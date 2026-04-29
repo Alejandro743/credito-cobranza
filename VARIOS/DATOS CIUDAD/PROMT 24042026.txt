@@ -1,0 +1,56 @@
+Implementar selector en cascada Ciudad → Provincia 
+→ Municipio usando el archivo Excel adjunto.
+
+=== 1. IMPORTAR DATOS A BD ===
+
+Crear seeders con los datos del archivo 
+CIUDAD_PROVINCIA_MUNICIPIO.xlsx:
+
+Tabla: ciudades
+- id, nombre
+
+Tabla: provincias  
+- id, nombre, ciudad_id (FK → ciudades.id)
+
+Tabla: municipios
+- id, nombre, provincia_id (FK → provincias.id)
+
+Sembrar los datos exactos del Excel:
+- 9 ciudades (departamentos de Bolivia)
+- Provincias con su ciudad_id
+- Municipios con su provincia_id
+
+=== 2. MODELOS Y RELACIONES ===
+- Ciudad hasMany Provincia
+- Provincia belongsTo Ciudad, hasMany Municipio
+- Municipio belongsTo Provincia
+
+=== 3. SELECTOR EN CASCADA CON LIVEWIRE ===
+
+En todos los formularios donde se ingresa dirección:
+- Formulario de Cliente (crear/editar)
+- Dirección de entrega en el pedido
+- Dirección de entrega en Entrega
+
+Comportamiento:
+- Select Ciudad: carga todas las ciudades
+- Al seleccionar Ciudad → carga Provincias de esa ciudad
+- Al seleccionar Provincia → carga Municipios de esa provincia
+- Al limpiar Ciudad → se limpian Provincia y Municipio
+- Al cambiar Ciudad → se limpian Provincia y Municipio
+
+Usando Livewire con propiedades reactivas:
+- $ciudad_id → updated → carga provincias
+- $provincia_id → updated → carga municipios
+
+=== 4. REEMPLAZAR CAMPOS DE TEXTO ===
+Reemplazar los inputs de texto libre de:
+- Ciudad → select de ciudades
+- Provincia → select de provincias (filtrado)
+- Municipio → select de municipios (filtrado)
+
+En todos los formularios del sistema que 
+tengan estos campos.
+
+Stack: Laravel, Blade, Livewire, TailwindCSS.
+Migraciones, modelos, seeders y componentes.

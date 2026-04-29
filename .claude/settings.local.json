@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls /c/laragon/www/credito-cobranza/app/Livewire/*/)",
+      "Bash(/c/laragon/bin/php/php-8.3.30-Win32-vs16-x64/php.exe artisan *)",
+      "Bash(/c/laragon/bin/php/php-8.3.30-Win32-vs16-x64/php.exe -l app/Livewire/Vendedor/OfertaManager.php app/Livewire/Vendedor/PedidoManager.php app/Livewire/Cliente/MisPedidos.php app/Models/PlanPago.php app/Models/Cuota.php app/Models/Pedido.php)",
+      "Bash(/c/laragon/bin/php/php-8.3.30-Win32-vs16-x64/php.exe *)",
+      "Bash(grep -v \"^$\")",
+      "Bash(awk '{print $3, $5}')",
+      "Bash(xargs grep *)",
+      "Bash(ipconfig)",
+      "Bash(grep -v \"^--$\")",
+      "Bash(netsh advfirewall *)",
+      "Bash(grep -n 'protected $table\\\\|class ListaMaestra\\\\|quantity_cuotas\\\\|cantidad_cuotas\\\\|dias_entre_cuotas' /c/laragon/www/credito-cobranza/app/Models/ListaMaestra.php)",
+      "Bash(/c/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe *)",
+      "Bash(xargs ls *)",
+      "Bash(git --version)",
+      "Bash(git -C /c/laragon/www/credito-cobranza status)",
+      "Bash(git -C /c/laragon/www/credito-cobranza init)",
+      "Bash(git -C /c/laragon/www/credito-cobranza remote add origin https://github.com/Alejandro743/credito-cobranza.git)",
+      "Bash(git -C /c/laragon/www/credito-cobranza config user.name \"Alejandro743\")",
+      "Bash(git -C /c/laragon/www/credito-cobranza config user.email \"alejandro.leon.cabrera@gmail.com\")",
+      "Bash(git -C /c/laragon/www/credito-cobranza add .)",
+      "Bash(git -C /c/laragon/www/credito-cobranza status --short)",
+      "Bash(git -C /c/laragon/www/credito-cobranza rm -r --cached VARIOS .claude)",
+      "Bash(git -C /c/laragon/www/credito-cobranza commit -m ' *)"
+    ]
+  }
+}

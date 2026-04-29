@@ -1,0 +1,149 @@
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+
+class CiudadesProvinciaMunicipioSeeder extends Seeder
+{
+    public function run(): void
+    {
+        DB::statement('PRAGMA foreign_keys=OFF;');
+        DB::table('municipios')->delete();
+        DB::table('provincias')->delete();
+        DB::table('ciudades')->delete();
+        DB::statement('PRAGMA foreign_keys=ON;');
+
+        // 9 ciudades (departamentos de Bolivia)
+        $ciudades = [
+            1 => 'CHUQUISACA',
+            2 => 'COCHABAMBA',
+            3 => 'EL BENI',
+            4 => 'LA PAZ',
+            5 => 'ORURO',
+            6 => 'PANDO',
+            7 => 'POTOSI',
+            8 => 'SANTA CRUZ',
+            9 => 'TARIJA',
+        ];
+
+        foreach ($ciudades as $id => $nombre) {
+            DB::table('ciudades')->insert(['id' => $id, 'nombre' => $nombre, 'created_at' => now(), 'updated_at' => now()]);
+        }
+
+        // 112 provincias
+        $provincias = [
+            [1,'AZURDUY',1],[2,'BELISARIO BOETO',1],[3,'HERNANDO SILES',1],[4,'LUIS CALVO',1],
+            [5,'NOR CINTI',1],[6,'OROPEZA',1],[7,'SUD CINTI',1],[8,'TOMINA',1],[9,'YAMPARAEZ',1],[10,'ZUDANEZ',1],
+            [11,'ARANI',2],[12,'ARQUE',2],[13,'AYOPAYA',2],[14,'BOLIVAR',2],[15,'CAPINOTA',2],
+            [16,'CARRASCO',2],[17,'CERCADO',2],[18,'CHAPARE',2],[19,'ESTEBAN ARCE',2],[20,'GERMAN JORDAN',2],
+            [21,'MIZQUE',2],[22,'NARCISO CAMPERO',2],[23,'PUNATA',2],[24,'QUILLACOLLO',2],[25,'TAPACARI',2],[26,'TIRAQUE',2],
+            [27,'CERCADO',3],[28,'ITENEZ',3],[29,'MAMORE',3],[30,'MARBAN',3],[31,'MOXOS',3],[32,'VACA DIEZ',3],[33,'YACUMA',3],
+            [34,'ABEL ITURRALDE',4],[35,'AROMA',4],[36,'BAUTISTA SAAVEDRA',4],[37,'CAMACHO',4],[38,'CARANAVI',4],
+            [39,'FRANZ TAMAYO',4],[40,'GUALBERTO VILLAROEL',4],[41,'INGAVI',4],[42,'INQUISIVI',4],[43,'JOSE MANUEL PANDO',4],
+            [44,'LARECAJA',4],[45,'LOAYZA',4],[46,'LOS ANDES',4],[47,'MANCO KAPAC',4],[48,'MUNECAS',4],[49,'MURILLO',4],
+            [50,'NOR YUNGAS',4],[51,'OMASUYOS',4],[52,'PACAJES',4],[53,'SUD YUNGAS',4],
+            [54,'ATAHUALLPA',5],[55,'CARANGAS',5],[56,'CERCADO',5],[57,'EDUARDO AVAROA',5],[58,'LADISLAO CABRERA',5],
+            [59,'LITORAL',5],[60,'NOR CARANGAS',5],[61,'PANTALEON DALENCE',5],[62,'POOPO',5],[63,'PUERTO DE MEJILLONES',5],
+            [64,'SAJAMA',5],[65,'SAN PEDRO DE TOTORA',5],[66,'SAUCARI',5],[67,'SEBASTIAN PAGADOR',5],[68,'SUD CARANGAS',5],[69,'TOMAS BARRON',5],
+            [70,'ABUNA',6],[71,'FEDERICO ROMAN',6],[72,'MADRE DE DIOS',6],[73,'MANURIPI',6],[74,'NICOLAS SUAREZ',6],
+            [75,'ALONSO DE IBANEZ',7],[76,'ANTONIO QUIJARRO',7],[77,'BERNARDINO BILBAO',7],[78,'CHARCAS',7],[79,'CHAYANTA',7],
+            [80,'CORNELIO SAAVEDRA',7],[81,'DANIEL CAMPOS',7],[82,'ENRIQUE BALDIVIESO',7],[83,'JOSE MARIA LINARES',7],
+            [84,'MODESTO OMISTE',7],[85,'NOR CHICHAS',7],[86,'NOR LIPEZ',7],[87,'RAFAEL BUSTILLO',7],
+            [88,'SUD CHICHAS',7],[89,'SUD LIPEZ',7],[90,'TOMAS FRIAS',7],
+            [91,'ANDRES IBANEZ',8],[92,'ANGEL SANDOVAL',8],[93,'CHIQUITOS',8],[94,'CORDILLERA',8],[95,'FLORIDA',8],
+            [96,'GERMAN BUSCH',8],[97,'GUARAYOS',8],[98,'ICHILO',8],[99,'IGNACIO WARNES',8],[100,'JOSE MIGUEL DE VELASCO',8],
+            [101,'MARIA MANUEL CABALLERO',8],[102,'NUFLO DE CHAVEZ',8],[103,'OBISPO SANTISTEVAN',8],[104,'SARA',8],[105,'VALLEGRANDE',8],
+            [106,'ANICETO ARCE',9],[107,'AVILES',9],[108,'BURDET OCONNOR',9],[109,'CERCADO',9],[110,'GRAN CHACO',9],[111,'MENDEZ',9],
+            [112,'MARISCAL JOSE BALLIVIAN',3],
+        ];
+
+        foreach ($provincias as [$id, $nombre, $ciudad_id]) {
+            DB::table('provincias')->insert(['id' => $id, 'nombre' => $nombre, 'ciudad_id' => $ciudad_id, 'created_at' => now(), 'updated_at' => now()]);
+        }
+
+        // 327 municipios
+        $municipios = [
+            [1,'AZURDUY',1],[2,'TARVITA',1],[3,'VILLA SERRANO',2],[4,'HUACARETA',3],[5,'MONTEAGUDO',3],
+            [6,'HUACAYA',4],[7,'MACHARETI',4],[8,'MUYUPAMPA',4],[9,'CAMARGO',5],[10,'INCAHUASI',5],
+            [11,'SAN LUCAS',5],[12,'POROMA',6],[13,'SUCRE',6],[14,'YOTALA',6],[15,'CULPINA',7],
+            [16,'LAS CARRERAS',7],[17,'VILLA ABECIA',7],[18,'EL VILLAR',8],[19,'PADILLA',8],[20,'SOPACHUY',8],
+            [21,'TOMINA',8],[22,'VILLA ALCALA',8],[23,'TARABUCO',9],[24,'YAMPARAEZ',9],[25,'ICLA',10],
+            [26,'MOJOCOYA',10],[27,'PRESTO',10],[28,'ZUDANEZ',10],[29,'ARANI',11],[30,'VACAS',11],
+            [31,'ARQUE',12],[32,'TACOPAYA',12],[33,'AYOPAYA (VILLA DE INDEPENDENCIA)',13],[34,'MOROCHATA',13],
+            [35,'BOLIVAR',14],[36,'CAPINOTA',15],[37,'SANTIVANEZ',15],[38,'SICAYA',15],[39,'CHIMORE',16],
+            [40,'ENTRE RIOS',16],[41,'POCONA',16],[42,'POJO',16],[43,'PUERTO VILLARROEL',16],[44,'TOTORA',16],
+            [45,'COCHABAMBA',17],[46,'COLOMI',18],[47,'SACABA',18],[48,'VILLA TUNARI',18],[49,'ANZALDO',19],
+            [50,'ARBIETO',19],[51,'SACABAMBA',19],[52,'TARATA',19],[53,'CLIZA',20],[54,'TOCO',20],
+            [55,'TOLATA',20],[56,'ALALAY',21],[57,'MIZQUE',21],[58,'VILA VILA',21],[59,'AIQUILE',22],
+            [60,'OMEREQUE',22],[61,'PASORAPA',22],[62,'CUCHUMUELA',23],[63,'PUNATA',23],[64,'SAN BENITO',23],
+            [65,'TACACHI',23],[66,'VILLA RIVERO',23],[67,'COLCAPIRHUA',24],[68,'QUILLACOLLO',24],[69,'SIPE SIPE',24],
+            [70,'TIQUIPAYA',24],[71,'VINTO',24],[72,'TAPACARI',25],[73,'TIRAQUE',26],[74,'SAN JAVIER',27],
+            [75,'TRINIDAD',27],[76,'BAURES',28],[77,'HUACARAJE',28],[78,'MAGDALENA',28],[79,'PUERTO SILES',29],
+            [80,'SAN JOAQUIN',29],[81,'SAN RAMON',29],[82,'LORETO',30],[83,'SAN ANDRES',30],[84,'SAN IGNACIO',31],
+            [85,'GUAYARAMERIN',32],[86,'RIBERALTA',32],[87,'EXALTACION',33],[88,'SANTA ANA DEL YACUMA',33],
+            [89,'IXIAMAS',34],[90,'SAN BUENAVENTURA',34],[91,'AYO AYO',35],[92,'CALAMARCA',35],[93,'COLLANA',35],
+            [94,'COLQUENCHA',35],[95,'PATACAMAYA',35],[96,'SICA SICA',35],[97,'UMALA',35],[98,'CHARAZANI',36],
+            [99,'CURVA',36],[100,'MOCOMOCO',37],[101,'PTO. CARABUCO',37],[102,'PUERTO ACOSTA',37],
+            [103,'CARANAVI',38],[104,'APOLO',39],[105,'PELECHUCO',39],[106,'CHACARILLA',40],[107,'PAPEL PAMPA',40],
+            [108,'SAN PEDRO CUARAHUARA',40],[109,'DESAGUADERO',41],[110,'GUAQUI',41],[111,'JESUS DE MACHACA',41],
+            [112,'SAN ANDRES DE MACHACA',41],[113,'TARACO',41],[114,'TIAHUANACU',41],[115,'VIACHA',41],
+            [116,'CAJUATA',42],[117,'COLQUIRI',42],[118,'ICHOCA',42],[119,'INQUISIVI',42],[120,'QUIME',42],
+            [121,'VILLA LIBERTAD LICOMA',42],[122,'CATACORA',43],[123,'SANTIAGO DE MACHACA',43],[124,'COMBAYA',44],
+            [125,'GUANAY',44],[126,'MAPIRI',44],[127,'QUIABAYA',44],[128,'SORATA',44],[129,'TACACOMA',44],
+            [130,'TEOPONTE',44],[131,'TIPUANI',44],[132,'CAIROMA',45],[133,'LURIBAY',45],[134,'MALLA',45],
+            [135,'SAPAHAQUI',45],[136,'YACO',45],[137,'BATALLAS',46],[138,'LAJA',46],[139,'PUCARANI',46],
+            [140,'PUERTO PEREZ',46],[141,'COPACABANA',47],[142,'SAN PEDRO DE TIQUINA',47],[143,'TITO YUPANQUI',47],
+            [144,'AUCAPATA',48],[145,'AYATA',48],[146,'CHUMA',48],[147,'ACHOCALLA',49],[148,'EL ALTO',49],
+            [149,'LA PAZ',49],[150,'MECAPACA',49],[151,'PALCA',49],[152,'CORIPATA',50],[153,'COROICO',50],
+            [154,'ACHACACHI',51],[155,'ANCORAIMES',51],[156,'CALACOTO',52],[157,'CALLAPA',52],[158,'CAQUIAVIRI',52],
+            [159,'CHARANA',52],[160,'COMANCHE',52],[161,'CORO CORO',52],[162,'NAZACARA DE PACAJES',52],
+            [163,'WALDO BALLIVIAN',52],[164,'CHULUMANI',53],[165,'IRUPANA',53],[166,'LA ASUNTA',53],
+            [167,'PALOS BLANCOS',53],[168,'YANACACHI',53],[169,'CHIPAYA',54],[170,'COIPASA',54],[171,'SABAYA',54],
+            [172,'CHOQUE COTA',55],[173,'CORQUE',55],[174,'CARACOLLO',56],[175,'EL CHORO',56],[176,'ORURO',56],
+            [177,'SORACACHI',56],[178,'CHALLAPATA',57],[179,'SANTUARIO DE QUILLACAS',57],[180,'PAMPA AULLAGAS',58],
+            [181,'SALINAS DE GARCI MENDOZA',58],[182,'CRUZ DE MACHACAMARCA',59],[183,'ESCARA',59],[184,'ESMERALDA',59],
+            [185,'HUACHACALLA',59],[186,'YUNGUYO DE LITORAL',59],[187,'HUAYLLAMARCA',60],[188,'HUANUNI',61],
+            [189,'MACHACAMARCA',61],[190,'ANTEQUERA',62],[191,'PAZNA',62],[192,'POOPO',62],[193,'CARANGAS',63],
+            [194,'LA RIVERA',63],[195,'TODOS SANTOS',63],[196,'CURAHUARA DE CARANGAS',64],[197,'TURCO',64],
+            [198,'TOTORA',65],[199,'TOLEDO',66],[200,'SANTIAGO DE HUARI',67],[201,'BELEN DE ANDAMARCA',68],
+            [202,'SANTIAGO DE ANDAMARCA',68],[203,'EUCALIPTUS',69],[204,'INGAVI (HUMAITA)',70],
+            [205,'SANTA ROSA DEL ABUNA',70],[206,'NUEVA ESPERANZA',71],[207,'SANTOS MERCADO',71],
+            [208,'VILLA NUEVA (LOMA ALTA)',71],[209,'PUERTO GONZALO MORENO',72],[210,'SAN LORENZO',72],
+            [211,'SENA',72],[212,'FILADELFIA',73],[213,'PUERTO RICO',73],[214,'SAN PEDRO',73],
+            [215,'BELLA FLOR',74],[216,'BOLPEBRA',74],[217,'COBIJA',74],[218,'PORVENIR',74],
+            [219,'CARIPUYO',75],[220,'SACACA (VILLA DE SACACA)',75],[221,'PORCO',76],[222,'TOMAVE',76],
+            [223,'UYUNI',76],[224,'ACASIO',77],[225,'ARAMPAMPA',77],[226,'SAN PEDRO DE BUENA VISTA',78],
+            [227,'TORO TORO',78],[228,'COLQUECHACA',79],[229,'OCURI',79],[230,'POCOATA',79],[231,'RAVELO',79],
+            [232,'BETANZOS',80],[233,'CHAQUI',80],[234,'TACOBAMBA',80],[235,'LLICA',81],[236,'TAHUA',81],
+            [237,'SAN AGUSTIN',82],[238,'CAIZA',83],[239,'PUNA (VILLA TALAVERA)',83],[240,'VILLAZON',84],
+            [241,'COTAGAITA',85],[242,'VITICHI',85],[243,'COLCHA K (VILLA MARTIN)',86],[244,'SAN PEDRO DE QUEMES',86],
+            [245,'CHAYANTA',87],[246,'LLALLAGUA',87],[247,'UNCIA',87],[248,'ATOCHA',88],[249,'TUPIZA',88],
+            [250,'MOJINETE',89],[251,'SAN ANTONIO DE ESMORUCO',89],[252,'SAN PABLO DE LIPEZ',89],
+            [253,'POTOSI',90],[254,'TINGUIPAYA',90],[255,'URMIRI',90],[256,'YOCALLA',90],
+            [257,'AYACUCHO (PORONGO)',91],[258,'COTOCA',91],[259,'EL TORNO',91],[260,'LA GUARDIA',91],
+            [261,'SANTA CRUZ DE LA SIERRA',91],[262,'SAN MATIAS',92],[263,'PAILON',93],[264,'ROBORE',93],
+            [265,'SAN JOSE DE CHIQUITOS',93],[266,'BOYUIBE',94],[267,'CABEZAS',94],[268,'CAMIRI',94],
+            [269,'CHARAGUA',94],[270,'CUEVO',94],[271,'GUTIERREZ',94],[272,'LAGUNILLAS',94],[273,'MAIRANA',95],
+            [274,'PAMPA GRANDE',95],[275,'QUIRUSILLAS',95],[276,'SAMAIPATA',95],[277,'CARMEN RIVERO TORREZ',96],
+            [278,'PUERTO QUIJARRO',96],[279,'PUERTO SUAREZ',96],[280,'ASCENSION DE GUARAYOS',97],
+            [281,'EL PUENTE',97],[282,'URUBICHA',97],[283,'BUENA VISTA',98],[284,'SAN CARLOS',98],
+            [285,'SAN JUAN',98],[286,'YAPACANI',98],[287,'OKINAWA UNO',99],[288,'WARNES',99],
+            [289,'SAN IGNACIO DE VELASCO',100],[290,'SAN MIGUEL DE VELASCO',100],[291,'SAN RAFAEL',100],
+            [292,'COMARAPA',101],[293,'SAIPINA',101],[294,'CONCEPCION',102],[295,'CUATRO CANADAS',102],
+            [296,'SAN ANTONIO DE LOMERIO',102],[297,'SAN JAVIER',102],[298,'SAN JULIAN',102],[299,'SAN RAMON',102],
+            [300,'AGUSTIN SAAVEDRA',103],[301,'FERNANDEZ ALONSO',103],[302,'MINEROS',103],[303,'MONTERO',103],
+            [304,'SAN PEDRO',103],[305,'COLPA BELGICA',104],[306,'PORTACHUELO',104],[307,'SANTA ROSA DEL SARA',104],
+            [308,'MORO MORO',105],[309,'POSTRER VALLE',105],[310,'PUCARA',105],[311,'TRIGAL',105],[312,'VALLEGRANDE',105],
+            [313,'BERMEJO',106],[314,'PADCAYA',106],[315,'URIONDO',107],[316,'YUNCHARA',107],[317,'ENTRE RIOS',108],
+            [318,'TARIJA',109],[319,'CARAPARI',110],[320,'VILLAMONTES',110],[321,'YACUIBA',110],
+            [322,'EL PUENTE',111],[323,'VILLA SAN LORENZO',111],[324,'REYES',112],[325,'SAN BORJA',112],
+            [326,'SANTA ROSA',112],[327,'RURRENABAQUE',112],
+        ];
+
+        foreach ($municipios as [$id, $nombre, $provincia_id]) {
+            DB::table('municipios')->insert(['id' => $id, 'nombre' => $nombre, 'provincia_id' => $provincia_id, 'created_at' => now(), 'updated_at' => now()]);
+        }
+    }
+}

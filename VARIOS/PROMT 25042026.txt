@@ -1,0 +1,25 @@
+En Mis Pedidos corregir la toolbar:
+
+1. TODO EN UNA SOLA LÍNEA:
+   - Buscador + estados + botón Nuevo Plan
+   - display: flex, align-items: center, gap: 8px
+   - En el mismo div contenedor
+
+2. BOTONES DE ESTADOS:
+   - border-radius: 6px (semi cuadrado, NO redondo)
+   - border: 0.5px solid #CECBF6
+   - background: transparent (sin fondo)
+   - color: #AFA9EC
+   - font-size: 11px
+   - padding: 6px 12px
+   - Activo: border-color de su color, 
+     background de su color suave, color de su color
+
+3. BOTÓN NUEVO PLAN:
+   - background: #7c3aed (morado, NO naranja)
+   - color: #fff
+   - border-radius: 8px
+   - ícono documento blanco al lado
+   - texto "Nuevo Plan"
+
+Stack: Laravel, Blade, Livewire, TailwindCSS.
