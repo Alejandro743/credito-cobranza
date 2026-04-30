@@ -9,11 +9,11 @@ class CiudadesProvinciaMunicipioSeeder extends Seeder
 {
     public function run(): void
     {
-        DB::statement('PRAGMA foreign_keys=OFF;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
         DB::table('municipios')->delete();
         DB::table('provincias')->delete();
         DB::table('ciudades')->delete();
-        DB::statement('PRAGMA foreign_keys=ON;');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
         // 9 ciudades (departamentos de Bolivia)
         $ciudades = [
