@@ -18,7 +18,7 @@ return new class extends Migration {
             $table->boolean('active')->default(true);
             $table->timestamps();
 
-            $table->unique(['lista_derivada_id', 'lista_maestra_item_id']);
+            $table->unique(['lista_derivada_id', 'lista_maestra_item_id'], 'ld_items_unique');
         });
     }
 
