@@ -8,8 +8,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        // SQLite: deshabilitar FKs temporalmente para poder recrear la tabla
-        DB::statement('PRAGMA foreign_keys = OFF');
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
         Schema::dropIfExists('clientes');
 
@@ -35,7 +34,7 @@ return new class extends Migration {
             $table->timestamps();
         });
 
-        DB::statement('PRAGMA foreign_keys = ON');
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
     }
 
     public function down(): void
