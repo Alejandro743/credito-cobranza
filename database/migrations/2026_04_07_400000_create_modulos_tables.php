@@ -12,7 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name', 100);
             $table->string('slug', 100)->unique();
-            $table->string('icon', 500)->nullable();          // SVG path data
+            $table->text('icon')->nullable();                  // SVG path data
             $table->string('color', 30)->default('lavanda');  // pastel color key
             $table->unsignedSmallInteger('sort_order')->default(0);
             $table->boolean('active')->default(true);
