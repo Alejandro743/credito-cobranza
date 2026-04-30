@@ -19,8 +19,8 @@ class EnsureUserIsActivo
         if (!$user) return $next($request);
 
         $inactivo =
-            Vendedor::where('user_id', $user->id)->where('activo', false)->exists() ||
-            Cliente::where('user_id',  $user->id)->where('activo', false)->exists();
+            Vendedor::where('user_id',   $user->id)->where('activo', false)->exists() ||
+            Cliente::where('usuario_id', $user->id)->where('active', false)->exists();
 
         if ($inactivo) {
             auth()->logout();
