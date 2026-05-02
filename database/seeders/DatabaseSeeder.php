@@ -13,6 +13,7 @@ class DatabaseSeeder extends Seeder
             ModulosSubmodulosSeeder::class,          // 4 módulos y sus submódulos
             RolesPermisosDefaultSeeder::class,       // permisos iniciales por rol
             CiudadesProvinciaMunicipioSeeder::class, // Bolivia: ciudades, provincias, municipios
+            DefinicionesDefaultSeeder::class,        // registros "Por Defecto" de pesos y rangos
         ]);
     }
 }

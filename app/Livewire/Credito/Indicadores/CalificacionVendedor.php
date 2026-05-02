@@ -3,6 +3,7 @@
 namespace App\Livewire\Credito\Indicadores;
 
 use App\Models\PesoIndicador;
+use App\Models\RangoCalificacion;
 use App\Models\Vendedor;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -24,6 +25,7 @@ class CalificacionVendedor extends Component
     {
         $hoy    = Carbon::today();
         $pesos  = PesoIndicador::vigente($hoy) ?? PesoIndicador::porDefecto();
+        $rangos = RangoCalificacion::vigente($hoy) ?? RangoCalificacion::porDefecto();
         $vendedores = Vendedor::where('activo', true)
             ->with(['pedidos' => function ($q) {
                 $q->where('estado', 'aprobado')
@@ -31,7 +33,7 @@ class CalificacionVendedor extends Component
             }])
             ->get();
 
-        return $vendedores->map(function (Vendedor $v) use ($hoy, $pesos) {
+        return $vendedores->map(function (Vendedor $v) use ($hoy, $pesos, $rangos) {
             $pedidos = $v->pedidos->filter(fn($p) => $p->planPago !== null);
 
             if ($pedidos->isEmpty()) return null;
@@ -91,13 +93,7 @@ class CalificacionVendedor extends Component
                 1
             );
 
-            $calificacion = match(true) {
-                $puntaje >= 85 => 'A',
-                $puntaje >= 70 => 'B',
-                $puntaje >= 50 => 'C',
-                $puntaje >= 30 => 'D',
-                default        => 'BLOQUEADO',
-            };
+            $calificacion = $rangos->calificar($puntaje);
 
             return [
                 'id'            => $v->id,

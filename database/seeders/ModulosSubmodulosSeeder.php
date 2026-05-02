@@ -61,8 +61,9 @@ class ModulosSubmodulosSeeder extends Seeder
                         'name' => 'Definiciones', 'slug' => 'definiciones',
                         'route_name' => null, 'sort_order' => 3,
                         'children' => [
-                            ['name' => 'Correlativo',         'slug' => 'def-correlativo',      'route_name' => 'admin.definiciones.correlativo',      'sort_order' => 1],
-                            ['name' => 'Pesos de Indicadores','slug' => 'def-peso-indicadores', 'route_name' => 'admin.definiciones.peso-indicadores',  'sort_order' => 2],
+                            ['name' => 'Correlativo',           'slug' => 'def-correlativo',        'route_name' => 'admin.definiciones.correlativo',        'sort_order' => 1],
+                            ['name' => 'Pesos de Indicadores',  'slug' => 'def-peso-indicadores',   'route_name' => 'admin.definiciones.peso-indicadores',   'sort_order' => 2],
+                            ['name' => 'Rangos de Calificación','slug' => 'def-rango-calificacion', 'route_name' => 'admin.definiciones.rango-calificacion', 'sort_order' => 3],
                         ],
                     ],
                     // Grupo: Configuración del Ciclo
