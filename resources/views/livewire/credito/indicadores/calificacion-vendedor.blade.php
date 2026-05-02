@@ -137,15 +137,17 @@
         <tr wire:key="detalle-{{ $v['id'] }}">
             <td colspan="8" style="padding:0; border:0.5px solid #d1fae5; background:#f9fffe;">
                 <div style="padding:16px 20px;">
-                    <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#15803D; margin:0 0 12px;">Detalle de Indicadores — {{ $v['nombre'] }}</p>
+
+                    {{-- Tarjetas de indicadores --}}
+                    <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#15803D; margin:0 0 10px;">Indicadores — {{ $v['nombre'] }}</p>
                     <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px;">
                         @php
                         $indicadores = [
-                            ['nombre'=>'Puntualidad',    'pct'=>$v['puntualidad'],           'peso'=>25, 'puntos'=>$v['puntualidad'],           'aporte'=>round($v['puntualidad']*0.25,1)],
-                            ['nombre'=>'Mora generada',  'pct'=>$v['mora'],                   'peso'=>25, 'puntos'=>100-$v['mora'],              'aporte'=>round((100-$v['mora'])*0.25,1)],
-                            ['nombre'=>'C. en Riesgo',   'pct'=>$v['riesgo'],                 'peso'=>20, 'puntos'=>100-$v['riesgo'],            'aporte'=>round((100-$v['riesgo'])*0.20,1)],
-                            ['nombre'=>'Recuperación',   'pct'=>$v['recuperacion'],           'peso'=>20, 'puntos'=>$v['recuperacion'],          'aporte'=>round($v['recuperacion']*0.20,1)],
-                            ['nombre'=>'Reprogramación', 'pct'=>$v['reprog'],                 'peso'=>10, 'puntos'=>100-$v['reprog'],            'aporte'=>round((100-$v['reprog'])*0.10,1)],
+                            ['nombre'=>'Puntualidad',    'pct'=>$v['puntualidad'],  'peso'=>$pesos->peso_puntualidad,    'puntos'=>$v['puntualidad'],        'aporte'=>round($v['puntualidad']        * $pesos->peso_puntualidad    / 100, 1)],
+                            ['nombre'=>'Mora generada',  'pct'=>$v['mora'],          'peso'=>$pesos->peso_mora,           'puntos'=>100-$v['mora'],           'aporte'=>round((100-$v['mora'])         * $pesos->peso_mora           / 100, 1)],
+                            ['nombre'=>'C. en Riesgo',   'pct'=>$v['riesgo'],        'peso'=>$pesos->peso_riesgo,         'puntos'=>100-$v['riesgo'],         'aporte'=>round((100-$v['riesgo'])       * $pesos->peso_riesgo         / 100, 1)],
+                            ['nombre'=>'Recuperación',   'pct'=>$v['recuperacion'],  'peso'=>$pesos->peso_recuperacion,   'puntos'=>$v['recuperacion'],       'aporte'=>round($v['recuperacion']       * $pesos->peso_recuperacion   / 100, 1)],
+                            ['nombre'=>'Reprogramación', 'pct'=>$v['reprog'],        'peso'=>$pesos->peso_reprogramacion, 'puntos'=>100-$v['reprog'],         'aporte'=>round((100-$v['reprog'])       * $pesos->peso_reprogramacion / 100, 1)],
                         ];
                         @endphp
                         @foreach($indicadores as $ind)
@@ -159,13 +161,79 @@
                         </div>
                         @endforeach
                     </div>
-                    <div style="margin-top:12px; text-align:right;">
+
+                    {{-- Puntaje final --}}
+                    <div style="margin-top:10px; text-align:right;">
                         <span style="font-size:13px; font-weight:700; color:#166534;">
                             Puntaje final: <span style="font-family:monospace; font-size:16px;">{{ $v['puntaje'] }}</span>
                             &nbsp;→&nbsp;
                             <span class="cv-badge" style="background:{{ $calBadge['bg'] }}; color:{{ $calBadge['cl'] }}; font-size:12px;">{{ $v['calificacion'] }}</span>
                         </span>
                     </div>
+
+                    {{-- Tabla de pedidos individuales --}}
+                    @if($detallePedidos->isNotEmpty())
+                    <div style="margin-top:16px;">
+                        <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#15803D; margin:0 0 8px;">
+                            Desglose por Pedido
+                            <span style="font-weight:400; color:#9ca3af;">({{ $detallePedidos->count() }} pedido{{ $detallePedidos->count() !== 1 ? 's' : '' }})</span>
+                        </p>
+                        <div style="overflow-x:auto; border-radius:8px; border:1px solid #d1fae5;">
+                        <table style="width:100%; border-collapse:collapse; font-size:11px;">
+                            <thead>
+                                <tr style="background:#f0fdf4;">
+                                    <th style="padding:7px 10px; text-align:left; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5;">Pedido</th>
+                                    <th style="padding:7px 10px; text-align:left; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5;">Cliente</th>
+                                    <th style="padding:7px 10px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:110px;">Cuotas (al día/venc.)</th>
+                                    <th style="padding:7px 10px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:90px;">Puntualidad</th>
+                                    <th style="padding:7px 10px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:70px;">Mora</th>
+                                    <th style="padding:7px 10px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:80px;">C. Riesgo</th>
+                                    <th style="padding:7px 10px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:75px;">Reprog.</th>
+                                    <th style="padding:7px 10px; text-align:right; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:110px;">Monto total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($detallePedidos as $ped)
+                            @php
+                            $ptColor = $ped['puntualidad'] >= 90 ? '#15803D' : ($ped['puntualidad'] >= 70 ? '#854F0B' : '#B91C1C');
+                            $rsColor = $ped['riesgo'] > 30 ? '#B91C1C' : ($ped['riesgo'] > 10 ? '#854F0B' : '#15803D');
+                            @endphp
+                            <tr style="border-bottom:0.5px solid #e5e7eb;">
+                                <td style="padding:7px 10px; font-weight:700; color:#374151; font-family:monospace;">{{ $ped['numero'] }}</td>
+                                <td style="padding:7px 10px; color:#374151;">{{ $ped['cliente'] }}</td>
+                                <td style="padding:7px 10px; text-align:center; color:#6b7280; font-family:monospace;">
+                                    {{ $ped['al_dia'] }}/{{ $ped['cerradas'] }}
+                                    <span style="color:#9ca3af; font-size:10px;">({{ $ped['total_cuotas'] }})</span>
+                                </td>
+                                <td style="padding:7px 10px; text-align:center; font-weight:700; font-family:monospace; color:{{ $ptColor }};">{{ $ped['puntualidad'] }}%</td>
+                                <td style="padding:7px 10px; text-align:center;">
+                                    @if($ped['en_mora'])
+                                    <span style="font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; background:#FEF2F2; color:#B91C1C;">Sí</span>
+                                    @else
+                                    <span style="font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; background:#F0FDF4; color:#15803D;">No</span>
+                                    @endif
+                                </td>
+                                <td style="padding:7px 10px; text-align:center; font-weight:700; font-family:monospace; color:{{ $rsColor }};">{{ $ped['riesgo'] }}%</td>
+                                <td style="padding:7px 10px; text-align:center;">
+                                    @if($ped['reprogramado'])
+                                    <span style="font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; background:#FEF3C7; color:#854F0B;">Sí</span>
+                                    @else
+                                    <span style="font-size:10px; font-weight:700; padding:2px 7px; border-radius:10px; background:#F0FDF4; color:#15803D;">No</span>
+                                    @endif
+                                </td>
+                                <td style="padding:7px 10px; text-align:right; font-weight:600; font-family:monospace; color:#374151;">
+                                    Bs {{ number_format($ped['monto'], 2) }}
+                                </td>
+                            </tr>
+                            @endforeach
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+                    @elseif($detalleId === $v['id'])
+                    <p style="margin-top:14px; font-size:11px; color:#9ca3af; text-align:center;">Sin pedidos con plan de pago activo.</p>
+                    @endif
+
                 </div>
             </td>
         </tr>

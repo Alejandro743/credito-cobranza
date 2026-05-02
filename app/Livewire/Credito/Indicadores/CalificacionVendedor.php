@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Credito\Indicadores;
 
+use App\Models\Pedido;
 use App\Models\PesoIndicador;
 use App\Models\RangoCalificacion;
 use App\Models\Vendedor;
@@ -21,11 +22,10 @@ class CalificacionVendedor extends Component
         $this->detalleId = $this->detalleId === $vendedorId ? null : $vendedorId;
     }
 
-    private function calcularVendedores(): Collection
+    private function calcularVendedores(PesoIndicador $pesos, RangoCalificacion $rangos): Collection
     {
-        $hoy    = Carbon::today();
-        $pesos  = PesoIndicador::vigente($hoy) ?? PesoIndicador::porDefecto();
-        $rangos = RangoCalificacion::vigente($hoy) ?? RangoCalificacion::porDefecto();
+        $hoy = Carbon::today();
+
         $vendedores = Vendedor::where('activo', true)
             ->with(['pedidos' => function ($q) {
                 $q->where('estado', 'aprobado')
@@ -40,18 +40,15 @@ class CalificacionVendedor extends Component
 
             $totalPedidos = $pedidos->count();
 
-            // Todas las cuotas (numero > 0) de todos los planes activos
             $todasCuotas = $pedidos->flatMap(fn($p) => $p->planPago->cuotas->where('numero', '>', 0));
+            $cerradas    = $todasCuotas->filter(fn($c) => $c->fecha_vencimiento && $c->fecha_vencimiento->lte($hoy));
 
-            // Cuotas cerradas = fecha_vencimiento <= hoy
-            $cerradas = $todasCuotas->filter(fn($c) => $c->fecha_vencimiento && $c->fecha_vencimiento->lte($hoy));
-
-            // 1. PUNTUALIDAD (25%)
+            // 1. PUNTUALIDAD
             $nCerradas   = $cerradas->count();
             $nATiempo    = $cerradas->filter(fn($c) => $c->estado === 'pagado' && $c->fecha_pago && $c->fecha_pago->lte($c->fecha_vencimiento))->count();
             $puntualidad = $nCerradas > 0 ? round(($nATiempo / $nCerradas) * 100, 1) : 100.0;
 
-            // 2. MORA GENERADA (25%)
+            // 2. MORA GENERADA
             $pedidosEnMora = $pedidos->filter(function ($p) use ($hoy) {
                 return $p->planPago->cuotas
                     ->where('numero', '>', 0)
@@ -60,30 +57,28 @@ class CalificacionVendedor extends Component
             })->count();
             $mora = $totalPedidos > 0 ? round(($pedidosEnMora / $totalPedidos) * 100, 1) : 0.0;
 
-            // 3. CARTERA EN RIESGO (20%)
+            // 3. CARTERA EN RIESGO
             $saldoVencido   = $cerradas->where('estado', '!=', 'pagado')->sum('monto');
             $cuotasAbiertas = $todasCuotas->filter(fn($c) => !$c->fecha_vencimiento || $c->fecha_vencimiento->gt($hoy));
             $saldoAbierto   = $cuotasAbiertas->where('estado', '!=', 'pagado')->sum('monto');
             $saldoPendiente = $saldoVencido + $saldoAbierto;
             $riesgo         = $saldoPendiente > 0 ? round(($saldoVencido / $saldoPendiente) * 100, 1) : 0.0;
 
-            // 4. RECUPERACIÓN (20%)
+            // 4. RECUPERACIÓN
             $totalVencidoNoPagado = $cerradas->where('estado', '!=', 'pagado')->sum('monto');
             if ($totalVencidoNoPagado > 0) {
                 $montoRecuperado = $cerradas->where('estado', 'pagado')
                     ->filter(fn($c) => $c->fecha_pago && $c->fecha_pago->gt($c->fecha_vencimiento))
                     ->sum('monto');
-                $recuperacion = round(($montoRecuperado / $totalVencidoNoPagado) * 100, 1);
-                $recuperacion = min(100, $recuperacion);
+                $recuperacion = min(100, round(($montoRecuperado / $totalVencidoNoPagado) * 100, 1));
             } else {
                 $recuperacion = 100.0;
             }
 
-            // 5. REPROGRAMACIONES (10%)
+            // 5. REPROGRAMACIONES
             $pedidosReprog = $pedidos->filter(fn($p) => $p->planes->count() > 1)->count();
             $reprog        = $totalPedidos > 0 ? round(($pedidosReprog / $totalPedidos) * 100, 1) : 0.0;
 
-            // PUNTAJE FINAL usando pesos configurados
             $puntaje = round(
                 ($puntualidad    * $pesos->peso_puntualidad    / 100) +
                 ((100 - $mora)   * $pesos->peso_mora           / 100) +
@@ -92,8 +87,6 @@ class CalificacionVendedor extends Component
                 ((100 - $reprog) * $pesos->peso_reprogramacion / 100),
                 1
             );
-
-            $calificacion = $rangos->calificar($puntaje);
 
             return [
                 'id'            => $v->id,
@@ -105,14 +98,61 @@ class CalificacionVendedor extends Component
                 'recuperacion'  => $recuperacion,
                 'reprog'        => $reprog,
                 'puntaje'       => $puntaje,
-                'calificacion'  => $calificacion,
+                'calificacion'  => $rangos->calificar($puntaje),
             ];
         })->filter()->values();
     }
 
+    private function calcularDetallePedidos(int $vendedorId): Collection
+    {
+        $hoy = Carbon::today();
+
+        return Pedido::where('vendedor_id', $vendedorId)
+            ->where('estado', 'aprobado')
+            ->with(['planPago.cuotas', 'planes', 'cliente.usuario'])
+            ->get()
+            ->filter(fn($p) => $p->planPago !== null)
+            ->map(function (Pedido $p) use ($hoy) {
+                $cuotas   = $p->planPago->cuotas->where('numero', '>', 0);
+                $cerradas = $cuotas->filter(fn($c) => $c->fecha_vencimiento && $c->fecha_vencimiento->lte($hoy));
+
+                $nCerradas = $cerradas->count();
+                $nATiempo  = $cerradas->filter(fn($c) =>
+                    $c->estado === 'pagado' && $c->fecha_pago && $c->fecha_pago->lte($c->fecha_vencimiento)
+                )->count();
+                $puntualidad = $nCerradas > 0 ? round(($nATiempo / $nCerradas) * 100, 1) : 100.0;
+
+                $enMora = $cerradas->filter(fn($c) => $c->estado !== 'pagado')->isNotEmpty();
+
+                $saldoVencido   = $cerradas->where('estado', '!=', 'pagado')->sum('monto');
+                $cuotasAbiertas = $cuotas->filter(fn($c) => !$c->fecha_vencimiento || $c->fecha_vencimiento->gt($hoy));
+                $saldoAbierto   = $cuotasAbiertas->where('estado', '!=', 'pagado')->sum('monto');
+                $saldoPendiente = $saldoVencido + $saldoAbierto;
+                $riesgo         = $saldoPendiente > 0 ? round(($saldoVencido / $saldoPendiente) * 100, 1) : 0.0;
+
+                return [
+                    'numero'      => $p->numero,
+                    'cliente'     => $p->cliente?->nombre_completo ?? '—',
+                    'total_cuotas'=> $cuotas->count(),
+                    'cerradas'    => $nCerradas,
+                    'al_dia'      => $nATiempo,
+                    'puntualidad' => $puntualidad,
+                    'en_mora'     => $enMora,
+                    'riesgo'      => $riesgo,
+                    'reprogramado'=> $p->planes->count() > 1,
+                    'monto'       => (float) $p->total_pagar,
+                ];
+            })
+            ->values();
+    }
+
     public function render()
     {
-        $vendedores = $this->calcularVendedores();
+        $hoy    = Carbon::today();
+        $pesos  = PesoIndicador::vigente($hoy) ?? PesoIndicador::porDefecto();
+        $rangos = RangoCalificacion::vigente($hoy) ?? RangoCalificacion::porDefecto();
+
+        $vendedores = $this->calcularVendedores($pesos, $rangos);
 
         if ($this->filtroCalificacion !== 'todos') {
             $vendedores = $vendedores->filter(fn($v) => $v['calificacion'] === $this->filtroCalificacion)->values();
@@ -124,18 +164,23 @@ class CalificacionVendedor extends Component
         }
 
         $vendedores = match($this->ordenar) {
-            'puntaje_asc'  => $vendedores->sortBy('puntaje')->values(),
-            'nombre'       => $vendedores->sortBy('nombre')->values(),
-            default        => $vendedores->sortByDesc('puntaje')->values(),
+            'puntaje_asc' => $vendedores->sortBy('puntaje')->values(),
+            'nombre'      => $vendedores->sortBy('nombre')->values(),
+            default       => $vendedores->sortByDesc('puntaje')->values(),
         };
 
         $kpis = [
-            'total'    => $vendedores->count(),
-            'ab'       => $vendedores->whereIn('calificacion', ['A', 'B'])->count(),
-            'c'        => $vendedores->where('calificacion', 'C')->count(),
-            'db'       => $vendedores->whereIn('calificacion', ['D', 'BLOQUEADO'])->count(),
+            'total' => $vendedores->count(),
+            'ab'    => $vendedores->whereIn('calificacion', ['A', 'B'])->count(),
+            'c'     => $vendedores->where('calificacion', 'C')->count(),
+            'db'    => $vendedores->whereIn('calificacion', ['D', 'BLOQUEADO'])->count(),
         ];
 
-        return view('livewire.credito.indicadores.calificacion-vendedor', compact('vendedores', 'kpis'));
+        $detallePedidos = $this->detalleId
+            ? $this->calcularDetallePedidos($this->detalleId)
+            : collect();
+
+        return view('livewire.credito.indicadores.calificacion-vendedor',
+            compact('vendedores', 'kpis', 'pesos', 'detallePedidos'));
     }
 }
