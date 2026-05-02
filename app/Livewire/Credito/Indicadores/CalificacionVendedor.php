@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Credito\Indicadores;
 
+use App\Models\PesoIndicador;
 use App\Models\Vendedor;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
@@ -21,7 +22,8 @@ class CalificacionVendedor extends Component
 
     private function calcularVendedores(): Collection
     {
-        $hoy      = Carbon::today();
+        $hoy    = Carbon::today();
+        $pesos  = PesoIndicador::vigente($hoy) ?? PesoIndicador::porDefecto();
         $vendedores = Vendedor::where('activo', true)
             ->with(['pedidos' => function ($q) {
                 $q->where('estado', 'aprobado')
@@ -29,7 +31,7 @@ class CalificacionVendedor extends Component
             }])
             ->get();
 
-        return $vendedores->map(function (Vendedor $v) use ($hoy) {
+        return $vendedores->map(function (Vendedor $v) use ($hoy, $pesos) {
             $pedidos = $v->pedidos->filter(fn($p) => $p->planPago !== null);
 
             if ($pedidos->isEmpty()) return null;
@@ -79,13 +81,13 @@ class CalificacionVendedor extends Component
             $pedidosReprog = $pedidos->filter(fn($p) => $p->planes->count() > 1)->count();
             $reprog        = $totalPedidos > 0 ? round(($pedidosReprog / $totalPedidos) * 100, 1) : 0.0;
 
-            // PUNTAJE FINAL
+            // PUNTAJE FINAL usando pesos configurados
             $puntaje = round(
-                ($puntualidad * 0.25) +
-                ((100 - $mora)    * 0.25) +
-                ((100 - $riesgo)  * 0.20) +
-                ($recuperacion    * 0.20) +
-                ((100 - $reprog)  * 0.10),
+                ($puntualidad    * $pesos->peso_puntualidad    / 100) +
+                ((100 - $mora)   * $pesos->peso_mora           / 100) +
+                ((100 - $riesgo) * $pesos->peso_riesgo         / 100) +
+                ($recuperacion   * $pesos->peso_recuperacion   / 100) +
+                ((100 - $reprog) * $pesos->peso_reprogramacion / 100),
                 1
             );
 
