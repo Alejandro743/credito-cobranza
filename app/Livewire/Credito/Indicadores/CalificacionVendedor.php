@@ -11,6 +11,7 @@ class CalificacionVendedor extends Component
 {
     public string $filtroCalificacion = 'todos';
     public string $ordenar            = 'puntaje_desc';
+    public string $buscarVendedor     = '';
     public ?int   $detalleId          = null;
 
     public function toggleDetalle(int $vendedorId): void
@@ -117,6 +118,11 @@ class CalificacionVendedor extends Component
 
         if ($this->filtroCalificacion !== 'todos') {
             $vendedores = $vendedores->filter(fn($v) => $v['calificacion'] === $this->filtroCalificacion)->values();
+        }
+
+        if (strlen(trim($this->buscarVendedor)) >= 2) {
+            $q = mb_strtolower(trim($this->buscarVendedor));
+            $vendedores = $vendedores->filter(fn($v) => str_contains(mb_strtolower($v['nombre']), $q))->values();
         }
 
         $vendedores = match($this->ordenar) {

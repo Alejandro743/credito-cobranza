@@ -48,7 +48,15 @@
         </button>
         @endforeach
     </div>
-    <div style="margin-left:auto;">
+    <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+        <div style="position:relative;">
+            <svg style="position:absolute; left:8px; top:50%; transform:translateY(-50%); width:12px; height:12px;"
+                 fill="none" stroke="#6ee7b7" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input wire:model.live.debounce.300ms="buscarVendedor" type="text" placeholder="Buscar vendedor..."
+                   style="padding:5px 10px 5px 26px; border-radius:6px; font-size:11px; border:1.5px solid #d1fae5; background:#f9fffe; color:#374151; outline:none; width:170px;" />
+        </div>
         <select wire:model.live="ordenar"
                 style="padding:5px 10px; border-radius:6px; font-size:11px; border:1px solid #d1fae5; background:#f9fffe; color:#374151; cursor:pointer;">
             <option value="puntaje_desc">Mayor puntaje</option>
