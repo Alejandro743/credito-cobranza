@@ -88,6 +88,9 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('credito')->name('credi
     Route::get('/pagos/pasarela',  fn() => view('modules.credito.pagos-pasarela'))->name('pagos-pasarela');
     Route::get('/pagos/manuales',  fn() => view('modules.credito.pagos-manuales'))->name('pagos-manuales');
     Route::get('/pagos/historial', fn() => view('modules.credito.pagos-historial'))->name('pagos-historial');
+
+    // Indicadores
+    Route::get('/indicadores/calificacion', fn() => view('modules.credito.indicadores.calificacion-vendedor'))->name('indicadores.calificacion');
 });
 
 // ─── Módulo Vendedor / EIE ────────────────────────────────────────────────────

@@ -1,25 +1,97 @@
-En Mis Pedidos corregir la toolbar:
+Agregar nuevo submódulo al Módulo Crédito / Cobranza.
 
-1. TODO EN UNA SOLA LÍNEA:
-   - Buscador + estados + botón Nuevo Plan
-   - display: flex, align-items: center, gap: 8px
-   - En el mismo div contenedor
+UBICACIÓN EN EL SISTEMA:
+Módulo: Crédito / Cobranza
+  └── Submódulo: Indicadores
+        └── Vista: Calificación de Cartera del Vendedor
 
-2. BOTONES DE ESTADOS:
-   - border-radius: 6px (semi cuadrado, NO redondo)
-   - border: 0.5px solid #CECBF6
-   - background: transparent (sin fondo)
-   - color: #AFA9EC
-   - font-size: 11px
-   - padding: 6px 12px
-   - Activo: border-color de su color, 
-     background de su color suave, color de su color
+ESTRUCTURA DE ARCHIVOS A CREAR:
+- app/Livewire/Credito/Indicadores/CalificacionVendedor.php
+- resources/views/livewire/credito/indicadores/calificacion-vendedor.blade.php
+- Agregar ruta en el grupo de rutas de Crédito / Cobranza
+- Agregar entrada en el sidebar de Crédito / Cobranza bajo "Indicadores"
 
-3. BOTÓN NUEVO PLAN:
-   - background: #7c3aed (morado, NO naranja)
-   - color: #fff
-   - border-radius: 8px
-   - ícono documento blanco al lado
-   - texto "Nuevo Plan"
+LÓGICA DEL COMPONENTE LIVEWIRE:
+El componente debe calcular la calificación de cartera de cada vendedor
+en base a sus pedidos aprobados y el comportamiento de pago de sus clientes.
 
-Stack: Laravel, Blade, Livewire, TailwindCSS.
+Propiedades:
+- $vendedores → colección con los datos calculados
+- $filtroCalificacion → string, filtra por A/B/C/D/BLOQUEADO
+- $ordenar → string, ordena por puntaje desc por defecto
+
+Método calcularVendedores():
+Para cada vendedor activo con pedidos aprobados, calcular:
+
+1. PUNTUALIDAD (peso 25%)
+   - Universo: cuotas cerradas (fecha_vencimiento <= hoy)
+   - A tiempo: cuotas donde fecha_pago <= fecha_vencimiento
+   - Puntualidad% = (cuotas_a_tiempo / cuotas_cerradas) * 100
+   - Puntos = puntualidad% directamente
+
+2. MORA GENERADA (peso 25%)
+   - Pedido en mora = tiene al menos 1 cuota cerrada sin pagar
+   - Mora% = (pedidos_en_mora / total_pedidos) * 100
+   - Puntos = 100 - mora%
+
+3. CARTERA EN RIESGO (peso 20%)
+   - Saldo vencido = suma de montos de cuotas cerradas sin pagar
+   - Saldo pendiente = saldo vencido + suma de montos de cuotas abiertas sin pagar
+   - Riesgo% = (saldo_vencido / saldo_pendiente) * 100
+   - Puntos = 100 - riesgo%
+   - Si saldo_pendiente = 0, riesgo = 0%
+
+4. RECUPERACIÓN (peso 20%)
+   - Solo sobre cuotas cerradas que no se pagaron originalmente
+   - Monto recuperado = suma de pagos registrados sobre esas cuotas vencidas
+   - Recuperacion% = (monto_recuperado / total_vencido_no_pagado) * 100
+   - Puntos = recuperacion% directamente
+   - Si no hay deuda vencida, recuperacion = 100%
+
+5. REPROGRAMACIONES (peso 10%)
+   - Reprogramado% = (pedidos_reprogramados / total_pedidos) * 100
+   - Puntos = 100 - reprogramado%
+
+FÓRMULA FINAL:
+puntaje = (punt * 0.25) + ((100-mora) * 0.25) + ((100-riesgo) * 0.20) + (recup * 0.20) + ((100-reprog) * 0.10)
+
+TABLA DE CALIFICACIÓN:
+- 85-100 → A (Excelente)
+- 70-84  → B (Buena)
+- 50-69  → C (Observada)
+- 30-49  → D (Riesgosa)
+- 0-29   → BLOQUEADO
+
+VISTA BLADE:
+Respetar EXACTAMENTE el diseño del sistema existente:
+- Mismo layout, sidebar y header que los demás submódulos de Crédito
+- Colores pasteles del sistema (lavanda, mint, melocotón, celeste)
+- Mobile first, responsive
+- Tabla limpia con columnas:
+  Vendedor | Puntualidad% | Mora% | C.Riesgo% | Recuperación% | Reprog.% | Puntaje | Calificación
+- Sin barras de progreso, solo valores numéricos con el símbolo %
+- Badge de color por calificación:
+  A = verde pastel, B = celeste pastel, C = amarillo pastel,
+  D = naranja pastel, BLOQUEADO = rojo pastel
+- Filtro por calificación (select) y ordenamiento arriba de la tabla
+- Al hacer click en una fila, mostrar panel inline debajo con el detalle
+  de cada indicador: % obtenido, puntos, peso aplicado y aporte al puntaje final
+- Sin modales, todo inline en la misma página
+- KPI cards arriba mostrando: total vendedores, cuántos en A/B, cuántos en C, cuántos en D/BLOQUEADO
+
+SIDEBAR:
+En el menú de Crédito / Cobranza agregar:
+Indicadores
+  └── Calificación de Cartera
+
+PERMISOS:
+Registrar en la tabla de módulos/submódulos el nuevo submódulo
+"Indicadores > Calificación de Cartera" bajo Crédito / Cobranza
+para que aparezca en el árbol de permisos por rol.
+
+IMPORTANTE:
+- No tocar ningún archivo existente salvo el sidebar y las rutas
+- Respetar naming conventions del proyecto (snake_case en BD, PascalCase en clases)
+- Usar los modelos existentes: Vendedor, Pedido, CuotaPago, Pago
+- Todo en español siguiendo el estilo del sistema
+- Solo crear, no modificar lógica existente

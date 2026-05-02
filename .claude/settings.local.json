@@ -23,7 +23,11 @@
       "Bash(git -C /c/laragon/www/credito-cobranza add .)",
       "Bash(git -C /c/laragon/www/credito-cobranza status --short)",
       "Bash(git -C /c/laragon/www/credito-cobranza rm -r --cached VARIOS .claude)",
-      "Bash(git -C /c/laragon/www/credito-cobranza commit -m ' *)"
+      "Bash(git -C /c/laragon/www/credito-cobranza commit -m ' *)",
+      "Bash(git *)",
+      "Bash(echo \"EXIT:$?\")",
+      "Bash(sshpass *)",
+      "Bash(ssh *)"
     ]
   }
 }

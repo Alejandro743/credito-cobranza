@@ -110,6 +110,13 @@ class ModulosSubmodulosSeeder extends Seeder
                             ['name' => 'Historial de Pagos', 'slug' => 'credito-pagos-historial', 'route_name' => 'credito.pagos-historial', 'sort_order' => 3],
                         ],
                     ],
+                    [
+                        'name' => 'Indicadores', 'slug' => 'credito-indicadores',
+                        'route_name' => null, 'sort_order' => 5,
+                        'children' => [
+                            ['name' => 'Calificación de Cartera', 'slug' => 'credito-indicadores-calificacion', 'route_name' => 'credito.indicadores.calificacion', 'sort_order' => 1],
+                        ],
+                    ],
                 ],
             ],
 
