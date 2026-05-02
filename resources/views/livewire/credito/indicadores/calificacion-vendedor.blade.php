@@ -1,5 +1,6 @@
 <div>
 <style>
+@keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
 .cv-badge  { display:inline-flex; align-items:center; padding:2px 10px; border-radius:20px; font-size:11px; font-weight:700; }
 .cv-card   { background:#fff; border-radius:12px; border:1px solid #d1fae5; box-shadow:0 1px 4px rgba(0,0,0,0.04); padding:14px 16px; }
 .cv-th     { padding:8px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border:0.5px solid #d1fae5; background:#f0fdf4; color:#15803D; }
@@ -49,6 +50,16 @@
         @endforeach
     </div>
     <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+        <button wire:click="$refresh" wire:loading.class="opacity-50"
+                style="padding:5px 12px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; border:1.5px solid #d1fae5; background:#f0fdf4; color:#15803D; display:inline-flex; align-items:center; gap:5px;">
+            <svg wire:loading.remove wire:target="$refresh" style="width:12px;height:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            <svg wire:loading wire:target="$refresh" style="width:12px;height:12px;animation:spin 1s linear infinite;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            Actualizar
+        </button>
         <div style="position:relative;">
             <svg style="position:absolute; left:8px; top:50%; transform:translateY(-50%); width:12px; height:12px;"
                  fill="none" stroke="#6ee7b7" stroke-width="2" viewBox="0 0 24 24">
