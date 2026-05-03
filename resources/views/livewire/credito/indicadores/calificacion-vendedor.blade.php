@@ -275,32 +275,6 @@ $calBadge = match($v['calificacion']) {
     @endforeach
 </div>
 
-{{-- Tarjetas de indicadores con aporte --}}
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4" style="margin-bottom:20px;">
-    <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#15803D; margin:0 0 12px;">Desglose de Indicadores</p>
-    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px;">
-        @php
-        $indicadores = [
-            ['nombre'=>'Puntualidad',    'pct'=>$v['puntualidad'],  'peso'=>$pesos->peso_puntualidad,    'puntos'=>$v['puntualidad'],        'aporte'=>round($v['puntualidad']        * $pesos->peso_puntualidad    / 100, 1), 'positivo'=>true],
-            ['nombre'=>'Mora generada',  'pct'=>$v['mora'],          'peso'=>$pesos->peso_mora,           'puntos'=>100-$v['mora'],           'aporte'=>round((100-$v['mora'])         * $pesos->peso_mora           / 100, 1), 'positivo'=>$v['mora'] <= 20],
-            ['nombre'=>'C. en Riesgo',   'pct'=>$v['riesgo'],        'peso'=>$pesos->peso_riesgo,         'puntos'=>100-$v['riesgo'],         'aporte'=>round((100-$v['riesgo'])       * $pesos->peso_riesgo         / 100, 1), 'positivo'=>$v['riesgo'] <= 30],
-            ['nombre'=>'Recuperación',   'pct'=>$v['recuperacion'],  'peso'=>$pesos->peso_recuperacion,   'puntos'=>$v['recuperacion'],       'aporte'=>round($v['recuperacion']       * $pesos->peso_recuperacion   / 100, 1), 'positivo'=>true],
-            ['nombre'=>'Reprogramación', 'pct'=>$v['reprog'],        'peso'=>$pesos->peso_reprogramacion, 'puntos'=>100-$v['reprog'],         'aporte'=>round((100-$v['reprog'])       * $pesos->peso_reprogramacion / 100, 1), 'positivo'=>$v['reprog'] <= 20],
-        ];
-        @endphp
-        @foreach($indicadores as $ind)
-        <div style="background:{{ $ind['positivo'] ? '#f0fdf4' : '#fef2f2' }}; border:1px solid {{ $ind['positivo'] ? '#d1fae5' : '#fecaca' }}; border-radius:10px; padding:14px; text-align:center;">
-            <p style="font-size:10px; font-weight:700; color:{{ $ind['positivo'] ? '#15803D' : '#B91C1C' }}; text-transform:uppercase; margin:0 0 8px; letter-spacing:0.04em;">{{ $ind['nombre'] }}</p>
-            <p style="font-size:22px; font-weight:800; color:{{ $ind['positivo'] ? '#166534' : '#991B1B' }}; margin:0; font-family:monospace;">{{ $ind['pct'] }}%</p>
-            <div style="margin:8px 0; height:1px; background:{{ $ind['positivo'] ? '#d1fae5' : '#fecaca' }};"></div>
-            <p style="font-size:10px; color:#9ca3af; margin:2px 0;">Peso: <strong style="color:#374151;">{{ $ind['peso'] }}%</strong></p>
-            <p style="font-size:10px; color:#9ca3af; margin:2px 0;">Puntos netos: <strong style="color:#374151;">{{ $ind['puntos'] }}</strong></p>
-            <p style="font-size:11px; color:#9ca3af; margin:4px 0 0;">Aporte al puntaje: <strong style="color:{{ $ind['positivo'] ? '#15803D' : '#B91C1C' }};">{{ $ind['aporte'] }}</strong></p>
-        </div>
-        @endforeach
-    </div>
-</div>
-
 {{-- Tabla de pedidos --}}
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div style="padding:14px 16px; border-bottom:1px solid #f0fdf4; display:flex; align-items:center; justify-content:space-between;">
