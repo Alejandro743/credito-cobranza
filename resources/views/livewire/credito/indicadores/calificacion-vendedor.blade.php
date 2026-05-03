@@ -264,59 +264,98 @@ $kpis_detalle = [
         'bg'    => $calBadge['bg'], 'cl' => $calBadge['cl'], 'bc' => $calBadge['cl'],
         'icono' => 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z',
         'titulo_info' => 'Suma ponderada',
-        'info'  => 'Es la suma de los 5 indicadores, cada uno multiplicado por su peso configurado en Definiciones → Pesos de Indicadores.',
-        'formula' => '(Puntualidad × p%) + ((100−Mora) × p%) + ((100−Riesgo) × p%) + (Recuperación × p%) + ((100−Reprog) × p%)',
-        'nota'  => null,
+        'info'  => 'Cada indicador aporta según su peso. Los negativos (mora, riesgo, reprog.) se invierten primero.',
+        'formula' => '(Punt×25%)+((100−Mora)×25%)+((100−Riesgo)×20%)+(Recup×20%)+((100−Reprog)×10%)',
+        'ejemplo' => [
+            ['txt' => 'Puntualidad 90%', 'cal' => '90 × 0.25 = 22.5'],
+            ['txt' => 'Mora 20%',         'cal' => '(100−20) × 0.25 = 20'],
+            ['txt' => 'Riesgo 10%',       'cal' => '(100−10) × 0.20 = 18'],
+            ['txt' => 'Recuperación 80%', 'cal' => '80 × 0.20 = 16'],
+            ['txt' => 'Reprog. 0%',       'cal' => '(100−0) × 0.10 = 10'],
+            ['txt' => 'Total',            'cal' => '= 86.5 pts → A', 'bold' => true],
+        ],
+        'nota' => null,
     ],
     [
         'label' => 'Puntualidad',
         'val'   => $v['puntualidad'].' %',
         'bg'    => '#F0FDF4', 'cl' => '#15803D', 'bc' => '#d1fae5',
         'icono' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
-        'titulo_info' => 'Indicador positivo',
-        'info'  => 'De todas las cuotas cuya fecha de vencimiento ya pasó, calcula qué porcentaje fue pagado en fecha o antes.',
-        'formula' => 'Cuotas pagadas a tiempo ÷ total cuotas vencidas × 100',
-        'nota'  => '↑ Cuanto más alto, mejor puntaje.',
+        'titulo_info' => 'Indicador positivo ↑',
+        'info'  => 'Cuotas ya vencidas que fueron pagadas antes o en la fecha de vencimiento.',
+        'formula' => 'Cuotas pagadas a tiempo ÷ total vencidas × 100',
+        'ejemplo' => [
+            ['txt' => '20 cuotas vencidas',   'cal' => ''],
+            ['txt' => '18 pagadas a tiempo',  'cal' => ''],
+            ['txt' => '2 pagadas tarde',       'cal' => ''],
+            ['txt' => 'Resultado',             'cal' => '18 ÷ 20 × 100 = 90%', 'bold' => true],
+        ],
+        'nota' => '↑ A mayor puntualidad, mejor puntaje.',
     ],
     [
         'label' => 'Mora Generada',
         'val'   => $v['mora'].' %',
         'bg'    => '#FEF2F2', 'cl' => '#B91C1C', 'bc' => '#fecaca',
         'icono' => 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
-        'titulo_info' => 'Indicador negativo',
-        'info'  => 'Mide qué porcentaje de los pedidos tiene al menos una cuota vencida que todavía no fue pagada.',
-        'formula' => 'Pedidos con cuota vencida sin pagar ÷ total pedidos × 100',
-        'nota'  => '↓ Se invierte: se resta de 100 antes de ponderar. Cuanto más bajo, mejor.',
+        'titulo_info' => 'Indicador negativo ↓',
+        'info'  => 'Pedidos que tienen al menos una cuota vencida todavía sin pagar.',
+        'formula' => 'Pedidos con mora ÷ total pedidos × 100',
+        'ejemplo' => [
+            ['txt' => '5 pedidos activos',     'cal' => ''],
+            ['txt' => '2 tienen cuota vencida sin pagar', 'cal' => ''],
+            ['txt' => 'Mora',                  'cal' => '2 ÷ 5 × 100 = 40%', 'bold' => true],
+            ['txt' => 'Aporte al puntaje',     'cal' => '(100−40) × 25% = 15 pts'],
+        ],
+        'nota' => '↓ Cuanto más bajo, mejor puntaje.',
     ],
     [
         'label' => 'C. en Riesgo',
         'val'   => $v['riesgo'].' %',
         'bg'    => '#FFF7ED', 'cl' => '#C2410C', 'bc' => '#fdba74',
         'icono' => 'M13 17h8m0 0V9m0 8l-8-8-4 4-6-6',
-        'titulo_info' => 'Indicador negativo',
-        'info'  => 'Del total de saldo pendiente de cobro (vencido + futuro), calcula qué proporción ya está vencida y sin pagar.',
-        'formula' => 'Saldo vencido sin pagar ÷ (saldo vencido + saldo futuro pendiente) × 100',
-        'nota'  => '↓ Se invierte al ponderar. Un valor alto indica cartera deteriorada.',
+        'titulo_info' => 'Indicador negativo ↓',
+        'info'  => 'Del total que queda por cobrar, cuánto ya venció y no fue pagado.',
+        'formula' => 'Saldo vencido impago ÷ (vencido + saldo futuro) × 100',
+        'ejemplo' => [
+            ['txt' => 'Vencido sin pagar',    'cal' => 'Bs 500'],
+            ['txt' => 'Cuotas futuras',       'cal' => 'Bs 1.500'],
+            ['txt' => 'Total pendiente',      'cal' => 'Bs 2.000'],
+            ['txt' => 'Riesgo',               'cal' => '500 ÷ 2.000 × 100 = 25%', 'bold' => true],
+            ['txt' => 'Aporte al puntaje',    'cal' => '(100−25) × 20% = 15 pts'],
+        ],
+        'nota' => '↓ Un valor alto indica cartera deteriorada.',
     ],
     [
         'label' => 'Recuperación',
         'val'   => $v['recuperacion'].' %',
         'bg'    => '#F0FDF4', 'cl' => '#15803D', 'bc' => '#d1fae5',
         'icono' => 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15',
-        'titulo_info' => 'Indicador positivo',
-        'info'  => 'De todas las cuotas que estaban vencidas sin pagar, mide cuánto monto se logró cobrar aunque fuera con retraso.',
-        'formula' => 'Monto cobrado tardíamente ÷ total monto vencido sin pagar × 100',
-        'nota'  => '↑ Refleja capacidad de gestión de cobranza. Cuanto más alto, mejor.',
+        'titulo_info' => 'Indicador positivo ↑',
+        'info'  => 'Del monto que venció sin pagar, cuánto se logró cobrar aunque sea con retraso.',
+        'formula' => 'Cobrado tardíamente ÷ total vencido impago × 100',
+        'ejemplo' => [
+            ['txt' => 'Vencido sin pagar',    'cal' => 'Bs 1.000'],
+            ['txt' => 'Cobrado con retraso',  'cal' => 'Bs 600'],
+            ['txt' => 'Recuperación',         'cal' => '600 ÷ 1.000 × 100 = 60%', 'bold' => true],
+            ['txt' => 'Aporte al puntaje',    'cal' => '60 × 20% = 12 pts'],
+        ],
+        'nota' => '↑ Refleja gestión activa de cobranza.',
     ],
     [
         'label' => 'Reprogramación',
         'val'   => $v['reprog'].' %',
         'bg'    => '#FFFBEB', 'cl' => '#854F0B', 'bc' => '#FCD34D',
         'icono' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4',
-        'titulo_info' => 'Indicador negativo',
-        'info'  => 'Porcentaje de pedidos que tuvieron que ser reprogramados, es decir, que tienen más de una versión de plan de pago.',
-        'formula' => 'Pedidos con más de 1 versión de plan ÷ total pedidos × 100',
-        'nota'  => '↓ Se invierte al ponderar. Muchas reprogramaciones indican riesgo de cartera.',
+        'titulo_info' => 'Indicador negativo ↓',
+        'info'  => 'Pedidos que necesitaron un nuevo plan de pago porque el cliente no pudo cumplir el original.',
+        'formula' => 'Pedidos reprogramados ÷ total pedidos × 100',
+        'ejemplo' => [
+            ['txt' => '5 pedidos activos',     'cal' => ''],
+            ['txt' => '1 fue reprogramado',    'cal' => ''],
+            ['txt' => 'Reprogramación',        'cal' => '1 ÷ 5 × 100 = 20%', 'bold' => true],
+            ['txt' => 'Aporte al puntaje',     'cal' => '(100−20) × 10% = 8 pts'],
+        ],
+        'nota' => '↓ Muchas reprogramaciones indican riesgo.',
     ],
 ];
 @endphp
@@ -346,16 +385,40 @@ $kpis_detalle = [
              x-transition:enter-start="opacity-0 scale-95"
              x-transition:enter-end="opacity-100 scale-100"
              style="position:absolute; top:calc(100% + 6px); left:50%; transform:translateX(-50%); z-index:99;
-                    width:230px; background:#fff; border:1px solid {{ $kd['bc'] }}; border-radius:10px;
-                    box-shadow:0 8px 24px rgba(0,0,0,0.12); padding:12px 13px;">
+                    width:260px; background:#fff; border:1px solid {{ $kd['bc'] }}; border-radius:10px;
+                    box-shadow:0 8px 24px rgba(0,0,0,0.13); padding:12px 13px;">
+            {{-- Flecha --}}
             <div style="position:absolute; top:-6px; left:50%; width:10px; height:10px; background:#fff; border-left:1px solid {{ $kd['bc'] }}; border-top:1px solid {{ $kd['bc'] }}; transform:translateX(-50%) rotate(45deg);"></div>
-            <p style="font-size:10px; font-weight:700; color:{{ $kd['cl'] }}; text-transform:uppercase; letter-spacing:0.04em; margin:0 0 5px;">{{ $kd['titulo_info'] }}</p>
-            <p style="font-size:11px; color:#374151; margin:0 0 7px; line-height:1.5;">{{ $kd['info'] }}</p>
-            <div style="background:{{ $kd['bg'] }}; border:1px solid {{ $kd['bc'] }}; border-radius:6px; padding:5px 8px; font-size:10px; font-family:monospace; color:{{ $kd['cl'] }}; line-height:1.6; margin-bottom:{{ $kd['nota'] ? '6px' : '0' }};">
+
+            {{-- Tipo --}}
+            <p style="font-size:10px; font-weight:700; color:{{ $kd['cl'] }}; text-transform:uppercase; letter-spacing:0.04em; margin:0 0 4px;">{{ $kd['titulo_info'] }}</p>
+
+            {{-- Descripción --}}
+            <p style="font-size:11px; color:#374151; margin:0 0 7px; line-height:1.45;">{{ $kd['info'] }}</p>
+
+            {{-- Fórmula --}}
+            <div style="background:{{ $kd['bg'] }}; border:1px solid {{ $kd['bc'] }}; border-radius:6px; padding:5px 8px; font-size:10px; font-family:monospace; color:{{ $kd['cl'] }}; line-height:1.6; margin-bottom:8px;">
                 {{ $kd['formula'] }}
             </div>
+
+            {{-- Ejemplo --}}
+            <div style="border-top:1px solid {{ $kd['bc'] }}; padding-top:7px;">
+                <p style="font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#9ca3af; margin:0 0 5px;">Ejemplo</p>
+                <div style="display:flex; flex-direction:column; gap:3px;">
+                    @foreach($kd['ejemplo'] as $ej)
+                    <div style="display:flex; justify-content:space-between; align-items:baseline; gap:6px;
+                                {{ !empty($ej['bold']) ? 'border-top:1px dashed '.$kd['bc'].'; padding-top:3px; margin-top:1px;' : '' }}">
+                        <span style="font-size:10px; color:#6b7280; flex-shrink:0;">{{ $ej['txt'] }}</span>
+                        @if($ej['cal'])
+                        <span style="font-size:10px; font-family:monospace; font-weight:{{ !empty($ej['bold']) ? '700' : '500' }}; color:{{ !empty($ej['bold']) ? $kd['cl'] : '#374151' }}; text-align:right;">{{ $ej['cal'] }}</span>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
             @if($kd['nota'])
-            <p style="font-size:10px; font-weight:600; color:{{ $kd['cl'] }}; margin:0; font-style:italic;">{{ $kd['nota'] }}</p>
+            <p style="font-size:10px; font-weight:600; color:{{ $kd['cl'] }}; margin:7px 0 0; font-style:italic; border-top:1px solid {{ $kd['bc'] }}; padding-top:6px;">{{ $kd['nota'] }}</p>
             @endif
         </div>
     </div>
