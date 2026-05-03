@@ -320,44 +320,38 @@ $kpis_detalle = [
     ],
 ];
 @endphp
-<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px;">
+<div style="display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-bottom:20px;">
     @foreach($kpis_detalle as $kd)
-    <div x-data="{ open: false }"
-         style="background:{{ $kd['bg'] }}; border:1px solid {{ $kd['bc'] }}; border-radius:12px; padding:14px 14px 12px;">
-        {{-- Fila superior: icono + label + botón info --}}
-        <div style="display:flex; align-items:center; gap:7px; margin-bottom:8px;">
-            <div style="width:28px; height:28px; border-radius:8px; background:#fff; border:1px solid {{ $kd['bc'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg style="width:14px;height:14px;" fill="none" stroke="{{ $kd['cl'] }}" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ $kd['icono'] }}"/>
-                </svg>
-            </div>
-            <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:{{ $kd['cl'] }}; flex:1; line-height:1.2;">{{ $kd['label'] }}</span>
-            <button @click="open = !open"
-                    :title="open ? 'Cerrar' : 'Cómo se calcula'"
-                    style="width:20px; height:20px; border-radius:50%; border:1.5px solid {{ $kd['bc'] }}; background:#fff; color:{{ $kd['cl'] }}; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s;"
-                    :style="open ? 'background:{{ $kd['cl'] }}; color:#fff;' : ''">
-                <svg style="width:11px;height:11px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+    <div x-data="{ open: false }" @click.away="open = false"
+         style="background:{{ $kd['bg'] }}; border:1px solid {{ $kd['bc'] }}; border-radius:10px; padding:10px 12px; position:relative;">
+
+        {{-- Label + botón ⓘ --}}
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+            <span style="font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:{{ $kd['cl'] }};">{{ $kd['label'] }}</span>
+            <button @click.stop="open = !open"
+                    style="width:15px; height:15px; border-radius:50%; border:1px solid {{ $kd['bc'] }}; background:#fff; color:{{ $kd['cl'] }}; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; padding:0;">
+                <svg style="width:10px;height:10px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
             </button>
         </div>
 
-        {{-- Valor principal --}}
-        <p style="font-size:26px; font-weight:800; color:{{ $kd['cl'] }}; margin:0 0 2px; font-family:monospace; text-align:center; line-height:1;">
-            {{ $kd['val'] }}
-        </p>
+        {{-- Valor --}}
+        <p style="font-size:20px; font-weight:800; color:{{ $kd['cl'] }}; margin:0; font-family:monospace; text-align:center; line-height:1.1;">{{ $kd['val'] }}</p>
 
-        {{-- Panel info expandible --}}
-        <div x-show="open"
-             x-transition:enter="transition ease-out duration-150"
-             x-transition:enter-start="opacity-0 -translate-y-1"
-             x-transition:enter-end="opacity-100 translate-y-0"
-             style="margin-top:10px; padding-top:10px; border-top:1px solid {{ $kd['bc'] }};">
-            <p style="font-size:10px; font-weight:700; color:{{ $kd['cl'] }}; margin:0 0 4px; text-transform:uppercase; letter-spacing:0.04em;">
-                {{ $kd['titulo_info'] }}
-            </p>
-            <p style="font-size:11px; color:#374151; margin:0 0 6px; line-height:1.5;">{{ $kd['info'] }}</p>
-            <div style="background:#fff; border:1px solid {{ $kd['bc'] }}; border-radius:6px; padding:6px 8px; font-size:10px; font-family:monospace; color:{{ $kd['cl'] }}; margin-bottom:6px; line-height:1.6;">
+        {{-- Tooltip flotante --}}
+        <div x-show="open" x-cloak
+             x-transition:enter="transition ease-out duration-100"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             style="position:absolute; top:calc(100% + 6px); left:50%; transform:translateX(-50%); z-index:99;
+                    width:230px; background:#fff; border:1px solid {{ $kd['bc'] }}; border-radius:10px;
+                    box-shadow:0 8px 24px rgba(0,0,0,0.12); padding:12px 13px;">
+            {{-- Flecha --}}
+            <div style="position:absolute; top:-6px; left:50%; transform:translateX(-50%); width:10px; height:10px; background:#fff; border-left:1px solid {{ $kd['bc'] }}; border-top:1px solid {{ $kd['bc'] }}; transform:translateX(-50%) rotate(45deg);"></div>
+            <p style="font-size:10px; font-weight:700; color:{{ $kd['cl'] }}; text-transform:uppercase; letter-spacing:0.04em; margin:0 0 5px;">{{ $kd['titulo_info'] }}</p>
+            <p style="font-size:11px; color:#374151; margin:0 0 7px; line-height:1.5;">{{ $kd['info'] }}</p>
+            <div style="background:{{ $kd['bg'] }}; border:1px solid {{ $kd['bc'] }}; border-radius:6px; padding:5px 8px; font-size:10px; font-family:monospace; color:{{ $kd['cl'] }}; line-height:1.6; margin-bottom:{{ $kd['nota'] ? '6px' : '0' }};">
                 {{ $kd['formula'] }}
             </div>
             @if($kd['nota'])
