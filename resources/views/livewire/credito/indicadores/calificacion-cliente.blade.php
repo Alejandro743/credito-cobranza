@@ -376,6 +376,7 @@ $kpis_detalle = [
         <thead>
             <tr style="background:#f0fdf4;">
                 <th style="padding:8px 12px; text-align:left; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5;">Pedido</th>
+                <th style="padding:8px 12px; text-align:left; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5;">Vendedor</th>
                 <th style="padding:8px 12px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:130px;">Cuotas (al día / venc.)</th>
                 <th style="padding:8px 12px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:95px;">Puntualidad</th>
                 <th style="padding:8px 12px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:70px;">Mora</th>
@@ -392,6 +393,7 @@ $kpis_detalle = [
         @endphp
         <tr style="border-bottom:0.5px solid #e5e7eb;">
             <td style="padding:10px 12px; font-weight:700; color:#374151; font-family:monospace;">{{ $ped['numero'] }}</td>
+            <td style="padding:10px 12px; color:#374151;">{{ ucwords(mb_strtolower($ped['vendedor'])) }}</td>
             <td style="padding:10px 12px; text-align:center; color:#6b7280; font-family:monospace;">
                 {{ $ped['al_dia'] }}/{{ $ped['cerradas'] }}
                 <span style="color:#9ca3af; font-size:10px;">({{ $ped['total_cuotas'] }} total)</span>

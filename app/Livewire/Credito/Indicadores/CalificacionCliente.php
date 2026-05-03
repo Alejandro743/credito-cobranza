@@ -117,7 +117,7 @@ class CalificacionCliente extends Component
 
         return Pedido::where('cliente_id', $clienteId)
             ->where('estado', 'aprobado')
-            ->with(['planPago.cuotas', 'planes'])
+            ->with(['planPago.cuotas', 'planes', 'vendedor'])
             ->get()
             ->filter(fn($p) => $p->planPago !== null)
             ->map(function (Pedido $p) use ($hoy) {
@@ -140,6 +140,7 @@ class CalificacionCliente extends Component
 
                 return [
                     'numero'       => $p->numero,
+                    'vendedor'     => $p->vendedor?->nombre_completo ?? '—',
                     'total_cuotas' => $cuotas->count(),
                     'cerradas'     => $nCerradas,
                     'al_dia'       => $nATiempo,
