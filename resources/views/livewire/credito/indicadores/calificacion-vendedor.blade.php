@@ -245,12 +245,12 @@ $calBadge = match($v['calificacion']) {
         </button>
         <div style="flex:1; text-align:center;">
             <div style="display:inline-flex; align-items:center; gap:10px; justify-content:center;">
-                <p style="font-size:16px; font-weight:800; color:#166534; margin:0; letter-spacing:-0.01em;">Calificación de Cartera</p>
+                <p style="font-size:17px; font-weight:800; color:#166534; margin:0; letter-spacing:-0.01em;">{{ $v['nombre'] }}</p>
                 <div style="width:36px; height:36px; border-radius:50%; background:{{ $calBadge['bg'] }}; border:2px solid {{ $calBadge['cl'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                     <span style="font-size:14px; font-weight:800; color:{{ $calBadge['cl'] }}; line-height:1;">{{ $v['calificacion'] }}</span>
                 </div>
             </div>
-            <p style="font-size:13px; font-weight:600; color:#6b7280; margin:3px 0 0;">{{ $v['nombre'] }}</p>
+            <p style="font-size:11px; font-weight:500; color:#9ca3af; margin:3px 0 0;">Calificación de Cartera</p>
         </div>
         <div style="width:90px;">
         </div>
