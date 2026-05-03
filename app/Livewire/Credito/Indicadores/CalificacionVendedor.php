@@ -182,7 +182,8 @@ class CalificacionVendedor extends Component
 
         $kpis = [
             'total' => $todos->count(),
-            'ab'    => $todos->whereIn('calificacion', ['A', 'B'])->count(),
+            'a'     => $todos->where('calificacion', 'A')->count(),
+            'b'     => $todos->where('calificacion', 'B')->count(),
             'c'     => $todos->where('calificacion', 'C')->count(),
             'db'    => $todos->whereIn('calificacion', ['D', 'BLOQUEADO'])->count(),
         ];
