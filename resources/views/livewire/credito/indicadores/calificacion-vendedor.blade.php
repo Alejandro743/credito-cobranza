@@ -7,6 +7,7 @@
 </style>
 
 @if($mode === 'list')
+<div x-data="{ infoOpen: false }">
 
 {{-- KPI Cards --}}
 <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:20px;">
@@ -75,6 +76,79 @@
             <option value="puntaje_asc">Menor puntaje</option>
             <option value="nombre">Nombre A-Z</option>
         </select>
+
+        <button @click="infoOpen = !infoOpen"
+                style="padding:5px 11px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; border:1.5px solid #d1fae5; display:inline-flex; align-items:center; gap:5px;"
+                :style="infoOpen ? 'background:#f0fdf4; color:#15803D;' : 'background:#fff; color:#6b7280;'">
+            <svg style="width:13px;height:13px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Cómo se calcula
+        </button>
+    </div>
+</div>
+
+{{-- Panel explicativo de la fórmula --}}
+<div x-show="infoOpen" x-transition:enter="transition ease-out duration-150"
+     x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
+     style="background:#fff; border:1px solid #d1fae5; border-radius:14px; padding:18px 20px; margin-bottom:16px;">
+
+    <p style="font-size:12px; font-weight:800; color:#15803D; margin:0 0 14px; text-transform:uppercase; letter-spacing:0.05em;">
+        Fórmula de calificación de cartera
+    </p>
+
+    {{-- 5 indicadores --}}
+    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-bottom:16px;">
+        @php
+        $infoIndicadores = [
+            ['nombre'=>'Puntualidad',    'peso'=>$pesos->peso_puntualidad,    'bg'=>'#F0FDF4','cl'=>'#15803D','bc'=>'#d1fae5',
+             'formula'=>'Cuotas pagadas antes o en fecha / total cuotas vencidas × 100',
+             'contribuye'=>'Positivo — a mayor puntualidad, mejor puntaje'],
+            ['nombre'=>'Mora Generada',  'peso'=>$pesos->peso_mora,           'bg'=>'#FEF2F2','cl'=>'#B91C1C','bc'=>'#fecaca',
+             'formula'=>'Pedidos con al menos 1 cuota vencida sin pagar / total pedidos × 100',
+             'contribuye'=>'Negativo — se invierte: (100 − mora%) × peso'],
+            ['nombre'=>'Cartera en Riesgo','peso'=>$pesos->peso_riesgo,       'bg'=>'#FFF7ED','cl'=>'#C2410C','bc'=>'#fdba74',
+             'formula'=>'Saldo vencido sin pagar / (saldo vencido + saldo futuro) × 100',
+             'contribuye'=>'Negativo — se invierte: (100 − riesgo%) × peso'],
+            ['nombre'=>'Recuperación',   'peso'=>$pesos->peso_recuperacion,   'bg'=>'#F0FDF4','cl'=>'#15803D','bc'=>'#d1fae5',
+             'formula'=>'Monto recuperado con pago tardío / monto total vencido sin pagar × 100',
+             'contribuye'=>'Positivo — a mayor recuperación, mejor puntaje'],
+            ['nombre'=>'Reprogramación', 'peso'=>$pesos->peso_reprogramacion, 'bg'=>'#FFFBEB','cl'=>'#854F0B','bc'=>'#FCD34D',
+             'formula'=>'Pedidos con más de 1 versión de plan / total pedidos × 100',
+             'contribuye'=>'Negativo — se invierte: (100 − reprog%) × peso'],
+        ];
+        @endphp
+        @foreach($infoIndicadores as $ii)
+        <div style="background:{{ $ii['bg'] }}; border:1px solid {{ $ii['bc'] }}; border-radius:10px; padding:10px 11px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+                <span style="font-size:10px; font-weight:700; color:{{ $ii['cl'] }}; text-transform:uppercase; letter-spacing:0.03em;">{{ $ii['nombre'] }}</span>
+                <span style="font-size:11px; font-weight:800; color:{{ $ii['cl'] }}; background:#fff; border:1px solid {{ $ii['bc'] }}; border-radius:8px; padding:1px 7px;">{{ $ii['peso'] }}%</span>
+            </div>
+            <p style="font-size:10px; color:#6b7280; margin:0 0 4px; line-height:1.4;">{{ $ii['formula'] }}</p>
+            <p style="font-size:10px; color:{{ $ii['cl'] }}; font-style:italic; margin:0;">{{ $ii['contribuye'] }}</p>
+        </div>
+        @endforeach
+    </div>
+
+    {{-- Fórmula del puntaje --}}
+    <div style="background:#f0fdf4; border:1px solid #d1fae5; border-radius:10px; padding:10px 14px; margin-bottom:14px; font-size:11px; color:#166534; font-family:monospace; line-height:1.8;">
+        <span style="font-weight:700; font-family:sans-serif; font-size:10px; text-transform:uppercase; letter-spacing:0.05em; color:#15803D;">Puntaje =&nbsp;</span>
+        (Puntualidad × {{ $pesos->peso_puntualidad }}%) +
+        ((100 − Mora%) × {{ $pesos->peso_mora }}%) +
+        ((100 − Riesgo%) × {{ $pesos->peso_riesgo }}%) +
+        (Recuperación × {{ $pesos->peso_recuperacion }}%) +
+        ((100 − Reprog%) × {{ $pesos->peso_reprogramacion }}%)
+    </div>
+
+    {{-- Umbrales de calificación vigentes --}}
+    <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+        <span style="font-size:10px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.04em; margin-right:4px;">Calificación vigente:</span>
+        <span style="font-size:11px; font-weight:700; padding:3px 12px; border-radius:10px; background:#DCFCE7; color:#15803D;">A ≥ {{ $rangos->min_a }}</span>
+        <span style="font-size:11px; font-weight:700; padding:3px 12px; border-radius:10px; background:#ECFEFF; color:#0e7490;">B ≥ {{ $rangos->min_b }}</span>
+        <span style="font-size:11px; font-weight:700; padding:3px 12px; border-radius:10px; background:#FEF3C7; color:#854F0B;">C ≥ {{ $rangos->min_c }}</span>
+        <span style="font-size:11px; font-weight:700; padding:3px 12px; border-radius:10px; background:#FFF7ED; color:#C2410C;">D ≥ {{ $rangos->min_d }}</span>
+        <span style="font-size:11px; font-weight:700; padding:3px 12px; border-radius:10px; background:#FEF2F2; color:#B91C1C;">BLOQUEADO &lt; {{ $rangos->min_d }}</span>
+        <span style="font-size:10px; color:#9ca3af; margin-left:4px;">— configuración: <em>{{ $rangos->nombre ?? 'Por Defecto' }}</em></span>
     </div>
 </div>
 
@@ -145,6 +219,8 @@
     </table>
     </div>
 </div>
+
+</div>{{-- /x-data infoOpen --}}
 
 @elseif($mode === 'detalle' && $vendedorDetalle)
 @php

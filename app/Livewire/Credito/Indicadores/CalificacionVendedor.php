@@ -188,6 +188,6 @@ class CalificacionVendedor extends Component
         ];
 
         return view('livewire.credito.indicadores.calificacion-vendedor',
-            compact('vendedores', 'kpis', 'pesos', 'vendedorDetalle', 'detallePedidos'));
+            compact('vendedores', 'kpis', 'pesos', 'rangos', 'vendedorDetalle', 'detallePedidos'));
     }
 }
