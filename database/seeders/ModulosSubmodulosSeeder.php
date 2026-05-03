@@ -116,7 +116,8 @@ class ModulosSubmodulosSeeder extends Seeder
                         'name' => 'Indicadores', 'slug' => 'credito-indicadores',
                         'route_name' => null, 'sort_order' => 5,
                         'children' => [
-                            ['name' => 'Calificación de Cartera', 'slug' => 'credito-indicadores-calificacion', 'route_name' => 'credito.indicadores.calificacion', 'sort_order' => 1],
+                            ['name' => 'Calificación de Cartera',  'slug' => 'credito-indicadores-calificacion',         'route_name' => 'credito.indicadores.calificacion',         'sort_order' => 1],
+                            ['name' => 'Calificación de Clientes', 'slug' => 'credito-indicadores-calificacion-clientes', 'route_name' => 'credito.indicadores.calificacion-clientes', 'sort_order' => 2],
                         ],
                     ],
                 ],

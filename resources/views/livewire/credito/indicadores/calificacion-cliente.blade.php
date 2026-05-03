@@ -1,0 +1,429 @@
+<div>
+<style>
+@keyframes spin { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+.cc-badge { display:inline-flex; align-items:center; padding:2px 10px; border-radius:20px; font-size:11px; font-weight:700; }
+.cc-th    { padding:8px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.5px; border:0.5px solid #d1fae5; background:#f0fdf4; color:#15803D; }
+.cc-td    { padding:9px 12px; font-size:12px; border:0.5px solid #e5e7eb; color:#374151; }
+</style>
+
+@if($mode === 'list')
+<div>
+
+{{-- KPI Cards --}}
+<div style="display:grid; grid-template-columns:repeat(5,1fr); gap:12px; margin-bottom:20px;">
+    @php
+    $kpiCfg = [
+        ['label'=>'Total Clientes', 'val'=>$kpis['total'],'bg'=>'#F0FDF4','cl'=>'#15803D','bc'=>'#d1fae5'],
+        ['label'=>'Calificación A', 'val'=>$kpis['a'],    'bg'=>'#DCFCE7','cl'=>'#15803D','bc'=>'#6ee7b7'],
+        ['label'=>'Calificación B', 'val'=>$kpis['b'],    'bg'=>'#ECFEFF','cl'=>'#0e7490','bc'=>'#67e8f9'],
+        ['label'=>'Calificación C', 'val'=>$kpis['c'],    'bg'=>'#FFFBEB','cl'=>'#854F0B','bc'=>'#FCD34D'],
+        ['label'=>'D / Bloqueado',  'val'=>$kpis['db'],   'bg'=>'#FEF2F2','cl'=>'#B91C1C','bc'=>'#FCA5A5'],
+    ];
+    @endphp
+    @foreach($kpiCfg as $k)
+    <div style="background:{{ $k['bg'] }}; border:1px solid {{ $k['bc'] }}; border-radius:12px; padding:14px 16px; text-align:center;">
+        <p style="font-size:10px; font-weight:600; text-transform:uppercase; letter-spacing:0.4px; color:{{ $k['cl'] }}; margin:0 0 6px;">{{ $k['label'] }}</p>
+        <p style="font-size:26px; font-weight:800; color:{{ $k['cl'] }}; margin:0; font-family:monospace;">{{ $k['val'] }}</p>
+    </div>
+    @endforeach
+</div>
+
+{{-- Filtros y ordenamiento --}}
+<div style="display:flex; align-items:center; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
+    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        @foreach(['todos'=>'Todos','A'=>'A','B'=>'B','C'=>'C','D'=>'D','BLOQUEADO'=>'Bloqueado'] as $val=>$lbl)
+        @php
+        $activo = $filtroCalificacion === $val;
+        $cfg = match($val) {
+            'A'         => ['bo'=>'#6ee7b7','bg'=>'#DCFCE7','cl'=>'#15803D'],
+            'B'         => ['bo'=>'#67e8f9','bg'=>'#ECFEFF','cl'=>'#0e7490'],
+            'C'         => ['bo'=>'#FCD34D','bg'=>'#FEF3C7','cl'=>'#854F0B'],
+            'D'         => ['bo'=>'#fdba74','bg'=>'#FFF7ED','cl'=>'#C2410C'],
+            'BLOQUEADO' => ['bo'=>'#fca5a5','bg'=>'#FEF2F2','cl'=>'#B91C1C'],
+            default     => ['bo'=>'#d1fae5','bg'=>'#F0FDF4','cl'=>'#15803D'],
+        };
+        @endphp
+        <button wire:click="$set('filtroCalificacion','{{ $val }}')"
+                style="padding:5px 12px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer;
+                       border:1.5px solid {{ $activo ? $cfg['bo'] : '#e5e7eb' }};
+                       background:{{ $activo ? $cfg['bg'] : '#fff' }};
+                       color:{{ $activo ? $cfg['cl'] : '#6b7280' }};">
+            {{ $lbl }}
+        </button>
+        @endforeach
+    </div>
+    <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+        <button wire:click="$refresh" wire:loading.class="opacity-50"
+                style="padding:5px 12px; border-radius:6px; font-size:11px; font-weight:600; cursor:pointer; border:1.5px solid #d1fae5; background:#f0fdf4; color:#15803D; display:inline-flex; align-items:center; gap:5px;">
+            <svg wire:loading.remove wire:target="$refresh" style="width:12px;height:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            <svg wire:loading wire:target="$refresh" style="width:12px;height:12px;animation:spin 1s linear infinite;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+            </svg>
+            Actualizar
+        </button>
+        <div style="position:relative;">
+            <svg style="position:absolute; left:8px; top:50%; transform:translateY(-50%); width:12px; height:12px;"
+                 fill="none" stroke="#6ee7b7" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input wire:model.live.debounce.300ms="buscarCliente" type="text" placeholder="Buscar cliente..."
+                   style="padding:5px 10px 5px 26px; border-radius:6px; font-size:11px; border:1.5px solid #d1fae5; background:#f9fffe; color:#374151; outline:none; width:170px;" />
+        </div>
+        <select wire:model.live="ordenar"
+                style="padding:5px 10px; border-radius:6px; font-size:11px; border:1px solid #d1fae5; background:#f9fffe; color:#374151; cursor:pointer;">
+            <option value="puntaje_desc">Mayor puntaje</option>
+            <option value="puntaje_asc">Menor puntaje</option>
+            <option value="nombre">Nombre A-Z</option>
+        </select>
+    </div>
+</div>
+
+{{-- Tabla --}}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div style="overflow-x:auto;">
+    <table style="border-collapse:separate; border-spacing:0; width:100%; min-width:820px;">
+        <thead>
+            <tr>
+                <th class="cc-th" style="text-align:left;">Cliente</th>
+                <th class="cc-th" style="text-align:center; width:100px;">Puntualidad%</th>
+                <th class="cc-th" style="text-align:center; width:80px;">Mora%</th>
+                <th class="cc-th" style="text-align:center; width:90px;">C.Riesgo%</th>
+                <th class="cc-th" style="text-align:center; width:100px;">Recuperación%</th>
+                <th class="cc-th" style="text-align:center; width:80px;">Reprog.%</th>
+                <th class="cc-th" style="text-align:center; width:80px;">Puntaje</th>
+                <th class="cc-th" style="text-align:center; width:100px;">Calificación</th>
+                <th class="cc-th" style="text-align:center; width:80px;">Detalle</th>
+            </tr>
+        </thead>
+        <tbody>
+        @forelse($clientes as $c)
+        @php
+        $calBadge = match($c['calificacion']) {
+            'A'         => ['bg'=>'#DCFCE7','cl'=>'#15803D'],
+            'B'         => ['bg'=>'#ECFEFF','cl'=>'#0e7490'],
+            'C'         => ['bg'=>'#FEF3C7','cl'=>'#854F0B'],
+            'D'         => ['bg'=>'#FFF7ED','cl'=>'#C2410C'],
+            'BLOQUEADO' => ['bg'=>'#FEF2F2','cl'=>'#B91C1C'],
+            default     => ['bg'=>'#f3f4f6','cl'=>'#6b7280'],
+        };
+        @endphp
+        <tr wire:key="c-{{ $c['id'] }}">
+            <td class="cc-td" style="font-weight:600; color:#166534;">
+                {{ ucwords(mb_strtolower($c['nombre'])) }}
+                <span style="font-size:10px; color:#9ca3af; font-weight:400;">({{ $c['total_pedidos'] }} ped.)</span>
+            </td>
+            <td class="cc-td" style="text-align:center; font-family:monospace; font-weight:600;">{{ $c['puntualidad'] }}%</td>
+            <td class="cc-td" style="text-align:center; font-family:monospace; font-weight:600; color:{{ $c['mora'] > 20 ? '#B91C1C' : '#374151' }};">{{ $c['mora'] }}%</td>
+            <td class="cc-td" style="text-align:center; font-family:monospace; font-weight:600; color:{{ $c['riesgo'] > 30 ? '#C2410C' : '#374151' }};">{{ $c['riesgo'] }}%</td>
+            <td class="cc-td" style="text-align:center; font-family:monospace; font-weight:600;">{{ $c['recuperacion'] }}%</td>
+            <td class="cc-td" style="text-align:center; font-family:monospace; font-weight:600; color:{{ $c['reprog'] > 20 ? '#C2410C' : '#374151' }};">{{ $c['reprog'] }}%</td>
+            <td class="cc-td" style="text-align:center; font-family:monospace; font-size:14px; font-weight:800; color:#166534;">{{ $c['puntaje'] }}</td>
+            <td class="cc-td" style="text-align:center;">
+                <span class="cc-badge" style="background:{{ $calBadge['bg'] }}; color:{{ $calBadge['cl'] }};">
+                    {{ $c['calificacion'] }}
+                </span>
+            </td>
+            <td class="cc-td" style="text-align:center;">
+                <button wire:click="verDetalle({{ $c['id'] }})" title="Ver detalle"
+                        style="padding:4px 10px; border-radius:6px; border:1px solid #d1fae5; background:#f0fdf4; color:#15803D; cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600;">
+                    <svg style="width:13px;height:13px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                    Ver
+                </button>
+            </td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="9" style="padding:40px; text-align:center; color:#9ca3af; font-size:13px;">
+                No hay clientes con pedidos aprobados.
+            </td>
+        </tr>
+        @endforelse
+        </tbody>
+    </table>
+    </div>
+</div>
+
+</div>
+
+@elseif($mode === 'detalle' && $clienteDetalle)
+@php
+$v = $clienteDetalle;
+$calBadge = match($v['calificacion']) {
+    'A'         => ['bg'=>'#DCFCE7','cl'=>'#15803D'],
+    'B'         => ['bg'=>'#ECFEFF','cl'=>'#0e7490'],
+    'C'         => ['bg'=>'#FEF3C7','cl'=>'#854F0B'],
+    'D'         => ['bg'=>'#FFF7ED','cl'=>'#C2410C'],
+    'BLOQUEADO' => ['bg'=>'#FEF2F2','cl'=>'#B91C1C'],
+    default     => ['bg'=>'#f3f4f6','cl'=>'#6b7280'],
+};
+@endphp
+
+{{-- Header con Volver --}}
+<div style="background:#f0fdf4; border:1px solid #d1fae5; border-radius:14px; padding:14px 18px; margin-bottom:20px;">
+    <div style="display:flex; align-items:center; gap:10px;">
+        <button wire:click="backToList"
+                style="display:inline-flex; align-items:center; gap:5px; background:#fff; border:1.5px solid #d1fae5; border-radius:20px; padding:5px 14px 5px 10px; cursor:pointer;">
+            <svg width="14" height="14" fill="none" stroke="#15803D" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 18l-6-6 6-6"/></svg>
+            <span style="font-size:11px; font-weight:700; color:#15803D;">Volver</span>
+        </button>
+        <div style="flex:1; text-align:center;">
+            <p style="font-size:17px; font-weight:800; color:#166534; margin:0; letter-spacing:-0.01em;">{{ ucwords(mb_strtolower($v['nombre'])) }}</p>
+            <div style="display:inline-flex; align-items:center; gap:8px; justify-content:center; margin-top:3px;">
+                <p style="font-size:11px; font-weight:500; color:#9ca3af; margin:0;">Calificación de Clientes</p>
+                <div style="width:22px; height:22px; border-radius:50%; background:{{ $calBadge['bg'] }}; border:1.5px solid {{ $calBadge['cl'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <span style="font-size:10px; font-weight:800; color:{{ $calBadge['cl'] }}; line-height:1;">{{ $v['calificacion'] }}</span>
+                </div>
+            </div>
+        </div>
+        <div style="width:90px;"></div>
+    </div>
+</div>
+
+{{-- KPIs con info expandible --}}
+@php
+$kpis_detalle = [
+    [
+        'label' => 'Puntaje Final',
+        'val'   => $v['puntaje'].' pts',
+        'bg'    => $calBadge['bg'], 'cl' => $calBadge['cl'], 'bc' => $calBadge['cl'],
+        'icono' => 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z',
+        'titulo_info' => 'Suma ponderada',
+        'info'  => 'Cada indicador aporta según su peso. Los negativos (mora, riesgo, reprog.) se invierten primero.',
+        'formula' => '(Punt×25%)+((100−Mora)×25%)+((100−Riesgo)×20%)+(Recup×20%)+((100−Reprog)×10%)',
+        'ejemplo' => [
+            ['txt' => 'Puntualidad 90%', 'cal' => '90 × 0.25 = 22.5'],
+            ['txt' => 'Mora 20%',         'cal' => '(100−20) × 0.25 = 20'],
+            ['txt' => 'Riesgo 10%',       'cal' => '(100−10) × 0.20 = 18'],
+            ['txt' => 'Recuperación 80%', 'cal' => '80 × 0.20 = 16'],
+            ['txt' => 'Reprog. 0%',       'cal' => '(100−0) × 0.10 = 10'],
+            ['txt' => 'Total',            'cal' => '= 86.5 pts → A', 'bold' => true],
+        ],
+        'nota' => null,
+    ],
+    [
+        'label' => 'Puntualidad',
+        'val'   => $v['puntualidad'].' %',
+        'bg'    => '#F0FDF4', 'cl' => '#15803D', 'bc' => '#d1fae5',
+        'icono' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
+        'titulo_info' => 'Indicador positivo ↑',
+        'info'  => 'Cuotas ya vencidas que fueron pagadas antes o en la fecha de vencimiento.',
+        'formula' => 'Cuotas pagadas a tiempo ÷ total vencidas × 100',
+        'ejemplo' => [
+            ['txt' => '20 cuotas vencidas',   'cal' => ''],
+            ['txt' => '18 pagadas a tiempo',  'cal' => ''],
+            ['txt' => '2 pagadas tarde',       'cal' => ''],
+            ['txt' => 'Resultado',             'cal' => '18 ÷ 20 × 100 = 90%', 'bold' => true],
+        ],
+        'nota' => '↑ A mayor puntualidad, mejor puntaje.',
+    ],
+    [
+        'label' => 'Mora Generada',
+        'val'   => $v['mora'].' %',
+        'bg'    => '#FEF2F2', 'cl' => '#B91C1C', 'bc' => '#fecaca',
+        'icono' => 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+        'titulo_info' => 'Indicador negativo ↓',
+        'info'  => 'Pedidos que tienen al menos una cuota vencida todavía sin pagar.',
+        'formula' => 'Pedidos con mora ÷ total pedidos × 100',
+        'ejemplo' => [
+            ['txt' => '5 pedidos activos',     'cal' => ''],
+            ['txt' => '2 tienen cuota vencida sin pagar', 'cal' => ''],
+            ['txt' => 'Mora',                  'cal' => '2 ÷ 5 × 100 = 40%', 'bold' => true],
+            ['txt' => 'Aporte al puntaje',     'cal' => '(100−40) × 25% = 15 pts'],
+        ],
+        'nota' => '↓ Cuanto más bajo, mejor puntaje.',
+    ],
+    [
+        'label' => 'C. en Riesgo',
+        'val'   => $v['riesgo'].' %',
+        'bg'    => '#FFF7ED', 'cl' => '#C2410C', 'bc' => '#fdba74',
+        'icono' => 'M13 17h8m0 0V9m0 8l-8-8-4 4-6-6',
+        'titulo_info' => 'Indicador negativo ↓',
+        'info'  => 'Del total que queda por cobrar, cuánto ya venció y no fue pagado.',
+        'formula' => 'Saldo vencido impago ÷ (vencido + saldo futuro) × 100',
+        'ejemplo' => [
+            ['txt' => 'Vencido sin pagar',    'cal' => 'Bs 500'],
+            ['txt' => 'Cuotas futuras',       'cal' => 'Bs 1.500'],
+            ['txt' => 'Total pendiente',      'cal' => 'Bs 2.000'],
+            ['txt' => 'Riesgo',               'cal' => '500 ÷ 2.000 × 100 = 25%', 'bold' => true],
+            ['txt' => 'Aporte al puntaje',    'cal' => '(100−25) × 20% = 15 pts'],
+        ],
+        'nota' => '↓ Un valor alto indica cartera deteriorada.',
+    ],
+    [
+        'label' => 'Recuperación',
+        'val'   => $v['recuperacion'].' %',
+        'bg'    => '#F0FDF4', 'cl' => '#15803D', 'bc' => '#d1fae5',
+        'icono' => 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15',
+        'titulo_info' => 'Indicador positivo ↑',
+        'info'  => 'Del monto que venció sin pagar, cuánto se logró cobrar aunque sea con retraso.',
+        'formula' => 'Cobrado tardíamente ÷ total vencido impago × 100',
+        'ejemplo' => [
+            ['txt' => 'Vencido sin pagar',    'cal' => 'Bs 1.000'],
+            ['txt' => 'Cobrado con retraso',  'cal' => 'Bs 600'],
+            ['txt' => 'Recuperación',         'cal' => '600 ÷ 1.000 × 100 = 60%', 'bold' => true],
+            ['txt' => 'Aporte al puntaje',    'cal' => '60 × 20% = 12 pts'],
+        ],
+        'nota' => '↑ Refleja gestión activa de cobranza.',
+    ],
+    [
+        'label' => 'Reprogramación',
+        'val'   => $v['reprog'].' %',
+        'bg'    => '#FFFBEB', 'cl' => '#854F0B', 'bc' => '#FCD34D',
+        'icono' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4',
+        'titulo_info' => 'Indicador negativo ↓',
+        'info'  => 'Pedidos que necesitaron un nuevo plan de pago porque el cliente no pudo cumplir el original.',
+        'formula' => 'Pedidos reprogramados ÷ total pedidos × 100',
+        'ejemplo' => [
+            ['txt' => '5 pedidos activos',     'cal' => ''],
+            ['txt' => '1 fue reprogramado',    'cal' => ''],
+            ['txt' => 'Reprogramación',        'cal' => '1 ÷ 5 × 100 = 20%', 'bold' => true],
+            ['txt' => 'Aporte al puntaje',     'cal' => '(100−20) × 10% = 8 pts'],
+        ],
+        'nota' => '↓ Muchas reprogramaciones indican riesgo.',
+    ],
+];
+@endphp
+<div x-data="{ activeKpi: null }" @click.away="activeKpi = null"
+     style="display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-bottom:20px;">
+    @foreach($kpis_detalle as $kd)
+    @php
+        $idx = $loop->index;
+        if ($loop->index <= 1) {
+            $tipPos   = 'left:0; transform:none;';
+            $arrowPos = 'left:16px; transform:rotate(45deg);';
+        } elseif ($loop->index >= 4) {
+            $tipPos   = 'right:0; left:auto; transform:none;';
+            $arrowPos = 'right:16px; left:auto; transform:rotate(45deg);';
+        } else {
+            $tipPos   = 'left:50%; transform:translateX(-50%);';
+            $arrowPos = 'left:50%; transform:translateX(-50%) rotate(45deg);';
+        }
+    @endphp
+    <div style="background:{{ $kd['bg'] }}; border:1px solid {{ $kd['bc'] }}; border-radius:10px; padding:10px 12px; position:relative;">
+
+        {{-- Label + botón ⓘ --}}
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+            <span style="font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:{{ $kd['cl'] }};">{{ $kd['label'] }}</span>
+            <button @click.stop="activeKpi = activeKpi === {{ $idx }} ? null : {{ $idx }}"
+                    style="width:15px; height:15px; border-radius:50%; border:1px solid {{ $kd['bc'] }}; background:#fff; color:{{ $kd['cl'] }}; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; padding:0;">
+                <svg style="width:10px;height:10px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </button>
+        </div>
+
+        {{-- Valor --}}
+        <p style="font-size:20px; font-weight:800; color:{{ $kd['cl'] }}; margin:0; font-family:monospace; text-align:center; line-height:1.1;">{{ $kd['val'] }}</p>
+
+        {{-- Tooltip flotante --}}
+        <div x-show="activeKpi === {{ $idx }}" x-cloak
+             x-transition:enter="transition ease-out duration-100"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             style="position:absolute; top:calc(100% + 6px); {{ $tipPos }} z-index:9999;
+                    width:260px; background:#fff; border:1px solid {{ $kd['bc'] }}; border-radius:10px;
+                    box-shadow:0 8px 24px rgba(0,0,0,0.13); padding:12px 13px;">
+            {{-- Flecha --}}
+            <div style="position:absolute; top:-6px; {{ $arrowPos }} width:10px; height:10px; background:#fff; border-left:1px solid {{ $kd['bc'] }}; border-top:1px solid {{ $kd['bc'] }};"></div>
+
+            <p style="font-size:10px; font-weight:700; color:{{ $kd['cl'] }}; text-transform:uppercase; letter-spacing:0.04em; margin:0 0 4px;">{{ $kd['titulo_info'] }}</p>
+            <p style="font-size:11px; color:#374151; margin:0 0 7px; line-height:1.45;">{{ $kd['info'] }}</p>
+
+            <div style="background:{{ $kd['bg'] }}; border:1px solid {{ $kd['bc'] }}; border-radius:6px; padding:5px 8px; font-size:10px; font-family:monospace; color:{{ $kd['cl'] }}; line-height:1.6; margin-bottom:8px;">
+                {{ $kd['formula'] }}
+            </div>
+
+            <div style="border-top:1px solid {{ $kd['bc'] }}; padding-top:7px;">
+                <p style="font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#9ca3af; margin:0 0 5px;">Ejemplo</p>
+                <div style="display:flex; flex-direction:column; gap:3px;">
+                    @foreach($kd['ejemplo'] as $ej)
+                    <div style="display:flex; justify-content:space-between; align-items:baseline; gap:6px;
+                                {{ !empty($ej['bold']) ? 'border-top:1px dashed '.$kd['bc'].'; padding-top:3px; margin-top:1px;' : '' }}">
+                        <span style="font-size:10px; color:#6b7280; flex-shrink:0;">{{ $ej['txt'] }}</span>
+                        @if($ej['cal'])
+                        <span style="font-size:10px; font-family:monospace; font-weight:{{ !empty($ej['bold']) ? '700' : '500' }}; color:{{ !empty($ej['bold']) ? $kd['cl'] : '#374151' }}; text-align:right;">{{ $ej['cal'] }}</span>
+                        @endif
+                    </div>
+                    @endforeach
+                </div>
+            </div>
+
+            @if($kd['nota'])
+            <p style="font-size:10px; font-weight:600; color:{{ $kd['cl'] }}; margin:7px 0 0; font-style:italic; border-top:1px solid {{ $kd['bc'] }}; padding-top:6px;">{{ $kd['nota'] }}</p>
+            @endif
+        </div>
+    </div>
+    @endforeach
+</div>
+
+{{-- Tabla de pedidos --}}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <div style="padding:14px 16px; border-bottom:1px solid #f0fdf4; display:flex; align-items:center; justify-content:space-between;">
+        <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#15803D; margin:0;">
+            Pedidos individuales
+            <span style="font-weight:400; color:#9ca3af;">({{ $detallePedidos->count() }})</span>
+        </p>
+        <span style="font-size:11px; color:#6b7280;">Total pedidos activos con plan: {{ $v['total_pedidos'] }}</span>
+    </div>
+    @if($detallePedidos->isNotEmpty())
+    <div style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; font-size:12px;">
+        <thead>
+            <tr style="background:#f0fdf4;">
+                <th style="padding:8px 12px; text-align:left; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5;">Pedido</th>
+                <th style="padding:8px 12px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:130px;">Cuotas (al día / venc.)</th>
+                <th style="padding:8px 12px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:95px;">Puntualidad</th>
+                <th style="padding:8px 12px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:70px;">Mora</th>
+                <th style="padding:8px 12px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:85px;">C. Riesgo</th>
+                <th style="padding:8px 12px; text-align:center; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:80px;">Reprog.</th>
+                <th style="padding:8px 12px; text-align:right; font-size:10px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; border-bottom:1px solid #d1fae5; width:120px;">Monto total</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach($detallePedidos as $ped)
+        @php
+        $ptColor = $ped['puntualidad'] >= 90 ? '#15803D' : ($ped['puntualidad'] >= 70 ? '#854F0B' : '#B91C1C');
+        $rsColor = $ped['riesgo'] > 30 ? '#B91C1C' : ($ped['riesgo'] > 10 ? '#854F0B' : '#15803D');
+        @endphp
+        <tr style="border-bottom:0.5px solid #e5e7eb;">
+            <td style="padding:10px 12px; font-weight:700; color:#374151; font-family:monospace;">{{ $ped['numero'] }}</td>
+            <td style="padding:10px 12px; text-align:center; color:#6b7280; font-family:monospace;">
+                {{ $ped['al_dia'] }}/{{ $ped['cerradas'] }}
+                <span style="color:#9ca3af; font-size:10px;">({{ $ped['total_cuotas'] }} total)</span>
+            </td>
+            <td style="padding:10px 12px; text-align:center; font-weight:700; font-family:monospace; color:{{ $ptColor }};">{{ $ped['puntualidad'] }}%</td>
+            <td style="padding:10px 12px; text-align:center;">
+                @if($ped['en_mora'])
+                <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#FEF2F2; color:#B91C1C;">Sí</span>
+                @else
+                <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#F0FDF4; color:#15803D;">No</span>
+                @endif
+            </td>
+            <td style="padding:10px 12px; text-align:center; font-weight:700; font-family:monospace; color:{{ $rsColor }};">{{ $ped['riesgo'] }}%</td>
+            <td style="padding:10px 12px; text-align:center;">
+                @if($ped['reprogramado'])
+                <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#FEF3C7; color:#854F0B;">Sí</span>
+                @else
+                <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#F0FDF4; color:#15803D;">No</span>
+                @endif
+            </td>
+            <td style="padding:10px 12px; text-align:right; font-weight:600; font-family:monospace; color:#374151;">
+                Bs {{ number_format($ped['monto'], 2) }}
+            </td>
+        </tr>
+        @endforeach
+        </tbody>
+    </table>
+    </div>
+    @else
+    <p style="padding:30px; text-align:center; color:#9ca3af; font-size:13px;">Sin pedidos con plan de pago activo.</p>
+    @endif
+</div>
+
+@endif
+</div>

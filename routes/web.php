@@ -93,6 +93,7 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('credito')->name('credi
 
     // Indicadores
     Route::get('/indicadores/calificacion', fn() => view('modules.credito.indicadores.calificacion-vendedor'))->name('indicadores.calificacion');
+    Route::get('/indicadores/calificacion-clientes', fn() => view('modules.credito.indicadores.calificacion-cliente'))->name('indicadores.calificacion-clientes');
 });
 
 // ─── Módulo Vendedor / EIE ────────────────────────────────────────────────────
