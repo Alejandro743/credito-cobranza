@@ -255,22 +255,115 @@ $calBadge = match($v['calificacion']) {
     </div>
 </div>
 
-{{-- Resumen de puntaje --}}
-<div style="display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-bottom:20px;">
-    @php
-    $resumen = [
-        ['label'=>'Puntaje Final',  'val'=>$v['puntaje'].'pts',    'bg'=>$calBadge['bg'],'cl'=>$calBadge['cl'],'bc'=>$calBadge['cl']],
-        ['label'=>'Puntualidad',    'val'=>$v['puntualidad'].'%',   'bg'=>'#F0FDF4','cl'=>'#15803D','bc'=>'#d1fae5'],
-        ['label'=>'Mora Generada',  'val'=>$v['mora'].'%',          'bg'=>'#FEF2F2','cl'=>'#B91C1C','bc'=>'#fecaca'],
-        ['label'=>'C. en Riesgo',   'val'=>$v['riesgo'].'%',        'bg'=>'#FFF7ED','cl'=>'#C2410C','bc'=>'#fdba74'],
-        ['label'=>'Recuperación',   'val'=>$v['recuperacion'].'%',  'bg'=>'#F0FDF4','cl'=>'#15803D','bc'=>'#d1fae5'],
-        ['label'=>'Reprogramación', 'val'=>$v['reprog'].'%',        'bg'=>'#FFFBEB','cl'=>'#854F0B','bc'=>'#FCD34D'],
-    ];
-    @endphp
-    @foreach($resumen as $r)
-    <div style="background:{{ $r['bg'] }}; border:1px solid {{ $r['bc'] }}; border-radius:10px; padding:12px; text-align:center;">
-        <p style="font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:{{ $r['cl'] }}; margin:0 0 4px;">{{ $r['label'] }}</p>
-        <p style="font-size:20px; font-weight:800; color:{{ $r['cl'] }}; margin:0; font-family:monospace;">{{ $r['val'] }}</p>
+{{-- KPIs con info expandible --}}
+@php
+$kpis_detalle = [
+    [
+        'label' => 'Puntaje Final',
+        'val'   => $v['puntaje'].' pts',
+        'bg'    => $calBadge['bg'], 'cl' => $calBadge['cl'], 'bc' => $calBadge['cl'],
+        'icono' => 'M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z',
+        'titulo_info' => 'Suma ponderada',
+        'info'  => 'Es la suma de los 5 indicadores, cada uno multiplicado por su peso configurado en Definiciones → Pesos de Indicadores.',
+        'formula' => '(Puntualidad × p%) + ((100−Mora) × p%) + ((100−Riesgo) × p%) + (Recuperación × p%) + ((100−Reprog) × p%)',
+        'nota'  => null,
+    ],
+    [
+        'label' => 'Puntualidad',
+        'val'   => $v['puntualidad'].' %',
+        'bg'    => '#F0FDF4', 'cl' => '#15803D', 'bc' => '#d1fae5',
+        'icono' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z',
+        'titulo_info' => 'Indicador positivo',
+        'info'  => 'De todas las cuotas cuya fecha de vencimiento ya pasó, calcula qué porcentaje fue pagado en fecha o antes.',
+        'formula' => 'Cuotas pagadas a tiempo ÷ total cuotas vencidas × 100',
+        'nota'  => '↑ Cuanto más alto, mejor puntaje.',
+    ],
+    [
+        'label' => 'Mora Generada',
+        'val'   => $v['mora'].' %',
+        'bg'    => '#FEF2F2', 'cl' => '#B91C1C', 'bc' => '#fecaca',
+        'icono' => 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z',
+        'titulo_info' => 'Indicador negativo',
+        'info'  => 'Mide qué porcentaje de los pedidos tiene al menos una cuota vencida que todavía no fue pagada.',
+        'formula' => 'Pedidos con cuota vencida sin pagar ÷ total pedidos × 100',
+        'nota'  => '↓ Se invierte: se resta de 100 antes de ponderar. Cuanto más bajo, mejor.',
+    ],
+    [
+        'label' => 'C. en Riesgo',
+        'val'   => $v['riesgo'].' %',
+        'bg'    => '#FFF7ED', 'cl' => '#C2410C', 'bc' => '#fdba74',
+        'icono' => 'M13 17h8m0 0V9m0 8l-8-8-4 4-6-6',
+        'titulo_info' => 'Indicador negativo',
+        'info'  => 'Del total de saldo pendiente de cobro (vencido + futuro), calcula qué proporción ya está vencida y sin pagar.',
+        'formula' => 'Saldo vencido sin pagar ÷ (saldo vencido + saldo futuro pendiente) × 100',
+        'nota'  => '↓ Se invierte al ponderar. Un valor alto indica cartera deteriorada.',
+    ],
+    [
+        'label' => 'Recuperación',
+        'val'   => $v['recuperacion'].' %',
+        'bg'    => '#F0FDF4', 'cl' => '#15803D', 'bc' => '#d1fae5',
+        'icono' => 'M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15',
+        'titulo_info' => 'Indicador positivo',
+        'info'  => 'De todas las cuotas que estaban vencidas sin pagar, mide cuánto monto se logró cobrar aunque fuera con retraso.',
+        'formula' => 'Monto cobrado tardíamente ÷ total monto vencido sin pagar × 100',
+        'nota'  => '↑ Refleja capacidad de gestión de cobranza. Cuanto más alto, mejor.',
+    ],
+    [
+        'label' => 'Reprogramación',
+        'val'   => $v['reprog'].' %',
+        'bg'    => '#FFFBEB', 'cl' => '#854F0B', 'bc' => '#FCD34D',
+        'icono' => 'M8 7h12m0 0l-4-4m4 4l-4 4m0 6H4m0 0l4 4m-4-4l4-4',
+        'titulo_info' => 'Indicador negativo',
+        'info'  => 'Porcentaje de pedidos que tuvieron que ser reprogramados, es decir, que tienen más de una versión de plan de pago.',
+        'formula' => 'Pedidos con más de 1 versión de plan ÷ total pedidos × 100',
+        'nota'  => '↓ Se invierte al ponderar. Muchas reprogramaciones indican riesgo de cartera.',
+    ],
+];
+@endphp
+<div style="display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px;">
+    @foreach($kpis_detalle as $kd)
+    <div x-data="{ open: false }"
+         style="background:{{ $kd['bg'] }}; border:1px solid {{ $kd['bc'] }}; border-radius:12px; padding:14px 14px 12px;">
+        {{-- Fila superior: icono + label + botón info --}}
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:8px;">
+            <div style="width:28px; height:28px; border-radius:8px; background:#fff; border:1px solid {{ $kd['bc'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg style="width:14px;height:14px;" fill="none" stroke="{{ $kd['cl'] }}" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="{{ $kd['icono'] }}"/>
+                </svg>
+            </div>
+            <span style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.04em; color:{{ $kd['cl'] }}; flex:1; line-height:1.2;">{{ $kd['label'] }}</span>
+            <button @click="open = !open"
+                    :title="open ? 'Cerrar' : 'Cómo se calcula'"
+                    style="width:20px; height:20px; border-radius:50%; border:1.5px solid {{ $kd['bc'] }}; background:#fff; color:{{ $kd['cl'] }}; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s;"
+                    :style="open ? 'background:{{ $kd['cl'] }}; color:#fff;' : ''">
+                <svg style="width:11px;height:11px;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+            </button>
+        </div>
+
+        {{-- Valor principal --}}
+        <p style="font-size:26px; font-weight:800; color:{{ $kd['cl'] }}; margin:0 0 2px; font-family:monospace; text-align:center; line-height:1;">
+            {{ $kd['val'] }}
+        </p>
+
+        {{-- Panel info expandible --}}
+        <div x-show="open"
+             x-transition:enter="transition ease-out duration-150"
+             x-transition:enter-start="opacity-0 -translate-y-1"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             style="margin-top:10px; padding-top:10px; border-top:1px solid {{ $kd['bc'] }};">
+            <p style="font-size:10px; font-weight:700; color:{{ $kd['cl'] }}; margin:0 0 4px; text-transform:uppercase; letter-spacing:0.04em;">
+                {{ $kd['titulo_info'] }}
+            </p>
+            <p style="font-size:11px; color:#374151; margin:0 0 6px; line-height:1.5;">{{ $kd['info'] }}</p>
+            <div style="background:#fff; border:1px solid {{ $kd['bc'] }}; border-radius:6px; padding:6px 8px; font-size:10px; font-family:monospace; color:{{ $kd['cl'] }}; margin-bottom:6px; line-height:1.6;">
+                {{ $kd['formula'] }}
+            </div>
+            @if($kd['nota'])
+            <p style="font-size:10px; font-weight:600; color:{{ $kd['cl'] }}; margin:0; font-style:italic;">{{ $kd['nota'] }}</p>
+            @endif
+        </div>
     </div>
     @endforeach
 </div>
