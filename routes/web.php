@@ -106,11 +106,12 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('vendedor')->name('vend
 
 // ─── Módulo Cliente ───────────────────────────────────────────────────────────
 Route::middleware(['auth', 'submodulo.permiso'])->prefix('cliente')->name('cliente.')->group(function () {
-    Route::get('/cuenta',  fn() => view('modules.cliente.cuenta'))->name('cuenta');
-    Route::get('/pedidos', fn() => view('modules.cliente.pedidos'))->name('pedidos');
-    Route::get('/plan',    fn() => view('modules.cliente.plan'))->name('plan');
-    Route::get('/cuotas',  fn() => view('modules.cliente.cuotas'))->name('cuotas');
-    Route::get('/pagos',   fn() => view('modules.cliente.pagos'))->name('pagos');
+    Route::get('/cuenta',        fn() => view('modules.cliente.cuenta'))->name('cuenta');
+    Route::get('/pedidos',       fn() => view('modules.cliente.pedidos'))->name('pedidos');
+    Route::get('/plan',          fn() => view('modules.cliente.plan'))->name('plan');
+    Route::get('/cuotas',        fn() => view('modules.cliente.cuotas'))->name('cuotas');
+    Route::get('/pagos',         fn() => view('modules.cliente.pagos'))->name('pagos');
+    Route::get('/mi-calificacion', fn() => view('modules.cliente.mi-calificacion'))->name('mi-calificacion');
 });
 
 // ─── Perfil ───────────────────────────────────────────────────────────────────

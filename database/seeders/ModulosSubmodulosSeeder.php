@@ -146,11 +146,12 @@ class ModulosSubmodulosSeeder extends Seeder
                 'name'  => 'Cliente', 'slug' => 'cliente',
                 'color' => 'celeste', 'icon' => self::ICONS['cliente'], 'sort_order' => 4,
                 'submodulos' => [
-                    ['name' => 'Mi Cuenta',       'slug' => 'cliente-cuenta',  'route_name' => 'cliente.cuenta',  'sort_order' => 1, 'children' => []],
-                    ['name' => 'Mis Pedidos',      'slug' => 'cliente-pedidos', 'route_name' => 'cliente.pedidos', 'sort_order' => 2, 'children' => []],
-                    ['name' => 'Mi Plan de Pago',  'slug' => 'cliente-plan',    'route_name' => 'cliente.plan',    'sort_order' => 3, 'children' => []],
-                    ['name' => 'Mis Cuotas',       'slug' => 'cliente-cuotas',  'route_name' => 'cliente.cuotas',  'sort_order' => 4, 'children' => []],
-                    ['name' => 'Mis Pagos',        'slug' => 'cliente-pagos',   'route_name' => 'cliente.pagos',   'sort_order' => 5, 'children' => []],
+                    ['name' => 'Mi Cuenta',        'slug' => 'cliente-cuenta',          'route_name' => 'cliente.cuenta',          'sort_order' => 1, 'children' => []],
+                    ['name' => 'Mis Pedidos',      'slug' => 'cliente-pedidos',         'route_name' => 'cliente.pedidos',         'sort_order' => 2, 'children' => []],
+                    ['name' => 'Mi Plan de Pago',  'slug' => 'cliente-plan',            'route_name' => 'cliente.plan',            'sort_order' => 3, 'children' => []],
+                    ['name' => 'Mis Cuotas',       'slug' => 'cliente-cuotas',          'route_name' => 'cliente.cuotas',          'sort_order' => 4, 'children' => []],
+                    ['name' => 'Mis Pagos',        'slug' => 'cliente-pagos',           'route_name' => 'cliente.pagos',           'sort_order' => 5, 'children' => []],
+                    ['name' => 'Mi Calificación',  'slug' => 'cliente-mi-calificacion', 'route_name' => 'cliente.mi-calificacion', 'sort_order' => 6, 'children' => []],
                 ],
             ],
         ];
