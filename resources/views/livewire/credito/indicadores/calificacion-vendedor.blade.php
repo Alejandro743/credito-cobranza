@@ -362,7 +362,20 @@ $kpis_detalle = [
 <div x-data="{ activeKpi: null }" @click.away="activeKpi = null"
      style="display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-bottom:20px;">
     @foreach($kpis_detalle as $kd)
-    @php $idx = $loop->index; @endphp
+    @php
+        $idx = $loop->index;
+        // Primeras 2 tarjetas: tooltip hacia la derecha; últimas 2: hacia la izquierda; resto: centrado
+        if ($loop->index <= 1) {
+            $tipPos   = 'left:0; transform:none;';
+            $arrowPos = 'left:16px; transform:rotate(45deg);';
+        } elseif ($loop->index >= 4) {
+            $tipPos   = 'right:0; left:auto; transform:none;';
+            $arrowPos = 'right:16px; left:auto; transform:rotate(45deg);';
+        } else {
+            $tipPos   = 'left:50%; transform:translateX(-50%);';
+            $arrowPos = 'left:50%; transform:translateX(-50%) rotate(45deg);';
+        }
+    @endphp
     <div style="background:{{ $kd['bg'] }}; border:1px solid {{ $kd['bc'] }}; border-radius:10px; padding:10px 12px; position:relative;">
 
         {{-- Label + botón ⓘ --}}
@@ -384,11 +397,11 @@ $kpis_detalle = [
              x-transition:enter="transition ease-out duration-100"
              x-transition:enter-start="opacity-0 scale-95"
              x-transition:enter-end="opacity-100 scale-100"
-             style="position:absolute; top:calc(100% + 6px); left:50%; transform:translateX(-50%); z-index:99;
+             style="position:absolute; top:calc(100% + 6px); {{ $tipPos }} z-index:9999;
                     width:260px; background:#fff; border:1px solid {{ $kd['bc'] }}; border-radius:10px;
                     box-shadow:0 8px 24px rgba(0,0,0,0.13); padding:12px 13px;">
             {{-- Flecha --}}
-            <div style="position:absolute; top:-6px; left:50%; width:10px; height:10px; background:#fff; border-left:1px solid {{ $kd['bc'] }}; border-top:1px solid {{ $kd['bc'] }}; transform:translateX(-50%) rotate(45deg);"></div>
+            <div style="position:absolute; top:-6px; {{ $arrowPos }} width:10px; height:10px; background:#fff; border-left:1px solid {{ $kd['bc'] }}; border-top:1px solid {{ $kd['bc'] }};"></div>
 
             {{-- Tipo --}}
             <p style="font-size:10px; font-weight:700; color:{{ $kd['cl'] }}; text-transform:uppercase; letter-spacing:0.04em; margin:0 0 4px;">{{ $kd['titulo_info'] }}</p>
