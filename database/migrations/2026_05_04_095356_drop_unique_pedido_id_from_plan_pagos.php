@@ -11,7 +11,9 @@ return new class extends Migration
     {
         if (DB::getDriverName() === 'mysql') {
             Schema::table('plan_pagos', function (Blueprint $table) {
+                $table->dropForeign(['pedido_id']);
                 $table->dropUnique('plan_pagos_pedido_id_unique');
+                $table->foreign('pedido_id')->references('id')->on('pedidos')->cascadeOnDelete();
             });
         }
     }
@@ -20,7 +22,9 @@ return new class extends Migration
     {
         if (DB::getDriverName() === 'mysql') {
             Schema::table('plan_pagos', function (Blueprint $table) {
+                $table->dropForeign(['pedido_id']);
                 $table->unique('pedido_id');
+                $table->foreign('pedido_id')->references('id')->on('pedidos')->cascadeOnDelete();
             });
         }
     }
