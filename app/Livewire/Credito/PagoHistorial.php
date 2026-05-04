@@ -16,8 +16,7 @@ class PagoHistorial extends Component
     public string $search = '';
     public ?int   $pagoId = null;
 
-    public bool   $confirmandoAnulacion  = false;
-    public ?int   $confirmandoAnularId   = null;
+    public bool   $confirmandoAnulacion = false;
 
     public function updatingSearch(): void { $this->resetPage(); }
 
@@ -25,18 +24,11 @@ class PagoHistorial extends Component
     {
         $this->pagoId               = $id;
         $this->confirmandoAnulacion = false;
-        $this->confirmandoAnularId  = null;
         $this->mode                 = 'detalle';
-    }
-
-    public function iniciarAnulacion(int $id): void
-    {
-        $this->confirmandoAnularId = $id;
     }
 
     public function cancelarAnulacion(): void
     {
-        $this->confirmandoAnularId  = null;
         $this->confirmandoAnulacion = false;
     }
 
@@ -44,7 +36,6 @@ class PagoHistorial extends Component
     {
         $this->pagoId               = null;
         $this->confirmandoAnulacion = false;
-        $this->confirmandoAnularId  = null;
         $this->mode                 = 'list';
     }
 
@@ -76,8 +67,6 @@ class PagoHistorial extends Component
 
         if ($this->mode === 'detalle') {
             $this->volver();
-        } else {
-            $this->confirmandoAnularId = null;
         }
     }
 
