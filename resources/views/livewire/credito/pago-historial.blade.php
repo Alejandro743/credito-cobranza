@@ -177,11 +177,12 @@
             <h1 style="flex:1; text-align:center; font-size:22px; font-weight:800; color:{{ $hColorDark }}; letter-spacing:-0.3px; margin:0;">HISTORIAL DE PAGO</h1>
             @if($pg->esAnulable && !$confirmandoAnulacion)
             <button wire:click="$set('confirmandoAnulacion', true)"
-                    style="display:inline-flex; align-items:center; gap:5px; background:#fff; border:1.5px solid #FCA5A5; border-radius:20px; padding:5px 12px 5px 8px; cursor:pointer; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
-                <svg width="12" height="12" fill="none" stroke="#B91C1C" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
+                    style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:20px; padding:5px 12px; cursor:pointer; flex-shrink:0; transition:background .15s;"
+                    onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='#FEF2F2'">
+                <svg style="width:12px;height:12px;flex-shrink:0;" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M4.93 4.93l14.14 14.14"/>
                 </svg>
-                <span style="font-size:11px; font-weight:700; color:#B91C1C;">Anular</span>
+                Anular
             </button>
             @else
             <div style="width:70px; flex-shrink:0;"></div>
