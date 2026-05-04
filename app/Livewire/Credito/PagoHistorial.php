@@ -16,7 +16,8 @@ class PagoHistorial extends Component
     public string $search = '';
     public ?int   $pagoId = null;
 
-    public bool   $confirmandoAnulacion = false;
+    public bool   $confirmandoAnulacion  = false;
+    public ?int   $confirmandoAnularId   = null;
 
     public function updatingSearch(): void { $this->resetPage(); }
 
@@ -24,19 +25,33 @@ class PagoHistorial extends Component
     {
         $this->pagoId               = $id;
         $this->confirmandoAnulacion = false;
+        $this->confirmandoAnularId  = null;
         $this->mode                 = 'detalle';
+    }
+
+    public function iniciarAnulacion(int $id): void
+    {
+        $this->confirmandoAnularId = $id;
+    }
+
+    public function cancelarAnulacion(): void
+    {
+        $this->confirmandoAnularId  = null;
+        $this->confirmandoAnulacion = false;
     }
 
     public function volver(): void
     {
         $this->pagoId               = null;
         $this->confirmandoAnulacion = false;
+        $this->confirmandoAnularId  = null;
         $this->mode                 = 'list';
     }
 
-    public function anularPago(): void
+    public function anularPago(?int $id = null): void
     {
-        $pago = Pago::with(['planPago', 'cuotas'])->find($this->pagoId);
+        $id   = $id ?? $this->pagoId;
+        $pago = Pago::with(['planPago', 'cuotas'])->find($id);
 
         if (!$pago || $pago->estado === 'anulado') return;
         if ($pago->planPago?->estado !== 'activo') return;
@@ -58,7 +73,12 @@ class PagoHistorial extends Component
         });
 
         session()->flash('success', 'Pago anulado. Las cuotas volvieron a estado pendiente.');
-        $this->volver();
+
+        if ($this->mode === 'detalle') {
+            $this->volver();
+        } else {
+            $this->confirmandoAnularId = null;
+        }
     }
 
     public function render()

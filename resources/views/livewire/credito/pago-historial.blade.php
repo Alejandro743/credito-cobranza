@@ -51,6 +51,7 @@
                 <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5; width:90px;">Estado</th>
                 <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #d1fae5;">Registrado por</th>
                 <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5; width:60px;">Ver</th>
+                <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5; width:80px;">Anular</th>
             </tr>
         </thead>
         <tbody>
@@ -96,10 +97,39 @@
                         </svg>
                     </button>
                 </td>
+                <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
+                    @if(!$esAnulado && $pg->planPago?->estado === 'activo')
+                        @if($confirmandoAnularId === $pg->id)
+                        <div style="display:flex; gap:4px; justify-content:center;">
+                            <button wire:click.stop="anularPago({{ $pg->id }})" wire:loading.attr="disabled"
+                                    style="font-size:10px; font-weight:700; color:#fff; background:#B91C1C; border:none; border-radius:6px; padding:4px 8px; cursor:pointer; white-space:nowrap;">
+                                <span wire:loading.remove wire:target="anularPago({{ $pg->id }})">Sí</span>
+                                <span wire:loading wire:target="anularPago({{ $pg->id }})">...</span>
+                            </button>
+                            <button wire:click.stop="cancelarAnulacion"
+                                    style="font-size:10px; font-weight:600; color:#6b7280; background:#f3f4f6; border:none; border-radius:6px; padding:4px 8px; cursor:pointer;">
+                                No
+                            </button>
+                        </div>
+                        @else
+                        <button wire:click.stop="iniciarAnulacion({{ $pg->id }})"
+                                class="p-1.5 rounded-lg transition-colors"
+                                style="color:#B91C1C; background:transparent;"
+                                onmouseover="this.style.background='#FEF2F2'" onmouseout="this.style.background='transparent'"
+                                title="Anular pago">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                            </svg>
+                        </button>
+                        @endif
+                    @else
+                        <span style="color:#d1d5db; font-size:11px;">—</span>
+                    @endif
+                </td>
             </tr>
             @empty
             <tr>
-                <td colspan="8" class="px-4 py-14 text-center text-gray-400">
+                <td colspan="9" class="px-4 py-14 text-center text-gray-400">
                     <svg class="w-12 h-12 mx-auto text-gray-200 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
                     </svg>
