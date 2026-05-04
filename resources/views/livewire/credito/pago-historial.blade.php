@@ -102,10 +102,10 @@
                     <div x-data="{ confirmar: false }" style="display:flex; align-items:center; justify-content:center;">
                         {{-- Botón inicial --}}
                         <button x-show="!confirmar" @click.stop="confirmar = true"
-                                style="display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:20px; padding:4px 10px; cursor:pointer; white-space:nowrap; transition:background .15s;"
+                                style="display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:20px; padding:4px 10px; cursor:pointer; white-space:nowrap; transition:background .15s; line-height:1;"
                                 onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='#FEF2F2'">
-                            <svg style="width:11px;height:11px;flex-shrink:0;" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M4.93 4.93l14.14 14.14"/>
+                            <svg style="width:10px;height:10px;flex-shrink:0;display:block;" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
                             Anular
                         </button>
@@ -177,10 +177,10 @@
             <h1 style="flex:1; text-align:center; font-size:22px; font-weight:800; color:{{ $hColorDark }}; letter-spacing:-0.3px; margin:0;">HISTORIAL DE PAGO</h1>
             @if($pg->esAnulable && !$confirmandoAnulacion)
             <button wire:click="$set('confirmandoAnulacion', true)"
-                    style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:20px; padding:5px 12px; cursor:pointer; flex-shrink:0; transition:background .15s;"
+                    style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:20px; padding:5px 14px; cursor:pointer; flex-shrink:0; transition:background .15s; line-height:1;"
                     onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='#FEF2F2'">
-                <svg style="width:12px;height:12px;flex-shrink:0;" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M4.93 4.93l14.14 14.14"/>
+                <svg style="width:11px;height:11px;flex-shrink:0;display:block;" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
                 Anular
             </button>
