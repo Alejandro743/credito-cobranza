@@ -470,8 +470,9 @@
             </p>
 
             @if ($aprobado)
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold {{ $cuota->estado_badge['class'] }}">
-                {{ $cuota->estado_badge['label'] }}
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                  style="background:{{ $cuota->estadoFinancieroBadge['bg'] }}; color:{{ $cuota->estadoFinancieroBadge['cl'] }};">
+                {{ $cuota->estadoFinancieroBadge['lb'] }}
             </span>
             @endif
 
