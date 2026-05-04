@@ -20,7 +20,7 @@
                 <p class="font-mono text-xs text-celeste-400 mb-1">{{ $p->numero }}</p>
                 <p class="text-xs text-gray-400">{{ $p->created_at->format('d/m/Y H:i') }}</p>
             </div>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold {{ $p->estado_badge['class'] }}">
+            <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold" style="{{ $p->estado_badge['style'] }}">
                 {{ $p->estado_badge['label'] }}
             </span>
         </div>
@@ -198,17 +198,18 @@
                             Bs {{ number_format($cuota->monto, 2) }}
                         </td>
                         <td class="px-4 py-2.5 text-center">
-                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $cuota->estado_badge['class'] }}">
-                                @if ($cuota->estado === 'pagado')
+                            <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold"
+                                  style="background:{{ $cuota->estadoFinancieroBadge['bg'] }}; color:{{ $cuota->estadoFinancieroBadge['cl'] }};">
+                                @if ($cuota->estadoFinanciero === 'pagado')
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                                 </svg>
-                                @elseif ($cuota->estado === 'vencido')
+                                @elseif ($cuota->estadoFinanciero === 'en_mora')
                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                                 </svg>
                                 @endif
-                                {{ $cuota->estado_badge['label'] }}
+                                {{ $cuota->estadoFinancieroBadge['lb'] }}
                             </span>
                         </td>
                         <td class="px-4 py-2.5 text-center text-xs text-gray-400 hidden sm:table-cell">
@@ -278,7 +279,7 @@
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 mb-0.5">
                     <p class="font-bold text-gray-800 text-sm truncate">{{ $p->numero }}</p>
-                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold {{ $p->estado_badge['class'] }}">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold" style="{{ $p->estado_badge['style'] }}">
                         {{ $p->estado_badge['label'] }}
                     </span>
                 </div>
