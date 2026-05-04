@@ -54,12 +54,26 @@ class PagoManual extends Component
 
     public function toggleCuota(int $cuotaId): void
     {
+        $pedido = Pedido::with('planPago.cuotas')->find($this->pedidoId);
+        $plan   = $pedido?->planPago;
+        if (!$plan) return;
+
+        $cuotas = $plan->cuotas->where('numero', '>', 0)->sortBy('numero')->values();
+        $cuota  = $cuotas->firstWhere('id', $cuotaId);
+        if (!$cuota || $cuota->estado === 'pagado') return;
+
         if (in_array($cuotaId, $this->cuotasSeleccionadas)) {
+            // Al deseleccionar, también quitar todas las de número mayor (cascada)
+            $idsToRemove = $cuotas->where('numero', '>=', $cuota->numero)->pluck('id')->toArray();
             $this->cuotasSeleccionadas = array_values(
-                array_filter($this->cuotasSeleccionadas, fn($id) => $id !== $cuotaId)
+                array_filter($this->cuotasSeleccionadas, fn($id) => !in_array($id, $idsToRemove))
             );
         } else {
-            $this->cuotasSeleccionadas[] = $cuotaId;
+            // Solo permitir si todas las cuotas anteriores no pagadas ya están seleccionadas
+            $lowerUnpaid = $cuotas->where('numero', '<', $cuota->numero)->where('estado', '!=', 'pagado');
+            if ($lowerUnpaid->every(fn($x) => in_array($x->id, $this->cuotasSeleccionadas))) {
+                $this->cuotasSeleccionadas[] = $cuotaId;
+            }
         }
     }
 

@@ -253,18 +253,29 @@
             <tbody>
                 @forelse($cuotas as $c)
                 @php
-                    $esPagada   = $c->estado === 'pagado';
-                    $esSelec    = in_array($c->id, $cuotasSeleccionadas);
-                    $badgeCuota = $c->estadoFinancieroBadge;
-                    $diffDias   = ($c->fecha_vencimiento && $c->fecha_pago)
+                    $esPagada     = $c->estado === 'pagado';
+                    $esSelec      = in_array($c->id, $cuotasSeleccionadas);
+                    $badgeCuota   = $c->estadoFinancieroBadge;
+                    $diffDias     = ($c->fecha_vencimiento && $c->fecha_pago)
                         ? (int) $c->fecha_vencimiento->diffInDays($c->fecha_pago, false)
                         : null;
+                    // Bloqueada si no está pagada, no está seleccionada,
+                    // y alguna cuota anterior no pagada no está seleccionada
+                    $lowerUnpaid  = $cuotas->where('numero', '<', $c->numero)->where('estado', '!=', 'pagado');
+                    $bloqueada    = !$esPagada && !$esSelec && !$lowerUnpaid->every(fn($x) => in_array($x->id, $cuotasSeleccionadas));
+                    $clickable    = !$esPagada && !$bloqueada;
                 @endphp
                 <tr wire:key="c-{{ $c->id }}"
-                    style="{{ $esPagada ? 'opacity:0.5; background:#f9fafb;' : ($esSelec ? 'background:#F0FDF4;' : '') }} {{ !$esPagada ? 'cursor:pointer;' : '' }}"
-                    {{ !$esPagada ? "wire:click=toggleCuota({$c->id})" : '' }}>
+                    style="{{ $esPagada ? 'opacity:0.5; background:#f9fafb;' : ($esSelec ? 'background:#F0FDF4;' : ($bloqueada ? 'background:#fafafa; opacity:0.6;' : '')) }} cursor:{{ $clickable ? 'pointer' : 'default' }};"
+                    {{ $clickable ? "wire:click=toggleCuota({$c->id})" : '' }}>
                     <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:center;">
-                        @if(!$esPagada)
+                        @if($esPagada)
+                            {{-- sin checkbox --}}
+                        @elseif($bloqueada)
+                        <svg style="width:14px;height:14px;color:#d1d5db;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                        @else
                         <div style="width:18px; height:18px; border-radius:5px; border:2px solid {{ $esSelec ? '#15803D' : '#d1d5db' }};
                                     background:{{ $esSelec ? '#15803D' : '#fff' }}; display:inline-flex; align-items:center; justify-content:center;">
                             @if($esSelec)
