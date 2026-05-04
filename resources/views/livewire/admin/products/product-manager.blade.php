@@ -80,38 +80,15 @@
         </div>
     </div>
 
-    {{-- Campo imagen --}}
-    <div class="mt-3 pt-3 border-t border-lavanda-200"
-         x-data="{ preview: null }">
-        <p class="text-xs font-semibold text-lavanda-600 mb-2">
-            Imagen
-            <span class="font-normal text-lavanda-400 normal-case">(opcional · JPG/PNG · máx. 2 MB · 800×800 px recomendado)</span>
-        </p>
-        <div class="flex items-center gap-4">
-            {{-- Preview --}}
-            <div class="w-20 h-20 rounded-xl overflow-hidden bg-lavanda-100 flex-shrink-0 flex items-center justify-center">
-                <img x-show="preview" :src="preview" x-cloak class="w-full h-full object-cover">
-                <svg x-show="!preview" class="w-8 h-8 text-lavanda-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
-            </div>
-            {{-- Selector --}}
-            <div>
-                <label class="cursor-pointer inline-flex items-center gap-2 px-4 py-2 bg-lavanda-500 hover:bg-lavanda-600 text-white text-xs font-semibold rounded-xl transition-colors">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"/>
-                    </svg>
-                    Seleccionar imagen
-                    <input type="file"
-                           wire:model="newImage"
-                           x-on:change="const f = $event.target.files[0]; if (f) preview = URL.createObjectURL(f)"
-                           accept="image/jpeg,image/png"
-                           class="hidden">
-                </label>
-                <div wire:loading wire:target="newImage" class="text-xs text-lavanda-500 mt-1">Subiendo...</div>
-                @error('newImage') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-            </div>
+    {{-- Info imagen Cloudinary --}}
+    <div class="mt-3 pt-3 border-t border-lavanda-200">
+        <div class="flex items-center gap-2 bg-lavanda-50 border border-lavanda-200 rounded-xl px-4 py-3">
+            <svg class="w-4 h-4 text-lavanda-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="text-xs text-lavanda-600">
+                La foto se gestiona en <strong>Cloudinary</strong>. Subí el archivo con el nombre del código del producto (ej: <span class="font-mono">38090810</span>) y aparecerá automáticamente.
+            </p>
         </div>
     </div>
 
@@ -152,30 +129,19 @@
                 {{-- FILA EN MODO EDICIÓN --}}
                 <tr wire:key="p-edit-{{ $p->id }}" class="bg-lavanda-50 border-l-2 border-lavanda-400">
 
-                    {{-- Imagen edit: thumbnail + input cambiar --}}
-                    <td class="px-3 py-2" x-data="{ preview: null }">
-                        <div class="flex flex-col items-center gap-1">
-                            <div class="w-10 h-10 rounded-lg overflow-hidden bg-lavanda-100 flex items-center justify-center">
-                                <img x-show="preview" :src="preview" x-cloak class="w-full h-full object-cover">
-                                @if ($editCurrentImage)
-                                <img x-show="!preview" src="{{ asset('storage/' . $editCurrentImage) }}"
-                                     class="w-full h-full object-cover">
-                                @else
-                                <svg x-show="!preview" class="w-5 h-5 text-lavanda-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                          d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                                @endif
-                            </div>
-                            <label class="cursor-pointer">
-                                <span class="text-[9px] font-semibold text-lavanda-600 hover:text-lavanda-800 leading-none">Cambiar</span>
-                                <input type="file"
-                                       wire:model="editImage"
-                                       x-on:change="const f = $event.target.files[0]; if (f) preview = URL.createObjectURL(f)"
-                                       accept="image/jpeg,image/png"
-                                       class="hidden">
-                            </label>
-                            @error('editImage') <p class="text-red-500 text-[9px] text-center">{{ $message }}</p> @enderror
+                    {{-- Imagen edit: solo muestra foto de Cloudinary --}}
+                    <td class="px-3 py-2">
+                        @if($p->foto_url)
+                        <img src="{{ $p->foto_url }}" alt="{{ $p->name }}"
+                             class="w-10 h-10 rounded-lg object-cover border border-gray-100"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        @endif
+                        <div class="w-10 h-10 rounded-lg bg-lavanda-50 items-center justify-center {{ $p->foto_url ? 'hidden' : 'flex' }}"
+                             style="{{ $p->foto_url ? 'display:none;' : '' }}">
+                            <svg class="w-5 h-5 text-lavanda-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
                         </div>
                     </td>
 
