@@ -235,7 +235,7 @@ class OfertaManager extends Component
                         'product_id'        => $item->product_id,
                         'code'              => $item->product->code ?? '',
                         'nombre'            => $item->product->name,
-                        'image'             => $item->product->image ? Storage::url($item->product->image) : null,
+                        'image'             => $item->product->foto_url ?? ($item->product->image ? Storage::url($item->product->image) : null),
                         'precio_base'       => (float)$item->precio_base,
                         'tipo_incremento'   => $item->tipo_incremento,
                         'factor_incremento' => (float)$item->factor_incremento,
