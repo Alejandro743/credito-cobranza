@@ -85,7 +85,6 @@ class RevisionManager extends Component
         $pedido->update([$campo => $path]);
 
         $this->$prop = null;
-        $this->dispatch('$refresh');
     }
 
     public function guardarDireccion(): void

@@ -80,6 +80,68 @@
         </div>
     </div>
 
+    {{-- Documentos --}}
+    @php
+        $docs = [
+            'Anverso CI'   => $p->doc_anverso_ci,
+            'Reverso CI'   => $p->doc_reverso_ci,
+            'Anverso Doc.' => $p->doc_anverso_doc,
+            'Reverso Doc.' => $p->doc_reverso_doc,
+            'Aviso de Luz' => $p->doc_aviso_luz,
+        ];
+        $docIconos = [
+            'Anverso CI'   => 'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0',
+            'Reverso CI'   => 'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0',
+            'Anverso Doc.' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+            'Reverso Doc.' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z',
+            'Aviso de Luz' => 'M13 10V3L4 14h7v7l9-11h-7z',
+        ];
+        $docsExisten = collect($docs)->filter()->isNotEmpty();
+    @endphp
+    @if ($docsExisten)
+    <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden mb-4">
+        <div class="px-5 py-3 border-b border-gray-50">
+            <h3 class="font-semibold text-gray-700 text-sm">Mis Documentos</h3>
+        </div>
+        <div class="p-4">
+            <div class="doc-grid-cliente" style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+            <style>@media(min-width:480px){.doc-grid-cliente{grid-template-columns:repeat(5,1fr)!important;}}</style>
+            @foreach ($docs as $label => $path)
+            @if ($path)
+            @php $url = \Illuminate\Support\Facades\Storage::url($path); @endphp
+            <a href="{{ $url }}" target="_blank" style="text-decoration:none;">
+                <div style="border:1.5px solid #0F6E56; background:#F0FDF4; border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:80px; box-sizing:border-box;">
+                    <div style="width:28px; height:28px; border-radius:6px; background:#DCFCE7; display:flex; align-items:center; justify-content:center;">
+                        <svg style="width:16px;height:16px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $docIconos[$label] ?? 'M9 12h6m-6 4h6' }}"/>
+                        </svg>
+                    </div>
+                    <span style="font-size:9px; font-weight:500; display:block; line-height:1.2; color:#0F6E56;">{{ $label }}</span>
+                    <span style="display:inline-flex; align-items:center; gap:2px; font-size:8px; color:#0F6E56;">
+                        <svg style="width:9px;height:9px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Ver
+                    </span>
+                </div>
+            </a>
+            @else
+            <div style="border:1.5px dashed #e5e7eb; background:#f9fafb; border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:80px; box-sizing:border-box;">
+                <div style="width:28px; height:28px; border-radius:6px; background:#f3f4f6; display:flex; align-items:center; justify-content:center;">
+                    <svg style="width:16px;height:16px;" fill="none" stroke="#9ca3af" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $docIconos[$label] ?? 'M9 12h6m-6 4h6' }}"/>
+                    </svg>
+                </div>
+                <span style="font-size:9px; font-weight:500; display:block; line-height:1.2; color:#9ca3af;">{{ $label }}</span>
+                <span style="font-size:8px; color:#d1d5db;">Sin archivo</span>
+            </div>
+            @endif
+            @endforeach
+            </div>
+        </div>
+    </div>
+    @endif
+
     {{-- Plan de Pago --}}
     @if ($plan)
     <div class="bg-white rounded-2xl border border-lavanda-100 shadow-sm overflow-hidden mb-4">
