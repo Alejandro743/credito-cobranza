@@ -2,7 +2,9 @@
 
 namespace App\Livewire\Credito;
 
+use App\Models\Cuota;
 use App\Models\Pago;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -14,18 +16,49 @@ class PagoHistorial extends Component
     public string $search = '';
     public ?int   $pagoId = null;
 
+    public bool   $confirmandoAnulacion = false;
+
     public function updatingSearch(): void { $this->resetPage(); }
 
     public function verPago(int $id): void
     {
-        $this->pagoId = $id;
-        $this->mode   = 'detalle';
+        $this->pagoId               = $id;
+        $this->confirmandoAnulacion = false;
+        $this->mode                 = 'detalle';
     }
 
     public function volver(): void
     {
-        $this->pagoId = null;
-        $this->mode   = 'list';
+        $this->pagoId               = null;
+        $this->confirmandoAnulacion = false;
+        $this->mode                 = 'list';
+    }
+
+    public function anularPago(): void
+    {
+        $pago = Pago::with(['planPago', 'cuotas'])->find($this->pagoId);
+
+        if (!$pago || $pago->estado === 'anulado') return;
+        if ($pago->planPago?->estado !== 'activo') return;
+
+        DB::transaction(function () use ($pago) {
+            foreach ($pago->cuotas as $cuota) {
+                $cuota->update([
+                    'estado'     => 'pendiente',
+                    'fecha_pago' => null,
+                    'pago_id'    => null,
+                ]);
+            }
+
+            $pago->update([
+                'estado'      => 'anulado',
+                'anulado_por' => auth()->id(),
+                'anulado_at'  => now(),
+            ]);
+        });
+
+        session()->flash('success', 'Pago anulado. Las cuotas volvieron a estado pendiente.');
+        $this->volver();
     }
 
     public function render()
@@ -50,7 +83,7 @@ class PagoHistorial extends Component
 
         $pagoDetalle = null;
         if ($this->mode === 'detalle' && $this->pagoId) {
-            $pagoDetalle = Pago::with(['pedido.cliente.usuario', 'planPago', 'cuotas', 'creadoPor'])
+            $pagoDetalle = Pago::with(['pedido.cliente.usuario', 'planPago', 'cuotas', 'creadoPor', 'anuladoPor'])
                 ->find($this->pagoId);
         }
 
