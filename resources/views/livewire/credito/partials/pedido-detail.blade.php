@@ -398,7 +398,7 @@ $docProps = [
         <p style="font-size:10px; font-weight:600; color:#6b7280;">Cuota</p>
         <p style="font-size:10px; font-weight:600; color:#6b7280;">Vencimiento</p>
         @if ($aprobado)
-        <p style="font-size:10px; font-weight:600; color:#6b7280;">Estado</p>
+        <p style="font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Estado</p>
         @endif
         <p style="font-size:10px; font-weight:600; color:#6b7280; text-align:right;">Monto</p>
     </div>
@@ -425,9 +425,11 @@ $docProps = [
 
         @if ($aprobado)
         @php $cbadge = $cuota->estadoFinancieroBadge; @endphp
-        <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold" style="background:{{ $cbadge['bg'] }}; color:{{ $cbadge['cl'] }};">
-            {{ $cbadge['lb'] }}
-        </span>
+        <div style="display:flex; align-items:center; justify-content:center;">
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-semibold" style="background:{{ $cbadge['bg'] }}; color:{{ $cbadge['cl'] }};">
+                {{ $cbadge['lb'] }}
+            </span>
+        </div>
         @endif
 
         <p style="font-size:13px; font-weight:700; color:#7c3aed; text-align:right;">Bs {{ number_format($cuota->monto, 2) }}</p>
