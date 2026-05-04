@@ -287,10 +287,7 @@
                         @endif
                     </td>
                     <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:left;">
-                        <div style="display:inline-flex; align-items:center; gap:5px;">
-                            <span style="width:20px; height:20px; border-radius:50%; background:#DCFCE7; color:#15803D; font-size:10px; font-weight:700; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">{{ $c->numero }}</span>
-                            <span style="font-size:12px; font-weight:600; color:#374151;">Cuota {{ $c->numero }}</span>
-                        </div>
+                        <span style="font-size:12px; font-weight:600; color:#374151;">Cuota {{ $c->numero }}</span>
                     </td>
                     <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:right; font-family:monospace; font-weight:700; color:#374151;">
                         Bs. {{ number_format($c->monto, 2) }}
