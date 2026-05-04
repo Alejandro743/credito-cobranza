@@ -37,6 +37,6 @@ class Product extends Model
     {
         if (!$this->code || !config('services.cloudinary.cloud_name')) return null;
         $cloud = config('services.cloudinary.cloud_name');
-        return "https://res.cloudinary.com/{$cloud}/image/upload/{$this->code}.jpg";
+        return "https://res.cloudinary.com/{$cloud}/image/upload/{$this->code}";
     }
 }
