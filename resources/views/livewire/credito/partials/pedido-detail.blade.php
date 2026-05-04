@@ -384,6 +384,9 @@ $docProps = [
 @if ($plan)
 <div style="display:flex; align-items:center; gap:8px; margin:16px 0 10px;">
     <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#534AB7;">Plan de Pagos</span>
+    @if ($plan->version > 1)
+    <span style="font-size:9px; font-weight:700; background:#FEF3C7; color:#854F0B; border-radius:4px; padding:2px 6px; white-space:nowrap;">Reprogramado v{{ $plan->version }}</span>
+    @endif
     <div style="flex:1; height:1px; background:#9C96E8;"></div>
     <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full" style="background:#EEEDFE; color:#534AB7;">
         {{ $plan->cantidad_cuotas }} {{ $plan->cantidad_cuotas === 1 ? 'cuota' : 'cuotas' }}

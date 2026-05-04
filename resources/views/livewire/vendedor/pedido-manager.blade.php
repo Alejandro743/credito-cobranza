@@ -437,7 +437,12 @@
     </div>
 
     {{-- Lista cuotas --}}
-    <p class="text-[11px] font-semibold uppercase tracking-wide mb-2" style="color:#9ca3af;">Detalle de Cuotas</p>
+    <p class="text-[11px] font-semibold uppercase tracking-wide mb-2" style="color:#9ca3af;">
+        Detalle de Cuotas
+        @if ($plan->version > 1)
+        <span style="font-size:9px; font-weight:700; background:#FEF3C7; color:#854F0B; border-radius:4px; padding:2px 6px; margin-left:4px; text-transform:none; letter-spacing:0;">Reprogramado v{{ $plan->version }}</span>
+        @endif
+    </p>
     <div class="bg-white overflow-hidden mb-5" style="border:0.5px solid #CECBF6; border-radius:10px; box-shadow:none;">
 
         <div class="grid px-3 py-2" style="background:#F8F7FF; grid-template-columns: 1fr 1fr {{ $aprobado ? '1fr' : '' }} 1fr;">
