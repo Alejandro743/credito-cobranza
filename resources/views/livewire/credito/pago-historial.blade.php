@@ -97,32 +97,32 @@
                         </svg>
                     </button>
                 </td>
-                <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
+                <td x-data="{ confirmar: false }" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
                     @if(!$esAnulado && $pg->planPago?->estado === 'activo')
-                    <div x-data="{ confirmar: false }" style="display:inline-flex; flex-direction:column; align-items:center; gap:4px;">
-                        {{-- Botón inicial --}}
-                        <button x-show="!confirmar" @click.stop="confirmar = true"
-                                style="display:inline-flex; align-items:center; gap:5px; background:#fff; border:1.5px solid #FCA5A5; border-radius:20px; padding:4px 10px 4px 7px; cursor:pointer; white-space:nowrap; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
-                            <svg width="12" height="12" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                            <span style="font-size:10px; font-weight:700; color:#B91C1C;">Anular</span>
-                        </button>
-                        {{-- Confirmación --}}
-                        <div x-show="confirmar" x-cloak style="display:flex; flex-direction:column; align-items:center; gap:5px;">
-                            <span style="font-size:10px; font-weight:700; color:#991B1B; white-space:nowrap;">¿Confirmar anulación?</span>
-                            <div style="display:flex; gap:5px;">
-                                <button @click.stop="$wire.anularPago({{ $pg->id }})"
-                                        style="font-size:10px; font-weight:700; color:#fff; background:#B91C1C; border:none; border-radius:6px; padding:4px 12px; cursor:pointer; white-space:nowrap;">
-                                    Confirmar
-                                </button>
-                                <button @click.stop="confirmar = false"
-                                        style="font-size:10px; font-weight:600; color:#6b7280; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:6px; padding:4px 10px; cursor:pointer;">
-                                    Cancelar
-                                </button>
+                        <template x-if="!confirmar">
+                            <button @click.stop="confirmar = true"
+                                    style="display:inline-flex; align-items:center; gap:5px; background:#fff; border:1.5px solid #FCA5A5; border-radius:20px; padding:5px 12px 5px 8px; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+                                <svg width="13" height="13" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                                </svg>
+                                <span style="font-size:10px; font-weight:700; color:#B91C1C;">Anular</span>
+                            </button>
+                        </template>
+                        <template x-if="confirmar">
+                            <div style="display:flex; flex-direction:column; align-items:center; gap:5px;">
+                                <span style="font-size:10px; font-weight:700; color:#991B1B; white-space:nowrap;">¿Confirmar?</span>
+                                <div style="display:flex; gap:5px;">
+                                    <button @click.stop="$wire.anularPago({{ $pg->id }})"
+                                            style="font-size:10px; font-weight:700; color:#fff; background:#B91C1C; border:none; border-radius:6px; padding:4px 10px; cursor:pointer;">
+                                        Confirmar
+                                    </button>
+                                    <button @click.stop="confirmar = false"
+                                            style="font-size:10px; font-weight:600; color:#6b7280; background:#f3f4f6; border:1px solid #e5e7eb; border-radius:6px; padding:4px 8px; cursor:pointer;">
+                                        Cancelar
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        </template>
                     @else
                         <span style="color:#d1d5db; font-size:11px;">—</span>
                     @endif
