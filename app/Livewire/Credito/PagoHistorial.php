@@ -89,12 +89,26 @@ class PagoHistorial extends Component
             $pagos = $query->paginate(15);
         }
 
-        $pagoDetalle = null;
+        $pagoDetalle  = null;
+        $cuotasDetalle = collect();
         if ($this->mode === 'detalle' && $this->pagoId) {
             $pagoDetalle = Pago::with(['pedido.cliente.usuario', 'planPago', 'cuotas', 'creadoPor', 'anuladoPor'])
                 ->find($this->pagoId);
+
+            if ($pagoDetalle) {
+                $cuotasDetalle = $pagoDetalle->cuotas->where('numero', '>', 0)->sortBy('numero');
+
+                // Fallback: si las cuotas ya no apuntan a este pago (fueron anuladas con código viejo),
+                // usar el snapshot de IDs guardado en el momento del registro
+                if ($cuotasDetalle->isEmpty() && !empty($pagoDetalle->cuota_ids)) {
+                    $cuotasDetalle = \App\Models\Cuota::whereIn('id', $pagoDetalle->cuota_ids)
+                        ->where('numero', '>', 0)
+                        ->orderBy('numero')
+                        ->get();
+                }
+            }
         }
 
-        return view('livewire.credito.pago-historial', compact('pagos', 'pagoDetalle'));
+        return view('livewire.credito.pago-historial', compact('pagos', 'pagoDetalle', 'cuotasDetalle'));
     }
 }

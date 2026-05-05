@@ -147,7 +147,7 @@
 @elseif($mode === 'detalle' && $pagoDetalle)
 @php
     $pg          = $pagoDetalle;
-    $cuotas      = $pg->cuotas->where('numero', '>', 0)->sortBy('numero');
+    $cuotas      = $cuotasDetalle;
     $pgVersion   = $pg->planPago?->version ?? 1;
     $pgPlanLabel = $pgVersion > 1 ? 'Reprogramación: V' . $pgVersion : 'Plan Original';
 @endphp

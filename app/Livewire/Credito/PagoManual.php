@@ -99,6 +99,7 @@ class PagoManual extends Component
                 'plan_pago_id'    => $plan->id,
                 'monto_total'     => $cuotas->sum('monto'),
                 'cantidad_cuotas' => $cuotas->count(),
+                'cuota_ids'       => $cuotas->pluck('id')->toArray(),
                 'creado_por'      => auth()->id(),
             ]);
 
@@ -222,6 +223,7 @@ class PagoManual extends Component
                         'plan_pago_id'    => $items[0]['plan_id'],
                         'monto_total'     => array_sum(array_column($items, 'monto')),
                         'cantidad_cuotas' => count($cuotaIds),
+                        'cuota_ids'       => $cuotaIds,
                         'creado_por'      => auth()->id(),
                     ]);
 

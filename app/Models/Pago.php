@@ -12,11 +12,12 @@ class Pago extends Model
 
     protected $fillable = [
         'numero', 'pedido_id', 'plan_pago_id', 'monto_total', 'cantidad_cuotas',
-        'creado_por', 'estado', 'anulado_por', 'anulado_at',
+        'cuota_ids', 'creado_por', 'estado', 'anulado_por', 'anulado_at',
     ];
 
     protected $casts = [
         'monto_total' => 'decimal:2',
+        'cuota_ids'   => 'array',
         'anulado_at'  => 'datetime',
     ];
 
