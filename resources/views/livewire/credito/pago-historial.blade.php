@@ -264,8 +264,10 @@
 
     {{-- CUOTAS PAGADAS --}}
     <div style="display:flex; align-items:center; gap:8px; margin:4px 0 10px;">
-        <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#15803D;">Cuotas Pagadas</span>
-        <div style="flex:1; height:1px; background:#6ee7b7;"></div>
+        <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:{{ $esAnulado ? '#B91C1C' : '#15803D' }};">
+            {{ $esAnulado ? 'Cuotas Anuladas' : 'Cuotas Pagadas' }}
+        </span>
+        <div style="flex:1; height:1px; background:{{ $esAnulado ? '#FCA5A5' : '#6ee7b7' }};"></div>
         <span style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; background:#f0fdf4; color:#15803D; border:1px solid #6ee7b7;">{{ $pgPlanLabel }}</span>
         <span style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; background:#DCFCE7; color:#15803D;">{{ $cuotas->count() }} cuota{{ $cuotas->count() !== 1 ? 's' : '' }}</span>
     </div>

@@ -52,7 +52,6 @@ class PagoHistorial extends Component
                 $cuota->update([
                     'estado'     => 'pendiente',
                     'fecha_pago' => null,
-                    'pago_id'    => null,
                 ]);
             }
 
