@@ -50,8 +50,7 @@
                 <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5; width:100px;">Fecha</th>
                 <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5; width:90px;">Estado</th>
                 <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #d1fae5;">Registrado por</th>
-                <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5; width:60px;">Ver</th>
-                <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5; width:80px;">Anular</th>
+                <th colspan="2" style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5;">Acciones</th>
             </tr>
         </thead>
         <tbody>
