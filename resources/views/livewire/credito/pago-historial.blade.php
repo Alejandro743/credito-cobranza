@@ -87,7 +87,7 @@
                 <td style="padding:8px 12px; border:0.5px solid #e5e7eb; font-size:12px; color:#6b7280;">
                     {{ $pg->creadoPor->name ?? '—' }}
                 </td>
-                <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
+                <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; width:48px;">
                     <button wire:click.stop="verPago({{ $pg->id }})" title="Ver detalle"
                             class="p-1.5 rounded-lg hover:bg-green-50 transition-colors" style="color:#15803D;">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,7 +96,7 @@
                         </svg>
                     </button>
                 </td>
-                <td x-data="{ confirmar: false }" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
+                <td x-data="{ confirmar: false }" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; width:100px;">
                     @if(!$esAnulado && $pg->planPago?->estado === 'activo')
                         <template x-if="!confirmar">
                             <button @click.stop="confirmar = true"
