@@ -99,15 +99,14 @@
                 </td>
                 <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
                     @if(!$esAnulado && $pg->planPago?->estado === 'activo')
-                    <div x-data="{ confirmar: false }" style="display:flex; align-items:center; justify-content:center;">
+                    <div x-data="{ confirmar: false }" style="display:inline-flex; flex-direction:column; align-items:center; gap:4px;">
                         {{-- Botón inicial --}}
                         <button x-show="!confirmar" @click.stop="confirmar = true"
-                                style="display:inline-flex; align-items:center; gap:4px; font-size:10px; font-weight:700; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:20px; padding:4px 10px; cursor:pointer; white-space:nowrap; transition:background .15s; line-height:1;"
-                                onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='#FEF2F2'">
-                            <svg style="width:10px;height:10px;flex-shrink:0;display:block;" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
+                                style="display:inline-flex; align-items:center; gap:5px; background:#fff; border:1.5px solid #FCA5A5; border-radius:20px; padding:4px 10px 4px 7px; cursor:pointer; white-space:nowrap; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+                            <svg width="12" height="12" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                             </svg>
-                            Anular
+                            <span style="font-size:10px; font-weight:700; color:#B91C1C;">Anular</span>
                         </button>
                         {{-- Confirmación --}}
                         <div x-show="confirmar" x-cloak style="display:flex; flex-direction:column; align-items:center; gap:5px;">
@@ -177,12 +176,11 @@
             <h1 style="flex:1; text-align:center; font-size:22px; font-weight:800; color:{{ $hColorDark }}; letter-spacing:-0.3px; margin:0;">HISTORIAL DE PAGO</h1>
             @if($pg->esAnulable && !$confirmandoAnulacion)
             <button wire:click="$set('confirmandoAnulacion', true)"
-                    style="display:inline-flex; align-items:center; gap:4px; font-size:11px; font-weight:700; color:#B91C1C; background:#FEF2F2; border:1px solid #FCA5A5; border-radius:20px; padding:5px 14px; cursor:pointer; flex-shrink:0; transition:background .15s; line-height:1;"
-                    onmouseover="this.style.background='#FEE2E2'" onmouseout="this.style.background='#FEF2F2'">
-                <svg style="width:11px;height:11px;flex-shrink:0;display:block;" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
+                    style="display:inline-flex; align-items:center; gap:5px; background:#fff; border:1.5px solid #FCA5A5; border-radius:20px; padding:5px 12px 5px 8px; cursor:pointer; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+                <svg width="14" height="14" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
-                Anular
+                <span style="font-size:11px; font-weight:700; color:#B91C1C;">Anular</span>
             </button>
             @else
             <div style="width:70px; flex-shrink:0;"></div>
