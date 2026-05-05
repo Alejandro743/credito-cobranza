@@ -101,10 +101,8 @@
                     @if(!$esAnulado && $pg->planPago?->estado === 'activo')
                         <template x-if="!confirmar">
                             <button @click.stop="confirmar = true"
-                                    style="display:inline-flex; align-items:center; gap:5px; background:#fff; border:1.5px solid #FCA5A5; border-radius:20px; padding:5px 12px 5px 8px; cursor:pointer; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
-                                <svg width="13" height="13" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
+                                    style="display:inline-flex; align-items:center; gap:4px; background:#FEF2F2; border:1.5px solid #FCA5A5; border-radius:6px; padding:4px 10px; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+                                <span style="font-size:13px; font-weight:700; color:#B91C1C; line-height:1;">×</span>
                                 <span style="font-size:10px; font-weight:700; color:#B91C1C;">Anular</span>
                             </button>
                         </template>
@@ -177,9 +175,7 @@
             @if($pg->esAnulable && !$confirmandoAnulacion)
             <button wire:click="$set('confirmandoAnulacion', true)"
                     style="display:inline-flex; align-items:center; gap:5px; background:#fff; border:1.5px solid #FCA5A5; border-radius:20px; padding:5px 12px 5px 8px; cursor:pointer; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
-                <svg width="14" height="14" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
+                <span style="font-size:15px; font-weight:700; color:#B91C1C; line-height:1;">×</span>
                 <span style="font-size:11px; font-weight:700; color:#B91C1C;">Anular</span>
             </button>
             @else
