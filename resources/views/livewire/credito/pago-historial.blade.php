@@ -170,7 +170,7 @@
                 </svg>
                 <span style="font-size:11px; font-weight:700; color:{{ $hColor }};">Historial</span>
             </button>
-            <div style="flex:1;"></div>
+            <h1 style="flex:1; text-align:center; font-size:22px; font-weight:800; color:{{ $hColorDark }}; letter-spacing:-0.3px; margin:0;">HISTORIAL DE PAGO</h1>
             @if($pg->esAnulable && !$confirmandoAnulacion)
             <button wire:click="$set('confirmandoAnulacion', true)"
                     style="display:inline-flex; align-items:center; gap:5px; background:#fff; border:1.5px solid #FCA5A5; border-radius:20px; padding:5px 12px 5px 8px; cursor:pointer; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
