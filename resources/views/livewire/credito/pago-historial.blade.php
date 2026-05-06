@@ -276,35 +276,25 @@
         <table style="border-collapse:separate; border-spacing:0; width:100%; font-size:13px;">
             <thead style="background:#DCFCE7; color:#15803D; font-size:10px; font-weight:600; letter-spacing:0.5px;">
                 <tr>
-                    <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #d1fae5; width:90px;">Cuota</th>
-                    <th style="padding:8px 12px; text-align:right; font-weight:700; border:0.5px solid #d1fae5;">Monto</th>
+                    <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5; width:90px;">Cuota</th>
+                    <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5;">Monto</th>
                     <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5;">Vencimiento</th>
                     <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #d1fae5;">Fecha pago</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($cuotas as $c)
-                @php
-                    $hDiff = ($c->fecha_vencimiento && $c->fecha_pago)
-                        ? (int) $c->fecha_vencimiento->diffInDays($c->fecha_pago, false)
-                        : null;
-                @endphp
                 <tr wire:key="dc-{{ $c->id }}">
-                    <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:left;">
+                    <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:center;">
                         <span style="font-size:12px; font-weight:600; color:#374151;">Cuota {{ $c->numero }}</span>
                     </td>
-                    <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:right; font-family:monospace; font-weight:700; color:#15803D;">Bs. {{ number_format($c->monto, 2) }}</td>
+                    <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:center; font-family:monospace; font-weight:700; color:#15803D;">Bs. {{ number_format($c->monto, 2) }}</td>
                     <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:center; font-size:12px; color:#6b7280;">
                         {{ $c->fecha_vencimiento ? $c->fecha_vencimiento->format('d/m/Y') : '—' }}
                     </td>
                     <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:center;">
                         @if($c->fecha_pago)
-                            <span style="font-size:12px; font-weight:600; color:#15803D; display:block;">{{ $c->fecha_pago->format('d/m/Y') }}</span>
-                            @if($hDiff !== null)
-                            <span style="font-size:10px; font-weight:600; color:{{ $hDiff > 0 ? '#B91C1C' : ($hDiff < 0 ? '#15803D' : '#854F0B') }};">
-                                {{ $hDiff > 0 ? '+' . $hDiff . 'd mora' : ($hDiff < 0 ? abs($hDiff) . 'd antes' : 'a tiempo') }}
-                            </span>
-                            @endif
+                            <span style="font-size:12px; font-weight:600; color:#15803D;">{{ $c->fecha_pago->format('d/m/Y') }}</span>
                         @else
                             <span style="font-size:12px; color:#9ca3af;">—</span>
                         @endif
