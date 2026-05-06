@@ -5,20 +5,6 @@
 .ph-pill-back{ background:#fff; border:1.5px solid #6ee7b7; border-radius:20px; padding:5px 14px 5px 10px; font-size:12px; font-weight:600; color:#15803D; cursor:pointer; display:inline-flex; align-items:center; gap:5px; }
 </style>
 
-{{-- Topbar --}}
-@if($mode === 'list')
-<div class="px-3 py-3 flex items-center gap-3" style="background:#DCFCE7;">
-    <button @click="$dispatch('open-sidebar')" onclick="window.dispatchEvent(new CustomEvent('open-sidebar'))"
-            class="md:hidden w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
-            style="background:rgba(21,128,61,0.12);">
-        <svg class="w-4 h-4" fill="none" stroke="#15803D" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-    </button>
-    <h1 class="font-bold text-base flex-1" style="color:#15803D;">Historial de Pagos</h1>
-    <span class="text-sm font-medium" style="color:#15803D;">{{ now()->format('d/m/Y') }}</span>
-</div>
-@endif
 
 <div class="p-4 sm:p-6">
 
