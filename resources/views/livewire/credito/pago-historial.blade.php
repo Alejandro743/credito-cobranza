@@ -171,10 +171,10 @@
         </div>
         <div style="text-align:center; margin-top:6px;">
             <div style="font-family:monospace; font-size:15px; font-weight:800; color:{{ $hColor }};">{{ $pg->pedido->numero }}</div>
-            <div style="margin-top:6px; display:flex; align-items:center; justify-content:center; gap:8px;">
-                <span style="font-family:monospace; font-size:15px; font-weight:800; color:{{ $hColor }}; {{ $esAnulado ? 'text-decoration:line-through; opacity:0.7;' : '' }}">{{ $pg->numero }}</span>
+            <div style="margin-top:4px; display:flex; align-items:center; justify-content:center; gap:4px;">
+                <span style="font-family:monospace; font-size:17px; font-weight:800; color:{{ $hColor }};">{{ $pg->numero }}</span>
                 @if($esAnulado)
-                <span class="ph-badge" style="background:#FEF2F2; color:#B91C1C; font-size:12px; font-weight:800; letter-spacing:0.06em; padding:3px 14px;">(ANULADO)</span>
+                <span class="ph-badge" style="background:#FEF2F2; color:#B91C1C; font-size:12px; font-weight:800; letter-spacing:0.06em; padding:3px 10px;">(ANULADO)</span>
                 @endif
             </div>
         </div>
