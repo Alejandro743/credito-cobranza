@@ -49,10 +49,7 @@ class PagoHistorial extends Component
 
         DB::transaction(function () use ($pago) {
             foreach ($pago->cuotas as $cuota) {
-                $cuota->update([
-                    'estado'     => 'pendiente',
-                    'fecha_pago' => null,
-                ]);
+                $cuota->update(['estado' => 'pendiente']);
             }
 
             $pago->update([
