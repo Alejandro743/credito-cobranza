@@ -305,11 +305,11 @@
                 @endforelse
             </tbody>
             <tfoot>
-                <tr style="background:#f9fffe;">
-                    <td colspan="2" style="padding:9px 12px; border-top:2px solid #d1fae5; font-size:12px; font-weight:700; color:#374151; text-align:right;">
-                        Total: <span style="font-family:monospace; color:#15803D; margin-left:4px;">Bs. {{ number_format($pg->monto_total, 2) }}</span>
+                <tr style="background:#f0fdf4;">
+                    <td colspan="4" style="padding:11px 16px; border-top:2px solid #d1fae5; text-align:center;">
+                        <span style="font-size:13px; font-weight:700; color:#374151;">Total: </span>
+                        <span style="font-family:monospace; font-size:15px; font-weight:800; color:#15803D;">Bs. {{ number_format($pg->monto_total, 2) }}</span>
                     </td>
-                    <td colspan="2" style="padding:9px 12px; border-top:2px solid #d1fae5;"></td>
                 </tr>
             </tfoot>
         </table>
