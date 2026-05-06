@@ -6,6 +6,7 @@
 </style>
 
 {{-- Topbar --}}
+@if($mode === 'list')
 <div class="px-3 py-3 flex items-center gap-3" style="background:#DCFCE7;">
     <button @click="$dispatch('open-sidebar')" onclick="window.dispatchEvent(new CustomEvent('open-sidebar'))"
             class="md:hidden w-8 h-8 flex items-center justify-center rounded-lg flex-shrink-0"
@@ -14,9 +15,10 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
     </button>
-    @if($mode === 'list')<h1 class="font-bold text-base flex-1" style="color:#15803D;">Historial de Pagos</h1>@else<div class="flex-1"></div>@endif
+    <h1 class="font-bold text-base flex-1" style="color:#15803D;">Historial de Pagos</h1>
     <span class="text-sm font-medium" style="color:#15803D;">{{ now()->format('d/m/Y') }}</span>
 </div>
+@endif
 
 <div class="p-4 sm:p-6">
 
