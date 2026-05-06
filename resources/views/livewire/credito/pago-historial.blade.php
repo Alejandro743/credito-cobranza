@@ -181,15 +181,12 @@
             <div style="width:70px; flex-shrink:0;"></div>
             @endif
         </div>
-        <p style="text-align:center; font-size:22px; font-weight:800; color:{{ $hColor }}; font-family:monospace; margin:4px 0 6px; {{ $esAnulado ? 'text-decoration:line-through; opacity:0.6;' : '' }}">
-            Bs. {{ number_format($pg->monto_total, 2) }}
-        </p>
-        <div style="text-align:center;">
-            <span style="font-size:11px; font-weight:500; color:#6b7280;">
-                Código: <span style="font-family:monospace; font-weight:700; color:{{ $hColor }};">{{ $pg->numero }}</span>
-            </span>
+        <div style="text-align:center; margin-top:2px;">
+            <span style="font-family:monospace; font-size:15px; font-weight:800; color:{{ $hColor }};">{{ $pg->numero }}</span>
             @if($esAnulado)
-            <span class="ph-badge" style="background:#FEF2F2; color:#B91C1C; margin-left:8px;">Anulado</span>
+            <div style="margin-top:6px;">
+                <span class="ph-badge" style="background:#FEF2F2; color:#B91C1C; font-size:12px; font-weight:800; letter-spacing:0.06em; padding:3px 14px;">ANULADO</span>
+            </div>
             @endif
         </div>
     </div>
@@ -215,34 +212,101 @@
     </div>
     @endif
 
-    {{-- Info anulación --}}
-    @if($esAnulado)
-    <div style="background:#FEF2F2; border:0.5px solid #FCA5A5; border-radius:10px; padding:10px 14px; margin-bottom:16px; display:flex; align-items:center; gap:10px;">
-        <svg style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="#B91C1C" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        <div>
-            <p style="font-size:11px; font-weight:700; color:#B91C1C; margin:0;">Pago anulado</p>
-            <p style="font-size:11px; color:#6b7280; margin:0;">
-                Por {{ $pg->anuladoPor->name ?? '—' }} el {{ $pg->anulado_at?->format('d/m/Y H:i') }}
-            </p>
-        </div>
-    </div>
-    @endif
-
     {{-- DATOS DEL CLIENTE --}}
     <div style="display:flex; align-items:center; gap:8px; margin:4px 0 10px;">
         <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#15803D;">Datos del Cliente</span>
         <div style="flex:1; height:1px; background:#6ee7b7;"></div>
     </div>
-    <div class="bg-white overflow-hidden mb-4" style="border:0.5px solid #d1fae5; border-radius:10px; padding:10px 12px;">
-        <span style="font-size:9px; font-weight:600; color:#15803D; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:4px;">Cliente</span>
+    <div x-data="{ modal: false }" class="bg-white overflow-hidden mb-4" style="border:0.5px solid #d1fae5; border-radius:10px; padding:10px 12px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+            <span style="font-size:9px; font-weight:600; color:#15803D; text-transform:uppercase; letter-spacing:0.04em;">Cliente</span>
+            <button @click="modal = true"
+                    style="display:inline-flex; align-items:center; gap:4px; background:#DCFCE7; border:none; border-radius:6px; padding:2px 8px; cursor:pointer;">
+                <svg width="10" height="10" fill="none" stroke="#15803D" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                <span style="font-size:9px; font-weight:600; color:#15803D;">Ver Cliente</span>
+            </button>
+        </div>
         <span style="font-size:13px; font-weight:600; color:#166534; display:block;">
             {{ $pg->pedido->cliente->ci ? $pg->pedido->cliente->ci . ' — ' : '' }}{{ $pg->pedido->cliente->nombre_completo }}
         </span>
-        <span style="font-size:11px; color:#9ca3af; display:block; margin-top:2px;">
-            Pedido: <span style="font-family:monospace; font-weight:600; color:#374151;">{{ $pg->pedido->numero }}</span>
-        </span>
+
+        {{-- Modal datos cliente --}}
+        <div x-show="modal"
+             x-transition:enter="transition ease-out duration-200"
+             x-transition:enter-start="opacity-0"
+             x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150"
+             x-transition:leave-start="opacity-100"
+             x-transition:leave-end="opacity-0"
+             class="fixed inset-0 z-50 flex items-center justify-center p-4"
+             style="background:rgba(20,10,40,0.4);"
+             @click.self="modal = false">
+            <div x-show="modal"
+                 x-transition:enter="transition ease-out duration-200"
+                 x-transition:enter-start="opacity-0 scale-95"
+                 x-transition:enter-end="opacity-100 scale-100"
+                 style="background:#F0FDF4; border-radius:18px; width:100%; max-width:420px; overflow:hidden; position:relative; max-height:90vh; overflow-y:auto;">
+                <button @click="modal = false"
+                        style="position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:8px; background:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.1); z-index:1;">
+                    <svg width="12" height="12" fill="none" stroke="#6b7280" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <div style="padding:20px 18px 18px;">
+                    @php
+                    $cli  = $pg->pedido->cliente;
+                    $fSty = 'background:#fff; border-radius:10px; padding:8px 10px; display:flex; align-items:center; gap:8px;';
+                    $iBox = 'width:32px; height:32px; border-radius:8px; background:#DCFCE7; display:flex; align-items:center; justify-content:center; flex-shrink:0;';
+                    $vClr = 'font-size:11px; font-weight:700; color:#166534; margin:0;';
+                    $lClr = 'font-size:8px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#6ee7b7; margin-bottom:1px;';
+                    @endphp
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                        <span style="font-size:12px; font-weight:700; color:#15803D; white-space:nowrap;">Datos del Cliente</span>
+                        <div style="flex:1; height:1px; background:#6ee7b7;"></div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+                        <div style="{{ $fSty }}">
+                            <div style="{{ $iBox }}"><svg width="14" height="14" fill="none" stroke="#15803D" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
+                            <div style="min-width:0;"><p style="{{ $lClr }}">Nombre</p><p style="{{ $vClr }} word-break:break-word;">{{ $cli->nombre_completo }}</p></div>
+                        </div>
+                        <div style="{{ $fSty }}">
+                            <div style="{{ $iBox }}"><svg width="14" height="14" fill="none" stroke="#15803D" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/></svg></div>
+                            <div><p style="{{ $lClr }}">CI</p><p style="{{ $vClr }} font-family:monospace;">{{ $cli->ci ?: '—' }}</p></div>
+                        </div>
+                        <div style="{{ $fSty }}">
+                            <div style="{{ $iBox }}"><svg width="14" height="14" fill="none" stroke="#15803D" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div>
+                            <div><p style="{{ $lClr }}">Teléfono</p><p style="{{ $vClr }}">{{ $cli->telefono ?: '—' }}</p></div>
+                        </div>
+                        <div style="{{ $fSty }}">
+                            <div style="{{ $iBox }}"><svg width="14" height="14" fill="none" stroke="#15803D" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
+                            <div><p style="{{ $lClr }}">Correo</p><p style="{{ $vClr }} word-break:break-all;">{{ $cli->correo ?: '—' }}</p></div>
+                        </div>
+                    </div>
+                    @if($cli->ciudad || $cli->direccion)
+                    <div style="display:flex; align-items:center; gap:8px; margin:8px 0;">
+                        <span style="font-size:11px; font-weight:700; color:#15803D; white-space:nowrap;">Dirección</span>
+                        <div style="flex:1; height:1px; background:#6ee7b7;"></div>
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                        @if($cli->ciudad)
+                        <div style="{{ $fSty }}">
+                            <div style="{{ $iBox }}"><svg width="14" height="14" fill="none" stroke="#15803D" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
+                            <div><p style="{{ $lClr }}">Ciudad</p><p style="{{ $vClr }}">{{ strtoupper($cli->ciudad) }}</p></div>
+                        </div>
+                        @endif
+                        @if($cli->direccion)
+                        <div style="{{ $fSty }}">
+                            <div style="{{ $iBox }}"><svg width="14" height="14" fill="none" stroke="#15803D" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div>
+                            <div><p style="{{ $lClr }}">Dirección</p><p style="{{ $vClr }} word-break:break-word;">{{ $cli->direccion }}</p></div>
+                        </div>
+                        @endif
+                    </div>
+                    @endif
+                </div>
+            </div>
+        </div>
     </div>
 
     {{-- DETALLES DEL PAGO --}}
@@ -315,6 +379,21 @@
         </table>
         </div>
     </div>
+
+    {{-- Info anulación --}}
+    @if($esAnulado)
+    <div style="background:#FEF2F2; border:0.5px solid #FCA5A5; border-radius:10px; padding:10px 14px; margin-top:16px; display:flex; align-items:center; gap:10px;">
+        <svg style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="#B91C1C" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <div>
+            <p style="font-size:11px; font-weight:700; color:#B91C1C; margin:0;">Pago anulado</p>
+            <p style="font-size:11px; color:#6b7280; margin:0;">
+                Por {{ $pg->anuladoPor->name ?? '—' }} el {{ $pg->anulado_at?->format('d/m/Y H:i') }}
+            </p>
+        </div>
+    </div>
+    @endif
 
 </div>
 @endif
