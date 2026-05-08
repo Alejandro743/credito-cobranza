@@ -8,7 +8,6 @@
             </svg>
         </div>
         <h1 style="font-size:clamp(3rem, 10vw, 7rem); font-weight:900; color:#4C1D95; letter-spacing:-0.03em; margin:0; line-height:1;">PANEL INICIO</h1>
-        <p style="font-size:1.1rem; color:#7C3AED; font-weight:600; margin-top:16px; letter-spacing:0.05em; text-transform:uppercase;">Administrador</p>
     </div>
 </div>
 </x-admin-layout>
