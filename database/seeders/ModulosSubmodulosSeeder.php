@@ -135,7 +135,7 @@ class ModulosSubmodulosSeeder extends Seeder
                             ['name' => 'Mis Clientes',         'slug' => 'vendedor-clientes',     'route_name' => 'vendedor.clientes',     'sort_order' => 1],
                             ['name' => 'Registrar Nuevo Plan', 'slug' => 'vendedor-oferta',       'route_name' => 'vendedor.oferta',       'sort_order' => 2],
                             ['name' => 'Revisión del Crédito', 'slug' => 'vendedor-pedidos',      'route_name' => 'vendedor.pedidos',      'sort_order' => 3],
-                            ['name' => 'Pagos y Saldos',       'slug' => 'vendedor-pagos-saldos', 'route_name' => 'vendedor.pagos-saldos', 'sort_order' => 4],
+                            ['name' => 'Historial de Pagos',   'slug' => 'vendedor-pagos-saldos', 'route_name' => 'vendedor.pagos-saldos', 'sort_order' => 4],
                         ],
                     ],
                 ],
