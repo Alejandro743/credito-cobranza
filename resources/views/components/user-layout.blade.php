@@ -170,19 +170,19 @@
             </div>
         </div>
 
-        <!-- Dashboard — siempre visible -->
+        <!-- Panel Inicio — siempre visible -->
         @php
             $dashRoute  = $navUser->hasRole('admin') ? route('admin.dashboard') : route('dashboard');
-            $dashActivo = request()->routeIs('admin.dashboard') || request()->routeIs('dashboard');
+            $dashActivo = request()->routeIs('admin.dashboard') || request()->routeIs('vendedor.dashboard') || request()->routeIs('cliente.dashboard');
         @endphp
         <div class="px-3 pt-3 pb-1 flex-shrink-0">
             <a href="{{ $dashRoute }}"
                class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
                       {{ $dashActivo ? 'bg-lavanda-100 text-lavanda-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                 </svg>
-                Dashboard
+                Panel Inicio
             </a>
         </div>
 

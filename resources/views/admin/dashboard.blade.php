@@ -1,5 +1,18 @@
 <x-admin-layout>
-@section('page-title', 'Dashboard')
+@section('page-title', 'Panel Inicio')
+
+{{-- Hero --}}
+<div style="text-align:center; padding:48px 32px 40px; margin-bottom:32px;">
+    <div style="width:80px; height:80px; border-radius:24px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; margin:0 auto 24px; box-shadow:0 4px 20px rgba(109,40,217,0.12);">
+        <svg width="40" height="40" fill="none" stroke="#5B21B6" stroke-width="1.8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+        </svg>
+    </div>
+    <h1 style="font-size:clamp(3rem, 8vw, 6rem); font-weight:900; color:#4C1D95; letter-spacing:-0.03em; margin:0; line-height:1;">PANEL INICIO</h1>
+    <p style="font-size:1.1rem; color:#7C3AED; font-weight:600; margin-top:16px; letter-spacing:0.05em; text-transform:uppercase;">Administrador</p>
+</div>
+
+{{-- Cards --}}
 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
     @php
     $cards = [

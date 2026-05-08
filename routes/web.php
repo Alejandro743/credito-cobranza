@@ -10,24 +10,9 @@ Route::get('/', fn() => view('welcome'));
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
-    if ($user->hasRole('admin')) {
-        return redirect()->route('admin.dashboard');
-    }
-
-    $roleId = $user->roles->first()?->id;
-    if ($roleId) {
-        $primer = RolSubmoduloPermiso::where('role_id', $roleId)
-            ->where('puede_ver', true)
-            ->with(['submodulo' => fn($q) => $q->where('active', true)->whereNotNull('route_name')->orderBy('sort_order')])
-            ->get()
-            ->filter(fn($p) => $p->submodulo?->route_name && Route::has($p->submodulo->route_name))
-            ->sortBy('submodulo.sort_order')
-            ->first();
-
-        if ($primer) {
-            return redirect()->route($primer->submodulo->route_name);
-        }
-    }
+    if ($user->hasRole('admin'))    return redirect()->route('admin.dashboard');
+    if ($user->hasRole('vendedor')) return redirect()->route('vendedor.dashboard');
+    if ($user->hasRole('cliente'))  return redirect()->route('cliente.dashboard');
 
     abort(403, 'No tenés módulos asignados. Contactá al administrador.');
 
@@ -98,6 +83,7 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('credito')->name('credi
 
 // ─── Módulo Vendedor / EIE ────────────────────────────────────────────────────
 Route::middleware(['auth', 'submodulo.permiso'])->prefix('vendedor')->name('vendedor.')->group(function () {
+    Route::get('/dashboard',     fn() => view('modules.vendedor.dashboard'))->name('dashboard');
     Route::get('/clientes',      fn() => view('modules.vendedor.clientes'))->name('clientes');
     Route::get('/oferta',        fn() => view('modules.vendedor.oferta'))->name('oferta');
     Route::get('/pedidos',       fn() => view('modules.vendedor.pedidos'))->name('pedidos');
@@ -106,6 +92,7 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('vendedor')->name('vend
 
 // ─── Módulo Cliente ───────────────────────────────────────────────────────────
 Route::middleware(['auth', 'submodulo.permiso'])->prefix('cliente')->name('cliente.')->group(function () {
+    Route::get('/dashboard',     fn() => view('modules.cliente.dashboard'))->name('dashboard');
     Route::get('/cuenta',        fn() => view('modules.cliente.cuenta'))->name('cuenta');
     Route::get('/pedidos',       fn() => view('modules.cliente.pedidos'))->name('pedidos');
     Route::get('/plan',          fn() => view('modules.cliente.plan'))->name('plan');
