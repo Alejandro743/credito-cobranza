@@ -43,7 +43,7 @@ class PagoHistorial extends Component
 
         if ($this->mode === 'list') {
             $query = Pago::with(['pedido.cliente.usuario', 'creadoPor'])
-                ->whereHas('pedido.cliente', fn($q) => $q->where('vendedor_id', $this->vendedorId))
+                ->whereHas('pedido', fn($q) => $q->where('vendedor_id', $this->vendedorId))
                 ->orderByDesc('created_at');
 
             if (strlen(trim($this->search)) >= 2) {
@@ -63,7 +63,7 @@ class PagoHistorial extends Component
 
         if ($this->mode === 'detalle' && $this->pagoId) {
             $pagoDetalle = Pago::with(['pedido.cliente.usuario', 'planPago', 'cuotas', 'creadoPor', 'anuladoPor'])
-                ->whereHas('pedido.cliente', fn($q) => $q->where('vendedor_id', $this->vendedorId))
+                ->whereHas('pedido', fn($q) => $q->where('vendedor_id', $this->vendedorId))
                 ->find($this->pagoId);
 
             if ($pagoDetalle) {
