@@ -1,8 +1,6 @@
 <div>
 <style>
-.vph-badge  { display:inline-flex; align-items:center; padding:2px 8px; border-radius:20px; font-size:10px; font-weight:600; }
-.vph-th     { cursor:pointer; user-select:none; white-space:nowrap; }
-.vph-th:hover { background:#FEF3C7; filter:brightness(0.96); }
+.vph-badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:20px; font-size:10px; font-weight:600; }
 </style>
 
 <div class="p-4 sm:p-6">
@@ -27,32 +25,15 @@
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div style="overflow-x:auto;">
     <table style="border-collapse:separate; border-spacing:0; width:100%; font-size:13px; min-width:650px;">
-        @php
-        $ico = fn($col) => $sortCol === $col
-            ? ($sortDir === 'asc'
-                ? '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 15l7-7 7 7"/></svg>'
-                : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>')
-            : '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" opacity="0.35"><path stroke-linecap="round" stroke-linejoin="round" d="M8 9l4-4 4 4M8 15l4 4 4-4"/></svg>';
-        @endphp
         <thead style="{{ $theadStyle }}">
             <tr>
-                <th wire:click="sortBy('numero')" class="vph-th" style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #FDE68A; width:150px;">
-                    <span style="display:inline-flex;align-items:center;gap:4px;">Código {!! $ico('numero') !!}</span>
-                </th>
+                <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #FDE68A; width:150px;">Código</th>
                 <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #FDE68A; width:120px;">Pedido</th>
                 <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #FDE68A;">Cliente</th>
-                <th wire:click="sortBy('cantidad_cuotas')" class="vph-th" style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #FDE68A; width:80px;">
-                    <span style="display:inline-flex;align-items:center;justify-content:center;gap:4px;">Cuotas {!! $ico('cantidad_cuotas') !!}</span>
-                </th>
-                <th wire:click="sortBy('monto_total')" class="vph-th" style="padding:8px 12px; text-align:right; font-weight:700; border:0.5px solid #FDE68A; width:130px;">
-                    <span style="display:inline-flex;align-items:center;justify-content:flex-end;gap:4px;">Monto total {!! $ico('monto_total') !!}</span>
-                </th>
-                <th wire:click="sortBy('created_at')" class="vph-th" style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #FDE68A; width:100px;">
-                    <span style="display:inline-flex;align-items:center;justify-content:center;gap:4px;">Fecha {!! $ico('created_at') !!}</span>
-                </th>
-                <th wire:click="sortBy('estado')" class="vph-th" style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #FDE68A; width:90px;">
-                    <span style="display:inline-flex;align-items:center;justify-content:center;gap:4px;">Estado {!! $ico('estado') !!}</span>
-                </th>
+                <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #FDE68A; width:80px;">Cuotas</th>
+                <th style="padding:8px 12px; text-align:right; font-weight:700; border:0.5px solid #FDE68A; width:130px;">Monto total</th>
+                <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #FDE68A; width:100px;">Fecha</th>
+                <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #FDE68A; width:90px;">Estado</th>
                 <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #FDE68A; width:60px;">Ver</th>
             </tr>
         </thead>

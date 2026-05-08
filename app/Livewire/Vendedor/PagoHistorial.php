@@ -14,9 +14,6 @@ class PagoHistorial extends Component
     public string $mode      = 'list';
     public string $search    = '';
     public ?int   $pagoId    = null;
-    public string $sortCol   = 'created_at';
-    public string $sortDir   = 'desc';
-
     public ?int $vendedorId = null;
 
     public function mount(): void
@@ -26,17 +23,6 @@ class PagoHistorial extends Component
     }
 
     public function updatingSearch(): void { $this->resetPage(); }
-
-    public function sortBy(string $col): void
-    {
-        if ($this->sortCol === $col) {
-            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
-        } else {
-            $this->sortCol = $col;
-            $this->sortDir = 'asc';
-        }
-        $this->resetPage();
-    }
 
     public function verPago(int $id): void
     {
@@ -56,15 +42,8 @@ class PagoHistorial extends Component
 
         if ($this->mode === 'list') {
             $query = Pago::with(['pedido.cliente.usuario', 'creadoPor'])
-                ->whereHas('pedido', fn($q) => $q->where('vendedor_id', $this->vendedorId));
-
-            match ($this->sortCol) {
-                'numero'         => $query->orderBy('numero', $this->sortDir),
-                'cantidad_cuotas'=> $query->orderBy('cantidad_cuotas', $this->sortDir),
-                'monto_total'    => $query->orderBy('monto_total', $this->sortDir),
-                'estado'         => $query->orderBy('estado', $this->sortDir),
-                default          => $query->orderBy('created_at', $this->sortDir),
-            };
+                ->whereHas('pedido', fn($q) => $q->where('vendedor_id', $this->vendedorId))
+                ->orderByDesc('created_at');
 
             if (strlen(trim($this->search)) >= 2) {
                 $query->where(fn($q) => $q
