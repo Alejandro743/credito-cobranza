@@ -298,23 +298,6 @@
         </div>
     </div>
 
-    {{-- DETALLES DEL PAGO --}}
-    <div style="display:flex; align-items:center; gap:8px; margin:4px 0 10px;">
-        <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#15803D;">Detalles del Pago</span>
-        <div style="flex:1; height:1px; background:#6ee7b7;"></div>
-    </div>
-    <div class="bg-white overflow-hidden mb-4" style="border:0.5px solid #d1fae5; border-radius:10px; padding:12px 16px; display:flex; gap:24px; flex-wrap:wrap;">
-        <div>
-            <p style="font-size:9px; font-weight:600; color:#9ca3af; text-transform:uppercase; letter-spacing:0.04em; margin:0 0 3px;">Fecha</p>
-            <p style="font-size:13px; font-weight:600; color:#374151; margin:0;">{{ $pg->created_at->format('d/m/Y') }}</p>
-            <p style="font-size:11px; color:#9ca3af; margin:0;">{{ $pg->created_at->format('H:i') }}</p>
-        </div>
-        <div>
-            <p style="font-size:9px; font-weight:600; color:#9ca3af; text-transform:uppercase; letter-spacing:0.04em; margin:0 0 3px;">Registrado por</p>
-            <p style="font-size:13px; font-weight:600; color:#374151; margin:0;">{{ $pg->creadoPor->name ?? '—' }}</p>
-        </div>
-    </div>
-
     {{-- CUOTAS PAGADAS --}}
     <div style="display:flex; align-items:center; gap:8px; margin:4px 0 10px;">
         <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:{{ $esAnulado ? '#B91C1C' : '#15803D' }};">
@@ -358,10 +341,10 @@
                 @endforelse
             </tbody>
             <tfoot>
-                <tr style="background:#f0fdf4;">
-                    <td colspan="4" style="padding:11px 16px; border-top:2px solid #d1fae5; text-align:center;">
+                <tr style="background:{{ $esAnulado ? '#FEF2F2' : '#f0fdf4' }};">
+                    <td colspan="4" style="padding:11px 16px; border-top:2px solid {{ $esAnulado ? '#FCA5A5' : '#d1fae5' }}; text-align:center;">
                         <span style="font-size:13px; font-weight:700; color:#374151;">Total: </span>
-                        <span style="font-family:monospace; font-size:15px; font-weight:800; color:#15803D;">Bs. {{ number_format($pg->monto_total, 2) }}</span>
+                        <span style="font-family:monospace; font-size:15px; font-weight:800; color:{{ $esAnulado ? '#B91C1C' : '#15803D' }}; {{ $esAnulado ? 'text-decoration:line-through;' : '' }}">Bs. {{ number_format($pg->monto_total, 2) }}</span>
                     </td>
                 </tr>
             </tfoot>
