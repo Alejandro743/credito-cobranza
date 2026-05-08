@@ -15,7 +15,7 @@ class PagoHistorial extends Component
     public string $search = '';
     public ?int   $pagoId = null;
 
-    protected ?int $vendedorId = null;
+    public ?int $vendedorId = null;
 
     public function mount(): void
     {
