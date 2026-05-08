@@ -170,6 +170,22 @@
             </div>
         </div>
 
+        <!-- Dashboard — siempre visible -->
+        @php
+            $dashRoute  = $navUser->hasRole('admin') ? route('admin.dashboard') : route('dashboard');
+            $dashActivo = request()->routeIs('admin.dashboard') || request()->routeIs('dashboard');
+        @endphp
+        <div class="px-3 pt-3 pb-1 flex-shrink-0">
+            <a href="{{ $dashRoute }}"
+               class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all
+                      {{ $dashActivo ? 'bg-lavanda-100 text-lavanda-700' : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900' }}">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7h18M3 12h18M3 17h18"/>
+                </svg>
+                Dashboard
+            </a>
+        </div>
+
         <!-- Navegación -->
         <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-1"
              x-data="{ activeModule: '{{ $activeModuloSlug }}' }">
