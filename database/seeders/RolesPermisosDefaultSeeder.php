@@ -22,7 +22,10 @@ class RolesPermisosDefaultSeeder extends Seeder
         $defaults = [
             'admin'   => ['*'],
             'credito' => [
-                'credito-pedidos', 'credito-aprobacion', 'credito-cobranza', 'credito-reprogramacion',
+                'credito-clientes', 'credito-cobranza', 'credito-espera', 'credito-revision',
+                'credito-aprobado', 'credito-pagos-pasarela', 'credito-pagos-manuales',
+                'credito-reprog-nueva', 'credito-reprog-historial', 'credito-pagos-historial',
+                'credito-indicadores-calificacion', 'credito-indicadores-calificacion-clientes',
             ],
             'vendedor' => [
                 'vendedor-clientes', 'vendedor-oferta', 'vendedor-pedidos', 'vendedor-pagos-saldos',

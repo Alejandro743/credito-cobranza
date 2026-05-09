@@ -7,14 +7,16 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', fn() => view('welcome'));
 
 // ─── Redirect dinámico según permisos ─────────────────────────────────────────
+Route::middleware('auth')->get('/administrativo/dashboard', fn() => view('modules.administrativo.dashboard'))->name('administrativo.dashboard');
+
 Route::get('/dashboard', function () {
     $user = auth()->user();
 
-    if ($user->hasRole('admin'))    return redirect()->route('admin.dashboard');
-    if ($user->hasRole('vendedor')) return redirect()->route('vendedor.dashboard');
-    if ($user->hasRole('cliente'))  return redirect()->route('cliente.dashboard');
-
-    abort(403, 'No tenés módulos asignados. Contactá al administrador.');
+    return match($user->tipo) {
+        'vendedor' => redirect()->route('vendedor.dashboard'),
+        'cliente'  => redirect()->route('cliente.dashboard'),
+        default    => redirect()->route('administrativo.dashboard'),
+    };
 
 })->middleware(['auth', 'verified'])->name('dashboard');
 
@@ -66,6 +68,7 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('admin')->name('admin.'
 
 // ─── Módulo Crédito / Cobranza ────────────────────────────────────────────────
 Route::middleware(['auth', 'submodulo.permiso'])->prefix('credito')->name('credito.')->group(function () {
+    Route::get('/dashboard',     fn() => view('modules.credito.dashboard'))->name('dashboard');
     Route::get('/espera',        fn() => view('modules.credito.espera'))->name('espera');
     Route::get('/revision',      fn() => view('modules.credito.revision'))->name('revision');
     Route::get('/aprobado',      fn() => view('modules.credito.aprobado'))->name('aprobado');

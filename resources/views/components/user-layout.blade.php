@@ -172,8 +172,12 @@
 
         <!-- Panel Inicio — siempre visible -->
         @php
-            $dashRoute  = $navUser->hasRole('admin') ? route('admin.dashboard') : route('dashboard');
-            $dashActivo = request()->routeIs('admin.dashboard') || request()->routeIs('vendedor.dashboard') || request()->routeIs('cliente.dashboard');
+            $dashRoute = match($navUser->tipo) {
+                'vendedor' => route('vendedor.dashboard'),
+                'cliente'  => route('cliente.dashboard'),
+                default    => route('administrativo.dashboard'),
+            };
+            $dashActivo = request()->routeIs('administrativo.dashboard') || request()->routeIs('vendedor.dashboard') || request()->routeIs('cliente.dashboard');
         @endphp
         <div class="px-3 pt-3 pb-1 flex-shrink-0">
             <a href="{{ $dashRoute }}"

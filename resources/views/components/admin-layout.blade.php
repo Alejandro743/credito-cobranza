@@ -142,8 +142,8 @@
 
         <!-- Panel Inicio — siempre visible, fuera del área scrollable -->
         @php
-            $dashRoute  = $navUser->hasRole('admin') ? route('admin.dashboard') : route('dashboard');
-            $dashActivo = request()->routeIs('admin.dashboard');
+            $dashRoute  = route('administrativo.dashboard');
+            $dashActivo = request()->routeIs('administrativo.dashboard');
         @endphp
         <div class="px-3 pt-3 pb-1 flex-shrink-0">
             <a href="{{ $dashRoute }}"

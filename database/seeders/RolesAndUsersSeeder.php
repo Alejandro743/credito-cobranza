@@ -18,7 +18,7 @@ class RolesAndUsersSeeder extends Seeder
         app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Crear roles
-        $roles = ['admin', 'vendedor', 'cliente'];
+        $roles = ['admin', 'credito', 'vendedor', 'cliente'];
         foreach ($roles as $roleName) {
             Role::firstOrCreate(['name' => $roleName]);
         }
@@ -35,6 +35,19 @@ class RolesAndUsersSeeder extends Seeder
             ]
         );
         $admin->syncRoles(['admin']);
+
+        // ── Usuario crédito (prueba) ──────────────────────────────────────────
+        $credito = User::updateOrCreate(
+            ['email' => 'credito@credito.test'],
+            [
+                'name'     => 'Crédito',
+                'apellido' => 'Demo',
+                'password' => Hash::make('password'),
+                'tipo'     => 'administrativo',
+                'active'   => true,
+            ]
+        );
+        $credito->syncRoles(['credito']);
 
         // ── Usuario vendedor (prueba) ──────────────────────────────────────────
         $vendedor = User::updateOrCreate(
@@ -80,8 +93,9 @@ class RolesAndUsersSeeder extends Seeder
             ['prefijo' => 'LN', 'siguiente_numero' => 1, 'longitud' => 6]
         );
 
-        // Crear registro en clientes si no existe
-        if (!Cliente::where('usuario_id', $clienteUser->id)->exists()) {
+        // Crear registro en clientes si no existe (evitar duplicado de CI)
+        if (!Cliente::where('usuario_id', $clienteUser->id)->exists() &&
+            !Cliente::where('ci', '00000001')->exists()) {
             Cliente::create([
                 'usuario_id'  => $clienteUser->id,
                 'vendedor_id' => $vendedor->id,
