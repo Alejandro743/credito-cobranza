@@ -23,9 +23,10 @@ class RolesPermisosDefaultSeeder extends Seeder
             'admin'   => ['*'],
             'credito' => [
                 'credito-clientes', 'credito-cobranza', 'credito-espera', 'credito-revision',
-                'credito-aprobado', 'credito-pagos-pasarela', 'credito-pagos-manuales',
+                'credito-aprobado', 'credito-cerrado', 'credito-pagos-pasarela', 'credito-pagos-manuales',
                 'credito-reprog-nueva', 'credito-reprog-historial', 'credito-pagos-historial',
                 'credito-indicadores-calificacion', 'credito-indicadores-calificacion-clientes',
+                'def-motivo-cierre',
             ],
             'vendedor' => [
                 'vendedor-clientes', 'vendedor-oferta', 'vendedor-pedidos', 'vendedor-pagos-saldos',

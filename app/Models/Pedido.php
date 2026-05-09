@@ -55,6 +55,12 @@ class Pedido extends Model
         return $this->hasMany(PlanPago::class)->orderBy('version');
     }
 
+    /** Registro de cierre activo (no revertido) */
+    public function cierre(): HasOne
+    {
+        return $this->hasOne(PedidoCierre::class)->whereNull('revertido_at')->latest();
+    }
+
     public function financialMatrix(): BelongsTo
     {
         return $this->belongsTo(FinancialMatrix::class);

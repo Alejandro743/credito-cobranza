@@ -2,6 +2,8 @@
 
 namespace App\Livewire\Credito;
 
+use App\Models\MotivoCierre;
+use App\Models\PedidoCierre;
 use App\Models\Pedido;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -17,6 +19,11 @@ class AprobadoManager extends Component
     public bool   $confirmandoRechazo = false;
     public string $notaRechazo       = '';
 
+    // Cierre de crédito
+    public bool   $confirmandoCierre  = false;
+    public ?int   $motivoCierreId     = null;
+    public string $observacionCierre  = '';
+
     public function updatingSearch(): void      { $this->resetPage(); }
     public function updatingFiltroEstado(): void { $this->resetPage(); }
 
@@ -25,6 +32,9 @@ class AprobadoManager extends Component
         $this->viewingId          = $id;
         $this->confirmandoRechazo = false;
         $this->notaRechazo        = '';
+        $this->confirmandoCierre  = false;
+        $this->motivoCierreId     = null;
+        $this->observacionCierre  = '';
         $this->mode               = 'detail';
     }
 
@@ -33,6 +43,9 @@ class AprobadoManager extends Component
         $this->viewingId          = null;
         $this->confirmandoRechazo = false;
         $this->notaRechazo        = '';
+        $this->confirmandoCierre  = false;
+        $this->motivoCierreId     = null;
+        $this->observacionCierre  = '';
         $this->mode               = 'list';
     }
 
@@ -73,6 +86,38 @@ class AprobadoManager extends Component
         $this->backToList();
     }
 
+    public function cerrar(): void
+    {
+        $this->validate([
+            'motivoCierreId'    => 'required|exists:motivo_cierres,id',
+            'observacionCierre' => 'nullable|string|max:500',
+        ], [
+            'motivoCierreId.required' => 'Seleccioná un motivo de cierre.',
+            'motivoCierreId.exists'   => 'Motivo inválido.',
+        ]);
+
+        $pedido = Pedido::where('estado', 'aprobado')->findOrFail($this->viewingId);
+        $plan   = $pedido->planPago;
+
+        // Cerrar plan de pagos
+        $plan->update(['estado' => 'cerrado']);
+
+        // Cerrar pedido
+        $pedido->update(['estado' => 'cerrado']);
+
+        // Registrar transacción de cierre
+        PedidoCierre::create([
+            'pedido_id'       => $pedido->id,
+            'plan_pago_id'    => $plan->id,
+            'motivo_cierre_id'=> $this->motivoCierreId,
+            'observacion'     => $this->observacionCierre ?: null,
+            'cerrado_por'     => auth()->id(),
+        ]);
+
+        session()->flash('success', 'Crédito cerrado correctamente.');
+        $this->backToList();
+    }
+
     public function render()
     {
         $pedidos = Pedido::with(['cliente.usuario', 'vendedor.user'])
@@ -92,6 +137,8 @@ class AprobadoManager extends Component
             ])->find($this->viewingId);
         }
 
-        return view('livewire.credito.aprobado-manager', compact('pedidos', 'pedidoDetalle'));
+        $motivosCierre = MotivoCierre::activos();
+
+        return view('livewire.credito.aprobado-manager', compact('pedidos', 'pedidoDetalle', 'motivosCierre'));
     }
 }

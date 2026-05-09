@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             RolesPermisosDefaultSeeder::class,       // permisos iniciales por rol
             CiudadesProvinciaMunicipioSeeder::class, // Bolivia: ciudades, provincias, municipios
             DefinicionesDefaultSeeder::class,        // registros "Por Defecto" de pesos y rangos
+            MotivoCierreSeeder::class,               // motivos de cierre de crédito por defecto
         ]);
     }
 }

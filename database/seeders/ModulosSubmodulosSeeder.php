@@ -64,6 +64,7 @@ class ModulosSubmodulosSeeder extends Seeder
                             ['name' => 'Correlativo',           'slug' => 'def-correlativo',        'route_name' => 'admin.definiciones.correlativo',        'sort_order' => 1],
                             ['name' => 'Pesos de Indicadores',  'slug' => 'def-peso-indicadores',   'route_name' => 'admin.definiciones.peso-indicadores',   'sort_order' => 2],
                             ['name' => 'Rangos de Calificación','slug' => 'def-rango-calificacion', 'route_name' => 'admin.definiciones.rango-calificacion', 'sort_order' => 3],
+                            ['name' => 'Motivos de Cierre',     'slug' => 'def-motivo-cierre',      'route_name' => 'admin.definiciones.motivo-cierre',      'sort_order' => 4],
                         ],
                     ],
                     // Grupo: Configuración del Ciclo
@@ -92,6 +93,7 @@ class ModulosSubmodulosSeeder extends Seeder
                             ['name' => 'En Espera de Aprobación', 'slug' => 'credito-espera',    'route_name' => 'credito.espera',         'sort_order' => 2],
                             ['name' => 'En Revisión',             'slug' => 'credito-revision',  'route_name' => 'credito.revision',       'sort_order' => 3],
                             ['name' => 'Aprobado/Rechazado',      'slug' => 'credito-aprobado',  'route_name' => 'credito.aprobado',       'sort_order' => 4],
+                            ['name' => 'Cerrado',                 'slug' => 'credito-cerrado',   'route_name' => 'credito.cerrado',        'sort_order' => 5],
                         ],
                     ],
                     ['name' => 'Cobranza',       'slug' => 'credito-cobranza',       'route_name' => 'credito.cobranza',       'sort_order' => 2, 'children' => []],

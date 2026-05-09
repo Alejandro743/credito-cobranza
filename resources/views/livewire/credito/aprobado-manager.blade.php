@@ -56,7 +56,7 @@ $estilosActivos = [
     @include('livewire.credito.partials.pedido-detail')
 
     {{-- Acciones según estado --}}
-    @if (!$confirmandoRechazo)
+    @if (!$confirmandoRechazo && !$confirmandoCierre)
     <div class="flex items-center gap-3" style="margin-top:8px;">
 
         {{-- Izquierda: devolver a revisión — oculto si ya pagó cuotas --}}
@@ -69,6 +69,18 @@ $estilosActivos = [
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
             </svg>
             A Revisión
+        </button>
+        @endif
+
+        {{-- Cerrar crédito — solo cuando hay cuotas pagadas y está aprobado --}}
+        @if ($tieneCuotasPagadas && $p->estado === 'aprobado')
+        <button wire:click="$set('confirmandoCierre', true)"
+                class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors"
+                style="border:1.5px solid #D1D5DB; color:#374151; background:transparent;">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12a2 2 0 002 2h8a2 2 0 002-2L19 8"/>
+            </svg>
+            Cerrar Crédito
         </button>
         @endif
 
@@ -97,8 +109,8 @@ $estilosActivos = [
         @endif
     </div>
 
-    @else
-    {{-- Panel de rechazo (solo desde aprobado) --}}
+    @elseif ($confirmandoRechazo)
+    {{-- Panel de rechazo --}}
     <div style="background:#FEF2F2; border:1px solid #FCA5A5; border-radius:14px; padding:16px; margin-top:8px;">
         <p class="font-semibold text-sm mb-3" style="color:#B91C1C;">Motivo del rechazo</p>
         <textarea wire:model="notaRechazo" rows="3"
@@ -113,6 +125,41 @@ $estilosActivos = [
             <button wire:click="rechazar"
                     class="px-5 py-2 text-white text-sm font-semibold rounded-xl"
                     style="background:#B91C1C;">Confirmar Rechazo</button>
+        </div>
+    </div>
+
+    @elseif ($confirmandoCierre)
+    {{-- Panel de cierre de crédito --}}
+    <div style="background:#F9FAFB; border:1px solid #D1D5DB; border-radius:14px; padding:16px; margin-top:8px;">
+        <p class="font-semibold text-sm mb-3" style="color:#374151;">Cerrar Crédito</p>
+
+        <div style="margin-bottom:12px;">
+            <label style="font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:4px;">Motivo *</label>
+            <select wire:model="motivoCierreId"
+                    style="width:100%; padding:8px 10px; border:1px solid #D1D5DB; border-radius:8px; font-size:13px; background:#fff; outline:none;">
+                <option value="">Seleccioná un motivo...</option>
+                @foreach($motivosCierre as $m)
+                <option value="{{ $m->id }}">{{ $m->nombre }}</option>
+                @endforeach
+            </select>
+            @error('motivoCierreId')<p class="text-xs mt-1" style="color:#B91C1C;">{{ $message }}</p>@enderror
+        </div>
+
+        <div style="margin-bottom:12px;">
+            <label style="font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:4px;">Observación <span style="font-weight:400;">(opcional)</span></label>
+            <textarea wire:model="observacionCierre" rows="3"
+                      placeholder="Detalle adicional sobre el cierre..."
+                      class="w-full text-sm border rounded-xl px-3 py-2 focus:outline-none bg-white"
+                      style="border-color:#D1D5DB;"></textarea>
+        </div>
+
+        <div class="flex gap-3 justify-end">
+            <button wire:click="$set('confirmandoCierre', false)"
+                    class="px-4 py-2 text-sm rounded-xl"
+                    style="background:#f3f4f6; color:#6b7280;">Cancelar</button>
+            <button wire:click="cerrar"
+                    class="px-5 py-2 text-white text-sm font-semibold rounded-xl"
+                    style="background:#374151;">Confirmar Cierre</button>
         </div>
     </div>
     @endif
