@@ -1,4 +1,3 @@
-<x-user-layout>
-@section('page-title', 'Créditos Cerrados')
+<x-user-layout :no-header="true" :no-padding="true">
 <livewire:credito.cerrado-manager />
 </x-user-layout>
