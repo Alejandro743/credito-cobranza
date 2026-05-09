@@ -395,18 +395,27 @@
             recalc() {
                 let inputs = this.$el.querySelectorAll('.monto-edit');
                 let total = Array.from(inputs).reduce((s, el) => s + (parseFloat(el.value) || 0), 0);
+                let diff  = Math.round((total - this.saldo) * 100) / 100;
+
                 this.$refs.totalDisplay.textContent = 'Bs. ' + total.toFixed(2);
-                let diff = Math.round((total - this.saldo) * 100) / 100;
-                let el = this.$refs.diffDisplay;
+
+                let diffEl = this.$refs.diffDisplay;
+                let diffCard = this.$refs.diffCard;
                 if (Math.abs(diff) < 0.01) {
-                    el.textContent = '✓ Cuadra exacto';
-                    el.style.color = '#15803D';
+                    diffEl.textContent = '✓ Cuadra exacto';
+                    diffEl.style.color = '#15803D';
+                    diffCard.style.background = '#F0FDF4';
+                    diffCard.style.borderColor = '#86EFAC';
                 } else if (diff > 0) {
-                    el.textContent = '+Bs. ' + diff.toFixed(2) + ' sobre saldo';
-                    el.style.color = '#854F0B';
+                    diffEl.textContent = '+Bs. ' + diff.toFixed(2);
+                    diffEl.style.color = '#854F0B';
+                    diffCard.style.background = '#FFFBEB';
+                    diffCard.style.borderColor = '#FCD34D';
                 } else {
-                    el.textContent = '−Bs. ' + Math.abs(diff).toFixed(2) + ' bajo saldo';
-                    el.style.color = '#B91C1C';
+                    diffEl.textContent = '−Bs. ' + Math.abs(diff).toFixed(2);
+                    diffEl.style.color = '#B91C1C';
+                    diffCard.style.background = '#FEF2F2';
+                    diffCard.style.borderColor = '#FCA5A5';
                 }
             }
          }"
@@ -476,18 +485,23 @@
                 </tr>
                 @endforeach
             </tbody>
-            <tfoot>
-                <tr style="background:#f9fffe; border-top:2px solid #d1fae5;">
-                    <td colspan="2" style="padding:10px 12px; font-size:12px; font-weight:700; color:#374151;">
-                        Total pendiente:
-                        <span x-ref="totalDisplay" style="font-size:14px; color:#15803D; font-family:monospace; margin-left:6px;"></span>
-                    </td>
-                    <td colspan="3" style="padding:10px 12px; text-align:right;">
-                        <span x-ref="diffDisplay" style="font-size:11px; font-weight:700;"></span>
-                    </td>
-                </tr>
-            </tfoot>
         </table>
+        </div>
+
+        {{-- Resumen en tiempo real --}}
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:1px; background:#e5e7eb; border-top:2px solid #d1fae5;">
+            <div style="padding:12px 16px; background:#F9FAFB; text-align:center;">
+                <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#9ca3af; margin:0 0 4px;">Saldo a cubrir</p>
+                <p style="font-size:16px; font-weight:800; color:#374151; font-family:monospace; margin:0;">Bs. {{ number_format($pendActual, 2) }}</p>
+            </div>
+            <div style="padding:12px 16px; background:#F9FAFB; text-align:center;">
+                <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#9ca3af; margin:0 0 4px;">Total cuotas</p>
+                <p x-ref="totalDisplay" style="font-size:16px; font-weight:800; color:#1D4ED8; font-family:monospace; margin:0;"></p>
+            </div>
+            <div x-ref="diffCard" style="padding:12px 16px; text-align:center; border-radius:0 0 14px 0; border:1.5px solid transparent;">
+                <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#9ca3af; margin:0 0 4px;">Diferencia</p>
+                <p x-ref="diffDisplay" style="font-size:16px; font-weight:800; font-family:monospace; margin:0;"></p>
+            </div>
         </div>
     </div>
 
