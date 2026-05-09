@@ -354,11 +354,13 @@
 {{-- ══ EDITAR ══ --}}
 @elseif($mode === 'editar' && $reprogramacionDetalle)
 @php
-    $rp        = $reprogramacionDetalle;
-    $p         = $rp->pedido;
-    $planNuevo = $rp->planNuevo;
-    $pagado    = $planNuevo?->cuotas->where('numero','>',0)->where('estado','pagado')->sum('monto') ?? 0;
-    $pendActual= $planNuevo?->cuotas->where('numero','>',0)->where('estado','!=','pagado')->sum('monto') ?? 0;
+    $rp          = $reprogramacionDetalle;
+    $p           = $rp->pedido;
+    $planNuevo   = $rp->planNuevo;
+    $pagado      = $planNuevo?->cuotas->where('numero','>',0)->where('estado','pagado')->sum('monto') ?? 0;
+    $pendActual  = $planNuevo?->cuotas->where('numero','>',0)->where('estado','!=','pagado')->sum('monto') ?? 0;
+    $totalEditado = round(collect($cuotasEditadas)->filter(fn($c) => !($c['pagado'] ?? false))->sum(fn($c) => (float)$c['monto']), 2);
+    $difEditado   = round($totalEditado - $pendActual, 2);
 @endphp
 <div class="max-w-2xl mx-auto" style="padding-bottom:60px;">
 
@@ -392,34 +394,31 @@
     <div class="rp-card mb-4"
          x-data="{
             saldo: {{ $pendActual }},
+            total: {{ $totalEditado }},
+            diff:  {{ $difEditado }},
+            get diffLabel() {
+                if (Math.abs(this.diff) < 0.01) return '✓ Cuadra exacto';
+                return (this.diff > 0 ? '+' : '−') + 'Bs. ' + Math.abs(this.diff).toFixed(2);
+            },
+            get diffColor() {
+                if (Math.abs(this.diff) < 0.01) return '#15803D';
+                return this.diff > 0 ? '#854F0B' : '#B91C1C';
+            },
+            get diffBg() {
+                if (Math.abs(this.diff) < 0.01) return '#F0FDF4';
+                return this.diff > 0 ? '#FFFBEB' : '#FEF2F2';
+            },
+            get diffBorder() {
+                if (Math.abs(this.diff) < 0.01) return '#86EFAC';
+                return this.diff > 0 ? '#FCD34D' : '#FCA5A5';
+            },
             recalc() {
                 let inputs = this.$el.querySelectorAll('.monto-edit');
-                let total = Array.from(inputs).reduce((s, el) => s + (parseFloat(el.value) || 0), 0);
-                let diff  = Math.round((total - this.saldo) * 100) / 100;
-
-                this.$refs.totalDisplay.textContent = 'Bs. ' + total.toFixed(2);
-
-                let diffEl = this.$refs.diffDisplay;
-                let diffCard = this.$refs.diffCard;
-                if (Math.abs(diff) < 0.01) {
-                    diffEl.textContent = '✓ Cuadra exacto';
-                    diffEl.style.color = '#15803D';
-                    diffCard.style.background = '#F0FDF4';
-                    diffCard.style.borderColor = '#86EFAC';
-                } else if (diff > 0) {
-                    diffEl.textContent = '+Bs. ' + diff.toFixed(2);
-                    diffEl.style.color = '#854F0B';
-                    diffCard.style.background = '#FFFBEB';
-                    diffCard.style.borderColor = '#FCD34D';
-                } else {
-                    diffEl.textContent = '−Bs. ' + Math.abs(diff).toFixed(2);
-                    diffEl.style.color = '#B91C1C';
-                    diffCard.style.background = '#FEF2F2';
-                    diffCard.style.borderColor = '#FCA5A5';
-                }
+                let raw = Array.from(inputs).reduce((s, el) => s + (parseFloat(el.value) || 0), 0);
+                this.total = Math.round(raw * 100) / 100;
+                this.diff  = Math.round((this.total - this.saldo) * 100) / 100;
             }
-         }"
-         x-init="recalc()">
+         }">
         <div style="padding:11px 16px; border-bottom:1px solid #f0fdf4; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:13px; font-weight:700; color:#166534;">Cuotas · v{{ $rp->version_nueva }}</span>
             <button wire:click="agregarCuotaEdicion" @click="$nextTick(()=>recalc())"
@@ -496,11 +495,11 @@
             </div>
             <div style="padding:12px 16px; background:#F9FAFB; text-align:center;">
                 <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#9ca3af; margin:0 0 4px;">Total cuotas</p>
-                <p x-ref="totalDisplay" style="font-size:16px; font-weight:800; color:#1D4ED8; font-family:monospace; margin:0;"></p>
+                <p x-text="'Bs. ' + total.toFixed(2)" style="font-size:16px; font-weight:800; color:#1D4ED8; font-family:monospace; margin:0;"></p>
             </div>
-            <div x-ref="diffCard" style="padding:12px 16px; text-align:center; border-radius:0 0 14px 0; border:1.5px solid transparent;">
+            <div :style="'padding:12px 16px; text-align:center; border-radius:0 0 14px 0; border:1.5px solid ' + diffBorder + '; background:' + diffBg + ';'">
                 <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#9ca3af; margin:0 0 4px;">Diferencia</p>
-                <p x-ref="diffDisplay" style="font-size:16px; font-weight:800; font-family:monospace; margin:0;"></p>
+                <p x-text="diffLabel" :style="'font-size:16px; font-weight:800; font-family:monospace; margin:0; color:' + diffColor"></p>
             </div>
         </div>
     </div>
