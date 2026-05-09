@@ -45,7 +45,12 @@ $estilosActivos = [
 
 {{-- ══ DETAIL ══ --}}
 @if ($mode === 'detail' && $pedidoDetalle)
-@php $p = $pedidoDetalle; $plan = $p->planPago; $aprobado = $p->estado === 'aprobado'; @endphp
+@php
+    $p = $pedidoDetalle;
+    $plan = $p->planPago;
+    $aprobado = $p->estado === 'aprobado';
+    $tieneCuotasPagadas = $plan && $plan->cuotas->where('numero', '>', 0)->where('estado', 'pagado')->isNotEmpty();
+@endphp
 <div class="max-w-2xl mx-auto" style="padding:0 0 40px;">
 
     @include('livewire.credito.partials.pedido-detail')
@@ -54,7 +59,8 @@ $estilosActivos = [
     @if (!$confirmandoRechazo)
     <div class="flex items-center gap-3" style="margin-top:8px;">
 
-        {{-- Izquierda: siempre disponible → devolver a revisión --}}
+        {{-- Izquierda: devolver a revisión — oculto si ya pagó cuotas --}}
+        @if (!$tieneCuotasPagadas)
         <button wire:click="devolverRevision"
                 wire:confirm="¿Devolvés este pedido a Revisión? La nota de rechazo se eliminará."
                 class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors"
@@ -64,11 +70,12 @@ $estilosActivos = [
             </svg>
             A Revisión
         </button>
+        @endif
 
         <div style="flex:1;"></div>
 
-        {{-- Derecha: toggle según estado actual --}}
-        @if ($p->estado === 'aprobado')
+        {{-- Derecha: toggle según estado actual — oculto si ya pagó cuotas --}}
+        @if (!$tieneCuotasPagadas && $p->estado === 'aprobado')
             <button wire:click="$set('confirmandoRechazo', true)"
                     class="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors"
                     style="border:1.5px solid #FCA5A5; color:#B91C1C; background:transparent;">
