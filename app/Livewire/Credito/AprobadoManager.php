@@ -133,7 +133,7 @@ class AprobadoManager extends Component
         if ($this->mode === 'detail' && $this->viewingId) {
             $pedidoDetalle = Pedido::with([
                 'cliente.usuario', 'vendedor.user',
-                'items.product', 'planPago.cuotas',
+                'items.product', 'planPago.cuotas', 'planes.cuotas',
             ])->find($this->viewingId);
         }
 
