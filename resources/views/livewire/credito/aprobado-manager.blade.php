@@ -49,7 +49,8 @@ $estilosActivos = [
     $p = $pedidoDetalle;
     $plan = $p->planPago;
     $aprobado = $p->estado === 'aprobado';
-    $tieneCuotasPagadas = $p->planes->flatMap(fn($pl) => $pl->cuotas)->where('numero', '>', 0)->where('estado', 'pagado')->isNotEmpty();
+    $tieneCuotasPagadas = $p->planes->flatMap(fn($pl) => $pl->cuotas)->where('numero', '>', 0)->where('estado', 'pagado')->isNotEmpty()
+                       || $p->planes->count() > 1;
 @endphp
 <div class="max-w-2xl mx-auto" style="padding:0 0 40px;">
 
