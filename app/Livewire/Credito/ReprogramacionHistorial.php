@@ -179,6 +179,7 @@ class ReprogramacionHistorial extends Component
             $reprogramacionDetalle = Reprogramacion::with([
                 'pedido.cliente.usuario',
                 'pedido.vendedor.user',
+                'planViejo.cuotas',
                 'planNuevo.cuotas',
                 'creadoPor',
             ])->find($this->reprogramacionId);

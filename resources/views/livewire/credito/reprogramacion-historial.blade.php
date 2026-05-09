@@ -151,13 +151,15 @@
 {{-- ══ DETALLE ══ --}}
 @elseif($mode === 'detalle' && $reprogramacionDetalle)
 @php
-    $rp        = $reprogramacionDetalle;
-    $p         = $rp->pedido;
-    $planNuevo = $rp->planNuevo;
-    $cuotas    = $planNuevo?->cuotas->where('numero', '>', 0)->sortBy('numero') ?? collect();
-    $pagado    = $cuotas->where('estado','pagado')->sum('monto');
-    $pendiente = $cuotas->where('estado','!=','pagado')->sum('monto');
-    $esActivo  = $planNuevo?->estado === 'activo';
+    $rp         = $reprogramacionDetalle;
+    $p          = $rp->pedido;
+    $planViejo  = $rp->planViejo;
+    $planNuevo  = $rp->planNuevo;
+    $cuotasViej = $planViejo?->cuotas->where('numero', '>', 0)->sortBy('numero') ?? collect();
+    $cuotas     = $planNuevo?->cuotas->where('numero', '>', 0)->sortBy('numero') ?? collect();
+    $pagado     = $cuotas->where('estado','pagado')->sum('monto');
+    $pendiente  = $cuotas->where('estado','!=','pagado')->sum('monto');
+    $esActivo   = $planNuevo?->estado === 'activo';
 @endphp
 <div class="max-w-2xl mx-auto" style="padding-bottom:40px;">
 
@@ -238,6 +240,61 @@
             <p style="font-size:15px; font-weight:800; color:#C2410C; margin:0; font-family:monospace;">Bs. {{ number_format($pendiente, 2) }}</p>
         </div>
     </div>
+
+    {{-- Plan anterior (cómo entró) --}}
+    @if($planViejo && $cuotasViej->isNotEmpty())
+    <div x-data="{ abierto: false }" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-4">
+        <button @click="abierto = !abierto"
+                style="width:100%; padding:11px 16px; display:flex; align-items:center; justify-content:space-between; background:#F9FAFB; border:none; cursor:pointer; text-align:left;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:13px; font-weight:700; color:#6b7280;">Plan anterior · v{{ $rp->version_anterior }}</span>
+                <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#F3F4F6; color:#6b7280;">REEMPLAZADO</span>
+            </div>
+            <svg :class="abierto ? 'rotate-180' : ''" class="w-4 h-4 transition-transform" style="color:#9ca3af;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+        </button>
+        <div x-show="abierto" x-collapse>
+            <div style="overflow-x:auto;">
+            <table style="border-collapse:separate; border-spacing:0; width:100%; font-size:13px;">
+                <thead style="background:#F3F4F6; color:#6b7280; font-size:10px; font-weight:600; letter-spacing:0.5px;">
+                    <tr>
+                        <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb; width:50px;">#</th>
+                        <th style="padding:8px 12px; text-align:right; font-weight:700; border:0.5px solid #e5e7eb;">Monto</th>
+                        <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb;">Vencimiento</th>
+                        <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb; width:110px;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($cuotasViej as $c)
+                    @php $badge = $c->estadoFinancieroBadge; @endphp
+                    <tr style="{{ $c->estado==='pagado' ? 'opacity:0.55;' : '' }}">
+                        <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:center; font-weight:700; color:#6b7280;">{{ $c->numero }}</td>
+                        <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:right; font-family:monospace; font-weight:700; color:#6b7280;">Bs. {{ number_format($c->monto, 2) }}</td>
+                        <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:center; font-size:12px; color:#9ca3af;">
+                            {{ $c->fecha_vencimiento ? \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') : '—' }}
+                        </td>
+                        <td style="padding:9px 12px; border:0.5px solid #e5e7eb; text-align:center;">
+                            <span class="rp-badge" style="background:{{ $badge['bg'] }}; color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+                <tfoot>
+                    <tr style="background:#F9FAFB;">
+                        <td colspan="2" style="padding:9px 12px; border-top:2px solid #e5e7eb; font-size:12px; font-weight:700; color:#6b7280; text-align:right;">
+                            Total: <span style="font-family:monospace; margin-left:4px;">Bs. {{ number_format($planViejo->total_pagar, 2) }}</span>
+                        </td>
+                        <td colspan="2" style="padding:9px 12px; border-top:2px solid #e5e7eb; font-size:11px; color:#9ca3af; text-align:center;">
+                            {{ $cuotasViej->where('estado','pagado')->count() }} pagadas · {{ $cuotasViej->where('estado','!=','pagado')->count() }} reemplazadas
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            </div>
+        </div>
+    </div>
+    @endif
 
     {{-- Plan de pago --}}
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
