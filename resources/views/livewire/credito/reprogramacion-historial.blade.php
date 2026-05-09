@@ -418,10 +418,14 @@
                 this.total = Math.round(raw * 100) / 100;
                 this.diff  = Math.round((this.total - this.saldo) * 100) / 100;
             }
-         }">
+         }"
+         x-init="
+            $el.addEventListener('input', (e) => { if (e.target.classList.contains('monto-edit')) recalc(); });
+            $wire.$watch('cuotasEditadas', () => $nextTick(() => recalc()));
+         ">
         <div style="padding:11px 16px; border-bottom:1px solid #f0fdf4; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:13px; font-weight:700; color:#166534;">Cuotas · v{{ $rp->version_nueva }}</span>
-            <button wire:click="agregarCuotaEdicion" @click="$nextTick(()=>recalc())"
+            <button wire:click="agregarCuotaEdicion"
                     style="background:#DCFCE7; border:none; border-radius:6px; padding:5px 12px; font-size:11px; font-weight:600; color:#15803D; cursor:pointer; display:flex; align-items:center; gap:4px;">
                 <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
@@ -450,7 +454,6 @@
                         @else
                             <input wire:model="cuotasEditadas.{{ $i }}.monto" type="number" step="0.01" min="0.01"
                                    class="monto-edit"
-                                   @input="recalc()"
                                    style="width:100%; border:1px solid #d1fae5; border-radius:6px; padding:5px 8px; font-size:12px; font-family:monospace; outline:none; background:#f9fffe;"
                                    onfocus="this.style.borderColor='#6ee7b7'" onblur="this.style.borderColor='#d1fae5'"/>
                             @error("cuotasEditadas.{$i}.monto")<p style="color:#dc2626; font-size:10px; margin:2px 0 0;">{{ $message }}</p>@enderror
@@ -473,7 +476,7 @@
                     </td>
                     <td class="rp-td" style="text-align:center;">
                         @if(!$ce['pagado'])
-                        <button wire:click="quitarCuotaEdicion({{ $i }})" @click="$nextTick(()=>recalc())"
+                        <button wire:click="quitarCuotaEdicion({{ $i }})"
                                 style="background:#FEF2F2; border:none; border-radius:5px; padding:4px 6px; cursor:pointer; color:#dc2626; display:inline-flex; align-items:center;">
                             <svg style="width:12px;height:12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/>
