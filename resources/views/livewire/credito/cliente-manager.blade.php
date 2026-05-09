@@ -354,7 +354,7 @@
                                 $vClr = 'font-size:11px; font-weight:700; color:#166534; margin:0;';
                                 $lClr = 'font-size:8px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#6ee7b7; margin-bottom:1px;';
                                 @endphp
-                                <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                                <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px; padding-right:40px;">
                                     <span style="font-size:13px; font-weight:700; color:#15803D; white-space:nowrap;">Datos del Cliente</span>
                                     <div style="flex:1; height:1px; background:#6ee7b7;"></div>
                                     <span style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; background:{{ $c->active ? '#DCFCE7' : '#f3f4f6' }}; color:{{ $c->active ? '#15803D' : '#6b7280' }};">
