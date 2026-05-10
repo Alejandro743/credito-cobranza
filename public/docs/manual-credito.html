@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manual de Usuario — Módulo Crédito/Cobranza</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; color: #1f2937; background: #fff; font-size: 13px; line-height: 1.7; }
+
+  /* Portada */
+  .portada { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; background: linear-gradient(160deg, #f0fdf4 0%, #dcfce7 100%); page-break-after: always; padding: 60px 40px; }
+  .portada .logo-box { width: 72px; height: 72px; background: #15803D; border-radius: 18px; display: flex; align-items: center; justify-content: center; margin: 0 auto 28px; }
+  .portada .logo-box svg { width: 40px; height: 40px; stroke: #fff; }
+  .portada h1 { font-size: 32px; font-weight: 800; color: #14532d; margin-bottom: 8px; }
+  .portada h2 { font-size: 18px; font-weight: 600; color: #15803D; margin-bottom: 32px; }
+  .portada .meta { font-size: 12px; color: #6b7280; }
+  .portada .meta span { display: block; margin-bottom: 4px; }
+
+  /* Layout */
+  .page { max-width: 800px; margin: 0 auto; padding: 48px 48px 60px; }
+
+  /* Índice */
+  .indice { page-break-after: always; }
+  .indice h2 { font-size: 20px; font-weight: 700; color: #14532d; border-bottom: 2px solid #dcfce7; padding-bottom: 10px; margin-bottom: 24px; }
+  .indice ol { list-style: none; counter-reset: indice; }
+  .indice ol > li { counter-increment: indice; padding: 7px 0; border-bottom: 1px dotted #e5e7eb; display: flex; align-items: baseline; gap: 8px; }
+  .indice ol > li::before { content: counter(indice) "."; font-weight: 700; color: #15803D; min-width: 20px; }
+  .indice ol > li span { flex: 1; font-weight: 600; color: #374151; }
+  .indice ol > li .pg { color: #9ca3af; font-size: 11px; }
+  .indice .sub { padding-left: 28px; font-size: 12px; color: #6b7280; }
+
+  /* Secciones */
+  .seccion { margin-bottom: 48px; }
+  .seccion-titulo { font-size: 20px; font-weight: 800; color: #14532d; border-left: 4px solid #15803D; padding-left: 14px; margin-bottom: 20px; padding-top: 4px; padding-bottom: 4px; }
+  .sub-titulo { font-size: 15px; font-weight: 700; color: #166534; margin: 28px 0 10px; }
+  p { margin-bottom: 10px; color: #374151; }
+
+  /* Callouts */
+  .callout { border-radius: 10px; padding: 14px 18px; margin: 16px 0; font-size: 12px; }
+  .callout.info    { background: #EFF6FF; border-left: 4px solid #3B82F6; color: #1e40af; }
+  .callout.tip     { background: #F0FDF4; border-left: 4px solid #22c55e; color: #15803D; }
+  .callout.warning { background: #FFFBEB; border-left: 4px solid #F59E0B; color: #854d0e; }
+  .callout strong  { font-weight: 700; display: block; margin-bottom: 4px; }
+
+  /* Tabla de estados */
+  table { width: 100%; border-collapse: collapse; margin: 16px 0 24px; font-size: 12px; }
+  th { background: #f0fdf4; color: #15803D; font-weight: 700; text-align: left; padding: 9px 12px; border: 1px solid #d1fae5; font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; }
+  td { padding: 9px 12px; border: 1px solid #e5e7eb; vertical-align: top; }
+  tr:nth-child(even) td { background: #f9fafb; }
+
+  /* Badges de estado */
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; }
+  .badge-verde   { background: #dcfce7; color: #15803D; }
+  .badge-azul    { background: #dbeafe; color: #1d4ed8; }
+  .badge-gris    { background: #f3f4f6; color: #374151; }
+  .badge-rojo    { background: #fee2e2; color: #B91C1C; }
+  .badge-naranja { background: #fef3c7; color: #854d0e; }
+
+  /* Flujo */
+  .flujo { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin: 16px 0 24px; }
+  .flujo-item { background: #f9fafb; border: 1.5px solid #e5e7eb; border-radius: 8px; padding: 8px 14px; font-size: 12px; font-weight: 600; color: #374151; }
+  .flujo-arrow { color: #9ca3af; font-size: 16px; }
+  .flujo-item.activo { background: #f0fdf4; border-color: #86efac; color: #15803D; }
+  .flujo-item.cerrado { background: #f3f4f6; border-color: #d1d5db; color: #6b7280; }
+
+  /* Lista de pasos */
+  .pasos { list-style: none; margin: 12px 0 20px; }
+  .pasos li { display: flex; gap: 12px; margin-bottom: 12px; }
+  .pasos li .num { width: 24px; height: 24px; background: #15803D; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .pasos li .txt { flex: 1; }
+  .pasos li .txt strong { display: block; font-weight: 600; color: #166534; margin-bottom: 2px; }
+
+  /* Indicadores */
+  .indicador-card { border: 1px solid #e5e7eb; border-radius: 10px; padding: 14px 18px; margin-bottom: 12px; }
+  .indicador-card h4 { font-size: 13px; font-weight: 700; color: #374151; margin-bottom: 6px; }
+  .indicador-card p { font-size: 12px; color: #6b7280; margin: 0; }
+  .indicador-card .peso { float: right; font-size: 11px; font-weight: 700; color: #15803D; }
+
+  /* Calificaciones */
+  .cal-table td:first-child { font-weight: 800; font-size: 15px; }
+
+  /* Separador de página */
+  .page-break { page-break-before: always; padding-top: 48px; }
+
+  /* Footer */
+  .footer { margin-top: 60px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center; font-size: 11px; color: #9ca3af; }
+
+  @media print {
+    body { font-size: 12px; }
+    .portada { min-height: 100vh; }
+    .page { padding: 32px 40px; }
+    .page-break { page-break-before: always; }
+    .no-print { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- PORTADA -->
+<div class="portada">
+  <div class="logo-box">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+    </svg>
+  </div>
+  <h1>Manual de Usuario</h1>
+  <h2>Módulo Crédito / Cobranza</h2>
+  <div class="meta">
+    <span>Sistema de Gestión de Créditos</span>
+    <span>Versión 1.0 — 2026</span>
+    <span>Dirigido al usuario con rol <strong>Crédito</strong></span>
+  </div>
+</div>
+
+<!-- ÍNDICE -->
+<div class="page indice">
+  <h2>Contenido</h2>
+  <ol>
+    <li><span>Introducción al sistema</span></li>
+    <li><span>El ciclo de vida de un crédito</span></li>
+    <li><span>Gestión de Créditos</span>
+      <div class="sub">En espera · En revisión · Aprobado · Cerrado</div>
+    </li>
+    <li><span>Cierre de crédito</span>
+      <div class="sub">Motivos · Reversión</div>
+    </li>
+    <li><span>Reprogramación</span>
+      <div class="sub">Cuándo reprogramar · Nueva reprogramación · Historial · Edición de cuotas</div>
+    </li>
+    <li><span>Indicadores de calificación de cartera</span>
+      <div class="sub">Los 5 indicadores · Calificación A–BLOQUEADO · Por cliente · Por vendedor</div>
+    </li>
+    <li><span>Conceptos clave</span></li>
+  </ol>
+</div>
+
+<!-- SECCIÓN 1 -->
+<div class="page">
+<div class="seccion">
+  <div class="seccion-titulo">1. Introducción al sistema</div>
+  <p>
+    Este sistema centraliza la gestión de créditos otorgados a clientes. Permite al equipo de crédito
+    seguir cada pedido desde que es creado por un vendedor hasta su cierre definitivo, pasando por
+    revisión, aprobación, cobro de cuotas y, cuando corresponda, reprogramación o cierre anticipado.
+  </p>
+  <p>
+    El usuario con rol <strong>Crédito</strong> tiene visibilidad y control sobre todos los estados
+    operativos del crédito, los planes de pago, el historial de reprogramaciones y los indicadores
+    de calificación de la cartera.
+  </p>
+  <div class="callout tip">
+    <strong>Acceso</strong>
+    El módulo se encuentra en el menú lateral bajo <em>Crédito / Cobranza</em>. Cada sección
+    corresponde a una etapa del ciclo de vida del crédito.
+  </div>
+</div>
+
+<!-- SECCIÓN 2 -->
+<div class="seccion">
+  <div class="seccion-titulo">2. El ciclo de vida de un crédito</div>
+  <p>Todo crédito sigue un recorrido desde que el vendedor genera el pedido hasta su resolución final.
+  Los estados operativos son los siguientes:</p>
+
+  <div class="flujo">
+    <div class="flujo-item">En espera</div>
+    <div class="flujo-arrow">→</div>
+    <div class="flujo-item">En revisión</div>
+    <div class="flujo-arrow">→</div>
+    <div class="flujo-item activo">Aprobado</div>
+    <div class="flujo-arrow">→</div>
+    <div class="flujo-item cerrado">Cerrado</div>
+  </div>
+
+  <table>
+    <thead>
+      <tr><th>Estado</th><th>Qué significa</th><th>Quién actúa</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="badge badge-naranja">En espera</span></td>
+        <td>El pedido fue creado por el vendedor y espera ser tomado para revisión.</td>
+        <td>Crédito</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-azul">En revisión</span></td>
+        <td>El equipo de crédito está evaluando la solicitud. Puede aprobarse o rechazarse.</td>
+        <td>Crédito</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-verde">Aprobado</span></td>
+        <td>El crédito fue aprobado. Tiene un plan de pagos activo con cuotas asignadas.</td>
+        <td>Crédito / Cobranza</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-gris">Cerrado</span></td>
+        <td>El crédito fue dado de baja de forma definitiva, con un motivo registrado.</td>
+        <td>Crédito</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="callout info">
+    <strong>Nota sobre Rechazado</strong>
+    Un pedido rechazado puede volver a revisión o aprobarse desde la sección <em>Aprobado</em>,
+    siempre que no tenga cuotas pagadas ni haya sido reprogramado.
+  </div>
+</div>
+</div>
+
+<!-- SECCIÓN 3 -->
+<div class="page page-break">
+<div class="seccion">
+  <div class="seccion-titulo">3. Gestión de Créditos</div>
+  <p>
+    La sección <strong>Gestión de Créditos</strong> del menú lateral agrupa las cuatro etapas
+    operativas: En espera, En revisión, Aprobado y Cerrado. Cada una muestra solo los pedidos
+    en ese estado.
+  </p>
+
+  <div class="sub-titulo">En espera</div>
+  <p>
+    Lista los pedidos recién enviados por los vendedores. Desde aquí el usuario de crédito puede
+    ver el detalle del pedido (cliente, productos, montos, documentación adjunta) y moverlo a
+    <em>En revisión</em> para comenzar la evaluación.
+  </p>
+
+  <div class="sub-titulo">En revisión</div>
+  <p>
+    Pedidos en proceso de análisis. El usuario puede:
+  </p>
+  <ul style="margin: 0 0 12px 20px; color:#374151;">
+    <li style="margin-bottom:6px;"><strong>Aprobar</strong> — asigna un plan de pagos al crédito y lo mueve a Aprobado.</li>
+    <li style="margin-bottom:6px;"><strong>Rechazar</strong> — requiere ingresar el motivo del rechazo. El pedido queda en estado Rechazado.</li>
+    <li><strong>Devolver a En espera</strong> — si necesita más información antes de continuar.</li>
+  </ul>
+
+  <div class="sub-titulo">Aprobado</div>
+  <p>
+    Muestra los créditos vigentes con plan de pagos activo. Es la vista principal de seguimiento
+    de la cartera. Desde el detalle de cada pedido el usuario puede:
+  </p>
+  <ul style="margin: 0 0 12px 20px; color:#374151;">
+    <li style="margin-bottom:6px;"><strong>Ver el plan de pagos</strong> — cuotas, montos, fechas de vencimiento y estado de cada cuota.</li>
+    <li style="margin-bottom:6px;"><strong>Rechazar</strong> — solo disponible si el crédito no tiene cuotas pagadas y no fue reprogramado.</li>
+    <li style="margin-bottom:6px;"><strong>Devolver a Revisión</strong> — misma condición que Rechazar.</li>
+    <li><strong>Cerrar el crédito</strong> — disponible cuando ya hay actividad (cuotas pagadas o reprogramaciones). Ver sección 4.</li>
+  </ul>
+
+  <div class="callout warning">
+    <strong>Bloqueo automático de Rechazar / Devolver</strong>
+    Si el cliente ya realizó al menos un pago o el crédito fue reprogramado alguna vez,
+    las opciones de Rechazar y Devolver a Revisión se ocultan automáticamente.
+    En ese caso, la única salida operativa es Cerrar el crédito.
+  </div>
+
+  <div class="sub-titulo">Cerrado</div>
+  <p>
+    Historial de créditos cerrados. Muestra el motivo de cierre, la fecha, quién lo cerró
+    y si el cierre afecta los indicadores de calificación. Desde aquí también es posible
+    <strong>revertir</strong> un cierre si fue registrado por error. Ver sección 4.
+  </p>
+</div>
+</div>
+
+<!-- SECCIÓN 4 -->
+<div class="page page-break">
+<div class="seccion">
+  <div class="seccion-titulo">4. Cierre de crédito</div>
+  <p>
+    El cierre es la baja definitiva de un crédito. Se utiliza cuando el crédito no puede continuar
+    en su estado normal: el cliente falleció, viajó, incumplió, o se llegó a un acuerdo de
+    cancelación, entre otros casos.
+  </p>
+
+  <div class="sub-titulo">Cómo cerrar un crédito</div>
+  <ol class="pasos">
+    <li>
+      <div class="num">1</div>
+      <div class="txt">
+        <strong>Ir a Gestión → Aprobado</strong>
+        Buscar el pedido del cliente y abrir su detalle.
+      </div>
+    </li>
+    <li>
+      <div class="num">2</div>
+      <div class="txt">
+        <strong>Presionar "Cerrar crédito"</strong>
+        El botón aparece cuando el crédito tiene actividad (pagos o reprogramaciones).
+      </div>
+    </li>
+    <li>
+      <div class="num">3</div>
+      <div class="txt">
+        <strong>Seleccionar el motivo de cierre</strong>
+        Los motivos están configurados en Definiciones. Cada motivo indica si afecta o no
+        los indicadores de calificación del cliente.
+      </div>
+    </li>
+    <li>
+      <div class="num">4</div>
+      <div class="txt">
+        <strong>Agregar una observación (opcional)</strong>
+        Texto libre para registrar el contexto del cierre.
+      </div>
+    </li>
+    <li>
+      <div class="num">5</div>
+      <div class="txt">
+        <strong>Confirmar</strong>
+        El pedido pasa a estado Cerrado y el plan de pagos queda inactivo.
+      </div>
+    </li>
+  </ol>
+
+  <div class="sub-titulo">Motivos de cierre</div>
+  <p>
+    Los motivos son configurables desde <em>Administrativo → Definiciones → Motivos de Cierre</em>.
+    El campo clave es <strong>"Afecta indicadores de calificación"</strong>:
+  </p>
+  <table>
+    <thead><tr><th>Motivo (ejemplo)</th><th>Afecta indicadores</th><th>Efecto</th></tr></thead>
+    <tbody>
+      <tr><td>Incumplimiento de pago</td><td style="text-align:center;"><span class="badge badge-rojo">Sí</span></td><td>El historial del crédito pesa en la calificación del cliente.</td></tr>
+      <tr><td>Fallecimiento</td><td style="text-align:center;"><span class="badge badge-verde">No</span></td><td>Se ignora en los indicadores. No afecta la calificación.</td></tr>
+      <tr><td>Acuerdo de cancelación</td><td style="text-align:center;"><span class="badge badge-verde">No</span></td><td>Se ignora en los indicadores.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout info">
+    <strong>Los motivos son configurables</strong>
+    Los ejemplos anteriores son solo de referencia. El administrador puede crear, modificar
+    y activar/desactivar motivos según la política de la empresa.
+  </div>
+
+  <div class="sub-titulo">Reversión de un cierre</div>
+  <p>
+    Si un crédito fue cerrado por error, es posible revertirlo desde <em>Gestión → Cerrado</em>.
+    Al revertir, el pedido vuelve a estado <strong>Aprobado</strong> y el plan de pagos se
+    reactiva. El cierre queda registrado como revertido en el historial (no se elimina).
+  </p>
+
+  <div class="callout warning">
+    <strong>Importante</strong>
+    Un crédito cerrado y revertido puede ser reprogramado normalmente desde la sección
+    de Reprogramación.
+  </div>
+</div>
+</div>
+
+<!-- SECCIÓN 5 -->
+<div class="page page-break">
+<div class="seccion">
+  <div class="seccion-titulo">5. Reprogramación</div>
+  <p>
+    La reprogramación permite reestructurar el plan de pagos de un crédito aprobado cuando el
+    cliente no puede mantener las condiciones originales. El plan anterior queda como historial
+    y se crea un nuevo plan con las condiciones acordadas.
+  </p>
+
+  <div class="sub-titulo">¿Cuándo reprogramar?</div>
+  <p>
+    La reprogramación aplica cuando el cliente tiene dificultades para pagar según el plan actual
+    pero existe voluntad de pago. Situaciones típicas:
+  </p>
+  <ul style="margin: 0 0 16px 20px; color:#374151;">
+    <li style="margin-bottom:6px;">El cliente solicita extender los plazos de pago.</li>
+    <li style="margin-bottom:6px;">Se acuerda reducir el monto de las cuotas aumentando el número de ellas.</li>
+    <li>El cliente pagó parte de la deuda y se reestructura el saldo restante.</li>
+  </ul>
+
+  <div class="callout tip">
+    <strong>Reprogramación ≠ Cierre</strong>
+    Si el cliente no tiene voluntad de pago o no se puede localizar, corresponde cerrar el
+    crédito con el motivo adecuado, no reprogramarlo.
+  </div>
+
+  <div class="sub-titulo">Nueva reprogramación</div>
+  <ol class="pasos">
+    <li>
+      <div class="num">1</div>
+      <div class="txt">
+        <strong>Ir a Reprogramación → Nueva Reprogramación</strong>
+        Buscar el pedido por número, cliente o CI.
+      </div>
+    </li>
+    <li>
+      <div class="num">2</div>
+      <div class="txt">
+        <strong>Verificar el saldo pendiente</strong>
+        El sistema muestra el saldo a reprogramar (cuotas impagas del plan actual).
+      </div>
+    </li>
+    <li>
+      <div class="num">3</div>
+      <div class="txt">
+        <strong>Definir las nuevas cuotas</strong>
+        Se ingresan montos y fechas de vencimiento para el nuevo plan.
+        El sistema calcula la diferencia entre el saldo a cubrir y el total de las nuevas cuotas.
+      </div>
+    </li>
+    <li>
+      <div class="num">4</div>
+      <div class="txt">
+        <strong>Registrar el motivo y confirmar</strong>
+        Se guarda el motivo de la reprogramación y se genera el nuevo plan.
+        El plan anterior queda como historial (versión anterior).
+      </div>
+    </li>
+  </ol>
+
+  <div class="sub-titulo">Historial de reprogramaciones</div>
+  <p>
+    La sección <em>Reprogramación → Historial</em> muestra todas las reprogramaciones registradas
+    en el sistema. Para cada una se puede ver:
+  </p>
+  <ul style="margin: 0 0 16px 20px; color:#374151;">
+    <li style="margin-bottom:6px;"><strong>Plan anterior</strong> — las cuotas originales que fueron reemplazadas.</li>
+    <li style="margin-bottom:6px;"><strong>Plan nuevo</strong> — las cuotas vigentes del acuerdo reprogramado.</li>
+    <li><strong>Resumen financiero</strong> — total pagado, pendiente y saldo reprogramado.</li>
+  </ul>
+
+  <div class="sub-titulo">Edición de cuotas de una reprogramación</div>
+  <p>
+    Si el plan de una reprogramación activa necesita ajustes menores (corrección de fechas,
+    montos), es posible editarlo directamente desde el historial:
+  </p>
+  <ul style="margin: 0 0 16px 20px; color:#374151;">
+    <li style="margin-bottom:6px;">Solo se pueden modificar cuotas que aún no han sido pagadas.</li>
+    <li style="margin-bottom:6px;">Se pueden agregar o quitar cuotas.</li>
+    <li>El sistema muestra en tiempo real el <strong>saldo a cubrir</strong>, el <strong>total de las cuotas editadas</strong>
+    y la <strong>diferencia</strong> entre ambos para verificar que cuadre.</li>
+  </ul>
+</div>
+</div>
+
+<!-- SECCIÓN 6 -->
+<div class="page page-break">
+<div class="seccion">
+  <div class="seccion-titulo">6. Indicadores de calificación de cartera</div>
+  <p>
+    El sistema calcula automáticamente una <strong>calificación crediticia</strong> para cada
+    cliente y cada vendedor basándose en el comportamiento de pago de sus créditos. Este indicador
+    permite identificar riesgos y tomar decisiones sobre nuevos créditos.
+  </p>
+
+  <div class="sub-titulo">Los 5 indicadores</div>
+  <p>Cada calificación es el resultado ponderado de cinco métricas:</p>
+
+  <div class="indicador-card">
+    <h4>1. Puntualidad <span class="peso">configurable</span></h4>
+    <p>Porcentaje de cuotas pagadas antes o en la fecha de vencimiento sobre el total de cuotas que ya vencieron.</p>
+  </div>
+  <div class="indicador-card">
+    <h4>2. Mora generada <span class="peso">configurable</span></h4>
+    <p>Porcentaje de créditos que tienen al menos una cuota vencida sin pagar sobre el total de créditos del cliente.</p>
+  </div>
+  <div class="indicador-card">
+    <h4>3. Cartera en riesgo <span class="peso">configurable</span></h4>
+    <p>Proporción del saldo vencido impago sobre el saldo total pendiente (vencido + por vencer). Mide la exposición al riesgo.</p>
+  </div>
+  <div class="indicador-card">
+    <h4>4. Recuperación <span class="peso">configurable</span></h4>
+    <p>De todo lo que venció sin pagarse, cuánto se recuperó posteriormente (pagos tardíos). A mayor recuperación, mejor calificación.</p>
+  </div>
+  <div class="indicador-card">
+    <h4>5. Reprogramaciones <span class="peso">configurable</span></h4>
+    <p>Porcentaje de créditos que han sido reprogramados al menos una vez. A mayor cantidad de reprogramaciones, menor puntaje.</p>
+  </div>
+
+  <div class="callout info">
+    <strong>Los pesos son configurables</strong>
+    El administrador puede ajustar cuánto pesa cada indicador en el puntaje final desde
+    <em>Administrativo → Definiciones → Pesos de Indicadores</em>.
+  </div>
+
+  <div class="sub-titulo">Créditos cerrados en el cálculo</div>
+  <p>
+    Los créditos cerrados <strong>con motivo que afecta indicadores</strong> siguen participando
+    en el cálculo. Su historial de cuotas impagas pesa en los 5 indicadores del cliente.
+    Los créditos cerrados con motivo que <strong>no afecta indicadores</strong> (ej: fallecimiento)
+    se excluyen completamente.
+  </p>
+
+  <div class="sub-titulo">Escala de calificación</div>
+  <table class="cal-table">
+    <thead><tr><th>Calificación</th><th>Puntaje</th><th>Interpretación</th></tr></thead>
+    <tbody>
+      <tr><td><span class="badge badge-verde">A</span></td><td>Alto</td><td>Cliente / vendedor excelente. Mínimo riesgo.</td></tr>
+      <tr><td><span class="badge badge-azul">B</span></td><td>Medio-alto</td><td>Buen comportamiento con leves observaciones.</td></tr>
+      <tr><td><span class="badge badge-naranja">C</span></td><td>Medio</td><td>Comportamiento regular. Requiere seguimiento.</td></tr>
+      <tr><td><span class="badge badge-rojo">D</span></td><td>Bajo</td><td>Riesgo elevado. Precaución para nuevos créditos.</td></tr>
+      <tr><td><span class="badge badge-rojo">BLOQUEADO</span></td><td>Muy bajo</td><td>Alto incumplimiento. No se recomienda operar.</td></tr>
+    </tbody>
+  </table>
+
+  <div class="callout info">
+    <strong>Los rangos son configurables</strong>
+    El administrador define los rangos de puntaje para cada calificación desde
+    <em>Administrativo → Definiciones → Rangos de Calificación</em>.
+  </div>
+
+  <div class="sub-titulo">Calificación por cliente y por vendedor</div>
+  <p>
+    El sistema ofrece dos vistas separadas:
+  </p>
+  <ul style="margin: 0 0 16px 20px; color:#374151;">
+    <li style="margin-bottom:6px;"><strong>Por cliente</strong> — califica a cada cliente según el comportamiento de pago de todos sus créditos.</li>
+    <li><strong>Por vendedor</strong> — califica a cada vendedor según el comportamiento colectivo de los créditos que gestionó.</li>
+  </ul>
+  <p>
+    En ambas vistas se puede ver el detalle pedido por pedido para entender qué créditos
+    específicos están impactando la calificación.
+  </p>
+</div>
+</div>
+
+<!-- SECCIÓN 7 -->
+<div class="page page-break">
+<div class="seccion">
+  <div class="seccion-titulo">7. Conceptos clave</div>
+  <table>
+    <thead><tr><th>Término</th><th>Definición</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Pedido</strong></td><td>Solicitud de crédito generada por un vendedor para un cliente.</td></tr>
+      <tr><td><strong>Plan de pagos</strong></td><td>Conjunto de cuotas asignadas a un crédito aprobado. Define montos y fechas de vencimiento.</td></tr>
+      <tr><td><strong>Cuota</strong></td><td>Cada pago individual dentro del plan. Puede estar pendiente, pagada o vencida.</td></tr>
+      <tr><td><strong>Cuota inicial</strong></td><td>Pago previo al inicio del plan, equivale a una entrega o anticipo (número 0).</td></tr>
+      <tr><td><strong>Reprogramación</strong></td><td>Reestructuración del plan de pagos. El plan anterior queda como historial.</td></tr>
+      <tr><td><strong>Cierre</strong></td><td>Baja definitiva de un crédito con motivo registrado. Puede revertirse si fue un error.</td></tr>
+      <tr><td><strong>Mora</strong></td><td>Situación en la que una cuota está vencida y no fue pagada.</td></tr>
+      <tr><td><strong>Saldo pendiente</strong></td><td>Suma de todas las cuotas que aún no han sido pagadas.</td></tr>
+      <tr><td><strong>Saldo vencido</strong></td><td>Parte del saldo pendiente cuya fecha de vencimiento ya pasó.</td></tr>
+      <tr><td><strong>Afecta indicadores</strong></td><td>Configuración del motivo de cierre que determina si ese crédito cerrado sigue pesando en la calificación del cliente.</td></tr>
+      <tr><td><strong>Calificación</strong></td><td>Nota A / B / C / D / BLOQUEADO calculada automáticamente según el historial de pago.</td></tr>
+      <tr><td><strong>Versión del plan</strong></td><td>Número que indica cuántas veces fue reprogramado un crédito. v1 = plan original, v2 = primera reprogramación, etc.</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<div class="footer">
+  Sistema de Gestión de Créditos · Manual de Usuario Módulo Crédito — v1.0 · 2026
+</div>
+</div>
+
+<!-- Botón imprimir (no aparece en PDF) -->
+<div class="no-print" style="position:fixed; bottom:24px; right:24px;">
+  <button onclick="window.print()"
+    style="background:#15803D; color:#fff; border:none; border-radius:10px; padding:12px 24px; font-size:14px; font-weight:700; cursor:pointer; box-shadow:0 4px 12px rgba(0,0,0,0.15);">
+    Imprimir / Guardar PDF
+  </button>
+</div>
+
+</body>
+</html>
