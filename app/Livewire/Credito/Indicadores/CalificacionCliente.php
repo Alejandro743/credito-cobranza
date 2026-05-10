@@ -36,19 +36,19 @@ class CalificacionCliente extends Component
 
         $clientes = Cliente::where('active', true)
             ->with(['pedidos' => function ($q) {
-                $q->where('estado', 'aprobado')
-                  ->with(['planPago.cuotas', 'planes']);
+                $q->paraIndicadores()
+                  ->with(['planReciente.cuotas', 'planes']);
             }])
             ->get();
 
         return $clientes->map(function (Cliente $c) use ($hoy, $pesos, $rangos) {
-            $pedidos = $c->pedidos->filter(fn($p) => $p->planPago !== null);
+            $pedidos = $c->pedidos->filter(fn($p) => $p->planReciente !== null);
 
             if ($pedidos->isEmpty()) return null;
 
             $totalPedidos = $pedidos->count();
 
-            $todasCuotas = $pedidos->flatMap(fn($p) => $p->planPago->cuotas->where('numero', '>', 0));
+            $todasCuotas = $pedidos->flatMap(fn($p) => $p->planReciente->cuotas->where('numero', '>', 0));
             $cerradas    = $todasCuotas->filter(fn($c) => $c->fecha_vencimiento && $c->fecha_vencimiento->lte($hoy));
 
             // 1. PUNTUALIDAD
@@ -58,7 +58,7 @@ class CalificacionCliente extends Component
 
             // 2. MORA GENERADA
             $pedidosEnMora = $pedidos->filter(function ($p) use ($hoy) {
-                return $p->planPago->cuotas
+                return $p->planReciente->cuotas
                     ->where('numero', '>', 0)
                     ->filter(fn($c) => $c->fecha_vencimiento && $c->fecha_vencimiento->lte($hoy) && $c->estado !== 'pagado')
                     ->isNotEmpty();
@@ -116,12 +116,12 @@ class CalificacionCliente extends Component
         $hoy = Carbon::today();
 
         return Pedido::where('cliente_id', $clienteId)
-            ->where('estado', 'aprobado')
-            ->with(['planPago.cuotas', 'planes', 'vendedor'])
+            ->paraIndicadores()
+            ->with(['planReciente.cuotas', 'planes', 'vendedor'])
             ->get()
-            ->filter(fn($p) => $p->planPago !== null)
+            ->filter(fn($p) => $p->planReciente !== null)
             ->map(function (Pedido $p) use ($hoy) {
-                $cuotas   = $p->planPago->cuotas->where('numero', '>', 0);
+                $cuotas   = $p->planReciente->cuotas->where('numero', '>', 0);
                 $cerradas = $cuotas->filter(fn($c) => $c->fecha_vencimiento && $c->fecha_vencimiento->lte($hoy));
 
                 $nCerradas = $cerradas->count();

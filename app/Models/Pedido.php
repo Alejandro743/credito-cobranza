@@ -55,10 +55,29 @@ class Pedido extends Model
         return $this->hasMany(PlanPago::class)->orderBy('version');
     }
 
+    /** Plan más reciente sin importar estado (para indicadores) */
+    public function planReciente(): HasOne
+    {
+        return $this->hasOne(PlanPago::class)->orderByDesc('version');
+    }
+
     /** Registro de cierre activo (no revertido) */
     public function cierre(): HasOne
     {
         return $this->hasOne(PedidoCierre::class)->whereNull('revertido_at')->latest();
+    }
+
+    public function scopeParaIndicadores($query): void
+    {
+        $query->where(function ($q) {
+            $q->where('estado', 'aprobado')
+              ->orWhere(function ($q2) {
+                  $q2->where('estado', 'cerrado')
+                     ->whereHas('cierre', fn($c) =>
+                         $c->whereHas('motivoCierre', fn($m) => $m->where('afecta_mora', true))
+                     );
+              });
+        });
     }
 
     public function financialMatrix(): BelongsTo
