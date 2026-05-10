@@ -70,7 +70,7 @@ class Pedido extends Model
     /** Todos los cierres del pedido, incluyendo revertidos */
     public function cierres(): HasMany
     {
-        return $this->hasMany(PedidoCierre::class)->orderByRaw('COALESCE(revertido_at, created_at) DESC');
+        return $this->hasMany(PedidoCierre::class)->orderByDesc('updated_at');
     }
 
     public function scopeParaIndicadores($query): void
