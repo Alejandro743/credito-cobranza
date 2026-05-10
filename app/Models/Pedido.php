@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Pedido extends Model
@@ -65,6 +66,12 @@ class Pedido extends Model
     public function cierre(): HasOne
     {
         return $this->hasOne(PedidoCierre::class)->whereNull('revertido_at')->latest();
+    }
+
+    /** Todas las cuotas de todos los planes (para withSum en grilla) */
+    public function todasCuotas(): HasManyThrough
+    {
+        return $this->hasManyThrough(Cuota::class, PlanPago::class);
     }
 
     /** Todos los cierres del pedido, incluyendo revertidos */

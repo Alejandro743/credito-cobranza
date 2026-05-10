@@ -313,7 +313,7 @@ $estilosActivos = [
 
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="ap-wrap">
-    <table class="ap-table" style="min-width:580px;">
+    <table class="ap-table" style="min-width:780px;">
         <thead style="{{ $theadStyle }}" class="tracking-wide">
             <tr>
                 <th class="sticky-col" style="border:0.5px solid #e5e7eb; font-weight:700; height:1px;">
@@ -326,6 +326,8 @@ $estilosActivos = [
                 <th style="padding:8px 10px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb; width:120px;">Vendedor</th>
                 <th style="padding:8px 10px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb; width:110px;">Fecha</th>
                 <th style="padding:8px 10px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb; width:100px;">Total Bs.</th>
+                <th style="padding:8px 10px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb; width:100px;">Pagado Bs.</th>
+                <th style="padding:8px 10px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb; width:100px;">Saldo Bs.</th>
                 <th style="padding:8px 10px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb; width:70px;">Ver</th>
             </tr>
         </thead>
@@ -355,6 +357,18 @@ $estilosActivos = [
                 <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-weight:700; color:#374151;">
                     {{ $p->total_pagar > 0 ? number_format($p->total_pagar, 2) : '—' }}
                 </td>
+                @php
+                    $sinImpacto = $p->estado === 'cerrado' && !($p->cierre?->motivoCierre?->afecta_mora);
+                    $esRechazado = $p->estado === 'rechazado';
+                    $pagado = ($sinImpacto || $esRechazado) ? 0 : ($p->total_pagado ?? 0);
+                    $saldo  = ($sinImpacto || $esRechazado) ? 0 : max(0, $p->total_pagar - $pagado);
+                @endphp
+                <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-weight:700; color:#15803D;">
+                    {{ number_format($pagado, 2) }}
+                </td>
+                <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-weight:700; color:{{ $saldo > 0 ? '#B91C1C' : '#374151' }};">
+                    {{ number_format($saldo, 2) }}
+                </td>
                 <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb;">
                     <button wire:click="ver({{ $p->id }})" title="Ver detalle"
                             class="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
@@ -367,7 +381,7 @@ $estilosActivos = [
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="px-4 py-14 text-center text-gray-400">
+                <td colspan="8" class="px-4 py-14 text-center text-gray-400">
                     <svg class="w-12 h-12 mx-auto text-gray-200 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
