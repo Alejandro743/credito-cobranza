@@ -67,6 +67,12 @@ class Pedido extends Model
         return $this->hasOne(PedidoCierre::class)->whereNull('revertido_at')->latest();
     }
 
+    /** Todos los cierres del pedido, incluyendo revertidos */
+    public function cierres(): HasMany
+    {
+        return $this->hasMany(PedidoCierre::class)->orderByDesc('created_at');
+    }
+
     public function scopeParaIndicadores($query): void
     {
         $query->where(function ($q) {

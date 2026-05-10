@@ -164,6 +164,7 @@ class AprobadoManager extends Component
                 'cliente.usuario', 'vendedor.user',
                 'items.product', 'planPago.cuotas', 'planes.cuotas',
                 'cierre.motivoCierre', 'cierre.cerradoPor',
+                'cierres.motivoCierre', 'cierres.cerradoPor', 'cierres.revertidoPor',
             ])->find($this->viewingId);
         }
 

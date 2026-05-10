@@ -219,6 +219,67 @@ $estilosActivos = [
     </div>
     @endif
 
+    {{-- Historial de cierres --}}
+    @if($p->cierres->isNotEmpty())
+    <div x-data="{ abierto: false }" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" style="margin-top:16px;">
+        <button @click="abierto = !abierto"
+                style="width:100%; padding:11px 16px; display:flex; align-items:center; justify-content:space-between; background:#F9FAFB; border:none; cursor:pointer; text-align:left;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <svg style="width:14px;height:14px; color:#6b7280;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                <span style="font-size:13px; font-weight:700; color:#374151;">Historial de cierres</span>
+                <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#F3F4F6; color:#6b7280;">{{ $p->cierres->count() }}</span>
+            </div>
+            <svg :class="abierto ? 'rotate-180' : ''" class="w-4 h-4 transition-transform" style="color:#9ca3af;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+        </button>
+        <div x-show="abierto" x-collapse>
+            <div style="padding:4px 0;">
+            @foreach($p->cierres as $histCierre)
+            @php $revertido = $histCierre->estaRevertido(); @endphp
+            <div style="padding:14px 16px; border-top:1px solid #f3f4f6; {{ $loop->first ? 'border-top:none;' : '' }}">
+                <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:8px;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $histCierre->motivoCierre?->nombre ?? '—' }}</span>
+                        @if($histCierre->motivoCierre?->afecta_mora)
+                        <span style="font-size:9px; font-weight:700; padding:1px 6px; border-radius:8px; background:#FEF2F2; color:#B91C1C;">Afecta indicadores</span>
+                        @endif
+                    </div>
+                    @if($revertido)
+                    <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#FEF3C7; color:#854d0e; flex-shrink:0;">REVERTIDO</span>
+                    @else
+                    <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#F3F4F6; color:#374151; flex-shrink:0;">VIGENTE</span>
+                    @endif
+                </div>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:11px; color:#6b7280;">
+                    <div>
+                        <span style="font-weight:600;">Cerrado por:</span> {{ $histCierre->cerradoPor?->name ?? '—' }}<br>
+                        <span style="font-weight:600;">Fecha:</span> {{ $histCierre->created_at->format('d/m/Y H:i') }}
+                    </div>
+                    @if($histCierre->observacion)
+                    <div>
+                        <span style="font-weight:600;">Observación:</span> {{ $histCierre->observacion }}
+                    </div>
+                    @endif
+                </div>
+
+                @if($revertido)
+                <div style="margin-top:8px; padding:8px 12px; background:#FFFBEB; border-radius:8px; border:1px solid #FCD34D; font-size:11px; color:#854d0e;">
+                    <span style="font-weight:700;">Revertido por:</span> {{ $histCierre->revertidoPor?->name ?? '—' }}
+                    · {{ $histCierre->revertido_at->format('d/m/Y H:i') }}<br>
+                    <span style="font-weight:700;">Motivo:</span> {{ $histCierre->motivo_reversion }}
+                </div>
+                @endif
+            </div>
+            @endforeach
+            </div>
+        </div>
+    </div>
+    @endif
+
 </div>
 
 {{-- ══ LIST ══ --}}
