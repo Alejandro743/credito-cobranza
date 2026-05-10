@@ -24,29 +24,37 @@ class AprobadoManager extends Component
     public ?int   $motivoCierreId     = null;
     public string $observacionCierre  = '';
 
+    // Reversión de cierre
+    public bool   $confirmandoReversion = false;
+    public string $motivoReversion      = '';
+
     public function updatingSearch(): void      { $this->resetPage(); }
     public function updatingFiltroEstado(): void { $this->resetPage(); }
 
     public function ver(int $id): void
     {
-        $this->viewingId          = $id;
-        $this->confirmandoRechazo = false;
-        $this->notaRechazo        = '';
-        $this->confirmandoCierre  = false;
-        $this->motivoCierreId     = null;
-        $this->observacionCierre  = '';
-        $this->mode               = 'detail';
+        $this->viewingId             = $id;
+        $this->confirmandoRechazo    = false;
+        $this->notaRechazo           = '';
+        $this->confirmandoCierre     = false;
+        $this->motivoCierreId        = null;
+        $this->observacionCierre     = '';
+        $this->confirmandoReversion  = false;
+        $this->motivoReversion       = '';
+        $this->mode                  = 'detail';
     }
 
     public function backToList(): void
     {
-        $this->viewingId          = null;
-        $this->confirmandoRechazo = false;
-        $this->notaRechazo        = '';
-        $this->confirmandoCierre  = false;
-        $this->motivoCierreId     = null;
-        $this->observacionCierre  = '';
-        $this->mode               = 'list';
+        $this->viewingId             = null;
+        $this->confirmandoRechazo    = false;
+        $this->notaRechazo           = '';
+        $this->confirmandoCierre     = false;
+        $this->motivoCierreId        = null;
+        $this->observacionCierre     = '';
+        $this->confirmandoReversion  = false;
+        $this->motivoReversion       = '';
+        $this->mode                  = 'list';
     }
 
     public function devolverRevision(): void
@@ -54,7 +62,6 @@ class AprobadoManager extends Component
         $pedido = Pedido::whereIn('estado', ['aprobado', 'rechazado'])
             ->findOrFail($this->viewingId);
 
-        // Si venía de rechazado, la nota de rechazo se borra
         $pedido->update(['estado' => 'revision', 'notas' => null]);
         session()->flash('success', 'Pedido devuelto a Revisión.');
         $this->backToList();
@@ -65,7 +72,6 @@ class AprobadoManager extends Component
         $pedido = Pedido::whereIn('estado', ['aprobado', 'rechazado'])
             ->findOrFail($this->viewingId);
 
-        // Si venía de rechazado, la nota de rechazo se borra
         $pedido->update(['estado' => 'aprobado', 'notas' => null]);
         session()->flash('success', 'Pedido aprobado.');
         $this->backToList();
@@ -99,29 +105,52 @@ class AprobadoManager extends Component
         $pedido = Pedido::where('estado', 'aprobado')->findOrFail($this->viewingId);
         $plan   = $pedido->planPago;
 
-        // Cerrar plan de pagos
         $plan->update(['estado' => 'cerrado']);
-
-        // Cerrar pedido
         $pedido->update(['estado' => 'cerrado']);
 
-        // Registrar transacción de cierre
         PedidoCierre::create([
-            'pedido_id'       => $pedido->id,
-            'plan_pago_id'    => $plan->id,
-            'motivo_cierre_id'=> $this->motivoCierreId,
-            'observacion'     => $this->observacionCierre ?: null,
-            'cerrado_por'     => auth()->id(),
+            'pedido_id'        => $pedido->id,
+            'plan_pago_id'     => $plan->id,
+            'motivo_cierre_id' => $this->motivoCierreId,
+            'observacion'      => $this->observacionCierre ?: null,
+            'cerrado_por'      => auth()->id(),
         ]);
 
         session()->flash('success', 'Crédito cerrado correctamente.');
         $this->backToList();
     }
 
+    public function revertir(): void
+    {
+        $this->validate(['motivoReversion' => 'required|min:5'], [
+            'motivoReversion.required' => 'Ingresá el motivo de la reversión.',
+            'motivoReversion.min'      => 'El motivo debe tener al menos 5 caracteres.',
+        ]);
+
+        $pedido = Pedido::where('estado', 'cerrado')->findOrFail($this->viewingId);
+
+        $cierre = PedidoCierre::where('pedido_id', $pedido->id)
+            ->whereNull('revertido_at')
+            ->latest()
+            ->firstOrFail();
+
+        $pedido->planes()->where('id', $cierre->plan_pago_id)->update(['estado' => 'activo']);
+        $pedido->update(['estado' => 'aprobado']);
+
+        $cierre->update([
+            'revertido_at'     => now(),
+            'revertido_por'    => auth()->id(),
+            'motivo_reversion' => $this->motivoReversion,
+        ]);
+
+        session()->flash('success', 'Cierre revertido. El pedido volvió a Aprobado.');
+        $this->backToList();
+    }
+
     public function render()
     {
         $pedidos = Pedido::with(['cliente.usuario', 'vendedor.user'])
-            ->whereIn('estado', ['aprobado', 'rechazado'])
+            ->whereIn('estado', ['aprobado', 'rechazado', 'cerrado'])
             ->when($this->filtroEstado, fn($q) => $q->where('estado', $this->filtroEstado))
             ->when($this->search, fn($q) => $q->whereHas('cliente.usuario', fn($c) =>
                 $c->where('name', 'like', "%{$this->search}%")
@@ -134,6 +163,7 @@ class AprobadoManager extends Component
             $pedidoDetalle = Pedido::with([
                 'cliente.usuario', 'vendedor.user',
                 'items.product', 'planPago.cuotas', 'planes.cuotas',
+                'cierre.motivoCierre', 'cierre.cerradoPor',
             ])->find($this->viewingId);
         }
 

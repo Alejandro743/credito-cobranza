@@ -73,7 +73,7 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('credito')->name('credi
     Route::get('/espera',        fn() => view('modules.credito.espera'))->name('espera');
     Route::get('/revision',      fn() => view('modules.credito.revision'))->name('revision');
     Route::get('/aprobado',      fn() => view('modules.credito.aprobado'))->name('aprobado');
-    Route::get('/cerrado',       fn() => view('modules.credito.cerrado'))->name('cerrado');
+    Route::get('/cerrado',       fn() => redirect()->route('credito.aprobado'))->name('cerrado');
     Route::get('/cobranza',        fn() => view('modules.credito.cobranza'))->name('cobranza');
     Route::get('/reprogramacion/nueva',    fn() => view('modules.credito.reprogramacion-nueva'))->name('reprogramacion.nueva');
     Route::get('/reprogramacion/historial',fn() => view('modules.credito.reprogramacion-historial'))->name('reprogramacion.historial');

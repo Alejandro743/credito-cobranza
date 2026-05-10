@@ -10,11 +10,12 @@
 
 @php
 $theadStyle = 'background:#F3F4F6; color:#374151; font-size:10px; font-weight:600; letter-spacing:0.5px;';
-$filtros = ['' => 'Todos', 'aprobado' => 'Aprobados', 'rechazado' => 'Rechazados'];
+$filtros = ['' => 'Todos', 'aprobado' => 'Aprobados', 'rechazado' => 'Rechazados', 'cerrado' => 'Cerrados'];
 $estilosActivos = [
     ''          => 'background:#EEEDFE; border-color:#7c3aed; color:#534AB7;',
     'aprobado'  => 'background:#F0FDF4; border-color:#16A34A; color:#15803D;',
     'rechazado' => 'background:#FEF2F2; border-color:#DC2626; color:#B91C1C;',
+    'cerrado'   => 'background:#F3F4F6; border-color:#9CA3AF; color:#374151;',
 ];
 @endphp
 
@@ -27,7 +28,7 @@ $estilosActivos = [
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
         </svg>
     </button>
-    <h1 class="font-bold text-base flex-1" style="color:#374151;">Aprobado / Rechazado</h1>
+    <h1 class="font-bold text-base flex-1" style="color:#374151;">Aprobado / Rechazado / Cerrado</h1>
     <span class="text-sm font-medium" style="color:#374151;">{{ now()->format('d/m/Y') }}</span>
 </div>
 
@@ -48,6 +49,7 @@ $estilosActivos = [
 @php
     $p = $pedidoDetalle;
     $plan = $p->planPago;
+    $cerrado = $p->estado === 'cerrado';
     $aprobado = $p->estado === 'aprobado';
     $tieneCuotasPagadas = $p->planes->flatMap(fn($pl) => $pl->cuotas)->where('numero', '>', 0)->where('estado', 'pagado')->isNotEmpty()
                        || $p->planes->count() > 1;
@@ -56,11 +58,70 @@ $estilosActivos = [
 
     @include('livewire.credito.partials.pedido-detail')
 
-    {{-- Acciones según estado --}}
-    @if (!$confirmandoRechazo && !$confirmandoCierre)
+    {{-- ══ ACCIONES: CERRADO ══ --}}
+    @if ($cerrado)
+        @php $cierre = $p->cierre; @endphp
+
+        {{-- Tarjeta de cierre --}}
+        <div style="background:#F3F4F6; border:1px solid #D1D5DB; border-radius:14px; padding:16px; margin-top:8px;">
+            <p class="font-semibold text-sm mb-3" style="color:#374151;">Información de cierre</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:12px;">
+                <div>
+                    <p style="color:#9ca3af; font-weight:600; text-transform:uppercase; font-size:10px; letter-spacing:0.4px; margin-bottom:2px;">Motivo</p>
+                    <p style="color:#374151; font-weight:600;">{{ $cierre?->motivoCierre?->nombre ?? '—' }}</p>
+                    @if($cierre?->motivoCierre?->afecta_mora)
+                    <span style="font-size:9px; font-weight:700; padding:1px 6px; border-radius:8px; background:#FEF2F2; color:#B91C1C;">Afecta indicadores</span>
+                    @endif
+                </div>
+                <div>
+                    <p style="color:#9ca3af; font-weight:600; text-transform:uppercase; font-size:10px; letter-spacing:0.4px; margin-bottom:2px;">Cerrado por</p>
+                    <p style="color:#374151; font-weight:600;">{{ $cierre?->cerradoPor?->name ?? '—' }}</p>
+                    <p style="color:#9ca3af; font-size:11px;">{{ $cierre?->created_at?->format('d/m/Y H:i') }}</p>
+                </div>
+                @if($cierre?->observacion)
+                <div style="grid-column:1/-1;">
+                    <p style="color:#9ca3af; font-weight:600; text-transform:uppercase; font-size:10px; letter-spacing:0.4px; margin-bottom:2px;">Observación</p>
+                    <p style="color:#374151;">{{ $cierre->observacion }}</p>
+                </div>
+                @endif
+            </div>
+        </div>
+
+        {{-- Botón / Panel de reversión --}}
+        @if (!$confirmandoReversion)
+        <div class="flex justify-end" style="margin-top:10px;">
+            <button wire:click="$set('confirmandoReversion', true)"
+                    class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm"
+                    style="border:1.5px solid #FCD34D; color:#854d0e; background:#FFFBEB;">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
+                </svg>
+                Revertir cierre
+            </button>
+        </div>
+        @else
+        <div style="background:#FFFBEB; border:1px solid #FCD34D; border-radius:14px; padding:16px; margin-top:10px;">
+            <p class="font-semibold text-sm mb-3" style="color:#854d0e;">Motivo de la reversión</p>
+            <textarea wire:model="motivoReversion" rows="3"
+                      placeholder="Explicá por qué se revierte el cierre..."
+                      class="w-full text-sm border rounded-xl px-3 py-2 focus:outline-none bg-white"
+                      style="border-color:#FCD34D;"></textarea>
+            @error('motivoReversion')<p class="text-xs mt-1" style="color:#B91C1C;">{{ $message }}</p>@enderror
+            <div class="flex gap-3 mt-3 justify-end">
+                <button wire:click="$set('confirmandoReversion', false)"
+                        class="px-4 py-2 text-sm rounded-xl"
+                        style="background:#f3f4f6; color:#6b7280;">Cancelar</button>
+                <button wire:click="revertir"
+                        class="px-5 py-2 text-white text-sm font-semibold rounded-xl"
+                        style="background:#854d0e;">Confirmar Reversión</button>
+            </div>
+        </div>
+        @endif
+
+    {{-- ══ ACCIONES: APROBADO / RECHAZADO ══ --}}
+    @elseif (!$confirmandoRechazo && !$confirmandoCierre)
     <div class="flex items-center gap-3" style="margin-top:8px;">
 
-        {{-- Izquierda: devolver a revisión — oculto si ya pagó cuotas --}}
         @if (!$tieneCuotasPagadas)
         <button wire:click="devolverRevision"
                 wire:confirm="¿Devolvés este pedido a Revisión? La nota de rechazo se eliminará."
@@ -73,8 +134,7 @@ $estilosActivos = [
         </button>
         @endif
 
-        {{-- Cerrar crédito — solo cuando hay cuotas pagadas y está aprobado --}}
-        @if ($tieneCuotasPagadas && $p->estado === 'aprobado')
+        @if ($tieneCuotasPagadas && $aprobado)
         <button wire:click="$set('confirmandoCierre', true)"
                 class="flex items-center gap-2 px-4 py-2.5 rounded-xl font-semibold text-sm transition-colors"
                 style="border:1.5px solid #D1D5DB; color:#374151; background:transparent;">
@@ -87,8 +147,7 @@ $estilosActivos = [
 
         <div style="flex:1;"></div>
 
-        {{-- Derecha: toggle según estado actual — oculto si ya pagó cuotas --}}
-        @if (!$tieneCuotasPagadas && $p->estado === 'aprobado')
+        @if (!$tieneCuotasPagadas && $aprobado)
             <button wire:click="$set('confirmandoRechazo', true)"
                     class="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors"
                     style="border:1.5px solid #FCA5A5; color:#B91C1C; background:transparent;">
@@ -111,7 +170,6 @@ $estilosActivos = [
     </div>
 
     @elseif ($confirmandoRechazo)
-    {{-- Panel de rechazo --}}
     <div style="background:#FEF2F2; border:1px solid #FCA5A5; border-radius:14px; padding:16px; margin-top:8px;">
         <p class="font-semibold text-sm mb-3" style="color:#B91C1C;">Motivo del rechazo</p>
         <textarea wire:model="notaRechazo" rows="3"
@@ -130,10 +188,8 @@ $estilosActivos = [
     </div>
 
     @elseif ($confirmandoCierre)
-    {{-- Panel de cierre de crédito --}}
     <div style="background:#F9FAFB; border:1px solid #D1D5DB; border-radius:14px; padding:16px; margin-top:8px;">
         <p class="font-semibold text-sm mb-3" style="color:#374151;">Cerrar Crédito</p>
-
         <div style="margin-bottom:12px;">
             <label style="font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:4px;">Motivo *</label>
             <select wire:model="motivoCierreId"
@@ -145,7 +201,6 @@ $estilosActivos = [
             </select>
             @error('motivoCierreId')<p class="text-xs mt-1" style="color:#B91C1C;">{{ $message }}</p>@enderror
         </div>
-
         <div style="margin-bottom:12px;">
             <label style="font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.04em; display:block; margin-bottom:4px;">Observación <span style="font-weight:400;">(opcional)</span></label>
             <textarea wire:model="observacionCierre" rows="3"
@@ -153,7 +208,6 @@ $estilosActivos = [
                       class="w-full text-sm border rounded-xl px-3 py-2 focus:outline-none bg-white"
                       style="border-color:#D1D5DB;"></textarea>
         </div>
-
         <div class="flex gap-3 justify-end">
             <button wire:click="$set('confirmandoCierre', false)"
                     class="px-4 py-2 text-sm rounded-xl"
