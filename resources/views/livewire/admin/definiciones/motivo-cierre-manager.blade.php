@@ -26,7 +26,7 @@
     <thead style="{{ $thead }}">
         <tr>
             <th style="padding:8px 12px; text-align:left; border:0.5px solid #ddd6fe;">Nombre</th>
-            <th style="padding:8px 12px; text-align:center; border:0.5px solid #ddd6fe; width:140px;">Afecta Mora</th>
+            <th style="padding:8px 12px; text-align:center; border:0.5px solid #ddd6fe; width:140px;">Afecta Indicadores</th>
             <th style="padding:8px 12px; text-align:center; border:0.5px solid #ddd6fe; width:90px;">Estado</th>
             <th style="padding:8px 12px; text-align:center; border:0.5px solid #ddd6fe; width:80px;">Acciones</th>
         </tr>
@@ -99,8 +99,8 @@
             <label style="display:flex; align-items:center; gap:10px; cursor:pointer; padding:12px; border-radius:10px; border:1px solid #FEE2E2; background:#FEF2F2;">
                 <input wire:model="afectaMora" type="checkbox" style="width:16px; height:16px; accent-color:#B91C1C; cursor:pointer; flex-shrink:0;">
                 <div>
-                    <span style="font-size:13px; font-weight:600; color:#B91C1C; display:block;">Afecta indicador de mora</span>
-                    <span style="font-size:11px; color:#9ca3af;">El cierre con este motivo se contabiliza en la mora del cliente</span>
+                    <span style="font-size:13px; font-weight:600; color:#B91C1C; display:block;">Afecta indicadores de calificación</span>
+                    <span style="font-size:11px; color:#9ca3af;">El cierre con este motivo se contabiliza en la calificación del cliente</span>
                 </div>
             </label>
 

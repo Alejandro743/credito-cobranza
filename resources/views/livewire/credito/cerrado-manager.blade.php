@@ -68,7 +68,7 @@
                 <span style="color:#9ca3af; display:block; font-size:10px; text-transform:uppercase; letter-spacing:0.3px;">Motivo</span>
                 <span style="font-weight:600; color:#374151;">{{ $cierre->motivoCierre?->nombre ?? '—' }}</span>
                 @if($cierre->motivoCierre?->afecta_mora)
-                <span style="margin-left:6px; font-size:9px; font-weight:700; padding:1px 5px; border-radius:8px; background:#FEF2F2; color:#B91C1C;">Afecta mora</span>
+                <span style="margin-left:6px; font-size:9px; font-weight:700; padding:1px 5px; border-radius:8px; background:#FEF2F2; color:#B91C1C;">Afecta indicadores</span>
                 @endif
             </div>
             <div>
@@ -204,7 +204,7 @@
                     @if($p->cierre?->motivoCierre)
                     <span style="font-size:11px; font-weight:600; color:#374151;">{{ $p->cierre->motivoCierre->nombre }}</span>
                     @if($p->cierre->motivoCierre->afecta_mora)
-                    <span style="display:block; font-size:9px; font-weight:700; padding:1px 5px; border-radius:8px; background:#FEF2F2; color:#B91C1C; margin-top:2px;">Afecta mora</span>
+                    <span style="display:block; font-size:9px; font-weight:700; padding:1px 5px; border-radius:8px; background:#FEF2F2; color:#B91C1C; margin-top:2px;">Afecta indicadores</span>
                     @endif
                     @else
                     <span style="color:#9ca3af; font-size:11px;">—</span>
