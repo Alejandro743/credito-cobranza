@@ -236,45 +236,49 @@ $estilosActivos = [
             </svg>
         </button>
         <div x-show="abierto" x-collapse>
-            <div style="padding:4px 0;">
+            <div style="padding:4px 0; display:flex; flex-direction:column; gap:8px; padding:10px 14px;">
             @foreach($p->cierres as $histCierre)
             @php $revertido = $histCierre->estaRevertido(); @endphp
-            <div style="padding:14px 16px; border-top:1px solid #f3f4f6; {{ $loop->first ? 'border-top:none;' : '' }}">
-                <div style="padding:12px 14px; border-radius:10px; border:1.5px solid {{ $revertido ? '#FCA5A5' : '#E5E7EB' }}; background:{{ $revertido ? '#FEF2F2' : '#F9FAFB' }};">
-                    <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:8px;">
-                        <div style="display:flex; align-items:center; gap:6px;">
-                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $histCierre->motivoCierre?->nombre ?? '—' }}</span>
-                            @if($histCierre->motivoCierre?->afecta_mora)
-                            <span style="font-size:9px; font-weight:700; padding:1px 6px; border-radius:8px; background:#FEF2F2; color:#B91C1C;">Afecta indicadores</span>
-                            @endif
-                        </div>
-                        @if($revertido)
-                        <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#FCA5A5; color:#7F1D1D; flex-shrink:0;">REVERTIDO</span>
-                        @else
-                        <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#F3F4F6; color:#374151; flex-shrink:0;">VIGENTE</span>
-                        @endif
-                    </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:11px; color:#6b7280;">
-                        <div>
-                            <span style="font-weight:600;">Cerrado por:</span> {{ $histCierre->cerradoPor?->name ?? '—' }}<br>
-                            <span style="font-weight:600;">Fecha:</span> {{ $histCierre->created_at->format('d/m/Y H:i') }}
-                        </div>
-                        @if($histCierre->observacion)
-                        <div>
-                            <span style="font-weight:600;">Observación:</span> {{ $histCierre->observacion }}
-                        </div>
-                        @endif
-                    </div>
 
-                    @if($revertido)
-                    <div style="margin-top:10px; padding:8px 12px; background:#FFFBEB; border-radius:8px; border:1px solid #FCD34D; font-size:11px; color:#854d0e;">
-                        <span style="font-weight:700;">Revertido por:</span> {{ $histCierre->revertidoPor?->name ?? '—' }}
-                        · {{ $histCierre->revertido_at->format('d/m/Y H:i') }}<br>
-                        <span style="font-weight:700;">Motivo:</span> {{ $histCierre->motivo_reversion }}
+            @if($revertido)
+            {{-- Tarjeta: evento de REVERSIÓN --}}
+            <div style="padding:12px 14px; border-radius:10px; border:1.5px solid #FCD34D; background:#FFFBEB;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                    <span style="font-size:11px; font-weight:700; color:#854d0e;">Reversión de cierre</span>
+                    <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#FCD34D; color:#854d0e; flex-shrink:0;">REVERTIDO</span>
+                </div>
+                <div style="font-size:11px; color:#854d0e;">
+                    <span style="font-weight:600;">Revertido por:</span> {{ $histCierre->revertidoPor?->name ?? '—' }}<br>
+                    <span style="font-weight:600;">Fecha:</span> {{ $histCierre->revertido_at->format('d/m/Y H:i') }}<br>
+                    <span style="font-weight:600;">Motivo:</span> {{ $histCierre->motivo_reversion }}
+                </div>
+            </div>
+            @endif
+
+            {{-- Tarjeta: evento de CIERRE --}}
+            <div style="padding:12px 14px; border-radius:10px; border:1.5px solid #E5E7EB; background:#F9FAFB;">
+                <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:8px;">
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $histCierre->motivoCierre?->nombre ?? '—' }}</span>
+                        @if($histCierre->motivoCierre?->afecta_mora)
+                        <span style="font-size:9px; font-weight:700; padding:1px 6px; border-radius:8px; background:#FEF2F2; color:#B91C1C;">Afecta indicadores</span>
+                        @endif
+                    </div>
+                    <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:{{ $revertido ? '#FEE2E2' : '#F3F4F6' }}; color:{{ $revertido ? '#991B1B' : '#374151' }}; flex-shrink:0;">CIERRE{{ $revertido ? ' (anulado)' : '' }}</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:11px; color:#6b7280;">
+                    <div>
+                        <span style="font-weight:600;">Cerrado por:</span> {{ $histCierre->cerradoPor?->name ?? '—' }}<br>
+                        <span style="font-weight:600;">Fecha:</span> {{ $histCierre->created_at->format('d/m/Y H:i') }}
+                    </div>
+                    @if($histCierre->observacion)
+                    <div>
+                        <span style="font-weight:600;">Observación:</span> {{ $histCierre->observacion }}
                     </div>
                     @endif
                 </div>
             </div>
+
             @endforeach
             </div>
         </div>
