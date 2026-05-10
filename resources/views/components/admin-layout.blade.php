@@ -8,6 +8,54 @@
     <title>{{ config('app.name') }} — Crediessen</title>
     <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    // Paleta pizarra — acento uniforme (reemplaza lavanda)
+                    lavanda: {
+                        50:  '#F0F4F7',
+                        100: '#FFFFE3',
+                        200: '#CBCBCB',
+                        300: '#A8B8C8',
+                        400: '#8FA0B0',
+                        500: '#6D8196',
+                        600: '#5C6F80',
+                        700: '#4A4A4A',
+                    },
+                    // Verde — estados positivos / aprobado
+                    mint: {
+                        50:  '#F0FDF4',
+                        100: '#D1FAE5',
+                        200: '#A7F3D0',
+                        500: '#10B981',
+                        600: '#059669',
+                        700: '#065F46',
+                    },
+                    // Ámbar — revisión / advertencia
+                    melocoton: {
+                        50:  '#FFFBEB',
+                        100: '#FEF3C7',
+                        200: '#FDE68A',
+                        500: '#F59E0B',
+                        600: '#D97706',
+                        700: '#92400E',
+                    },
+                    // Azul — información / cobro
+                    celeste: {
+                        50:  '#EFF6FF',
+                        100: '#DBEAFE',
+                        200: '#BFDBFE',
+                        500: '#3B82F6',
+                        600: '#2563EB',
+                        700: '#1D4ED8',
+                    },
+                }
+            }
+        }
+    }
+    </script>
     <style>
         body { font-family: 'Inter', sans-serif; }
         .sidebar-nav::-webkit-scrollbar { width: 4px; }
