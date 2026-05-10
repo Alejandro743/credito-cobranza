@@ -70,7 +70,7 @@ class Pedido extends Model
     /** Todos los cierres del pedido, incluyendo revertidos */
     public function cierres(): HasMany
     {
-        return $this->hasMany(PedidoCierre::class)->orderByDesc('created_at');
+        return $this->hasMany(PedidoCierre::class)->orderBy('created_at');
     }
 
     public function scopeParaIndicadores($query): void
