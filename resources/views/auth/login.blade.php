@@ -1,7 +1,7 @@
 <x-guest-layout>
 
-    <p style="font-size:24px; font-weight:700; color:#1C1917; margin-bottom:5px;">Bienvenida</p>
-    <p style="font-size:13px; color:#A8A29E; margin-bottom:28px;">Ingresá tus datos para continuar</p>
+    <p style="font-size:28px; font-weight:800; color:#4A4A4A; margin-bottom:6px; text-align:center; letter-spacing:-0.5px;">Bienvenid@</p>
+    <p style="font-size:13px; color:#CBCBCB; margin-bottom:30px; text-align:center; font-weight:400; letter-spacing:.2px;">Ingresá tus datos para continuar</p>
 
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -31,7 +31,7 @@
         {{-- Recordarme --}}
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:22px;">
             <input type="checkbox" name="remember" id="remember_me"
-                   style="accent-color:#BE185D; width:15px; height:15px; cursor:pointer;">
+                   style="accent-color:#6D8196; width:15px; height:15px; cursor:pointer;">
             <label for="remember_me" style="font-size:13px; color:#78716C; cursor:pointer;">
                 Recordarme en este equipo
             </label>
