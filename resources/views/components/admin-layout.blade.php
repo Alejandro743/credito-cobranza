@@ -61,6 +61,27 @@
         .sidebar-nav::-webkit-scrollbar { width: 4px; }
         .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
         .sidebar-nav::-webkit-scrollbar-thumb { background: #CBCBCB; border-radius: 4px; }
+
+        /* ── Design system global: esquinas cuadradas ── */
+        button, input[type="submit"], input[type="button"], input[type="reset"],
+        select, textarea, input[type="text"], input[type="email"],
+        input[type="password"], input[type="number"], input[type="search"],
+        input[type="date"], input[type="tel"] {
+            border-radius: 3px !important;
+        }
+        /* Clases Tailwind rounded-* */
+        .rounded-full, .rounded-xl, .rounded-2xl, .rounded-3xl,
+        .rounded-lg, .rounded-md, .rounded { border-radius: 3px !important; }
+        /* Inline style border-radius en cualquier elemento de contenido */
+        span[style*="border-radius"],
+        div[style*="border-radius"],
+        a[style*="border-radius"],
+        button[style*="border-radius"],
+        input[style*="border-radius"] { border-radius: 3px !important; }
+
+        /* ── Espaciado en área de contenido ── */
+        main .p-4 { padding: 1.5rem !important; }
+        main .p-6 { padding: 1.5rem !important; }
     </style>
     @livewireStyles
 </head>
