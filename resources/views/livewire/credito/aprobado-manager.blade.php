@@ -265,15 +265,15 @@ $estilosActivos = [
                         </div>
                         @endif
                     </div>
-                </div>
 
-                @if($revertido)
-                <div style="margin-top:8px; padding:8px 12px; background:#FFFBEB; border-radius:8px; border:1px solid #FCD34D; font-size:11px; color:#854d0e;">
-                    <span style="font-weight:700;">Revertido por:</span> {{ $histCierre->revertidoPor?->name ?? '—' }}
-                    · {{ $histCierre->revertido_at->format('d/m/Y H:i') }}<br>
-                    <span style="font-weight:700;">Motivo:</span> {{ $histCierre->motivo_reversion }}
+                    @if($revertido)
+                    <div style="margin-top:10px; padding:8px 12px; background:#FFFBEB; border-radius:8px; border:1px solid #FCD34D; font-size:11px; color:#854d0e;">
+                        <span style="font-weight:700;">Revertido por:</span> {{ $histCierre->revertidoPor?->name ?? '—' }}
+                        · {{ $histCierre->revertido_at->format('d/m/Y H:i') }}<br>
+                        <span style="font-weight:700;">Motivo:</span> {{ $histCierre->motivo_reversion }}
+                    </div>
+                    @endif
                 </div>
-                @endif
             </div>
             @endforeach
             </div>
