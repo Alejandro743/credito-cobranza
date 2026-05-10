@@ -165,7 +165,7 @@
     $efBadge   = $plan?->estadoFinancieroBadge ?? ['bg'=>'#f3f4f6','cl'=>'#6b7280','lb'=>'Sin plan'];
     $hdrCfg    = match($plan?->estadoFinanciero ?? 'vigente') {
         'pagado'  => ['color'=>'#15803D','bg'=>'#F0FDF4','border'=>'#86EFAC'],
-        'en_mora' => ['color'=>'#B91C1C','bg'=>'#FEF2F2','border'=>'#FCA5A5'],
+        'en_mora' => ['color'=>'#B91C1C','bg'=>'#FEF2F2','border'=>'#CBCBCB'],
         default   => ['color'=>'#854F0B','bg'=>'#FFFBEB','border'=>'#FCD34D'],
     };
 @endphp
@@ -464,7 +464,7 @@
         $totalOk  = count($resultadosOk);
         $totalErr = count($resultadosError);
         $hdrBg    = $totalErr === 0 ? '#F0FDF4' : ($totalOk === 0 ? '#FEF2F2' : '#FFFBEB');
-        $hdrBo    = $totalErr === 0 ? '#86EFAC'  : ($totalOk === 0 ? '#FCA5A5'  : '#FCD34D');
+        $hdrBo    = $totalErr === 0 ? '#86EFAC'  : ($totalOk === 0 ? '#CBCBCB'  : '#FCD34D');
         $hdrCl    = $totalErr === 0 ? '#15803D'  : ($totalOk === 0 ? '#B91C1C'  : '#854F0B');
     @endphp
     <div style="background:{{ $hdrBg }}; border:1px solid {{ $hdrBo }}; border-radius:14px; padding:16px 18px; margin:0 0 20px;">
@@ -531,7 +531,7 @@
     @if($totalErr > 0)
     <div style="display:flex; align-items:center; gap:8px; margin:4px 0 10px;">
         <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#B91C1C;">Líneas No Aplicadas</span>
-        <div style="flex:1; height:1px; background:#FCA5A5;"></div>
+        <div style="flex:1; height:1px; background:#CBCBCB;"></div>
         <span style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; background:#FEF2F2; color:#B91C1C;">{{ $totalErr }}</span>
     </div>
     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
@@ -539,11 +539,11 @@
         <table style="border-collapse:separate; border-spacing:0; width:100%; font-size:12px;">
             <thead style="background:#FEF2F2; color:#B91C1C; font-size:10px; font-weight:600; letter-spacing:0.5px;">
                 <tr>
-                    <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #FCA5A5; width:50px;">Fila</th>
-                    <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #FCA5A5;">Transacción</th>
-                    <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #FCA5A5;">Pedido</th>
-                    <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #FCA5A5; width:70px;">Cuota</th>
-                    <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #FCA5A5;">Motivo</th>
+                    <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #CBCBCB; width:50px;">Fila</th>
+                    <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #CBCBCB;">Transacción</th>
+                    <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #CBCBCB;">Pedido</th>
+                    <th style="padding:8px 12px; text-align:center; font-weight:700; border:0.5px solid #CBCBCB; width:70px;">Cuota</th>
+                    <th style="padding:8px 12px; text-align:left; font-weight:700; border:0.5px solid #CBCBCB;">Motivo</th>
                 </tr>
             </thead>
             <tbody>

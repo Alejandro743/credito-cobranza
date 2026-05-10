@@ -12,7 +12,7 @@
         .login-wrap { display: flex; width: 100%; max-width: 880px; border-radius: 20px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,.22); min-height: 540px; }
         .login-left  { background: #6D8196; flex: 1; padding: 52px 44px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
         .login-right { background: #fff; width: 380px; flex-shrink: 0; padding: 52px 40px; display: flex; flex-direction: column; justify-content: center; }
-        .form-input { width: 100%; padding: 12px 14px; border: 1.5px solid #E7E0DC; border-radius: 10px; font-size: 14px; color: #374151; background: #FAF7F5; font-family: 'Inter', sans-serif; transition: border-color .15s, box-shadow .15s; }
+        .form-input { width: 100%; padding: 12px 14px; border: 1.5px solid #E7E0DC; border-radius: 10px; font-size: 14px; color: #374151; background: #FFFFE3; font-family: 'Inter', sans-serif; transition: border-color .15s, box-shadow .15s; }
         .form-input:focus { outline: none; border-color: #6D8196; background: #fff; box-shadow: 0 0 0 3px rgba(109,129,150,.12); }
         .form-input::placeholder { color: #CBCBCB; }
         .btn-login { width: 100%; padding: 14px; border-radius: 3px; background: #6D8196; color: #fff; font-size: 14px; font-weight: 700; border: none; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: .3px; transition: background .15s; }

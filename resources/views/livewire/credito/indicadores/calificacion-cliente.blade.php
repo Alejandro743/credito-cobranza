@@ -17,7 +17,7 @@
         ['label'=>'Calificación A', 'val'=>$kpis['a'],    'bg'=>'#DCFCE7','cl'=>'#15803D','bc'=>'#6ee7b7'],
         ['label'=>'Calificación B', 'val'=>$kpis['b'],    'bg'=>'#ECFEFF','cl'=>'#0e7490','bc'=>'#67e8f9'],
         ['label'=>'Calificación C', 'val'=>$kpis['c'],    'bg'=>'#FFFBEB','cl'=>'#854F0B','bc'=>'#FCD34D'],
-        ['label'=>'D / Bloqueado',  'val'=>$kpis['db'],   'bg'=>'#FEF2F2','cl'=>'#B91C1C','bc'=>'#FCA5A5'],
+        ['label'=>'D / Bloqueado',  'val'=>$kpis['db'],   'bg'=>'#FEF2F2','cl'=>'#B91C1C','bc'=>'#CBCBCB'],
     ];
     @endphp
     @foreach($kpiCfg as $k)

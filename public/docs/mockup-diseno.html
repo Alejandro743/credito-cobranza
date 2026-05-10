@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup Diseño — Essen</title>
+<link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800&display=swap" rel="stylesheet"/>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', sans-serif; background: #F5F0ED; color: #1C1917; }
+
+/* ── SECCIÓN ──────────────────────────────────────── */
+.section { max-width: 980px; margin: 0 auto; padding: 48px 24px; }
+.section-title { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #A8A29E; margin-bottom: 28px; }
+.section-title span { color: #BE185D; }
+.block-label { font-size: 12px; font-weight: 700; color: #44403C; margin-bottom: 14px; text-transform: uppercase; letter-spacing: .6px; }
+.divider { height: 1px; background: #E7E0DC; margin: 40px 0; }
+
+/* ── PALETA ──────────────────────────────────────── */
+.palette { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 32px; }
+.swatch { width: 76px; }
+.sw-color { height: 44px; border-radius: 10px; margin-bottom: 6px; border: 1px solid rgba(0,0,0,.06); }
+.sw-name { font-size: 10px; font-weight: 600; color: #78716C; text-align: center; }
+.sw-hex  { font-size: 9px; color: #A8A29E; text-align: center; font-family: monospace; }
+
+/* ── BADGES ──────────────────────────────────────── */
+.badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 6px; font-size: 11px; font-weight: 700; }
+.badge-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+
+/* ── BOTONES ──────────────────────────────────────── */
+.btn { display: inline-flex; align-items: center; gap: 7px; padding: 10px 20px; border-radius: 10px; font-size: 13px; font-weight: 600; border: none; cursor: pointer; font-family: inherit; }
+.btn-primary { background: #BE185D; color: #fff; }
+.btn-success { background: #16A34A; color: #fff; }
+.btn-danger  { background: #DC2626; color: #fff; }
+.btn-ghost   { background: #F5F0ED; color: #78716C; border: 1.5px solid #E7E0DC; }
+.btn-outline { background: transparent; color: #BE185D; border: 1.5px solid #BE185D; }
+
+/* ── STAT CARD ──────────────────────────────────────── */
+.stat-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+.stat-card { background: #fff; border: 1px solid #E7E0DC; border-radius: 14px; padding: 18px 20px; }
+.stat-label { font-size: 10px; font-weight: 700; color: #A8A29E; letter-spacing: .6px; text-transform: uppercase; margin-bottom: 8px; }
+.stat-value { font-size: 22px; font-weight: 800; color: #1C1917; line-height: 1; }
+.stat-sub   { font-size: 11px; color: #A8A29E; margin-top: 5px; }
+.stat-rose  { border-left: 3px solid #BE185D; }
+.stat-green { border-left: 3px solid #16A34A; }
+.stat-red   { border-left: 3px solid #DC2626; }
+.stat-amber { border-left: 3px solid #D97706; }
+
+/* ── TABLA ──────────────────────────────────────── */
+.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size: 13px; }
+.tbl th { background: #FAF7F5; color: #78716C; font-size: 10px; font-weight: 700; letter-spacing: .6px; text-transform: uppercase; padding: 10px 14px; border: 1px solid #EDE8E5; text-align: left; }
+.tbl td { padding: 13px 14px; border: 1px solid #F5F0ED; color: #1C1917; vertical-align: middle; }
+.tbl tr:hover td { background: #FAF7F5; }
+.tbl .num   { font-family: monospace; font-size: 11px; color: #78716C; }
+.tbl .money { font-weight: 700; text-align: right; }
+.tbl .green { color: #16A34A; }
+.tbl .red   { color: #DC2626; }
+.tbl .muted { color: #A8A29E; }
+
+/* ── LOGIN ──────────────────────────────────────── */
+.login-wrap  { display: flex; border-radius: 20px; overflow: hidden; box-shadow: 0 24px 80px rgba(28,25,23,.14); }
+.login-left  { background: #1C1917; flex: 1; padding: 52px 44px; display: flex; flex-direction: column; justify-content: space-between; }
+.login-right { background: #fff; width: 380px; flex-shrink: 0; padding: 52px 40px; display: flex; flex-direction: column; justify-content: center; }
+.essen-brand { display: flex; align-items: center; gap: 14px; }
+.essen-mark  { width: 44px; height: 44px; background: #BE185D; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.essen-name  { font-size: 26px; font-weight: 800; color: #fff; letter-spacing: 3px; }
+.login-tagline { font-size: 14px; color: #78716C; line-height: 1.8; margin-top: 28px; }
+.login-quote   { font-size: 12px; color: #57534E; font-style: italic; }
+.accent-line   { width: 36px; height: 3px; background: #BE185D; border-radius: 2px; margin-bottom: 14px; }
+.form-title { font-size: 24px; font-weight: 700; color: #1C1917; margin-bottom: 5px; }
+.form-sub   { font-size: 13px; color: #A8A29E; margin-bottom: 30px; }
+.form-label { display: block; font-size: 11px; font-weight: 700; color: #78716C; letter-spacing: .5px; text-transform: uppercase; margin-bottom: 6px; }
+.form-input { width: 100%; padding: 12px 14px; border: 1.5px solid #E7E0DC; border-radius: 10px; font-size: 14px; color: #1C1917; outline: none; font-family: inherit; background: #FAF7F5; margin-bottom: 16px; }
+.form-input:focus { border-color: #BE185D; background: #fff; box-shadow: 0 0 0 3px rgba(190,24,93,.08); }
+.remember { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #78716C; margin-bottom: 22px; }
+.remember input { accent-color: #BE185D; width: 14px; height: 14px; }
+.btn-login { width: 100%; padding: 14px; border-radius: 11px; background: #BE185D; color: #fff; font-size: 14px; font-weight: 700; border: none; cursor: pointer; font-family: inherit; letter-spacing: .3px; }
+
+/* ── SIDEBAR DESKTOP ──────────────────────────────── */
+.sidebar { background: #1C1917; border-radius: 16px; padding: 0; width: 220px; flex-shrink: 0; overflow: hidden; }
+.sidebar-logo { padding: 22px 20px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.sidebar-brand { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 2.5px; }
+.sidebar-sub   { font-size: 9px; color: #57534E; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+.sidebar-sec   { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #57534E; padding: 16px 20px 6px; }
+.sidebar-item  { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: 13px; font-weight: 500; color: #A8A29E; cursor: pointer; }
+.sidebar-item.active { background: rgba(190,24,93,.15); color: #FB7185; font-weight: 600; border-left: 3px solid #BE185D; }
+.sidebar-item:hover:not(.active) { background: rgba(255,255,255,.04); color: #D6D3D1; }
+.sidebar-dot  { width: 5px; height: 5px; border-radius: 50%; background: #BE185D; flex-shrink: 0; }
+.sidebar-dot-g { width: 5px; height: 5px; border-radius: 50%; background: #44403C; flex-shrink: 0; }
+
+/* ── MOBILE MENU ──────────────────────────────────── */
+.mobile-frame { width: 360px; border-radius: 32px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,.18); background: #F5F0ED; border: 8px solid #1C1917; position: relative; flex-shrink: 0; }
+.mobile-topbar { background: #1C1917; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+.mobile-topbar-title { font-size: 14px; font-weight: 700; color: #fff; }
+.hamburger { display: flex; flex-direction: column; gap: 4px; cursor: pointer; }
+.hamburger span { width: 20px; height: 2px; background: #fff; border-radius: 2px; display: block; }
+.mobile-content { padding: 16px; }
+.mobile-stat-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+.mobile-stat { background: #fff; border-radius: 12px; padding: 14px; border: 1px solid #E7E0DC; }
+.mobile-stat-label { font-size: 9px; font-weight: 700; color: #A8A29E; text-transform: uppercase; letter-spacing: .5px; }
+.mobile-stat-value { font-size: 18px; font-weight: 800; color: #1C1917; margin-top: 4px; }
+.mobile-row { background: #fff; border-radius: 12px; padding: 14px; margin-bottom: 10px; border: 1px solid #E7E0DC; }
+.mobile-row-name { font-size: 13px; font-weight: 700; color: #1C1917; }
+.mobile-row-num  { font-size: 10px; color: #A8A29E; font-family: monospace; margin-top: 1px; }
+.mobile-row-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 10px; }
+.mobile-row-money { font-size: 15px; font-weight: 800; color: #BE185D; }
+.mobile-row-saldo { font-size: 10px; font-weight: 600; color: #DC2626; }
+
+/* Drawer overlay */
+.drawer-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(28,25,23,.55); z-index: 10; display: flex; }
+.drawer { width: 260px; height: 100%; background: #1C1917; display: flex; flex-direction: column; }
+.drawer-header { padding: 22px 20px 18px; border-bottom: 1px solid rgba(255,255,255,.06); }
+.drawer-brand  { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: 2px; }
+.drawer-sub    { font-size: 9px; color: #57534E; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px; }
+.drawer-sec    { font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: #57534E; padding: 16px 20px 6px; }
+.drawer-item   { display: flex; align-items: center; gap: 12px; padding: 13px 20px; font-size: 14px; font-weight: 500; color: #A8A29E; }
+.drawer-item.active { background: rgba(190,24,93,.15); color: #FB7185; font-weight: 600; border-left: 3px solid #BE185D; }
+.drawer-item svg { width: 18px; height: 18px; flex-shrink: 0; }
+.drawer-close  { width: 32px; height: 32px; background: rgba(255,255,255,.07); border-radius: 8px; display: flex; align-items: center; justify-content: center; float: right; margin-top: -4px; }
+
+/* ── UTILS ──────────────────────────────────────── */
+.flex { display: flex; }
+.gap-4 { gap: 16px; }
+.gap-6 { gap: 24px; }
+.gap-8 { gap: 32px; }
+.mb-4  { margin-bottom: 16px; }
+.mb-6  { margin-bottom: 24px; }
+.mb-8  { margin-bottom: 32px; }
+.flex-wrap { flex-wrap: wrap; }
+.items-start { align-items: flex-start; }
+.items-center { align-items: center; }
+</style>
+</head>
+<body>
+
+<!-- Topbar mockup nav -->
+<div style="background:#1C1917; padding:14px 40px; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:100;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <div style="width:28px; height:28px; background:#BE185D; border-radius:7px; display:flex; align-items:center; justify-content:center;">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    </div>
+    <span style="font-size:15px; font-weight:800; color:#fff; letter-spacing:2px;">ESSEN</span>
+    <span style="font-size:11px; color:#57534E; font-weight:600; letter-spacing:1px; margin-left:4px;">· Mockup de Diseño</span>
+  </div>
+  <span style="font-size:11px; color:#57534E;">Propuesta visual — Mayo 2026</span>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  01  PALETA ELEGANTE                           -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-title"><span>01</span> — Paleta elegante y cálida</p>
+
+  <p class="block-label mb-4">Base cálida (reemplaza los grises fríos)</p>
+  <div class="palette mb-6">
+    <div class="swatch"><div class="sw-color" style="background:#1C1917;"></div><div class="sw-name">Stone 950</div><div class="sw-hex">#1C1917</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#44403C;"></div><div class="sw-name">Stone 700</div><div class="sw-hex">#44403C</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#78716C;"></div><div class="sw-name">Secundario</div><div class="sw-hex">#78716C</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#A8A29E;"></div><div class="sw-name">Muted</div><div class="sw-hex">#A8A29E</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#E7E0DC;"></div><div class="sw-name">Borde</div><div class="sw-hex">#E7E0DC</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#FAF7F5;"></div><div class="sw-name">Surface</div><div class="sw-hex">#FAF7F5</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#F5F0ED;"></div><div class="sw-name">Fondo</div><div class="sw-hex">#F5F0ED</div></div>
+  </div>
+
+  <p class="block-label mb-4">Acento principal — Rosa profundo</p>
+  <div class="palette mb-6">
+    <div class="swatch"><div class="sw-color" style="background:#881337;"></div><div class="sw-name">Rose 900</div><div class="sw-hex">#881337</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#9F1239;"></div><div class="sw-name">Rose 800</div><div class="sw-hex">#9F1239</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#BE185D;"></div><div class="sw-name">Principal ★</div><div class="sw-hex">#BE185D</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#E11D48;"></div><div class="sw-name">Hover</div><div class="sw-hex">#E11D48</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#FB7185;"></div><div class="sw-name">Light</div><div class="sw-hex">#FB7185</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#FFF1F2;"></div><div class="sw-name">Bg acento</div><div class="sw-hex">#FFF1F2</div></div>
+  </div>
+
+  <p class="block-label mb-4">Estados semánticos (sin cambio de significado)</p>
+  <div class="palette">
+    <div class="swatch"><div class="sw-color" style="background:#16A34A;"></div><div class="sw-name">Aprobado</div><div class="sw-hex">#16A34A</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#DCFCE7;"></div><div class="sw-name">Aprobado bg</div><div class="sw-hex">#DCFCE7</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#DC2626;"></div><div class="sw-name">Rechazado</div><div class="sw-hex">#DC2626</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#FEE2E2;"></div><div class="sw-name">Rechazado bg</div><div class="sw-hex">#FEE2E2</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#D97706;"></div><div class="sw-name">En espera</div><div class="sw-hex">#D97706</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#FEF3C7;"></div><div class="sw-name">Espera bg</div><div class="sw-hex">#FEF3C7</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#2563EB;"></div><div class="sw-name">Revisión</div><div class="sw-hex">#2563EB</div></div>
+    <div class="swatch"><div class="sw-color" style="background:#44403C;"></div><div class="sw-name">Cerrado</div><div class="sw-hex">#44403C</div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  02  LOGIN                                     -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-title"><span>02</span> — Pantalla de ingreso</p>
+  <div class="login-wrap">
+    <div class="login-left">
+      <div>
+        <div class="essen-brand">
+          <div class="essen-mark">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+          <span class="essen-name">ESSEN</span>
+        </div>
+        <p class="login-tagline">Sistema de Gestión<br>de Crédito y Cobranza</p>
+      </div>
+      <div>
+        <div class="accent-line"></div>
+        <p class="login-quote">"Control total sobre tu cartera de crédito."</p>
+      </div>
+    </div>
+    <div class="login-right">
+      <p class="form-title">Bienvenida</p>
+      <p class="form-sub">Ingresá tus datos para continuar</p>
+      <label class="form-label">Correo electrónico</label>
+      <input class="form-input" type="text" placeholder="usuario@essen.com">
+      <label class="form-label">Contraseña</label>
+      <input class="form-input" type="password" placeholder="••••••••">
+      <div class="remember">
+        <input type="checkbox" checked>
+        <span>Recordarme en este equipo</span>
+      </div>
+      <button class="btn-login">Ingresar al sistema</button>
+      <p style="font-size:11px; color:#D6D3D1; text-align:center; margin-top:22px;">Essen &copy; 2026 · Sistema Interno</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  03  MENÚ MÓVIL                               -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-title"><span>03</span> — Menú móvil (señoras de campo / tablet)</p>
+  <div class="flex gap-8 flex-wrap items-start">
+
+    <!-- Celular: menú cerrado -->
+    <div>
+      <p class="block-label mb-4" style="text-align:center;">Vista normal (menú cerrado)</p>
+      <div class="mobile-frame">
+        <div class="mobile-topbar">
+          <div class="hamburger">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="mobile-topbar-title">Aprobado / Cerrado</span>
+          <div style="width:20px;"></div>
+        </div>
+        <div class="mobile-content">
+          <div class="mobile-stat-row">
+            <div class="mobile-stat" style="border-left:3px solid #BE185D;">
+              <div class="mobile-stat-label">Total cartera</div>
+              <div class="mobile-stat-value" style="font-size:16px;">Bs. 124,500</div>
+            </div>
+            <div class="mobile-stat" style="border-left:3px solid #16A34A;">
+              <div class="mobile-stat-label">Cobrado</div>
+              <div class="mobile-stat-value" style="font-size:16px; color:#16A34A;">Bs. 89,200</div>
+            </div>
+          </div>
+          <div class="mobile-row">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <div class="mobile-row-name">María González</div>
+                <div class="mobile-row-num">PED-00012</div>
+              </div>
+              <span class="badge" style="background:#DCFCE7; color:#16A34A; font-size:10px;"><span class="badge-dot" style="background:#16A34A;"></span>Aprobado</span>
+            </div>
+            <div class="mobile-row-foot">
+              <div>
+                <div style="font-size:9px; color:#A8A29E; font-weight:700; text-transform:uppercase; letter-spacing:.5px;">Total</div>
+                <div class="mobile-row-money">Bs. 2,400</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:9px; color:#A8A29E; font-weight:700; text-transform:uppercase; letter-spacing:.5px;">Saldo</div>
+                <div class="mobile-row-saldo">Bs. 1,200</div>
+              </div>
+              <button style="padding:8px 14px; background:#BE185D; color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">Ver</button>
+            </div>
+          </div>
+          <div class="mobile-row">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <div class="mobile-row-name">Juan Pérez</div>
+                <div class="mobile-row-num">PED-00009</div>
+              </div>
+              <span class="badge" style="background:#FEE2E2; color:#DC2626; font-size:10px;"><span class="badge-dot" style="background:#DC2626;"></span>Rechazado</span>
+            </div>
+            <div class="mobile-row-foot">
+              <div>
+                <div style="font-size:9px; color:#A8A29E; font-weight:700; text-transform:uppercase; letter-spacing:.5px;">Total</div>
+                <div class="mobile-row-money" style="color:#44403C;">Bs. 1,800</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:9px; color:#A8A29E; font-weight:700; text-transform:uppercase; letter-spacing:.5px;">Saldo</div>
+                <div class="mobile-row-saldo" style="color:#A8A29E;">Bs. 0</div>
+              </div>
+              <button style="padding:8px 14px; background:#BE185D; color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">Ver</button>
+            </div>
+          </div>
+          <div class="mobile-row">
+            <div style="display:flex; align-items:center; justify-content:space-between;">
+              <div>
+                <div class="mobile-row-name">Luis Herrera</div>
+                <div class="mobile-row-num">PED-00005</div>
+              </div>
+              <span class="badge" style="background:#F5F0ED; color:#44403C; font-size:10px;"><span class="badge-dot" style="background:#44403C;"></span>Cerrado</span>
+            </div>
+            <div class="mobile-row-foot">
+              <div>
+                <div style="font-size:9px; color:#A8A29E; font-weight:700; text-transform:uppercase; letter-spacing:.5px;">Total</div>
+                <div class="mobile-row-money" style="color:#44403C;">Bs. 3,200</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-size:9px; color:#A8A29E; font-weight:700; text-transform:uppercase; letter-spacing:.5px;">Saldo</div>
+                <div style="font-size:10px; font-weight:600; color:#16A34A;">Bs. 0 ✓</div>
+              </div>
+              <button style="padding:8px 14px; background:#BE185D; color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">Ver</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Celular: menú abierto (drawer) -->
+    <div>
+      <p class="block-label mb-4" style="text-align:center;">Menú abierto (drawer lateral)</p>
+      <div class="mobile-frame">
+        <div class="mobile-topbar">
+          <div class="hamburger">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="mobile-topbar-title">Aprobado / Cerrado</span>
+          <div style="width:20px;"></div>
+        </div>
+        <!-- Contenido difuminado detrás -->
+        <div style="position:relative; overflow:hidden; height:560px;">
+          <div style="padding:16px; filter:blur(1px); opacity:.4;">
+            <div class="mobile-row" style="margin-bottom:10px;">
+              <div class="mobile-row-name">María González</div>
+              <div class="mobile-row-num">PED-00012</div>
+            </div>
+            <div class="mobile-row">
+              <div class="mobile-row-name">Juan Pérez</div>
+              <div class="mobile-row-num">PED-00009</div>
+            </div>
+          </div>
+          <!-- Overlay + Drawer -->
+          <div class="drawer-overlay">
+            <div class="drawer">
+              <div class="drawer-header">
+                <div style="display:flex; align-items:center; justify-content:space-between;">
+                  <div>
+                    <div class="drawer-brand">ESSEN</div>
+                    <div class="drawer-sub">Crédito · Cobranza</div>
+                  </div>
+                  <div class="drawer-close">
+                    <svg width="14" height="14" fill="none" stroke="#A8A29E" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
+                  </div>
+                </div>
+              </div>
+              <div style="overflow-y:auto; flex:1;">
+                <div class="drawer-sec">Crédito / Cobranza</div>
+                <div class="drawer-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                  Dashboard
+                </div>
+                <div class="drawer-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                  En espera
+                </div>
+                <div class="drawer-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  En revisión
+                </div>
+                <div class="drawer-item active">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                  Aprobado / Cerrado
+                </div>
+                <div class="drawer-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                  Cobranza
+                </div>
+                <div class="drawer-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+                  Reprogramación
+                </div>
+                <div class="drawer-sec">Indicadores</div>
+                <div class="drawer-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+                  Calificación cartera
+                </div>
+                <div class="drawer-item">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+                  Calificación clientes
+                </div>
+              </div>
+              <!-- Usuario -->
+              <div style="padding:16px 20px; border-top:1px solid rgba(255,255,255,.06); display:flex; align-items:center; gap:10px;">
+                <div style="width:32px; height:32px; background:#BE185D; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0;">AC</div>
+                <div>
+                  <div style="font-size:12px; font-weight:600; color:#D6D3D1;">Ana Coordinadora</div>
+                  <div style="font-size:10px; color:#57534E;">credito@essen.com</div>
+                </div>
+              </div>
+            </div>
+            <!-- Tap para cerrar -->
+            <div style="flex:1; cursor:pointer;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Notas -->
+    <div style="flex:1; min-width:220px;">
+      <p class="block-label mb-4">Criterios de diseño móvil</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="background:#fff; border-radius:12px; padding:14px 16px; border-left:3px solid #BE185D; border:1px solid #E7E0DC;">
+          <p style="font-size:12px; font-weight:700; color:#1C1917; margin-bottom:4px;">Ítems del menú grandes</p>
+          <p style="font-size:12px; color:#78716C;">Área de toque de 48px mínimo — fácil de presionar sin errores</p>
+        </div>
+        <div style="background:#fff; border-radius:12px; padding:14px 16px; border:1px solid #E7E0DC;">
+          <p style="font-size:12px; font-weight:700; color:#1C1917; margin-bottom:4px;">Íconos acompañan texto</p>
+          <p style="font-size:12px; color:#78716C;">Nunca solo ícono — siempre con etiqueta para claridad</p>
+        </div>
+        <div style="background:#fff; border-radius:12px; padding:14px 16px; border:1px solid #E7E0DC;">
+          <p style="font-size:12px; font-weight:700; color:#1C1917; margin-bottom:4px;">Cards en lugar de tablas</p>
+          <p style="font-size:12px; color:#78716C;">En móvil cada pedido es una tarjeta con toda la info visible</p>
+        </div>
+        <div style="background:#fff; border-radius:12px; padding:14px 16px; border:1px solid #E7E0DC;">
+          <p style="font-size:12px; font-weight:700; color:#1C1917; margin-bottom:4px;">Fuente 14px mínimo</p>
+          <p style="font-size:12px; color:#78716C;">Texto legible sin necesidad de hacer zoom</p>
+        </div>
+        <div style="background:#fff; border-radius:12px; padding:14px 16px; border-left:3px solid #BE185D; border:1px solid #E7E0DC;">
+          <p style="font-size:12px; font-weight:700; color:#1C1917; margin-bottom:4px;">Color activo claro</p>
+          <p style="font-size:12px; color:#78716C;">El ítem seleccionado siempre se distingue con borde rosa y texto claro</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  04  COMPONENTES                              -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="section">
+  <p class="section-title"><span>04</span> — Componentes estandarizados</p>
+
+  <p class="block-label mb-4">Badges de estado</p>
+  <div class="flex gap-4 flex-wrap mb-8">
+    <span class="badge" style="background:#DCFCE7; color:#16A34A;"><span class="badge-dot" style="background:#16A34A;"></span>Aprobado</span>
+    <span class="badge" style="background:#FEE2E2; color:#DC2626;"><span class="badge-dot" style="background:#DC2626;"></span>Rechazado</span>
+    <span class="badge" style="background:#FEF3C7; color:#D97706;"><span class="badge-dot" style="background:#D97706;"></span>En espera</span>
+    <span class="badge" style="background:#DBEAFE; color:#2563EB;"><span class="badge-dot" style="background:#2563EB;"></span>En revisión</span>
+    <span class="badge" style="background:#F5F0ED; color:#44403C;"><span class="badge-dot" style="background:#44403C;"></span>Cerrado</span>
+    <span class="badge" style="background:#FFF1F2; color:#BE185D;"><span class="badge-dot" style="background:#BE185D;"></span>Operativo</span>
+  </div>
+
+  <p class="block-label mb-4">Botones</p>
+  <div class="flex gap-4 flex-wrap mb-8">
+    <button class="btn btn-primary">Aprobar</button>
+    <button class="btn btn-danger">Rechazar</button>
+    <button class="btn btn-success">Confirmar</button>
+    <button class="btn btn-ghost">Cancelar</button>
+    <button class="btn btn-outline">Ver detalle</button>
+  </div>
+
+  <p class="block-label mb-4">Tarjetas de indicador</p>
+  <div class="stat-grid mb-8">
+    <div class="stat-card stat-rose">
+      <div class="stat-label">Total Cartera</div>
+      <div class="stat-value">Bs. 124,500</div>
+      <div class="stat-sub">48 créditos activos</div>
+    </div>
+    <div class="stat-card stat-green">
+      <div class="stat-label">Cobrado</div>
+      <div class="stat-value" style="color:#16A34A;">Bs. 89,200</div>
+      <div class="stat-sub">71.6% recuperado</div>
+    </div>
+    <div class="stat-card stat-red">
+      <div class="stat-label">En Mora</div>
+      <div class="stat-value" style="color:#DC2626;">Bs. 12,300</div>
+      <div class="stat-sub">9 créditos vencidos</div>
+    </div>
+    <div class="stat-card stat-amber">
+      <div class="stat-label">Por Cobrar</div>
+      <div class="stat-value" style="color:#D97706;">Bs. 23,000</div>
+      <div class="stat-sub">Saldo pendiente</div>
+    </div>
+  </div>
+
+  <p class="block-label mb-4">Sidebar desktop</p>
+  <div class="flex gap-6 items-start">
+    <div class="sidebar">
+      <div class="sidebar-logo">
+        <div class="sidebar-brand">ESSEN</div>
+        <div class="sidebar-sub">Crédito · Cobranza</div>
+      </div>
+      <div class="sidebar-sec">Crédito / Cobranza</div>
+      <div class="sidebar-item"><span class="sidebar-dot-g"></span>Dashboard</div>
+      <div class="sidebar-item"><span class="sidebar-dot-g"></span>En espera</div>
+      <div class="sidebar-item"><span class="sidebar-dot-g"></span>En revisión</div>
+      <div class="sidebar-item active"><span class="sidebar-dot"></span>Aprobado / Cerrado</div>
+      <div class="sidebar-item"><span class="sidebar-dot-g"></span>Cobranza</div>
+      <div class="sidebar-item"><span class="sidebar-dot-g"></span>Reprogramación</div>
+      <div class="sidebar-sec">Indicadores</div>
+      <div class="sidebar-item"><span class="sidebar-dot-g"></span>Calificación cartera</div>
+      <div class="sidebar-item"><span class="sidebar-dot-g"></span>Calificación clientes</div>
+    </div>
+
+    <div style="flex:1; background:#fff; border-radius:14px; overflow:hidden; border:1px solid #E7E0DC;">
+      <div style="background:#1C1917; padding:13px 18px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:14px; font-weight:700; color:#fff;">Aprobado / Rechazado / Cerrado</span>
+        <span style="font-size:12px; color:#57534E;">10/05/2026</span>
+      </div>
+      <div style="padding:14px 16px;">
+        <div style="display:flex; gap:8px; margin-bottom:14px; flex-wrap:wrap;">
+          <input style="flex:1; min-width:160px; padding:9px 12px; border:1.5px solid #E7E0DC; border-radius:8px; font-size:13px; background:#FAF7F5; font-family:inherit; color:#1C1917; outline:none;" placeholder="Buscar cliente o pedido...">
+          <span style="padding:6px 14px; border-radius:7px; font-size:12px; font-weight:600; background:#FFF1F2; border:1.5px solid #BE185D; color:#BE185D; cursor:pointer;">Todos</span>
+          <span style="padding:6px 14px; border-radius:7px; font-size:12px; font-weight:600; background:#FAF7F5; border:1.5px solid #E7E0DC; color:#78716C; cursor:pointer;">Aprobados</span>
+          <span style="padding:6px 14px; border-radius:7px; font-size:12px; font-weight:600; background:#FAF7F5; border:1.5px solid #E7E0DC; color:#78716C; cursor:pointer;">Rechazados</span>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Pedido</th><th>Cliente</th><th>Estado</th>
+                <th style="text-align:right;">Total</th>
+                <th style="text-align:right;">Pagado</th>
+                <th style="text-align:right;">Saldo</th>
+                <th style="text-align:center;">Ver</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="num">PED-00012</td>
+                <td><span style="font-weight:600;">María González</span><br><span style="font-size:11px;color:#A8A29E;">CI: 12345678</span></td>
+                <td><span class="badge" style="background:#DCFCE7;color:#16A34A;"><span class="badge-dot" style="background:#16A34A;"></span>Aprobado</span></td>
+                <td class="money">2,400.00</td>
+                <td class="money green">1,200.00</td>
+                <td class="money red">1,200.00</td>
+                <td style="text-align:center;"><button style="padding:6px 12px; background:#FFF1F2; border:1.5px solid #BE185D; border-radius:7px; font-size:12px; font-weight:600; color:#BE185D; cursor:pointer;">Ver</button></td>
+              </tr>
+              <tr>
+                <td class="num">PED-00005</td>
+                <td><span style="font-weight:600;">Luis Herrera</span><br><span style="font-size:11px;color:#A8A29E;">CI: 55544433</span></td>
+                <td><span class="badge" style="background:#F5F0ED;color:#44403C;"><span class="badge-dot" style="background:#44403C;"></span>Cerrado</span></td>
+                <td class="money">3,200.00</td>
+                <td class="money green">3,200.00</td>
+                <td class="money muted">0.00</td>
+                <td style="text-align:center;"><button style="padding:6px 12px; background:#FFF1F2; border:1.5px solid #BE185D; border-radius:7px; font-size:12px; font-weight:600; color:#BE185D; cursor:pointer;">Ver</button></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center; padding:32px; font-size:12px; color:#A8A29E;">
+  Essen · Sistema de Crédito y Cobranza · Propuesta visual Mayo 2026
+</div>
+</body>
+</html>

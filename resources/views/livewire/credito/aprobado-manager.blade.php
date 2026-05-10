@@ -150,7 +150,7 @@ $estilosActivos = [
         @if (!$tieneCuotasPagadas && $aprobado)
             <button wire:click="$set('confirmandoRechazo', true)"
                     class="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm transition-colors"
-                    style="border:1.5px solid #FCA5A5; color:#B91C1C; background:transparent;">
+                    style="border:1.5px solid #CBCBCB; color:#B91C1C; background:transparent;">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
@@ -170,12 +170,12 @@ $estilosActivos = [
     </div>
 
     @elseif ($confirmandoRechazo)
-    <div style="background:#FEF2F2; border:1px solid #FCA5A5; border-radius:14px; padding:16px; margin-top:8px;">
+    <div style="background:#FEF2F2; border:1px solid #CBCBCB; border-radius:14px; padding:16px; margin-top:8px;">
         <p class="font-semibold text-sm mb-3" style="color:#B91C1C;">Motivo del rechazo</p>
         <textarea wire:model="notaRechazo" rows="3"
                   placeholder="Explicá el motivo del rechazo..."
                   class="w-full text-sm border rounded-xl px-3 py-2 focus:outline-none bg-white"
-                  style="border-color:#FCA5A5;"></textarea>
+                  style="border-color:#CBCBCB;"></textarea>
         @error('notaRechazo')<p class="text-xs mt-1" style="color:#B91C1C;">{{ $message }}</p>@enderror
         <div class="flex gap-3 mt-3 justify-end">
             <button wire:click="$set('confirmandoRechazo', false)"

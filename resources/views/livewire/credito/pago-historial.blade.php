@@ -88,7 +88,7 @@
                     @if(!$esAnulado && $pg->planPago?->estado === 'activo')
                         <template x-if="!confirmar">
                             <button @click.stop="confirmar = true"
-                                    style="display:inline-flex; align-items:center; gap:4px; background:#FEF2F2; border:1.5px solid #FCA5A5; border-radius:6px; padding:4px 10px; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
+                                    style="display:inline-flex; align-items:center; gap:4px; background:#FEF2F2; border:1.5px solid #CBCBCB; border-radius:6px; padding:4px 10px; cursor:pointer; box-shadow:0 1px 3px rgba(0,0,0,0.06);">
                                 <span style="font-size:13px; font-weight:700; color:#B91C1C; line-height:1;">×</span>
                                 <span style="font-size:10px; font-weight:700; color:#B91C1C;">Anular</span>
                             </button>
@@ -145,7 +145,7 @@
     @php
         $esAnulado  = $pg->estado === 'anulado';
         $hBg        = $esAnulado ? '#FEF2F2' : '#F0FDF4';
-        $hBorder    = $esAnulado ? '#FCA5A5' : '#86EFAC';
+        $hBorder    = $esAnulado ? '#CBCBCB' : '#86EFAC';
         $hColor     = $esAnulado ? '#B91C1C' : '#15803D';
         $hColorDark = $esAnulado ? '#991B1B' : '#166534';
     @endphp
@@ -161,7 +161,7 @@
             <h1 style="flex:1; text-align:center; font-size:22px; font-weight:800; color:{{ $hColorDark }}; letter-spacing:-0.3px; margin:0;">HISTORIAL DE PAGO</h1>
             @if($pg->esAnulable && !$confirmandoAnulacion)
             <button wire:click="$set('confirmandoAnulacion', true)"
-                    style="display:inline-flex; align-items:center; gap:5px; background:#fff; border:1.5px solid #FCA5A5; border-radius:20px; padding:5px 12px 5px 8px; cursor:pointer; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
+                    style="display:inline-flex; align-items:center; gap:5px; background:#fff; border:1.5px solid #CBCBCB; border-radius:20px; padding:5px 12px 5px 8px; cursor:pointer; flex-shrink:0; box-shadow:0 1px 4px rgba(0,0,0,0.07);">
                 <span style="font-size:15px; font-weight:700; color:#B91C1C; line-height:1;">×</span>
                 <span style="font-size:11px; font-weight:700; color:#B91C1C;">Anular</span>
             </button>
@@ -182,7 +182,7 @@
 
     {{-- Confirmación anulación --}}
     @if($confirmandoAnulacion)
-    <div style="background:#FEF2F2; border:1.5px solid #FCA5A5; border-radius:12px; padding:14px 18px; margin-bottom:20px;">
+    <div style="background:#FEF2F2; border:1.5px solid #CBCBCB; border-radius:12px; padding:14px 18px; margin-bottom:20px;">
         <p style="font-size:13px; font-weight:700; color:#991B1B; margin:0 0 4px;">Confirmar anulación</p>
         <p style="font-size:12px; color:#6b7280; margin:0 0 12px;">
             Las {{ $pg->cuotas->where('numero','>',0)->count() }} cuota(s) de este pago volverán a estado <strong>pendiente</strong>. Esta acción no se puede deshacer.
@@ -303,7 +303,7 @@
         <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:{{ $esAnulado ? '#B91C1C' : '#15803D' }};">
             {{ $esAnulado ? 'Cuotas Anuladas' : 'Cuotas Pagadas' }}
         </span>
-        <div style="flex:1; height:1px; background:{{ $esAnulado ? '#FCA5A5' : '#6ee7b7' }};"></div>
+        <div style="flex:1; height:1px; background:{{ $esAnulado ? '#CBCBCB' : '#6ee7b7' }};"></div>
         <span style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; background:#f0fdf4; color:#15803D; border:1px solid #6ee7b7;">{{ $pgPlanLabel }}</span>
         <span style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; background:#DCFCE7; color:#15803D;">{{ $cuotas->count() }} cuota{{ $cuotas->count() !== 1 ? 's' : '' }}</span>
     </div>
@@ -342,7 +342,7 @@
             </tbody>
             <tfoot>
                 <tr style="background:{{ $esAnulado ? '#FEF2F2' : '#f0fdf4' }};">
-                    <td colspan="4" style="padding:11px 16px; border-top:2px solid {{ $esAnulado ? '#FCA5A5' : '#d1fae5' }}; text-align:center;">
+                    <td colspan="4" style="padding:11px 16px; border-top:2px solid {{ $esAnulado ? '#CBCBCB' : '#d1fae5' }}; text-align:center;">
                         <span style="font-size:13px; font-weight:700; color:#374151;">Total: </span>
                         <span style="font-family:monospace; font-size:15px; font-weight:800; color:{{ $esAnulado ? '#B91C1C' : '#15803D' }}; {{ $esAnulado ? 'text-decoration:line-through;' : '' }}">Bs. {{ number_format($pg->monto_total, 2) }}</span>
                     </td>
@@ -354,7 +354,7 @@
 
     {{-- Info anulación --}}
     @if($esAnulado)
-    <div style="background:#FEF2F2; border:0.5px solid #FCA5A5; border-radius:10px; padding:10px 14px; margin-top:16px; display:flex; align-items:center; gap:10px;">
+    <div style="background:#FEF2F2; border:0.5px solid #CBCBCB; border-radius:10px; padding:10px 14px; margin-top:16px; display:flex; align-items:center; gap:10px;">
         <svg style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="#B91C1C" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>

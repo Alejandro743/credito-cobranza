@@ -105,7 +105,7 @@
     $pgPlanLabel = $pgVersion > 1 ? 'Reprogramación: V' . $pgVersion : 'Plan Original';
     $esAnulado   = $pg->estado === 'anulado';
     $hBg         = $esAnulado ? '#FEF2F2' : '#FFFBEB';
-    $hBorder     = $esAnulado ? '#FCA5A5' : '#FCD34D';
+    $hBorder     = $esAnulado ? '#CBCBCB' : '#FCD34D';
     $hColor      = $esAnulado ? '#B91C1C' : '#92400E';
     $hColorDark  = $esAnulado ? '#991B1B' : '#78350F';
 @endphp
@@ -237,7 +237,7 @@
         <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:{{ $esAnulado ? '#B91C1C' : '#92400E' }};">
             {{ $esAnulado ? 'Cuotas Anuladas' : 'Cuotas Pagadas' }}
         </span>
-        <div style="flex:1; height:1px; background:{{ $esAnulado ? '#FCA5A5' : '#FCD34D' }};"></div>
+        <div style="flex:1; height:1px; background:{{ $esAnulado ? '#CBCBCB' : '#FCD34D' }};"></div>
         <span style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; background:#FFFBEB; color:#92400E; border:1px solid #FCD34D;">{{ $pgPlanLabel }}</span>
         <span style="font-size:10px; font-weight:600; padding:2px 8px; border-radius:20px; background:#FEF3C7; color:#92400E;">{{ $cuotas->count() }} cuota{{ $cuotas->count() !== 1 ? 's' : '' }}</span>
     </div>
@@ -276,7 +276,7 @@
             </tbody>
             <tfoot>
                 <tr style="background:{{ $esAnulado ? '#FEF2F2' : '#FFFBEB' }};">
-                    <td colspan="4" style="padding:11px 16px; border-top:2px solid {{ $esAnulado ? '#FCA5A5' : '#FDE68A' }}; text-align:center;">
+                    <td colspan="4" style="padding:11px 16px; border-top:2px solid {{ $esAnulado ? '#CBCBCB' : '#FDE68A' }}; text-align:center;">
                         <span style="font-size:13px; font-weight:700; color:#374151;">Total: </span>
                         <span style="font-family:monospace; font-size:15px; font-weight:800; color:{{ $esAnulado ? '#B91C1C' : '#92400E' }}; {{ $esAnulado ? 'text-decoration:line-through;' : '' }}">Bs. {{ number_format($pg->monto_total, 2) }}</span>
                     </td>
@@ -288,7 +288,7 @@
 
     {{-- Info anulación --}}
     @if($esAnulado)
-    <div style="background:#FEF2F2; border:0.5px solid #FCA5A5; border-radius:10px; padding:10px 14px; margin-top:16px; display:flex; align-items:center; gap:10px;">
+    <div style="background:#FEF2F2; border:0.5px solid #CBCBCB; border-radius:10px; padding:10px 14px; margin-top:16px; display:flex; align-items:center; gap:10px;">
         <svg style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="#B91C1C" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
         </svg>

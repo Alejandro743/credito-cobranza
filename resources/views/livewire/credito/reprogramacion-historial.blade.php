@@ -410,7 +410,7 @@
             },
             get diffBorder() {
                 if (Math.abs(this.diff) < 0.01) return '#86EFAC';
-                return this.diff > 0 ? '#FCD34D' : '#FCA5A5';
+                return this.diff > 0 ? '#FCD34D' : '#CBCBCB';
             },
             recalc() {
                 let inputs = this.$el.querySelectorAll('.monto-edit');

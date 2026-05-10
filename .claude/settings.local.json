@@ -28,7 +28,13 @@
       "Bash(echo \"EXIT:$?\")",
       "Bash(sshpass *)",
       "Bash(ssh *)",
-      "Bash(grep *)"
+      "Bash(grep *)",
+      "Bash(curl *)",
+      "Bash(start *)",
+      "PowerShell(Test-NetConnection *)",
+      "PowerShell(Get-Process | Where-Object { $_.Name -match \"laragon|apache|httpd|nginx|mysql\" } | Select-Object Name, Id)",
+      "PowerShell(Start-Process \"C:\\\\laragon\\\\laragon.exe\" -WindowStyle Normal)",
+      "PowerShell(Start-Sleep 10; Get-Process | Where-Object { $_.Name -match \"laragon|apache|httpd|nginx|mysql|php\" } | Select-Object Name, Id)"
     ]
   }
 }

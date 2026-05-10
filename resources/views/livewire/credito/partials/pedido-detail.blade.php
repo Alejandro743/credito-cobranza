@@ -7,7 +7,7 @@
         'en_espera' => ['color' => '#854F0B', 'bg' => '#FEF3C7', 'border' => '#FCD34D', 'dot' => '#D97706'],
         'revision'   => ['color' => '#0369A1', 'bg' => '#F0F9FF', 'border' => '#7DD3FC', 'dot' => '#0284C7'],
         'aprobado'  => ['color' => '#15803D', 'bg' => '#F0FDF4', 'border' => '#86EFAC', 'dot' => '#16A34A'],
-        'rechazado' => ['color' => '#B91C1C', 'bg' => '#FEF2F2', 'border' => '#FCA5A5', 'dot' => '#DC2626'],
+        'rechazado' => ['color' => '#B91C1C', 'bg' => '#FEF2F2', 'border' => '#CBCBCB', 'dot' => '#DC2626'],
         default     => ['color' => '#6b7280', 'bg' => '#f3f4f6', 'border' => '#d1d5db', 'dot' => '#9ca3af'],
     };
 @endphp
@@ -204,9 +204,9 @@
     @if ($p->estado === 'rechazado')
     <div style="display:flex; align-items:center; gap:8px; margin:12px 0 10px;">
         <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#B91C1C; white-space:nowrap;">Motivo de Rechazo</span>
-        <div style="flex:1; height:1px; background:#FCA5A5;"></div>
+        <div style="flex:1; height:1px; background:#CBCBCB;"></div>
     </div>
-    <div class="bg-white overflow-hidden mb-3" style="border:0.5px solid #FCA5A5; border-radius:10px; box-shadow:none; padding:10px 12px;">
+    <div class="bg-white overflow-hidden mb-3" style="border:0.5px solid #CBCBCB; border-radius:10px; box-shadow:none; padding:10px 12px;">
         <span style="font-size:13px; font-weight:600; color:#B91C1C; display:block;">{{ $p->notas }}</span>
     </div>
     @else

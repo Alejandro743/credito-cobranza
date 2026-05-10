@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mockup Pasteles — Crediessen</title>
+<link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800&display=swap" rel="stylesheet"/>
+<style>
+  /* ── PALETA ─────────────────────────────────────────────
+     #4A4A4A  carbón      → texto, sidebar header
+     #CBCBCB  gris claro  → bordes, fondos secundarios
+     #FFFFE3  crema       → fondo página, fondo cards
+     #6D8196  pizarra     → acento, botones, activo
+  ──────────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Inter', sans-serif; background: #F0F0E0; color: #4A4A4A; }
+
+  /* ── SECCIÓN LABEL ── */
+  .section { padding: 48px 40px 0; max-width: 1100px; margin: 0 auto; }
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #6D8196; margin-bottom: 6px; }
+  .section-desc  { font-size: 13px; color: #4A4A4A; opacity: .55; margin-bottom: 28px; }
+
+  /* ══════════════════════════════════════════════════════
+     1. PALETA
+  ══════════════════════════════════════════════════════ */
+  .palette { display: flex; gap: 0; border-radius: 14px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,.1); height: 110px; }
+  .swatch  { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; padding-bottom: 12px; }
+  .swatch span { font-size: 11px; font-weight: 700; letter-spacing: .5px; }
+
+  /* ══════════════════════════════════════════════════════
+     2. LOGIN
+  ══════════════════════════════════════════════════════ */
+  .login-wrap {
+    display: flex; border-radius: 18px; overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,.14); max-width: 760px;
+  }
+  .login-left {
+    background: #6D8196; flex: 1; padding: 48px 40px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .login-right {
+    background: #fff; width: 340px; flex-shrink: 0;
+    padding: 48px 36px; display: flex; flex-direction: column; justify-content: center;
+  }
+  .brand-icon {
+    width: 42px; height: 42px; background: rgba(255,255,255,.18);
+    border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .l-input {
+    width: 100%; padding: 11px 13px; border: 1.5px solid #CBCBCB;
+    border-radius: 3px; font-size: 13px; color: #4A4A4A;
+    background: #FFFFE3; font-family: 'Inter', sans-serif;
+    transition: border-color .15s;
+  }
+  .l-input:focus { outline: none; border-color: #6D8196; background: #fff; }
+  .l-input::placeholder { color: #CBCBCB; }
+  .l-btn {
+    width: 100%; padding: 13px; border-radius: 3px; background: #6D8196;
+    color: #fff; font-size: 13px; font-weight: 700; border: none; cursor: pointer;
+    font-family: 'Inter', sans-serif;
+  }
+  .l-label {
+    font-size: 10px; font-weight: 700; color: #6D8196;
+    letter-spacing: .5px; text-transform: uppercase; margin-bottom: 5px; display: block;
+  }
+
+  /* ══════════════════════════════════════════════════════
+     3. SIDEBAR
+  ══════════════════════════════════════════════════════ */
+  .layout-demo {
+    display: flex; border-radius: 16px; overflow: hidden;
+    box-shadow: 0 12px 40px rgba(0,0,0,.10); height: 460px; max-width: 900px;
+  }
+  .sidebar {
+    width: 220px; flex-shrink: 0; background: #fff;
+    border-right: 1px solid #CBCBCB; display: flex; flex-direction: column;
+  }
+  .sidebar-header {
+    background: #6D8196; padding: 20px 18px; display: flex; align-items: center; gap: 10px;
+  }
+  .sidebar-icon {
+    width: 34px; height: 34px; background: #6D8196; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .sidebar-body { padding: 14px 0; flex: 1; overflow: hidden; }
+  .mod-label {
+    font-size: 9px; font-weight: 700; color: #CBCBCB;
+    letter-spacing: 1.5px; text-transform: uppercase;
+    padding: 10px 16px 4px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 14px; font-size: 12px; color: #4A4A4A; cursor: pointer;
+    border-left: 3px solid transparent;
+  }
+  .nav-item.active {
+    background: #FFFFE3; color: #6D8196; font-weight: 600;
+    border-left-color: #6D8196;
+  }
+  .nav-item .ic {
+    width: 26px; height: 26px; border-radius: 6px; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0;
+  }
+  .nav-sub {
+    padding: 5px 14px 5px 50px; font-size: 11px; color: #CBCBCB; cursor: pointer;
+  }
+  .nav-sub.active { color: #6D8196; font-weight: 600; }
+
+  /* content area */
+  .content-area { flex: 1; background: #FFFFE3; display: flex; flex-direction: column; overflow: hidden; }
+  .topbar {
+    background: #fff; border-bottom: 1px solid #CBCBCB;
+    padding: 0 22px; height: 52px; display: flex; align-items: center;
+    justify-content: space-between; flex-shrink: 0;
+  }
+  .topbar-title { font-size: 13px; font-weight: 700; color: #4A4A4A; }
+  .avatar {
+    width: 32px; height: 32px; border-radius: 50%; background: #6D8196;
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 12px; font-weight: 700;
+  }
+  .content-inner { padding: 18px; flex: 1; overflow: hidden; }
+
+  /* ══════════════════════════════════════════════════════
+     4. STAT CARDS
+  ══════════════════════════════════════════════════════ */
+  .stats { display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; margin-bottom: 18px; }
+  .stat-card {
+    background: #fff; border: 1px solid #CBCBCB; border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .stat-label { font-size: 10px; color: #CBCBCB; font-weight: 600; letter-spacing: .4px; text-transform: uppercase; margin-bottom: 6px; }
+  .stat-value { font-size: 20px; font-weight: 700; color: #4A4A4A; }
+  .stat-sub   { font-size: 10px; color: #6D8196; margin-top: 2px; }
+  .stat-card.accent { background: #6D8196; border-color: #6D8196; }
+  .stat-card.accent .stat-label { color: rgba(255,255,255,.65); }
+  .stat-card.accent .stat-value { color: #fff; }
+  .stat-card.accent .stat-sub   { color: rgba(255,255,255,.75); }
+
+  /* ══════════════════════════════════════════════════════
+     5. TABLE
+  ══════════════════════════════════════════════════════ */
+  .table-wrap { background: #fff; border: 1px solid #CBCBCB; border-radius: 10px; overflow: hidden; }
+  .table-head { display: flex; align-items: center; padding: 10px 14px; border-bottom: 1px solid #CBCBCB; gap: 8px; }
+  .th-search {
+    flex: 1; padding: 7px 10px; border: 1.5px solid #CBCBCB; border-radius: 3px;
+    font-size: 11px; color: #4A4A4A; background: #FFFFE3; font-family: 'Inter', sans-serif;
+  }
+  .th-search::placeholder { color: #CBCBCB; }
+  .th-btn {
+    padding: 7px 14px; border-radius: 3px; background: #6D8196; color: #fff;
+    font-size: 11px; font-weight: 600; border: none; cursor: pointer; font-family: 'Inter', sans-serif;
+    display: inline-flex; align-items: center; gap: 5px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 11px; }
+  thead th { background: #FFFFE3; color: #6D8196; font-weight: 700; text-align: left; padding: 9px 14px; border-bottom: 1px solid #CBCBCB; letter-spacing: .3px; text-transform: uppercase; font-size: 10px; }
+  tbody tr:hover { background: #FFFFE3; }
+  tbody td { padding: 9px 14px; border-bottom: 1px solid #F0F0E8; color: #4A4A4A; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* BADGES */
+  .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 3px; font-size: 10px; font-weight: 700; }
+  .badge-aprobado  { background: #FFFFE3; color: #6D8196; border: 1px solid #6D8196; }
+  .badge-cerrado   { background: #F4F4F4; color: #4A4A4A; border: 1px solid #CBCBCB; }
+  .badge-rechazado { background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5; }
+  .badge-revision  { background: #FFF9E3; color: #B45309; border: 1px solid #FCD34D; }
+
+  /* ══════════════════════════════════════════════════════
+     6. BUTTONS & FORM ELEMENTS
+  ══════════════════════════════════════════════════════ */
+  .btn-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+  .btn {
+    padding: 9px 18px; border-radius: 3px; font-size: 12px; font-weight: 600;
+    border: none; cursor: pointer; font-family: 'Inter', sans-serif;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .btn-primary   { background: #6D8196; color: #fff; }
+  .btn-secondary { background: #FFFFE3; color: #4A4A4A; border: 1.5px solid #CBCBCB; }
+  .btn-danger    { background: #FEE2E2; color: #DC2626; border: 1.5px solid #FCA5A5; }
+  .btn-ghost     { background: transparent; color: #6D8196; border: 1.5px solid #6D8196; }
+
+  /* ══════════════════════════════════════════════════════
+     7. DETAIL CARD
+  ══════════════════════════════════════════════════════ */
+  .detail-card {
+    background: #fff; border: 1px solid #CBCBCB; border-radius: 12px;
+    padding: 24px; max-width: 560px;
+  }
+  .detail-title { font-size: 15px; font-weight: 700; color: #4A4A4A; margin-bottom: 4px; }
+  .detail-sub   { font-size: 12px; color: #CBCBCB; margin-bottom: 18px; }
+  .detail-grid  { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .detail-field label { font-size: 10px; font-weight: 700; color: #6D8196; letter-spacing: .4px; text-transform: uppercase; display: block; margin-bottom: 3px; }
+  .detail-field span  { font-size: 13px; color: #4A4A4A; font-weight: 500; }
+  .detail-divider { border: none; border-top: 1px solid #CBCBCB; margin: 16px 0; }
+  .cuota-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px; border-radius: 8px; margin-bottom: 6px;
+  }
+  .cuota-row.pagado   { background: #FFFFE3; }
+  .cuota-row.pendiente { background: #F9F9F9; border: 1px solid #CBCBCB; }
+  .cuota-row .cuota-n { font-size: 11px; font-weight: 700; color: #4A4A4A; }
+  .cuota-row .cuota-m { font-size: 12px; font-weight: 700; color: #6D8196; }
+  .cuota-row .cuota-e { font-size: 10px; }
+
+  /* separator */
+  .spacer { height: 48px; }
+</style>
+</head>
+<body>
+
+<!-- ══ 0. HEADER ═══════════════════════════════════════════ -->
+<div style="background:#4A4A4A; padding:28px 40px 24px; text-align:center;">
+  <div style="font-size:22px; font-weight:800; color:#fff; letter-spacing:2px;">CREDIESSEN</div>
+  <div style="font-size:10px; color:#6D8196; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-top:4px;">Propuesta de paleta visual</div>
+</div>
+
+<!-- ══ 1. PALETA ════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Paleta de colores</div>
+  <div class="section-desc">4 tonos neutros · carbón · gris · crema · pizarra azul</div>
+  <div class="palette">
+    <div class="swatch" style="background:#4A4A4A;"><span style="color:#fff;">#4A4A4A</span></div>
+    <div class="swatch" style="background:#CBCBCB;"><span style="color:#4A4A4A;">#CBCBCB</span></div>
+    <div class="swatch" style="background:#FFFFE3;"><span style="color:#4A4A4A;">#FFFFE3</span></div>
+    <div class="swatch" style="background:#6D8196;"><span style="color:#fff;">#6D8196</span></div>
+  </div>
+</div>
+
+<!-- ══ 2. LOGIN ═════════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Pantalla de Login</div>
+  <div class="section-desc">Panel izquierdo pizarra · formulario blanco · acento #6D8196</div>
+  <div class="login-wrap">
+    <div class="login-left">
+      <div>
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:32px;">
+          <div class="brand-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+              <path d="M2 17l10 5 10-5"/>
+              <path d="M2 12l10 5 10-5"/>
+            </svg>
+          </div>
+          <div>
+            <div style="font-size:20px;font-weight:800;color:#fff;letter-spacing:2px;line-height:1;">CREDIESSEN</div>
+            <div style="font-size:9px;color:rgba(255,255,255,.65);font-weight:600;letter-spacing:1.6px;text-transform:uppercase;margin-top:4px;">Crédito · Cobranza</div>
+          </div>
+        </div>
+        <div style="width:32px;height:3px;background:rgba(255,255,255,.4);border-radius:2px;margin-bottom:18px;"></div>
+        <p style="font-size:13px;color:rgba(255,255,255,.75);line-height:1.9;">Sistema de gestión<br>de crédito y cobranza</p>
+      </div>
+    </div>
+    <div class="login-right">
+      <p style="font-size:22px;font-weight:700;color:#4A4A4A;margin-bottom:4px;">Bienvenida</p>
+      <p style="font-size:12px;color:#CBCBCB;margin-bottom:26px;">Ingresá tus datos para continuar</p>
+      <div style="margin-bottom:14px;">
+        <label class="l-label">Correo electrónico</label>
+        <input class="l-input" placeholder="usuario@crediessen.com" disabled>
+      </div>
+      <div style="margin-bottom:14px;">
+        <label class="l-label">Contraseña</label>
+        <input class="l-input" type="password" placeholder="••••••••" disabled>
+      </div>
+      <div style="display:flex;align-items:center;gap:7px;margin-bottom:20px;">
+        <input type="checkbox" style="accent-color:#6D8196;width:14px;height:14px;">
+        <span style="font-size:12px;color:#4A4A4A;">Recordarme en este equipo</span>
+      </div>
+      <button class="l-btn">Ingresar al sistema</button>
+      <p style="font-size:10px;color:#CBCBCB;text-align:center;margin-top:22px;">Crediessen © 2026 · Sistema Interno</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 3. LAYOUT (SIDEBAR + CONTENIDO) ═════════════════════ -->
+<div class="section">
+  <div class="section-title">Layout principal</div>
+  <div class="section-desc">Sidebar blanco con header carbón · fondo crema · acento pizarra</div>
+  <div class="layout-demo">
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+            <path d="M2 17l10 5 10-5"/>
+            <path d="M2 12l10 5 10-5"/>
+          </svg>
+        </div>
+        <div>
+          <div style="font-size:13px;font-weight:800;color:#fff;letter-spacing:1.5px;line-height:1;">CREDIESSEN</div>
+          <div style="font-size:8px;color:rgba(255,255,255,.6);letter-spacing:1px;text-transform:uppercase;margin-top:3px;">Sistema</div>
+        </div>
+      </div>
+      <div class="sidebar-body">
+        <div class="mod-label">Crédito / Cobranza</div>
+
+        <div class="nav-item active">
+          <div class="ic" style="background:#D1FAE5;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          Pedidos Aprobados
+        </div>
+
+        <div class="nav-item">
+          <div class="ic" style="background:#FEF3C7;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          En Revisión
+        </div>
+
+        <div class="nav-item">
+          <div class="ic" style="background:#DBEAFE;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </div>
+          Cobranza
+        </div>
+
+        <div class="mod-label" style="margin-top:10px;">Administración</div>
+
+        <div class="nav-item">
+          <div class="ic" style="background:#EDE9FE;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#8B5CF6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+          </div>
+          Catálogo
+        </div>
+        <div class="nav-sub">Productos</div>
+        <div class="nav-sub">Categorías</div>
+
+        <div class="nav-item">
+          <div class="ic" style="background:#CFFAFE;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#06B6D4" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          Listas de Precio
+        </div>
+
+        <div class="nav-item">
+          <div class="ic" style="background:#FFEDD5;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F97316" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          Ciclos Comerciales
+        </div>
+
+        <div class="mod-label" style="margin-top:10px;">Vendedor / EIE</div>
+
+        <div class="nav-item">
+          <div class="ic" style="background:#FCE7F3;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#EC4899" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          </div>
+          Mis Clientes
+        </div>
+
+        <div class="nav-item">
+          <div class="ic" style="background:#E0E7FF;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          </div>
+          Mis Pedidos
+        </div>
+      </div>
+    </div>
+    <!-- CONTENT -->
+    <div class="content-area">
+      <div class="topbar">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:30px;height:30px;background:#D1FAE5;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </div>
+          <div class="topbar-title">Pedidos Aprobados</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div style="width:30px;height:30px;background:#FFFFE3;border:1px solid #CBCBCB;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#6D8196" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <div style="position:relative;width:30px;height:30px;background:#FFFFE3;border:1px solid #CBCBCB;border-radius:6px;display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            <div style="position:absolute;top:4px;right:4px;width:7px;height:7px;background:#EF4444;border-radius:50%;border:1.5px solid #fff;"></div>
+          </div>
+          <div style="width:1px;height:20px;background:#CBCBCB;"></div>
+          <span style="font-size:11px;color:#CBCBCB;">María García</span>
+          <div class="avatar">M</div>
+        </div>
+      </div>
+      <div class="content-inner">
+        <!-- STAT CARDS -->
+        <div class="stats">
+          <div class="stat-card" style="border-top:3px solid #10B981;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div class="stat-label" style="margin:0;">Aprobados</div>
+              <div style="width:36px;height:36px;background:#D1FAE5;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              </div>
+            </div>
+            <div class="stat-value">24</div>
+            <div class="stat-sub" style="color:#10B981;">activos</div>
+          </div>
+          <div class="stat-card" style="border-top:3px solid #6366F1;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div class="stat-label" style="margin:0;">Cerrados</div>
+              <div style="width:36px;height:36px;background:#E0E7FF;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366F1" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              </div>
+            </div>
+            <div class="stat-value">8</div>
+            <div class="stat-sub" style="color:#6366F1;">este mes</div>
+          </div>
+          <div class="stat-card" style="border-top:3px solid #3B82F6;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div class="stat-label" style="margin:0;">Total pagado</div>
+              <div style="width:36px;height:36px;background:#DBEAFE;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#3B82F6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+              </div>
+            </div>
+            <div class="stat-value" style="font-size:15px;">$182.400</div>
+            <div class="stat-sub" style="color:#3B82F6;">cobrado</div>
+          </div>
+          <div class="stat-card" style="border-top:3px solid #F59E0B;">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+              <div class="stat-label" style="margin:0;">Saldo vivo</div>
+              <div style="width:36px;height:36px;background:#FEF3C7;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+            </div>
+            <div class="stat-value" style="font-size:15px;">$94.200</div>
+            <div class="stat-sub" style="color:#F59E0B;">pendiente</div>
+          </div>
+        </div>
+        <!-- TABLE MINI -->
+        <div class="table-wrap">
+          <div class="table-head">
+            <input class="th-search" placeholder="Buscar cliente o pedido…">
+            <button class="th-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5" stroke-linecap="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Nuevo
+            </button>
+          </div>
+          <table>
+            <thead>
+              <tr>
+                <th>N°</th><th>Cliente</th><th>Total</th><th>Pagado</th><th>Saldo</th><th>Estado</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>#00142</td><td>Laura Méndez</td><td>$48.000</td><td>$18.000</td><td>$30.000</td>
+                <td><span class="badge badge-aprobado">Aprobado</span></td>
+              </tr>
+              <tr>
+                <td>#00138</td><td>Sofía Torres</td><td>$32.500</td><td>$32.500</td><td>$0</td>
+                <td><span class="badge badge-cerrado">Cerrado</span></td>
+              </tr>
+              <tr>
+                <td>#00135</td><td>Valentina Ruiz</td><td>$61.200</td><td>$20.400</td><td>$40.800</td>
+                <td><span class="badge badge-aprobado">Aprobado</span></td>
+              </tr>
+              <tr>
+                <td>#00131</td><td>Camila López</td><td>$27.000</td><td>$0</td><td>$0</td>
+                <td><span class="badge badge-rechazado">Rechazado</span></td>
+              </tr>
+              <tr>
+                <td>#00128</td><td>Ana Flores</td><td>$55.800</td><td>$18.600</td><td>$37.200</td>
+                <td><span class="badge badge-revision">Revisión</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 4. BOTONES ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Botones y controles</div>
+  <div class="section-desc">Primario pizarra · secundario crema · peligro rojo suave · ghost outline</div>
+  <div class="btn-row">
+    <button class="btn btn-primary">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+      Guardar
+    </button>
+    <button class="btn btn-ghost">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#6D8196" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      Ver detalle
+    </button>
+    <button class="btn btn-secondary">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4A4A4A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      Cancelar
+    </button>
+    <button class="btn btn-danger">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      Rechazar
+    </button>
+    <button class="btn" style="background:#D1FAE5;color:#065F46;border:1px solid #6EE7B7;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Aprobar
+    </button>
+    <button class="btn" style="background:#FEF3C7;color:#92400E;border:1px solid #FCD34D;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.85"/></svg>
+      Devolver
+    </button>
+  </div>
+  <div class="btn-row" style="margin-top:12px;">
+    <span class="badge badge-aprobado">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#6D8196" stroke-width="2.5" stroke-linecap="round" style="margin-right:4px;"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+      Aprobado
+    </span>
+    <span class="badge badge-cerrado">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#4A4A4A" stroke-width="2.5" stroke-linecap="round" style="margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+      Cerrado
+    </span>
+    <span class="badge badge-rechazado">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.5" stroke-linecap="round" style="margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+      Rechazado
+    </span>
+    <span class="badge badge-revision">
+      <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2.5" stroke-linecap="round" style="margin-right:4px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      Revisión
+    </span>
+  </div>
+</div>
+
+<!-- ══ 5. DETALLE DE PEDIDO ════════════════════════════════ -->
+<div class="section">
+  <div class="section-title">Detalle de pedido</div>
+  <div class="section-desc">Card con cuotas · colores crema para pagadas · gris para pendientes</div>
+  <div class="detail-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div>
+        <div class="detail-title">Pedido #00142</div>
+        <div class="detail-sub">Laura Méndez · Vendedora: Paola Ríos</div>
+      </div>
+      <span class="badge badge-aprobado">Aprobado</span>
+    </div>
+    <div class="detail-grid">
+      <div class="detail-field">
+        <label>Total a pagar</label>
+        <span>$48.000</span>
+      </div>
+      <div class="detail-field">
+        <label>Cuotas</label>
+        <span>12 mensuales</span>
+      </div>
+      <div class="detail-field">
+        <label>Pagado</label>
+        <span style="color:#6D8196;">$18.000</span>
+      </div>
+      <div class="detail-field">
+        <label>Saldo</label>
+        <span>$30.000</span>
+      </div>
+    </div>
+    <hr class="detail-divider">
+    <div style="font-size:10px;font-weight:700;color:#6D8196;letter-spacing:.4px;text-transform:uppercase;margin-bottom:10px;">Cuotas</div>
+    <div class="cuota-row pagado">
+      <span class="cuota-n">Cuota 1</span>
+      <span class="cuota-m">$4.000</span>
+      <span class="badge badge-cerrado cuota-e">Pagada</span>
+    </div>
+    <div class="cuota-row pagado">
+      <span class="cuota-n">Cuota 2</span>
+      <span class="cuota-m">$4.000</span>
+      <span class="badge badge-cerrado cuota-e">Pagada</span>
+    </div>
+    <div class="cuota-row pagado">
+      <span class="cuota-n">Cuota 3</span>
+      <span class="cuota-m">$4.000</span>
+      <span class="badge badge-cerrado cuota-e">Pagada</span>
+    </div>
+    <div class="cuota-row pendiente">
+      <span class="cuota-n">Cuota 4</span>
+      <span class="cuota-m" style="color:#4A4A4A;">$4.000</span>
+      <span class="badge badge-revision cuota-e">Pendiente</span>
+    </div>
+    <div class="cuota-row pendiente">
+      <span class="cuota-n">Cuota 5</span>
+      <span class="cuota-m" style="color:#4A4A4A;">$4.000</span>
+      <span class="badge badge-revision cuota-e">Pendiente</span>
+    </div>
+    <hr class="detail-divider">
+    <div class="btn-row">
+      <button class="btn btn-primary" style="flex:1;">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Cerrar crédito
+      </button>
+      <button class="btn btn-secondary">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.85"/></svg>
+        Devolver a revisión
+      </button>
+      <button class="btn btn-danger">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#DC2626" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        Rechazar
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="spacer"></div>
+
+<!-- ══ FOOTER ═════════════════════════════════════════════ -->
+<div style="background:#4A4A4A;padding:20px 40px;text-align:center;margin-top:48px;">
+  <span style="font-size:11px;color:rgba(255,255,255,.4);">Crediessen © 2026 · Mockup de paleta pasteles</span>
+</div>
+
+</body>
+</html>
