@@ -8,15 +8,15 @@
     <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800&display=swap" rel="stylesheet"/>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Inter', sans-serif; background: #8C9BAB; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
+        body { font-family: 'Inter', sans-serif; background: #5C6F80; min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 24px; }
         .login-wrap { display: flex; width: 100%; max-width: 880px; border-radius: 20px; overflow: hidden; box-shadow: 0 32px 80px rgba(0,0,0,.22); min-height: 540px; }
-        .login-left  { background: #A8B8C8; flex: 1; padding: 52px 44px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
+        .login-left  { background: #6D8196; flex: 1; padding: 52px 44px; display: flex; flex-direction: column; justify-content: space-between; min-width: 0; }
         .login-right { background: #fff; width: 380px; flex-shrink: 0; padding: 52px 40px; display: flex; flex-direction: column; justify-content: center; }
         .form-input { width: 100%; padding: 12px 14px; border: 1.5px solid #E7E0DC; border-radius: 10px; font-size: 14px; color: #374151; background: #FAF7F5; font-family: 'Inter', sans-serif; transition: border-color .15s, box-shadow .15s; }
-        .form-input:focus { outline: none; border-color: #BE185D; background: #fff; box-shadow: 0 0 0 3px rgba(190,24,93,.08); }
-        .form-input::placeholder { color: #C4B8B2; }
-        .btn-login { width: 100%; padding: 14px; border-radius: 11px; background: #BE185D; color: #fff; font-size: 14px; font-weight: 700; border: none; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: .3px; transition: background .15s; }
-        .btn-login:hover { background: #9F1239; }
+        .form-input:focus { outline: none; border-color: #6D8196; background: #fff; box-shadow: 0 0 0 3px rgba(109,129,150,.12); }
+        .form-input::placeholder { color: #CBCBCB; }
+        .btn-login { width: 100%; padding: 14px; border-radius: 3px; background: #6D8196; color: #fff; font-size: 14px; font-weight: 700; border: none; cursor: pointer; font-family: 'Inter', sans-serif; letter-spacing: .3px; transition: background .15s; }
+        .btn-login:hover { background: #5C6F80; }
         @media (max-width: 640px) {
             .login-left  { display: none; }
             .login-right { width: 100%; padding: 36px 28px; }
@@ -46,7 +46,6 @@
             <div style="width:36px; height:3px; background:#BE185D; border-radius:2px; margin-bottom:20px;"></div>
             <p style="font-size:14px; color:#E2EAF0; line-height:1.9;">Sistema de gestión<br>de crédito y cobranza</p>
         </div>
-        <p style="font-size:12px; color:#D4DDE6; font-style:italic; line-height:1.6;">"Control total sobre<br>tu cartera de crédito."</p>
     </div>
 
     {{-- Panel derecho: formulario --}}
