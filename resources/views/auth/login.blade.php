@@ -1,40 +1,45 @@
 <x-guest-layout>
+
+    <p style="font-size:24px; font-weight:700; color:#1C1917; margin-bottom:5px;">Bienvenida</p>
+    <p style="font-size:13px; color:#A8A29E; margin-bottom:28px;">Ingresá tus datos para continuar</p>
+
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <form method="POST" action="{{ route('login') }}">
         @csrf
 
-        <!-- Usuario -->
-        <div>
-            <x-input-label for="email" :value="__('Usuario')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="text" name="email"
-                          :value="old('email')" required autofocus autocomplete="username" />
+        {{-- Email --}}
+        <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#78716C; letter-spacing:.5px; text-transform:uppercase; margin-bottom:6px;">
+                Correo electrónico
+            </label>
+            <input type="text" name="email" value="{{ old('email') }}" required autofocus autocomplete="username"
+                   class="form-input" placeholder="usuario@essen.com">
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <!-- Contraseña -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Contraseña')" />
-            <x-text-input id="password" class="block mt-1 w-full"
-                          type="password" name="password"
-                          required autocomplete="current-password" />
+        {{-- Contraseña --}}
+        <div style="margin-bottom:16px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#78716C; letter-spacing:.5px; text-transform:uppercase; margin-bottom:6px;">
+                Contraseña
+            </label>
+            <input type="password" name="password" required autocomplete="current-password"
+                   class="form-input" placeholder="••••••••">
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
 
-        <!-- Recordarme -->
-        <div class="block mt-4">
-            <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox"
-                       class="rounded border-gray-300 text-indigo-600 shadow-sm focus:ring-indigo-500"
-                       name="remember">
-                <span class="ms-2 text-sm text-gray-600">Recordarme</span>
+        {{-- Recordarme --}}
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:22px;">
+            <input type="checkbox" name="remember" id="remember_me"
+                   style="accent-color:#BE185D; width:15px; height:15px; cursor:pointer;">
+            <label for="remember_me" style="font-size:13px; color:#78716C; cursor:pointer;">
+                Recordarme en este equipo
             </label>
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button class="ms-3">
-                Ingresar
-            </x-primary-button>
-        </div>
+        <button type="submit" class="btn-login">
+            Ingresar al sistema
+        </button>
     </form>
+
 </x-guest-layout>
