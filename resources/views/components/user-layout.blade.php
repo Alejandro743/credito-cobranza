@@ -6,24 +6,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }}</title>
+    <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        lavanda:   { 50:'#f5f3ff',100:'#ede9fe',200:'#ddd6fe',300:'#c4b5fd',400:'#a78bfa',500:'#8b5cf6',600:'#7c3aed',700:'#6d28d9' },
-                        mint:      { 50:'#f0fdf4',100:'#dcfce7',200:'#bbf7d0',300:'#86efac',400:'#4ade80',500:'#22c55e',600:'#16a34a',700:'#15803d' },
-                        melocoton: { 50:'#fff7ed',100:'#ffedd5',200:'#fed7aa',300:'#fdba74',400:'#fb923c',500:'#f97316',600:'#ea580c',700:'#c2410c' },
-                        celeste:   { 50:'#f0f9ff',100:'#e0f2fe',200:'#bae6fd',300:'#7dd3fc',400:'#38bdf8',500:'#0ea5e9',600:'#0284c7',700:'#0369a1' },
+                        lavanda:   { 50:'#F0F4F7',100:'#FFFFE3',200:'#CBCBCB',300:'#A8B8C8',400:'#8FA0B0',500:'#6D8196',600:'#5C6F80',700:'#4A4A4A' },
+                        mint:      { 50:'#F0F4F7',100:'#FFFFE3',200:'#CBCBCB',300:'#A8B8C8',400:'#8FA0B0',500:'#6D8196',600:'#5C6F80',700:'#4A4A4A' },
+                        melocoton: { 50:'#F0F4F7',100:'#FFFFE3',200:'#CBCBCB',300:'#A8B8C8',400:'#8FA0B0',500:'#6D8196',600:'#5C6F80',700:'#4A4A4A' },
+                        celeste:   { 50:'#F0F4F7',100:'#FFFFE3',200:'#CBCBCB',300:'#A8B8C8',400:'#8FA0B0',500:'#6D8196',600:'#5C6F80',700:'#4A4A4A' },
                     }
                 }
             }
         }
     </script>
+    <style>body { font-family: 'Inter', sans-serif; }</style>
     @livewireStyles
+    <link rel="stylesheet" href="{{ asset('css/crediessen.css') }}?v={{ @filemtime(public_path('css/crediessen.css')) }}">
 </head>
-<body class="bg-gray-50 font-sans antialiased">
+<body style="background:#F5F5F0;" class="font-sans antialiased">
 
 @php
     use App\Services\PermisoService;

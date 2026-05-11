@@ -66,7 +66,7 @@
     {{-- Design system — carga ÚLTIMO para máxima prioridad --}}
     <link rel="stylesheet" href="{{ asset('css/crediessen.css') }}?v={{ @filemtime(public_path('css/crediessen.css')) }}">
 </head>
-<body style="background:#FFFFE3;" class="font-sans antialiased">
+<body style="background:#F5F5F0;" class="font-sans antialiased">
 
 @php
     use App\Services\PermisoService;
