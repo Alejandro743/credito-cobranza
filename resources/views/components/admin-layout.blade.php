@@ -148,6 +148,28 @@
     });
     $activeModuloSlug = $moduloActivo?->slug ?? '';
     $activeModuloName = $moduloActivo?->name ?? '';
+
+    // Leaf submodulo activo → page header automático
+    $activeLeaf = null;
+    if ($moduloActivo) {
+        foreach ($moduloActivo->submodulosVisibles as $sub) {
+            if (!$sub->isGroup() && $sub->route_name && request()->routeIs($sub->route_name)) {
+                $activeLeaf = $sub; break;
+            }
+            if ($sub->isGroup()) {
+                foreach ($sub->childrenVisibles as $child) {
+                    if ($child->route_name && request()->routeIs($child->route_name)) {
+                        $activeLeaf = $child; break 2;
+                    }
+                }
+            }
+        }
+    }
+    $pageTitle    = $activeLeaf?->name ?? ($activeModuloName ?: 'Panel de Inicio');
+    $pageIconPath = ($activeLeaf && isset($subIconos[$activeLeaf->slug]))
+        ? $subIconos[$activeLeaf->slug]
+        : ($moduloActivo?->icon
+            ?? 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6');
 @endphp
 
 <div class="flex h-screen overflow-hidden">
@@ -365,37 +387,45 @@
     {{-- ═══ MAIN ═══ --}}
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
 
-        {{-- Topbar --}}
-        <header class="flex items-center gap-3 px-4 flex-shrink-0"
-                style="background:#fff; border-bottom:1px solid #CBCBCB; min-height:56px;">
+        {{-- Topbar — breadcrumb mínimo --}}
+        <header class="flex items-center gap-3 px-5 flex-shrink-0"
+                style="background:#fff; border-bottom:1px solid #EBEBDF; min-height:46px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
             <button @click="sidebarOpen = !sidebarOpen"
                     class="md:hidden flex items-center justify-center transition-colors"
-                    style="min-width:38px; min-height:38px; color:#6D8196; background:#FFFFE3; border:1px solid #CBCBCB; border-radius:6px; cursor:pointer;">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    style="min-width:32px; min-height:32px; color:#6D8196; background:#F0F0E8; border:1px solid #E0E0D8; border-radius:5px; cursor:pointer;">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
-
-            {{-- Breadcrumb --}}
-            <div class="flex-1 flex items-center gap-2 min-w-0">
+            <div class="flex-1 flex items-center gap-1.5 min-w-0">
                 @if($activeModuloName)
-                <span style="font-size:12px; color:#CBCBCB; font-weight:500;">{{ $activeModuloName }}</span>
-                <span style="color:#CBCBCB; font-size:12px;">/</span>
+                <span style="font-size:11px; color:#C0C0B8; font-weight:500; white-space:nowrap;">{{ $activeModuloName }}</span>
+                <span style="color:#D8D8D0; font-size:11px;">/</span>
                 @endif
-                <h1 style="font-size:14px; font-weight:600; color:#4A4A4A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                    @yield('page-title', 'Panel')
-                </h1>
+                <span style="font-size:11px; font-weight:600; color:#6D8196; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $pageTitle }}</span>
             </div>
-
-            <div style="font-size:12px; color:#CBCBCB; display:none;" class="sm:block">
-                {{ now()->format('d/m/Y') }}
+            <div style="font-size:11px; color:#C8C8C0; display:none; letter-spacing:.3px;" class="sm:block">
+                {{ now()->format('d M Y') }}
             </div>
-
-            {{-- Avatar topbar --}}
-            <div style="width:34px; height:34px; border-radius:50%; background:#6D8196; display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; flex-shrink:0;">
+            <div style="width:30px; height:30px; border-radius:50%; background:#6D8196; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:.5px;">
                 {{ strtoupper(substr($navUser->name, 0, 1)) }}
             </div>
         </header>
+
+        {{-- Page Header — auto-generado desde el submodulo activo --}}
+        <div style="padding:18px 28px 16px; border-bottom:1px solid #EBEBDF; background:#FFFFFF; display:flex; align-items:center; gap:16px; flex-shrink:0;">
+            <div style="width:44px; height:44px; background:#EEF2F7; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 1px 5px rgba(109,129,150,.13);">
+                <svg width="21" height="21" fill="none" stroke="#6D8196" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="{{ $pageIconPath }}"/>
+                </svg>
+            </div>
+            <div>
+                @if($activeModuloName)
+                <p style="font-size:9px; font-weight:700; color:#C0C0B8; letter-spacing:1.3px; text-transform:uppercase; margin:0 0 3px; font-family:'Inter',sans-serif;">{{ $activeModuloName }}</p>
+                @endif
+                <h1 style="font-size:22px; font-weight:800; color:#4A4A4A; letter-spacing:-.5px; line-height:1; margin:0; font-family:'Inter',sans-serif;">{{ $pageTitle }}</h1>
+            </div>
+        </div>
 
         {{-- Flash messages --}}
         @if (session('success') || session('error'))

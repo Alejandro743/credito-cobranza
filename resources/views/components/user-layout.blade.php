@@ -134,6 +134,28 @@
     $hSubText  = $hP ? $hP['header_sub']      : 'text-gray-400';
     $hBtnText  = $hP ? $hP['header_btn']      : 'text-gray-500';
     $hBtnHover = $hP ? $hP['header_btn_hover']: 'hover:bg-gray-100';
+
+    // Leaf submodulo activo → page header automático
+    $ulActiveLeaf = null;
+    if ($moduloActivoHeader) {
+        foreach ($moduloActivoHeader->submodulosVisibles as $sub) {
+            if (!$sub->isGroup() && $sub->route_name && request()->routeIs($sub->route_name)) {
+                $ulActiveLeaf = $sub; break;
+            }
+            if ($sub->isGroup()) {
+                foreach ($sub->childrenVisibles as $child) {
+                    if ($child->route_name && request()->routeIs($child->route_name)) {
+                        $ulActiveLeaf = $child; break 2;
+                    }
+                }
+            }
+        }
+    }
+    $ulPageTitle    = $ulActiveLeaf?->name ?? ($moduloActivoHeader?->name ?? 'Panel de Inicio');
+    $ulPageIconPath = ($ulActiveLeaf && isset($subIconos[$ulActiveLeaf->slug]))
+        ? $subIconos[$ulActiveLeaf->slug]
+        : ($moduloActivoHeader?->icon
+            ?? 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6');
 @endphp
 
 <div class="flex h-screen overflow-hidden"
@@ -336,18 +358,39 @@
     <!-- ═══ MAIN ═══ -->
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
         @unless($noHeader)
-        <header class="flex items-center gap-4 px-4 py-3 border-b shadow-sm {{ $hBg }} {{ $hBorder }}">
+        {{-- Topbar — accent de módulo + breadcrumb mínimo --}}
+        <header class="flex items-center gap-3 px-5 border-b {{ $hBg }} {{ $hBorder }}" style="min-height:46px;">
             <button @click="sidebarOpen = !sidebarOpen"
-                    class="md:hidden p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg transition-colors {{ $hBtnText }} {{ $hBtnHover }}">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    class="md:hidden flex items-center justify-center rounded-lg transition-colors {{ $hBtnText }} {{ $hBtnHover }}"
+                    style="min-width:32px; min-height:32px;">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
-            <div class="flex-1">
-                <h1 class="text-base font-semibold {{ $hText }}">@yield('page-title', 'Panel')</h1>
+            <div class="flex-1 flex items-center gap-1.5 min-w-0">
+                @if($moduloActivoHeader)
+                <span class="text-xs font-medium whitespace-nowrap {{ $hSubText }}" style="opacity:.65;">{{ $moduloActivoHeader->name }}</span>
+                <span class="text-xs {{ $hSubText }}" style="opacity:.35;">/</span>
+                @endif
+                <span class="text-xs font-semibold {{ $hText }} truncate">{{ $ulPageTitle }}</span>
             </div>
-            <div class="text-xs hidden sm:block {{ $hSubText }}">{{ now()->format('d/m/Y') }}</div>
+            <div class="text-xs hidden sm:block {{ $hSubText }}" style="opacity:.6; letter-spacing:.3px;">{{ now()->format('d M Y') }}</div>
         </header>
+
+        {{-- Page Header — auto-generado desde el submodulo activo --}}
+        <div style="padding:18px 28px 16px; border-bottom:1px solid #EBEBDF; background:#FFFFFF; display:flex; align-items:center; gap:16px; flex-shrink:0;">
+            <div style="width:44px; height:44px; background:#EEF2F7; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 1px 5px rgba(109,129,150,.13);">
+                <svg width="21" height="21" fill="none" stroke="#6D8196" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="{{ $ulPageIconPath }}"/>
+                </svg>
+            </div>
+            <div>
+                @if($moduloActivoHeader)
+                <p style="font-size:9px; font-weight:700; color:#C0C0B8; letter-spacing:1.3px; text-transform:uppercase; margin:0 0 3px; font-family:'Inter',sans-serif;">{{ $moduloActivoHeader->name }}</p>
+                @endif
+                <h1 style="font-size:22px; font-weight:800; color:#4A4A4A; letter-spacing:-.5px; line-height:1; margin:0; font-family:'Inter',sans-serif;">{{ $ulPageTitle }}</h1>
+            </div>
+        </div>
         @endunless
 
         <main class="{{ $noPadding ? 'p-0' : 'p-4 sm:p-6' }} flex-1 overflow-y-auto">
