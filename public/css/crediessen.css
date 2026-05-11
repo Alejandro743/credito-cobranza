@@ -430,3 +430,93 @@ main .ds-empty p {
     font-weight: 600;
     color:       #CBCBCB;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   18. MATAR TOPBARS DE COLOR — inline style en primer hijo
+   Todas las vistas tienen un div coloreado como primer hijo.
+   Lo ocultamos globalmente sin tocar los blades.
+──────────────────────────────────────────────────────────────*/
+main > div > div:first-child[style*="background:#DCFCE7"],
+main > div > div:first-child[style*="background:#FEF3C7"],
+main > div > div:first-child[style*="background:#EDE9FE"],
+main > div > div:first-child[style*="background:#E0F2FE"],
+main > div > div:first-child[style*="background:#FCE7F3"],
+main > div > div:first-child[style*="background:#F3E8FF"],
+main > div > div:first-child[style*="background:#ECFDF5"],
+main > div > div:first-child[style*="background:#FFF7ED"],
+main > div > div:first-child[style*="background:#DBEAFE"],
+main > div > div:first-child[style*="background:#D1FAE5"] {
+    display: none !important;
+}
+
+/* Topbars con clases Tailwind de color */
+main > div > div.bg-mint-50:first-child,
+main > div > div.bg-mint-100:first-child,
+main > div > div.bg-melocoton-50:first-child,
+main > div > div.bg-melocoton-100:first-child,
+main > div > div.bg-lavanda-50:first-child,
+main > div > div.bg-lavanda-100:first-child,
+main > div > div.bg-celeste-50:first-child,
+main > div > div.bg-celeste-100:first-child,
+main > div > div.bg-amber-50:first-child,
+main > div > div.bg-green-50:first-child,
+main > div > div.bg-blue-50:first-child {
+    display: none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   19. ELIMINAR DOBLE PADDING — el <main> ya tiene p-4 sm:p-6
+   Las vistas agregaban otro div.p-4 adentro. Lo anulamos.
+──────────────────────────────────────────────────────────────*/
+main > div > div.p-4,
+main > div > div.p-5,
+main > div > div.p-6,
+main > div > div.p-8 {
+    padding: 0 !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   20. FLASH TOASTS — ocultar (ya existe feedback inline)
+──────────────────────────────────────────────────────────────*/
+main div[x-data*="show:true"][class*="fixed"],
+div[x-data*="show:true"].fixed.bottom-5 {
+    display: none !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   21. TEXTOS Y FONDOS — ajuste global de grises Tailwind
+──────────────────────────────────────────────────────────────*/
+main .text-gray-400,
+main .text-gray-500  { color: #CBCBCB !important; }
+main .text-gray-600  { color: #6D8196 !important; }
+main .text-gray-700,
+main .text-gray-800,
+main .text-gray-900  { color: #4A4A4A !important; }
+main .bg-gray-50     { background: #FAFAF5 !important; }
+main .bg-gray-100    { background: #F4F4F4 !important; }
+main .divide-gray-50 > * + *,
+main .divide-gray-100 > * + * { border-color: #EBEBD9 !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   22. TARJETAS CONTENEDORAS — uniformes sin importar clase
+──────────────────────────────────────────────────────────────*/
+main .bg-white.rounded-2xl,
+main .bg-white.rounded-xl {
+    border: 1px solid #CBCBCB !important;
+    box-shadow: none !important;
+}
+
+/* Headers de sección coloreados con Tailwind → pizarra */
+main .bg-mint-50,
+main .bg-mint-100   { background: #E8F0F7 !important; }
+main .bg-lavanda-50,
+main .bg-lavanda-100 { background: #E8F0F7 !important; }
+main .text-mint-600,
+main .text-mint-700,
+main .text-lavanda-600,
+main .text-lavanda-700 { color: #4A4A4A !important; }
+main .border-mint-100,
+main .border-mint-200,
+main .border-mint-300 { border-color: #CBCBCB !important; }
+main .border-lavanda-100,
+main .border-lavanda-200 { border-color: #CBCBCB !important; }

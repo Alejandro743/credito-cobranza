@@ -24,32 +24,32 @@
                         600: '#5C6F80',
                         700: '#4A4A4A',
                     },
-                    // Verde — estados positivos / aprobado
+                    // Verde semántico — estados positivos (pagado, activo)
                     mint: {
-                        50:  '#F0FDF4',
-                        100: '#D1FAE5',
-                        200: '#A7F3D0',
-                        500: '#10B981',
-                        600: '#059669',
-                        700: '#065F46',
+                        50:  '#F0F4F7',
+                        100: '#E8F0F7',
+                        200: '#D4E0EA',
+                        500: '#6D8196',
+                        600: '#5C6F80',
+                        700: '#4A4A4A',
                     },
-                    // Ámbar — revisión / advertencia
+                    // Ámbar semántico → pizarra uniforme
                     melocoton: {
-                        50:  '#FFFBEB',
-                        100: '#FEF3C7',
-                        200: '#FDE68A',
-                        500: '#F59E0B',
-                        600: '#D97706',
-                        700: '#92400E',
+                        50:  '#F0F4F7',
+                        100: '#E8F0F7',
+                        200: '#D4E0EA',
+                        500: '#6D8196',
+                        600: '#5C6F80',
+                        700: '#4A4A4A',
                     },
-                    // Azul — información / cobro
+                    // Celeste semántico → pizarra uniforme
                     celeste: {
-                        50:  '#EFF6FF',
-                        100: '#DBEAFE',
-                        200: '#BFDBFE',
-                        500: '#3B82F6',
-                        600: '#2563EB',
-                        700: '#1D4ED8',
+                        50:  '#F0F4F7',
+                        100: '#E8F0F7',
+                        200: '#D4E0EA',
+                        500: '#6D8196',
+                        600: '#5C6F80',
+                        700: '#4A4A4A',
                     },
                 }
             }
