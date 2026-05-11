@@ -413,9 +413,6 @@
             <div style="font-size:11px; color:#C8C8C0; display:none; letter-spacing:.3px; flex-shrink:0;" class="sm:block">
                 {{ now()->format('d M Y') }}
             </div>
-            <div style="width:30px; height:30px; border-radius:50%; background:#6D8196; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:.5px;">
-                {{ strtoupper(substr($navUser->name, 0, 1)) }}
-            </div>
         </header>
 
 
