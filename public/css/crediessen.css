@@ -1,21 +1,22 @@
 /*
  * ╔═══════════════════════════════════════════════════════════════╗
- * ║   CREDIESSEN — Design System v1.1                            ║
+ * ║   CREDIESSEN — Design System v2.0                            ║
  * ║   Paleta: #4A4A4A · #CBCBCB · #FFFFE3 · #6D8196             ║
- * ║   Carga ÚLTIMA → máxima prioridad sobre Tailwind y locales   ║
+ * ║   Fuente única de verdad — inline <style> en layout removido ║
  * ╚═══════════════════════════════════════════════════════════════╝
  */
 
 /* ─────────────────────────────────────────────────────────────
-   1. TABLAS — thead crema+pizarra, celdas aireadas
+   1. TABLAS — valores exactos del mockup aprobado
+   thead padding: 9px 14px · tbody padding: 9px 14px
+   font-size tabla: 11px · solo borde inferior en filas
 ──────────────────────────────────────────────────────────────*/
 main table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 13px;
+    font-size: 11px;
 }
 
-/* Thead: cualquier variante de color local → crema + pizarra */
 main thead,
 main thead tr,
 main thead th,
@@ -25,14 +26,16 @@ main thead td {
     color:            #6D8196 !important;
     font-size:        10px    !important;
     font-weight:      700     !important;
-    letter-spacing:   0.5px;
+    letter-spacing:   .3px;
     text-transform:   uppercase;
-    padding:          11px 16px !important;
-    border-color:     #CBCBCB  !important;
+    padding:          9px 14px !important;
+    border-top:       none !important;
+    border-left:      none !important;
+    border-right:     none !important;
+    border-bottom:    1px solid #CBCBCB !important;
     white-space:      nowrap;
 }
 
-/* Filas */
 main tbody tr {
     transition: background 0.1s;
 }
@@ -41,25 +44,24 @@ main tbody tr:hover > th {
     background-color: #FFFFE3 !important;
 }
 
-/* Celdas */
 main tbody td,
 main tbody th {
-    padding:         11px 16px !important;
-    border:          1px solid #EBEBD9   !important;
-    color:           #4A4A4A;
-    vertical-align:  middle;
-    font-size:       13px;
+    padding:        9px 14px !important;
+    border:         none     !important;
+    border-bottom:  1px solid #F0F0E8 !important;
+    color:          #4A4A4A;
+    vertical-align: middle;
+    font-size:      11px;
 }
 main tbody tr:last-child td,
 main tbody tr:last-child th {
     border-bottom: none !important;
 }
 
-/* Pie de tabla */
 main tfoot td,
 main tfoot th {
-    padding:     10px 16px !important;
-    font-size:   12px;
+    padding:     9px 14px !important;
+    font-size:   11px;
     font-weight: 700;
     color:       #6D8196;
     background:  #F7F7E8 !important;
@@ -72,15 +74,15 @@ main tfoot th {
 main input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]),
 main select,
 main textarea {
-    border-radius:   3px !important;
-    border:          1.5px solid #CBCBCB !important;
-    background:      #FFFFE3             !important;
-    color:           #4A4A4A             !important;
-    font-family:     'Inter', sans-serif !important;
-    font-size:       13px                !important;
-    box-shadow:      none                !important;
-    outline:         none                !important;
-    transition:      border-color .15s, box-shadow .15s;
+    border-radius: 3px                  !important;
+    border:        1.5px solid #CBCBCB  !important;
+    background:    #FFFFE3              !important;
+    color:         #4A4A4A              !important;
+    font-family:   'Inter', sans-serif  !important;
+    font-size:     13px                 !important;
+    box-shadow:    none                 !important;
+    outline:       none                 !important;
+    transition:    border-color .15s, box-shadow .15s;
 }
 
 main input:not([type="checkbox"]):not([type="radio"]):focus,
@@ -111,17 +113,14 @@ main input[type="reset"] {
 /* ─────────────────────────────────────────────────────────────
    4. ESQUINAS — sistema cuadrado/suave según elemento
 ──────────────────────────────────────────────────────────────*/
-
-/* Badges y pills → cuadrados */
 main .rounded-full,
-main .rounded-3xl { border-radius: 3px !important; }
+main .rounded-3xl { border-radius: 3px  !important; }
 
-/* Cards y contenedores → suave */
 main .rounded-2xl,
-main .rounded-xl  { border-radius: 8px !important; }
-main .rounded-lg  { border-radius: 6px !important; }
-main .rounded-md  { border-radius: 4px !important; }
-main .rounded     { border-radius: 3px !important; }
+main .rounded-xl  { border-radius: 10px !important; }
+main .rounded-lg  { border-radius: 8px  !important; }
+main .rounded-md  { border-radius: 6px  !important; }
+main .rounded     { border-radius: 3px  !important; }
 
 /* ─────────────────────────────────────────────────────────────
    5. CLASES LOCALES de badge/pill (todas las vistas)
@@ -136,7 +135,7 @@ main .cc-badge,
 main .ph-pill-back,
 main .rp-pill-back,
 main .pm-pill-back {
-    border-radius:  3px !important;
+    border-radius: 3px !important;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -148,19 +147,17 @@ main small[style*="border-radius"] {
     border-radius: 3px !important;
 }
 
-/* Pills / filtros con border-radius alto → cuadrado suave */
-main div[style*="border-radius:20"],   main div[style*="border-radius: 20"],
-main button[style*="border-radius:20"],main button[style*="border-radius: 20"],
-main a[style*="border-radius:20"],     main a[style*="border-radius: 20"] {
+main div[style*="border-radius:20"],    main div[style*="border-radius: 20"],
+main button[style*="border-radius:20"], main button[style*="border-radius: 20"],
+main a[style*="border-radius:20"],      main a[style*="border-radius: 20"] {
     border-radius: 4px !important;
 }
 
-/* Containers con radius grande → suave */
-main div[style*="border-radius:16"],   main div[style*="border-radius: 16"],
-main div[style*="border-radius:14"],   main div[style*="border-radius: 14"],
-main div[style*="border-radius:12"],   main div[style*="border-radius: 12"],
-main div[style*="border-radius:10"],   main div[style*="border-radius: 10"] {
-    border-radius: 8px !important;
+main div[style*="border-radius:16"],  main div[style*="border-radius: 16"],
+main div[style*="border-radius:14"],  main div[style*="border-radius: 14"],
+main div[style*="border-radius:12"],  main div[style*="border-radius: 12"],
+main div[style*="border-radius:10"],  main div[style*="border-radius: 10"] {
+    border-radius: 10px !important;
 }
 
 /* ─────────────────────────────────────────────────────────────
@@ -175,8 +172,8 @@ main .border-gray-300 { border-color: #CBCBCB !important; }
 ──────────────────────────────────────────────────────────────*/
 main [role="navigation"] a,
 main [role="navigation"] span {
-    border-radius: 3px      !important;
-    font-size:     12px     !important;
+    border-radius: 3px     !important;
+    font-size:     12px    !important;
     font-family:   'Inter', sans-serif !important;
 }
 
@@ -189,29 +186,27 @@ main [style*="border-radius: 99"] {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   10. CARDS GENÉRICAS — fondo blanco, borde gris, radio suave
+   10. CARDS GENÉRICAS — fondo blanco, sombra sutil
 ──────────────────────────────────────────────────────────────*/
 main .bg-white {
     background: #ffffff !important;
 }
 
-/* Sombra uniforme y sutil */
-main .shadow-sm  { box-shadow: 0 1px 4px rgba(74,74,74,.08)  !important; }
-main .shadow     { box-shadow: 0 2px 8px rgba(74,74,74,.10)  !important; }
-main .shadow-md  { box-shadow: 0 4px 12px rgba(74,74,74,.12) !important; }
-main .shadow-lg  { box-shadow: 0 6px 20px rgba(74,74,74,.14) !important; }
+main .shadow-sm { box-shadow: 0 1px 4px rgba(74,74,74,.08)  !important; }
+main .shadow    { box-shadow: 0 2px 8px rgba(74,74,74,.10)  !important; }
+main .shadow-md { box-shadow: 0 4px 12px rgba(74,74,74,.12) !important; }
+main .shadow-lg { box-shadow: 0 6px 20px rgba(74,74,74,.14) !important; }
 
 /* ─────────────────────────────────────────────────────────────
-   11. TOPBAR SECTION HEADER — icono vivo + título
-       Usar: <div class="ds-section-header ds-icon-green">...</div>
+   11. SECTION HEADER — icono vivo + título
 ──────────────────────────────────────────────────────────────*/
 main .ds-section-header {
-    display:         flex;
-    align-items:     center;
-    gap:             12px;
-    margin-bottom:   20px;
-    padding-bottom:  14px;
-    border-bottom:   1px solid #CBCBCB;
+    display:        flex;
+    align-items:    center;
+    gap:            12px;
+    margin-bottom:  18px;
+    padding-bottom: 12px;
+    border-bottom:  1px solid #CBCBCB;
 }
 main .ds-section-header h2,
 main .ds-section-header h3 {
@@ -228,27 +223,27 @@ main .ds-section-header small {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   12. STAT CARDS — grid de indicadores con icono vivo
-       Usar: <div class="ds-stats-grid"><div class="ds-stat-card">
+   12. STAT CARDS — grid de indicadores
+   border-radius: 10px · padding: 14px 16px · value: 20px
 ──────────────────────────────────────────────────────────────*/
 main .ds-stats-grid {
     display:               grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap:                   14px;
-    margin-bottom:         20px;
+    gap:                   12px;
+    margin-bottom:         18px;
 }
 main .ds-stat-card {
     background:    #ffffff;
     border:        1px solid #CBCBCB;
-    border-radius: 8px !important;
-    padding:       16px 18px;
+    border-radius: 10px !important;
+    padding:       14px 16px;
     display:       flex;
     align-items:   center;
-    gap:           14px;
+    gap:           12px;
 }
 main .ds-stat-card .ds-stat-icon {
-    width:           42px;
-    height:          42px;
+    width:           36px;
+    height:          36px;
     border-radius:   8px !important;
     display:         flex;
     align-items:     center;
@@ -257,108 +252,109 @@ main .ds-stat-card .ds-stat-icon {
 }
 main .ds-stat-card .ds-stat-label {
     font-size:      10px;
-    font-weight:    700;
+    font-weight:    600;
     color:          #CBCBCB;
     letter-spacing: .4px;
     text-transform: uppercase;
-    margin-bottom:  2px;
+    margin-bottom:  4px;
 }
 main .ds-stat-card .ds-stat-value {
-    font-size:   22px;
+    font-size:   20px;
     font-weight: 700;
     color:       #4A4A4A;
     line-height: 1.1;
 }
 main .ds-stat-card .ds-stat-sub {
-    font-size: 11px;
-    color:     #6D8196;
+    font-size:  10px;
+    color:      #6D8196;
     margin-top: 2px;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   13. TABLA WRAPPER CARD — contenedor estándar de tabla
+   13. TABLA WRAPPER CARD — border-radius: 10px
 ──────────────────────────────────────────────────────────────*/
 main .ds-table-card {
     background:    #ffffff;
     border:        1px solid #CBCBCB;
-    border-radius: 8px !important;
+    border-radius: 10px !important;
     overflow:      hidden;
 }
 main .ds-table-toolbar {
-    display:         flex;
-    align-items:     center;
-    gap:             10px;
-    padding:         12px 16px;
-    border-bottom:   1px solid #CBCBCB;
-    flex-wrap:       wrap;
+    display:       flex;
+    align-items:   center;
+    gap:           8px;
+    padding:       10px 14px;
+    border-bottom: 1px solid #CBCBCB;
+    flex-wrap:     wrap;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   14. BADGES SEMÁNTICOS — paleta del mockup
+   14. BADGES SEMÁNTICOS — padding: 2px 8px
 ──────────────────────────────────────────────────────────────*/
 main .ds-badge {
     display:        inline-flex;
     align-items:    center;
-    padding:        2px 9px;
+    padding:        2px 8px;
     border-radius:  3px !important;
     font-size:      10px;
     font-weight:    700;
     letter-spacing: .2px;
 }
 main .ds-badge-active,
-main .ds-badge-aprobado   { background:#FFFFE3; color:#6D8196; border:1px solid #6D8196; }
+main .ds-badge-aprobado  { background: #FFFFE3; color: #6D8196; border: 1px solid #6D8196; }
 main .ds-badge-pending,
-main .ds-badge-revision   { background:#FFF9E3; color:#B45309; border:1px solid #FCD34D; }
+main .ds-badge-revision  { background: #FFF9E3; color: #B45309; border: 1px solid #FCD34D; }
 main .ds-badge-inactive,
-main .ds-badge-cerrado    { background:#F4F4F4; color:#4A4A4A; border:1px solid #CBCBCB; }
+main .ds-badge-cerrado   { background: #F4F4F4; color: #4A4A4A; border: 1px solid #CBCBCB; }
 main .ds-badge-danger,
-main .ds-badge-anulado    { background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; }
+main .ds-badge-anulado,
+main .ds-badge-rechazado { background: #FEE2E2; color: #DC2626; border: 1px solid #FCA5A5; }
 
 /* ─────────────────────────────────────────────────────────────
-   15. BOTONES SEMÁNTICOS — paleta del mockup
+   15. BOTONES SEMÁNTICOS — padding: 9px 18px · font-size: 12px
 ──────────────────────────────────────────────────────────────*/
 main .ds-btn {
-    display:      inline-flex;
-    align-items:  center;
-    gap:          6px;
-    padding:      9px 18px;
+    display:       inline-flex;
+    align-items:   center;
+    gap:           6px;
+    padding:       9px 18px;
     border-radius: 3px !important;
-    font-size:    12px;
-    font-weight:  600;
-    border:       none;
-    cursor:       pointer;
-    font-family:  'Inter', sans-serif;
-    transition:   background .15s, opacity .15s;
-    white-space:  nowrap;
+    font-size:     12px;
+    font-weight:   600;
+    border:        none;
+    cursor:        pointer;
+    font-family:   'Inter', sans-serif;
+    transition:    background .15s, opacity .15s;
+    white-space:   nowrap;
 }
 main .ds-btn:disabled,
 main .ds-btn[disabled] { opacity: .5; cursor: not-allowed; }
 
-main .ds-btn-primary   { background:#6D8196; color:#fff; }
-main .ds-btn-primary:hover { background:#5C6F80; }
+main .ds-btn-primary         { background: #6D8196; color: #fff; }
+main .ds-btn-primary:hover   { background: #5C6F80; }
 
-main .ds-btn-secondary { background:#FFFFE3; color:#4A4A4A; border:1.5px solid #CBCBCB !important; }
-main .ds-btn-secondary:hover { background:#F0F0D8; }
+main .ds-btn-secondary       { background: #FFFFE3; color: #4A4A4A; border: 1.5px solid #CBCBCB !important; }
+main .ds-btn-secondary:hover { background: #F0F0D8; }
 
-main .ds-btn-ghost     { background:transparent; color:#6D8196; border:1.5px solid #6D8196 !important; }
-main .ds-btn-ghost:hover { background:#FFFFE3; }
+main .ds-btn-ghost           { background: transparent; color: #6D8196; border: 1.5px solid #6D8196 !important; }
+main .ds-btn-ghost:hover     { background: #FFFFE3; }
 
-main .ds-btn-danger    { background:#FEE2E2; color:#DC2626; border:1.5px solid #FCA5A5 !important; }
-main .ds-btn-danger:hover { background:#FECACA; }
+main .ds-btn-danger          { background: #FEE2E2; color: #DC2626; border: 1.5px solid #FCA5A5 !important; }
+main .ds-btn-danger:hover    { background: #FECACA; }
 
-main .ds-btn-success { background: #10B981; color: #fff; }
-main .ds-btn-success:hover { background: #059669; }
+main .ds-btn-success         { background: #D1FAE5; color: #065F46; border: 1px solid #6EE7B7 !important; }
+main .ds-btn-success:hover   { background: #A7F3D0; }
 
-main .ds-btn-warning { background: #FFFBEB; color: #B45309; border: 1.5px solid #FCD34D !important; }
-main .ds-btn-warning:hover { background: #FEF3C7; }
+main .ds-btn-warning         { background: #FEF3C7; color: #92400E; border: 1.5px solid #FCD34D !important; }
+main .ds-btn-warning:hover   { background: #FDE68A; }
 
 main .ds-btn-sm {
-    padding:   6px 12px;
+    padding:   5px 10px;
     font-size: 11px;
 }
 
 /* ─────────────────────────────────────────────────────────────
-   16b. TABLA COLUMNA STICKY
+   16. STICKY COLUMN
 ──────────────────────────────────────────────────────────────*/
 .ds-sticky-col {
     position:   sticky;
@@ -369,29 +365,29 @@ main .ds-btn-sm {
     box-shadow: 3px 0 6px -2px rgba(0,0,0,.06);
 }
 main thead .ds-sticky-col,
-main thead th.ds-sticky-col { background: #FFFFE3 !important; }
+main thead th.ds-sticky-col     { background: #FFFFE3 !important; }
 main tbody tr:hover .ds-sticky-col { background: #FFFFE3 !important; }
 
 /* ─────────────────────────────────────────────────────────────
-   16c. PANEL DE CONFIRMACIÓN (rechazo / cierre / reversion)
+   16b. PANEL DE CONFIRMACIÓN (rechazo / cierre / reversión)
 ──────────────────────────────────────────────────────────────*/
 main .ds-confirm-panel {
     border-radius: 6px;
-    padding:       16px;
+    padding:       14px 16px;
     margin-top:    12px;
 }
-main .ds-confirm-panel.danger  { background:#FFF0F0; border:1px solid #FCA5A5; }
-main .ds-confirm-panel.neutral { background:#F7F7F0; border:1px solid #CBCBCB; }
-main .ds-confirm-panel.warning { background:#FFFBEB; border:1px solid #FCD34D; }
-main .ds-confirm-panel.info    { background:#EFF6FF; border:1px solid #BFDBFE; }
-main .ds-confirm-panel-title   { font-size:13px; font-weight:700; margin:0 0 10px; }
-main .ds-confirm-panel.danger  .ds-confirm-panel-title { color:#DC2626; }
-main .ds-confirm-panel.warning .ds-confirm-panel-title { color:#B45309; }
-main .ds-confirm-panel.info    .ds-confirm-panel-title { color:#1D4ED8; }
-main .ds-confirm-panel-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
+main .ds-confirm-panel.danger  { background: #FFF0F0; border: 1px solid #FCA5A5; }
+main .ds-confirm-panel.neutral { background: #F7F7F0; border: 1px solid #CBCBCB; }
+main .ds-confirm-panel.warning { background: #FFFBEB; border: 1px solid #FCD34D; }
+main .ds-confirm-panel.info    { background: #EFF6FF; border: 1px solid #BFDBFE; }
+main .ds-confirm-panel-title   { font-size: 13px; font-weight: 700; margin: 0 0 10px; }
+main .ds-confirm-panel.danger  .ds-confirm-panel-title { color: #DC2626; }
+main .ds-confirm-panel.warning .ds-confirm-panel-title { color: #B45309; }
+main .ds-confirm-panel.info    .ds-confirm-panel-title { color: #1D4ED8; }
+main .ds-confirm-panel-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 10px; }
 
 /* ─────────────────────────────────────────────────────────────
-   16. FORMULARIO — etiquetas y campos
+   16c. FORMULARIO — etiquetas y campos
 ──────────────────────────────────────────────────────────────*/
 main .ds-form-label {
     display:        block;
@@ -400,10 +396,10 @@ main .ds-form-label {
     color:          #6D8196 !important;
     letter-spacing: .4px;
     text-transform: uppercase;
-    margin-bottom:  5px;
+    margin-bottom:  4px;
 }
 main .ds-form-group {
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 main .ds-form-error {
     font-size:  11px;
@@ -415,15 +411,15 @@ main .ds-form-error {
    17. VACÍO / EMPTY STATE
 ──────────────────────────────────────────────────────────────*/
 main .ds-empty {
-    text-align:  center;
-    padding:     48px 24px;
-    color:       #CBCBCB;
+    text-align: center;
+    padding:    48px 24px;
+    color:      #CBCBCB;
 }
 main .ds-empty svg {
-    width:        48px;
-    height:       48px;
-    margin:       0 auto 12px;
-    stroke:       #CBCBCB;
+    width:   48px;
+    height:  48px;
+    margin:  0 auto 12px;
+    stroke:  #CBCBCB;
 }
 main .ds-empty p {
     font-size:   13px;
@@ -433,8 +429,7 @@ main .ds-empty p {
 
 /* ─────────────────────────────────────────────────────────────
    18. MATAR TOPBARS DE COLOR — inline style en primer hijo
-   Todas las vistas tienen un div coloreado como primer hijo.
-   Lo ocultamos globalmente sin tocar los blades.
+   Vistas legacy tienen div coloreado como primer hijo.
 ──────────────────────────────────────────────────────────────*/
 main > div > div:first-child[style*="background:#DCFCE7"],
 main > div > div:first-child[style*="background:#FEF3C7"],
@@ -449,7 +444,6 @@ main > div > div:first-child[style*="background:#D1FAE5"] {
     display: none !important;
 }
 
-/* Topbars con clases Tailwind de color */
 main > div > div.bg-mint-50:first-child,
 main > div > div.bg-mint-100:first-child,
 main > div > div.bg-melocoton-50:first-child,
@@ -466,7 +460,7 @@ main > div > div.bg-blue-50:first-child {
 
 /* ─────────────────────────────────────────────────────────────
    19. ELIMINAR DOBLE PADDING — el <main> ya tiene p-4 sm:p-6
-   Las vistas agregaban otro div.p-4 adentro. Lo anulamos.
+   Vistas legacy agregan otro div.p-4 adentro.
 ──────────────────────────────────────────────────────────────*/
 main > div > div.p-4,
 main > div > div.p-5,
@@ -476,7 +470,7 @@ main > div > div.p-8 {
 }
 
 /* ─────────────────────────────────────────────────────────────
-   20. FLASH TOASTS — ocultar (ya existe feedback inline)
+   20. FLASH TOASTS — ocultar (feedback inline en layout)
 ──────────────────────────────────────────────────────────────*/
 main div[x-data*="show:true"][class*="fixed"],
 div[x-data*="show:true"].fixed.bottom-5 {
@@ -494,21 +488,20 @@ main .text-gray-800,
 main .text-gray-900  { color: #4A4A4A !important; }
 main .bg-gray-50     { background: #FAFAF5 !important; }
 main .bg-gray-100    { background: #F4F4F4 !important; }
-main .divide-gray-50 > * + *,
+main .divide-gray-50  > * + *,
 main .divide-gray-100 > * + * { border-color: #EBEBD9 !important; }
 
 /* ─────────────────────────────────────────────────────────────
-   22. TARJETAS CONTENEDORAS — uniformes sin importar clase
+   22. TARJETAS CONTENEDORAS — uniformes
 ──────────────────────────────────────────────────────────────*/
 main .bg-white.rounded-2xl,
 main .bg-white.rounded-xl {
-    border: 1px solid #CBCBCB !important;
+    border:     1px solid #CBCBCB !important;
     box-shadow: none !important;
 }
 
-/* Headers de sección coloreados con Tailwind → pizarra */
 main .bg-mint-50,
-main .bg-mint-100   { background: #E8F0F7 !important; }
+main .bg-mint-100    { background: #E8F0F7 !important; }
 main .bg-lavanda-50,
 main .bg-lavanda-100 { background: #E8F0F7 !important; }
 main .text-mint-600,
@@ -517,6 +510,6 @@ main .text-lavanda-600,
 main .text-lavanda-700 { color: #4A4A4A !important; }
 main .border-mint-100,
 main .border-mint-200,
-main .border-mint-300 { border-color: #CBCBCB !important; }
+main .border-mint-300  { border-color: #CBCBCB !important; }
 main .border-lavanda-100,
 main .border-lavanda-200 { border-color: #CBCBCB !important; }
