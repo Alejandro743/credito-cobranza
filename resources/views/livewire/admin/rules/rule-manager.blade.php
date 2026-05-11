@@ -128,8 +128,8 @@
             <tbody class="divide-y divide-gray-50">
                 @foreach ($rules as $r)
                 <tr wire:key="r-{{ $r->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td class="px-5 py-3 font-medium text-gray-800">{{ $r->name }}</td>
-                    <td class="px-5 py-3">
+                    <td data-label="Nombre" class="px-5 py-3 font-medium text-gray-800">{{ $r->name }}</td>
+                    <td data-label="Tipo" class="px-5 py-3">
                         <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium
                             @switch($r->type)
                                 @case('segmento') bg-lavanda-100 text-lavanda-700 @break
@@ -140,16 +140,16 @@
                             {{ ucfirst($r->type) }}
                         </span>
                     </td>
-                    <td class="px-5 py-3 text-center text-gray-600">{{ $r->priority }}</td>
-                    <td class="px-5 py-3 text-center text-gray-600">{{ $r->groups_count }}</td>
-                    <td class="px-5 py-3 text-center">
+                    <td data-label="Prioridad" class="px-5 py-3 text-center text-gray-600">{{ $r->priority }}</td>
+                    <td data-label="Grupos" class="px-5 py-3 text-center text-gray-600">{{ $r->groups_count }}</td>
+                    <td data-label="Estado" class="px-5 py-3 text-center">
                         <button wire:click="toggleActive({{ $r->id }})"
                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors
                                     {{ $r->active ? 'bg-mint-100 text-mint-700 hover:bg-mint-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
                             {{ $r->active ? 'Activa' : 'Inactiva' }}
                         </button>
                     </td>
-                    <td class="px-5 py-3 text-center">
+                    <td data-label="" class="px-5 py-3 text-center">
                         <button wire:click="edit({{ $r->id }})" class="text-lavanda-500 hover:text-lavanda-700 transition-colors p-1">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         </button>

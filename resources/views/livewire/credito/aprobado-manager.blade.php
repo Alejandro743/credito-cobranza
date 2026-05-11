@@ -77,7 +77,7 @@ $badgeEstado = [
                 $estiloEstado = $badgeEstado[$p->estado] ?? 'background:#F4F4F4;color:#4A4A4A;border:1px solid #CBCBCB;';
             @endphp
             <tr wire:key="a-{{ $p->id }}">
-                <td class="ds-sticky-col" style="height:1px;">
+                <td data-label="Pedido / Cliente" class="ds-sticky-col" style="height:1px;">
                     <div style="display:flex;align-items:stretch;height:100%;">
                         <div style="width:110px;padding:10px 12px;border-right:1px solid #e5e7eb;font-family:monospace;font-size:11px;color:#6D8196;font-weight:700;display:flex;align-items:center;justify-content:center;">{{ $p->numero }}</div>
                         <div style="flex:1;padding:10px 12px;">
@@ -86,15 +86,15 @@ $badgeEstado = [
                         </div>
                     </div>
                 </td>
-                <td style="text-align:center;">
+                <td data-label="Estado" style="text-align:center;">
                     <span class="ds-badge" style="{{ $estiloEstado }}">{{ ucfirst($p->estado) }}</span>
                 </td>
-                <td style="text-align:center;">{{ $p->vendedor->user->name ?? '—' }}</td>
-                <td style="text-align:center;">{{ $p->updated_at->format('d/m/Y') }}</td>
-                <td style="text-align:center;font-weight:700;color:#4A4A4A;">{{ $p->total_pagar > 0 ? number_format($p->total_pagar, 2) : '—' }}</td>
-                <td style="text-align:center;font-weight:700;color:#10B981;">{{ number_format($pagado, 2) }}</td>
-                <td style="text-align:center;font-weight:700;color:{{ $saldo > 0 ? '#DC2626' : '#4A4A4A' }};">{{ number_format($saldo, 2) }}</td>
-                <td style="text-align:center;">
+                <td data-label="Vendedor" style="text-align:center;">{{ $p->vendedor->user->name ?? '—' }}</td>
+                <td data-label="Fecha" style="text-align:center;">{{ $p->updated_at->format('d/m/Y') }}</td>
+                <td data-label="Total Bs." style="text-align:center;font-weight:700;color:#4A4A4A;">{{ $p->total_pagar > 0 ? number_format($p->total_pagar, 2) : '—' }}</td>
+                <td data-label="Pagado Bs." style="text-align:center;font-weight:700;color:#10B981;">{{ number_format($pagado, 2) }}</td>
+                <td data-label="Saldo Bs." style="text-align:center;font-weight:700;color:{{ $saldo > 0 ? '#DC2626' : '#4A4A4A' }};">{{ number_format($saldo, 2) }}</td>
+                <td data-label="" style="text-align:center;">
                     <button wire:click="ver({{ $p->id }})" class="ds-btn ds-btn-ghost ds-btn-sm">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

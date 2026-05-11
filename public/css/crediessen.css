@@ -729,3 +729,114 @@ aside .hover\:text-gray-900:hover                     { color: #FFFFFF          
 /* Avatar del usuario (mantiene color pizarra sobre fondo oscuro) */
 aside > div:last-child .bg-lavanda-100                { background: #6D8196              !important; }
 aside > div:last-child .text-lavanda-700              { color: #FFFFFF                   !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   27. CENTRADO GLOBAL DE GRILLAS
+   Todas las cabeceras y datos centrados por defecto.
+   Excepciones: ds-sticky-col queda left (contenido compuesto).
+──────────────────────────────────────────────────────────────*/
+main thead th,
+main thead td     { text-align: center !important; }
+main tbody td,
+main tbody th     { text-align: center !important; }
+
+/* Flex wrappers dentro de celdas → centrar (ej: botones de acción) */
+main tbody td > .flex,
+main tbody th > .flex { justify-content: center !important; }
+
+/* Sticky-col queda left porque tiene contenido compuesto */
+main .ds-sticky-col,
+main thead .ds-sticky-col     { text-align: left !important; }
+main .ds-sticky-col > .flex   { justify-content: flex-start !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   28. OCULTAR DS-SECTION-HEADER
+   El layout (admin-layout / user-layout) genera el page header
+   automáticamente. Los ds-section-header en vistas son redundantes.
+──────────────────────────────────────────────────────────────*/
+main .ds-section-header { display: none !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   29. MOBILE CARDS — tabla → tarjetas apiladas en < 640 px
+   Requiere data-label="COLUMNA" en cada <td> de modo lectura.
+   Las filas de edición (border-l-2) se muestran normalmente.
+──────────────────────────────────────────────────────────────*/
+@media (max-width: 639px) {
+
+    /* Anular min-width forzado en inline style */
+    main table { min-width: unset !important; }
+
+    /* Convertir table elements en bloques */
+    main table,
+    main thead,
+    main tbody,
+    main tfoot { display: block !important; }
+
+    /* Ocultar fila de encabezados (labels van en ::before) */
+    main thead tr { display: none !important; }
+
+    /* Cada fila tbody = tarjeta */
+    main tbody tr {
+        display:       block !important;
+        border:        1px solid #E4E4DA !important;
+        border-radius: 8px !important;
+        margin-bottom: 10px !important;
+        overflow:      hidden !important;
+        background:    #fff !important;
+        box-shadow:    0 1px 4px rgba(74,74,74,.05) !important;
+    }
+
+    /* Cada celda = fila label → valor */
+    main tbody td,
+    main tbody th {
+        display:         flex !important;
+        justify-content: space-between !important;
+        align-items:     center !important;
+        padding:         9px 14px !important;
+        border-bottom:   1px solid #F0F0E8 !important;
+        border-radius:   0 !important;
+        text-align:      right !important;
+        min-height:      36px;
+    }
+    main tbody td:last-child,
+    main tbody th:last-child { border-bottom: none !important; }
+
+    /* Label automático desde atributo data-label */
+    main tbody td::before {
+        content:        attr(data-label);
+        font-size:      10px;
+        font-weight:    700;
+        color:          #9CA3AF;
+        text-transform: uppercase;
+        letter-spacing: .5px;
+        margin-right:   8px;
+        flex-shrink:    0;
+        text-align:     left;
+        white-space:    nowrap;
+    }
+
+    /* Flex wrappers en celdas → right-align en mobile */
+    main tbody td > .flex { justify-content: flex-end !important; }
+
+    /* Celdas con colspan (empty-state) → block sin label */
+    main tbody td[colspan] { display: block !important; }
+    main tbody td[colspan]::before { content: none !important; }
+
+    /* Sticky-col en mobile: estático, sin flex interno horizontal */
+    main .ds-sticky-col {
+        position:   static !important;
+        box-shadow: none   !important;
+        z-index:    auto   !important;
+    }
+    main .ds-sticky-col > div[style*="display:flex"],
+    main .ds-sticky-col > div[style*="display: flex"] {
+        flex-direction: column !important;
+        height:         auto   !important;
+    }
+    main .ds-sticky-col > div > div {
+        width:        auto !important;
+        border-right: none !important;
+        height:       auto !important;
+        padding:      2px 0 !important;
+    }
+}

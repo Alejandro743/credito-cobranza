@@ -266,7 +266,7 @@
             {{-- Fila normal --}}
             @else
             <tr wire:key="row-{{ $c->id }}">
-                <td class="sticky-combined" style="border:0.5px solid #e5e7eb; height:1px;">
+                <td data-label="CI / Nombre" class="sticky-combined" style="border:0.5px solid #e5e7eb; height:1px;">
                     <div style="display:flex; align-items:stretch; height:100%;">
                         <div style="width:110px; padding:8px 10px; text-align:center; border-right:1.5px solid #d1d5db; flex-shrink:0; font-family:monospace; font-size:11px; color:#534AB7; display:flex; align-items:center; justify-content:center;">{{ $c->ci }}</div>
                         <div style="flex:1; padding:8px 10px; text-align:center;">
@@ -274,15 +274,15 @@
                         </div>
                     </div>
                 </td>
-                <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-size:12px; color:#534AB7;">{{ $c->telefono }}</td>
-                <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-size:12px; color:#534AB7;">{{ $c->ciudad }}</td>
-                <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb;">
+                <td data-label="Teléfono" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-size:12px; color:#534AB7;">{{ $c->telefono }}</td>
+                <td data-label="Ciudad" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-size:12px; color:#534AB7;">{{ $c->ciudad }}</td>
+                <td data-label="Estado" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb;">
                     <span class="inline-flex items-center text-xs font-semibold"
                           style="{{ $c->active ? 'background:#F0FDF4; color:#15803D;' : 'background:#f3f4f6; color:#6b7280;' }} padding:3px 10px; border-radius:6px;">
                         {{ $c->active ? 'Activo' : 'Inactivo' }}
                     </span>
                 </td>
-                <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb;">
+                <td data-label="" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb;">
                     <div class="flex items-center justify-center gap-1.5">
                         <button wire:click="ver({{ $c->id }})" title="Ver detalle"
                                 class="p-1.5 rounded-lg transition-colors hover:bg-melocoton-50"

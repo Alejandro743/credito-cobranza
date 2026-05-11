@@ -130,21 +130,21 @@
                 <tbody class="divide-y divide-gray-50">
                     @foreach ($items as $item)
                     <tr class="hover:bg-gray-50 transition-colors {{ !$item->active ? 'opacity-50' : '' }}">
-                        <td class="px-4 py-3 font-medium text-gray-800">
+                        <td data-label="Producto" class="px-4 py-3 font-medium text-gray-800">
                             {{ $item->maestraItem->product->name ?? '—' }}
                         </td>
-                        <td class="px-4 py-3 text-right text-gray-600">S/ {{ number_format($item->maestraItem->precio_base ?? 0, 2) }}</td>
-                        <td class="px-4 py-3 text-right text-melocoton-600">S/ {{ number_format($item->descuento, 2) }}</td>
-                        <td class="px-4 py-3 text-right font-semibold text-mint-700">S/ {{ number_format($item->precio_final, 2) }}</td>
-                        <td class="px-4 py-3 text-right text-gray-600">{{ number_format($item->stock_asignado, 2) }}</td>
-                        <td class="px-4 py-3 text-center">
+                        <td data-label="Precio Base" class="px-4 py-3 text-right text-gray-600">S/ {{ number_format($item->maestraItem->precio_base ?? 0, 2) }}</td>
+                        <td data-label="Descuento" class="px-4 py-3 text-right text-melocoton-600">S/ {{ number_format($item->descuento, 2) }}</td>
+                        <td data-label="Precio Final" class="px-4 py-3 text-right font-semibold text-mint-700">S/ {{ number_format($item->precio_final, 2) }}</td>
+                        <td data-label="Stock Asig." class="px-4 py-3 text-right text-gray-600">{{ number_format($item->stock_asignado, 2) }}</td>
+                        <td data-label="Estado" class="px-4 py-3 text-center">
                             <button wire:click="toggleItemActive({{ $item->id }})"
                                     class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium transition-colors
                                         {{ $item->active ? 'bg-mint-100 text-mint-700 hover:bg-mint-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
                                 {{ $item->active ? 'Activo' : 'Inactivo' }}
                             </button>
                         </td>
-                        <td class="px-4 py-3 text-center">
+                        <td data-label="" class="px-4 py-3 text-center">
                             <button wire:click="removeItem({{ $item->id }})"
                                     wire:confirm="¿Eliminar este producto de la lista?"
                                     class="text-red-400 hover:text-red-600 transition-colors p-1">
@@ -249,16 +249,16 @@
             <tbody class="divide-y divide-gray-50">
                 @foreach ($derivadas as $d)
                 <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="px-5 py-3 font-medium text-gray-800">{{ $d->name }}</td>
-                    <td class="px-5 py-3 text-gray-600">{{ $d->listaMaestra->name ?? '—' }}</td>
-                    <td class="px-5 py-3 text-center">
+                    <td data-label="Nombre" class="px-5 py-3 font-medium text-gray-800">{{ $d->name }}</td>
+                    <td data-label="Lista Maestra" class="px-5 py-3 text-gray-600">{{ $d->listaMaestra->name ?? '—' }}</td>
+                    <td data-label="Estado" class="px-5 py-3 text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
                             {{ $d->estado === 'activa' ? 'bg-mint-100 text-mint-700' : ($d->estado === 'cerrada' ? 'bg-gray-100 text-gray-600' : 'bg-melocoton-100 text-melocoton-700') }}">
                             {{ ucfirst($d->estado) }}
                         </span>
                     </td>
-                    <td class="px-5 py-3 text-center text-gray-500">{{ $d->created_at->format('d/m/Y') }}</td>
-                    <td class="px-5 py-3">
+                    <td data-label="Creada" class="px-5 py-3 text-center text-gray-500">{{ $d->created_at->format('d/m/Y') }}</td>
+                    <td data-label="" class="px-5 py-3">
                         <div class="flex items-center justify-center gap-2">
                             <button wire:click="viewItems({{ $d->id }})" title="Productos"
                                     class="text-celeste-500 hover:text-celeste-700 transition-colors p-1">

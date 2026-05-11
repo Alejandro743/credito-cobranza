@@ -110,22 +110,22 @@
         };
         @endphp
         <tr wire:key="c-{{ $c['id'] }}">
-            <td class="cc-td" style="font-weight:600; color:#166534;">
+            <td data-label="Cliente" class="cc-td" style="font-weight:600; color:#166534;">
                 {{ ucwords(mb_strtolower($c['nombre'])) }}
                 <span style="font-size:10px; color:#9ca3af; font-weight:400;">({{ $c['total_pedidos'] }} ped.)</span>
             </td>
-            <td class="cc-td" style="text-align:center; font-family:monospace; font-weight:600;">{{ $c['puntualidad'] }}%</td>
-            <td class="cc-td" style="text-align:center; font-family:monospace; font-weight:600; color:{{ $c['mora'] > 20 ? '#B91C1C' : '#374151' }};">{{ $c['mora'] }}%</td>
-            <td class="cc-td" style="text-align:center; font-family:monospace; font-weight:600; color:{{ $c['riesgo'] > 30 ? '#C2410C' : '#374151' }};">{{ $c['riesgo'] }}%</td>
-            <td class="cc-td" style="text-align:center; font-family:monospace; font-weight:600;">{{ $c['recuperacion'] }}%</td>
-            <td class="cc-td" style="text-align:center; font-family:monospace; font-weight:600; color:{{ $c['reprog'] > 20 ? '#C2410C' : '#374151' }};">{{ $c['reprog'] }}%</td>
-            <td class="cc-td" style="text-align:center; font-family:monospace; font-size:14px; font-weight:800; color:#166534;">{{ $c['puntaje'] }}</td>
-            <td class="cc-td" style="text-align:center;">
+            <td data-label="Puntualidad%" class="cc-td" style="text-align:center; font-family:monospace; font-weight:600;">{{ $c['puntualidad'] }}%</td>
+            <td data-label="Mora%" class="cc-td" style="text-align:center; font-family:monospace; font-weight:600; color:{{ $c['mora'] > 20 ? '#B91C1C' : '#374151' }};">{{ $c['mora'] }}%</td>
+            <td data-label="C.Riesgo%" class="cc-td" style="text-align:center; font-family:monospace; font-weight:600; color:{{ $c['riesgo'] > 30 ? '#C2410C' : '#374151' }};">{{ $c['riesgo'] }}%</td>
+            <td data-label="Recuperación%" class="cc-td" style="text-align:center; font-family:monospace; font-weight:600;">{{ $c['recuperacion'] }}%</td>
+            <td data-label="Reprog.%" class="cc-td" style="text-align:center; font-family:monospace; font-weight:600; color:{{ $c['reprog'] > 20 ? '#C2410C' : '#374151' }};">{{ $c['reprog'] }}%</td>
+            <td data-label="Puntaje" class="cc-td" style="text-align:center; font-family:monospace; font-size:14px; font-weight:800; color:#166534;">{{ $c['puntaje'] }}</td>
+            <td data-label="Calificación" class="cc-td" style="text-align:center;">
                 <span class="cc-badge" style="background:{{ $calBadge['bg'] }}; color:{{ $calBadge['cl'] }};">
                     {{ $c['calificacion'] }}
                 </span>
             </td>
-            <td class="cc-td" style="text-align:center;">
+            <td data-label="" class="cc-td" style="text-align:center;">
                 <button wire:click="verDetalle({{ $c['id'] }})" title="Ver detalle"
                         style="padding:4px 10px; border-radius:6px; border:1px solid #d1fae5; background:#f0fdf4; color:#15803D; cursor:pointer; display:inline-flex; align-items:center; gap:5px; font-size:11px; font-weight:600;">
                     <svg style="width:13px;height:13px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -392,29 +392,29 @@ $kpis_detalle = [
         $rsColor = $ped['riesgo'] > 30 ? '#B91C1C' : ($ped['riesgo'] > 10 ? '#854F0B' : '#15803D');
         @endphp
         <tr style="border-bottom:0.5px solid #e5e7eb;">
-            <td style="padding:10px 12px; font-weight:700; color:#374151; font-family:monospace;">{{ $ped['numero'] }}</td>
-            <td style="padding:10px 12px; color:#374151;">{{ ucwords(mb_strtolower($ped['vendedor'])) }}</td>
-            <td style="padding:10px 12px; text-align:center; color:#6b7280; font-family:monospace;">
+            <td data-label="Pedido" style="padding:10px 12px; font-weight:700; color:#374151; font-family:monospace;">{{ $ped['numero'] }}</td>
+            <td data-label="Vendedor" style="padding:10px 12px; color:#374151;">{{ ucwords(mb_strtolower($ped['vendedor'])) }}</td>
+            <td data-label="Cuotas" style="padding:10px 12px; text-align:center; color:#6b7280; font-family:monospace;">
                 {{ $ped['al_dia'] }}/{{ $ped['cerradas'] }}
                 <span style="color:#9ca3af; font-size:10px;">({{ $ped['total_cuotas'] }} total)</span>
             </td>
-            <td style="padding:10px 12px; text-align:center; font-weight:700; font-family:monospace; color:{{ $ptColor }};">{{ $ped['puntualidad'] }}%</td>
-            <td style="padding:10px 12px; text-align:center;">
+            <td data-label="Puntualidad" style="padding:10px 12px; text-align:center; font-weight:700; font-family:monospace; color:{{ $ptColor }};">{{ $ped['puntualidad'] }}%</td>
+            <td data-label="Mora" style="padding:10px 12px; text-align:center;">
                 @if($ped['en_mora'])
                 <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#FEF2F2; color:#B91C1C;">Sí</span>
                 @else
                 <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#F0FDF4; color:#15803D;">No</span>
                 @endif
             </td>
-            <td style="padding:10px 12px; text-align:center; font-weight:700; font-family:monospace; color:{{ $rsColor }};">{{ $ped['riesgo'] }}%</td>
-            <td style="padding:10px 12px; text-align:center;">
+            <td data-label="C. Riesgo" style="padding:10px 12px; text-align:center; font-weight:700; font-family:monospace; color:{{ $rsColor }};">{{ $ped['riesgo'] }}%</td>
+            <td data-label="Reprog." style="padding:10px 12px; text-align:center;">
                 @if($ped['reprogramado'])
                 <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#FEF3C7; color:#854F0B;">Sí</span>
                 @else
                 <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#F0FDF4; color:#15803D;">No</span>
                 @endif
             </td>
-            <td style="padding:10px 12px; text-align:right; font-weight:600; font-family:monospace; color:#374151;">
+            <td data-label="Monto" style="padding:10px 12px; text-align:right; font-weight:600; font-family:monospace; color:#374151;">
                 Bs {{ number_format($ped['monto'], 2) }}
             </td>
         </tr>

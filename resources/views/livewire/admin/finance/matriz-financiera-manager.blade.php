@@ -308,19 +308,19 @@
                 @else
                 {{-- FILA NORMAL --}}
                 <tr wire:key="m-{{ $m->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td class="px-4 py-3 font-mono text-xs text-gray-600">
+                    <td data-label="Ciclo" class="px-4 py-3 font-mono text-xs text-gray-600">
                         {{ $m->cycle?->code ?? '—' }}
                     </td>
-                    <td class="px-4 py-3 font-mono text-xs text-lavanda-700 font-semibold">{{ $m->code }}</td>
-                    <td class="px-4 py-3 text-sm text-gray-700">
+                    <td data-label="Código" class="px-4 py-3 font-mono text-xs text-lavanda-700 font-semibold">{{ $m->code }}</td>
+                    <td data-label="Descripción" class="px-4 py-3 text-sm text-gray-700">
                         {{ $m->description ? Str::limit($m->description, 60) : '—' }}
                     </td>
-                    <td class="px-4 py-3 text-center">
+                    <td data-label="Estado" class="px-4 py-3 text-center">
                         <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $m->active ? 'bg-mint-100 text-mint-700' : 'bg-red-100 text-red-600' }}">
                             {{ $m->active ? 'Activa' : 'Inactiva' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3 text-right">
+                    <td data-label="" class="px-4 py-3 text-right">
                         <div class="flex items-center justify-end gap-1">
                             <button wire:click="startEdit({{ $m->id }})" title="Editar"
                                     class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">

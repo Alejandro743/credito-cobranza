@@ -244,20 +244,20 @@
                 @else
                 {{-- FILA NORMAL --}}
                 <tr wire:key="c-{{ $c->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td class="px-4 py-3">
+                    <td data-label="ID" class="px-4 py-3">
                         <span class="font-mono text-xs font-semibold text-celeste-700">{{ $c->id_ln ?? '—' }}</span>
                     </td>
-                    <td class="px-4 py-3 font-mono text-xs text-gray-600">{{ $c->ci }}</td>
-                    <td class="px-4 py-3 font-medium text-gray-800">{{ $c->usuario->name ?? '—' }}</td>
-                    <td class="px-4 py-3 text-gray-700">{{ $c->usuario->apellido ?? '—' }}</td>
-                    <td class="px-4 py-3 text-gray-500 hidden md:table-cell font-mono text-xs">{{ $c->telefono }}</td>
-                    <td class="px-4 py-3 text-gray-500 hidden lg:table-cell text-xs">{{ $c->ciudad }}</td>
-                    <td class="px-4 py-3 text-center">
+                    <td data-label="CI" class="px-4 py-3 font-mono text-xs text-gray-600">{{ $c->ci }}</td>
+                    <td data-label="Nombre" class="px-4 py-3 font-medium text-gray-800">{{ $c->usuario->name ?? '—' }}</td>
+                    <td data-label="Apellido" class="px-4 py-3 text-gray-700">{{ $c->usuario->apellido ?? '—' }}</td>
+                    <td data-label="Teléfono" class="px-4 py-3 text-gray-500 hidden md:table-cell font-mono text-xs">{{ $c->telefono }}</td>
+                    <td data-label="Ciudad" class="px-4 py-3 text-gray-500 hidden lg:table-cell text-xs">{{ $c->ciudad }}</td>
+                    <td data-label="Estado" class="px-4 py-3 text-center">
                         <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $c->active ? 'bg-mint-100 text-mint-700' : 'bg-red-100 text-red-600' }}">
                             {{ $c->active ? 'Activo' : 'Inactivo' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3 text-right">
+                    <td data-label="" class="px-4 py-3 text-right">
                         <div class="flex items-center justify-end gap-1">
                             <button wire:click="startEdit({{ $c->id }})" title="Editar"
                                     class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">

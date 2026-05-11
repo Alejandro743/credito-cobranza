@@ -194,7 +194,7 @@
                 @else
                 {{-- FILA EN MODO LECTURA --}}
                 <tr wire:key="p-{{ $p->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td class="px-3 py-2">
+                    <td data-label="" class="px-3 py-2">
                         @if($p->foto_url)
                         <img src="{{ $p->foto_url }}" alt="{{ $p->name }}"
                              class="w-10 h-10 rounded-lg object-cover border border-gray-100"
@@ -208,17 +208,17 @@
                             </svg>
                         </div>
                     </td>
-                    <td class="px-4 py-3 font-mono text-xs text-gray-500 font-medium">{{ $p->code }}</td>
-                    <td class="px-4 py-3 font-medium text-gray-800">{{ $p->name }}</td>
-                    <td class="px-4 py-3 text-gray-600 hidden md:table-cell">{{ $p->unidad?->abreviatura ?? $p->unidad?->name ?? '—' }}</td>
-                    <td class="px-4 py-3 text-gray-600 hidden sm:table-cell">{{ $p->categoria?->name ?? '—' }}</td>
-                    <td class="px-4 py-3 text-center">
+                    <td data-label="Código" class="px-4 py-3 font-mono text-xs text-gray-500 font-medium">{{ $p->code }}</td>
+                    <td data-label="Nombre" class="px-4 py-3 font-medium text-gray-800">{{ $p->name }}</td>
+                    <td data-label="Unidad" class="px-4 py-3 text-gray-600 hidden md:table-cell">{{ $p->unidad?->abreviatura ?? $p->unidad?->name ?? '—' }}</td>
+                    <td data-label="Categoría" class="px-4 py-3 text-gray-600 hidden sm:table-cell">{{ $p->categoria?->name ?? '—' }}</td>
+                    <td data-label="Estado" class="px-4 py-3 text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
                             {{ $p->active ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-500' }}">
                             {{ $p->active ? 'Activo' : 'Inactivo' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3">
+                    <td data-label="" class="px-4 py-3">
                         <div class="flex items-center justify-end gap-1">
                             <button wire:click="startEdit({{ $p->id }})" title="Editar"
                                     class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">

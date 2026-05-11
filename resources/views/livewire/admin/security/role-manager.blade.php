@@ -204,7 +204,7 @@
             @else
             {{-- FILA NORMAL --}}
             <tr wire:key="role-{{ $role->id }}" class="hover:bg-gray-50 transition-colors">
-                <td class="px-4 py-3.5">
+                <td data-label="Rol" class="px-4 py-3.5">
                     <div class="flex items-center gap-2.5">
                         <div class="w-7 h-7 rounded-lg bg-lavanda-100 flex items-center justify-center flex-shrink-0">
                             <svg class="w-3.5 h-3.5 text-lavanda-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
@@ -212,10 +212,10 @@
                         <span class="font-medium text-gray-800 capitalize">{{ $role->name }}</span>
                     </div>
                 </td>
-                <td class="px-4 py-3.5 text-center">
+                <td data-label="Usuarios" class="px-4 py-3.5 text-center">
                     <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold">{{ $role->users_count }}</span>
                 </td>
-                <td class="px-4 py-3.5 text-center">
+                <td data-label="Estado" class="px-4 py-3.5 text-center">
                     @if ($role->name === 'admin')
                     <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-lavanda-100 text-lavanda-700">Siempre activo</span>
                     @elseif ($role->activo ?? true)
@@ -224,7 +224,7 @@
                     <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-600">Inactivo</span>
                     @endif
                 </td>
-                <td class="px-4 py-3.5 text-right">
+                <td data-label="" class="px-4 py-3.5 text-right">
                     <div class="flex items-center justify-end gap-1">
                         <button wire:click="openPermissions({{ $role->id }})"
                                 class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-lavanda-50 hover:bg-lavanda-100 text-lavanda-600 text-xs font-medium transition-colors">

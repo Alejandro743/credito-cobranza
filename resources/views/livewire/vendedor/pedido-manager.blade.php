@@ -550,7 +550,7 @@ $estilosActivos = [
         <tbody>
             @forelse ($pedidos as $p)
             <tr wire:key="p-{{ $p->id }}">
-                <td class="sticky-combined" style="border:0.5px solid #e5e7eb; height:1px;">
+                <td data-label="Pedido / Cliente" class="sticky-combined" style="border:0.5px solid #e5e7eb; height:1px;">
                     <div style="display:flex; align-items:stretch; height:100%;">
                         <div style="width:110px; padding:8px 10px; text-align:center; border-right:1.5px solid #d1d5db; flex-shrink:0; font-family:monospace; font-size:11px; color:#534AB7; display:flex; align-items:center; justify-content:center;">{{ $p->numero }}</div>
                         <div style="flex:1; padding:8px 10px; text-align:center;">
@@ -559,29 +559,29 @@ $estilosActivos = [
                         </div>
                     </div>
                 </td>
-                <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb;">
+                <td data-label="Estado" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb;">
                     <span class="inline-flex items-center text-xs font-semibold" style="{{ $p->estado_badge['style'] ?? '' }} padding:4px 10px; border-radius:6px;">
                         {{ $p->estado_badge['label'] }}
                     </span>
                 </td>
-                <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-size:12px; color:#534AB7;">
+                <td data-label="Solicitud" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-size:12px; color:#534AB7;">
                     {{ $p->created_at->format('d/m/Y') }}
                 </td>
-                <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-size:12px; color:#534AB7;">
+                <td data-label="Aprobación" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-size:12px; color:#534AB7;">
                     @if ($p->estado === 'aprobado' && $p->updated_at)
                         {{ $p->updated_at->format('d/m/Y') }}
                     @else
                         <span style="color:#d1d5db;">—</span>
                     @endif
                 </td>
-                <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-weight:700; color:#534AB7;">
+                <td data-label="Total Bs." style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-weight:700; color:#534AB7;">
                     @if ($p->total_pagar > 0)
                         {{ number_format($p->total_pagar, 2) }}
                     @else
                         <span style="color:#d1d5db;">—</span>
                     @endif
                 </td>
-                <td style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb;">
+                <td data-label="" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb;">
                     <button wire:click="ver({{ $p->id }})"
                             class="p-1.5 rounded-lg hover:bg-melocoton-50 text-melocoton-500 transition-colors"
                             title="Ver detalle">

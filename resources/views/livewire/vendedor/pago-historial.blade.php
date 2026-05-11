@@ -39,33 +39,33 @@
             @php $esAnulado = $pg->estado === 'anulado'; @endphp
             <tr wire:key="pg-{{ $pg->id }}" class="hover:bg-gray-50 transition-colors" style="cursor:pointer; {{ $esAnulado ? 'opacity:0.55;' : '' }}"
                 wire:click="verPago({{ $pg->id }})">
-                <td style="padding:8px 12px; border:0.5px solid #e5e7eb; font-family:monospace; font-size:11px; color:#92400E; font-weight:700; {{ $esAnulado ? 'text-decoration:line-through;' : '' }}">
+                <td data-label="Código" style="padding:8px 12px; border:0.5px solid #e5e7eb; font-family:monospace; font-size:11px; color:#92400E; font-weight:700; {{ $esAnulado ? 'text-decoration:line-through;' : '' }}">
                     {{ $pg->numero }}
                 </td>
-                <td style="padding:8px 12px; border:0.5px solid #e5e7eb; font-family:monospace; font-size:11px; color:#374151; font-weight:600;">
+                <td data-label="Pedido" style="padding:8px 12px; border:0.5px solid #e5e7eb; font-family:monospace; font-size:11px; color:#374151; font-weight:600;">
                     {{ $pg->pedido->numero }}
                 </td>
-                <td style="padding:8px 12px; border:0.5px solid #e5e7eb;">
+                <td data-label="Cliente" style="padding:8px 12px; border:0.5px solid #e5e7eb;">
                     <p style="font-weight:600; font-size:13px; color:#92400E; margin:0;">{{ $pg->pedido->cliente->nombre_completo }}</p>
                     <p style="font-size:11px; color:#9ca3af; margin:0;">CI: {{ $pg->pedido->cliente->ci ?? '—' }}</p>
                 </td>
-                <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-weight:700; color:#374151;">
+                <td data-label="Cuotas" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-weight:700; color:#374151;">
                     {{ $pg->cantidad_cuotas }}
                 </td>
-                <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:right; font-family:monospace; font-weight:700; color:{{ $esAnulado ? '#9ca3af' : '#92400E' }}; font-size:12px;">
+                <td data-label="Monto" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:right; font-family:monospace; font-weight:700; color:{{ $esAnulado ? '#9ca3af' : '#92400E' }}; font-size:12px;">
                     Bs. {{ number_format($pg->monto_total, 2) }}
                 </td>
-                <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-size:12px; color:#374151;">
+                <td data-label="Fecha" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-size:12px; color:#374151;">
                     {{ $pg->created_at->format('d/m/Y') }}
                 </td>
-                <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
+                <td data-label="Estado" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
                     @if($esAnulado)
                     <span class="vph-badge" style="background:#FEF2F2; color:#B91C1C;">Anulado</span>
                     @else
                     <span class="vph-badge" style="background:#FEF3C7; color:#92400E;">Activo</span>
                     @endif
                 </td>
-                <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; width:48px;">
+                <td data-label="" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; width:48px;">
                     <button wire:click.stop="verPago({{ $pg->id }})" title="Ver detalle"
                             class="p-1.5 rounded-lg hover:bg-amber-50 transition-colors" style="color:#92400E;">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

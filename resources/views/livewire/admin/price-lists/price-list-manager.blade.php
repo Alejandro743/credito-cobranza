@@ -49,12 +49,12 @@
             <tbody class="divide-y divide-gray-50">
                 @forelse($lists as $list)
                 <tr wire:key="pricelist-{{ $list->id }}" class="hover:bg-gray-50/50 transition-colors">
-                    <td class="px-4 py-3.5 font-medium text-gray-800">{{ $list->name }}
+                    <td data-label="Nombre" class="px-4 py-3.5 font-medium text-gray-800">{{ $list->name }}
                         @if($list->description)
                         <p class="text-xs text-gray-400 font-normal mt-0.5">{{ Str::limit($list->description, 60) }}</p>
                         @endif
                     </td>
-                    <td class="px-4 py-3.5 text-gray-500 text-xs hidden md:table-cell">
+                    <td data-label="Vigencia" class="px-4 py-3.5 text-gray-500 text-xs hidden md:table-cell">
                         @if($list->valid_from || $list->valid_to)
                         <span>{{ $list->valid_from?->format('d/m/Y') ?? '—' }}</span>
                         <span class="text-gray-300 mx-1">→</span>
@@ -63,12 +63,12 @@
                         <span class="text-gray-300">Sin vencimiento</span>
                         @endif
                     </td>
-                    <td class="px-4 py-3.5">
+                    <td data-label="Productos" class="px-4 py-3.5">
                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-celeste-100 text-celeste-700">
                             {{ $list->items_count }} producto{{ $list->items_count !== 1 ? 's' : '' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3.5 hidden lg:table-cell">
+                    <td data-label="Grupos" class="px-4 py-3.5 hidden lg:table-cell">
                         @if($list->groups->count())
                         <div class="flex flex-wrap gap-1">
                             @foreach($list->groups->take(3) as $g)
@@ -82,13 +82,13 @@
                         <span class="text-gray-300 text-xs">Sin grupos</span>
                         @endif
                     </td>
-                    <td class="px-4 py-3.5">
+                    <td data-label="Estado" class="px-4 py-3.5">
                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium {{ $list->active ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-500' }}">
                             <span class="w-1.5 h-1.5 rounded-full {{ $list->active ? 'bg-mint-500' : 'bg-gray-400' }}"></span>
                             {{ $list->active ? 'Activa' : 'Inactiva' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3.5">
+                    <td data-label="" class="px-4 py-3.5">
                         <div class="flex items-center justify-end gap-1">
                             <button wire:click="openItems({{ $list->id }})"
                                     class="p-1.5 rounded-lg hover:bg-lavanda-50 text-lavanda-500 transition-colors" title="Ver productos">

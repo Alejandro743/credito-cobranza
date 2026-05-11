@@ -251,7 +251,7 @@
                 {{-- ── Fila normal ──────────────────────────────────────────── --}}
                 @else
                 <tr wire:key="u-{{ $user->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td class="px-5 py-3">
+                    <td data-label="Nombre" class="px-5 py-3">
                         <div class="flex items-center gap-3">
                             <div class="w-8 h-8 rounded-full bg-lavanda-100 flex items-center justify-center text-lavanda-700 font-bold text-xs flex-shrink-0">
                                 {{ strtoupper(substr($user->name, 0, 1)) }}
@@ -259,10 +259,10 @@
                             <p class="font-medium text-gray-800 text-sm">{{ $user->name }}</p>
                         </div>
                     </td>
-                    <td class="px-5 py-3 hidden md:table-cell">
+                    <td data-label="Usuario" class="px-5 py-3 hidden md:table-cell">
                         <span class="font-mono text-xs text-gray-500">{{ $user->email }}</span>
                     </td>
-                    <td class="px-5 py-3 text-center hidden sm:table-cell">
+                    <td data-label="Tipo" class="px-5 py-3 text-center hidden sm:table-cell">
                         @php
                             $tipoClases = [
                                 'administrativo' => 'bg-lavanda-100 text-lavanda-700',
@@ -275,7 +275,7 @@
                             {{ ucfirst($user->tipo ?? 'administrativo') }}
                         </span>
                     </td>
-                    <td class="px-5 py-3 text-center hidden sm:table-cell">
+                    <td data-label="Rol" class="px-5 py-3 text-center hidden sm:table-cell">
                         @php $roleName = $user->getRoleNames()->first() ?? '—'; @endphp
                         <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium capitalize
                             @switch($roleName)
@@ -287,13 +287,13 @@
                             {{ $roleName }}
                         </span>
                     </td>
-                    <td class="px-5 py-3 text-center">
+                    <td data-label="Estado" class="px-5 py-3 text-center">
                         <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium
                                      {{ $user->active ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-500' }}">
                             {{ $user->active ? 'Activo' : 'Inactivo' }}
                         </span>
                     </td>
-                    <td class="px-5 py-3 text-right">
+                    <td data-label="" class="px-5 py-3 text-right">
                         <div class="inline-flex items-center gap-0.5">
                             {{-- Toggle activo --}}
                             <button wire:click="toggleActive({{ $user->id }})"

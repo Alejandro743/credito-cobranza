@@ -34,22 +34,22 @@
     <tbody>
     @forelse($registros as $r)
     <tr wire:key="mc-{{ $r->id }}">
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; font-weight:600; color:#374151;">{{ $r->nombre }}</td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
+        <td data-label="Nombre" style="padding:8px 12px; border:0.5px solid #e5e7eb; font-weight:600; color:#374151;">{{ $r->nombre }}</td>
+        <td data-label="Afecta" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
             @if($r->afecta_mora)
             <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#FEF2F2; color:#B91C1C;">Sí afecta</span>
             @else
             <span style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; background:#F0FDF4; color:#15803D;">No afecta</span>
             @endif
         </td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
+        <td data-label="Estado" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
             <button wire:click="toggleActivo({{ $r->id }})"
                     style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; border:none; cursor:pointer;
                            background:{{ $r->activo ? '#DCFCE7' : '#f3f4f6' }}; color:{{ $r->activo ? '#15803D' : '#6b7280' }};">
                 {{ $r->activo ? 'Activo' : 'Inactivo' }}
             </button>
         </td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
+        <td data-label="" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
             <div style="display:flex; gap:4px; justify-content:center;">
                 <button wire:click="edit({{ $r->id }})" title="Editar"
                         style="padding:4px; border-radius:6px; border:1px solid #ddd6fe; background:#faf5ff; color:#7c3aed; cursor:pointer;">

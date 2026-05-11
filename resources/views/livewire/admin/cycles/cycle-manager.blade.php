@@ -139,11 +139,11 @@
                 @else
                 {{-- Normal row --}}
                 <tr wire:key="c-{{ $cycle->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td class="px-5 py-3.5 font-mono text-xs text-lavanda-700 font-semibold">{{ $cycle->code }}</td>
-                    <td class="px-5 py-3.5 font-medium text-gray-800">{{ $cycle->name }}</td>
-                    <td class="px-5 py-3.5 text-gray-500 text-xs hidden md:table-cell">{{ $cycle->start_date->format('d/m/Y') }}</td>
-                    <td class="px-5 py-3.5 text-gray-500 text-xs hidden md:table-cell">{{ $cycle->end_date->format('d/m/Y') }}</td>
-                    <td class="px-5 py-3.5 text-center">
+                    <td data-label="Código" class="px-5 py-3.5 font-mono text-xs text-lavanda-700 font-semibold">{{ $cycle->code }}</td>
+                    <td data-label="Descripción" class="px-5 py-3.5 font-medium text-gray-800">{{ $cycle->name }}</td>
+                    <td data-label="Inicio" class="px-5 py-3.5 text-gray-500 text-xs hidden md:table-cell">{{ $cycle->start_date->format('d/m/Y') }}</td>
+                    <td data-label="Fin" class="px-5 py-3.5 text-gray-500 text-xs hidden md:table-cell">{{ $cycle->end_date->format('d/m/Y') }}</td>
+                    <td data-label="Estado" class="px-5 py-3.5 text-center">
                         @php
                             $bc = match($cycle->status) {
                                 'abierto' => 'bg-mint-100 text-mint-700',
@@ -156,7 +156,7 @@
                         @endphp
                         <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $bc }}">{{ $label }}</span>
                     </td>
-                    <td class="px-5 py-3.5 text-right">
+                    <td data-label="" class="px-5 py-3.5 text-right">
                         <div class="flex items-center gap-1 justify-end">
                             @if ($cycle->status === 'abierto')
                                 <button wire:click="changeStatus({{ $cycle->id }},'cerrado')"

@@ -315,30 +315,30 @@
                 @else
                 {{-- FILA NORMAL --}}
                 <tr wire:key="prod-{{ $p->id }}" class="{{ $inLista ? 'hover:bg-gray-50' : 'hover:bg-gray-50 opacity-60' }} transition-colors">
-                    <td class="px-3 py-3 text-center font-mono text-xs text-gray-500">{{ $p->code }}</td>
-                    <td class="px-4 py-3 text-center font-medium text-gray-800">{{ $p->name }}</td>
-                    <td class="px-4 py-3 text-center text-gray-700">
+                    <td data-label="Código" class="px-3 py-3 text-center font-mono text-xs text-gray-500">{{ $p->code }}</td>
+                    <td data-label="Producto" class="px-4 py-3 text-center font-medium text-gray-800">{{ $p->name }}</td>
+                    <td data-label="Precio Base" class="px-4 py-3 text-center text-gray-700">
                         @if ($inLista) Bs {{ number_format($item->precio_base, 2) }}
                         @else <span class="text-gray-300">—</span> @endif
                     </td>
-                    <td class="px-4 py-3 text-center text-gray-700">
+                    <td data-label="Puntos" class="px-4 py-3 text-center text-gray-700">
                         @if ($inLista) {{ $item->puntos }}
                         @else <span class="text-gray-300">—</span> @endif
                     </td>
-                    <td class="px-4 py-3 text-center text-gray-500 hidden lg:table-cell text-xs">
+                    <td data-label="St. Inicial" class="px-4 py-3 text-center text-gray-500 hidden lg:table-cell text-xs">
                         @if ($inLista) {{ number_format($item->stock_inicial, 2) }}
                         @else <span class="text-gray-300">—</span> @endif
                     </td>
-                    <td class="px-4 py-3 text-center text-gray-500 hidden lg:table-cell text-xs">
+                    <td data-label="Consumido" class="px-4 py-3 text-center text-gray-500 hidden lg:table-cell text-xs">
                         @if ($inLista) {{ number_format($item->stock_consumido, 2) }}
                         @else <span class="text-gray-300">—</span> @endif
                     </td>
-                    <td class="px-4 py-3 text-center hidden lg:table-cell text-xs
+                    <td data-label="Actual" class="px-4 py-3 text-center hidden lg:table-cell text-xs
                         {{ $inLista && $item->stock_actual <= 0 ? 'text-red-500 font-semibold' : 'text-gray-700' }}">
                         @if ($inLista) {{ number_format($item->stock_actual, 2) }}
                         @else <span class="text-gray-300">—</span> @endif
                     </td>
-                    <td class="px-4 py-3 text-center hidden xl:table-cell">
+                    <td data-label="Tipo Inc." class="px-4 py-3 text-center hidden xl:table-cell">
                         @if ($inLista && $item->tipo_incremento)
                         <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-lavanda-100 text-lavanda-700">
                             {{ $item->tipo_incremento === 'porcentaje' ? '%' : 'Bs' }}
@@ -347,7 +347,7 @@
                         <span class="text-gray-300">—</span>
                         @endif
                     </td>
-                    <td class="px-4 py-3 text-center hidden xl:table-cell text-xs text-gray-700">
+                    <td data-label="Incremento" class="px-4 py-3 text-center hidden xl:table-cell text-xs text-gray-700">
                         @if ($inLista && $item->factor_incremento > 0)
                             {{ $item->tipo_incremento === 'porcentaje'
                                 ? number_format($item->factor_incremento, 2).'%'
@@ -356,12 +356,12 @@
                         <span class="text-gray-300">—</span>
                         @endif
                     </td>
-                    <td class="px-4 py-3 text-center text-xs font-semibold {{ $inLista ? 'text-lavanda-700' : 'text-gray-300' }}">
+                    <td data-label="P. Final" class="px-4 py-3 text-center text-xs font-semibold {{ $inLista ? 'text-lavanda-700' : 'text-gray-300' }}">
                         @if ($inLista) Bs {{ number_format($item->precio_final, 2) }}
                         @else —
                         @endif
                     </td>
-                    <td class="px-4 py-3 text-center">
+                    <td data-label="Estado" class="px-4 py-3 text-center">
                         @if ($inLista)
                         <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold {{ $item->active ? 'bg-mint-100 text-mint-700' : 'bg-red-100 text-red-600' }}">
                             {{ $item->active ? 'Activo' : 'Inactivo' }}
@@ -370,7 +370,7 @@
                         <span class="inline-flex px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-400">Sin agregar</span>
                         @endif
                     </td>
-                    <td class="px-4 py-3 text-center">
+                    <td data-label="" class="px-4 py-3 text-center">
                         <div class="flex items-center justify-center gap-1">
                             @if ($inLista)
                                 <button wire:click="startEditItem({{ $item->id }})" title="Editar"
@@ -865,23 +865,23 @@
                 </tr>
                 @else
                 <tr wire:key="m-{{ $m->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td class="px-4 py-3.5 font-mono text-xs text-lavanda-700 font-semibold">{{ $m->code ?? '—' }}</td>
-                    <td class="px-4 py-3.5 font-medium text-gray-800">{{ $m->name }}</td>
-                    <td class="px-4 py-3.5 hidden md:table-cell">
+                    <td data-label="Código" class="px-4 py-3.5 font-mono text-xs text-lavanda-700 font-semibold">{{ $m->code ?? '—' }}</td>
+                    <td data-label="Nombre" class="px-4 py-3.5 font-medium text-gray-800">{{ $m->name }}</td>
+                    <td data-label="Ciclo" class="px-4 py-3.5 hidden md:table-cell">
                         @if ($m->cycle)
                         <span class="text-xs font-mono text-gray-500">{{ $m->cycle->code }}</span>
                         @else
                         <span class="text-gray-300">—</span>
                         @endif
                     </td>
-                    <td class="px-4 py-3.5 text-center hidden lg:table-cell">
+                    <td data-label="Cuotas" class="px-4 py-3.5 text-center hidden lg:table-cell">
                         @if ($m->cantidad_cuotas)
                         <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-lavanda-100 text-lavanda-700">{{ $m->cantidad_cuotas }}c</span>
                         @else
                         <span class="text-gray-300">—</span>
                         @endif
                     </td>
-                    <td class="px-4 py-3.5 text-center hidden lg:table-cell">
+                    <td data-label="C. Inicial" class="px-4 py-3.5 text-center hidden lg:table-cell">
                         @if ($m->usa_cuota_inicial)
                         <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-melocoton-100 text-melocoton-700">
                             {{ $m->tipo_cuota_inicial === 'porcentaje' ? number_format($m->valor_cuota_inicial, 0).'%' : 'Bs '.number_format($m->valor_cuota_inicial, 2) }}
@@ -890,12 +890,12 @@
                         <span class="text-gray-300">—</span>
                         @endif
                     </td>
-                    <td class="px-4 py-3.5 text-center">
+                    <td data-label="Estado" class="px-4 py-3.5 text-center">
                         <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $m->active ? 'bg-mint-100 text-mint-700' : 'bg-red-100 text-red-600' }}">
                             {{ $m->active ? 'Activa' : 'Inactiva' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3.5 text-right">
+                    <td data-label="" class="px-4 py-3.5 text-right">
                         <div class="flex items-center justify-end gap-1">
                             <button wire:click="startEdit({{ $m->id }})" title="Editar"
                                     class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">

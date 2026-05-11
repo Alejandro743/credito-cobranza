@@ -50,7 +50,7 @@
             @forelse($pagos as $pg)
             @php $esAnulado = $pg->estado === 'anulado'; @endphp
             <tr wire:key="pg-{{ $pg->id }}" style="{{ $esAnulado ? 'opacity:0.6;' : '' }}" wire:click="verPago({{ $pg->id }})" style="cursor:pointer;">
-                <td class="ds-sticky-col" style="height:1px;">
+                <td data-label="Código / Cliente" class="ds-sticky-col" style="height:1px;">
                     <div style="display:flex;align-items:stretch;height:100%;">
                         <div style="width:130px;padding:10px 12px;border-right:1px solid #e5e7eb;font-family:monospace;font-size:11px;color:#6D8196;font-weight:700;display:flex;align-items:center;justify-content:center;{{ $esAnulado ? 'text-decoration:line-through;' : '' }}">
                             {{ $pg->numero }}
@@ -61,19 +61,19 @@
                         </div>
                     </div>
                 </td>
-                <td style="text-align:center;font-family:monospace;font-size:11px;font-weight:600;">{{ $pg->pedido->numero }}</td>
-                <td style="text-align:center;font-weight:700;">{{ $pg->cantidad_cuotas }}</td>
-                <td style="text-align:right;font-family:monospace;font-weight:700;">Bs. {{ number_format($pg->monto_total, 2) }}</td>
-                <td style="text-align:center;font-size:11px;color:#CBCBCB;">{{ $pg->created_at->format('d/m/Y') }}</td>
-                <td style="text-align:center;">
+                <td data-label="Pedido" style="text-align:center;font-family:monospace;font-size:11px;font-weight:600;">{{ $pg->pedido->numero }}</td>
+                <td data-label="Cuotas" style="text-align:center;font-weight:700;">{{ $pg->cantidad_cuotas }}</td>
+                <td data-label="Monto" style="text-align:right;font-family:monospace;font-weight:700;">Bs. {{ number_format($pg->monto_total, 2) }}</td>
+                <td data-label="Fecha" style="text-align:center;font-size:11px;color:#CBCBCB;">{{ $pg->created_at->format('d/m/Y') }}</td>
+                <td data-label="Estado" style="text-align:center;">
                     @if($esAnulado)
                     <span class="ds-badge ds-badge-anulado">Anulado</span>
                     @else
                     <span class="ds-badge" style="background:#DCFCE7;color:#059669;">Activo</span>
                     @endif
                 </td>
-                <td style="font-size:12px;color:#CBCBCB;">{{ $pg->creadoPor->name ?? '—' }}</td>
-                <td style="text-align:center;">
+                <td data-label="Registrado por" style="font-size:12px;color:#CBCBCB;">{{ $pg->creadoPor->name ?? '—' }}</td>
+                <td data-label="" style="text-align:center;">
                     <div style="display:flex;align-items:center;justify-content:center;gap:6px;">
                         <button wire:click.stop="verPago({{ $pg->id }})" class="ds-btn ds-btn-ghost ds-btn-sm">
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

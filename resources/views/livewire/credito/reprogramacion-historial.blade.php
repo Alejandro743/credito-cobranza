@@ -63,7 +63,7 @@
             @forelse($reprogramaciones as $rp)
             @php $esActivo = $rp->planNuevo?->estado === 'activo'; @endphp
             <tr wire:key="rp-{{ $rp->id }}">
-                <td class="ds-sticky-col" style="height:1px;">
+                <td data-label="Código / Cliente" class="ds-sticky-col" style="height:1px;">
                     <div style="display:flex;align-items:stretch;height:100%;">
                         <div style="width:130px;padding:10px 12px;border-right:1px solid #e5e7eb;font-family:monospace;font-size:11px;color:#6D8196;font-weight:700;display:flex;align-items:center;justify-content:center;">{{ $rp->numero }}</div>
                         <div style="flex:1;padding:10px 12px;">
@@ -72,20 +72,20 @@
                         </div>
                     </div>
                 </td>
-                <td style="text-align:center;font-family:monospace;font-size:11px;font-weight:600;">{{ $rp->pedido->numero }}</td>
-                <td style="text-align:center;">
+                <td data-label="Pedido" style="text-align:center;font-family:monospace;font-size:11px;font-weight:600;">{{ $rp->pedido->numero }}</td>
+                <td data-label="Versión" style="text-align:center;">
                     <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
                         <span class="ds-badge ds-badge-cerrado">v{{ $rp->version_anterior }}</span>
                         <svg width="11" height="11" fill="none" stroke="#CBCBCB" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
                         <span class="ds-badge ds-badge-aprobado">v{{ $rp->version_nueva }}</span>
                     </div>
                 </td>
-                <td style="text-align:center;color:#CBCBCB;font-size:11px;">{{ $rp->created_at->format('d/m/Y') }}</td>
-                <td style="text-align:center;font-family:monospace;font-weight:700;color:#DC2626;font-size:12px;">Bs. {{ number_format($rp->saldo_reprogramado, 2) }}</td>
-                <td style="text-align:center;">
+                <td data-label="Fecha" style="text-align:center;color:#CBCBCB;font-size:11px;">{{ $rp->created_at->format('d/m/Y') }}</td>
+                <td data-label="Saldo" style="text-align:center;font-family:monospace;font-weight:700;color:#DC2626;font-size:12px;">Bs. {{ number_format($rp->saldo_reprogramado, 2) }}</td>
+                <td data-label="Plan" style="text-align:center;">
                     <span class="ds-badge {{ $esActivo ? 'ds-badge-aprobado' : 'ds-badge-cerrado' }}">{{ $esActivo ? 'Activo' : 'Inactivo' }}</span>
                 </td>
-                <td style="text-align:center;">
+                <td data-label="" style="text-align:center;">
                     <button wire:click="verDetalle({{ $rp->id }})" class="ds-btn ds-btn-ghost ds-btn-sm">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

@@ -255,26 +255,26 @@
                     @elseif ($inLista)
                     {{-- ── FILA EN LECTURA (ya en lista) ── --}}
                     <tr wire:key="inlist-{{ $product->id }}" class="hover:bg-gray-50 transition-colors {{ !$item->active ? 'opacity-60' : '' }}">
-                        <td class="px-4 py-3 font-mono text-xs text-gray-500 font-medium">{{ $product->code }}</td>
-                        <td class="px-4 py-3 font-medium text-gray-800">{{ $product->name }}</td>
-                        <td class="px-4 py-3 text-xs text-gray-500 hidden sm:table-cell">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
-                        <td class="px-4 py-3 text-right text-gray-700">S/ {{ number_format($item->precio_base, 2) }}</td>
-                        <td class="px-4 py-3 text-right text-gray-700 hidden md:table-cell">{{ $item->puntos }}</td>
-                        <td class="px-4 py-3 text-right text-gray-500 hidden lg:table-cell">{{ number_format($item->stock_inicial, 2) }}</td>
-                        <td class="px-4 py-3 text-right text-melocoton-600 hidden lg:table-cell">{{ number_format($item->stock_consumido, 2) }}</td>
-                        <td class="px-4 py-3 text-right">
+                        <td data-label="Código" class="px-4 py-3 font-mono text-xs text-gray-500 font-medium">{{ $product->code }}</td>
+                        <td data-label="Producto" class="px-4 py-3 font-medium text-gray-800">{{ $product->name }}</td>
+                        <td data-label="Unidad" class="px-4 py-3 text-xs text-gray-500 hidden sm:table-cell">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
+                        <td data-label="Precio" class="px-4 py-3 text-right text-gray-700">S/ {{ number_format($item->precio_base, 2) }}</td>
+                        <td data-label="Puntos" class="px-4 py-3 text-right text-gray-700 hidden md:table-cell">{{ $item->puntos }}</td>
+                        <td data-label="Stock Ini." class="px-4 py-3 text-right text-gray-500 hidden lg:table-cell">{{ number_format($item->stock_inicial, 2) }}</td>
+                        <td data-label="Consumido" class="px-4 py-3 text-right text-melocoton-600 hidden lg:table-cell">{{ number_format($item->stock_consumido, 2) }}</td>
+                        <td data-label="Stock Act." class="px-4 py-3 text-right">
                             <span class="font-semibold {{ $item->stock_actual > 0 ? 'text-mint-700' : 'text-melocoton-600' }}">
                                 {{ number_format($item->stock_actual, 2) }}
                             </span>
                         </td>
-                        <td class="px-4 py-3 text-center">
+                        <td data-label="Estado" class="px-4 py-3 text-center">
                             <button wire:click="toggleItemActive({{ $item->id }})"
                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold transition-colors
                                     {{ $item->active ? 'bg-mint-100 text-mint-700 hover:bg-mint-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
                                 {{ $item->active ? 'Activo' : 'Inactivo' }}
                             </button>
                         </td>
-                        <td class="px-4 py-3">
+                        <td data-label="" class="px-4 py-3">
                             <div class="flex items-center justify-end gap-1">
                                 <button wire:click="startEditItem({{ $item->id }})" title="Editar"
                                         class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">
@@ -293,18 +293,18 @@
                     @else
                     {{-- ── FILA DISPONIBLE (no en lista aún) ── --}}
                     <tr wire:key="avail-{{ $product->id }}" class="hover:bg-gray-50 transition-colors opacity-70">
-                        <td class="px-4 py-3 font-mono text-xs text-gray-400">{{ $product->code }}</td>
-                        <td class="px-4 py-3 text-gray-500">{{ $product->name }}</td>
-                        <td class="px-4 py-3 text-xs text-gray-400 hidden sm:table-cell">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
-                        <td class="px-4 py-3 text-right text-gray-300">—</td>
-                        <td class="px-4 py-3 text-right text-gray-300 hidden md:table-cell">—</td>
-                        <td class="px-4 py-3 text-right text-gray-300 hidden lg:table-cell">—</td>
-                        <td class="px-4 py-3 text-right text-gray-300 hidden lg:table-cell">—</td>
-                        <td class="px-4 py-3 text-right text-gray-300">—</td>
-                        <td class="px-4 py-3 text-center">
+                        <td data-label="Código" class="px-4 py-3 font-mono text-xs text-gray-400">{{ $product->code }}</td>
+                        <td data-label="Producto" class="px-4 py-3 text-gray-500">{{ $product->name }}</td>
+                        <td data-label="Unidad" class="px-4 py-3 text-xs text-gray-400 hidden sm:table-cell">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
+                        <td data-label="Precio" class="px-4 py-3 text-right text-gray-300">—</td>
+                        <td data-label="Puntos" class="px-4 py-3 text-right text-gray-300 hidden md:table-cell">—</td>
+                        <td data-label="Stock Ini." class="px-4 py-3 text-right text-gray-300 hidden lg:table-cell">—</td>
+                        <td data-label="Consumido" class="px-4 py-3 text-right text-gray-300 hidden lg:table-cell">—</td>
+                        <td data-label="Stock Act." class="px-4 py-3 text-right text-gray-300">—</td>
+                        <td data-label="Estado" class="px-4 py-3 text-center">
                             <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-400">No en lista</span>
                         </td>
-                        <td class="px-4 py-3 text-right">
+                        <td data-label="" class="px-4 py-3 text-right">
                             <button wire:click="startQuickAdd({{ $product->id }})" title="Agregar a esta lista"
                                     class="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-celeste-600 bg-celeste-50 hover:bg-celeste-100 transition-colors">
                                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
@@ -398,16 +398,16 @@
             <tbody class="divide-y divide-gray-50">
                 @forelse ($listas as $lista)
                 <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="px-5 py-3.5 font-medium text-gray-800">{{ $lista->name }}</td>
-                    <td class="px-5 py-3.5 font-mono text-xs text-gray-500">{{ $lista->cycle?->code ?? '—' }}</td>
-                    <td class="px-5 py-3.5 text-center">
+                    <td data-label="Nombre" class="px-5 py-3.5 font-medium text-gray-800">{{ $lista->name }}</td>
+                    <td data-label="Ciclo" class="px-5 py-3.5 font-mono text-xs text-gray-500">{{ $lista->cycle?->code ?? '—' }}</td>
+                    <td data-label="Estado" class="px-5 py-3.5 text-center">
                         <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold
                             {{ $lista->estado === 'activa' ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-600' }}">
                             {{ ucfirst($lista->estado) }}
                         </span>
                     </td>
-                    <td class="px-5 py-3.5 text-center text-gray-500 hidden md:table-cell">{{ $lista->created_at->format('d/m/Y') }}</td>
-                    <td class="px-5 py-3.5">
+                    <td data-label="Creada" class="px-5 py-3.5 text-center text-gray-500 hidden md:table-cell">{{ $lista->created_at->format('d/m/Y') }}</td>
+                    <td data-label="" class="px-5 py-3.5">
                         <div class="flex items-center justify-end gap-1">
                             <button wire:click="viewItems({{ $lista->id }})" title="Ver productos"
                                     class="p-1.5 rounded-lg text-gray-400 hover:text-celeste-600 hover:bg-celeste-50 transition-colors">

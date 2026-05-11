@@ -45,27 +45,27 @@
         $esVigente = $vigente?->id === $r->id;
     @endphp
     <tr wire:key="pi-{{ $r->id }}" style="{{ $esVigente ? 'background:#faf5ff;' : '' }}">
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; font-weight:600; color:#374151;">
+        <td data-label="Nombre" style="padding:8px 12px; border:0.5px solid #e5e7eb; font-weight:600; color:#374151;">
             {{ $r->nombre }}
             @if($esVigente)
             <span style="margin-left:6px; font-size:9px; font-weight:700; padding:2px 6px; border-radius:10px; background:#EDE9FE; color:#6d28d9;">VIGENTE</span>
             @endif
         </td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-size:11px; color:#6b7280;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-size:11px; color:#6b7280;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-family:monospace; font-weight:600;">{{ $r->peso_puntualidad }}%</td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-family:monospace; font-weight:600;">{{ $r->peso_mora }}%</td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-family:monospace; font-weight:600;">{{ $r->peso_riesgo }}%</td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-family:monospace; font-weight:600;">{{ $r->peso_recuperacion }}%</td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-family:monospace; font-weight:600;">{{ $r->peso_reprogramacion }}%</td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
+        <td data-label="Desde" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-size:11px; color:#6b7280;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
+        <td data-label="Hasta" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-size:11px; color:#6b7280;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
+        <td data-label="Punt%" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-family:monospace; font-weight:600;">{{ $r->peso_puntualidad }}%</td>
+        <td data-label="Mora%" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-family:monospace; font-weight:600;">{{ $r->peso_mora }}%</td>
+        <td data-label="Riesgo%" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-family:monospace; font-weight:600;">{{ $r->peso_riesgo }}%</td>
+        <td data-label="Recup%" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-family:monospace; font-weight:600;">{{ $r->peso_recuperacion }}%</td>
+        <td data-label="Reprog%" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center; font-family:monospace; font-weight:600;">{{ $r->peso_reprogramacion }}%</td>
+        <td data-label="Estado" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
             <button wire:click="toggleActivo({{ $r->id }})"
                     style="font-size:10px; font-weight:700; padding:2px 8px; border-radius:10px; border:none; cursor:pointer;
                            background:{{ $r->activo ? '#DCFCE7' : '#f3f4f6' }}; color:{{ $r->activo ? '#15803D' : '#6b7280' }};">
                 {{ $r->activo ? 'Activo' : 'Inactivo' }}
             </button>
         </td>
-        <td style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
+        <td data-label="" style="padding:8px 12px; border:0.5px solid #e5e7eb; text-align:center;">
             <div style="display:flex; gap:4px; justify-content:center;">
                 <button wire:click="edit({{ $r->id }})" title="Editar"
                         style="padding:4px; border-radius:6px; border:1px solid #ddd6fe; background:#faf5ff; color:#7c3aed; cursor:pointer;">

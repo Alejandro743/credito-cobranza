@@ -126,10 +126,10 @@
                     <tbody class="divide-y divide-gray-50">
                         @forelse ($allMembers as $m)
                         <tr wire:key="mbr-{{ $m['id'] }}" class="hover:bg-gray-50 transition-colors">
-                            <td class="px-4 py-3 font-mono text-xs text-gray-400">{{ $m['id'] }}</td>
-                            <td class="px-4 py-3 font-medium text-gray-800">{{ $m['name'] }}</td>
-                            <td class="px-4 py-3 text-xs text-gray-500 hidden sm:table-cell">{{ $m['email'] }}</td>
-                            <td class="px-4 py-3 text-center">
+                            <td data-label="ID" class="px-4 py-3 font-mono text-xs text-gray-400">{{ $m['id'] }}</td>
+                            <td data-label="Nombre" class="px-4 py-3 font-medium text-gray-800">{{ $m['name'] }}</td>
+                            <td data-label="Email" class="px-4 py-3 text-xs text-gray-500 hidden sm:table-cell">{{ $m['email'] }}</td>
+                            <td data-label="Tipo" class="px-4 py-3 text-center">
                                 @php
                                 $tipoClr = match($m['tipo']) {
                                     'administrativo' => 'bg-lavanda-100 text-lavanda-700',
@@ -142,7 +142,7 @@
                                     {{ ucfirst($m['tipo']) }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-center">
+                            <td data-label="Origen" class="px-4 py-3 text-center">
                                 @if ($m['origen'] === 'auto')
                                 <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-600">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
@@ -155,7 +155,7 @@
                                 </span>
                                 @endif
                             </td>
-                            <td class="px-4 py-3 text-right">
+                            <td data-label="" class="px-4 py-3 text-right">
                                 @if ($m['origen'] === 'manual')
                                 <button wire:click="removeMember({{ $m['id'] }})"
                                         wire:confirm="¿Quitar a {{ $m['name'] }} del grupo?"
@@ -247,15 +247,15 @@
                     <tbody class="divide-y divide-gray-50">
                         @forelse ($assignedListas as $lista)
                         <tr wire:key="lst-{{ $lista->id }}" class="hover:bg-gray-50 transition-colors">
-                            <td class="px-4 py-3 font-medium text-gray-800">{{ $lista->name }}</td>
-                            <td class="px-4 py-3 text-gray-500 hidden sm:table-cell">{{ $lista->cycle?->name ?? '—' }}</td>
-                            <td class="px-4 py-3 text-center">
+                            <td data-label="Lista" class="px-4 py-3 font-medium text-gray-800">{{ $lista->name }}</td>
+                            <td data-label="Ciclo" class="px-4 py-3 text-gray-500 hidden sm:table-cell">{{ $lista->cycle?->name ?? '—' }}</td>
+                            <td data-label="Estado" class="px-4 py-3 text-center">
                                 <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold
                                     {{ $lista->estado === 'activa' ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-600' }}">
                                     {{ ucfirst($lista->estado) }}
                                 </span>
                             </td>
-                            <td class="px-4 py-3 text-right">
+                            <td data-label="" class="px-4 py-3 text-right">
                                 <button wire:click="removeLista({{ $lista->id }})"
                                         wire:confirm="¿Quitar esta lista del grupo?"
                                         title="Quitar lista"
@@ -398,28 +398,28 @@
                 @else
                 {{-- FILA EN LECTURA --}}
                 <tr wire:key="g-{{ $g->id }}" class="hover:bg-gray-50 transition-colors {{ !$g->active ? 'opacity-60' : '' }}">
-                    <td class="px-4 py-3">
+                    <td data-label="Nombre" class="px-4 py-3">
                         <div class="font-medium text-gray-800">{{ $g->name }}</div>
                         <div class="text-xs text-gray-400 mt-0.5">
                             {{ $g->users_count + $g->miembros_manual_count }} miembros · {{ $g->listas_count }} listas
                         </div>
                     </td>
-                    <td class="px-4 py-3 text-center">
+                    <td data-label="Tipo" class="px-4 py-3 text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
                             {{ $g->type === 'clientes' ? 'bg-celeste-100 text-celeste-700' : 'bg-melocoton-100 text-melocoton-700' }}">
                             {{ $g->type === 'clientes' ? 'Clientes' : 'Vendedores' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3 text-gray-500 text-xs hidden md:table-cell">
+                    <td data-label="Descripción" class="px-4 py-3 text-gray-500 text-xs hidden md:table-cell">
                         {{ $g->description ? \Illuminate\Support\Str::limit($g->description, 60) : '—' }}
                     </td>
-                    <td class="px-4 py-3 text-center">
+                    <td data-label="Estado" class="px-4 py-3 text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
                             {{ $g->active ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-500' }}">
                             {{ $g->active ? 'Activo' : 'Inactivo' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3">
+                    <td data-label="" class="px-4 py-3">
                         <div class="flex items-center justify-end gap-1">
                             <button wire:click="viewDetail({{ $g->id }})" title="Ver detalle"
                                     class="p-1.5 rounded-lg text-gray-400 hover:text-celeste-600 hover:bg-celeste-50 transition-colors">

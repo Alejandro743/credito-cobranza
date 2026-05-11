@@ -155,7 +155,7 @@
                 {{-- ── Fila normal ──────────────────────────────────────────── --}}
                 @else
                 <tr wire:key="row-{{ $c->id }}" class="hover:bg-gray-50/60 transition-colors">
-                    <td class="px-5 py-3.5">
+                    <td data-label="Prefijo" class="px-5 py-3.5">
                         <span class="font-mono font-bold text-gray-800">{{ $c->prefijo }}</span>
                         <span class="ml-1 text-xs text-gray-400">
                             + {{ $c->longitud }} dígitos →
@@ -164,19 +164,19 @@
                             </span>
                         </span>
                     </td>
-                    <td class="px-5 py-3.5 text-gray-500 text-sm hidden sm:table-cell">
+                    <td data-label="Descripción" class="px-5 py-3.5 text-gray-500 text-sm hidden sm:table-cell">
                         {{ $c->descripcion ?? '—' }}
                     </td>
-                    <td class="px-5 py-3.5 text-center font-mono text-gray-700">{{ $c->siguiente_numero }}</td>
-                    <td class="px-5 py-3.5 text-center text-gray-500 hidden sm:table-cell">{{ $c->longitud }}</td>
-                    <td class="px-5 py-3.5 text-center">
+                    <td data-label="Sig. #" class="px-5 py-3.5 text-center font-mono text-gray-700">{{ $c->siguiente_numero }}</td>
+                    <td data-label="Long." class="px-5 py-3.5 text-center text-gray-500 hidden sm:table-cell">{{ $c->longitud }}</td>
+                    <td data-label="Estado" class="px-5 py-3.5 text-center">
                         @if ($c->activo)
                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-mint-100 text-mint-700">Activo</span>
                         @else
                             <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-500">Inactivo</span>
                         @endif
                     </td>
-                    <td class="px-5 py-3.5 text-right">
+                    <td data-label="" class="px-5 py-3.5 text-right">
                         <div class="flex items-center justify-end gap-1.5">
                             {{-- Toggle activo --}}
                             <button wire:click="toggleActivo({{ $c->id }})" title="{{ $c->activo ? 'Desactivar' : 'Activar' }}"

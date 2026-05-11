@@ -263,21 +263,21 @@
                 {{-- ── Fila normal ── --}}
                 @else
                 <tr wire:key="row-{{ $c->id }}" x-data="{ modal: false }">
-                    <td style="font-family:monospace;font-size:11px;color:#6D8196;">{{ $c->id_ln ?? '—' }}</td>
-                    <td style="font-family:monospace;font-size:12px;color:#4A4A4A;">{{ $c->ci }}</td>
-                    <td style="font-weight:600;color:#4A4A4A;">{{ $c->usuario->name ?? '—' }}</td>
-                    <td style="color:#6D8196;">{{ $c->apellido ?? '—' }}</td>
-                    <td style="color:#6D8196;">{{ $c->telefono }}</td>
-                    <td style="color:#CBCBCB;font-size:12px;">{{ $c->ciudad }}</td>
-                    <td style="color:#CBCBCB;font-size:12px;">{{ $c->vendedorUsuario->name ?? '—' }}</td>
-                    <td style="text-align:center;">
+                    <td data-label="ID_LN" style="font-family:monospace;font-size:11px;color:#6D8196;">{{ $c->id_ln ?? '—' }}</td>
+                    <td data-label="CI" style="font-family:monospace;font-size:12px;color:#4A4A4A;">{{ $c->ci }}</td>
+                    <td data-label="Nombre" style="font-weight:600;color:#4A4A4A;">{{ $c->usuario->name ?? '—' }}</td>
+                    <td data-label="Apellido" style="color:#6D8196;">{{ $c->apellido ?? '—' }}</td>
+                    <td data-label="Teléfono" style="color:#6D8196;">{{ $c->telefono }}</td>
+                    <td data-label="Ciudad" style="color:#CBCBCB;font-size:12px;">{{ $c->ciudad }}</td>
+                    <td data-label="Vendedor" style="color:#CBCBCB;font-size:12px;">{{ $c->vendedorUsuario->name ?? '—' }}</td>
+                    <td data-label="Estado" style="text-align:center;">
                         @if ($c->active)
                             <span class="ds-badge ds-badge-active">Activo</span>
                         @else
                             <span class="ds-badge ds-badge-inactive">Inactivo</span>
                         @endif
                     </td>
-                    <td style="text-align:right;">
+                    <td data-label="" style="text-align:right;">
                         <div style="display:flex;align-items:center;justify-content:flex-end;gap:4px;">
                             <button @click="modal = true" title="Ver cliente" class="ds-btn ds-btn-ghost ds-btn-sm">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">

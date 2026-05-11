@@ -47,7 +47,7 @@
         <tbody>
             @forelse($pedidos as $p)
             <tr wire:key="cr-{{ $p->id }}">
-                <td class="ds-sticky-col" style="height:1px;">
+                <td data-label="Pedido / Cliente" class="ds-sticky-col" style="height:1px;">
                     <div style="display:flex;align-items:stretch;height:100%;">
                         <div style="width:110px;padding:10px 12px;border-right:1px solid #e5e7eb;font-family:monospace;font-size:11px;color:#6D8196;font-weight:700;display:flex;align-items:center;justify-content:center;">{{ $p->numero }}</div>
                         <div style="flex:1;padding:10px 12px;">
@@ -56,7 +56,7 @@
                         </div>
                     </div>
                 </td>
-                <td style="text-align:center;">
+                <td data-label="Motivo" style="text-align:center;">
                     @if($p->cierre?->motivoCierre)
                     <span style="font-size:12px;font-weight:600;color:#4A4A4A;">{{ $p->cierre->motivoCierre->nombre }}</span>
                     @if($p->cierre->motivoCierre->afecta_mora)
@@ -66,10 +66,10 @@
                     <span style="color:#CBCBCB;font-size:11px;">—</span>
                     @endif
                 </td>
-                <td style="text-align:center;">{{ $p->vendedor?->nombre_completo ?? '—' }}</td>
-                <td style="text-align:center;font-size:11px;color:#CBCBCB;">{{ $p->cierre?->created_at->format('d/m/Y') ?? $p->updated_at->format('d/m/Y') }}</td>
-                <td style="text-align:center;font-weight:600;color:#4A4A4A;">{{ number_format($p->total_pagar, 2) }}</td>
-                <td style="text-align:center;">
+                <td data-label="Vendedor" style="text-align:center;">{{ $p->vendedor?->nombre_completo ?? '—' }}</td>
+                <td data-label="Cerrado el" style="text-align:center;font-size:11px;color:#CBCBCB;">{{ $p->cierre?->created_at->format('d/m/Y') ?? $p->updated_at->format('d/m/Y') }}</td>
+                <td data-label="Total Bs." style="text-align:center;font-weight:600;color:#4A4A4A;">{{ number_format($p->total_pagar, 2) }}</td>
+                <td data-label="" style="text-align:center;">
                     <button wire:click="ver({{ $p->id }})" class="ds-btn ds-btn-ghost ds-btn-sm">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>

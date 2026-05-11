@@ -123,16 +123,16 @@
                 @else
                 {{-- FILA EN MODO LECTURA --}}
                 <tr wire:key="cat-{{ $cat->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td class="px-4 py-3 font-mono text-xs text-gray-500 font-medium">{{ $cat->code }}</td>
-                    <td class="px-4 py-3 font-medium text-gray-800">{{ $cat->name }}</td>
-                    <td class="px-4 py-3 text-gray-500 hidden md:table-cell">{{ $cat->descripcion ?? '—' }}</td>
-                    <td class="px-4 py-3 text-center">
+                    <td data-label="Código" class="px-4 py-3 font-mono text-xs text-gray-500 font-medium">{{ $cat->code }}</td>
+                    <td data-label="Nombre" class="px-4 py-3 font-medium text-gray-800">{{ $cat->name }}</td>
+                    <td data-label="Descripción" class="px-4 py-3 text-gray-500 hidden md:table-cell">{{ $cat->descripcion ?? '—' }}</td>
+                    <td data-label="Estado" class="px-4 py-3 text-center">
                         <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
                             {{ $cat->active ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-500' }}">
                             {{ $cat->active ? 'Activa' : 'Inactiva' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3">
+                    <td data-label="" class="px-4 py-3">
                         <div class="flex items-center justify-end gap-1">
                             <button wire:click="startEdit({{ $cat->id }})" title="Editar"
                                     class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">

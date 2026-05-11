@@ -50,39 +50,39 @@
             <tbody class="divide-y divide-gray-50">
                 @forelse($plans as $plan)
                 <tr wire:key="plan-{{ $plan->id }}" class="hover:bg-gray-50/50 transition-colors">
-                    <td class="px-4 py-3.5">
+                    <td data-label="Nombre" class="px-4 py-3.5">
                         <p class="font-medium text-gray-800">{{ $plan->name }}</p>
                         @if($plan->description)
                         <p class="text-xs text-gray-400 mt-0.5">{{ Str::limit($plan->description, 50) }}</p>
                         @endif
                     </td>
-                    <td class="px-4 py-3.5 hidden md:table-cell">
+                    <td data-label="Tasa" class="px-4 py-3.5 hidden md:table-cell">
                         <span class="inline-flex px-2.5 py-1 rounded-full text-xs font-medium bg-celeste-100 text-celeste-700">
                             {{ number_format($plan->interest_rate, 2) }}%
                         </span>
                     </td>
-                    <td class="px-4 py-3.5 hidden md:table-cell">
+                    <td data-label="Plazo" class="px-4 py-3.5 hidden md:table-cell">
                         <span class="text-sm text-gray-600">{{ $plan->term_months }} meses</span>
                     </td>
-                    <td class="px-4 py-3.5 hidden lg:table-cell">
+                    <td data-label="Montos" class="px-4 py-3.5 hidden lg:table-cell">
                         <div class="text-xs text-gray-500">
                             <span class="text-mint-600">${{ number_format($plan->min_amount, 0) }}</span>
                             <span class="text-gray-300 mx-1">—</span>
                             <span>{{ $plan->max_amount ? '$'.number_format($plan->max_amount, 0) : '∞' }}</span>
                         </div>
                     </td>
-                    <td class="px-4 py-3.5 hidden lg:table-cell">
+                    <td data-label="Condiciones" class="px-4 py-3.5 hidden lg:table-cell">
                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-lavanda-100 text-lavanda-700">
                             {{ $plan->conditions_count }} condición{{ $plan->conditions_count !== 1 ? 'es' : '' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3.5">
+                    <td data-label="Estado" class="px-4 py-3.5">
                         <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium {{ $plan->active ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-500' }}">
                             <span class="w-1.5 h-1.5 rounded-full {{ $plan->active ? 'bg-mint-500' : 'bg-gray-400' }}"></span>
                             {{ $plan->active ? 'Activo' : 'Inactivo' }}
                         </span>
                     </td>
-                    <td class="px-4 py-3.5">
+                    <td data-label="" class="px-4 py-3.5">
                         <div class="flex items-center justify-end gap-1">
                             <button wire:click="openConditions({{ $plan->id }})"
                                     class="p-1.5 rounded-lg hover:bg-lavanda-50 text-lavanda-500 transition-colors" title="Condiciones">

@@ -262,21 +262,21 @@ $kpis_detalle = [
                 @foreach($ped['cuotas'] as $cuota)
                 @php $esInicial = $cuota['numero'] === 0; @endphp
                 <tr style="border-bottom:0.5px solid #e5e7eb; background:{{ $cuota['estado'] === 'pagado' ? '#fafff8' : ($cuota['estado'] === 'en_mora' ? '#fff8f8' : '#fff') }};">
-                    <td style="padding:8px 10px; text-align:center; font-family:monospace; font-weight:700; color:#374151;">
+                    <td data-label="#" style="padding:8px 10px; text-align:center; font-family:monospace; font-weight:700; color:#374151;">
                         {{ $esInicial ? 'Inicial' : $cuota['numero'] }}
                     </td>
-                    <td style="padding:8px 10px; text-align:center; color:#6b7280;">
+                    <td data-label="Vencimiento" style="padding:8px 10px; text-align:center; color:#6b7280;">
                         {{ $cuota['fecha_vencimiento'] ? $cuota['fecha_vencimiento']->format('d/m/Y') : '—' }}
                     </td>
-                    <td style="padding:8px 10px; text-align:right; font-family:monospace; font-weight:600; color:#374151;">
+                    <td data-label="Monto" style="padding:8px 10px; text-align:right; font-family:monospace; font-weight:600; color:#374151;">
                         Bs {{ number_format($cuota['monto'], 2) }}
                     </td>
-                    <td style="padding:8px 10px; text-align:center;">
+                    <td data-label="Estado" style="padding:8px 10px; text-align:center;">
                         <span style="font-size:10px; font-weight:700; padding:2px 10px; border-radius:10px; background:{{ $cuota['badge']['bg'] }}; color:{{ $cuota['badge']['cl'] }};">
                             {{ $cuota['badge']['lb'] }}
                         </span>
                     </td>
-                    <td style="padding:8px 10px; text-align:center; color:{{ $cuota['estado'] === 'pagado' ? '#15803D' : '#9ca3af' }}; font-family:monospace; font-size:11px;">
+                    <td data-label="Pago" style="padding:8px 10px; text-align:center; color:{{ $cuota['estado'] === 'pagado' ? '#15803D' : '#9ca3af' }}; font-family:monospace; font-size:11px;">
                         {{ $cuota['fecha_pago'] ? $cuota['fecha_pago']->format('d/m/Y') : '—' }}
                     </td>
                 </tr>

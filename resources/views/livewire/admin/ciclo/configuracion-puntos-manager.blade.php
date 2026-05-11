@@ -130,28 +130,28 @@
                 @else
                 {{-- Normal row --}}
                 <tr wire:key="p-{{ $punto->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td class="px-5 py-3.5">
+                    <td data-label="Ciclo" class="px-5 py-3.5">
                         <p class="font-mono text-xs text-lavanda-700 font-semibold">{{ $punto->cycle->code }}</p>
                         <p class="text-gray-700 text-sm">{{ $punto->cycle->name }}</p>
                     </td>
-                    <td class="px-5 py-3.5 text-gray-500 text-xs hidden md:table-cell">
+                    <td data-label="Período" class="px-5 py-3.5 text-gray-500 text-xs hidden md:table-cell">
                         {{ $punto->cycle->start_date->format('d/m/Y') }} — {{ $punto->cycle->end_date->format('d/m/Y') }}
                     </td>
-                    <td class="px-5 py-3.5 text-center">
+                    <td data-label="Valor" class="px-5 py-3.5 text-center">
                         <span class="font-bold text-lavanda-700">Bs {{ number_format((float) $punto->valor_punto, 2) }}</span>
                         <span class="text-gray-400 text-xs"> / pto</span>
                     </td>
-                    <td class="px-5 py-3.5 text-gray-500 text-xs hidden lg:table-cell">
+                    <td data-label="Descripción" class="px-5 py-3.5 text-gray-500 text-xs hidden lg:table-cell">
                         {{ $punto->description ?? '—' }}
                     </td>
-                    <td class="px-5 py-3.5 text-center">
+                    <td data-label="Estado" class="px-5 py-3.5 text-center">
                         <button wire:click="toggleActive({{ $punto->id }})"
                                 class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors
                                     {{ $punto->active ? 'bg-mint-100 text-mint-700 hover:bg-mint-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
                             {{ $punto->active ? 'Activo' : 'Inactivo' }}
                         </button>
                     </td>
-                    <td class="px-5 py-3.5 text-right">
+                    <td data-label="" class="px-5 py-3.5 text-right">
                         <button wire:click="startEdit({{ $punto->id }})" class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         </button>

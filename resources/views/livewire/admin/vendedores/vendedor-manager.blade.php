@@ -183,7 +183,7 @@
         <tbody class="divide-y divide-gray-50">
             @forelse ($vendedores as $v)
             <tr class="hover:bg-melocoton-50/20 transition-colors" wire:key="v-{{ $v->id }}">
-                <td class="px-4 py-3.5">
+                <td data-label="Vendedor" class="px-4 py-3.5">
                     <div class="flex items-center gap-2.5">
                         <div class="w-8 h-8 rounded-full bg-melocoton-100 flex items-center justify-center text-melocoton-700 font-bold text-xs flex-shrink-0">
                             {{ strtoupper(substr($v->nombre, 0, 1) . substr($v->apellido, 0, 1)) }}
@@ -194,7 +194,7 @@
                         </div>
                     </div>
                 </td>
-                <td class="px-4 py-3.5 hidden sm:table-cell">
+                <td data-label="Grupo" class="px-4 py-3.5 hidden sm:table-cell">
                     @if ($v->grupo)
                         <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-melocoton-50 text-melocoton-700 text-xs font-medium">
                             {{ $v->grupo->name }}
@@ -203,17 +203,17 @@
                         <span class="text-gray-300 text-xs">—</span>
                     @endif
                 </td>
-                <td class="px-4 py-3.5 hidden md:table-cell text-xs text-gray-500">
+                <td data-label="Usuario" class="px-4 py-3.5 hidden md:table-cell text-xs text-gray-500">
                     {{ $v->user?->name ?? '—' }}
                 </td>
-                <td class="px-4 py-3.5 text-center">
+                <td data-label="Estado" class="px-4 py-3.5 text-center">
                     <button wire:click="toggleActivo({{ $v->id }})"
                             class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold transition-colors
                                    {{ $v->activo ? 'bg-mint-100 text-mint-700 hover:bg-mint-200' : 'bg-red-100 text-red-600 hover:bg-red-200' }}">
                         {{ $v->activo ? 'Activo' : 'Inactivo' }}
                     </button>
                 </td>
-                <td class="px-4 py-3.5 text-right">
+                <td data-label="" class="px-4 py-3.5 text-right">
                     <button wire:click="edit({{ $v->id }})"
                             class="p-1.5 rounded-lg hover:bg-celeste-50 text-celeste-500 transition-colors">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
