@@ -387,24 +387,30 @@
     {{-- ═══ MAIN ═══ --}}
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
 
-        {{-- Topbar — breadcrumb mínimo --}}
-        <header class="flex items-center gap-3 px-5 flex-shrink-0"
-                style="background:#fff; border-bottom:1px solid #EBEBDF; min-height:46px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
+        {{-- Topbar — ícono + módulo/título (único encabezado) --}}
+        <header class="flex items-center gap-3 px-4 flex-shrink-0"
+                style="background:#fff; border-bottom:1px solid #EBEBDF; min-height:56px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
             <button @click="sidebarOpen = !sidebarOpen"
                     class="md:hidden flex items-center justify-center transition-colors"
-                    style="min-width:32px; min-height:32px; color:#6D8196; background:#F0F0E8; border:1px solid #E0E0D8; border-radius:5px; cursor:pointer;">
+                    style="min-width:32px; min-height:32px; color:#6D8196; background:#F0F0E8; border:1px solid #E0E0D8; border-radius:5px; cursor:pointer; flex-shrink:0;">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
-            <div class="flex-1 flex items-center gap-1.5 min-w-0">
-                @if($activeModuloName)
-                <span class="hidden md:inline" style="font-size:11px; color:#C0C0B8; font-weight:500; white-space:nowrap;">{{ $activeModuloName }}</span>
-                <span class="hidden md:inline" style="color:#D8D8D0; font-size:11px;">/</span>
-                @endif
-                <span style="font-size:13px; font-weight:700; color:#4A4A4A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" class="md:text-xs md:font-semibold md:text-lavanda-500">{{ $pageTitle }}</span>
+            {{-- Ícono del submodulo --}}
+            <div style="width:38px; height:38px; background:#EEF2F7; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 1px 4px rgba(109,129,150,.13);">
+                <svg width="18" height="18" fill="none" stroke="#6D8196" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="{{ $pageIconPath }}"/>
+                </svg>
             </div>
-            <div style="font-size:11px; color:#C8C8C0; display:none; letter-spacing:.3px;" class="sm:block">
+            {{-- Módulo pequeño + Título grande --}}
+            <div class="flex-1 min-w-0">
+                @if($activeModuloName)
+                <p style="font-size:9px; font-weight:700; color:#C0C0B8; letter-spacing:1.3px; text-transform:uppercase; margin:0; line-height:1;">{{ $activeModuloName }}</p>
+                @endif
+                <p style="font-size:15px; font-weight:800; color:#4A4A4A; margin:0; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $pageTitle }}</p>
+            </div>
+            <div style="font-size:11px; color:#C8C8C0; display:none; letter-spacing:.3px; flex-shrink:0;" class="sm:block">
                 {{ now()->format('d M Y') }}
             </div>
             <div style="width:30px; height:30px; border-radius:50%; background:#6D8196; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; color:#fff; flex-shrink:0; letter-spacing:.5px;">

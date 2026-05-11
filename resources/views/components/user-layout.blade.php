@@ -359,22 +359,28 @@
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
         @unless($noHeader)
         {{-- Topbar — accent de módulo + breadcrumb mínimo --}}
-        <header class="flex items-center gap-3 px-5 border-b {{ $hBg }} {{ $hBorder }}" style="min-height:46px;">
+        <header class="flex items-center gap-3 px-4 border-b {{ $hBg }} {{ $hBorder }}" style="min-height:56px;">
             <button @click="sidebarOpen = !sidebarOpen"
                     class="md:hidden flex items-center justify-center rounded-lg transition-colors {{ $hBtnText }} {{ $hBtnHover }}"
-                    style="min-width:32px; min-height:32px;">
+                    style="min-width:32px; min-height:32px; flex-shrink:0;">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
             </button>
-            <div class="flex-1 flex items-center gap-1.5 min-w-0">
-                @if($moduloActivoHeader)
-                <span class="hidden md:inline text-xs font-medium whitespace-nowrap {{ $hSubText }}" style="opacity:.65;">{{ $moduloActivoHeader->name }}</span>
-                <span class="hidden md:inline text-xs {{ $hSubText }}" style="opacity:.35;">/</span>
-                @endif
-                <span class="font-bold {{ $hText }} truncate" style="font-size:13px;" >{{ $ulPageTitle }}</span>
+            {{-- Ícono del submodulo --}}
+            <div style="width:38px; height:38px; background:rgba(109,129,150,.12); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="18" height="18" fill="none" stroke="#6D8196" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="{{ $ulPageIconPath }}"/>
+                </svg>
             </div>
-            <div class="text-xs hidden sm:block {{ $hSubText }}" style="opacity:.6; letter-spacing:.3px;">{{ now()->format('d M Y') }}</div>
+            {{-- Módulo pequeño + Título grande --}}
+            <div class="flex-1 min-w-0">
+                @if($moduloActivoHeader)
+                <p style="font-size:9px; font-weight:700; letter-spacing:1.3px; text-transform:uppercase; margin:0; line-height:1;" class="{{ $hSubText }}">{{ $moduloActivoHeader->name }}</p>
+                @endif
+                <p style="font-size:15px; font-weight:800; margin:0; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" class="{{ $hText }}">{{ $ulPageTitle }}</p>
+            </div>
+            <div class="text-xs hidden sm:block {{ $hSubText }}" style="opacity:.6; letter-spacing:.3px; flex-shrink:0;">{{ now()->format('d M Y') }}</div>
         </header>
 
         @endunless
