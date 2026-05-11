@@ -377,20 +377,6 @@
             <div class="text-xs hidden sm:block {{ $hSubText }}" style="opacity:.6; letter-spacing:.3px;">{{ now()->format('d M Y') }}</div>
         </header>
 
-        {{-- Page Header — auto-generado desde el submodulo activo --}}
-        <div class="hidden md:flex" style="padding:18px 28px 16px; border-bottom:1px solid #EBEBDF; background:#FFFFFF; align-items:center; gap:16px; flex-shrink:0;">
-            <div style="width:44px; height:44px; background:#EEF2F7; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 1px 5px rgba(109,129,150,.13);">
-                <svg width="21" height="21" fill="none" stroke="#6D8196" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                    <path d="{{ $ulPageIconPath }}"/>
-                </svg>
-            </div>
-            <div>
-                @if($moduloActivoHeader)
-                <p style="font-size:9px; font-weight:700; color:#C0C0B8; letter-spacing:1.3px; text-transform:uppercase; margin:0 0 3px; font-family:'Inter',sans-serif;">{{ $moduloActivoHeader->name }}</p>
-                @endif
-                <h1 style="font-size:22px; font-weight:800; color:#4A4A4A; letter-spacing:-.5px; line-height:1; margin:0; font-family:'Inter',sans-serif;">{{ $ulPageTitle }}</h1>
-            </div>
-        </div>
         @endunless
 
         <main class="{{ $noPadding ? 'p-0' : 'p-4 sm:p-6' }} flex-1 overflow-y-auto">
