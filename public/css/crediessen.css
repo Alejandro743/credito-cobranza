@@ -1,6 +1,6 @@
 /*
  * ╔═══════════════════════════════════════════════════════════════╗
- * ║   CREDIESSEN — Design System v1.0                            ║
+ * ║   CREDIESSEN — Design System v1.1                            ║
  * ║   Paleta: #4A4A4A · #CBCBCB · #FFFFE3 · #6D8196             ║
  * ║   Carga ÚLTIMA → máxima prioridad sobre Tailwind y locales   ║
  * ╚═══════════════════════════════════════════════════════════════╝
@@ -346,10 +346,49 @@ main .ds-btn-ghost:hover { background:#FFFFE3; }
 main .ds-btn-danger    { background:#FEE2E2; color:#DC2626; border:1.5px solid #FCA5A5 !important; }
 main .ds-btn-danger:hover { background:#FECACA; }
 
+main .ds-btn-success { background: #10B981; color: #fff; }
+main .ds-btn-success:hover { background: #059669; }
+
+main .ds-btn-warning { background: #FFFBEB; color: #B45309; border: 1.5px solid #FCD34D !important; }
+main .ds-btn-warning:hover { background: #FEF3C7; }
+
 main .ds-btn-sm {
     padding:   6px 12px;
     font-size: 11px;
 }
+
+/* ─────────────────────────────────────────────────────────────
+   16b. TABLA COLUMNA STICKY
+──────────────────────────────────────────────────────────────*/
+.ds-sticky-col {
+    position:   sticky;
+    left:       0;
+    z-index:    2;
+    background: #fff;
+    padding:    0 !important;
+    box-shadow: 3px 0 6px -2px rgba(0,0,0,.06);
+}
+main thead .ds-sticky-col,
+main thead th.ds-sticky-col { background: #FFFFE3 !important; }
+main tbody tr:hover .ds-sticky-col { background: #FFFFE3 !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   16c. PANEL DE CONFIRMACIÓN (rechazo / cierre / reversion)
+──────────────────────────────────────────────────────────────*/
+main .ds-confirm-panel {
+    border-radius: 6px;
+    padding:       16px;
+    margin-top:    12px;
+}
+main .ds-confirm-panel.danger  { background:#FFF0F0; border:1px solid #FCA5A5; }
+main .ds-confirm-panel.neutral { background:#F7F7F0; border:1px solid #CBCBCB; }
+main .ds-confirm-panel.warning { background:#FFFBEB; border:1px solid #FCD34D; }
+main .ds-confirm-panel.info    { background:#EFF6FF; border:1px solid #BFDBFE; }
+main .ds-confirm-panel-title   { font-size:13px; font-weight:700; margin:0 0 10px; }
+main .ds-confirm-panel.danger  .ds-confirm-panel-title { color:#DC2626; }
+main .ds-confirm-panel.warning .ds-confirm-panel-title { color:#B45309; }
+main .ds-confirm-panel.info    .ds-confirm-panel-title { color:#1D4ED8; }
+main .ds-confirm-panel-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:10px; }
 
 /* ─────────────────────────────────────────────────────────────
    16. FORMULARIO — etiquetas y campos
