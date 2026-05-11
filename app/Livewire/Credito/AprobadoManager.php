@@ -150,7 +150,7 @@ class AprobadoManager extends Component
     public function render()
     {
         $pedidos = Pedido::with(['cliente.usuario', 'vendedor.user', 'cierre.motivoCierre'])
-            ->withSum(['todasCuotas as total_pagado' => fn($q) => $q->whereRaw('`cuotas`.`estado` = ?', ['pagado'])], 'monto')
+            ->selectRaw('`pedidos`.*, (SELECT COALESCE(SUM(`c`.`monto`), 0) FROM `cuotas` `c` INNER JOIN `plan_pagos` `pp` ON `pp`.`id` = `c`.`plan_pago_id` WHERE `pp`.`pedido_id` = `pedidos`.`id` AND `c`.`estado` = ?) AS `total_pagado`', ['pagado'])
             ->whereIn('pedidos.estado', ['aprobado', 'rechazado', 'cerrado'])
             ->when($this->filtroEstado, fn($q) => $q->where('pedidos.estado', $this->filtroEstado))
             ->when($this->search, fn($q) => $q->whereHas('cliente.usuario', fn($c) =>
