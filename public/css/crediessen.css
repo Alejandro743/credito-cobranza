@@ -1,0 +1,393 @@
+/*
+ * ╔═══════════════════════════════════════════════════════════════╗
+ * ║   CREDIESSEN — Design System v1.0                            ║
+ * ║   Paleta: #4A4A4A · #CBCBCB · #FFFFE3 · #6D8196             ║
+ * ║   Carga ÚLTIMA → máxima prioridad sobre Tailwind y locales   ║
+ * ╚═══════════════════════════════════════════════════════════════╝
+ */
+
+/* ─────────────────────────────────────────────────────────────
+   1. TABLAS — thead crema+pizarra, celdas aireadas
+──────────────────────────────────────────────────────────────*/
+main table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+/* Thead: cualquier variante de color local → crema + pizarra */
+main thead,
+main thead tr,
+main thead th,
+main thead td {
+    background-color: #FFFFE3 !important;
+    background-image: none    !important;
+    color:            #6D8196 !important;
+    font-size:        10px    !important;
+    font-weight:      700     !important;
+    letter-spacing:   0.5px;
+    text-transform:   uppercase;
+    padding:          11px 16px !important;
+    border-color:     #CBCBCB  !important;
+    white-space:      nowrap;
+}
+
+/* Filas */
+main tbody tr {
+    transition: background 0.1s;
+}
+main tbody tr:hover > td,
+main tbody tr:hover > th {
+    background-color: #FFFFE3 !important;
+}
+
+/* Celdas */
+main tbody td,
+main tbody th {
+    padding:         11px 16px !important;
+    border:          1px solid #EBEBD9   !important;
+    color:           #4A4A4A;
+    vertical-align:  middle;
+    font-size:       13px;
+}
+main tbody tr:last-child td,
+main tbody tr:last-child th {
+    border-bottom: none !important;
+}
+
+/* Pie de tabla */
+main tfoot td,
+main tfoot th {
+    padding:     10px 16px !important;
+    font-size:   12px;
+    font-weight: 700;
+    color:       #6D8196;
+    background:  #F7F7E8 !important;
+    border-top:  2px solid #CBCBCB !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   2. INPUTS, SELECTS, TEXTAREAS — crema, borde gris, focus pizarra
+──────────────────────────────────────────────────────────────*/
+main input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]),
+main select,
+main textarea {
+    border-radius:   3px !important;
+    border:          1.5px solid #CBCBCB !important;
+    background:      #FFFFE3             !important;
+    color:           #4A4A4A             !important;
+    font-family:     'Inter', sans-serif !important;
+    font-size:       13px                !important;
+    box-shadow:      none                !important;
+    outline:         none                !important;
+    transition:      border-color .15s, box-shadow .15s;
+}
+
+main input:not([type="checkbox"]):not([type="radio"]):focus,
+main select:focus,
+main textarea:focus {
+    border-color: #6D8196 !important;
+    background:   #ffffff !important;
+    box-shadow:   0 0 0 3px rgba(109,129,150,.14) !important;
+}
+
+main input::placeholder,
+main textarea::placeholder {
+    color: #CBCBCB !important;
+    opacity: 1;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   3. BOTONES — esquinas cuadradas
+──────────────────────────────────────────────────────────────*/
+main button,
+main input[type="submit"],
+main input[type="button"],
+main input[type="reset"] {
+    border-radius: 3px !important;
+    font-family:   'Inter', sans-serif !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   4. ESQUINAS — sistema cuadrado/suave según elemento
+──────────────────────────────────────────────────────────────*/
+
+/* Badges y pills → cuadrados */
+main .rounded-full,
+main .rounded-3xl { border-radius: 3px !important; }
+
+/* Cards y contenedores → suave */
+main .rounded-2xl,
+main .rounded-xl  { border-radius: 8px !important; }
+main .rounded-lg  { border-radius: 6px !important; }
+main .rounded-md  { border-radius: 4px !important; }
+main .rounded     { border-radius: 3px !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   5. CLASES LOCALES de badge/pill (todas las vistas)
+──────────────────────────────────────────────────────────────*/
+main .ph-badge,
+main .vph-badge,
+main .pm-badge,
+main .rp-badge,
+main .rp-filter,
+main .cv-badge,
+main .cc-badge,
+main .ph-pill-back,
+main .rp-pill-back,
+main .pm-pill-back {
+    border-radius:  3px !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   6. INLINE STYLES — anular border-radius en spans/links (badges)
+──────────────────────────────────────────────────────────────*/
+main span[style*="border-radius"],
+main a[style*="border-radius"],
+main small[style*="border-radius"] {
+    border-radius: 3px !important;
+}
+
+/* Pills / filtros con border-radius alto → cuadrado suave */
+main div[style*="border-radius:20"],   main div[style*="border-radius: 20"],
+main button[style*="border-radius:20"],main button[style*="border-radius: 20"],
+main a[style*="border-radius:20"],     main a[style*="border-radius: 20"] {
+    border-radius: 4px !important;
+}
+
+/* Containers con radius grande → suave */
+main div[style*="border-radius:16"],   main div[style*="border-radius: 16"],
+main div[style*="border-radius:14"],   main div[style*="border-radius: 14"],
+main div[style*="border-radius:12"],   main div[style*="border-radius: 12"],
+main div[style*="border-radius:10"],   main div[style*="border-radius: 10"] {
+    border-radius: 8px !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   7. BORDES DE CARDS/CONTENEDORES — gris estándar
+──────────────────────────────────────────────────────────────*/
+main .border-gray-100 { border-color: #CBCBCB !important; }
+main .border-gray-200 { border-color: #CBCBCB !important; }
+main .border-gray-300 { border-color: #CBCBCB !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   8. PAGINACIÓN
+──────────────────────────────────────────────────────────────*/
+main [role="navigation"] a,
+main [role="navigation"] span {
+    border-radius: 3px      !important;
+    font-size:     12px     !important;
+    font-family:   'Inter', sans-serif !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   9. PROGRESS BARS
+──────────────────────────────────────────────────────────────*/
+main [style*="border-radius:99"],
+main [style*="border-radius: 99"] {
+    border-radius: 3px !important;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   10. CARDS GENÉRICAS — fondo blanco, borde gris, radio suave
+──────────────────────────────────────────────────────────────*/
+main .bg-white {
+    background: #ffffff !important;
+}
+
+/* Sombra uniforme y sutil */
+main .shadow-sm  { box-shadow: 0 1px 4px rgba(74,74,74,.08)  !important; }
+main .shadow     { box-shadow: 0 2px 8px rgba(74,74,74,.10)  !important; }
+main .shadow-md  { box-shadow: 0 4px 12px rgba(74,74,74,.12) !important; }
+main .shadow-lg  { box-shadow: 0 6px 20px rgba(74,74,74,.14) !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   11. TOPBAR SECTION HEADER — icono vivo + título
+       Usar: <div class="ds-section-header ds-icon-green">...</div>
+──────────────────────────────────────────────────────────────*/
+main .ds-section-header {
+    display:         flex;
+    align-items:     center;
+    gap:             12px;
+    margin-bottom:   20px;
+    padding-bottom:  14px;
+    border-bottom:   1px solid #CBCBCB;
+}
+main .ds-section-header h2,
+main .ds-section-header h3 {
+    font-size:   15px !important;
+    font-weight: 700  !important;
+    color:       #4A4A4A !important;
+    margin:      0;
+}
+main .ds-section-header p,
+main .ds-section-header small {
+    font-size: 11px;
+    color:     #CBCBCB;
+    margin:    0;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   12. STAT CARDS — grid de indicadores con icono vivo
+       Usar: <div class="ds-stats-grid"><div class="ds-stat-card">
+──────────────────────────────────────────────────────────────*/
+main .ds-stats-grid {
+    display:               grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap:                   14px;
+    margin-bottom:         20px;
+}
+main .ds-stat-card {
+    background:    #ffffff;
+    border:        1px solid #CBCBCB;
+    border-radius: 8px !important;
+    padding:       16px 18px;
+    display:       flex;
+    align-items:   center;
+    gap:           14px;
+}
+main .ds-stat-card .ds-stat-icon {
+    width:           42px;
+    height:          42px;
+    border-radius:   8px !important;
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    flex-shrink:     0;
+}
+main .ds-stat-card .ds-stat-label {
+    font-size:      10px;
+    font-weight:    700;
+    color:          #CBCBCB;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    margin-bottom:  2px;
+}
+main .ds-stat-card .ds-stat-value {
+    font-size:   22px;
+    font-weight: 700;
+    color:       #4A4A4A;
+    line-height: 1.1;
+}
+main .ds-stat-card .ds-stat-sub {
+    font-size: 11px;
+    color:     #6D8196;
+    margin-top: 2px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   13. TABLA WRAPPER CARD — contenedor estándar de tabla
+──────────────────────────────────────────────────────────────*/
+main .ds-table-card {
+    background:    #ffffff;
+    border:        1px solid #CBCBCB;
+    border-radius: 8px !important;
+    overflow:      hidden;
+}
+main .ds-table-toolbar {
+    display:         flex;
+    align-items:     center;
+    gap:             10px;
+    padding:         12px 16px;
+    border-bottom:   1px solid #CBCBCB;
+    flex-wrap:       wrap;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   14. BADGES SEMÁNTICOS — paleta del mockup
+──────────────────────────────────────────────────────────────*/
+main .ds-badge {
+    display:        inline-flex;
+    align-items:    center;
+    padding:        2px 9px;
+    border-radius:  3px !important;
+    font-size:      10px;
+    font-weight:    700;
+    letter-spacing: .2px;
+}
+main .ds-badge-active,
+main .ds-badge-aprobado   { background:#FFFFE3; color:#6D8196; border:1px solid #6D8196; }
+main .ds-badge-pending,
+main .ds-badge-revision   { background:#FFF9E3; color:#B45309; border:1px solid #FCD34D; }
+main .ds-badge-inactive,
+main .ds-badge-cerrado    { background:#F4F4F4; color:#4A4A4A; border:1px solid #CBCBCB; }
+main .ds-badge-danger,
+main .ds-badge-anulado    { background:#FEE2E2; color:#DC2626; border:1px solid #FCA5A5; }
+
+/* ─────────────────────────────────────────────────────────────
+   15. BOTONES SEMÁNTICOS — paleta del mockup
+──────────────────────────────────────────────────────────────*/
+main .ds-btn {
+    display:      inline-flex;
+    align-items:  center;
+    gap:          6px;
+    padding:      9px 18px;
+    border-radius: 3px !important;
+    font-size:    12px;
+    font-weight:  600;
+    border:       none;
+    cursor:       pointer;
+    font-family:  'Inter', sans-serif;
+    transition:   background .15s, opacity .15s;
+    white-space:  nowrap;
+}
+main .ds-btn:disabled,
+main .ds-btn[disabled] { opacity: .5; cursor: not-allowed; }
+
+main .ds-btn-primary   { background:#6D8196; color:#fff; }
+main .ds-btn-primary:hover { background:#5C6F80; }
+
+main .ds-btn-secondary { background:#FFFFE3; color:#4A4A4A; border:1.5px solid #CBCBCB !important; }
+main .ds-btn-secondary:hover { background:#F0F0D8; }
+
+main .ds-btn-ghost     { background:transparent; color:#6D8196; border:1.5px solid #6D8196 !important; }
+main .ds-btn-ghost:hover { background:#FFFFE3; }
+
+main .ds-btn-danger    { background:#FEE2E2; color:#DC2626; border:1.5px solid #FCA5A5 !important; }
+main .ds-btn-danger:hover { background:#FECACA; }
+
+main .ds-btn-sm {
+    padding:   6px 12px;
+    font-size: 11px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   16. FORMULARIO — etiquetas y campos
+──────────────────────────────────────────────────────────────*/
+main .ds-form-label {
+    display:        block;
+    font-size:      10px !important;
+    font-weight:    700  !important;
+    color:          #6D8196 !important;
+    letter-spacing: .4px;
+    text-transform: uppercase;
+    margin-bottom:  5px;
+}
+main .ds-form-group {
+    margin-bottom: 16px;
+}
+main .ds-form-error {
+    font-size:  11px;
+    color:      #DC2626;
+    margin-top: 4px;
+}
+
+/* ─────────────────────────────────────────────────────────────
+   17. VACÍO / EMPTY STATE
+──────────────────────────────────────────────────────────────*/
+main .ds-empty {
+    text-align:  center;
+    padding:     48px 24px;
+    color:       #CBCBCB;
+}
+main .ds-empty svg {
+    width:        48px;
+    height:       48px;
+    margin:       0 auto 12px;
+    stroke:       #CBCBCB;
+}
+main .ds-empty p {
+    font-size:   13px;
+    font-weight: 600;
+    color:       #CBCBCB;
+}

@@ -161,6 +161,8 @@
         main [style*="border-radius:99"] { border-radius: 3px !important; }
     </style>
     @livewireStyles
+    {{-- Design system — carga ÚLTIMO para máxima prioridad --}}
+    <link rel="stylesheet" href="{{ asset('css/crediessen.css') }}?v={{ @filemtime(public_path('css/crediessen.css')) }}">
 </head>
 <body style="background:#FFFFE3;" class="font-sans antialiased">
 
