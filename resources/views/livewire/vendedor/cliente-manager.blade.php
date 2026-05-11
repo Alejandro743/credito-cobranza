@@ -7,35 +7,8 @@
     position: sticky; left: 0; z-index: 2; background: #fff; padding: 0;
     box-shadow: 4px 0 6px -2px rgba(0,0,0,0.07);
 }
-.mc-table thead .sticky-combined { background: #EFF6FF; }
+.mc-table thead .sticky-combined { background: #FFFFE3; }
 </style>
-
-@php $theadStyle = 'background:#FAEEDA; color:#633806; font-size:10px; font-weight:500; letter-spacing:0.5px;'; @endphp
-
-{{-- Topbar --}}
-<div class="px-3 py-3 flex items-center justify-between" style="background:#FAEEDA;">
-    <button @click="$dispatch('open-sidebar')" onclick="window.dispatchEvent(new CustomEvent('open-sidebar'))"
-            class="md:hidden w-8 h-8 flex items-center justify-center rounded-lg mr-2 flex-shrink-0"
-            style="background:rgba(99,56,6,0.12);">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#633806;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-    </button>
-    <h1 class="font-bold text-base flex-1" style="color:#633806;">Mis Clientes</h1>
-    <span class="text-sm font-medium" style="color:#633806;">{{ now()->format('d/m/Y') }}</span>
-</div>
-
-{{-- Flash --}}
-@if (session('success'))
-<div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-     class="fixed bottom-5 right-5 z-50 text-white text-sm font-semibold px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2"
-     style="background:#633806;">
-    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-    </svg>
-    {{ session('success') }}
-</div>
-@endif
 
 <div class="p-4 sm:p-6">
 
@@ -178,7 +151,7 @@
     @else
     <div class="mc-wrap">
     <table class="mc-table" style="min-width:600px;">
-        <thead style="{{ $theadStyle }}" class="tracking-wide">
+        <thead class="tracking-wide">
             <tr>
                 <th class="sticky-combined" style="border:0.5px solid #e5e7eb; font-weight:700; height:1px;">
                     <div style="display:flex; align-items:stretch; height:100%;">
@@ -363,30 +336,29 @@
          class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
 
         {{-- Header --}}
-        <div class="flex items-center justify-between px-5 py-4" style="background:#FAEEDA;">
+        <div class="flex items-center justify-between px-5 py-4" style="background:#FFFFE3; border-bottom:1px solid #CBCBCB;">
             <div class="flex items-center gap-3">
                 <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-                     style="background:rgba(99,56,6,0.15);">
-                    <svg class="w-5 h-5" fill="none" stroke="#633806" stroke-width="2" viewBox="0 0 24 24">
+                     style="background:#E8F0F7;">
+                    <svg class="w-5 h-5" fill="none" stroke="#6D8196" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                               d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                     </svg>
                 </div>
                 <div>
-                    <p class="font-bold text-sm leading-tight" style="color:#633806;">
+                    <p class="font-bold text-sm leading-tight" style="color:#4A4A4A;">
                         {{ $viewingCliente->usuario->name ?? '—' }} {{ $viewingCliente->apellido }}
                     </p>
-                    <p class="text-xs" style="color:#9A6030;">CI: {{ $viewingCliente->ci }}</p>
+                    <p class="text-xs" style="color:#6D8196;">CI: {{ $viewingCliente->ci }}</p>
                 </div>
             </div>
             <div class="flex items-center gap-2">
-                <span class="text-xs font-semibold px-2.5 py-1 rounded-full"
-                      style="{{ $viewingCliente->active ? 'background:#F0FDF4; color:#15803D;' : 'background:#f3f4f6; color:#6b7280;' }}">
+                <span class="ds-badge {{ $viewingCliente->active ? 'ds-badge-aprobado' : 'ds-badge-cerrado' }}">
                     {{ $viewingCliente->active ? 'Activo' : 'Inactivo' }}
                 </span>
                 <button @click="open=false; $wire.closeModal()"
                         class="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
-                        style="color:#9A6030; background:rgba(99,56,6,0.08);">
+                        style="color:#6D8196; background:#E8F0F7;">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
@@ -426,8 +398,7 @@
         <div class="px-5 pb-4 flex justify-end gap-2 border-t border-gray-100 pt-3">
             <button wire:click="startEdit({{ $viewingCliente->id }})"
                     @click="open=false"
-                    class="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
-                    style="background:transparent; color:#633806; border:1.5px solid #633806;">
+                    class="ds-btn ds-btn-ghost ds-btn-sm">
                 <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round"
                           d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
@@ -435,8 +406,7 @@
                 Editar
             </button>
             <button @click="open=false; $wire.closeModal()"
-                    class="px-4 py-2 rounded-xl text-sm font-medium transition-colors"
-                    style="background:#f3f4f6; color:#6b7280;">
+                    class="ds-btn ds-btn-secondary ds-btn-sm">
                 Cerrar
             </button>
         </div>

@@ -1,33 +1,5 @@
-<div class="min-h-screen bg-gray-50"
-     x-data="{ toastShow: false, toastMsg: '' }"
+<div x-data="{ toastShow: false, toastMsg: '' }"
      x-on:producto-agregado.window="toastMsg = $event.detail.nombre; toastShow = true; setTimeout(() => toastShow = false, 2200)">
-<style>
-.celda-cliente {
-    background-color: #EEEDFE !important;
-    border: 0.5px solid #CECBF6 !important;
-    border-radius: 8px !important;
-    padding: 8px 10px !important;
-    display: block !important;
-}
-.celda-cliente-label {
-    font-size: 9px !important;
-    font-weight: 500 !important;
-    color: #534AB7 !important;
-    display: block !important;
-    margin-bottom: 3px !important;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-}
-.celda-cliente-valor {
-    font-size: 13px !important;
-    font-weight: 500 !important;
-    color: #3C3489 !important;
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-</style>
 
 {{-- Toast --}}
 <div x-show="toastShow" x-cloak
@@ -37,7 +9,7 @@
      x-transition:leave="transition ease-in duration-150"
      x-transition:leave-end="opacity-0 translate-y-3 scale-95"
      class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 text-white text-sm font-semibold px-5 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 pointer-events-none whitespace-nowrap"
-     style="background:#7c3aed;">
+     style="background:#6D8196;">
     <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
     </svg>

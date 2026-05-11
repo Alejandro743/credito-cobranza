@@ -1,13 +1,10 @@
 <div>
-<style>
-.vph-badge { display:inline-flex; align-items:center; padding:2px 8px; border-radius:20px; font-size:10px; font-weight:600; }
-</style>
 
 <div class="p-4 sm:p-6">
 
 {{-- ══ LIST ══ --}}
 @if($mode === 'list')
-@php $theadStyle = 'background:#FEF3C7; color:#92400E; font-size:10px; font-weight:600; letter-spacing:0.5px;'; @endphp
+@php $theadStyle = ''; @endphp
 
 <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
     <div style="position:relative; flex-shrink:0; width:260px;">
@@ -40,7 +37,7 @@
         <tbody>
             @forelse($pagos as $pg)
             @php $esAnulado = $pg->estado === 'anulado'; @endphp
-            <tr wire:key="pg-{{ $pg->id }}" class="hover:bg-amber-50 transition-colors" style="cursor:pointer; {{ $esAnulado ? 'opacity:0.55;' : '' }}"
+            <tr wire:key="pg-{{ $pg->id }}" class="hover:bg-gray-50 transition-colors" style="cursor:pointer; {{ $esAnulado ? 'opacity:0.55;' : '' }}"
                 wire:click="verPago({{ $pg->id }})">
                 <td style="padding:8px 12px; border:0.5px solid #e5e7eb; font-family:monospace; font-size:11px; color:#92400E; font-weight:700; {{ $esAnulado ? 'text-decoration:line-through;' : '' }}">
                     {{ $pg->numero }}
@@ -104,10 +101,10 @@
     $pgVersion   = $pg->planPago?->version ?? 1;
     $pgPlanLabel = $pgVersion > 1 ? 'Reprogramación: V' . $pgVersion : 'Plan Original';
     $esAnulado   = $pg->estado === 'anulado';
-    $hBg         = $esAnulado ? '#FEF2F2' : '#FFFBEB';
-    $hBorder     = $esAnulado ? '#CBCBCB' : '#FCD34D';
-    $hColor      = $esAnulado ? '#B91C1C' : '#92400E';
-    $hColorDark  = $esAnulado ? '#991B1B' : '#78350F';
+    $hBg         = $esAnulado ? '#FEF2F2' : '#FFFFE3';
+    $hBorder     = '#CBCBCB';
+    $hColor      = $esAnulado ? '#B91C1C' : '#6D8196';
+    $hColorDark  = $esAnulado ? '#991B1B' : '#4A4A4A';
 @endphp
 <div class="max-w-2xl mx-auto" style="padding-bottom:40px;">
 

@@ -2,54 +2,13 @@
 
 <style>
 .mp-wrap { overflow-x: auto; background: #fff; }
-.mp-table {
-    border-collapse: separate;
-    border-spacing: 0;
-    background: #fff;
-}
+.mp-table { border-collapse: separate; border-spacing: 0; background: #fff; }
 .mp-table .sticky-combined {
-    position: sticky;
-    left: 0;
-    z-index: 2;
-    background: #fff;
-    padding: 0;
+    position: sticky; left: 0; z-index: 2; background: #fff; padding: 0;
     box-shadow: 4px 0 6px -2px rgba(0,0,0,0.07);
 }
-.mp-table thead .sticky-combined { background: #EFF6FF; }
+.mp-table thead .sticky-combined { background: #FFFFE3; }
 </style>
-
-@php
-    $theadStyle = 'background:#FAEEDA; color:#633806; font-size:10px; font-weight:500; letter-spacing:0.5px;';
-@endphp
-
-{{-- Topbar --}}
-<div class="px-3 py-3 flex items-center justify-between" style="background:#FAEEDA;">
-    <button @click="$dispatch('open-sidebar')" onclick="window.dispatchEvent(new CustomEvent('open-sidebar'))"
-            class="md:hidden w-8 h-8 flex items-center justify-center rounded-lg mr-2 flex-shrink-0 transition-colors hover:opacity-75"
-            style="background:rgba(99,56,6,0.12);">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#633806;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-    </button>
-    <h1 class="font-bold text-base flex-1" style="color:#633806;">Revisión del Crédito</h1>
-    <span class="text-sm font-medium" style="color:#633806;">{{ now()->format('d/m/Y') }}</span>
-</div>
-
-{{-- Toast --}}
-@if (session('success'))
-<div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3500)"
-     x-transition:enter="transition ease-out duration-300"
-     x-transition:enter-start="opacity-0 translate-y-2"
-     x-transition:enter-end="opacity-100 translate-y-0"
-     x-transition:leave="transition ease-in duration-200"
-     x-transition:leave-end="opacity-0 translate-y-2"
-     class="fixed bottom-5 right-5 z-50 bg-mint-500 text-white text-sm font-semibold px-5 py-3 rounded-2xl shadow-xl flex items-center gap-2">
-    <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
-    </svg>
-    {{ session('success') }}
-</div>
-@endif
 
 <div class="p-4 sm:p-6">
 
@@ -517,11 +476,11 @@ $filtros = [
     'rechazado'  => ['label' => 'Rechazado',   'icon' => 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'],
 ];
 $estilosActivos = [
-    ''           => 'background:#EEEDFE; border-color:#7c3aed; color:#534AB7;',
-    'en_espera'  => 'background:#FEF3C7; border-color:#D97706; color:#854F0B;',
-    'revision'    => 'background:#F0F9FF; border-color:#0284C7; color:#0369A1;',
-    'aprobado'   => 'background:#F0FDF4; border-color:#16A34A; color:#15803D;',
-    'rechazado'  => 'background:#FEF2F2; border-color:#DC2626; color:#B91C1C;',
+    ''           => 'background:#E8F0F7; border-color:#6D8196; color:#6D8196;',
+    'en_espera'  => 'background:#FFF9E3; border-color:#FCD34D; color:#B45309;',
+    'revision'    => 'background:#EFF6FF; border-color:#93C5FD; color:#1D4ED8;',
+    'aprobado'   => 'background:#F0FDF4; border-color:#6EE7B7; color:#065F46;',
+    'rechazado'  => 'background:#FEF2F2; border-color:#FCA5A5; color:#DC2626;',
 ];
 @endphp
 
@@ -531,19 +490,14 @@ $estilosActivos = [
     {{-- Buscador --}}
     <div style="position:relative; flex-shrink:0; width:180px;">
         <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px;"
-             viewBox="0 0 24 24" fill="none" stroke="#AFA9EC" stroke-width="2" stroke-linecap="round">
+             viewBox="0 0 24 24" fill="none" stroke="#CBCBCB" stroke-width="2" stroke-linecap="round">
             <circle cx="11" cy="11" r="8"/>
             <path d="m21 21-4.35-4.35"/>
         </svg>
         <input wire:model.debounce.300ms="search"
                type="text"
                placeholder="Buscar cliente..."
-               style="width:100%; padding:7px 10px 7px 30px;
-                      border:0.5px solid #CECBF6;
-                      border-radius:8px;
-                      background:#FAFAFE;
-                      font-size:12px;
-                      outline:none;" />
+               style="width:100%; padding:7px 10px 7px 30px; font-size:12px;" />
     </div>
 
     {{-- Filtros estado --}}
@@ -563,12 +517,9 @@ $estilosActivos = [
 
     {{-- Nuevo Plan --}}
     <a href="{{ route('vendedor.oferta') }}"
-       style="display:inline-flex; align-items:center; gap:6px;
-              background:transparent; color:#633806;
-              border:1.5px solid #633806; border-radius:8px;
-              padding:7px 14px; font-size:12px; font-weight:500;
-              text-decoration:none; white-space:nowrap; margin-left:auto;">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#633806" stroke-width="2" stroke-linecap="round">
+       class="ds-btn ds-btn-ghost ds-btn-sm"
+       style="text-decoration:none; white-space:nowrap; margin-left:auto;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
             <rect x="9" y="3" width="6" height="4" rx="1"/>
             <line x1="9" y1="12" x2="15" y2="12"/>
@@ -581,7 +532,7 @@ $estilosActivos = [
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="mp-wrap" style="-webkit-overflow-scrolling:touch;">
     <table class="mp-table" style="width:100%; min-width:600px; font-size:13px;">
-        <thead style="{{ $theadStyle }}" class="tracking-wide">
+        <thead class="tracking-wide">
             <tr>
                 <th class="sticky-combined" style="border:0.5px solid #e5e7eb; font-weight:700; height:1px;">
                     <div style="display:flex; align-items:stretch; height:100%;">

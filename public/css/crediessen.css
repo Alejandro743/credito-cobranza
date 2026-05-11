@@ -513,3 +513,109 @@ main .border-mint-200,
 main .border-mint-300  { border-color: #CBCBCB !important; }
 main .border-lavanda-100,
 main .border-lavanda-200 { border-color: #CBCBCB !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   23. FORZAR COLORES EN CELDAS DE TABLA
+   Los tbody td tienen inline color:#534AB7 etc. — !important gana
+──────────────────────────────────────────────────────────────*/
+main tbody td,
+main tbody th { color: #4A4A4A !important; }
+
+/* Fix specificity: th con .text-gray-500 perdía ante sección 21 */
+main thead th.text-gray-500,
+main thead th.text-gray-600,
+main thead td.text-gray-500,
+main thead td.text-gray-600 { color: #6D8196 !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   24. MATAR TOPBARS AMBER VENDEDOR
+   Divs con py-3 y background:#FAEEDA inline (no son first-child)
+──────────────────────────────────────────────────────────────*/
+main div.px-3.py-3[style*="background:#FAEEDA"],
+main div.px-4.py-3[style*="background:#FAEEDA"] { display: none !important; }
+
+/* ─────────────────────────────────────────────────────────────
+   25. OVERRIDE INLINE PURPLE — #534AB7, #3C3489, #EEEDFE etc.
+   CSS !important gana sobre inline styles
+──────────────────────────────────────────────────────────────*/
+
+/* Textos: purple → pizarra */
+main [style*="color:#534AB7"]  { color: #6D8196 !important; }
+main [style*="color:#3C3489"],
+main [style*="color:#1E1B5E"]  { color: #4A4A4A !important; }
+main [style*="color:#AFA9EC"]  { color: #CBCBCB !important; }
+main [style*="color:#7c3aed"]  { color: #4A4A4A !important; }
+
+/* Textos: amber → pizarra/carbón */
+main [style*="color:#92400E"],
+main [style*="color:#78350F"],
+main [style*="color:#854F0B"],
+main [style*="color:#633806"],
+main [style*="color:#BA7517"],
+main [style*="color:#FCD34D"]  { color: #CBCBCB !important; }
+
+/* SVG stroke: inline style overrides */
+main [style*="stroke:#534AB7"]  { stroke: #6D8196 !important; }
+main [style*="stroke:#3C3489"]  { stroke: #4A4A4A !important; }
+main [style*="stroke:#92400E"],
+main [style*="stroke:#633806"]  { stroke: #6D8196 !important; }
+
+/* SVG stroke: HTML presentation attribute overrides (no inline style) */
+main [stroke="#FCD34D"],
+main [stroke="#FDE68A"] { stroke: #CBCBCB; }
+main [stroke="#534AB7"],
+main [stroke="#AFA9EC"] { stroke: #6D8196; }
+main [stroke="#633806"],
+main [stroke="#92400E"] { stroke: #6D8196; }
+
+/* Fondos: purple → pizarra-light */
+main [style*="background:#EEEDFE"],
+main [style*="background-color:#EEEDFE"] { background: #E8F0F7 !important; }
+main [style*="background:#F8F7FF"]       { background: #FAFAF5 !important; }
+main [style*="background:#EEEDF7"]       { background: #FFFFE3 !important; }
+
+/* Fondos: amber → crema */
+main [style*="background:#FEF3C7"],
+main [style*="background:#FFFBEB"],
+main [style*="background:#FAEEDA"]       { background: #FFFFE3 !important; }
+/* Exception: topbars ya ocultados por sección 24 */
+
+/* Líneas separadoras / borders legados */
+main [style*="background:#9C96E8"],
+main [style*="background:#CECBF6"],
+main [style*="background:#FCD34D"],
+main [style*="background:#FDE68A"]       { background: #CBCBCB !important; }
+
+/* Borders purple/amber → gris */
+main [style*="border:0.5px solid #CECBF6"]  { border-color: #CBCBCB !important; }
+main [style*="border:1px solid #CECBF6"]    { border-color: #CBCBCB !important; }
+main [style*="border:1.5px solid #CECBF6"]  { border-color: #CBCBCB !important; }
+main [style*="border:0.5px solid #FDE68A"]  { border-color: #CBCBCB !important; }
+main [style*="border:0.5px solid #FCD34D"]  { border-color: #CBCBCB !important; }
+main [style*="border:1px solid #FCD34D"]    { border-color: #CBCBCB !important; }
+main [style*="border:1.5px solid #7c3aed"] { border-color: #6D8196 !important; }
+main [style*="border:1.5px solid #633806"] { border-color: #6D8196 !important; }
+main [style*="border:1px solid #7c3aed"]   { border-color: #6D8196 !important; }
+main [style*="border:1.5px solid #D97706"] { border-color: #CBCBCB !important; }
+
+/* Legacy badge classes */
+main .vph-badge {
+    display:        inline-flex;
+    align-items:    center;
+    padding:        2px 8px;
+    border-radius:  3px !important;
+    font-size:      10px;
+    font-weight:    600;
+}
+
+/* Fondos purple (#7c3aed) → pizarra */
+main [style*="background:#7c3aed"],
+main [style*="background: #7c3aed"] { background: #6D8196 !important; }
+
+/* Fondo lila de entrega step */
+main [style*="background:#F5F4FC"] { background: #FAFAF5 !important; }
+main [style*="min-height:100vh"]   { min-height: auto !important; }
+
+/* min-h-screen en raíz de componente (oferta-manager) */
+main > div.min-h-screen { min-height: auto !important; }
+main div.bg-gray-50.min-h-screen { background: transparent !important; }
