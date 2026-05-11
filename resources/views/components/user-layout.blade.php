@@ -369,16 +369,16 @@
             </button>
             <div class="flex-1 flex items-center gap-1.5 min-w-0">
                 @if($moduloActivoHeader)
-                <span class="text-xs font-medium whitespace-nowrap {{ $hSubText }}" style="opacity:.65;">{{ $moduloActivoHeader->name }}</span>
-                <span class="text-xs {{ $hSubText }}" style="opacity:.35;">/</span>
+                <span class="hidden md:inline text-xs font-medium whitespace-nowrap {{ $hSubText }}" style="opacity:.65;">{{ $moduloActivoHeader->name }}</span>
+                <span class="hidden md:inline text-xs {{ $hSubText }}" style="opacity:.35;">/</span>
                 @endif
-                <span class="text-xs font-semibold {{ $hText }} truncate">{{ $ulPageTitle }}</span>
+                <span class="font-bold {{ $hText }} truncate" style="font-size:13px;" >{{ $ulPageTitle }}</span>
             </div>
             <div class="text-xs hidden sm:block {{ $hSubText }}" style="opacity:.6; letter-spacing:.3px;">{{ now()->format('d M Y') }}</div>
         </header>
 
         {{-- Page Header — auto-generado desde el submodulo activo --}}
-        <div style="padding:18px 28px 16px; border-bottom:1px solid #EBEBDF; background:#FFFFFF; display:flex; align-items:center; gap:16px; flex-shrink:0;">
+        <div class="hidden md:flex" style="padding:18px 28px 16px; border-bottom:1px solid #EBEBDF; background:#FFFFFF; align-items:center; gap:16px; flex-shrink:0;">
             <div style="width:44px; height:44px; background:#EEF2F7; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 1px 5px rgba(109,129,150,.13);">
                 <svg width="21" height="21" fill="none" stroke="#6D8196" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="{{ $ulPageIconPath }}"/>

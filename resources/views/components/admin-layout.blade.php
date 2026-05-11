@@ -399,10 +399,10 @@
             </button>
             <div class="flex-1 flex items-center gap-1.5 min-w-0">
                 @if($activeModuloName)
-                <span style="font-size:11px; color:#C0C0B8; font-weight:500; white-space:nowrap;">{{ $activeModuloName }}</span>
-                <span style="color:#D8D8D0; font-size:11px;">/</span>
+                <span class="hidden md:inline" style="font-size:11px; color:#C0C0B8; font-weight:500; white-space:nowrap;">{{ $activeModuloName }}</span>
+                <span class="hidden md:inline" style="color:#D8D8D0; font-size:11px;">/</span>
                 @endif
-                <span style="font-size:11px; font-weight:600; color:#6D8196; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $pageTitle }}</span>
+                <span style="font-size:13px; font-weight:700; color:#4A4A4A; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" class="md:text-xs md:font-semibold md:text-lavanda-500">{{ $pageTitle }}</span>
             </div>
             <div style="font-size:11px; color:#C8C8C0; display:none; letter-spacing:.3px;" class="sm:block">
                 {{ now()->format('d M Y') }}
@@ -413,7 +413,7 @@
         </header>
 
         {{-- Page Header — auto-generado desde el submodulo activo --}}
-        <div style="padding:18px 28px 16px; border-bottom:1px solid #EBEBDF; background:#FFFFFF; display:flex; align-items:center; gap:16px; flex-shrink:0;">
+        <div class="hidden md:flex" style="padding:18px 28px 16px; border-bottom:1px solid #EBEBDF; background:#FFFFFF; align-items:center; gap:16px; flex-shrink:0;">
             <div style="width:44px; height:44px; background:#EEF2F7; border-radius:12px; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:0 1px 5px rgba(109,129,150,.13);">
                 <svg width="21" height="21" fill="none" stroke="#6D8196" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="{{ $pageIconPath }}"/>
