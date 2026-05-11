@@ -62,26 +62,103 @@
         .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
         .sidebar-nav::-webkit-scrollbar-thumb { background: #CBCBCB; border-radius: 4px; }
 
-        /* ── Design system global: esquinas cuadradas ── */
-        button, input[type="submit"], input[type="button"], input[type="reset"],
-        select, textarea, input[type="text"], input[type="email"],
-        input[type="password"], input[type="number"], input[type="search"],
-        input[type="date"], input[type="tel"] {
+        /* ══════════════════════════════════════════════════════════
+           DESIGN SYSTEM CREDIESSEN — aplicado desde el núcleo
+           Paleta: #4A4A4A · #CBCBCB · #FFFFE3 · #6D8196
+        ══════════════════════════════════════════════════════════ */
+
+        /* ── TABLAS ──────────────────────────────────────────── */
+        main table { width: 100%; border-collapse: collapse; }
+        main thead,
+        main thead th,
+        main thead td {
+            background:     #FFFFE3 !important;
+            color:          #6D8196 !important;
+            font-size:      10px    !important;
+            font-weight:    700     !important;
+            letter-spacing: .5px;
+            text-transform: uppercase;
+            padding:        10px 14px !important;
+            border:         0.5px solid #CBCBCB !important;
+            white-space:    nowrap;
+        }
+        main tbody tr { transition: background .1s; }
+        main tbody tr:hover > td { background: #FFFFE3 !important; }
+        main tbody td {
+            padding:        10px 14px !important;
+            border:         0.5px solid #e5e7eb !important;
+            border-bottom:  1px solid #F0F0E8   !important;
+            color:          #4A4A4A;
+            vertical-align: middle;
+            font-size:      13px;
+        }
+        main tbody tr:last-child td { border-bottom: none !important; }
+
+        /* ── INPUTS & SELECTS ────────────────────────────────── */
+        main input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]):not([type="hidden"]),
+        main select,
+        main textarea {
+            border-radius: 3px    !important;
+            border:     1.5px solid #CBCBCB !important;
+            background: #FFFFE3   !important;
+            color:      #4A4A4A   !important;
+            font-family: 'Inter', sans-serif !important;
+        }
+        main input:not([type="checkbox"]):not([type="radio"]):focus,
+        main select:focus,
+        main textarea:focus {
+            border-color: #6D8196  !important;
+            background:   #fff     !important;
+            outline:      none     !important;
+            box-shadow: 0 0 0 3px rgba(109,129,150,.12) !important;
+        }
+        main input::placeholder,
+        main textarea::placeholder { color: #CBCBCB !important; }
+
+        /* ── BOTONES ─────────────────────────────────────────── */
+        main button,
+        main input[type="submit"],
+        main input[type="button"] { border-radius: 3px !important; }
+
+        /* ── ESQUINAS: clases Tailwind ───────────────────────── */
+        main .rounded-full, main .rounded-3xl { border-radius: 3px !important; }
+        main .rounded-2xl, main .rounded-xl   { border-radius: 8px !important; }
+        main .rounded-lg                      { border-radius: 6px !important; }
+        main .rounded-md, main .rounded       { border-radius: 4px !important; }
+
+        /* ── ESQUINAS: clases locales badge/pill ─────────────── */
+        main .ph-badge,  main .vph-badge, main .pm-badge,
+        main .rp-badge,  main .rp-filter,
+        main .cv-badge,  main .cc-badge,
+        main .ph-pill-back, main .rp-pill-back, main .pm-pill-back {
             border-radius: 3px !important;
         }
-        /* Clases Tailwind rounded-* */
-        .rounded-full, .rounded-xl, .rounded-2xl, .rounded-3xl,
-        .rounded-lg, .rounded-md, .rounded { border-radius: 3px !important; }
-        /* Inline style border-radius en cualquier elemento de contenido */
-        span[style*="border-radius"],
-        div[style*="border-radius"],
-        a[style*="border-radius"],
-        button[style*="border-radius"],
-        input[style*="border-radius"] { border-radius: 3px !important; }
 
-        /* ── Espaciado en área de contenido ── */
-        main .p-4 { padding: 1.5rem !important; }
-        main .p-6 { padding: 1.5rem !important; }
+        /* ── ESQUINAS: inline style en spans/links (badges) ──── */
+        main span[style*="border-radius"],
+        main a[style*="border-radius"] { border-radius: 3px !important; }
+
+        /* ── ESQUINAS: inline style en divs/botones tipo pill ── */
+        main div[style*="border-radius:20"],   main div[style*="border-radius: 20"],
+        main button[style*="border-radius:20"],main button[style*="border-radius: 20"],
+        main a[style*="border-radius:20"],     main a[style*="border-radius: 20"] {
+            border-radius: 6px !important;
+        }
+        main div[style*="border-radius:16"], main div[style*="border-radius: 16"],
+        main div[style*="border-radius:14"], main div[style*="border-radius: 14"],
+        main div[style*="border-radius:12"], main div[style*="border-radius: 12"] {
+            border-radius: 8px !important;
+        }
+
+        /* ── BORDES DE CARDS ─────────────────────────────────── */
+        main .border-gray-100, main .border-gray-200 { border-color: #CBCBCB !important; }
+
+        /* ── PAGINACIÓN ──────────────────────────────────────── */
+        main [role="navigation"] a,
+        main [role="navigation"] span { border-radius: 3px !important; }
+
+        /* ── PROGRESS BAR ────────────────────────────────────── */
+        main [style*="border-radius:99"] { border-radius: 3px !important; }
     </style>
     @livewireStyles
 </head>
