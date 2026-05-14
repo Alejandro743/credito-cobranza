@@ -104,9 +104,6 @@
             </button>
 
             <div x-show="activeModule === '{{ $slug }}' && !sidebarCollapsed"
-                 x-transition:enter="transition-all duration-150 ease-out"
-                 x-transition:enter-start="opacity-0 -translate-y-1"
-                 x-transition:enter-end="opacity-100 translate-y-0"
                  style="margin-left:16px; padding-left:12px; border-left:1px solid rgba(255,255,255,.1); margin-top:2px; margin-bottom:4px;">
 
                 @foreach ($modulo->submodulosVisibles as $sub)
@@ -203,29 +200,31 @@
     </nav>
 
     {{-- ── Usuario + Logout ── --}}
-    <div style="padding:12px 10px; border-top:1px solid rgba(255,255,255,.07); flex-shrink:0;">
-        <div class="flex items-center gap-2.5" style="margin-bottom:10px; overflow:hidden;">
-            <div style="width:34px; height:34px; border-radius:50%; background:linear-gradient(135deg,#7B6FE8,#9B8FF5); display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:700; color:#fff; flex-shrink:0;">
+    <div style="padding:10px 10px 12px; border-top:1px solid rgba(255,255,255,.07); flex-shrink:0;">
+        {{-- Avatar + nombre --}}
+        <div class="flex items-center gap-2.5" style="padding:6px 8px; margin-bottom:4px; overflow:hidden;">
+            <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#7B6FE8,#9B8FF5); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0;">
                 {{ strtoupper(substr($navUser->name, 0, 2)) }}
             </div>
             <div class="nav-label" :style="sidebarCollapsed ? 'opacity:0;width:0;' : 'opacity:1;'" style="flex:1; min-width:0;">
-                <p style="font-size:12px; font-weight:600; color:rgba(255,255,255,.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $navUser->name }}</p>
-                <p style="font-size:10px; color:rgba(255,255,255,.35); text-transform:capitalize;">{{ $navUser->getRoleNames()->first() }}</p>
+                <p style="font-size:12px; font-weight:600; color:rgba(255,255,255,.85); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">{{ $navUser->name }}</p>
+                <p style="font-size:10px; color:rgba(255,255,255,.35); text-transform:capitalize; line-height:1.3;">{{ $navUser->getRoleNames()->first() }}</p>
             </div>
         </div>
+        {{-- Logout --}}
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit"
-                    class="nav-item-wrap w-full flex items-center gap-2.5 transition-all"
-                    style="padding:8px 10px; border-radius:8px; background:rgba(239,68,68,.12); border:none; cursor:pointer; font-family:'Inter',sans-serif; position:relative;">
+                    class="nav-item-wrap w-full flex items-center gap-2.5"
+                    style="padding:7px 8px; border-radius:8px; border:none; cursor:pointer; font-family:'Inter',sans-serif; position:relative; background:transparent;">
                 <span class="nav-tooltip">Cerrar sesión</span>
-                <div style="width:24px; height:24px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="15" height="15" fill="none" stroke="rgba(239,68,68,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <div style="width:24px; height:24px; border-radius:6px; background:rgba(239,68,68,.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="13" height="13" fill="none" stroke="rgba(239,68,68,.75)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                     </svg>
                 </div>
                 <span class="nav-label" :style="sidebarCollapsed ? 'opacity:0;width:0;' : 'opacity:1;'"
-                      style="font-size:12px; font-weight:500; color:rgba(239,68,68,.8); white-space:nowrap;">
+                      style="font-size:12px; font-weight:500; color:rgba(239,68,68,.7); white-space:nowrap;">
                     Cerrar sesión
                 </span>
             </button>

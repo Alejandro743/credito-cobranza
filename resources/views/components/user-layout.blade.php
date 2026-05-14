@@ -55,6 +55,7 @@
         aside .nav-item-wrap:hover       { box-shadow: inset 0 0 0 100px rgba(255,255,255,.07); }
         .sidebar-nav button.w-full:hover { box-shadow: inset 0 0 0 100px rgba(255,255,255,.06); }
         .sidebar-nav a.flex:hover        { box-shadow: inset 0 0 0 100px rgba(255,255,255,.06); }
+        form .nav-item-wrap:hover        { box-shadow: inset 0 0 0 100px rgba(239,68,68,.08); }
     </style>
     @livewireStyles
     <link rel="stylesheet" href="{{ asset('css/crediessen.css') }}?v={{ @filemtime(public_path('css/crediessen.css')) }}">
