@@ -194,7 +194,7 @@
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit"
-                    class="nav-item-wrap w-full flex items-center gap-1.5"
+                    class="nav-item-wrap w-full flex items-center gap-1"
                     style="padding:7px 8px; border-radius:8px; border:none; cursor:pointer; font-family:'Inter',sans-serif; position:relative; background:transparent;">
                 <span class="nav-tooltip">Cerrar sesión</span>
                 <div style="width:24px; height:24px; border-radius:6px; background:rgba(239,68,68,.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
