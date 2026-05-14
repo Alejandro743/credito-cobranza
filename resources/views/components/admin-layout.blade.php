@@ -178,7 +178,7 @@ $dashRoute  = route('administrativo.dashboard');
 $dashActivo = request()->routeIs('administrativo.dashboard');
 @endphp
 
-<div class="flex h-screen overflow-hidden">
+<div class="flex h-screen overflow-hidden" style="background:#F0F2F5;">
 
     @include('partials.sidebar')
 
