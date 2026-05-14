@@ -194,16 +194,14 @@
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit"
-                    class="nav-item-wrap w-full flex items-center gap-1"
-                    style="padding:7px 8px; border-radius:8px; border:none; cursor:pointer; font-family:'Inter',sans-serif; position:relative; background:transparent;">
+                    class="nav-item-wrap w-full flex items-center"
+                    style="padding:7px 8px; gap:5px; border-radius:8px; border:none; cursor:pointer; font-family:'Inter',sans-serif; position:relative; background:transparent;">
                 <span class="nav-tooltip">Cerrar sesión</span>
-                <div style="width:24px; height:24px; border-radius:6px; background:rgba(239,68,68,.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="13" height="13" fill="none" stroke="rgba(239,68,68,.75)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
-                    </svg>
-                </div>
+                <svg style="flex-shrink:0;" width="15" height="15" fill="none" stroke="rgba(239,68,68,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                    <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+                </svg>
                 <span class="nav-label"
-                      style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:rgba(252,165,165,.9); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0;">
+                      style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:rgba(252,165,165,.9); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                     Cerrar sesión
                 </span>
             </button>
