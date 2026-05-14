@@ -45,28 +45,28 @@
         </svg>
     </button>
 
-    {{-- ── Panel Inicio ── --}}
-    <div style="padding:10px 10px 4px; flex-shrink:0;">
-        <a href="{{ $dashRoute }}" wire:navigate
-           class="nav-item-wrap flex items-center gap-3"
-           style="padding:9px 10px; border-radius:8px; position:relative; justify-content:center; {{ $dashActivo ? 'background:rgba(123,111,232,.25);' : '' }}">
-            <span class="nav-tooltip">Panel Inicio</span>
-            <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $dashActivo ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}">
-                <svg width="15" height="15" fill="none" stroke="{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.6)' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                </svg>
-            </div>
-            <span class="nav-label"
-                  style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; color:{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.80)' }}; white-space:nowrap;">
-                Panel Inicio
-            </span>
-        </a>
-    </div>
-
     {{-- ── Navegación ── --}}
     <nav class="sidebar-nav flex-1 overflow-y-auto overflow-x-hidden"
          style="padding:4px 10px 8px;"
          x-data="{ activeModule: '{{ $activeModuloSlug }}' }">
+
+        {{-- Panel Inicio — primer ítem del nav --}}
+        <div style="margin-bottom:2px;">
+            <a href="{{ $dashRoute }}" wire:navigate
+               class="nav-item-wrap flex items-center gap-3"
+               style="padding:9px 10px; border-radius:8px; position:relative; {{ $dashActivo ? 'background:rgba(123,111,232,.25);' : '' }}">
+                <span class="nav-tooltip">Panel Inicio</span>
+                <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $dashActivo ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}">
+                    <svg width="15" height="15" fill="none" stroke="{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.6)' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                </div>
+                <span class="nav-label"
+                      style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; color:{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.80)' }}; white-space:nowrap;">
+                    Panel Inicio
+                </span>
+            </a>
+        </div>
 
         @foreach ($navModulos as $modulo)
         @php $slug = $modulo->slug; @endphp
@@ -195,7 +195,7 @@
             @csrf
             <button type="submit"
                     class="nav-item-wrap w-full flex items-center"
-                    style="padding:7px 8px; gap:5px; border-radius:8px; border:none; cursor:pointer; font-family:'Inter',sans-serif; position:relative; background:transparent; justify-content:center;">
+                    style="padding:7px 8px; gap:5px; border-radius:8px; border:none; cursor:pointer; font-family:'Inter',sans-serif; position:relative; background:transparent;">
                 <span class="nav-tooltip">Cerrar sesión</span>
                 <svg style="flex-shrink:0;" width="15" height="15" fill="none" stroke="rgba(239,68,68,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
