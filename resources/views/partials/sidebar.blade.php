@@ -17,7 +17,7 @@
               transition-transform duration-300 ease-in-out md:transition-none"
        :class="{ 'translate-x-0': sidebarOpen, 'is-collapsed': sidebarCollapsed }"
        :style="{ width: sidebarCollapsed ? '64px' : '240px' }"
-       style="width:240px; background:#0B1120;">
+       style="width:240px; background:#0B1120; position:relative;">
 
     {{-- ── Logo ── --}}
     <div style="padding:16px 14px; border-bottom:1px solid rgba(255,255,255,.07); flex-shrink:0; min-height:64px; display:flex; align-items:center; gap:10px;">
@@ -34,16 +34,13 @@
         </div>
     </div>
 
-    {{-- ── Toggle Desktop ── --}}
-    <button @click="sidebarCollapsed = !sidebarCollapsed"
-            class="hidden md:flex items-center justify-center"
-            style="position:absolute; top:18px; right:-12px; width:24px; height:24px; background:#1E2A50; border:2px solid rgba(255,255,255,.12); border-radius:50%; cursor:pointer; z-index:10;">
-        <svg :style="sidebarCollapsed ? 'transform:rotate(180deg)' : ''"
-             style="transition:transform .25s; width:10px; height:10px; color:rgba(255,255,255,.6);"
-             fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 19l-7-7 7-7"/>
-        </svg>
-    </button>
+    {{-- ── Borde resize (reemplaza botón toggle) ── --}}
+    <div x-data="{ h: false }"
+         @click="sidebarCollapsed = !sidebarCollapsed"
+         @mouseenter="h = true" @mouseleave="h = false"
+         :style="h ? 'background:rgba(123,111,232,.3);' : 'background:rgba(255,255,255,.04);'"
+         style="position:absolute; top:0; right:0; bottom:0; width:4px; cursor:col-resize; z-index:20; transition:background .2s; display:none;"
+         class="md:block"></div>
 
     {{-- ── Navegación ── --}}
     <nav class="sidebar-nav flex-1 overflow-y-auto overflow-x-hidden"
@@ -72,7 +69,7 @@
         @php $slug = $modulo->slug; @endphp
         <div style="margin-bottom:2px;">
 
-            <button @click="!sidebarCollapsed && (activeModule = (activeModule === '{{ $slug }}' ? '' : '{{ $slug }}'))"
+            <button @click="sidebarCollapsed ? (sidebarCollapsed = false, activeModule = '{{ $slug }}') : (activeModule = activeModule === '{{ $slug }}' ? '' : '{{ $slug }}')"
                     class="nav-item-wrap w-full flex items-center gap-3"
                     style="padding:9px 10px; border-radius:8px; position:relative; {{ $activeModuloSlug === $slug ? 'background:rgba(123,111,232,.15);' : '' }}">
                 <span class="nav-tooltip">{{ $modulo->name }}</span>
