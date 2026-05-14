@@ -95,7 +95,7 @@
                         {{ $modulo->name }}
                     </span>
                     <svg :class="activeModule === '{{ $slug }}' ? 'rotate-180' : ''"
-                         class="w-3 h-3 transition-transform flex-shrink-0"
+                         class="w-3 h-3 transition-transform flex-shrink-0 {{ $activeModuloSlug === $slug ? 'rotate-180' : '' }}"
                          style="color:rgba(255,255,255,.3);"
                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
@@ -104,7 +104,7 @@
             </button>
 
             <div x-show="activeModule === '{{ $slug }}' && !sidebarCollapsed"
-                 style="margin-left:16px; padding-left:12px; border-left:1px solid rgba(255,255,255,.1); margin-top:2px; margin-bottom:4px;">
+                 style="{{ $activeModuloSlug !== $slug ? 'display:none;' : '' }}margin-left:16px; padding-left:12px; border-left:1px solid rgba(255,255,255,.1); margin-top:2px; margin-bottom:4px;">
 
                 @foreach ($modulo->submodulosVisibles as $sub)
 
@@ -133,14 +133,14 @@
                             {{ $sub->name }}
                         </span>
                         <svg :class="subOpen ? 'rotate-180' : ''"
-                             class="w-3 h-3 transition-transform flex-shrink-0"
+                             class="w-3 h-3 transition-transform flex-shrink-0 {{ $grupActivo ? 'rotate-180' : '' }}"
                              style="color:rgba(255,255,255,.25);"
                              fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
                     <div x-show="subOpen"
-                         style="margin-left:12px; padding-left:10px; border-left:1px solid rgba(255,255,255,.08); margin-top:1px;">
+                         style="{{ !$grupActivo ? 'display:none;' : '' }}margin-left:12px; padding-left:10px; border-left:1px solid rgba(255,255,255,.08); margin-top:1px;">
                         @foreach ($sub->childrenVisibles as $child)
                         @php
                             $childActivo = $child->route_name && request()->routeIs($child->route_name);
