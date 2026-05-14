@@ -18,6 +18,8 @@ return Application::configure(basePath: dirname(__DIR__))
             'submodulo.permiso' => \App\Http\Middleware\CheckSubmoduloPermiso::class,
         ]);
 
+        // Sin caché en todas las páginas web
+        $middleware->appendToGroup('web', \App\Http\Middleware\NoCacheHeaders::class);
         // Bloquea usuarios vinculados a vendedor/cliente inactivo
         $middleware->appendToGroup('web', \App\Http\Middleware\EnsureUserIsActivo::class);
         // Bloquea acceso si el rol del usuario está desactivado

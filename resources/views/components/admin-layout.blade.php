@@ -1,5 +1,4 @@
 @props(['title' => ''])
-<?php header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0'); ?>
 <!DOCTYPE html>
 <html lang="es" x-data="{ sidebarOpen: false, sidebarCollapsed: false }">
 <head>
