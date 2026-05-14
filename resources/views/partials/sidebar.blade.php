@@ -57,7 +57,7 @@
                 </svg>
             </div>
             <span class="nav-label"
-                  style="font-size:13px; font-weight:{{ $dashActivo ? '600' : '500' }}; color:{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.80)' }}; white-space:nowrap;">
+                  style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; color:{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.80)' }}; white-space:nowrap;">
                 Panel Inicio
             </span>
         </a>
@@ -194,7 +194,7 @@
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit"
-                    class="nav-item-wrap w-full flex items-center gap-2.5"
+                    class="nav-item-wrap w-full flex items-center gap-1.5"
                     style="padding:7px 8px; border-radius:8px; border:none; cursor:pointer; font-family:'Inter',sans-serif; position:relative; background:transparent;">
                 <span class="nav-tooltip">Cerrar sesión</span>
                 <div style="width:24px; height:24px; border-radius:6px; background:rgba(239,68,68,.15); display:flex; align-items:center; justify-content:center; flex-shrink:0;">
