@@ -27,6 +27,9 @@
         body { font-family: 'Inter', sans-serif; }
         [x-cloak] { display: none !important; }
         aside.is-collapsed .nav-label { opacity: 0; max-width: 0; pointer-events: none; }
+        @media (max-width: 767px) {
+            .sidebar-wrap:not(.translate-x-0) { display: none; }
+        }
         .sidebar-nav::-webkit-scrollbar       { width: 3px; }
         .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
         .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 4px; }
