@@ -1,7 +1,7 @@
 <x-guest-layout>
 
-    <p style="font-size:30px; font-weight:800; color:#111827; margin-bottom:6px; letter-spacing:-0.5px;">Bienvenido</p>
-    <p style="font-size:13px; color:#9CA3AF; margin-bottom:28px; font-weight:400;">Ingrese sus datos para continuar</p>
+    <p style="font-size:30px; font-weight:800; color:#111827; margin-bottom:6px; letter-spacing:-0.5px; text-align:center;">Bienvenido</p>
+    <p style="font-size:13px; color:#9CA3AF; margin-bottom:36px; font-weight:400; text-align:center;">Ingrese sus datos para continuar</p>
 
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
@@ -11,7 +11,7 @@
         {{-- Email --}}
         <div style="margin-bottom:16px;">
             <label style="display:block; font-size:11px; font-weight:700; color:#6B7280; letter-spacing:.5px; text-transform:uppercase; margin-bottom:6px;">
-                Correo electrónico
+                Usuario
             </label>
             <div class="input-wrap">
                 <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
