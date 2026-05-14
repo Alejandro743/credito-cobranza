@@ -6,14 +6,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn() => view('welcome'));
 
-// TEMPORAL — borrar después
-Route::get('/flush-x9k2m', function () {
-    opcache_reset();
-    Artisan::call('view:clear');
-    Artisan::call('view:cache');
-    return 'OK — PHP ' . PHP_VERSION . ' OPcache y vistas limpiadas';
-});
-
 // ─── Redirect dinámico según permisos ─────────────────────────────────────────
 Route::middleware('auth')->get('/administrativo/dashboard', fn() => view('modules.administrativo.dashboard'))->name('administrativo.dashboard');
 
