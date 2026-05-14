@@ -72,6 +72,15 @@
             box-shadow: 0 4px 12px rgba(0,0,0,.3);
         }
         .nav-item-wrap:hover .nav-tooltip { display: block; }
+
+        /* Hover feedback — box-shadow inset no pisa el background activo */
+        aside .nav-item-wrap,
+        .sidebar-nav button.w-full,
+        .sidebar-nav a.flex { transition: box-shadow 0.15s ease; }
+
+        aside .nav-item-wrap:hover  { box-shadow: inset 0 0 0 100px rgba(255,255,255,.07); }
+        .sidebar-nav button.w-full:hover { box-shadow: inset 0 0 0 100px rgba(255,255,255,.06); }
+        .sidebar-nav a.flex:hover        { box-shadow: inset 0 0 0 100px rgba(255,255,255,.06); }
     </style>
     @livewireStyles
     <link rel="stylesheet" href="{{ asset('css/crediessen.css') }}?v={{ @filemtime(public_path('css/crediessen.css')) }}">
@@ -296,6 +305,7 @@
                     <div class="nav-label flex items-center flex-1 gap-1"
                          :style="sidebarCollapsed ? 'opacity:0;width:0;overflow:hidden;' : 'opacity:1;'">
                         <span style="flex:1; text-align:left; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.6px;
+                                     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
                                      color:{{ $activeModuloSlug === $slug ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.60)' }};">
                             {{ $modulo->name }}
                         </span>
@@ -337,6 +347,7 @@
                                 </svg>
                             </div>
                             <span style="flex:1; text-align:left; font-size:12px; font-weight:500;
+                                         white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
                                          color:{{ $grupActivo ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,.65)' }};">
                                 {{ $sub->name }}
                             </span>
@@ -387,6 +398,7 @@
                             </svg>
                         </div>
                         <span style="font-size:12px; font-weight:{{ $subActivo ? '600' : '400' }};
+                                     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
                                      color:{{ $subActivo ? '#fff' : 'rgba(255,255,255,.70)' }};">
                             {{ $sub->name }}
                         </span>
