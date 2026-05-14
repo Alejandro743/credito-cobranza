@@ -1,4 +1,5 @@
 @props(['title' => ''])
+<?php header('Cache-Control: no-cache, no-store, must-revalidate, max-age=0'); ?>
 <!DOCTYPE html>
 <html lang="es" x-data="{ sidebarOpen: false, sidebarCollapsed: false }">
 <head>
@@ -37,10 +38,11 @@
         /* Sidebar scroll */
         .sidebar-nav::-webkit-scrollbar       { width: 3px; }
         .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.15); border-radius: 4px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 4px; }
 
-        /* Sidebar transition */
+        /* Sidebar */
         .sidebar-wrap {
+            background: #0B1120;
             transition: width 0.28s cubic-bezier(.4,0,.2,1);
             overflow: hidden;
         }
@@ -175,7 +177,7 @@
                   transition-transform duration-300 ease-in-out md:transition-none"
            :class="{ 'translate-x-0': sidebarOpen }"
            :style="{ width: sidebarCollapsed ? '64px' : '240px' }"
-           style="background:#0B1120; width:240px;">
+           style="width:240px;">
 
         {{-- ── Logo ── --}}
         <div style="padding:16px 14px; border-bottom:1px solid rgba(255,255,255,.07); flex-shrink:0; min-height:64px; display:flex; align-items:center; gap:10px;">
@@ -190,7 +192,7 @@
             {{-- Texto: oculto cuando colapsado --}}
             <div class="nav-label" :style="sidebarCollapsed ? 'opacity:0;width:0;' : 'opacity:1;width:auto;'">
                 <p style="font-size:13px; font-weight:800; color:#fff; letter-spacing:1.5px; line-height:1; white-space:nowrap;">CREDIESSEN</p>
-                <p style="font-size:9px; color:rgba(255,255,255,.4); font-weight:500; letter-spacing:1px; text-transform:uppercase; margin-top:3px; white-space:nowrap;">Sistema de Crédito</p>
+                <p style="font-size:9px; color:rgba(255,255,255,.55); font-weight:500; letter-spacing:1px; text-transform:uppercase; margin-top:3px; white-space:nowrap;">Sistema de Crédito</p>
             </div>
         </div>
 
@@ -215,13 +217,13 @@
                 {{-- Tooltip colapsado --}}
                 <span class="nav-tooltip">Panel Inicio</span>
                 <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
-                            {{ $dashActivo ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.08);' }}">
+                            {{ $dashActivo ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}">
                     <svg width="15" height="15" fill="none" stroke="{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.6)' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                     </svg>
                 </div>
                 <span class="nav-label" :style="sidebarCollapsed ? 'opacity:0;width:0;' : 'opacity:1;'"
-                      style="font-size:13px; font-weight:{{ $dashActivo ? '600' : '500' }}; color:{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.65)' }};">
+                      style="font-size:13px; font-weight:{{ $dashActivo ? '600' : '500' }}; color:{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.80)' }};">
                     Panel Inicio
                 </span>
             </a>
@@ -245,7 +247,7 @@
                     <span class="nav-tooltip">{{ $modulo->name }}</span>
                     {{-- Ícono módulo --}}
                     <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
-                                {{ $activeModuloSlug === $slug ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.08);' }}">
+                                {{ $activeModuloSlug === $slug ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}">
                         <svg width="15" height="15" fill="none"
                              stroke="{{ $activeModuloSlug === $slug ? '#fff' : 'rgba(255,255,255,.6)' }}"
                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -256,7 +258,7 @@
                     <div class="nav-label flex items-center flex-1 gap-1"
                          :style="sidebarCollapsed ? 'opacity:0;width:0;overflow:hidden;' : 'opacity:1;'">
                         <span style="flex:1; text-align:left; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.6px;
-                                     color:{{ $activeModuloSlug === $slug ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.45)' }};">
+                                     color:{{ $activeModuloSlug === $slug ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.60)' }};">
                             {{ $modulo->name }}
                         </span>
                         <svg :class="activeModule === '{{ $slug }}' ? 'rotate-180' : ''"
@@ -289,15 +291,15 @@
                                 style="padding:7px 8px; border-radius:6px; width:100%;
                                        {{ $grupActivo ? 'background:rgba(123,111,232,.12);' : '' }}">
                             <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
-                                        {{ $grupActivo ? 'background:rgba(123,111,232,.5);' : 'background:rgba(255,255,255,.06);' }}">
+                                        {{ $grupActivo ? 'background:rgba(123,111,232,.5);' : 'background:rgba(255,255,255,.12);' }}">
                                 <svg width="12" height="12" fill="none"
-                                     stroke="{{ $grupActivo ? '#C4B5FD' : 'rgba(255,255,255,.5)' }}"
+                                     stroke="{{ $grupActivo ? '#C4B5FD' : 'rgba(255,255,255,.65)' }}"
                                      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                     <path d="{{ $subIconos[$sub->slug] ?? 'M4 6h16M4 12h16M4 18h16' }}"/>
                                 </svg>
                             </div>
                             <span style="flex:1; text-align:left; font-size:12px; font-weight:500;
-                                         color:{{ $grupActivo ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,.5)' }};">
+                                         color:{{ $grupActivo ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,.65)' }};">
                                 {{ $sub->name }}
                             </span>
                             <svg :class="subOpen ? 'rotate-180' : ''"
@@ -321,7 +323,7 @@
                                 <span style="width:5px; height:5px; border-radius:50%; flex-shrink:0;
                                              background:{{ $childActivo ? '#fff' : 'rgba(255,255,255,.25)' }};"></span>
                                 <span style="font-size:12px; font-weight:{{ $childActivo ? '600' : '400' }};
-                                             color:{{ $childActivo ? '#fff' : 'rgba(255,255,255,.5)' }};">
+                                             color:{{ $childActivo ? '#fff' : 'rgba(255,255,255,.65)' }};">
                                     {{ $child->name }}
                                 </span>
                             </a>
@@ -339,15 +341,15 @@
                        style="padding:7px 8px; border-radius:6px; margin-bottom:1px;
                               {{ $subActivo ? 'background:#7B6FE8;' : '' }}">
                         <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
-                                    {{ $subActivo ? 'background:rgba(255,255,255,.2);' : 'background:rgba(255,255,255,.06);' }}">
+                                    {{ $subActivo ? 'background:rgba(255,255,255,.2);' : 'background:rgba(255,255,255,.12);' }}">
                             <svg width="12" height="12" fill="none"
-                                 stroke="{{ $subActivo ? '#fff' : 'rgba(255,255,255,.5)' }}"
+                                 stroke="{{ $subActivo ? '#fff' : 'rgba(255,255,255,.65)' }}"
                                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <path d="{{ $subIconos[$sub->slug] ?? 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2' }}"/>
                             </svg>
                         </div>
                         <span style="font-size:12px; font-weight:{{ $subActivo ? '600' : '400' }};
-                                     color:{{ $subActivo ? '#fff' : 'rgba(255,255,255,.55)' }};">
+                                     color:{{ $subActivo ? '#fff' : 'rgba(255,255,255,.70)' }};">
                             {{ $sub->name }}
                         </span>
                     </a>
