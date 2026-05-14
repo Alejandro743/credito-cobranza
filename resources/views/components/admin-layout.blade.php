@@ -25,6 +25,8 @@
     <style>
         html, body { background: #0B1120; }
         body { font-family: 'Inter', sans-serif; }
+        [x-cloak] { display: none !important; }
+        aside.is-collapsed .nav-label { opacity: 0; max-width: 0; pointer-events: none; }
         .sidebar-nav::-webkit-scrollbar       { width: 3px; }
         .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
         .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 4px; }
@@ -64,6 +66,19 @@
     <link rel="stylesheet" href="{{ asset('css/crediessen.css') }}?v={{ @filemtime(public_path('css/crediessen.css')) }}">
 </head>
 <body style="background:#0B1120;" class="font-sans antialiased">
+
+{{-- Overlay anti-flash: cubre cualquier parpadeo durante carga y navegación --}}
+<div id="pg" style="position:fixed;inset:0;background:#0B1120;z-index:9999;pointer-events:none;transition:opacity .15s;"></div>
+<script>
+(function(){
+    function hide(){ var e=document.getElementById('pg'); if(e){e.style.opacity='0';} }
+    function show(){ var e=document.getElementById('pg'); if(e){e.style.transition='none';e.style.opacity='1';} }
+    document.addEventListener('alpine:initialized', hide);
+    document.addEventListener('livewire:navigate', show);
+    document.addEventListener('livewire:navigated', function(){ setTimeout(hide, 50); });
+    setTimeout(hide, 800);
+})();
+</script>
 
 @php
 use App\Services\PermisoService;
