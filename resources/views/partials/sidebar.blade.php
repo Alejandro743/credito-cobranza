@@ -47,7 +47,7 @@
 
     {{-- ── Panel Inicio ── --}}
     <div style="padding:10px 10px 4px; flex-shrink:0;">
-        <a href="{{ $dashRoute }}"
+        <a href="{{ $dashRoute }}" wire:navigate
            class="nav-item-wrap flex items-center gap-3"
            style="padding:9px 10px; border-radius:8px; position:relative;
                   {{ $dashActivo ? 'background:rgba(123,111,232,.25);' : '' }}">
@@ -147,7 +147,7 @@
                             $href = ($child->route_name && \Illuminate\Support\Facades\Route::has($child->route_name))
                                 ? route($child->route_name) : '#';
                         @endphp
-                        <a href="{{ $href }}"
+                        <a href="{{ $href }}" wire:navigate
                            class="flex items-center gap-2"
                            style="padding:6px 8px; border-radius:6px; margin-bottom:1px;
                                   {{ $childActivo ? 'background:#7B6FE8;' : '' }}">
@@ -168,7 +168,7 @@
                     $href = ($sub->route_name && \Illuminate\Support\Facades\Route::has($sub->route_name))
                         ? route($sub->route_name) : '#';
                 @endphp
-                <a href="{{ $href }}"
+                <a href="{{ $href }}" wire:navigate
                    class="flex items-center gap-2.5"
                    style="padding:7px 8px; border-radius:6px; margin-bottom:1px;
                           {{ $subActivo ? 'background:#7B6FE8;' : '' }}">
