@@ -11,7 +11,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #C4B5FD 0%, #A78BFA 50%, #8B7CF6 100%);
+            background: #E8EAED;
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -25,7 +25,7 @@
             max-width: 880px;
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 32px 80px rgba(80, 50, 180, .30);
+            box-shadow: 0 20px 60px rgba(0,0,0,.18), 0 4px 16px rgba(0,0,0,.10);
             min-height: 540px;
         }
 
