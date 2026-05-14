@@ -57,7 +57,7 @@
                 </svg>
             </div>
             <span class="nav-label"
-                  style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; color:{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.80)' }}; white-space:nowrap;">
+                  style="font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; color:{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.80)' }}; white-space:nowrap;">
                 Panel Inicio
             </span>
         </a>
@@ -203,7 +203,7 @@
                     </svg>
                 </div>
                 <span class="nav-label"
-                      style="font-size:12px; font-weight:500; color:rgba(252,165,165,.9); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0;">
+                      style="font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.5px; color:rgba(252,165,165,.9); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0;">
                     Cerrar sesión
                 </span>
             </button>

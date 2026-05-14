@@ -67,16 +67,6 @@
 </head>
 <body style="background:#0B1120;" class="font-sans antialiased">
 
-{{-- Overlay anti-flash: cubre cualquier parpadeo durante carga y navegación --}}
-<div id="pg" style="position:fixed;inset:0;background:#0B1120;z-index:9999;pointer-events:none;transition:opacity .15s;"></div>
-<script>
-(function(){
-    function hide(){ var e=document.getElementById('pg'); if(e){e.style.opacity='0';} }
-    document.addEventListener('alpine:initialized', hide);
-    setTimeout(hide, 800);
-})();
-</script>
-
 @php
 use App\Services\PermisoService;
 
