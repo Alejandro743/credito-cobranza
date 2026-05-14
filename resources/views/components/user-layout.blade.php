@@ -60,7 +60,7 @@
     @livewireStyles
     <link rel="stylesheet" href="{{ asset('css/crediessen.css') }}?v={{ @filemtime(public_path('css/crediessen.css')) }}">
 </head>
-<body style="background:#F0F2F5;" class="font-sans antialiased">
+<body style="background:#0B1120;" class="font-sans antialiased">
 
 @php
 use App\Services\PermisoService;
@@ -182,7 +182,7 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
     @include('partials.sidebar')
 
     {{-- ═══ MAIN ═══ --}}
-    <div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden" style="background:#F0F2F5;">
 
         @unless($noHeader)
         {{-- Topbar --}}

@@ -224,7 +224,7 @@
                     </svg>
                 </div>
                 <span :style="sidebarCollapsed ? 'opacity:0;' : 'opacity:1;'"
-                      style="font-size:12px; font-weight:500; color:rgba(252,165,165,.9); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0;">
+                      style="font-size:12px; font-weight:500; color:rgba(252,165,165,.9); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0; opacity:1;">
                     Cerrar sesión
                 </span>
             </button>
