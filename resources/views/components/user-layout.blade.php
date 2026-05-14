@@ -27,6 +27,13 @@
         body { font-family: 'Inter', sans-serif; }
         [x-cloak] { display: none !important; }
         aside.is-collapsed .nav-label { opacity: 0; max-width: 0; pointer-events: none; }
+        /* Sidebar colapsado: íconos centrados y visibles */
+        aside.is-collapsed { overflow: visible; }
+        aside.is-collapsed > div:first-child { padding-left: 14px !important; padding-right: 14px !important; justify-content: center !important; gap: 0 !important; }
+        aside.is-collapsed .sidebar-nav { padding-left: 0 !important; padding-right: 0 !important; overflow: visible !important; }
+        aside.is-collapsed .nav-item-wrap { padding-left: 0 !important; padding-right: 0 !important; justify-content: center !important; gap: 0 !important; }
+        aside.is-collapsed > div:last-child { padding-left: 0 !important; padding-right: 0 !important; }
+        aside.is-collapsed > div:last-child > .flex { padding-left: 0 !important; padding-right: 0 !important; justify-content: center !important; gap: 0 !important; }
         @media (max-width: 767px) {
             .sidebar-wrap:not(.translate-x-0) { display: none; }
         }
