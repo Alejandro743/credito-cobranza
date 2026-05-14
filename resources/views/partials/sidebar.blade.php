@@ -15,7 +15,7 @@
               md:static md:inset-auto md:z-auto
               -translate-x-full md:translate-x-0
               transition-transform duration-300 ease-in-out md:transition-none"
-       :class="{ 'translate-x-0': sidebarOpen }"
+       :class="{ 'translate-x-0': sidebarOpen, 'is-collapsed': sidebarCollapsed }"
        :style="{ width: sidebarCollapsed ? '64px' : '240px', background: '#0B1120' }"
        style="width:240px; background:#0B1120;">
 
@@ -223,8 +223,8 @@
                         <path d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
                     </svg>
                 </div>
-                <span class="nav-label" :style="sidebarCollapsed ? 'opacity:0;width:0;' : 'opacity:1;'"
-                      style="font-size:12px; font-weight:500; color:rgba(239,68,68,.7); white-space:nowrap;">
+                <span :style="sidebarCollapsed ? 'opacity:0;' : 'opacity:1;'"
+                      style="font-size:12px; font-weight:500; color:rgba(252,165,165,.9); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; min-width:0;">
                     Cerrar sesión
                 </span>
             </button>

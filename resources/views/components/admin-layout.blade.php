@@ -48,7 +48,8 @@
             white-space: nowrap; pointer-events: none;
             z-index: 100; box-shadow: 0 4px 12px rgba(0,0,0,.3);
         }
-        .nav-item-wrap:hover .nav-tooltip { display: block; }
+        /* Solo mostrar tooltip cuando el sidebar está colapsado */
+        aside.is-collapsed .nav-item-wrap:hover .nav-tooltip { display: block; }
         aside .nav-item-wrap,
         .sidebar-nav button.w-full,
         .sidebar-nav a.flex { transition: box-shadow 0.15s ease; }
