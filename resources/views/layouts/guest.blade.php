@@ -38,7 +38,6 @@
             flex-direction: column;
             justify-content: space-between;
             min-width: 0;
-            position: relative;
             overflow: hidden;
         }
 
@@ -51,9 +50,6 @@
             flex-direction: column;
             justify-content: center;
         }
-
-        /* Logo mobile: oculto en desktop */
-        .mobile-logo { display: none; }
 
         /* ── INPUTS ── */
         .input-wrap { position: relative; }
@@ -118,66 +114,58 @@
         .btn-login:hover { opacity: .93; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(123,111,232,.5); }
         .btn-login:active { transform: translateY(0); }
 
+        /* Logo mobile: oculto en desktop */
+        .mobile-logo { display: none; }
+
         /* ── MOBILE ── */
         @media (max-width: 640px) {
             body {
-                align-items: flex-end;
+                background: #fff;
                 padding: 0;
-                background: #E8EAED;
-                position: relative;
-                overflow: hidden;
-            }
-
-            /* Ilustración de fondo en mobile */
-            body::before {
-                content: '';
-                position: fixed;
-                top: 0; left: 0; right: 0;
-                height: 42vh;
-                background: #E8EAED;
-                z-index: 0;
+                align-items: stretch;
             }
 
             .login-wrap {
-                position: relative;
-                z-index: 1;
                 flex-direction: column;
                 max-width: 100%;
                 width: 100%;
-                border-radius: 24px 24px 0 0;
-                box-shadow: 0 -8px 40px rgba(0,0,0,.13), 0 -2px 8px rgba(0,0,0,.07);
-                min-height: unset;
+                min-height: 100vh;
+                border-radius: 0;
+                box-shadow: none;
             }
 
-            /* Ocultar panel izquierdo en mobile */
             .login-left { display: none; }
 
             .login-right {
                 width: 100%;
-                padding: 8px 28px 40px;
-                justify-content: flex-start;
+                flex: 1;
+                padding: 52px 32px 40px;
+                display: flex;
+                flex-direction: column;
+                justify-content: space-between;
             }
 
-            /* Logo centrado arriba de la tarjeta en mobile */
+            /* Logo centrado abajo en mobile */
             .mobile-logo {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                gap: 10px;
-                padding: 28px 0 20px;
+                gap: 8px;
+                padding-top: 32px;
             }
             .mobile-logo-icon {
-                width: 56px;
-                height: 56px;
+                width: 52px;
+                height: 52px;
                 background: linear-gradient(135deg, #8B7CF6, #7B6FE8);
-                border-radius: 16px;
+                border-radius: 14px;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 4px 16px rgba(123,111,232,.35);
+                box-shadow: 0 4px 14px rgba(123,111,232,.35);
+                margin-bottom: 4px;
             }
             .mobile-logo-name {
-                font-size: 18px;
+                font-size: 16px;
                 font-weight: 800;
                 color: #1F2937;
                 letter-spacing: 2px;
@@ -188,56 +176,11 @@
                 font-weight: 600;
                 letter-spacing: 1.8px;
                 text-transform: uppercase;
-                margin-top: -6px;
-            }
-
-            /* Ilustración SVG flotante en fondo mobile */
-            .mobile-illustration {
-                display: flex;
-                justify-content: center;
-                position: fixed;
-                top: 0; left: 0; right: 0;
-                height: 42vh;
-                align-items: center;
-                z-index: 0;
-                pointer-events: none;
             }
         }
-
-        /* Ocultar ilustración mobile en desktop */
-        .mobile-illustration { display: none; }
     </style>
 </head>
 <body>
-
-{{-- Ilustración fondo mobile (solo visible en < 640px) --}}
-<div class="mobile-illustration">
-    <svg width="300" height="180" viewBox="0 0 300 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="40" y="30" width="200" height="110" rx="14" fill="rgba(139,124,246,.12)" stroke="rgba(139,124,246,.25)" stroke-width="1.2"/>
-        <rect x="40" y="30" width="200" height="30" rx="14" fill="rgba(139,124,246,.18)"/>
-        <rect x="40" y="46" width="200" height="14" fill="rgba(139,124,246,.18)"/>
-        <rect x="54" y="40" width="56" height="7" rx="3.5" fill="rgba(139,124,246,.55)"/>
-        <rect x="210" y="40" width="22" height="7" rx="3.5" fill="rgba(139,124,246,.35)"/>
-        <line x1="40" y1="60" x2="240" y2="60" stroke="rgba(139,124,246,.15)" stroke-width="1"/>
-        <rect x="56"  y="96" width="16" height="30" rx="4" fill="rgba(139,124,246,.30)"/>
-        <rect x="80"  y="82" width="16" height="44" rx="4" fill="rgba(139,124,246,.50)"/>
-        <rect x="104" y="89" width="16" height="37" rx="4" fill="rgba(139,124,246,.35)"/>
-        <rect x="128" y="74" width="16" height="52" rx="4" fill="rgba(139,124,246,.60)"/>
-        <rect x="152" y="85" width="16" height="41" rx="4" fill="rgba(139,124,246,.40)"/>
-        <rect x="176" y="78" width="16" height="48" rx="4" fill="rgba(139,124,246,.52)"/>
-        <rect x="188" y="8" width="72" height="38" rx="10" fill="rgba(139,124,246,.15)" stroke="rgba(139,124,246,.28)" stroke-width="1"/>
-        <rect x="198" y="17" width="30" height="5" rx="2.5" fill="rgba(139,124,246,.50)"/>
-        <rect x="198" y="26" width="20" height="5" rx="2.5" fill="rgba(139,124,246,.30)"/>
-        <circle cx="244" cy="22" r="9" fill="rgba(139,124,246,.20)"/>
-        <path d="M240 22l3 3 5-5" stroke="rgba(139,124,246,.70)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        <rect x="28" y="100" width="58" height="38" rx="10" fill="rgba(139,124,246,.13)" stroke="rgba(139,124,246,.22)" stroke-width="1"/>
-        <circle cx="48" cy="116" r="8" fill="none" stroke="rgba(139,124,246,.45)" stroke-width="2"/>
-        <path d="M48 108v8l5 3" stroke="rgba(139,124,246,.65)" stroke-width="1.8" stroke-linecap="round"/>
-        <rect x="62" y="111" width="16" height="5" rx="2.5" fill="rgba(139,124,246,.40)"/>
-        <rect x="62" y="120" width="10" height="5" rx="2.5" fill="rgba(139,124,246,.25)"/>
-    </svg>
-</div>
-
 <div class="login-wrap">
 
     {{-- Panel izquierdo (solo desktop) --}}
@@ -289,10 +232,15 @@
     {{-- Panel derecho --}}
     <div class="login-right">
 
-        {{-- Logo centrado solo en mobile --}}
+        {{-- Contenido del formulario --}}
+        <div>
+            {{ $slot }}
+        </div>
+
+        {{-- Logo abajo (solo mobile) --}}
         <div class="mobile-logo">
             <div class="mobile-logo-icon">
-                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 2L2 7l10 5 10-5-10-5z"/>
                     <path d="M2 17l10 5 10-5"/>
                     <path d="M2 12l10 5 10-5"/>
@@ -302,8 +250,7 @@
             <div class="mobile-logo-sub">Crédito · Cobranza</div>
         </div>
 
-        {{ $slot }}
-        <p style="font-size:11px; color:#D1D5DB; text-align:center; margin-top:28px;">Crediessen &copy; {{ date('Y') }} · Sistema Interno</p>
+        <p style="font-size:11px; color:#D1D5DB; text-align:center; margin-top:12px;" class="footer-copy">Crediessen &copy; {{ date('Y') }} · Sistema Interno</p>
     </div>
 
 </div>
