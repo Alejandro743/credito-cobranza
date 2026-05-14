@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }}</title>
-    <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700,800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -185,15 +185,16 @@
 
         <!-- Cabecera -->
         <div class="flex items-center gap-3 px-5 py-4 border-b border-gray-100 bg-gray-50">
-            <div class="w-9 h-9 rounded-xl bg-lavanda-500 flex items-center justify-center text-white flex-shrink-0">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            <div style="width:36px; height:36px; background:linear-gradient(135deg,#7B6FE8,#9B8FF5); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                    <path d="M2 17l10 5 10-5"/>
+                    <path d="M2 12l10 5 10-5"/>
                 </svg>
             </div>
             <div>
-                <p class="font-bold text-gray-800 text-sm leading-tight">{{ config('app.name') }}</p>
-                <p class="text-xs text-lavanda-600 font-semibold capitalize">{{ $navRol }}</p>
+                <p style="font-size:13px; font-weight:800; color:#fff; letter-spacing:1.5px; line-height:1; white-space:nowrap;">CREDIESSEN</p>
+                <p style="font-size:9px; color:rgba(255,255,255,.55); font-weight:500; letter-spacing:1px; text-transform:uppercase; margin-top:3px;">Sistema de Crédito</p>
             </div>
         </div>
 
@@ -236,7 +237,7 @@
                         <svg class="w-4 h-4 flex-shrink-0 {{ $c['icon'] }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $modulo->icon }}"/>
                         </svg>
-                        <span class="flex-1 text-left">{{ $modulo->name }}</span>
+                        <span class="flex-1 text-left" style="text-transform:uppercase; letter-spacing:.6px; font-size:12px; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $modulo->name }}</span>
                         <svg :class="activeModule === '{{ $slug }}' ? 'rotate-180' : ''" class="w-3.5 h-3.5 transition-transform text-gray-400"
                              fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
@@ -266,7 +267,7 @@
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $subIconos[$sub->slug] }}"/>
                                         </svg>
                                         @endif
-                                        <span class="flex-1 text-left font-medium">{{ $sub->name }}</span>
+                                        <span class="flex-1 text-left font-medium" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $sub->name }}</span>
                                         <svg :class="subOpen ? 'rotate-180':''"
                                              class="w-3 h-3 transition-transform text-gray-400 flex-shrink-0"
                                              fill="none" stroke="currentColor" viewBox="0 0 24 24">
