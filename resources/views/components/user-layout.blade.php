@@ -70,10 +70,7 @@
 <script>
 (function(){
     function hide(){ var e=document.getElementById('pg'); if(e){e.style.opacity='0';} }
-    function show(){ var e=document.getElementById('pg'); if(e){e.style.transition='none';e.style.opacity='1';} }
     document.addEventListener('alpine:initialized', hide);
-    document.addEventListener('livewire:navigate', show);
-    document.addEventListener('livewire:navigated', function(){ setTimeout(hide, 50); });
     setTimeout(hide, 800);
 })();
 </script>
