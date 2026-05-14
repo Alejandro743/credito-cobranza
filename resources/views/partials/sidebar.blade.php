@@ -48,7 +48,7 @@
     {{-- ── Panel Inicio ── --}}
     <div style="padding:10px 10px 4px; flex-shrink:0;">
         <a href="{{ $dashRoute }}"
-           class="nav-item-wrap flex items-center gap-3 transition-all"
+           class="nav-item-wrap flex items-center gap-3"
            style="padding:9px 10px; border-radius:8px; position:relative;
                   {{ $dashActivo ? 'background:rgba(123,111,232,.25);' : '' }}">
             <span class="nav-tooltip">Panel Inicio</span>
@@ -75,7 +75,7 @@
         <div style="margin-bottom:2px;">
 
             <button @click="!sidebarCollapsed && (activeModule = (activeModule === '{{ $slug }}' ? '' : '{{ $slug }}'))"
-                    class="nav-item-wrap w-full flex items-center gap-3 transition-all"
+                    class="nav-item-wrap w-full flex items-center gap-3"
                     style="padding:9px 10px; border-radius:8px; position:relative;
                            {{ $activeModuloSlug === $slug ? 'background:rgba(123,111,232,.15);' : '' }}">
                 <span class="nav-tooltip">{{ $modulo->name }}</span>
@@ -116,7 +116,7 @@
                 @endphp
                 <div x-data="{ subOpen: {{ $grupActivo ? 'true' : 'false' }} }" style="margin-bottom:1px;">
                     <button @click="subOpen = !subOpen"
-                            class="w-full flex items-center gap-2.5 transition-all"
+                            class="w-full flex items-center gap-2.5"
                             style="padding:7px 8px; border-radius:6px; width:100%;
                                    {{ $grupActivo ? 'background:rgba(123,111,232,.12);' : '' }}">
                         <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0;
@@ -148,7 +148,7 @@
                                 ? route($child->route_name) : '#';
                         @endphp
                         <a href="{{ $href }}"
-                           class="flex items-center gap-2 transition-all"
+                           class="flex items-center gap-2"
                            style="padding:6px 8px; border-radius:6px; margin-bottom:1px;
                                   {{ $childActivo ? 'background:#7B6FE8;' : '' }}">
                             <span style="width:5px; height:5px; border-radius:50%; flex-shrink:0;
@@ -169,7 +169,7 @@
                         ? route($sub->route_name) : '#';
                 @endphp
                 <a href="{{ $href }}"
-                   class="flex items-center gap-2.5 transition-all"
+                   class="flex items-center gap-2.5"
                    style="padding:7px 8px; border-radius:6px; margin-bottom:1px;
                           {{ $subActivo ? 'background:#7B6FE8;' : '' }}">
                     <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0;

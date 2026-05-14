@@ -1,6 +1,6 @@
 @props(['title' => ''])
 <!DOCTYPE html>
-<html lang="es" x-data="{ sidebarOpen: false, sidebarCollapsed: false }">
+<html lang="es" x-data="{ sidebarOpen: false, sidebarCollapsed: false }" style="background:#0B1120;">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
