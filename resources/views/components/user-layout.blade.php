@@ -23,6 +23,7 @@
     }
     </script>
     <style>
+        html, body { background: #0B1120; }
         body { font-family: 'Inter', sans-serif; }
         .sidebar-nav::-webkit-scrollbar       { width: 3px; }
         .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
