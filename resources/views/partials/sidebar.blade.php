@@ -49,7 +49,7 @@
     <div style="padding:10px 10px 4px; flex-shrink:0;">
         <a href="{{ $dashRoute }}" wire:navigate
            class="nav-item-wrap flex items-center gap-3"
-           style="padding:9px 10px; border-radius:8px; position:relative; {{ $dashActivo ? 'background:rgba(123,111,232,.25);' : '' }}">
+           style="padding:9px 10px; border-radius:8px; position:relative; justify-content:center; {{ $dashActivo ? 'background:rgba(123,111,232,.25);' : '' }}">
             <span class="nav-tooltip">Panel Inicio</span>
             <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $dashActivo ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}">
                 <svg width="15" height="15" fill="none" stroke="{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.6)' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
@@ -195,7 +195,7 @@
             @csrf
             <button type="submit"
                     class="nav-item-wrap w-full flex items-center"
-                    style="padding:7px 8px; gap:5px; border-radius:8px; border:none; cursor:pointer; font-family:'Inter',sans-serif; position:relative; background:transparent;">
+                    style="padding:7px 8px; gap:5px; border-radius:8px; border:none; cursor:pointer; font-family:'Inter',sans-serif; position:relative; background:transparent; justify-content:center;">
                 <span class="nav-tooltip">Cerrar sesión</span>
                 <svg style="flex-shrink:0;" width="15" height="15" fill="none" stroke="rgba(239,68,68,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
