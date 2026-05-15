@@ -199,43 +199,40 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
             $hdrIconBg2    = $hdrBgMap2[$moduloActivo?->color ?? ''] ?? 'rgba(123,111,232,.13)';
         @endphp
         <header class="flex items-center gap-3 px-4 flex-shrink-0"
-                style="background:#fff; border-bottom:1px solid #E5E7EB; min-height:60px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
+                style="background:#fff; border-bottom:1px solid #E5E7EB; min-height:56px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
 
-            {{-- Ícono del módulo activo --}}
-            <div style="width:38px; height:38px; border-radius:11px; background:{{ $hdrIconBg2 }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            {{-- Hamburguesa --}}
+            <button @click="sidebarOpen = !sidebarOpen"
+                    style="width:32px; height:32px; border-radius:8px; background:#F3F4F6; border:none; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2.2" stroke-linecap="round" viewBox="0 0 24 24">
+                    <path d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+
+            {{-- Ícono del módulo --}}
+            <div style="width:32px; height:32px; border-radius:9px; background:{{ $hdrIconBg2 }}; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
                 @if($moduloActivo?->icon)
-                <svg width="19" height="19" fill="none" stroke="{{ $hdrIconColor2 }}" stroke-width="1.9"
-                     stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <svg width="16" height="16" fill="none" stroke="{{ $hdrIconColor2 }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="{{ $moduloActivo->icon }}"/>
                 </svg>
                 @else
-                <svg width="19" height="19" fill="none" stroke="{{ $hdrIconColor2 }}" stroke-width="1.9"
-                     stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <svg width="16" height="16" fill="none" stroke="{{ $hdrIconColor2 }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                     <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                 </svg>
                 @endif
             </div>
 
-            {{-- Título --}}
-            <div class="flex-1 min-w-0">
+            {{-- Breadcrumb en lila --}}
+            <div class="flex-1 min-w-0" style="display:flex; align-items:center; gap:6px; overflow:hidden;">
                 @if($activeModuloName)
-                <p style="font-size:10px; font-weight:600; color:#9CA3AF; letter-spacing:.6px; text-transform:uppercase; margin:0 0 1px; line-height:1;">{{ $activeModuloName }}</p>
+                <span style="font-size:13px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">{{ $activeModuloName }}</span>
+                <span style="font-size:13px; color:#C4B5FD;">/</span>
                 @endif
-                <p style="font-size:18px; font-weight:800; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0; line-height:1.2;">{{ $headerTitle ?: $pageTitle }}</p>
+                <span style="font-size:13px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $headerTitle ?: $pageTitle }}</span>
             </div>
 
             {{-- Fecha --}}
             <div style="font-size:11px; color:#D1D5DB; flex-shrink:0;" class="hidden sm:block">{{ now()->format('d M Y') }}</div>
-
-            {{-- Hamburguesa (derecha) --}}
-            <button @click="sidebarOpen = !sidebarOpen"
-                    class="flex items-center justify-center"
-                    style="width:36px; height:36px; border-radius:9px; background:#F3F4F6; border:none; cursor:pointer; flex-shrink:0;">
-                <svg width="17" height="17" fill="none" stroke="#6B7280" stroke-width="2"
-                     stroke-linecap="round" viewBox="0 0 24 24">
-                    <path d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-            </button>
         </header>
         @endunless
 
