@@ -16,12 +16,11 @@
               -translate-x-full md:translate-x-0
               transition-transform duration-300 ease-in-out md:transition-none"
        :class="{ 'translate-x-0': sidebarOpen, 'is-collapsed': sidebarCollapsed }"
-       :style="{ width: sidebarCollapsed ? '64px' : '240px', overflow: 'visible' }"
+       :style="{ width: sidebarCollapsed ? '64px' : '240px' }"
        style="width:240px; background:#0B1120; position:relative;">
 
     {{-- ── Logo ── --}}
-    <div :style="sidebarCollapsed ? 'padding:16px 0; justify-content:center; gap:0;' : 'padding:16px 14px; gap:10px;'"
-         style="border-bottom:1px solid rgba(255,255,255,.07); flex-shrink:0; min-height:64px; display:flex; align-items:center; transition:padding .28s, gap .28s;">
+    <div style="padding:16px 14px; border-bottom:1px solid rgba(255,255,255,.07); flex-shrink:0; min-height:64px; display:flex; align-items:center; gap:10px;">
         <div style="width:36px; height:36px; background:linear-gradient(135deg,#7B6FE8,#9B8FF5); border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M12 2L2 7l10 5 10-5-10-5z"/>
@@ -44,20 +43,18 @@
          class="md:block"></div>
 
     {{-- ── Navegación ── --}}
-    <nav class="sidebar-nav flex-1 overflow-y-auto"
-         :style="sidebarCollapsed ? 'padding:4px 0 8px; overflow-x:visible;' : 'padding:4px 10px 8px; overflow-x:hidden;'"
+    <nav class="sidebar-nav flex-1 overflow-y-auto overflow-x-hidden"
          style="padding:4px 10px 8px;"
          x-data="{ activeModule: '{{ $activeModuloSlug }}' }">
 
         {{-- Panel Inicio — primer ítem del nav --}}
         <div style="margin-bottom:2px;">
             <a href="{{ $dashRoute }}" wire:navigate
-               class="nav-item-wrap flex items-center"
-               :style="sidebarCollapsed ? 'padding:9px 0; justify-content:center; gap:0;' : 'padding:9px 10px; gap:12px;'"
-               style="padding:9px 10px; gap:12px; border-radius:8px; position:relative; {{ $dashActivo ? 'background:rgba(123,111,232,.25);' : '' }}">
+               class="nav-item-wrap flex items-center gap-3"
+               style="padding:9px 10px; border-radius:8px; position:relative; {{ $dashActivo ? 'background:rgba(123,111,232,.25);' : '' }}">
                 <span class="nav-tooltip">Panel Inicio</span>
-                <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $dashActivo ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.18);' }}">
-                    <svg width="15" height="15" fill="none" stroke="{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.8)' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $dashActivo ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}">
+                    <svg width="15" height="15" fill="none" stroke="{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.6)' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                     </svg>
                 </div>
@@ -73,13 +70,12 @@
         <div style="margin-bottom:2px;">
 
             <button @click="sidebarCollapsed ? (sidebarCollapsed = false, activeModule = '{{ $slug }}') : (activeModule = activeModule === '{{ $slug }}' ? '' : '{{ $slug }}')"
-                    class="nav-item-wrap w-full flex items-center"
-                    :style="sidebarCollapsed ? 'padding:9px 0; justify-content:center; gap:0;' : 'padding:9px 10px; gap:12px;'"
-                    style="padding:9px 10px; gap:12px; border-radius:8px; position:relative; {{ $activeModuloSlug === $slug ? 'background:rgba(123,111,232,.15);' : '' }}">
+                    class="nav-item-wrap w-full flex items-center gap-3"
+                    style="padding:9px 10px; border-radius:8px; position:relative; {{ $activeModuloSlug === $slug ? 'background:rgba(123,111,232,.15);' : '' }}">
                 <span class="nav-tooltip">{{ $modulo->name }}</span>
-                <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $activeModuloSlug === $slug ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.18);' }}">
+                <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $activeModuloSlug === $slug ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}">
                     <svg width="15" height="15" fill="none"
-                         stroke="{{ $activeModuloSlug === $slug ? '#fff' : 'rgba(255,255,255,.8)' }}"
+                         stroke="{{ $activeModuloSlug === $slug ? '#fff' : 'rgba(255,255,255,.6)' }}"
                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <path d="{{ $modulo->icon }}"/>
                     </svg>
@@ -182,11 +178,8 @@
     </nav>
 
     {{-- ── Usuario + Logout ── --}}
-    <div :style="sidebarCollapsed ? 'padding:10px 0 12px;' : 'padding:10px 10px 12px;'"
-         style="padding:10px 10px 12px; border-top:1px solid rgba(255,255,255,.07); flex-shrink:0; transition:padding .28s;">
-        <div class="flex items-center"
-             :style="sidebarCollapsed ? 'padding:6px 0; justify-content:center; gap:0; margin-bottom:4px;' : 'padding:6px 8px; gap:10px; margin-bottom:4px;'"
-             style="padding:6px 8px; gap:10px; margin-bottom:4px; overflow:hidden;">
+    <div style="padding:10px 10px 12px; border-top:1px solid rgba(255,255,255,.07); flex-shrink:0;">
+        <div class="flex items-center gap-2.5" style="padding:6px 8px; margin-bottom:4px; overflow:hidden;">
             <div style="width:32px; height:32px; border-radius:50%; background:linear-gradient(135deg,#7B6FE8,#9B8FF5); display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; color:#fff; flex-shrink:0;">
                 {{ strtoupper(substr($navUser->name, 0, 2)) }}
             </div>
@@ -199,7 +192,6 @@
             @csrf
             <button type="submit"
                     class="nav-item-wrap w-full flex items-center"
-                    :style="sidebarCollapsed ? 'padding:7px 0; justify-content:center; gap:0;' : 'padding:7px 8px; gap:5px;'"
                     style="padding:7px 8px; gap:5px; border-radius:8px; border:none; cursor:pointer; font-family:'Inter',sans-serif; position:relative; background:transparent;">
                 <span class="nav-tooltip">Cerrar sesión</span>
                 <svg style="flex-shrink:0;" width="15" height="15" fill="none" stroke="rgba(239,68,68,.8)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
