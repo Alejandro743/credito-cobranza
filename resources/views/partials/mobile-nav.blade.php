@@ -19,19 +19,25 @@ $mobileColorMap = [
         <p style="font-size:12px; color:#9CA3AF; margin-top:2px;">Selecciona un módulo</p>
     </div>
 
-    {{-- Lista de módulos --}}
-    <div class="flex-1 overflow-y-auto" style="padding:10px 0 4px;">
+    {{-- Lista de módulos — estado en un solo x-data padre para evitar conflictos --}}
+    <div class="flex-1 overflow-y-auto" style="padding:10px 0 4px;"
+         x-data="{
+             openMods: {
+                 @foreach($navModulos as $m)
+                 '{{ $m->slug }}': {{ $moduloActivo?->slug === $m->slug ? 'true' : 'false' }}{{ !$loop->last ? ',' : '' }}
+                 @endforeach
+             }
+         }">
 
         @foreach($navModulos as $modulo)
         @php
-            $mc  = $mobileColorMap[$modulo->color] ?? ['bg' => 'rgba(123,111,232,.13)', 'icon' => '#7B6FE8'];
-            $isOpen = $moduloActivo?->slug === $modulo->slug;
+            $slug = $modulo->slug;
+            $mc   = $mobileColorMap[$modulo->color] ?? ['bg' => 'rgba(123,111,232,.13)', 'icon' => '#7B6FE8'];
         @endphp
-        <div x-data="{ mOpen: {{ $isOpen ? 'true' : 'false' }} }"
-             style="background:#fff; margin-bottom:8px;">
+        <div style="background:#fff; margin-bottom:8px;">
 
             {{-- Fila del módulo --}}
-            <button @click="mOpen = !mOpen"
+            <button @click="openMods['{{ $slug }}'] = !openMods['{{ $slug }}']"
                     class="w-full flex items-center justify-between"
                     style="padding:14px 20px;">
                 <div class="flex items-center gap-3">
@@ -49,7 +55,7 @@ $mobileColorMap = [
                     </div>
                 </div>
                 <svg class="w-5 h-5 flex-shrink-0"
-                     :class="mOpen ? 'rotate-180' : ''"
+                     :class="openMods['{{ $slug }}'] ? 'rotate-180' : ''"
                      style="color:#D1D5DB; transition:transform .2s;"
                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
@@ -57,8 +63,7 @@ $mobileColorMap = [
             </button>
 
             {{-- Grid de acciones --}}
-            <div x-cloak x-show="mOpen"
-                 style="padding:4px 16px 18px; background:#F7F8FC; border-top:1px solid #F0F0F0;">
+            <div x-show="openMods['{{ $slug }}']" style="display:none; padding:4px 16px 18px; background:#F7F8FC; border-top:1px solid #F0F0F0;">
                 <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-top:10px;">
 
                     @foreach($modulo->submodulosVisibles as $sub)

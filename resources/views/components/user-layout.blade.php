@@ -1,4 +1,4 @@
-@props(['title' => '', 'noHeader' => false, 'noPadding' => false])
+@props(['title' => '', 'noHeader' => false, 'noPadding' => false, 'headerTitle' => ''])
 <!DOCTYPE html>
 <html lang="es" x-data="{ sidebarOpen: false, sidebarCollapsed: false, mobileTab: 'inicio' }" style="background:#0B1120;">
 <head>
@@ -206,7 +206,7 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
                 <span style="font-size:11px; font-weight:600; color:#9CA3AF; letter-spacing:.5px; text-transform:uppercase; white-space:nowrap;">{{ $activeModuloName }}</span>
                 <span style="color:#D1D5DB; font-size:11px;">/</span>
                 @endif
-                <span style="font-size:14px; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $pageTitle }}</span>
+                <span style="font-size:14px; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $headerTitle ?: $pageTitle }}</span>
             </div>
             <div style="font-size:11px; color:#D1D5DB; flex-shrink:0;" class="hidden sm:block">{{ now()->format('d M Y') }}</div>
         </header>
