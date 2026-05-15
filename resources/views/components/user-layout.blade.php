@@ -1,6 +1,6 @@
 @props(['title' => '', 'noHeader' => false, 'noPadding' => false])
 <!DOCTYPE html>
-<html lang="es" x-data="{ sidebarOpen: false, sidebarCollapsed: false }" style="background:#0B1120;">
+<html lang="es" x-data="{ sidebarOpen: false, sidebarCollapsed: false, mobileTab: 'inicio' }" style="background:#0B1120;">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -221,12 +221,13 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
         </div>
         @endif
 
-        <main class="{{ $noPadding ? 'p-0' : 'p-4 sm:p-6' }} flex-1 overflow-y-auto">
+        <main class="{{ $noPadding ? 'p-0' : 'p-4 sm:p-6' }} flex-1 overflow-y-auto pb-20 md:pb-6">
             {{ $slot }}
         </main>
     </div>
 </div>
 
+@include('partials.mobile-nav')
 @livewireScripts
 </body>
 </html>
