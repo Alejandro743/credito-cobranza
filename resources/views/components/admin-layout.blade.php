@@ -189,7 +189,7 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
         <header class="flex items-center gap-3 px-4 flex-shrink-0"
                 style="background:#fff; border-bottom:1px solid #E5E7EB; min-height:56px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
             <button @click="sidebarOpen = !sidebarOpen"
-                    class="md:hidden flex items-center justify-center"
+                    class="hidden flex items-center justify-center"
                     style="width:32px; height:32px; border-radius:8px; background:#F3F4F6; border:none; cursor:pointer; flex-shrink:0;">
                 <svg class="w-4 h-4" style="color:#6B7280;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>

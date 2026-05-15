@@ -135,23 +135,28 @@ $mobileColorMap = [
         <span style="font-size:10px; font-weight:600; letter-spacing:.2px;">Módulos</span>
     </button>
 
-    <button class="flex-1 flex flex-col items-center justify-center"
-            style="gap:3px; border:none; background:transparent; cursor:pointer; color:#9CA3AF;">
-        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-            <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
-        </svg>
-        <span style="font-size:10px; font-weight:600; letter-spacing:.2px;">Actividad</span>
-    </button>
-
-    <a href="{{ route('profile.edit') }}" wire:navigate @click="mobileTab = 'inicio'"
+    <a href="{{ route('perfil') }}" wire:navigate @click="mobileTab = 'inicio'"
        class="flex-1 flex flex-col items-center justify-center"
-       style="gap:3px; text-decoration:none; color:#9CA3AF;">
+       style="gap:3px; text-decoration:none;"
+       :style="mobileTab === 'perfil' ? 'color:#7B6FE8;' : 'color:#9CA3AF;'">
         <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
              stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
             <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
         </svg>
         <span style="font-size:10px; font-weight:600; letter-spacing:.2px;">Perfil</span>
     </a>
+
+    <form method="POST" action="{{ route('logout') }}" class="flex-1">
+        @csrf
+        <button type="submit"
+                class="w-full h-full flex flex-col items-center justify-center"
+                style="gap:3px; border:none; background:transparent; cursor:pointer; color:#EF4444;">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/>
+            </svg>
+            <span style="font-size:10px; font-weight:600; letter-spacing:.2px;">Salir</span>
+        </button>
+    </form>
 
 </nav>
