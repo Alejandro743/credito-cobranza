@@ -307,13 +307,13 @@
 
                     <td style="padding:10px 16px; text-align:center;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
-                            <button wire:click="openPermissions({{ $role->id }})" title="Permisos"
+                            <button wire:click="openPermissions({{ $role->id }})" title="Accesos"
                                     style="height:28px; padding:0 10px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:600; white-space:nowrap;"
                                     @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
                                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                                 </svg>
-                                Permisos
+                                Accesos
                             </button>
                             <button wire:click="startEdit({{ $role->id }})" title="Editar"
                                     style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
