@@ -816,7 +816,7 @@
                 <col style="width:130px;">
                 <col style="width:85px;">
                 <col style="width:115px;">
-                <col style="width:90px;">
+                <col style="width:110px;">
                 <col style="width:155px;">
             </colgroup>
             <thead>
@@ -894,9 +894,9 @@
                         <input type="checkbox" wire:model="editUsaCuotaInicial"
                                style="width:15px; height:15px; cursor:pointer; accent-color:#7B6FE8;">
                     </td>
-                    <td style="padding:7px 10px; text-align:center;">
+                    <td style="padding:7px 8px; text-align:center;">
                         <select wire:model="editActive"
-                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 4px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
                             <option value="1">Activa</option>
                             <option value="0">Inactiva</option>
                         </select>
@@ -969,19 +969,15 @@
                         <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle?->code ?? '—' }}</span>
                     </td>
                     <td style="padding:10px 16px; text-align:center;">
-                        @if ($m->cantidad_cuotas)
-                        <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:#EDE9FE; color:#5B21B6;">{{ $m->cantidad_cuotas }}c</span>
-                        @else
-                        <span style="color:#D1D5DB;">—</span>
-                        @endif
+                        <span style="font-size:13px; color:#374151; font-weight:500;">{{ $m->cantidad_cuotas ? $m->cantidad_cuotas.'c' : '—' }}</span>
                     </td>
                     <td style="padding:10px 16px; text-align:center;">
                         @if ($m->usa_cuota_inicial)
-                        <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:#FFF7ED; color:#C2410C;">
+                        <span style="font-size:13px; color:#374151; font-weight:500;">
                             {{ $m->tipo_cuota_inicial === 'porcentaje' ? number_format($m->valor_cuota_inicial, 0).'%' : 'Bs '.number_format($m->valor_cuota_inicial, 2) }}
                         </span>
                         @else
-                        <span style="color:#D1D5DB;">—</span>
+                        <span style="font-size:13px; color:#374151; font-weight:500;">—</span>
                         @endif
                     </td>
                     <td style="padding:10px 16px; text-align:center;">
