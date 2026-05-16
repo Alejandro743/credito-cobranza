@@ -348,6 +348,69 @@
 {{-- ══ MOBILE: Cards ══ --}}
 <div class="sm:hidden space-y-3">
     @forelse ($products as $p)
+
+    @if ($editingId === $p->id)
+    {{-- Card edición mobile --}}
+    <div wire:key="card-edit-{{ $p->id }}"
+         style="background:#fff; border-radius:14px; border:1px solid #EDE9FE; box-shadow:0 2px 8px rgba(123,111,232,.1); overflow:hidden;">
+        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:11px 14px; display:flex; align-items:center; justify-content:space-between;">
+            <p style="font-size:13px; font-weight:700; color:#5B21B6; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->name }}</p>
+            <button wire:click="cancelEdit" style="background:transparent; border:none; cursor:pointer; color:#9CA3AF; display:flex; padding:3px; flex-shrink:0;">
+                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div style="padding:14px; display:flex; flex-direction:column; gap:10px;">
+            <div>
+                <label style="display:block; font-size:11px; font-weight:600; color:#374151; margin-bottom:4px;">Nombre</label>
+                <input wire:model="editName" type="text"
+                       style="width:100%; border:1px solid #D8D3F8; border-radius:8px; padding:8px 10px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
+                @error('editName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:600; color:#374151; margin-bottom:4px;">Unidad</label>
+                    <select wire:model="editUnidadId"
+                            style="width:100%; border:1px solid #D8D3F8; border-radius:8px; padding:8px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
+                        <option value="">— Unidad —</option>
+                        @foreach ($unidades as $u)
+                            <option value="{{ $u->id }}">{{ $u->abreviatura ?? $u->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:600; color:#374151; margin-bottom:4px;">Categoría</label>
+                    <select wire:model="editCategoriaId"
+                            style="width:100%; border:1px solid #D8D3F8; border-radius:8px; padding:8px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
+                        <option value="">— Categoría —</option>
+                        @foreach ($categorias as $cat)
+                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+            <div>
+                <label style="display:block; font-size:11px; font-weight:600; color:#374151; margin-bottom:4px;">Estado</label>
+                <select wire:model="editActive"
+                        style="width:100%; border:1px solid #D8D3F8; border-radius:8px; padding:8px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select>
+            </div>
+            <div style="display:flex; gap:8px; padding-top:4px;">
+                <button wire:click="saveEdit"
+                        style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                    Guardar
+                </button>
+                <button wire:click="cancelEdit"
+                        style="flex:1; height:36px; background:#FEF2F2; color:#EF4444; border:1px solid #FEE2E2; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                    Cancelar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @else
+    {{-- Card normal --}}
     <div wire:key="card-{{ $p->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #F3F4F6; box-shadow:0 1px 4px rgba(0,0,0,.06); padding:14px;">
         <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
