@@ -372,19 +372,19 @@
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
 
                     <td style="padding:10px 16px; overflow:hidden; text-align:left;">
-                        <p style="font-size:13px; font-weight:600; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0;">{{ $user->name }}</p>
+                        <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $user->name }}</span>
                     </td>
 
                     <td style="padding:10px 16px; overflow:hidden; text-align:left;">
-                        <p style="font-size:12px; color:#6B7280; font-family:monospace; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0;">{{ $user->email }}</p>
+                        <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $user->email }}</span>
                     </td>
 
                     <td style="padding:10px 16px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; color:#374151;">{{ ucfirst($user->tipo ?? 'administrativo') }}</span>
+                        <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucfirst($user->tipo ?? 'administrativo') }}</span>
                     </td>
 
                     <td style="padding:10px 16px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; color:#374151; text-transform:capitalize;">{{ $roleName }}</span>
+                        <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; text-transform:capitalize;">{{ $roleName }}</span>
                     </td>
 
                     <td style="padding:10px 16px; overflow:hidden;">
