@@ -633,17 +633,11 @@
 </div>
 
 @if ($showAddForm)
-@php
-    $inputStyle  = 'border:1px solid #CECBF6; border-radius:6px; padding:7px 10px; font-size:12px; background:#FAFAFE; outline:none; width:100%;';
-    $labelStyle  = 'display:block; font-size:10px; font-weight:600; color:#534AB7; margin-bottom:4px;';
-    $selectStyle = $inputStyle;
-@endphp
-<div class="rounded-2xl border border-lavanda-200 p-5 mb-5" style="background:#FAFAFE;"
+<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:20px; overflow:hidden;"
      x-data="{
          tipoInc: @js($newTipoIncremento),
          valorInc: parseFloat(@js($newValorIncremento)) || 0,
          cantCuotas: parseInt(@js($newCantidadCuotas)) || 0,
-         diasCuotas: parseInt(@js($newDiasEntreCuotas)) || 30,
          tipoCuotaIni: @js($newTipoCuotaInicial ?: 'ninguna'),
          valorCuotaIni: parseFloat(@js($newValorCuotaInicial)) || 0,
          get badgeInc() {
@@ -667,117 +661,130 @@
          }
      }">
 
-    <h3 class="font-bold mb-4" style="font-size:13px; color:#3C3489;">Nueva Lista de Precios</h3>
-
-    {{-- FILA 1: Información general --}}
-    <div class="flex flex-wrap items-end gap-3 mb-4">
-        <div style="width:130px;">
-            <label style="{{ $labelStyle }}">Código *</label>
-            <input wire:model="newCode" type="text" maxlength="30" placeholder="LP-202601"
-                   style="{{ $inputStyle }} font-family:monospace;">
-            @error('newCode') <p class="text-red-500 mt-1" style="font-size:10px;">{{ $message }}</p> @enderror
-        </div>
-        <div style="flex:1; min-width:160px;">
-            <label style="{{ $labelStyle }}">Nombre *</label>
-            <input wire:model="newName" type="text" placeholder="Lista Enero 2026" style="{{ $inputStyle }}">
-            @error('newName') <p class="text-red-500 mt-1" style="font-size:10px;">{{ $message }}</p> @enderror
-        </div>
-        <div style="width:140px;">
-            <label style="{{ $labelStyle }}">Ciclo *</label>
-            <select wire:model="newCycleId" style="{{ $selectStyle }}">
-                <option value="">— Seleccionar —</option>
-                @foreach ($cycles as $cycle)
-                    <option value="{{ $cycle->id }}">{{ $cycle->code }}</option>
-                @endforeach
-            </select>
-            @error('newCycleId') <p class="text-red-500 mt-1" style="font-size:10px;">{{ $message }}</p> @enderror
-        </div>
-        <div class="flex items-center gap-2 pb-1">
-            <input wire:model="newActive" type="checkbox" id="newActive" class="w-4 h-4 rounded cursor-pointer" style="accent-color:#7c3aed;">
-            <label for="newActive" style="font-size:12px; font-weight:500; color:#3C3489; cursor:pointer;">Activa</label>
-        </div>
+    {{-- Header --}}
+    <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:11px 18px; display:flex; align-items:center; justify-content:space-between;">
+        <p style="font-size:13px; font-weight:700; color:#5B21B6; margin:0; display:flex; align-items:center; gap:7px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            Nueva Lista de Precios
+        </p>
+        <button wire:click="cancelAdd" style="background:transparent; border:none; cursor:pointer; color:#9CA3AF; display:flex; padding:3px;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
     </div>
 
-    {{-- Separador --}}
-    <div class="flex items-center gap-3 my-4">
-        <div class="flex-1 h-px" style="background:#CECBF6;"></div>
-        <span style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.06em;">Incremento de Precio</span>
-        <div class="flex-1 h-px" style="background:#CECBF6;"></div>
-    </div>
+    {{-- Body --}}
+    <div style="padding:16px 18px;">
 
-    {{-- FILA 2: Incremento --}}
-    <div class="flex flex-wrap items-end gap-3 mb-4">
-        <div style="width:160px;">
-            <label style="{{ $labelStyle }}">Tipo Incremento</label>
-            <select wire:model="newTipoIncremento" x-on:change="tipoInc = $event.target.value"
-                    style="{{ $selectStyle }}">
-                <option value="">— Sin incremento —</option>
-                <option value="porcentaje">Porcentaje %</option>
-                <option value="monto_fijo">Monto Fijo Bs</option>
-            </select>
+        {{-- Fila 1: Info general --}}
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px;">
+            <div>
+                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Código *</label>
+                <input wire:model="newCode" type="text" maxlength="30" placeholder="LP-202601"
+                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; font-family:monospace;">
+                @error('newCode') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
+            <div style="grid-column:span 2;">
+                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Nombre *</label>
+                <input wire:model="newName" type="text" placeholder="Lista Enero 2026"
+                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box;">
+                @error('newName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
+            <div>
+                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Ciclo *</label>
+                <select wire:model="newCycleId"
+                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
+                    <option value="">— Seleccionar —</option>
+                    @foreach ($cycles as $cycle)
+                        <option value="{{ $cycle->id }}">{{ $cycle->code }}</option>
+                    @endforeach
+                </select>
+                @error('newCycleId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
         </div>
-        <div style="width:110px;">
-            <label style="{{ $labelStyle }}">Valor</label>
-            <input wire:model="newValorIncremento" x-on:input="valorInc = parseFloat($event.target.value) || 0"
-                   type="number" step="0.01" min="0" placeholder="Ej: 10"
-                   style="{{ $inputStyle }} text-align:center;">
-        </div>
-        <div x-show="badgeInc" class="flex items-center px-3 py-1.5 rounded-lg" style="background:#e6f4ef; border:1px solid #b7e4d1;">
-            <span x-text="badgeInc" style="font-size:11px; font-weight:600; color:#0F6E56;"></span>
-        </div>
-    </div>
 
-    {{-- Separador --}}
-    <div class="flex items-center gap-3 my-4">
-        <div class="flex-1 h-px" style="background:#CECBF6;"></div>
-        <span style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.06em;">Plan de Financiamiento</span>
-        <div class="flex-1 h-px" style="background:#CECBF6;"></div>
-    </div>
+        {{-- Separador Incremento --}}
+        <div style="display:flex; align-items:center; gap:10px; margin:16px 0 12px;">
+            <div style="flex:1; height:1px; background:#F3F4F6;"></div>
+            <span style="font-size:11px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px;">Incremento de Precio</span>
+            <div style="flex:1; height:1px; background:#F3F4F6;"></div>
+        </div>
 
-    {{-- FILA 3: Financiamiento --}}
-    <div class="flex flex-wrap items-end gap-3 mb-3">
-        <div style="width:150px;">
-            <label style="{{ $labelStyle }}">Cantidad de Cuotas</label>
-            <input wire:model="newCantidadCuotas" x-on:input="cantCuotas = parseInt($event.target.value) || 0"
-                   type="number" min="1" max="999" placeholder="Ej: 6"
-                   style="{{ $inputStyle }} text-align:center;">
+        {{-- Fila 2: Incremento --}}
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px;">
+            <div>
+                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Tipo Incremento</label>
+                <select wire:model="newTipoIncremento" x-on:change="tipoInc = $event.target.value"
+                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
+                    <option value="">— Sin incremento —</option>
+                    <option value="porcentaje">Porcentaje %</option>
+                    <option value="monto_fijo">Monto Fijo Bs</option>
+                </select>
+            </div>
+            <div>
+                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Valor</label>
+                <input wire:model="newValorIncremento" x-on:input="valorInc = parseFloat($event.target.value) || 0"
+                       type="number" step="0.01" min="0" placeholder="Ej: 10"
+                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
+            </div>
         </div>
-        <div style="width:150px;">
-            <label style="{{ $labelStyle }}">Días entre Cuotas</label>
-            <input wire:model="newDiasEntreCuotas" x-on:input="diasCuotas = parseInt($event.target.value) || 30"
-                   type="number" min="1" max="365" placeholder="Ej: 30"
-                   style="{{ $inputStyle }} text-align:center;">
+        <div x-show="badgeInc" style="margin-top:10px; background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:8px 12px;">
+            <span x-text="badgeInc" style="font-size:12px; font-weight:600; color:#065F46;"></span>
         </div>
-        <div style="width:160px;">
-            <label style="{{ $labelStyle }}">Tipo Cuota Inicial</label>
-            <select wire:model="newTipoCuotaInicial" x-on:change="tipoCuotaIni = $event.target.value"
-                    style="{{ $selectStyle }}">
-                <option value="ninguna">Sin cuota inicial</option>
-                <option value="porcentaje">Porcentaje %</option>
-                <option value="monto_fijo">Monto Fijo Bs</option>
-            </select>
-        </div>
-        <div style="width:110px;" x-show="tipoCuotaIni !== 'ninguna'" x-cloak>
-            <label style="{{ $labelStyle }}">Valor Inicial</label>
-            <input wire:model="newValorCuotaInicial" x-on:input="valorCuotaIni = parseFloat($event.target.value) || 0"
-                   type="number" step="0.01" min="0" placeholder="Ej: 20"
-                   style="{{ $inputStyle }} text-align:center;">
-        </div>
-    </div>
 
-    {{-- Badge resumen financiamiento --}}
-    <div x-show="badgeResumen" class="flex items-center px-3 py-2 rounded-lg mb-4" style="background:#e6f4ef; border:1px solid #b7e4d1;">
-        <span x-text="badgeResumen" style="font-size:10px; font-weight:600; color:#0F6E56;"></span>
-    </div>
+        {{-- Separador Financiamiento --}}
+        <div style="display:flex; align-items:center; gap:10px; margin:16px 0 12px;">
+            <div style="flex:1; height:1px; background:#F3F4F6;"></div>
+            <span style="font-size:11px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px;">Plan de Financiamiento</span>
+            <div style="flex:1; height:1px; background:#F3F4F6;"></div>
+        </div>
 
-    {{-- Botones --}}
-    <div class="flex gap-3">
-        <button wire:click="saveNew"
-                class="px-5 py-2 text-white font-semibold rounded-xl transition-colors hover:opacity-90"
-                style="background:#7c3aed; font-size:13px;">Guardar</button>
-        <button wire:click="cancelAdd"
-                class="px-5 py-2 font-medium rounded-xl transition-colors hover:bg-gray-50"
-                style="border:1px solid #d1d5db; color:#6b7280; font-size:13px;">Cancelar</button>
+        {{-- Fila 3: Financiamiento --}}
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px;">
+            <div>
+                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Cant. de Cuotas</label>
+                <input wire:model="newCantidadCuotas" x-on:input="cantCuotas = parseInt($event.target.value) || 0"
+                       type="number" min="1" max="999" placeholder="Ej: 6"
+                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
+            </div>
+            <div>
+                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Días entre Cuotas</label>
+                <input wire:model="newDiasEntreCuotas"
+                       type="number" min="1" max="365" placeholder="Ej: 30"
+                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
+            </div>
+            <div>
+                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Tipo Cuota Inicial</label>
+                <select wire:model="newTipoCuotaInicial" x-on:change="tipoCuotaIni = $event.target.value"
+                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
+                    <option value="ninguna">Sin cuota inicial</option>
+                    <option value="porcentaje">Porcentaje %</option>
+                    <option value="monto_fijo">Monto Fijo Bs</option>
+                </select>
+            </div>
+            <div x-show="tipoCuotaIni !== 'ninguna'" x-cloak>
+                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Valor Inicial</label>
+                <input wire:model="newValorCuotaInicial" x-on:input="valorCuotaIni = parseFloat($event.target.value) || 0"
+                       type="number" step="0.01" min="0" placeholder="Ej: 20"
+                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
+            </div>
+        </div>
+        <div x-show="badgeResumen" style="margin-top:10px; background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:8px 12px;">
+            <span x-text="badgeResumen" style="font-size:12px; font-weight:600; color:#065F46;"></span>
+        </div>
+
+        {{-- Botones --}}
+        <div style="display:flex; gap:8px; padding-top:12px; border-top:1px solid #F3F4F6; margin-top:16px;">
+            <button wire:click="saveNew"
+                    style="height:36px; padding:0 20px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;">
+                Guardar
+            </button>
+            <button wire:click="cancelAdd"
+                    style="height:36px; padding:0 16px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;">
+                Cancelar
+            </button>
+        </div>
     </div>
 </div>
 @endif
