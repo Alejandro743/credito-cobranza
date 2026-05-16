@@ -23,7 +23,7 @@
 
 {{-- Cabecera --}}
 <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); margin-bottom:14px; overflow:hidden;">
-    <div style="padding:13px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" style="padding:13px 18px;">
         <div style="display:flex; align-items:center; gap:12px; min-width:0;">
             <button wire:click="backToList"
                     style="width:34px; height:34px; border-radius:9px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
@@ -37,15 +37,15 @@
                 <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $permissionsRoleName }}</p>
             </div>
         </div>
-        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-            <button wire:click="toggleTodos(true)"
-                    style="height:30px; padding:0 12px; border:1px solid #EDE9FE; border-radius:7px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; white-space:nowrap;"
+        <div style="display:flex; align-items:center; gap:6px;">
+            <button wire:click="toggleTodos(true)" class="flex-1 sm:flex-none"
+                    style="height:34px; padding:0 12px; border:1px solid #EDE9FE; border-radius:7px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px; white-space:nowrap;"
                     @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
                 <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 Dar todo
             </button>
-            <button wire:click="toggleTodos(false)"
-                    style="height:30px; padding:0 12px; border:1px solid #E5E7EB; border-radius:7px; background:#F9FAFB; color:#6B7280; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; white-space:nowrap;"
+            <button wire:click="toggleTodos(false)" class="flex-1 sm:flex-none"
+                    style="height:34px; padding:0 12px; border:1px solid #E5E7EB; border-radius:7px; background:#F9FAFB; color:#6B7280; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px; white-space:nowrap;"
                     @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
                 <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 Quitar todo
@@ -99,7 +99,7 @@
                 <span style="font-size:13px; color:#374151;">{{ $leaf->name }}</span>
             </div>
             <label style="display:flex; align-items:center; gap:7px; cursor:pointer; user-select:none;">
-                <span style="font-size:11px; font-weight:500; min-width:62px; text-align:right; color:{{ ($permissions[$key]['puede_ver'] ?? false) ? '#7B6FE8' : '#D1D5DB' }};">
+                <span class="hidden sm:inline" style="font-size:11px; font-weight:500; min-width:62px; text-align:right; color:{{ ($permissions[$key]['puede_ver'] ?? false) ? '#7B6FE8' : '#D1D5DB' }};">
                     {{ ($permissions[$key]['puede_ver'] ?? false) ? 'Con acceso' : 'Sin acceso' }}
                 </span>
                 <div style="position:relative; width:36px; height:20px; flex-shrink:0;">
@@ -124,7 +124,7 @@
                 <span style="font-size:13px; color:#374151;">{{ $sub->name }}</span>
             </div>
             <label style="display:flex; align-items:center; gap:7px; cursor:pointer; user-select:none;">
-                <span style="font-size:11px; font-weight:500; min-width:62px; text-align:right; color:{{ ($permissions[$key]['puede_ver'] ?? false) ? '#7B6FE8' : '#D1D5DB' }};">
+                <span class="hidden sm:inline" style="font-size:11px; font-weight:500; min-width:62px; text-align:right; color:{{ ($permissions[$key]['puede_ver'] ?? false) ? '#7B6FE8' : '#D1D5DB' }};">
                     {{ ($permissions[$key]['puede_ver'] ?? false) ? 'Con acceso' : 'Sin acceso' }}
                 </span>
                 <div style="position:relative; width:36px; height:20px; flex-shrink:0;">
@@ -147,15 +147,15 @@
 </div>
 
 {{-- Footer --}}
-<div style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; padding:13px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
-    <p style="font-size:11px; color:#9CA3AF; margin:0;">Solo submódulos con acceso activo serán visibles en el menú.</p>
-    <div style="display:flex; gap:8px; flex-shrink:0;">
-        <button wire:click="backToList"
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; padding:13px 18px;">
+    <p class="hidden sm:block" style="font-size:11px; color:#9CA3AF; margin:0;">Solo submódulos con acceso activo serán visibles en el menú.</p>
+    <div style="display:flex; gap:8px;">
+        <button wire:click="backToList" class="flex-1 sm:flex-none"
                 style="height:36px; padding:0 18px; background:#FEF2F2; color:#EF4444; border:1px solid #FEE2E2; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;"
                 @mouseenter="$el.style.background='#FEE2E2'" @mouseleave="$el.style.background='#FEF2F2'">
             Cancelar
         </button>
-        <button wire:click="savePermissions" wire:loading.attr="disabled"
+        <button wire:click="savePermissions" wire:loading.attr="disabled" class="flex-1 sm:flex-none"
                 style="height:36px; padding:0 22px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;">
             <span wire:loading.remove wire:target="savePermissions">Guardar accesos</span>
             <span wire:loading wire:target="savePermissions">Guardando...</span>
