@@ -111,6 +111,20 @@ $mobileColorMap = [
     </div>
 </div>
 
+{{-- Mask: tapa el contenido durante wire:navigate en mobile para evitar flash --}}
+<div id="__nav_mask" style="display:none; position:fixed; inset:0; z-index:200; background:#F0F2F5;"></div>
+<script>
+(function () {
+    if (window.__navMaskReady) return;
+    window.__navMaskReady = true;
+    function show() { if (window.innerWidth < 768) { var m = document.getElementById('__nav_mask'); if (m) m.style.display = 'block'; } }
+    function hide() { var m = document.getElementById('__nav_mask'); if (m) m.style.display = 'none'; }
+    document.addEventListener('livewire:navigate',   show);
+    document.addEventListener('livewire:navigating', show);
+    document.addEventListener('livewire:navigated',  hide);
+})();
+</script>
+
 {{-- ═══ BOTTOM NAVIGATION (móvil) ═══ --}}
 <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 flex"
      style="background:#fff; border-top:1px solid #E8EAED; height:60px; box-shadow:0 -2px 12px rgba(0,0,0,.06);">
