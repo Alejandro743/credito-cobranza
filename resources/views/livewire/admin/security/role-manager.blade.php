@@ -117,159 +117,281 @@
 @else
 {{-- ── LIST ──────────────────────────────────────────────────────────────── --}}
 
-{{-- Toolbar --}}
-<div class="flex flex-col sm:flex-row gap-3 mb-5">
-    <div class="relative flex-1">
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+{{-- ══ TOOLBAR ══ --}}
+<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
+
+    <div class="relative w-full sm:flex-1" style="min-width:0;">
+        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
+        </svg>
         <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar rol..."
-               class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-lavanda-400 focus:ring-2 focus:ring-lavanda-100 bg-white">
+               style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
     </div>
-    <button wire:click="showAdd"
-            class="flex items-center gap-2 bg-lavanda-500 hover:bg-lavanda-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+
+    <button wire:click="showAdd" class="w-full sm:w-auto"
+            style="height:36px; padding:0 18px; display:flex; align-items:center; justify-content:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        </svg>
         Nuevo Rol
     </button>
 </div>
 
-{{-- Inline add form --}}
+{{-- ══ FORM: Nuevo rol ══ --}}
 @if ($showAddForm)
-<div class="bg-lavanda-50 border border-lavanda-200 rounded-2xl p-5 mb-5">
-    <h3 class="text-sm font-bold text-lavanda-700 mb-4">Nuevo Rol</h3>
-    <div class="flex flex-col sm:flex-row gap-4 items-end">
-        <div class="flex-1">
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Nombre *</label>
-            <input wire:model="newRoleName" type="text" placeholder="ej: ejecutivo"
-                   class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
-            @error('newRoleName') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:20px; overflow:hidden;">
+    <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:11px 18px; display:flex; align-items:center; justify-content:space-between;">
+        <p style="font-size:13px; font-weight:700; color:#5B21B6; margin:0; display:flex; align-items:center; gap:7px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+            </svg>
+            Nuevo Rol
+        </p>
+        <button wire:click="cancelAdd" style="background:transparent; border:none; cursor:pointer; color:#9CA3AF; display:flex; padding:3px;">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+    </div>
+    <div style="padding:16px 18px;">
+        <div style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap; margin-bottom:14px;">
+            <div style="flex:1; min-width:160px;">
+                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Nombre *</label>
+                <input wire:model="newRoleName" type="text" placeholder="ej: ejecutivo"
+                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box;">
+                @error('newRoleName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
+            <div style="padding-bottom:4px;">
+                <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                    <input wire:model="newActivo" type="checkbox" style="width:14px; height:14px; cursor:pointer; accent-color:#7B6FE8;">
+                    <span style="font-size:13px; font-weight:500; color:#374151;">Activo</span>
+                </label>
+            </div>
         </div>
-        <div class="flex items-center gap-2 pb-2">
-            <input wire:model="newActivo" type="checkbox" id="newActivo" class="w-4 h-4 rounded border-gray-300 text-lavanda-500 focus:ring-lavanda-400 cursor-pointer">
-            <label for="newActivo" class="text-sm font-medium text-gray-700 cursor-pointer">Activo</label>
-        </div>
-        <div class="flex gap-2">
-            <button wire:click="saveNew" class="px-5 py-2 bg-lavanda-500 hover:bg-lavanda-600 text-white text-sm font-semibold rounded-xl transition-colors">Guardar</button>
-            <button wire:click="cancelAdd" class="px-5 py-2 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium rounded-xl transition-colors">Cancelar</button>
+        <div style="display:flex; gap:8px; padding-top:12px; border-top:1px solid #F3F4F6;">
+            <button wire:click="saveNew"
+                    style="height:36px; padding:0 20px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;">
+                Guardar
+            </button>
+            <button wire:click="cancelAdd"
+                    style="height:36px; padding:0 16px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;">
+                Cancelar
+            </button>
         </div>
     </div>
 </div>
 @endif
 
-{{-- Tabla --}}
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="overflow-x-auto">
-    <table class="w-full text-sm">
-        <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-            <tr>
-                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Rol</th>
-                <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Usuarios</th>
-                <th class="text-center px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Estado</th>
-                <th class="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Acciones</th>
-            </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-50">
-            @forelse ($roles as $role)
-            @if ($editingId === $role->id)
-            {{-- FILA EDICIÓN INLINE --}}
-            <tr wire:key="role-edit-{{ $role->id }}" class="bg-lavanda-50 border-l-2 border-lavanda-400">
-                <td class="px-3 py-2">
-                    @if ($role->name === 'admin')
-                        <span class="font-medium text-gray-500 text-sm capitalize">admin</span>
-                    @else
-                        <input wire:model="editRoleName" type="text"
-                               class="w-full border border-lavanda-300 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-lavanda-500 bg-white">
-                        @error('editRoleName') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
-                    @endif
-                </td>
-                <td class="px-3 py-2 text-center text-gray-400 text-xs">{{ $role->users_count }}</td>
-                <td class="px-3 py-2 text-center">
-                    @if ($role->name === 'admin')
-                        <span class="text-xs text-lavanda-600 font-medium">Siempre activo</span>
-                    @else
-                        <input type="checkbox" wire:model="editActivo" class="w-4 h-4 rounded border-gray-300 text-lavanda-500 cursor-pointer">
-                    @endif
-                </td>
-                <td class="px-3 py-2 text-right">
-                    <div class="flex items-center justify-end gap-1">
-                        <button wire:click="saveEdit" title="Guardar"
-                                class="p-1.5 rounded-lg bg-mint-100 text-mint-700 hover:bg-mint-200 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                        </button>
-                        <button wire:click="cancelEdit" title="Cancelar"
-                                class="p-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                        </button>
-                    </div>
-                </td>
-            </tr>
-            @else
-            {{-- FILA NORMAL --}}
-            <tr wire:key="role-{{ $role->id }}" class="hover:bg-gray-50 transition-colors">
-                <td data-label="Rol" class="px-4 py-3.5">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-7 h-7 rounded-lg bg-lavanda-100 flex items-center justify-center flex-shrink-0">
-                            <svg class="w-3.5 h-3.5 text-lavanda-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
-                        </div>
-                        <span class="font-medium text-gray-800 capitalize">{{ $role->name }}</span>
-                    </div>
-                </td>
-                <td data-label="Usuarios" class="px-4 py-3.5 text-center">
-                    <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-gray-100 text-gray-600 text-xs font-semibold">{{ $role->users_count }}</span>
-                </td>
-                <td data-label="Estado" class="px-4 py-3.5 text-center">
-                    @if ($role->name === 'admin')
-                    <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium bg-lavanda-100 text-lavanda-700">Siempre activo</span>
-                    @elseif ($role->activo ?? true)
-                    <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-mint-100 text-mint-700">Activo</span>
-                    @else
-                    <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold bg-red-100 text-red-600">Inactivo</span>
-                    @endif
-                </td>
-                <td data-label="" class="px-4 py-3.5 text-right">
-                    <div class="flex items-center justify-end gap-1">
-                        <button wire:click="openPermissions({{ $role->id }})"
-                                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-lavanda-50 hover:bg-lavanda-100 text-lavanda-600 text-xs font-medium transition-colors">
-                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
-                            Permisos
-                        </button>
-                        <button wire:click="startEdit({{ $role->id }})" title="Editar"
-                                class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </button>
-                        @if ($role->name !== 'admin')
-                        <button wire:click="toggleActivo({{ $role->id }})" title="{{ ($role->activo ?? true) ? 'Desactivar' : 'Activar' }}"
-                                class="p-1.5 rounded-lg transition-colors {{ ($role->activo ?? true) ? 'text-gray-400 hover:text-red-500 hover:bg-red-50' : 'text-gray-400 hover:text-mint-600 hover:bg-mint-50' }}">
-                            @if ($role->activo ?? true)
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                            @else
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                            @endif
-                        </button>
-                        @endif
-                    </div>
-                </td>
-            </tr>
-            @endif
-            @empty
-            <tr><td colspan="4" class="px-4 py-12 text-center text-gray-400">No hay roles registrados.</td></tr>
-            @endforelse
-        </tbody>
-    </table>
+{{-- ══ TABLA ══ --}}
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+
+    {{-- Barra --}}
+    <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:13px; font-weight:700; color:#111827;">Roles registrados</span>
+            <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $roles->total() }}</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:6px;">
+            <button type="button" wire:click="$refresh"
+                    style="height:30px; padding:0 10px; border:1px solid #E5E7EB; border-radius:7px; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500; box-sizing:border-box;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                Actualizar
+            </button>
+        </div>
     </div>
+
+    <div style="overflow-x:auto;">
+        @if ($roles->isEmpty())
+        <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay roles registrados.</p>
+        @else
+        <table style="table-layout:fixed; width:100%; min-width:500px; border-collapse:collapse; font-size:13px;">
+            <colgroup>
+                <col style="width:220px;">
+                <col style="width:100px;">
+                <col style="width:120px;">
+                <col style="width:180px;">
+            </colgroup>
+            <thead>
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:120px;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Rol</span>
+                        <div x-data="colResize()" @mousedown="start($event)"
+                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+                    <th style="padding:10px 16px; text-align:center; position:relative; user-select:none; overflow:hidden; min-width:70px;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Usuarios</span>
+                        <div x-data="colResize()" @mousedown="start($event)"
+                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+                    <th style="padding:10px 16px; text-align:center; position:relative; user-select:none; overflow:hidden; min-width:80px;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</span>
+                        <div x-data="colResize()" @mousedown="start($event)"
+                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+                    <th style="padding:10px 16px; text-align:center;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</span>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse ($roles as $role)
+
+                {{-- Fila edición inline --}}
+                @if ($editingId === $role->id)
+                <tr wire:key="edit-{{ $role->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+                    <td style="padding:7px 10px; text-align:left;">
+                        @if ($role->name === 'admin')
+                            <span style="font-size:13px; font-weight:600; color:#6B7280; text-transform:capitalize;">admin</span>
+                        @else
+                            <input wire:model="editRoleName" type="text" placeholder="Nombre del rol"
+                                   style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
+                            @error('editRoleName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                        @endif
+                    </td>
+                    <td style="padding:7px 10px; text-align:center; color:#9CA3AF; font-size:12px;">{{ $role->users_count }}</td>
+                    <td style="padding:7px 10px; text-align:center;">
+                        @if ($role->name === 'admin')
+                            <span style="font-size:12px; color:#7B6FE8; font-weight:500;">Siempre activo</span>
+                        @else
+                            <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
+                                <input type="checkbox" wire:model="editActivo" style="width:14px; height:14px; cursor:pointer; accent-color:#7B6FE8;">
+                                <span style="font-size:12px; color:#374151;">Activo</span>
+                            </label>
+                        @endif
+                    </td>
+                    <td style="padding:7px 10px; text-align:center;">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                            <button wire:click="saveEdit"
+                                    style="height:30px; padding:0 10px; background:#7B6FE8; color:#fff; border:none; border-radius:7px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
+                                Guardar
+                            </button>
+                            <button wire:click="cancelEdit"
+                                    style="height:30px; padding:0 8px; background:#F3F4F6; color:#6B7280; border:none; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
+                                Cancelar
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+
+                {{-- Fila normal --}}
+                @else
+                <tr wire:key="role-{{ $role->id }}"
+                    style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
+                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+
+                    <td style="padding:10px 16px; overflow:hidden; text-align:left;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <div style="width:28px; height:28px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                            </div>
+                            <span style="font-size:13px; font-weight:600; color:#111827; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $role->name }}</span>
+                        </div>
+                    </td>
+
+                    <td style="padding:10px 16px; text-align:center;">
+                        <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:99px; background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600;">{{ $role->users_count }}</span>
+                    </td>
+
+                    <td style="padding:10px 16px; text-align:center;">
+                        @if ($role->name === 'admin')
+                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#EDE9FE; color:#7B6FE8;">Siempre activo</span>
+                        @elseif ($role->activo ?? true)
+                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#D1FAE5; color:#059669;">Activo</span>
+                        @else
+                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#FEE2E2; color:#EF4444;">Inactivo</span>
+                        @endif
+                    </td>
+
+                    <td style="padding:10px 16px; text-align:center;">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
+                            <button wire:click="openPermissions({{ $role->id }})" title="Permisos"
+                                    style="height:28px; padding:0 10px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:600; white-space:nowrap;"
+                                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
+                                </svg>
+                                Permisos
+                            </button>
+                            <button wire:click="startEdit({{ $role->id }})" title="Editar"
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                            </button>
+                            @if ($role->name !== 'admin')
+                            <button wire:click="toggleActivo({{ $role->id }})" title="{{ ($role->activo ?? true) ? 'Desactivar' : 'Activar' }}"
+                                    style="width:28px; height:28px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+                                           border:1px solid {{ ($role->activo ?? true) ? '#FEE2E2' : '#D1FAE5' }};
+                                           background:{{ ($role->activo ?? true) ? '#FEF2F2' : '#ECFDF5' }};
+                                           color:{{ ($role->activo ?? true) ? '#EF4444' : '#10B981' }};"
+                                    @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/>
+                                </svg>
+                            </button>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+                @endif
+
+                @empty
+                <tr><td colspan="4" style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay roles registrados.</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+        @endif
+    </div>
+
     @if ($roles->hasPages())
-    <div class="px-4 py-3 border-t border-gray-100">{{ $roles->links() }}</div>
+    <div style="padding:10px 18px; border-top:1px solid #F3F4F6;">{{ $roles->links() }}</div>
     @endif
 </div>
+
+<script>
+window.colResize = function () {
+    return {
+        start(e) {
+            e.preventDefault();
+            const th = this.$el.closest('th');
+            const table = th.closest('table');
+            const idx = Array.from(th.closest('tr').querySelectorAll('th')).indexOf(th);
+            const col = table.querySelectorAll('colgroup col')[idx];
+            const startX = e.clientX;
+            const startW = col ? (parseFloat(col.style.width) || th.getBoundingClientRect().width)
+                               : th.getBoundingClientRect().width;
+            const onMove = mv => {
+                const w = Math.max(60, startW + mv.clientX - startX);
+                if (col) col.style.width = w + 'px';
+            };
+            const onUp = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        }
+    };
+};
+</script>
+
 @endif
 
 @if (session('error'))
 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
-     class="fixed bottom-5 right-5 z-50 bg-red-500 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg">
+     class="fixed bottom-5 right-5 z-50"
+     style="background:#EF4444; color:#fff; font-size:13px; font-weight:600; padding:12px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,.15);">
     {{ session('error') }}
 </div>
 @endif
 @if (session('success'))
 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-     class="fixed bottom-5 right-5 z-50 bg-mint-500 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg">
+     class="fixed bottom-5 right-5 z-50"
+     style="background:#10B981; color:#fff; font-size:13px; font-weight:600; padding:12px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,.15);">
     {{ session('success') }}
 </div>
 @endif
