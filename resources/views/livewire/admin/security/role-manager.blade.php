@@ -368,7 +368,7 @@
                 @else
                 <tr wire:key="role-{{ $role->id }}"
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
-                    @mouseenter="$el.style.background='{{ $cc['head_bg'] }}'" @mouseleave="$el.style.background=''">
+                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
 
                     <td style="padding:10px 16px; overflow:hidden; text-align:left;">
                         <div style="display:flex; align-items:center; gap:8px;">
