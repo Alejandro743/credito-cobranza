@@ -197,7 +197,8 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
 
             {{-- Hamburguesa --}}
             <button @click="sidebarOpen = !sidebarOpen"
-                    style="width:32px; height:32px; border-radius:8px; background:#F3F4F6; border:none; cursor:pointer; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                    class="hidden md:flex"
+                    style="width:32px; height:32px; border-radius:8px; background:#F3F4F6; border:none; cursor:pointer; flex-shrink:0; align-items:center; justify-content:center;">
                 <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2.2" stroke-linecap="round" viewBox="0 0 24 24">
                     <path d="M4 6h16M4 12h16M4 18h16"/>
                 </svg>
