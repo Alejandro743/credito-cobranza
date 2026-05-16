@@ -204,27 +204,29 @@
                         <div style="padding:12px 16px; display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px;">
                             @php $eLabel = 'display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:5px;'; @endphp
 
+                            @php $h = 'height:36px; box-sizing:border-box;'; @endphp
+
                             {{-- Código (disabled) --}}
                             <div style="width:90px;">
                                 <p style="{{ $eLabel }}">Código</p>
                                 <input type="text" value="{{ $p->code }}" disabled
-                                       style="width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:7px 10px; font-size:12px; font-family:monospace; color:#9CA3AF; background:#F3F4F6; cursor:not-allowed;">
+                                       style="{{ $h }} width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:12px; font-family:monospace; color:#9CA3AF; background:#F3F4F6; cursor:not-allowed;">
                             </div>
 
                             {{-- Nombre (disabled) --}}
                             <div style="flex:1; min-width:160px;">
                                 <p style="{{ $eLabel }}">Nombre</p>
                                 <input type="text" value="{{ $p->name }}" disabled
-                                       style="width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:7px 10px; font-size:13px; color:#9CA3AF; background:#F3F4F6; cursor:not-allowed;">
+                                       style="{{ $h }} width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#9CA3AF; background:#F3F4F6; cursor:not-allowed;">
                             </div>
 
                             {{-- Precio --}}
                             <div>
                                 <p style="{{ $eLabel }}">Precio (Bs)</p>
-                                <div style="display:flex; border:1px solid #EDE9FE; border-radius:8px; overflow:hidden; background:#fff;">
-                                    <span style="padding:7px 9px; background:#F8F7FF; border-right:1px solid #EDE9FE; font-size:11px; font-weight:700; color:#7B6FE8; display:flex; align-items:center;">Bs</span>
+                                <div style="{{ $h }} display:flex; border:1px solid #EDE9FE; border-radius:8px; overflow:hidden; background:#fff;">
+                                    <span style="padding:0 8px; background:#F8F7FF; border-right:1px solid #EDE9FE; font-size:11px; font-weight:700; color:#7B6FE8; display:flex; align-items:center;">Bs</span>
                                     <input wire:model="editItemPrecio" x-on:input="precio = parseFloat($event.target.value) || 0"
-                                           type="number" step="0.01" min="0" style="width:75px; border:none; outline:none; padding:7px 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
+                                           type="number" step="0.01" min="0" style="width:75px; border:none; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                                 </div>
                                 @error('editItemPrecio') <p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
                             </div>
@@ -232,22 +234,22 @@
                             {{-- Puntos --}}
                             <div>
                                 <p style="{{ $eLabel }}">Puntos</p>
-                                <div style="display:flex; border:1px solid #EDE9FE; border-radius:8px; overflow:hidden; background:#fff;">
-                                    <span style="padding:7px 9px; background:#F8F7FF; border-right:1px solid #EDE9FE; font-size:13px; color:#7B6FE8; display:flex; align-items:center;">★</span>
+                                <div style="{{ $h }} display:flex; border:1px solid #EDE9FE; border-radius:8px; overflow:hidden; background:#fff;">
+                                    <span style="padding:0 8px; background:#F8F7FF; border-right:1px solid #EDE9FE; font-size:13px; color:#7B6FE8; display:flex; align-items:center;">★</span>
                                     <input wire:model="editItemPuntos" type="number" min="0"
-                                           style="width:60px; border:none; outline:none; padding:7px 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
+                                           style="width:60px; border:none; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                                 </div>
                             </div>
 
                             {{-- Stock Inicial --}}
                             <div>
                                 <p style="{{ $eLabel }}">St. Inicial</p>
-                                <div style="display:flex; border:1px solid #EDE9FE; border-radius:8px; overflow:hidden; background:#fff;">
-                                    <span style="padding:7px 9px; background:#F8F7FF; border-right:1px solid #EDE9FE; display:flex; align-items:center;">
+                                <div style="{{ $h }} display:flex; border:1px solid #EDE9FE; border-radius:8px; overflow:hidden; background:#fff;">
+                                    <span style="padding:0 8px; background:#F8F7FF; border-right:1px solid #EDE9FE; display:flex; align-items:center;">
                                         <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                                     </span>
                                     <input wire:model="editItemStock" type="number" step="0.01" min="0"
-                                           style="width:70px; border:none; outline:none; padding:7px 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
+                                           style="width:70px; border:none; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                                 </div>
                             </div>
 
@@ -255,7 +257,7 @@
                             <div>
                                 <p style="{{ $eLabel }}">Tipo Inc.</p>
                                 <select wire:model="editItemTipoIncremento" x-on:change="tipo = $event.target.value"
-                                        style="border:1px solid #EDE9FE; border-radius:8px; padding:7px 10px; font-size:13px; color:#374151; background:#fff; outline:none; width:135px; cursor:pointer;">
+                                        style="{{ $h }} border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; width:135px; cursor:pointer;">
                                     <option value="">— Sin inc. —</option>
                                     <option value="porcentaje">% Porcentaje</option>
                                     <option value="monto_fijo">Bs Monto Fijo</option>
@@ -265,12 +267,12 @@
                             {{-- Valor Incremento --}}
                             <div>
                                 <p style="{{ $eLabel }}">Valor Inc.</p>
-                                <div style="display:flex; border:1px solid #EDE9FE; border-radius:8px; overflow:hidden; background:#fff;">
+                                <div style="{{ $h }} display:flex; border:1px solid #EDE9FE; border-radius:8px; overflow:hidden; background:#fff;">
                                     <span x-text="tipo === 'porcentaje' ? '%' : (tipo === 'monto_fijo' ? 'Bs' : '—')"
-                                          style="padding:7px 9px; background:#F8F7FF; border-right:1px solid #EDE9FE; font-size:11px; font-weight:700; color:#7B6FE8; display:flex; align-items:center; min-width:28px; justify-content:center;"></span>
+                                          style="padding:0 8px; background:#F8F7FF; border-right:1px solid #EDE9FE; font-size:11px; font-weight:700; color:#7B6FE8; display:flex; align-items:center; min-width:28px; justify-content:center;"></span>
                                     <input wire:model="editItemFactorIncremento" x-on:input="factor = parseFloat($event.target.value) || 0"
                                            type="number" step="0.01" min="0" placeholder="0"
-                                           style="width:70px; border:none; outline:none; padding:7px 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
+                                           style="width:70px; border:none; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                                 </div>
                                 @error('editItemFactorIncremento') <p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
                             </div>
@@ -278,9 +280,9 @@
                             {{-- P. Final (Alpine live) --}}
                             <div>
                                 <p style="{{ $eLabel }}">P. Final</p>
-                                <div style="border:1px solid #EDE9FE; border-radius:8px; padding:7px 14px; background:#F8F7FF; min-width:95px; text-align:center;">
+                                <div style="{{ $h }} display:flex; align-items:center; justify-content:center; border:1px solid #EDE9FE; border-radius:8px; padding:0 14px; background:#F8F7FF; min-width:95px;">
                                     <span style="font-size:11px; color:#9CA3AF; margin-right:2px;">Bs</span>
-                                    <span x-text="final" style="font-size:14px; font-weight:700; color:#7B6FE8;"></span>
+                                    <span x-text="final" style="font-size:13px; font-weight:700; color:#7B6FE8;"></span>
                                 </div>
                             </div>
 
@@ -288,14 +290,14 @@
                             <div style="width:105px;">
                                 <p style="{{ $eLabel }}">Estado</p>
                                 <select wire:model="editItemActive"
-                                        style="width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:7px 10px; font-size:13px; color:#374151; background:#fff; outline:none; cursor:pointer;">
+                                        style="{{ $h }} width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; cursor:pointer;">
                                     <option value="1">Activo</option>
                                     <option value="0">Inactivo</option>
                                 </select>
                             </div>
 
                             {{-- Botones --}}
-                            <div style="display:flex; gap:8px; padding-bottom:2px;">
+                            <div style="display:flex; gap:8px;">
                                 <button wire:click="saveEditItem"
                                         style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
                                         @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
