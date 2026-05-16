@@ -111,17 +111,14 @@ $mobileColorMap = [
     </div>
 </div>
 
-{{-- Mask: tapa el contenido durante wire:navigate en mobile para evitar flash --}}
-<div id="__nav_mask" style="display:none; position:fixed; inset:0; z-index:200; background:#F0F2F5;"></div>
+{{-- Reset mobileTab al terminar wire:navigate --}}
 <script>
 (function () {
-    if (window.__navMaskReady) return;
-    window.__navMaskReady = true;
-    function show() { if (window.innerWidth < 768) { var m = document.getElementById('__nav_mask'); if (m) m.style.display = 'block'; } }
-    function hide() { var m = document.getElementById('__nav_mask'); if (m) m.style.display = 'none'; }
-    document.addEventListener('livewire:navigate',   show);
-    document.addEventListener('livewire:navigating', show);
-    document.addEventListener('livewire:navigated',  hide);
+    if (window.__navTabReset) return;
+    window.__navTabReset = true;
+    document.addEventListener('livewire:navigated', function () {
+        window.dispatchEvent(new CustomEvent('reset-mobile-tab'));
+    });
 })();
 </script>
 
@@ -154,7 +151,7 @@ $mobileColorMap = [
         <span style="font-size:10px; font-weight:600; letter-spacing:.2px;">Módulos</span>
     </button>
 
-    <a href="{{ route('perfil') }}" wire:navigate
+    <a href="{{ route('perfil') }}" wire:navigate @click="mobileTab = 'inicio'"
        class="flex-1 flex flex-col items-center justify-center"
        style="gap:3px; text-decoration:none;"
        :style="mobileTab === 'perfil' ? 'color:#7B6FE8;' : 'color:#9CA3AF;'">
