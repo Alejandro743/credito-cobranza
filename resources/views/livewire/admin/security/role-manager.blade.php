@@ -14,10 +14,10 @@
 {{-- ── ACCESOS DEL ROL ──────────────────────────────────────────────────── --}}
 @php
     $accColorMap = [
-        'lavanda'   => ['head_bg'=>'#F5F3FF','head_border'=>'#EDE9FE','icon'=>'#7B6FE8','dot'=>'#A78BFA','btn_bg'=>'#EDE9FE','btn_color'=>'#5B21B6'],
-        'mint'      => ['head_bg'=>'#F0FDF4','head_border'=>'#D1FAE5','icon'=>'#059669','dot'=>'#6EE7B7','btn_bg'=>'#D1FAE5','btn_color'=>'#065F46'],
-        'melocoton' => ['head_bg'=>'#FFF7ED','head_border'=>'#FED7AA','icon'=>'#EA580C','dot'=>'#FDBA74','btn_bg'=>'#FED7AA','btn_color'=>'#9A3412'],
-        'celeste'   => ['head_bg'=>'#EFF6FF','head_border'=>'#BFDBFE','icon'=>'#2563EB','dot'=>'#93C5FD','btn_bg'=>'#BFDBFE','btn_color'=>'#1E40AF'],
+        'lavanda'   => ['head_bg'=>'#F5F3FF','head_border'=>'#EDE9FE','hover'=>'#F0EEFF','icon'=>'#7B6FE8','dot'=>'#A78BFA','btn_bg'=>'#EDE9FE','btn_color'=>'#5B21B6'],
+        'mint'      => ['head_bg'=>'#F0FDF4','head_border'=>'#D1FAE5','hover'=>'#E6FCF0','icon'=>'#059669','dot'=>'#6EE7B7','btn_bg'=>'#D1FAE5','btn_color'=>'#065F46'],
+        'melocoton' => ['head_bg'=>'#FFF7ED','head_border'=>'#FED7AA','hover'=>'#FEF0D8','icon'=>'#EA580C','dot'=>'#FDBA74','btn_bg'=>'#FED7AA','btn_color'=>'#9A3412'],
+        'celeste'   => ['head_bg'=>'#EFF6FF','head_border'=>'#BFDBFE','hover'=>'#E4F0FF','icon'=>'#2563EB','dot'=>'#93C5FD','btn_bg'=>'#BFDBFE','btn_color'=>'#1E40AF'],
     ];
 @endphp
 
@@ -93,7 +93,7 @@
         @php $key = (string) $leaf->id; @endphp
         <div wire:key="s-{{ $leaf->id }}"
              style="padding:10px 16px 10px 28px; border-bottom:1px solid #F9FAFB; display:flex; align-items:center; justify-content:space-between;"
-             @mouseenter="$el.style.background='{{ $cc['head_border'] }}'" @mouseleave="$el.style.background=''">
+             @mouseenter="$el.style.background='{{ $cc['hover'] }}'" @mouseleave="$el.style.background=''">
             <div style="display:flex; align-items:center; gap:7px;">
                 <span style="width:5px; height:5px; border-radius:50%; background:{{ $cc['dot'] }}; flex-shrink:0; display:block;"></span>
                 <span style="font-size:13px; color:#374151;">{{ $leaf->name }}</span>
@@ -118,7 +118,7 @@
         @php $key = (string) $sub->id; @endphp
         <div wire:key="s-{{ $sub->id }}"
              style="padding:10px 16px; border-bottom:1px solid #F9FAFB; display:flex; align-items:center; justify-content:space-between;"
-             @mouseenter="$el.style.background='{{ $cc['head_border'] }}'" @mouseleave="$el.style.background=''">
+             @mouseenter="$el.style.background='{{ $cc['hover'] }}'" @mouseleave="$el.style.background=''">
             <div style="display:flex; align-items:center; gap:7px;">
                 <span style="width:5px; height:5px; border-radius:50%; background:{{ $cc['dot'] }}; flex-shrink:0; display:block;"></span>
                 <span style="font-size:13px; color:#374151;">{{ $sub->name }}</span>
