@@ -11,106 +11,154 @@
 @endphp
 
 @if ($mode === 'permissions')
-{{-- ── ÁRBOL DE PERMISOS ──────────────────────────────────────────────────── --}}
-<div class="max-w-lg mx-auto">
-    <div class="flex items-center gap-3 mb-6">
-        <button wire:click="backToList" class="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        </button>
-        <div>
-            <h2 class="text-lg font-bold text-gray-800">Accesos del rol</h2>
-            <p class="text-xs text-lavanda-600 font-semibold capitalize">{{ $permissionsRoleName }}</p>
-        </div>
-    </div>
+{{-- ── ACCESOS DEL ROL ──────────────────────────────────────────────────── --}}
+@php
+    $accColorMap = [
+        'lavanda'   => ['head_bg'=>'#F5F3FF','head_border'=>'#EDE9FE','icon'=>'#7B6FE8','dot'=>'#A78BFA','btn_bg'=>'#EDE9FE','btn_color'=>'#5B21B6'],
+        'mint'      => ['head_bg'=>'#F0FDF4','head_border'=>'#D1FAE5','icon'=>'#059669','dot'=>'#6EE7B7','btn_bg'=>'#D1FAE5','btn_color'=>'#065F46'],
+        'melocoton' => ['head_bg'=>'#FFF7ED','head_border'=>'#FED7AA','icon'=>'#EA580C','dot'=>'#FDBA74','btn_bg'=>'#FED7AA','btn_color'=>'#9A3412'],
+        'celeste'   => ['head_bg'=>'#EFF6FF','head_border'=>'#BFDBFE','icon'=>'#2563EB','dot'=>'#93C5FD','btn_bg'=>'#BFDBFE','btn_color'=>'#1E40AF'],
+    ];
+@endphp
 
-    <div class="flex items-center gap-3 mb-4 px-1">
-        <span class="text-xs font-semibold text-gray-400 uppercase tracking-wide">Todo:</span>
-        <button wire:click="toggleTodos(true)" class="px-3 py-1 text-xs font-semibold rounded-lg bg-lavanda-100 hover:bg-lavanda-200 text-lavanda-700 transition-colors">Dar acceso a todo</button>
-        <button wire:click="toggleTodos(false)" class="px-3 py-1 text-xs font-semibold rounded-lg bg-gray-100 hover:bg-gray-200 text-gray-500 transition-colors">Quitar todo</button>
-    </div>
-
-    <div class="space-y-3 mb-6">
-        @forelse ($modulosArbol as $modulo)
-        @php
-            $colores = [
-                'lavanda'   => ['head_bg'=>'bg-lavanda-50','head_border'=>'border-lavanda-100','dot'=>'bg-lavanda-300','btn_all'=>'bg-lavanda-200 hover:bg-lavanda-300 text-lavanda-800'],
-                'mint'      => ['head_bg'=>'bg-mint-50','head_border'=>'border-mint-100','dot'=>'bg-mint-300','btn_all'=>'bg-mint-200 hover:bg-mint-300 text-mint-800'],
-                'melocoton' => ['head_bg'=>'bg-melocoton-50','head_border'=>'border-melocoton-100','dot'=>'bg-melocoton-300','btn_all'=>'bg-melocoton-200 hover:bg-melocoton-300 text-melocoton-800'],
-                'celeste'   => ['head_bg'=>'bg-celeste-50','head_border'=>'border-celeste-100','dot'=>'bg-celeste-300','btn_all'=>'bg-celeste-200 hover:bg-celeste-300 text-celeste-800'],
-            ];
-            $cc = $colores[$modulo->color] ?? $colores['lavanda'];
-        @endphp
-        <div class="border border-gray-100 rounded-xl overflow-hidden shadow-sm" wire:key="m-{{ $modulo->id }}">
-            <div class="flex items-center justify-between px-4 py-2.5 {{ $cc['head_bg'] }} border-b {{ $cc['head_border'] }}">
-                <div class="flex items-center gap-2">
-                    <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $modulo->icon }}"/></svg>
-                    <span class="font-bold text-sm text-gray-800">{{ $modulo->name }}</span>
-                </div>
-                <div class="flex gap-1.5">
-                    <button wire:click="toggleModulo({{ $modulo->id }}, true)" class="text-xs px-2.5 py-1 rounded-lg {{ $cc['btn_all'] }} font-bold transition-colors">Todos</button>
-                    <button wire:click="toggleModulo({{ $modulo->id }}, false)" class="text-xs px-2.5 py-1 rounded-lg bg-white hover:bg-gray-100 text-gray-500 font-bold border border-gray-200 transition-colors">Ninguno</button>
-                </div>
+{{-- Cabecera --}}
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); margin-bottom:14px; overflow:hidden;">
+    <div style="padding:13px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+        <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+            <button wire:click="backToList"
+                    style="width:34px; height:34px; border-radius:9px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                </svg>
+            </button>
+            <div style="min-width:0;">
+                <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.6px; margin:0 0 2px;">Configurando accesos</p>
+                <p style="font-size:16px; font-weight:800; color:#111827; margin:0; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $permissionsRoleName }}</p>
             </div>
-            @foreach ($modulo->submodulos as $sub)
-                @if ($sub->isGroup())
-                <div class="px-4 py-2 bg-gray-50 border-b border-gray-100">
-                    <span class="text-xs font-semibold text-gray-500 uppercase tracking-wide">{{ $sub->name }}</span>
-                </div>
-                @foreach ($sub->children as $leaf)
-                @php $key = (string) $leaf->id; @endphp
-                <div class="flex items-center justify-between px-4 py-2.5 pl-8 border-b border-gray-50 last:border-0 hover:bg-gray-50/60 transition-colors" wire:key="s-{{ $leaf->id }}">
-                    <div class="flex items-center gap-2 text-sm text-gray-700">
-                        <span class="w-1.5 h-1.5 rounded-full {{ $cc['dot'] }} flex-shrink-0"></span>
-                        {{ $leaf->name }}
-                    </div>
-                    <label class="flex items-center gap-2 cursor-pointer select-none group">
-                        <span class="text-xs font-medium transition-colors {{ ($permissions[$key]['puede_ver'] ?? false) ? 'text-lavanda-600' : 'text-gray-300 group-hover:text-gray-400' }}">
-                            {{ ($permissions[$key]['puede_ver'] ?? false) ? 'Con acceso' : 'Sin acceso' }}
-                        </span>
-                        <div class="relative w-10 h-5 flex-shrink-0">
-                            <input type="checkbox" wire:model.live="permissions.{{ $key }}.puede_ver" class="sr-only peer">
-                            <div class="absolute inset-0 bg-gray-200 peer-checked:bg-lavanda-500 rounded-full transition-colors duration-200"></div>
-                            <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 peer-checked:translate-x-5"></div>
-                        </div>
-                    </label>
-                </div>
-                @endforeach
-                @else
-                @php $key = (string) $sub->id; @endphp
-                <div class="flex items-center justify-between px-4 py-2.5 border-b border-gray-50 last:border-0 hover:bg-gray-50/60 transition-colors" wire:key="s-{{ $sub->id }}">
-                    <div class="flex items-center gap-2 text-sm text-gray-700">
-                        <span class="w-1.5 h-1.5 rounded-full {{ $cc['dot'] }} flex-shrink-0"></span>
-                        {{ $sub->name }}
-                    </div>
-                    <label class="flex items-center gap-2 cursor-pointer select-none group">
-                        <span class="text-xs font-medium transition-colors {{ ($permissions[$key]['puede_ver'] ?? false) ? 'text-lavanda-600' : 'text-gray-300 group-hover:text-gray-400' }}">
-                            {{ ($permissions[$key]['puede_ver'] ?? false) ? 'Con acceso' : 'Sin acceso' }}
-                        </span>
-                        <div class="relative w-10 h-5 flex-shrink-0">
-                            <input type="checkbox" wire:model.live="permissions.{{ $key }}.puede_ver" class="sr-only peer">
-                            <div class="absolute inset-0 bg-gray-200 peer-checked:bg-lavanda-500 rounded-full transition-colors duration-200"></div>
-                            <div class="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform duration-200 peer-checked:translate-x-5"></div>
-                        </div>
-                    </label>
-                </div>
-                @endif
-            @endforeach
         </div>
-        @empty
-        <div class="text-center py-10 text-gray-400 text-sm">No hay módulos en BD.</div>
-        @endforelse
-    </div>
-
-    <div class="flex items-center justify-between">
-        <p class="text-xs text-gray-400">Solo submódulos con acceso activo serán visibles en el menú.</p>
-        <div class="flex gap-3">
-            <button wire:click="backToList" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-100 transition-colors">Cancelar</button>
-            <button wire:click="savePermissions" wire:loading.attr="disabled"
-                    class="inline-flex items-center gap-2 px-6 py-2.5 text-sm font-bold bg-lavanda-500 hover:bg-lavanda-600 text-white rounded-xl shadow-sm transition-colors disabled:opacity-60">
-                <span wire:loading.remove wire:target="savePermissions">Guardar permisos</span>
-                <span wire:loading wire:target="savePermissions">Guardando...</span>
+        <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+            <button wire:click="toggleTodos(true)"
+                    style="height:30px; padding:0 12px; border:1px solid #EDE9FE; border-radius:7px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; white-space:nowrap;"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Dar todo
+            </button>
+            <button wire:click="toggleTodos(false)"
+                    style="height:30px; padding:0 12px; border:1px solid #E5E7EB; border-radius:7px; background:#F9FAFB; color:#6B7280; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; white-space:nowrap;"
+                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                Quitar todo
             </button>
         </div>
+    </div>
+</div>
+
+{{-- Módulos --}}
+<div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+    @forelse ($modulosArbol as $modulo)
+    @php $cc = $accColorMap[$modulo->color] ?? $accColorMap['lavanda']; @endphp
+    <div wire:key="m-{{ $modulo->id }}"
+         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 3px rgba(0,0,0,.05); overflow:hidden;">
+
+        {{-- Cabecera módulo --}}
+        <div style="padding:10px 16px; background:{{ $cc['head_bg'] }}; border-bottom:1px solid {{ $cc['head_border'] }}; display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:30px; height:30px; border-radius:8px; background:{{ $cc['head_border'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="14" height="14" fill="none" stroke="{{ $cc['icon'] }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="{{ $modulo->icon }}"/>
+                    </svg>
+                </div>
+                <span style="font-size:13px; font-weight:700; color:#111827;">{{ $modulo->name }}</span>
+            </div>
+            <div style="display:flex; gap:5px;">
+                <button wire:click="toggleModulo({{ $modulo->id }}, true)"
+                        style="height:26px; padding:0 10px; border-radius:6px; border:none; background:{{ $cc['btn_bg'] }}; color:{{ $cc['btn_color'] }}; font-size:11px; font-weight:700; cursor:pointer;">
+                    Todos
+                </button>
+                <button wire:click="toggleModulo({{ $modulo->id }}, false)"
+                        style="height:26px; padding:0 10px; border-radius:6px; border:1px solid #E5E7EB; background:#fff; color:#6B7280; font-size:11px; font-weight:700; cursor:pointer;">
+                    Ninguno
+                </button>
+            </div>
+        </div>
+
+        {{-- Submodulos --}}
+        @foreach ($modulo->submodulos as $sub)
+        @if ($sub->isGroup())
+        <div style="padding:5px 16px; background:#F9FAFB; border-bottom:1px solid #F3F4F6;">
+            <span style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.7px;">{{ $sub->name }}</span>
+        </div>
+        @foreach ($sub->children as $leaf)
+        @php $key = (string) $leaf->id; @endphp
+        <div wire:key="s-{{ $leaf->id }}"
+             style="padding:10px 16px 10px 28px; border-bottom:1px solid #F9FAFB; display:flex; align-items:center; justify-content:space-between;"
+             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+            <div style="display:flex; align-items:center; gap:7px;">
+                <span style="width:5px; height:5px; border-radius:50%; background:{{ $cc['dot'] }}; flex-shrink:0; display:block;"></span>
+                <span style="font-size:13px; color:#374151;">{{ $leaf->name }}</span>
+            </div>
+            <label style="display:flex; align-items:center; gap:7px; cursor:pointer; user-select:none;">
+                <span style="font-size:11px; font-weight:500; min-width:62px; text-align:right; color:{{ ($permissions[$key]['puede_ver'] ?? false) ? '#7B6FE8' : '#D1D5DB' }};">
+                    {{ ($permissions[$key]['puede_ver'] ?? false) ? 'Con acceso' : 'Sin acceso' }}
+                </span>
+                <div style="position:relative; width:36px; height:20px; flex-shrink:0;">
+                    <input type="checkbox" wire:model.live="permissions.{{ $key }}.puede_ver" class="peer"
+                           style="position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; margin:0; z-index:1;">
+                    <div class="peer-checked:bg-lavanda-500 bg-gray-200"
+                         style="position:absolute; inset:0; border-radius:10px; transition:background .15s; pointer-events:none;"></div>
+                    <div class="peer-checked:translate-x-4 translate-x-0"
+                         style="position:absolute; top:2px; left:2px; width:16px; height:16px; background:#fff; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,.2); transition:transform .15s; pointer-events:none;"></div>
+                </div>
+            </label>
+        </div>
+        @endforeach
+
+        @else
+        @php $key = (string) $sub->id; @endphp
+        <div wire:key="s-{{ $sub->id }}"
+             style="padding:10px 16px; border-bottom:1px solid #F9FAFB; display:flex; align-items:center; justify-content:space-between;"
+             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+            <div style="display:flex; align-items:center; gap:7px;">
+                <span style="width:5px; height:5px; border-radius:50%; background:{{ $cc['dot'] }}; flex-shrink:0; display:block;"></span>
+                <span style="font-size:13px; color:#374151;">{{ $sub->name }}</span>
+            </div>
+            <label style="display:flex; align-items:center; gap:7px; cursor:pointer; user-select:none;">
+                <span style="font-size:11px; font-weight:500; min-width:62px; text-align:right; color:{{ ($permissions[$key]['puede_ver'] ?? false) ? '#7B6FE8' : '#D1D5DB' }};">
+                    {{ ($permissions[$key]['puede_ver'] ?? false) ? 'Con acceso' : 'Sin acceso' }}
+                </span>
+                <div style="position:relative; width:36px; height:20px; flex-shrink:0;">
+                    <input type="checkbox" wire:model.live="permissions.{{ $key }}.puede_ver" class="peer"
+                           style="position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%; margin:0; z-index:1;">
+                    <div class="peer-checked:bg-lavanda-500 bg-gray-200"
+                         style="position:absolute; inset:0; border-radius:10px; transition:background .15s; pointer-events:none;"></div>
+                    <div class="peer-checked:translate-x-4 translate-x-0"
+                         style="position:absolute; top:2px; left:2px; width:16px; height:16px; background:#fff; border-radius:50%; box-shadow:0 1px 3px rgba(0,0,0,.2); transition:transform .15s; pointer-events:none;"></div>
+                </div>
+            </label>
+        </div>
+        @endif
+        @endforeach
+
+    </div>
+    @empty
+    <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">No hay módulos en BD.</p>
+    @endforelse
+</div>
+
+{{-- Footer --}}
+<div style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; padding:13px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px;">
+    <p style="font-size:11px; color:#9CA3AF; margin:0;">Solo submódulos con acceso activo serán visibles en el menú.</p>
+    <div style="display:flex; gap:8px; flex-shrink:0;">
+        <button wire:click="backToList"
+                style="height:36px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;">
+            Cancelar
+        </button>
+        <button wire:click="savePermissions" wire:loading.attr="disabled"
+                style="height:36px; padding:0 22px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;">
+            <span wire:loading.remove wire:target="savePermissions">Guardar accesos</span>
+            <span wire:loading wire:target="savePermissions">Guardando...</span>
+        </button>
     </div>
 </div>
 
