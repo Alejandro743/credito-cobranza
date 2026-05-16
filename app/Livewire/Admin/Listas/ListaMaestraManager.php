@@ -45,6 +45,12 @@ class ListaMaestraManager extends Component
     public bool  $showViewModal   = false;
     public array $viewMaestraData = [];
 
+    // ── Ver productos (modal) ─────────────────────────────────────────────────
+    public bool   $showItemsModal      = false;
+    public string $viewItemsMaestraName = '';
+    public string $viewItemsMaestraCode = '';
+    public array  $viewItemsData        = [];
+
     // ── Inline edit ───────────────────────────────────────────────────────────
     public ?int   $editingId             = null;
     public string $editName              = '';
@@ -282,6 +288,38 @@ class ListaMaestraManager extends Component
     {
         $this->showViewModal   = false;
         $this->viewMaestraData = [];
+    }
+
+    // ── Ver productos (modal) ─────────────────────────────────────────────────
+
+    public function openViewItems(int $id): void
+    {
+        $m = ListaMaestra::with(['items' => fn($q) => $q->with('product')->orderBy('id')])->findOrFail($id);
+
+        $items = $m->items->map(fn($item) => [
+            'code'   => $item->product?->code ?? '—',
+            'name'   => $item->product?->name ?? '—',
+            'precio' => 'Bs ' . number_format((float) $item->precio_base, 2),
+            'stock'  => $item->stock_actual,
+            'active' => (bool) $item->active,
+        ])->toArray();
+
+        $this->viewItemsMaestraName = $m->name;
+        $this->viewItemsMaestraCode = $m->code ?? '—';
+        $this->viewItemsData = [
+            'total'   => count($items),
+            'activos' => collect($items)->where('active', true)->count(),
+            'items'   => $items,
+        ];
+        $this->showItemsModal = true;
+    }
+
+    public function closeViewItems(): void
+    {
+        $this->showItemsModal       = false;
+        $this->viewItemsMaestraName = '';
+        $this->viewItemsMaestraCode = '';
+        $this->viewItemsData        = [];
     }
 
     // ── Items mode ────────────────────────────────────────────────────────────

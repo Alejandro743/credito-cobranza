@@ -1002,10 +1002,10 @@
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </button>
                             {{-- Ver productos --}}
-                            <button wire:click="viewItems({{ $m->id }})" title="Ver productos"
+                            <button wire:click="openViewItems({{ $m->id }})" title="Ver productos"
                                     style="width:28px; height:28px; border-radius:7px; border:1px solid #A5F3FC; background:#CFFAFE; color:#0E7490; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                    @mouseenter="$el.style.opacity='.75'" @mouseleave="$el.style.opacity='1'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    @mouseenter="$el.style.background='#A5F3FC'" @mouseleave="$el.style.background='#CFFAFE'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                             </button>
                             {{-- Gestionar acceso --}}
                             <button wire:click="viewAcceso({{ $m->id }})" title="Gestionar acceso"
@@ -1165,6 +1165,96 @@ if (!window.colResize) {
         {{-- Footer --}}
         <div style="padding:12px 20px; border-top:1px solid #F3F4F6; flex-shrink:0; display:flex; justify-content:flex-end;">
             <button wire:click="closeView"
+                    style="height:36px; padding:0 24px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
+                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+@endif
+
+{{-- ═══════════════════════════════════════════ MODAL VER PRODUCTOS ═══ --}}
+@if ($showItemsModal)
+<div style="position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.45);"
+     wire:click.self="closeViewItems">
+    <div style="background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,.18); width:100%; max-width:540px; height:80vh; display:flex; flex-direction:column;">
+
+        {{-- Header --}}
+        <div style="background:#F0FDFA; border-bottom:1px solid #A5F3FC; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <div>
+                <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.7px; margin:0 0 2px;">Productos en lista</p>
+                <p style="font-size:16px; font-weight:800; color:#0E7490; margin:0;">{{ $viewItemsMaestraName }}</p>
+            </div>
+            <button wire:click="closeViewItems"
+                    style="width:32px; height:32px; border-radius:9px; border:1px solid #A5F3FC; background:#fff; color:#9CA3AF; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        {{-- Body --}}
+        <div style="height:calc(80vh - 130px); overflow-y:auto; padding:16px;">
+
+            {{-- Resumen --}}
+            <div style="border-radius:12px; border:1px solid #EDE9FE; overflow:hidden; margin-bottom:10px;">
+                <div style="background:#F5F3FF; padding:9px 14px; display:flex; align-items:center; gap:8px;">
+                    <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    <span style="font-size:12px; font-weight:700; color:#111827; text-transform:uppercase; letter-spacing:.4px;">Resumen</span>
+                </div>
+                <div style="padding:12px 14px; display:flex; flex-direction:column; gap:8px;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F9FAFB; padding-bottom:8px;">
+                        <span style="font-size:12px; color:#6B7280; font-weight:500;">Total de ítems</span>
+                        <span style="font-size:13px; color:#374151; font-weight:600;">{{ $viewItemsData['total'] }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F9FAFB; padding-bottom:8px;">
+                        <span style="font-size:12px; color:#6B7280; font-weight:500;">Activos</span>
+                        <span style="font-size:13px; color:#059669; font-weight:600;">{{ $viewItemsData['activos'] }}</span>
+                    </div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span style="font-size:12px; color:#6B7280; font-weight:500;">Inactivos</span>
+                        <span style="font-size:13px; color:#9CA3AF; font-weight:600;">{{ $viewItemsData['total'] - $viewItemsData['activos'] }}</span>
+                    </div>
+                </div>
+            </div>
+
+            {{-- Lista de productos --}}
+            <div style="border-radius:12px; border:1px solid #CFFAFE; overflow:hidden;">
+                <div style="background:#F0FDFA; padding:9px 14px; display:flex; align-items:center; gap:8px;">
+                    <svg width="13" height="13" fill="none" stroke="#0E7490" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                    </svg>
+                    <span style="font-size:12px; font-weight:700; color:#111827; text-transform:uppercase; letter-spacing:.4px;">Ítems</span>
+                </div>
+                @forelse ($viewItemsData['items'] as $item)
+                <div style="padding:9px 14px; border-bottom:1px solid #F0FDFA; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                    <div style="min-width:0; flex:1;">
+                        <span style="font-size:11px; font-family:monospace; color:#0E7490; font-weight:600;">{{ $item['code'] }}</span>
+                        <span style="font-size:13px; color:#374151; font-weight:500; margin-left:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:inline-block; max-width:220px; vertical-align:middle;">{{ $item['name'] }}</span>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
+                        <span style="font-size:12px; color:#374151; font-weight:600;">{{ $item['precio'] }}</span>
+                        <span style="padding:2px 8px; border-radius:99px; font-size:11px; font-weight:600;
+                                     background:{{ $item['active'] ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $item['active'] ? '#059669' : '#9CA3AF' }};">
+                            {{ $item['active'] ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </div>
+                </div>
+                @empty
+                <div style="padding:24px 14px; text-align:center; color:#9CA3AF; font-size:13px;">Sin productos</div>
+                @endforelse
+            </div>
+
+        </div>
+
+        {{-- Footer --}}
+        <div style="padding:12px 20px; border-top:1px solid #F3F4F6; flex-shrink:0; display:flex; justify-content:flex-end;">
+            <button wire:click="closeViewItems"
                     style="height:36px; padding:0 24px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
                     @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
                 Cerrar
