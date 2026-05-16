@@ -598,25 +598,36 @@
 {{-- ═══════════════════════════════════════════════════════ LIST MODE ════ --}}
 @else
 
-<div class="flex flex-col sm:flex-row gap-3 mb-5">
-    <div class="relative flex-1">
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
+
+    <div class="relative w-full sm:flex-1" style="min-width:0;">
+        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
+        </svg>
         <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por código o nombre..."
-               class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-lavanda-400 focus:ring-2 focus:ring-lavanda-100">
+               style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
     </div>
-    <select wire:model.live="filterCycleId" class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
+
+    <select wire:model.live="filterCycleId" class="w-full sm:w-auto"
+            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
         <option value="">Todos los ciclos</option>
         @foreach ($cycles as $cycle)
             <option value="{{ $cycle->id }}">{{ $cycle->code }}</option>
         @endforeach
     </select>
-    <select wire:model.live="filterStatus" class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
+
+    <select wire:model.live="filterStatus" class="w-full sm:w-auto"
+            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
         <option value="">Todos los estados</option>
         <option value="1">Activa</option>
         <option value="0">Inactiva</option>
     </select>
-    <button wire:click="showAdd" class="flex items-center gap-2 bg-lavanda-500 hover:bg-lavanda-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+
+    <button wire:click="showAdd" class="w-full sm:w-auto"
+            style="height:36px; padding:0 18px; display:flex; align-items:center; justify-content:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        </svg>
         Nueva Lista
     </button>
 </div>
@@ -771,10 +782,27 @@
 </div>
 @endif
 
-{{-- ── Desktop table ────────────────────────────────────────────────────── --}}
-<div class="hidden sm:block" style="background:#fff; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,.07); border:1px solid #F0F0F0; overflow:hidden;">
+{{-- ══ DESKTOP: Tabla ══ --}}
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+
+    {{-- Barra --}}
+    <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:13px; font-weight:700; color:#111827;">Listas registradas</span>
+            <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $maestras->total() }}</span>
+        </div>
+        <button type="button" wire:click="$refresh"
+                style="height:30px; padding:0 10px; border:1px solid #E5E7EB; border-radius:7px; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500; box-sizing:border-box;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Actualizar
+        </button>
+    </div>
+
     <div style="overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse; font-size:13px;" data-table="lm">
+        @if ($maestras->isEmpty())
+        <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay listas registradas.</p>
+        @else
+        <table style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <colgroup>
                 <col style="width:110px;">
                 <col>
@@ -782,201 +810,256 @@
                 <col style="width:85px;">
                 <col style="width:115px;">
                 <col style="width:90px;">
-                <col style="width:138px;">
+                <col style="width:155px;">
             </colgroup>
             <thead>
-                <tr style="background:#FAFAFE; border-bottom:2px solid #EBEBFF;">
-                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:left; cursor:col-resize; user-select:none; white-space:nowrap;" data-col="0">Código</th>
-                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:left; cursor:col-resize; user-select:none;" data-col="1">Nombre</th>
-                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:left; cursor:col-resize; user-select:none; white-space:nowrap;" data-col="2">Ciclo</th>
-                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:center; cursor:col-resize; user-select:none; white-space:nowrap;" data-col="3">Cuotas</th>
-                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:center; cursor:col-resize; user-select:none; white-space:nowrap;" data-col="4">C. Inicial</th>
-                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:center; white-space:nowrap;">Estado</th>
-                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:right; white-space:nowrap;">Acciones</th>
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:80px;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Código</span>
+                        <div x-data="colResize()" @mousedown="start($event)"
+                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:120px;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Nombre</span>
+                        <div x-data="colResize()" @mousedown="start($event)"
+                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:80px;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Ciclo</span>
+                        <div x-data="colResize()" @mousedown="start($event)"
+                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+                    <th style="padding:10px 16px; text-align:center; position:relative; user-select:none; overflow:hidden; min-width:60px;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Cuotas</span>
+                        <div x-data="colResize()" @mousedown="start($event)"
+                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+                    <th style="padding:10px 16px; text-align:center; position:relative; user-select:none; overflow:hidden; min-width:80px;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">C. Inicial</span>
+                        <div x-data="colResize()" @mousedown="start($event)"
+                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+                    <th style="padding:10px 16px; text-align:center; position:relative; user-select:none; overflow:hidden; min-width:70px;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</span>
+                        <div x-data="colResize()" @mousedown="start($event)"
+                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+                    <th style="padding:10px 16px; text-align:center;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</span>
+                    </th>
                 </tr>
             </thead>
             <tbody>
-                @forelse ($maestras as $m)
+                @foreach ($maestras as $m)
+
                 @if ($editingId === $m->id)
-                {{-- Fila de edición principal --}}
-                <tr wire:key="m-edit-{{ $m->id }}" style="background:#F5F3FF; border-left:3px solid #7c3aed;">
-                    <td style="padding:10px 12px; font-family:monospace; font-size:11px; color:#534AB7; font-weight:600; white-space:nowrap;">{{ $m->code ?? '—' }}</td>
-                    <td style="padding:10px 12px;">
-                        <input wire:model="editName" type="text"
-                               style="width:100%; border:1px solid #CECBF6; border-radius:6px; padding:6px 10px; font-size:12px; background:#fff; outline:none;">
-                        @error('editName') <p style="color:#ef4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                {{-- Fila edición principal --}}
+                <tr wire:key="m-edit-{{ $m->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+                    <td style="padding:7px 16px;">
+                        <span style="font-family:monospace; font-size:11px; color:#9CA3AF;">{{ $m->code ?? '—' }}</span>
                     </td>
-                    <td style="padding:10px 12px;">
+                    <td style="padding:7px 10px;">
+                        <input wire:model="editName" type="text"
+                               style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
+                        @error('editName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                    </td>
+                    <td style="padding:7px 10px;">
                         <select wire:model="editCycleId"
-                                style="width:100%; border:1px solid #CECBF6; border-radius:6px; padding:6px 8px; font-size:12px; background:#fff; outline:none;">
+                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
                             <option value="">— Ciclo —</option>
                             @foreach ($cycles as $cycle)
                                 <option value="{{ $cycle->id }}">{{ $cycle->code }}</option>
                             @endforeach
                         </select>
-                        @error('editCycleId') <p style="color:#ef4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                        @error('editCycleId') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:10px 12px; text-align:center;">
+                    <td style="padding:7px 10px; text-align:center;">
                         <input wire:model="editCantidadCuotas" type="number" min="1" max="999" placeholder="—"
-                               style="width:58px; border:1px solid #CECBF6; border-radius:6px; padding:6px 4px; font-size:12px; text-align:center; background:#fff; outline:none;">
+                               style="width:58px; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
                     </td>
-                    <td style="padding:10px 12px; text-align:center;">
+                    <td style="padding:7px 10px; text-align:center;">
                         <input type="checkbox" wire:model="editUsaCuotaInicial"
-                               style="width:15px; height:15px; cursor:pointer; accent-color:#7c3aed;">
+                               style="width:15px; height:15px; cursor:pointer; accent-color:#7B6FE8;">
                     </td>
-                    <td style="padding:10px 12px; text-align:center;">
-                        <input type="checkbox" wire:model="editActive"
-                               style="width:15px; height:15px; cursor:pointer; accent-color:#7c3aed;">
+                    <td style="padding:7px 10px; text-align:center;">
+                        <select wire:model="editActive"
+                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                            <option value="1">Activa</option>
+                            <option value="0">Inactiva</option>
+                        </select>
                     </td>
-                    <td style="padding:10px 12px; text-align:right;">
-                        <div style="display:flex; align-items:center; justify-content:flex-end; gap:4px;">
-                            <button wire:click="saveEdit" title="Guardar"
-                                    style="width:28px; height:28px; border-radius:7px; border:none; background:#D1FAE5; color:#059669; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <td style="padding:7px 10px; text-align:center;">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                            <button wire:click="saveEdit"
+                                    style="height:30px; padding:0 10px; background:#7B6FE8; color:#fff; border:none; border-radius:7px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
+                                Guardar
                             </button>
-                            <button wire:click="cancelEdit" title="Cancelar"
-                                    style="width:28px; height:28px; border-radius:7px; border:none; background:#F3F4F6; color:#6B7280; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
-                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            <button wire:click="cancelEdit"
+                                    style="height:30px; padding:0 8px; background:#F3F4F6; color:#6B7280; border:none; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
+                                Cancelar
                             </button>
                         </div>
                     </td>
                 </tr>
                 {{-- Sub-fila: incremento + financiamiento --}}
-                <tr style="background:#F5F3FF; border-left:3px solid #7c3aed; border-bottom:1px solid #E5E7EB;">
-                    <td colspan="7" style="padding:0 12px 10px 12px;">
+                <tr style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+                    <td colspan="7" style="padding:0 16px 10px 16px;">
                         <div style="display:flex; flex-wrap:wrap; align-items:center; gap:16px;">
                             <div style="display:flex; align-items:center; gap:8px;">
-                                <span style="font-size:11px; font-weight:600; color:#534AB7;">Incremento:</span>
+                                <span style="font-size:11px; font-weight:600; color:#7B6FE8;">Incremento:</span>
                                 <select wire:model="editTipoIncremento"
-                                        style="border:1px solid #CECBF6; border-radius:6px; padding:5px 8px; font-size:11px; background:#fff; outline:none;">
+                                        style="border:1px solid #D8D3F8; border-radius:6px; padding:4px 8px; font-size:11px; background:#fff; outline:none;">
                                     <option value="">— Sin incremento —</option>
                                     <option value="porcentaje">Porcentaje %</option>
                                     <option value="monto_fijo">Monto Fijo Bs</option>
                                 </select>
                                 <input wire:model="editValorIncremento" type="number" step="0.01" min="0" placeholder="0"
-                                       style="width:68px; border:1px solid #CECBF6; border-radius:6px; padding:5px 6px; font-size:11px; text-align:center; background:#fff; outline:none;">
+                                       style="width:65px; border:1px solid #D8D3F8; border-radius:6px; padding:4px 6px; font-size:11px; text-align:center; background:#fff; outline:none;">
                                 <span style="font-size:11px; color:#9CA3AF;">{{ $editTipoIncremento === 'porcentaje' ? '%' : ($editTipoIncremento === 'monto_fijo' ? 'Bs' : '') }}</span>
                             </div>
-                            <div style="display:flex; align-items:center; gap:8px; padding-left:14px; border-left:1px solid #CECBF6;">
-                                <span style="font-size:11px; font-weight:600; color:#534AB7;">Días:</span>
+                            <div style="display:flex; align-items:center; gap:8px; padding-left:14px; border-left:1px solid #D8D3F8;">
+                                <span style="font-size:11px; font-weight:600; color:#7B6FE8;">Días:</span>
                                 <input wire:model="editDiasEntreCuotas" type="number" min="1" max="365" placeholder="30"
-                                       style="width:58px; border:1px solid #CECBF6; border-radius:6px; padding:5px 6px; font-size:11px; text-align:center; background:#fff; outline:none;">
+                                       style="width:55px; border:1px solid #D8D3F8; border-radius:6px; padding:4px 6px; font-size:11px; text-align:center; background:#fff; outline:none;">
                             </div>
-                            <div style="display:flex; align-items:center; gap:8px; padding-left:14px; border-left:1px solid #CECBF6;">
-                                <span style="font-size:11px; font-weight:600; color:#534AB7;">C. Inicial:</span>
+                            <div style="display:flex; align-items:center; gap:8px; padding-left:14px; border-left:1px solid #D8D3F8;">
+                                <span style="font-size:11px; font-weight:600; color:#7B6FE8;">C. Inicial:</span>
                                 <select wire:model="editTipoCuotaInicial"
-                                        style="border:1px solid #CECBF6; border-radius:6px; padding:5px 8px; font-size:11px; background:#fff; outline:none;">
+                                        style="border:1px solid #D8D3F8; border-radius:6px; padding:4px 8px; font-size:11px; background:#fff; outline:none;">
                                     <option value="ninguna">Sin cuota inicial</option>
                                     <option value="porcentaje">Porcentaje %</option>
                                     <option value="monto_fijo">Monto Fijo Bs</option>
                                 </select>
                                 @if ($editTipoCuotaInicial !== 'ninguna')
                                 <input wire:model="editValorCuotaInicial" type="number" step="0.01" min="0" placeholder="0"
-                                       style="width:68px; border:1px solid #CECBF6; border-radius:6px; padding:5px 6px; font-size:11px; text-align:center; background:#fff; outline:none;">
+                                       style="width:65px; border:1px solid #D8D3F8; border-radius:6px; padding:4px 6px; font-size:11px; text-align:center; background:#fff; outline:none;">
                                 <span style="font-size:11px; color:#9CA3AF;">{{ $editTipoCuotaInicial === 'porcentaje' ? '%' : 'Bs' }}</span>
                                 @endif
                             </div>
                         </div>
                     </td>
                 </tr>
+
                 @else
-                <tr wire:key="m-{{ $m->id }}" style="border-bottom:1px solid #F3F4F6;" onmouseover="this.style.background='#FAFAFA'" onmouseout="this.style.background=''">
-                    <td style="padding:11px 12px; font-family:monospace; font-size:11px; color:#534AB7; font-weight:600; white-space:nowrap;">{{ $m->code ?? '—' }}</td>
-                    <td style="padding:11px 12px; font-size:13px; color:#1F2937; font-weight:500;">{{ $m->name }}</td>
-                    <td style="padding:11px 12px;">
+                {{-- Fila normal --}}
+                <tr wire:key="m-{{ $m->id }}"
+                    style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
+                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+
+                    <td style="padding:10px 16px; overflow:hidden;">
+                        <span style="font-family:monospace; font-size:12px; color:#7B6FE8; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->code ?? '—' }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden;">
+                        <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->name }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden;">
                         @if ($m->cycle)
-                        <span style="font-family:monospace; font-size:11px; color:#6B7280;">{{ $m->cycle->code }}</span>
+                        <span style="font-family:monospace; font-size:12px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle->code }}</span>
                         @else
                         <span style="color:#D1D5DB;">—</span>
                         @endif
                     </td>
-                    <td style="padding:11px 12px; text-align:center;">
+                    <td style="padding:10px 16px; text-align:center;">
                         @if ($m->cantidad_cuotas)
-                        <span style="display:inline-flex; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:600; background:#EDE9FE; color:#534AB7;">{{ $m->cantidad_cuotas }}c</span>
+                        <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:#EDE9FE; color:#5B21B6;">{{ $m->cantidad_cuotas }}c</span>
                         @else
                         <span style="color:#D1D5DB;">—</span>
                         @endif
                     </td>
-                    <td style="padding:11px 12px; text-align:center;">
+                    <td style="padding:10px 16px; text-align:center;">
                         @if ($m->usa_cuota_inicial)
-                        <span style="display:inline-flex; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:600; background:#FFE4D9; color:#C2410C;">
+                        <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:#FFF7ED; color:#C2410C;">
                             {{ $m->tipo_cuota_inicial === 'porcentaje' ? number_format($m->valor_cuota_inicial, 0).'%' : 'Bs '.number_format($m->valor_cuota_inicial, 2) }}
                         </span>
                         @else
                         <span style="color:#D1D5DB;">—</span>
                         @endif
                     </td>
-                    <td style="padding:11px 12px; text-align:center;">
-                        <span style="display:inline-flex; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; {{ $m->active ? 'background:#D1FAE5; color:#065F46;' : 'background:#FEE2E2; color:#991B1B;' }}">
+                    <td style="padding:10px 16px; text-align:center;">
+                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; white-space:nowrap;
+                                     background:{{ $m->active ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $m->active ? '#059669' : '#9CA3AF' }};">
                             {{ $m->active ? 'Activa' : 'Inactiva' }}
                         </span>
                     </td>
-                    <td style="padding:11px 12px; text-align:right;">
-                        <div style="display:flex; align-items:center; justify-content:flex-end; gap:4px;">
+                    <td style="padding:10px 16px; text-align:center;">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
+                            {{-- Editar --}}
                             <button wire:click="startEdit({{ $m->id }})" title="Editar"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
-                                    onmouseover="this.style.background='#EDE9FE';this.style.color='#7c3aed';this.style.borderColor='#CECBF6';"
-                                    onmouseout="this.style.background='#F9FAFB';this.style.color='#6B7280';this.style.borderColor='#E5E7EB';">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                             </button>
+                            {{-- Ver productos --}}
                             <button wire:click="viewItems({{ $m->id }})" title="Ver productos"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
-                                    onmouseover="this.style.background='#CFFAFE';this.style.color='#0E7490';this.style.borderColor='#A5F3FC';"
-                                    onmouseout="this.style.background='#F9FAFB';this.style.color='#6B7280';this.style.borderColor='#E5E7EB';">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #A5F3FC; background:#CFFAFE; color:#0E7490; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.opacity='.75'" @mouseleave="$el.style.opacity='1'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </button>
+                            {{-- Gestionar acceso --}}
                             <button wire:click="viewAcceso({{ $m->id }})" title="Gestionar acceso"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
-                                    onmouseover="this.style.background='#FFE4D9';this.style.color='#C2410C';this.style.borderColor='#FED7AA';"
-                                    onmouseout="this.style.background='#F9FAFB';this.style.color='#6B7280';this.style.borderColor='#E5E7EB';">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #FED7AA; background:#FFF7ED; color:#C2410C; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.opacity='.75'" @mouseleave="$el.style.opacity='1'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                             </button>
+                            {{-- Toggle activo --}}
                             <button wire:click="toggleActive({{ $m->id }})" title="{{ $m->active ? 'Desactivar' : 'Activar' }}"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
-                                    onmouseover="this.style.background='{{ $m->active ? '#FEE2E2' : '#D1FAE5' }}';this.style.color='{{ $m->active ? '#991B1B' : '#065F46' }}';this.style.borderColor='{{ $m->active ? '#FECACA' : '#A7F3D0' }}';"
-                                    onmouseout="this.style.background='#F9FAFB';this.style.color='#6B7280';this.style.borderColor='#E5E7EB';">
-                                @if ($m->active)
-                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                                @else
-                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                @endif
+                                    style="width:28px; height:28px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+                                           border:1px solid {{ $m->active ? '#FEE2E2' : '#D1FAE5' }};
+                                           background:{{ $m->active ? '#FEF2F2' : '#ECFDF5' }};
+                                           color:{{ $m->active ? '#EF4444' : '#10B981' }};"
+                                    @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
                             </button>
                         </div>
                     </td>
                 </tr>
                 @endif
-                @empty
-                <tr><td colspan="7" style="padding:56px 20px; text-align:center; color:#9CA3AF; font-size:13px;">No hay listas de precios.</td></tr>
-                @endforelse
+
+                @endforeach
             </tbody>
         </table>
+        @endif
     </div>
+
     @if ($maestras->hasPages())
-    <div style="padding:12px 20px; border-top:1px solid #F3F4F6;">{{ $maestras->links() }}</div>
+    <div style="padding:10px 18px; border-top:1px solid #F3F4F6;">{{ $maestras->links() }}</div>
     @endif
 </div>
 
 <script>
 if (!window.colResize) {
-    window.colResize = function(tableSelector) {
-        const table = document.querySelector(tableSelector);
-        if (!table) return;
-        const cols = table.querySelectorAll('colgroup col');
-        table.querySelectorAll('thead th[data-col]').forEach(th => {
-            th.addEventListener('mousedown', function(e) {
-                const idx = +this.dataset.col;
-                const startX = e.pageX;
-                const startW = cols[idx].offsetWidth || cols[idx].style.width.replace('px','') * 1 || 100;
-                const move = ev => { cols[idx].style.width = Math.max(50, startW + ev.pageX - startX) + 'px'; };
-                const up = () => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); };
-                document.addEventListener('mousemove', move);
-                document.addEventListener('mouseup', up);
-            });
-        });
+    window.colResize = function () {
+        return {
+            start(e) {
+                e.preventDefault();
+                const th = this.$el.closest('th');
+                const table = th.closest('table');
+                const idx = Array.from(th.closest('tr').querySelectorAll('th')).indexOf(th);
+                const col = table.querySelectorAll('colgroup col')[idx];
+                const startX = e.clientX;
+                const startW = col ? (parseFloat(col.style.width) || th.getBoundingClientRect().width)
+                                   : th.getBoundingClientRect().width;
+                const onMove = mv => {
+                    const w = Math.max(60, startW + mv.clientX - startX);
+                    if (col) col.style.width = w + 'px';
+                };
+                const onUp = () => {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onUp);
+                };
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseup', onUp);
+            }
+        };
     };
 }
-document.addEventListener('livewire:navigated', () => colResize('[data-table="lm"]'));
-colResize('[data-table="lm"]');
 </script>
 @endif
 
