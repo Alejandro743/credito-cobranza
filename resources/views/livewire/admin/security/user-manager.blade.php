@@ -74,42 +74,41 @@
 @endif
 
 {{-- ══ TOOLBAR ══ --}}
-<div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:20px;">
+<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
 
-    {{-- Izquierda: búsqueda + filtros --}}
-    <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; flex:1; min-width:0;">
-        <div style="position:relative; min-width:200px; max-width:280px; flex:1;">
-            <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
-            </svg>
-            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por nombre o usuario..."
-                   style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
-        </div>
-        <select wire:model.live="filterTipo"
-                style="flex:1; height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer;">
-            <option value="">Todos los tipos</option>
-            <option value="administrativo">Administrativo</option>
-            <option value="vendedor">Vendedor</option>
-            <option value="cliente">Cliente</option>
-        </select>
-        <select wire:model.live="filterRole"
-                style="flex:1; height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer;">
-            <option value="">Todos los roles</option>
-            @foreach ($roles as $role)
-                <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
-            @endforeach
-        </select>
-        <select wire:model.live="filterStatus"
-                style="flex:1; height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer;">
-            <option value="">Todos los estados</option>
-            <option value="1">Activo</option>
-            <option value="0">Inactivo</option>
-        </select>
+    <div class="relative w-full sm:flex-1" style="min-width:0; max-width:100%; sm:max-width:280px;">
+        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
+        </svg>
+        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por nombre o usuario..."
+               style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
     </div>
 
-    {{-- Derecha: solo Nuevo usuario --}}
-    <button wire:click="showAdd"
-            style="height:36px; padding:0 18px; display:inline-flex; align-items:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; flex-shrink:0; box-sizing:border-box;">
+    <select wire:model.live="filterTipo" class="w-full sm:flex-1"
+            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
+        <option value="">Todos los tipos</option>
+        <option value="administrativo">Administrativo</option>
+        <option value="vendedor">Vendedor</option>
+        <option value="cliente">Cliente</option>
+    </select>
+
+    <select wire:model.live="filterRole" class="w-full sm:flex-1"
+            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
+        <option value="">Todos los roles</option>
+        @foreach ($roles as $role)
+            <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+        @endforeach
+    </select>
+
+    <select wire:model.live="filterStatus" class="w-full sm:flex-1"
+            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
+        <option value="">Todos los estados</option>
+        <option value="1">Activo</option>
+        <option value="0">Inactivo</option>
+    </select>
+
+    <button wire:click="showAdd" class="w-full sm:w-auto"
+            style="height:36px; padding:0 18px; display:flex; align-items:center; justify-content:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
         </svg>
