@@ -449,17 +449,16 @@
 {{-- ═══════════════════════════════════════════════════════ ACCESO MODE ══ --}}
 @elseif ($mode === 'acceso' && $viewingMaestra)
 
-<div class="flex items-center gap-3 mb-6">
-    <button wire:click="backToList" class="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+<div style="display:flex; align-items:center; gap:10px; margin-bottom:20px;">
+    <button wire:click="backToList"
+            style="width:32px; height:32px; border-radius:8px; border:1px solid #E5E7EB; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+            @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
     </button>
     <div>
-        <h2 class="text-base font-bold text-gray-800">Acceso — {{ $viewingMaestra->name }}</h2>
-        <p class="text-xs text-gray-500 font-mono">{{ $viewingMaestra->cycle?->code ?? '—' }}</p>
+        <p style="font-size:11px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.6px; margin:0 0 2px;">Gestionar Acceso</p>
+        <p style="font-size:15px; font-weight:800; color:#7B6FE8; margin:0;">{{ $viewingMaestra->name }}</p>
     </div>
-    <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $viewingMaestra->active ? 'bg-mint-100 text-mint-700' : 'bg-red-100 text-red-600' }}">
-        {{ $viewingMaestra->active ? 'Activa' : 'Inactiva' }}
-    </span>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
