@@ -13,7 +13,7 @@
 {{-- Flash --}}
 @if (session('success'))
 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-     class="fixed bottom-5 right-5 z-50 bg-mint-500 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg">
+     class="fixed bottom-20 sm:bottom-5 right-5 z-50 bg-mint-500 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg">
     {{ session('success') }}
 </div>
 @endif
@@ -771,150 +771,174 @@
 </div>
 @endif
 
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                <tr>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Código</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nombre</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Ciclo</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Cuotas</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">C. Inicial</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Estado</th>
-                    <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+{{-- ── Desktop table ────────────────────────────────────────────────────── --}}
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; box-shadow:0 1px 3px rgba(0,0,0,.07); border:1px solid #F0F0F0; overflow:hidden;">
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse; font-size:13px;" data-table="lm">
+            <colgroup>
+                <col style="width:110px;">
+                <col>
+                <col style="width:130px;">
+                <col style="width:85px;">
+                <col style="width:115px;">
+                <col style="width:90px;">
+                <col style="width:138px;">
+            </colgroup>
+            <thead>
+                <tr style="background:#FAFAFE; border-bottom:2px solid #EBEBFF;">
+                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:left; cursor:col-resize; user-select:none; white-space:nowrap;" data-col="0">Código</th>
+                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:left; cursor:col-resize; user-select:none;" data-col="1">Nombre</th>
+                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:left; cursor:col-resize; user-select:none; white-space:nowrap;" data-col="2">Ciclo</th>
+                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:center; cursor:col-resize; user-select:none; white-space:nowrap;" data-col="3">Cuotas</th>
+                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:center; cursor:col-resize; user-select:none; white-space:nowrap;" data-col="4">C. Inicial</th>
+                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:center; white-space:nowrap;">Estado</th>
+                    <th style="padding:10px 12px; font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:#6B7280; text-align:right; white-space:nowrap;">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-50">
+            <tbody>
                 @forelse ($maestras as $m)
                 @if ($editingId === $m->id)
-                <tr wire:key="m-edit-{{ $m->id }}" class="bg-lavanda-50 border-l-2 border-lavanda-400">
-                    <td class="px-4 py-2 font-mono text-xs text-lavanda-700 font-semibold">{{ $m->code ?? '—' }}</td>
-                    <td class="px-4 py-2">
+                {{-- Fila de edición principal --}}
+                <tr wire:key="m-edit-{{ $m->id }}" style="background:#F5F3FF; border-left:3px solid #7c3aed;">
+                    <td style="padding:10px 12px; font-family:monospace; font-size:11px; color:#534AB7; font-weight:600; white-space:nowrap;">{{ $m->code ?? '—' }}</td>
+                    <td style="padding:10px 12px;">
                         <input wire:model="editName" type="text"
-                               class="w-full border border-lavanda-300 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-lavanda-500 bg-white">
-                        @error('editName') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
+                               style="width:100%; border:1px solid #CECBF6; border-radius:6px; padding:6px 10px; font-size:12px; background:#fff; outline:none;">
+                        @error('editName') <p style="color:#ef4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td class="px-4 py-2 hidden md:table-cell">
-                        <select wire:model="editCycleId" class="w-full border border-lavanda-300 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-lavanda-500 bg-white">
+                    <td style="padding:10px 12px;">
+                        <select wire:model="editCycleId"
+                                style="width:100%; border:1px solid #CECBF6; border-radius:6px; padding:6px 8px; font-size:12px; background:#fff; outline:none;">
                             <option value="">— Ciclo —</option>
                             @foreach ($cycles as $cycle)
                                 <option value="{{ $cycle->id }}">{{ $cycle->code }}</option>
                             @endforeach
                         </select>
-                        @error('editCycleId') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
+                        @error('editCycleId') <p style="color:#ef4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td class="px-4 py-2 text-center hidden lg:table-cell">
+                    <td style="padding:10px 12px; text-align:center;">
                         <input wire:model="editCantidadCuotas" type="number" min="1" max="999" placeholder="—"
-                               class="w-16 border border-lavanda-300 rounded-lg px-2 py-1 text-sm text-center focus:outline-none bg-white">
+                               style="width:58px; border:1px solid #CECBF6; border-radius:6px; padding:6px 4px; font-size:12px; text-align:center; background:#fff; outline:none;">
                     </td>
-                    <td class="px-4 py-2 text-center hidden lg:table-cell">
-                        <input type="checkbox" wire:model="editUsaCuotaInicial" class="w-4 h-4 rounded border-gray-300 text-lavanda-500 cursor-pointer">
+                    <td style="padding:10px 12px; text-align:center;">
+                        <input type="checkbox" wire:model="editUsaCuotaInicial"
+                               style="width:15px; height:15px; cursor:pointer; accent-color:#7c3aed;">
                     </td>
-                    <td class="px-4 py-2 text-center">
-                        <input type="checkbox" wire:model="editActive" class="w-4 h-4 rounded border-gray-300 text-lavanda-500 cursor-pointer">
+                    <td style="padding:10px 12px; text-align:center;">
+                        <input type="checkbox" wire:model="editActive"
+                               style="width:15px; height:15px; cursor:pointer; accent-color:#7c3aed;">
                     </td>
-                    <td class="px-4 py-2 text-right">
-                        <div class="flex items-center justify-end gap-1">
-                            <button wire:click="saveEdit" class="p-1.5 rounded-lg bg-mint-100 text-mint-700 hover:bg-mint-200 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <td style="padding:10px 12px; text-align:right;">
+                        <div style="display:flex; align-items:center; justify-content:flex-end; gap:4px;">
+                            <button wire:click="saveEdit" title="Guardar"
+                                    style="width:28px; height:28px; border-radius:7px; border:none; background:#D1FAE5; color:#059669; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
                             </button>
-                            <button wire:click="cancelEdit" class="p-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            <button wire:click="cancelEdit" title="Cancelar"
+                                    style="width:28px; height:28px; border-radius:7px; border:none; background:#F3F4F6; color:#6B7280; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                             </button>
                         </div>
                     </td>
                 </tr>
                 {{-- Sub-fila: incremento + financiamiento --}}
-                <tr class="bg-lavanda-50 border-l-2 border-lavanda-400">
-                    <td colspan="7" class="px-4 pb-3 pt-0">
-                        <div class="flex flex-wrap items-center gap-4">
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs text-lavanda-600 font-semibold">Incremento:</span>
+                <tr style="background:#F5F3FF; border-left:3px solid #7c3aed; border-bottom:1px solid #E5E7EB;">
+                    <td colspan="7" style="padding:0 12px 10px 12px;">
+                        <div style="display:flex; flex-wrap:wrap; align-items:center; gap:16px;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span style="font-size:11px; font-weight:600; color:#534AB7;">Incremento:</span>
                                 <select wire:model="editTipoIncremento"
-                                        class="border border-lavanda-300 rounded-lg px-2 py-1 text-xs bg-white focus:outline-none">
+                                        style="border:1px solid #CECBF6; border-radius:6px; padding:5px 8px; font-size:11px; background:#fff; outline:none;">
                                     <option value="">— Sin incremento —</option>
                                     <option value="porcentaje">Porcentaje %</option>
                                     <option value="monto_fijo">Monto Fijo Bs</option>
                                 </select>
                                 <input wire:model="editValorIncremento" type="number" step="0.01" min="0" placeholder="0"
-                                       class="w-20 border border-lavanda-300 rounded-lg px-2 py-1 text-xs text-center bg-white focus:outline-none">
-                                <span class="text-xs text-gray-400">{{ $editTipoIncremento === 'porcentaje' ? '%' : ($editTipoIncremento === 'monto_fijo' ? 'Bs' : '') }}</span>
+                                       style="width:68px; border:1px solid #CECBF6; border-radius:6px; padding:5px 6px; font-size:11px; text-align:center; background:#fff; outline:none;">
+                                <span style="font-size:11px; color:#9CA3AF;">{{ $editTipoIncremento === 'porcentaje' ? '%' : ($editTipoIncremento === 'monto_fijo' ? 'Bs' : '') }}</span>
                             </div>
-                            <div class="flex items-center gap-2 pl-4 border-l border-lavanda-200">
-                                <span class="text-xs text-lavanda-600 font-semibold">Días:</span>
+                            <div style="display:flex; align-items:center; gap:8px; padding-left:14px; border-left:1px solid #CECBF6;">
+                                <span style="font-size:11px; font-weight:600; color:#534AB7;">Días:</span>
                                 <input wire:model="editDiasEntreCuotas" type="number" min="1" max="365" placeholder="30"
-                                       class="w-16 border border-lavanda-300 rounded-lg px-2 py-1 text-xs text-center bg-white focus:outline-none">
+                                       style="width:58px; border:1px solid #CECBF6; border-radius:6px; padding:5px 6px; font-size:11px; text-align:center; background:#fff; outline:none;">
                             </div>
-                            <div class="flex items-center gap-2 pl-4 border-l border-lavanda-200">
-                                <span class="text-xs text-lavanda-600 font-semibold">C. Inicial:</span>
+                            <div style="display:flex; align-items:center; gap:8px; padding-left:14px; border-left:1px solid #CECBF6;">
+                                <span style="font-size:11px; font-weight:600; color:#534AB7;">C. Inicial:</span>
                                 <select wire:model="editTipoCuotaInicial"
-                                        class="border border-lavanda-300 rounded-lg px-2 py-1 text-xs bg-white focus:outline-none">
+                                        style="border:1px solid #CECBF6; border-radius:6px; padding:5px 8px; font-size:11px; background:#fff; outline:none;">
                                     <option value="ninguna">Sin cuota inicial</option>
                                     <option value="porcentaje">Porcentaje %</option>
                                     <option value="monto_fijo">Monto Fijo Bs</option>
                                 </select>
                                 @if ($editTipoCuotaInicial !== 'ninguna')
                                 <input wire:model="editValorCuotaInicial" type="number" step="0.01" min="0" placeholder="0"
-                                       class="w-20 border border-lavanda-300 rounded-lg px-2 py-1 text-xs text-center bg-white focus:outline-none">
-                                <span class="text-xs text-gray-400">{{ $editTipoCuotaInicial === 'porcentaje' ? '%' : 'Bs' }}</span>
+                                       style="width:68px; border:1px solid #CECBF6; border-radius:6px; padding:5px 6px; font-size:11px; text-align:center; background:#fff; outline:none;">
+                                <span style="font-size:11px; color:#9CA3AF;">{{ $editTipoCuotaInicial === 'porcentaje' ? '%' : 'Bs' }}</span>
                                 @endif
                             </div>
                         </div>
                     </td>
                 </tr>
                 @else
-                <tr wire:key="m-{{ $m->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td data-label="Código" class="px-4 py-3.5 font-mono text-xs text-lavanda-700 font-semibold">{{ $m->code ?? '—' }}</td>
-                    <td data-label="Nombre" class="px-4 py-3.5 font-medium text-gray-800">{{ $m->name }}</td>
-                    <td data-label="Ciclo" class="px-4 py-3.5 hidden md:table-cell">
+                <tr wire:key="m-{{ $m->id }}" style="border-bottom:1px solid #F3F4F6;" onmouseover="this.style.background='#FAFAFA'" onmouseout="this.style.background=''">
+                    <td style="padding:11px 12px; font-family:monospace; font-size:11px; color:#534AB7; font-weight:600; white-space:nowrap;">{{ $m->code ?? '—' }}</td>
+                    <td style="padding:11px 12px; font-size:13px; color:#1F2937; font-weight:500;">{{ $m->name }}</td>
+                    <td style="padding:11px 12px;">
                         @if ($m->cycle)
-                        <span class="text-xs font-mono text-gray-500">{{ $m->cycle->code }}</span>
+                        <span style="font-family:monospace; font-size:11px; color:#6B7280;">{{ $m->cycle->code }}</span>
                         @else
-                        <span class="text-gray-300">—</span>
+                        <span style="color:#D1D5DB;">—</span>
                         @endif
                     </td>
-                    <td data-label="Cuotas" class="px-4 py-3.5 text-center hidden lg:table-cell">
+                    <td style="padding:11px 12px; text-align:center;">
                         @if ($m->cantidad_cuotas)
-                        <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-lavanda-100 text-lavanda-700">{{ $m->cantidad_cuotas }}c</span>
+                        <span style="display:inline-flex; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:600; background:#EDE9FE; color:#534AB7;">{{ $m->cantidad_cuotas }}c</span>
                         @else
-                        <span class="text-gray-300">—</span>
+                        <span style="color:#D1D5DB;">—</span>
                         @endif
                     </td>
-                    <td data-label="C. Inicial" class="px-4 py-3.5 text-center hidden lg:table-cell">
+                    <td style="padding:11px 12px; text-align:center;">
                         @if ($m->usa_cuota_inicial)
-                        <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-melocoton-100 text-melocoton-700">
+                        <span style="display:inline-flex; padding:2px 8px; border-radius:20px; font-size:11px; font-weight:600; background:#FFE4D9; color:#C2410C;">
                             {{ $m->tipo_cuota_inicial === 'porcentaje' ? number_format($m->valor_cuota_inicial, 0).'%' : 'Bs '.number_format($m->valor_cuota_inicial, 2) }}
                         </span>
                         @else
-                        <span class="text-gray-300">—</span>
+                        <span style="color:#D1D5DB;">—</span>
                         @endif
                     </td>
-                    <td data-label="Estado" class="px-4 py-3.5 text-center">
-                        <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $m->active ? 'bg-mint-100 text-mint-700' : 'bg-red-100 text-red-600' }}">
+                    <td style="padding:11px 12px; text-align:center;">
+                        <span style="display:inline-flex; padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; {{ $m->active ? 'background:#D1FAE5; color:#065F46;' : 'background:#FEE2E2; color:#991B1B;' }}">
                             {{ $m->active ? 'Activa' : 'Inactiva' }}
                         </span>
                     </td>
-                    <td data-label="" class="px-4 py-3.5 text-right">
-                        <div class="flex items-center justify-end gap-1">
+                    <td style="padding:11px 12px; text-align:right;">
+                        <div style="display:flex; align-items:center; justify-content:flex-end; gap:4px;">
                             <button wire:click="startEdit({{ $m->id }})" title="Editar"
-                                    class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
+                                    onmouseover="this.style.background='#EDE9FE';this.style.color='#7c3aed';this.style.borderColor='#CECBF6';"
+                                    onmouseout="this.style.background='#F9FAFB';this.style.color='#6B7280';this.style.borderColor='#E5E7EB';">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                             </button>
                             <button wire:click="viewItems({{ $m->id }})" title="Ver productos"
-                                    class="p-1.5 rounded-lg text-gray-400 hover:text-celeste-600 hover:bg-celeste-50 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
+                                    onmouseover="this.style.background='#CFFAFE';this.style.color='#0E7490';this.style.borderColor='#A5F3FC';"
+                                    onmouseout="this.style.background='#F9FAFB';this.style.color='#6B7280';this.style.borderColor='#E5E7EB';">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </button>
                             <button wire:click="viewAcceso({{ $m->id }})" title="Gestionar acceso"
-                                    class="p-1.5 rounded-lg text-gray-400 hover:text-melocoton-600 hover:bg-melocoton-50 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
+                                    onmouseover="this.style.background='#FFE4D9';this.style.color='#C2410C';this.style.borderColor='#FED7AA';"
+                                    onmouseout="this.style.background='#F9FAFB';this.style.color='#6B7280';this.style.borderColor='#E5E7EB';">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                             </button>
                             <button wire:click="toggleActive({{ $m->id }})" title="{{ $m->active ? 'Desactivar' : 'Activar' }}"
-                                    class="p-1.5 rounded-lg transition-colors {{ $m->active ? 'text-gray-400 hover:text-red-500 hover:bg-red-50' : 'text-gray-400 hover:text-mint-600 hover:bg-mint-50' }}">
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
+                                    onmouseover="this.style.background='{{ $m->active ? '#FEE2E2' : '#D1FAE5' }}';this.style.color='{{ $m->active ? '#991B1B' : '#065F46' }}';this.style.borderColor='{{ $m->active ? '#FECACA' : '#A7F3D0' }}';"
+                                    onmouseout="this.style.background='#F9FAFB';this.style.color='#6B7280';this.style.borderColor='#E5E7EB';">
                                 @if ($m->active)
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
                                 @else
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <svg width="13" height="13" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 @endif
                             </button>
                         </div>
@@ -922,15 +946,38 @@
                 </tr>
                 @endif
                 @empty
-                <tr><td colspan="7" class="px-5 py-14 text-center text-gray-400 text-sm">No hay listas de precios.</td></tr>
+                <tr><td colspan="7" style="padding:56px 20px; text-align:center; color:#9CA3AF; font-size:13px;">No hay listas de precios.</td></tr>
                 @endforelse
             </tbody>
         </table>
     </div>
     @if ($maestras->hasPages())
-    <div class="px-5 py-3 border-t border-gray-100">{{ $maestras->links() }}</div>
+    <div style="padding:12px 20px; border-top:1px solid #F3F4F6;">{{ $maestras->links() }}</div>
     @endif
 </div>
+
+<script>
+if (!window.colResize) {
+    window.colResize = function(tableSelector) {
+        const table = document.querySelector(tableSelector);
+        if (!table) return;
+        const cols = table.querySelectorAll('colgroup col');
+        table.querySelectorAll('thead th[data-col]').forEach(th => {
+            th.addEventListener('mousedown', function(e) {
+                const idx = +this.dataset.col;
+                const startX = e.pageX;
+                const startW = cols[idx].offsetWidth || cols[idx].style.width.replace('px','') * 1 || 100;
+                const move = ev => { cols[idx].style.width = Math.max(50, startW + ev.pageX - startX) + 'px'; };
+                const up = () => { document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up); };
+                document.addEventListener('mousemove', move);
+                document.addEventListener('mouseup', up);
+            });
+        });
+    };
+}
+document.addEventListener('livewire:navigated', () => colResize('[data-table="lm"]'));
+colResize('[data-table="lm"]');
+</script>
 @endif
 
 </div>
