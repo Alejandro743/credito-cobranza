@@ -159,12 +159,6 @@
                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box;">
                 @error('newRoleName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-            <div style="padding-bottom:4px;">
-                <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-                    <input wire:model="newActivo" type="checkbox" style="width:14px; height:14px; cursor:pointer; accent-color:#7B6FE8;">
-                    <span style="font-size:13px; font-weight:500; color:#374151;">Activo</span>
-                </label>
-            </div>
         </div>
         <div style="display:flex; gap:8px; padding-top:12px; border-top:1px solid #F3F4F6;">
             <button wire:click="saveNew"
@@ -254,10 +248,11 @@
                         @if ($role->name === 'admin')
                             <span style="font-size:12px; color:#7B6FE8; font-weight:500;">Siempre activo</span>
                         @else
-                            <label style="display:inline-flex; align-items:center; gap:6px; cursor:pointer;">
-                                <input type="checkbox" wire:model="editActivo" style="width:14px; height:14px; cursor:pointer; accent-color:#7B6FE8;">
-                                <span style="font-size:12px; color:#374151;">Activo</span>
-                            </label>
+                            <select wire:model="editActivo"
+                                    style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
                         @endif
                     </td>
                     <td style="padding:7px 10px; text-align:center;">
