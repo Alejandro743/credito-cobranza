@@ -27,15 +27,7 @@
             @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
     </button>
-    <div>
-        <p style="font-size:11px; font-family:monospace; color:#7B6FE8; font-weight:700; margin:0;">{{ $viewingMaestra->code }}</p>
-        <p style="font-size:15px; font-weight:800; color:#111827; margin:0;">{{ $viewingMaestra->name }}</p>
-    </div>
-    <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600;
-                 background:{{ $viewingMaestra->active ? '#D1FAE5' : '#F3F4F6' }};
-                 color:{{ $viewingMaestra->active ? '#059669' : '#9CA3AF' }};">
-        {{ $viewingMaestra->active ? 'Activa' : 'Inactiva' }}
-    </span>
+    <p style="font-size:15px; font-weight:800; color:#7B6FE8; margin:0;">{{ $viewingMaestra->name }}</p>
     <div style="flex:1;"></div>
     <button wire:click="refreshFromCatalog"
             style="height:36px; padding:0 14px; border:1px solid #E5E7EB; background:#fff; color:#6B7280; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;"
@@ -60,14 +52,9 @@
 <div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:16px; overflow:hidden;">
     {{-- Header --}}
     <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:11px 18px; display:flex; align-items:center; justify-content:space-between;">
-        <div style="display:flex; align-items:center; gap:10px;">
-            <span style="font-size:13px; font-weight:700; color:#374151;">Nuevo Producto</span>
-            <span style="font-size:11px; color:#7B6FE8; background:#EDE9FE; border-radius:99px; padding:2px 10px; font-weight:600; font-family:monospace;">{{ $viewingMaestra->code }}</span>
-            @if ($viewingMaestra?->tipo_incremento)
-            <span style="font-size:11px; color:#059669; background:#D1FAE5; border:1px solid #A7F3D0; border-radius:99px; padding:2px 10px; font-weight:600;">
-                Inc. {{ $viewingMaestra->tipo_incremento === 'porcentaje' ? $viewingMaestra->valor_incremento.'%' : 'Bs '.$viewingMaestra->valor_incremento }}
-            </span>
-            @endif
+        <div style="display:flex; align-items:center; gap:8px;">
+            <div style="width:3px; height:18px; background:#7B6FE8; border-radius:2px; flex-shrink:0;"></div>
+            <span style="font-size:14px; font-weight:700; color:#111827;">Nuevo Producto</span>
         </div>
         <button wire:click="cancelAddItem"
                 style="width:28px; height:28px; border-radius:8px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; cursor:pointer; display:flex; align-items:center; justify-content:center;"
@@ -118,10 +105,6 @@
                         <option value="{{ $cat->id }}">{{ $cat->name }}</option>
                     @endforeach
                 </select>
-            </div>
-            <div style="display:flex; flex-direction:column; align-items:center; padding-bottom:2px;">
-                <label style="{{ $lStyle }}">Activo</label>
-                <input type="checkbox" wire:model="newItemActive" style="width:16px; height:16px; margin-top:6px; accent-color:#7B6FE8; cursor:pointer;">
             </div>
             <div style="display:flex; gap:8px; padding-bottom:2px;">
                 <button wire:click="saveNewItem"
@@ -214,16 +197,23 @@
                         get final() { return (this.precio + this.monto).toFixed(2); }
                     }"
                     style="background:#F8F7FF; border-left:3px solid #7c3aed;">
-                    <td colspan="12" style="padding:0;">
-                        {{-- Header de la fila de edición --}}
-                        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:8px 16px; display:flex; align-items:center; gap:8px;">
-                            <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Editando</span>
-                            <span style="font-size:12px; font-family:monospace; color:#374151; font-weight:600;">{{ $p->code }}</span>
-                            <span style="font-size:12px; color:#6B7280;">— {{ $p->name }}</span>
-                        </div>
-                        {{-- Campos --}}
+                    <td colspan="12" style="padding:0; background:#F8F7FF; border-left:3px solid #7B6FE8;">
                         <div style="padding:12px 16px; display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px;">
                             @php $eLabel = 'display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:5px;'; @endphp
+
+                            {{-- Código (disabled) --}}
+                            <div style="width:90px;">
+                                <p style="{{ $eLabel }}">Código</p>
+                                <input type="text" value="{{ $p->code }}" disabled
+                                       style="width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:7px 10px; font-size:12px; font-family:monospace; color:#9CA3AF; background:#F3F4F6; cursor:not-allowed;">
+                            </div>
+
+                            {{-- Nombre (disabled) --}}
+                            <div style="flex:1; min-width:160px;">
+                                <p style="{{ $eLabel }}">Nombre</p>
+                                <input type="text" value="{{ $p->name }}" disabled
+                                       style="width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:7px 10px; font-size:13px; color:#9CA3AF; background:#F3F4F6; cursor:not-allowed;">
+                            </div>
 
                             {{-- Precio --}}
                             <div>
@@ -291,10 +281,14 @@
                                 </div>
                             </div>
 
-                            {{-- Toggle Activo --}}
-                            <div style="display:flex; flex-direction:column; align-items:center; padding-bottom:2px;">
-                                <p style="{{ $eLabel }}">Activo</p>
-                                <input type="checkbox" wire:model="editItemActive" style="width:16px; height:16px; accent-color:#7B6FE8; cursor:pointer; margin-top:6px;">
+                            {{-- Estado --}}
+                            <div style="width:105px;">
+                                <p style="{{ $eLabel }}">Estado</p>
+                                <select wire:model="editItemActive"
+                                        style="width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:7px 10px; font-size:13px; color:#374151; background:#fff; outline:none; cursor:pointer;">
+                                    <option value="1">Activo</option>
+                                    <option value="0">Inactivo</option>
+                                </select>
                             </div>
 
                             {{-- Botones --}}
