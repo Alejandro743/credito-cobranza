@@ -452,6 +452,8 @@
             </button>
         </div>
     </div>
+    @endif
+
     @empty
     <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">No hay productos registrados.</p>
     @endforelse
