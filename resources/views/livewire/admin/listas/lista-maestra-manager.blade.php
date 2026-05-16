@@ -953,17 +953,13 @@
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
 
                     <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-family:monospace; font-size:12px; color:#7B6FE8; font-weight:600; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->code ?? '—' }}</span>
+                        <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->code ?? '—' }}</span>
                     </td>
                     <td style="padding:10px 16px; overflow:hidden;">
                         <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->name }}</span>
                     </td>
                     <td style="padding:10px 16px; overflow:hidden;">
-                        @if ($m->cycle)
-                        <span style="font-family:monospace; font-size:12px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle->code }}</span>
-                        @else
-                        <span style="color:#D1D5DB;">—</span>
-                        @endif
+                        <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle?->code ?? '—' }}</span>
                     </td>
                     <td style="padding:10px 16px; text-align:center;">
                         @if ($m->cantidad_cuotas)
