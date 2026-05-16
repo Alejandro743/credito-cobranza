@@ -1,6 +1,6 @@
 @props(['title' => '', 'noHeader' => false, 'noPadding' => false, 'headerTitle' => ''])
 <!DOCTYPE html>
-<html lang="es" x-data="{ sidebarOpen: false, sidebarCollapsed: false, mobileTab: 'inicio' }" @reset-mobile-tab.window="mobileTab = 'inicio'" style="background:#0B1120;">
+<html lang="es" x-data="{ sidebarOpen: false, sidebarCollapsed: false, mobileTab: 'inicio' }" style="background:#0B1120;">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">

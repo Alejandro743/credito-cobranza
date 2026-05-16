@@ -9,9 +9,6 @@ $mobileColorMap = [
 
 {{-- ═══ PANEL DE MÓDULOS (móvil) ═══ --}}
 <div x-cloak x-show="mobileTab === 'modulos'"
-     x-transition:leave="transition-opacity duration-500"
-     x-transition:leave-start="opacity-100"
-     x-transition:leave-end="opacity-0"
      class="md:hidden fixed inset-0 z-40 flex flex-col"
      style="background:#F0F2F5; padding-bottom:60px;">
 
@@ -114,17 +111,6 @@ $mobileColorMap = [
     </div>
 </div>
 
-{{-- Reset mobileTab al terminar wire:navigate --}}
-<script>
-(function () {
-    if (window.__navTabReset) return;
-    window.__navTabReset = true;
-    document.addEventListener('livewire:navigated', function () {
-        window.dispatchEvent(new CustomEvent('reset-mobile-tab'));
-    });
-})();
-</script>
-
 {{-- ═══ BOTTOM NAVIGATION (móvil) ═══ --}}
 <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 flex"
      style="background:#fff; border-top:1px solid #E8EAED; height:60px; box-shadow:0 -2px 12px rgba(0,0,0,.06);">
@@ -154,7 +140,7 @@ $mobileColorMap = [
         <span style="font-size:10px; font-weight:600; letter-spacing:.2px;">Módulos</span>
     </button>
 
-    <a href="{{ route('perfil') }}" wire:navigate @click="mobileTab = 'inicio'"
+    <a href="{{ route('perfil') }}" wire:navigate @click="setTimeout(() => mobileTab = 'inicio', 500)"
        class="flex-1 flex flex-col items-center justify-center"
        style="gap:3px; text-decoration:none;"
        :style="mobileTab === 'perfil' ? 'color:#7B6FE8;' : 'color:#9CA3AF;'">
