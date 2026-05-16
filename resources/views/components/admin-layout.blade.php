@@ -1,6 +1,11 @@
 @props(['title' => ''])
 <!DOCTYPE html>
-<html lang="es" x-data="{ sidebarOpen: false, sidebarCollapsed: false, mobileTab: 'inicio' }" style="background:#0B1120;">
+<html lang="es" x-data="{
+    sidebarOpen: false,
+    sidebarCollapsed: false,
+    mobileTab: sessionStorage.getItem('_mTab') || 'inicio',
+    init() { this.$watch('mobileTab', v => sessionStorage.setItem('_mTab', v)); }
+}" style="background:#0B1120;">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
