@@ -105,10 +105,6 @@
         </div>
 
         <div style="display:flex; align-items:center; gap:12px; padding-top:12px; border-top:1px solid #F3F4F6;">
-            <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
-                <input type="checkbox" wire:model="newActive" style="width:14px; height:14px; cursor:pointer; accent-color:#7B6FE8;">
-                <span style="font-size:13px; font-weight:500; color:#374151;">Activo</span>
-            </label>
             <div style="flex:1;"></div>
             <button wire:click="saveNew"
                     style="height:36px; padding:0 20px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;">
