@@ -317,17 +317,17 @@
                 {{-- Fila edición inline --}}
                 @if ($editingId === $user->id)
                 <tr wire:key="edit-{{ $user->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
-                    <td style="padding:7px 10px;">
+                    <td style="padding:7px 10px; text-align:left;">
                         <input wire:model="editName" type="text" placeholder="Nombre completo"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
                         @error('editName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:7px 10px;">
+                    <td style="padding:7px 10px; text-align:left;">
                         <input wire:model="editUsuario" type="text" placeholder="usuario"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; font-family:monospace;">
                         @error('editUsuario') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:7px 10px;">
+                    <td style="padding:7px 10px; text-align:left;">
                         <select wire:model="editTipo"
                                 style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
                             <option value="administrativo">Administrativo</option>
@@ -335,7 +335,7 @@
                             <option value="cliente">Cliente</option>
                         </select>
                     </td>
-                    <td style="padding:7px 10px;">
+                    <td style="padding:7px 10px; text-align:left;">
                         <select wire:model="editRole"
                                 style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
                             <option value="">— Rol —</option>
@@ -372,19 +372,19 @@
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
 
-                    <td style="padding:10px 16px; overflow:hidden;">
+                    <td style="padding:10px 16px; overflow:hidden; text-align:left;">
                         <p style="font-size:13px; font-weight:600; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0;">{{ $user->name }}</p>
                     </td>
 
-                    <td style="padding:10px 16px; overflow:hidden;">
+                    <td style="padding:10px 16px; overflow:hidden; text-align:left;">
                         <p style="font-size:12px; color:#6B7280; font-family:monospace; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0;">{{ $user->email }}</p>
                     </td>
 
-                    <td style="padding:10px 16px; overflow:hidden;">
+                    <td style="padding:10px 16px; overflow:hidden; text-align:left;">
                         <span style="font-size:13px; color:#374151;">{{ ucfirst($user->tipo ?? 'administrativo') }}</span>
                     </td>
 
-                    <td style="padding:10px 16px; overflow:hidden;">
+                    <td style="padding:10px 16px; overflow:hidden; text-align:left;">
                         <span style="font-size:13px; color:#374151; text-transform:capitalize;">{{ $roleName }}</span>
                     </td>
 
