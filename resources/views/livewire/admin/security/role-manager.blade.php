@@ -93,7 +93,7 @@
         @php $key = (string) $leaf->id; @endphp
         <div wire:key="s-{{ $leaf->id }}"
              style="padding:10px 16px 10px 28px; border-bottom:1px solid #F9FAFB; display:flex; align-items:center; justify-content:space-between;"
-             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+             @mouseenter="$el.style.background='{{ $cc['head_bg'] }}'" @mouseleave="$el.style.background=''">
             <div style="display:flex; align-items:center; gap:7px;">
                 <span style="width:5px; height:5px; border-radius:50%; background:{{ $cc['dot'] }}; flex-shrink:0; display:block;"></span>
                 <span style="font-size:13px; color:#374151;">{{ $leaf->name }}</span>
@@ -118,7 +118,7 @@
         @php $key = (string) $sub->id; @endphp
         <div wire:key="s-{{ $sub->id }}"
              style="padding:10px 16px; border-bottom:1px solid #F9FAFB; display:flex; align-items:center; justify-content:space-between;"
-             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+             @mouseenter="$el.style.background='{{ $cc['head_bg'] }}'" @mouseleave="$el.style.background=''">
             <div style="display:flex; align-items:center; gap:7px;">
                 <span style="width:5px; height:5px; border-radius:50%; background:{{ $cc['dot'] }}; flex-shrink:0; display:block;"></span>
                 <span style="font-size:13px; color:#374151;">{{ $sub->name }}</span>
@@ -368,7 +368,7 @@
                 @else
                 <tr wire:key="role-{{ $role->id }}"
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
-                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                    @mouseenter="$el.style.background='{{ $cc['head_bg'] }}'" @mouseleave="$el.style.background=''">
 
                     <td style="padding:10px 16px; overflow:hidden; text-align:left;">
                         <div style="display:flex; align-items:center; gap:8px;">
