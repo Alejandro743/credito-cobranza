@@ -137,29 +137,26 @@ class RoleManager extends Component
         $this->viewData     = $modulosArbol->map(function ($modulo) use ($existentes, $isAdmin) {
             $subs = $modulo->submodulos->map(function ($sub) use ($existentes, $isAdmin) {
                 if ($sub->isGroup()) {
-                    return [
-                        'name'     => $sub->name,
-                        'tipo'     => 'group',
-                        'children' => $sub->children->map(fn($child) => [
-                            'name'      => $child->name,
-                            'puede_ver' => $isAdmin || (bool) ($existentes->get($child->id)?->puede_ver ?? false),
-                        ])->toArray(),
-                    ];
-                }
-                return [
-                    'name'      => $sub->name,
-                    'tipo'      => 'leaf',
-                    'puede_ver' => $isAdmin || (bool) ($existentes->get($sub->id)?->puede_ver ?? false),
-                ];
-            })->toArray();
+                    $children = $sub->children
+                        ->filter(fn($child) => $isAdmin || (bool) ($existentes->get($child->id)?->puede_ver ?? false))
+                        ->map(fn($child) => ['name' => $child->name])
+                        ->values()->toArray();
 
-            return [
-                'name'       => $modulo->name,
-                'color'      => $modulo->color,
-                'icon'       => $modulo->icon,
-                'submodulos' => $subs,
-            ];
-        })->toArray();
+                    if (empty($children)) return null;
+
+                    return ['name' => $sub->name, 'tipo' => 'group', 'children' => $children];
+                }
+
+                $puedeVer = $isAdmin || (bool) ($existentes->get($sub->id)?->puede_ver ?? false);
+                if (!$puedeVer) return null;
+
+                return ['name' => $sub->name, 'tipo' => 'leaf'];
+            })->filter()->values()->toArray();
+
+            if (empty($subs)) return null;
+
+            return ['name' => $modulo->name, 'color' => $modulo->color, 'icon' => $modulo->icon, 'submodulos' => $subs];
+        })->filter()->values()->toArray();
 
         $this->showViewModal = true;
     }

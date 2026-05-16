@@ -560,7 +560,7 @@ $vmColorMap = [
 
         {{-- Body --}}
         <div style="overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px;">
-            @foreach ($viewData as $mod)
+            @forelse ($viewData as $mod)
             @php $vmc = $vmColorMap[$mod['color']] ?? $vmColorMap['lavanda']; @endphp
             <div style="border-radius:12px; border:1px solid {{ $vmc['head_border'] }}; overflow:hidden;">
 
@@ -572,49 +572,31 @@ $vmColorMap = [
                     <span style="font-size:12px; font-weight:700; color:#111827; text-transform:uppercase; letter-spacing:.4px;">{{ $mod['name'] }}</span>
                 </div>
 
-                {{-- Submodulos --}}
+                {{-- Solo accesos habilitados --}}
                 <div>
                     @foreach ($mod['submodulos'] as $sub)
                     @if ($sub['tipo'] === 'group')
-                    <div style="padding:8px 14px 4px; background:#FAFAFA; border-top:1px solid #F3F4F6;">
+                    <div style="padding:8px 14px 6px; background:#FAFAFA; border-top:1px solid #F3F4F6;">
                         <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.6px; margin:0 0 5px;">{{ $sub['name'] }}</p>
                         @foreach ($sub['children'] as $child)
-                        <div style="display:flex; align-items:center; justify-content:space-between; padding:4px 0 4px 10px;">
+                        <div style="display:flex; align-items:center; gap:7px; padding:4px 0 4px 8px;">
+                            <svg width="11" height="11" fill="none" stroke="#10B981" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                             <span style="font-size:12px; color:#374151;">{{ $child['name'] }}</span>
-                            @if ($child['puede_ver'])
-                            <span style="display:flex; align-items:center; gap:3px; font-size:11px; font-weight:600; color:#059669;">
-                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                                Con acceso
-                            </span>
-                            @else
-                            <span style="display:flex; align-items:center; gap:3px; font-size:11px; font-weight:500; color:#D1D5DB;">
-                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                                Sin acceso
-                            </span>
-                            @endif
                         </div>
                         @endforeach
                     </div>
                     @else
-                    <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 14px; border-top:1px solid #F9FAFB;">
+                    <div style="display:flex; align-items:center; gap:7px; padding:8px 14px; border-top:1px solid #F9FAFB;">
+                        <svg width="11" height="11" fill="none" stroke="#10B981" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                         <span style="font-size:12px; color:#374151;">{{ $sub['name'] }}</span>
-                        @if ($sub['puede_ver'])
-                        <span style="display:flex; align-items:center; gap:3px; font-size:11px; font-weight:600; color:#059669;">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                            Con acceso
-                        </span>
-                        @else
-                        <span style="display:flex; align-items:center; gap:3px; font-size:11px; font-weight:500; color:#D1D5DB;">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                            Sin acceso
-                        </span>
-                        @endif
                     </div>
                     @endif
                     @endforeach
                 </div>
             </div>
-            @endforeach
+            @empty
+            <p style="text-align:center; padding:32px; color:#9CA3AF; font-size:13px; font-style:italic;">Este rol no tiene accesos habilitados.</p>
+            @endforelse
         </div>
 
         {{-- Footer --}}
