@@ -995,6 +995,12 @@
                                     @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                             </button>
+                            {{-- Ver detalle --}}
+                            <button wire:click="openView({{ $m->id }})" title="Ver detalle"
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#F3F4F6';$el.style.borderColor='#D1D5DB';" @mouseleave="$el.style.background='#F9FAFB';$el.style.borderColor='#E5E7EB';">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
                             {{-- Ver productos --}}
                             <button wire:click="viewItems({{ $m->id }})" title="Ver productos"
                                     style="width:28px; height:28px; border-radius:7px; border:1px solid #A5F3FC; background:#CFFAFE; color:#0E7490; cursor:pointer; display:flex; align-items:center; justify-content:center;"
@@ -1060,6 +1066,87 @@ if (!window.colResize) {
     };
 }
 </script>
+@endif
+
+{{-- ══ MODAL: Ver detalle lista ══ --}}
+@if ($showViewModal)
+<div wire:click.self="closeView"
+     style="position:fixed; inset:0; z-index:60; background:rgba(0,0,0,.45); display:flex; align-items:center; justify-content:center; padding:24px;">
+    <div style="background:#fff; border-radius:18px; width:100%; max-width:480px; box-shadow:0 20px 60px rgba(0,0,0,.2); overflow:hidden;">
+
+        {{-- Header --}}
+        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:14px 20px; display:flex; align-items:center; justify-content:space-between;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:8px; height:8px; border-radius:50%; background:{{ $viewMaestraData['active'] ? '#10B981' : '#9CA3AF' }};"></div>
+                <p style="font-size:14px; font-weight:700; color:#5B21B6; margin:0;">{{ $viewMaestraData['name'] }}</p>
+                <span style="font-family:monospace; font-size:11px; color:#9CA3AF;">{{ $viewMaestraData['code'] }}</span>
+            </div>
+            <button wire:click="closeView" style="background:transparent; border:none; cursor:pointer; color:#9CA3AF; display:flex; padding:4px;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        {{-- Body --}}
+        <div style="padding:20px;">
+
+            {{-- Info general --}}
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px;">
+                <div style="background:#F9FAFB; border-radius:10px; padding:12px 14px;">
+                    <p style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 4px;">Ciclo</p>
+                    <p style="font-size:14px; font-weight:600; color:#111827; margin:0; font-family:monospace;">{{ $viewMaestraData['ciclo'] }}</p>
+                </div>
+                <div style="background:#F9FAFB; border-radius:10px; padding:12px 14px;">
+                    <p style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 4px;">Estado</p>
+                    <span style="display:inline-flex; padding:3px 10px; border-radius:99px; font-size:12px; font-weight:600;
+                                 background:{{ $viewMaestraData['active'] ? '#D1FAE5' : '#F3F4F6' }};
+                                 color:{{ $viewMaestraData['active'] ? '#059669' : '#9CA3AF' }};">
+                        {{ $viewMaestraData['active'] ? 'Activa' : 'Inactiva' }}
+                    </span>
+                </div>
+            </div>
+
+            {{-- Separador Incremento --}}
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <div style="flex:1; height:1px; background:#F3F4F6;"></div>
+                <span style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px;">Incremento</span>
+                <div style="flex:1; height:1px; background:#F3F4F6;"></div>
+            </div>
+            <div style="background:#F9FAFB; border-radius:10px; padding:12px 14px; margin-bottom:16px;">
+                <p style="font-size:13px; font-weight:500; color:#374151; margin:0;">{{ $viewMaestraData['incremento'] }}</p>
+            </div>
+
+            {{-- Separador Financiamiento --}}
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <div style="flex:1; height:1px; background:#F3F4F6;"></div>
+                <span style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px;">Financiamiento</span>
+                <div style="flex:1; height:1px; background:#F3F4F6;"></div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+                <div style="background:#F9FAFB; border-radius:10px; padding:12px 14px;">
+                    <p style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 4px;">Cuotas</p>
+                    <p style="font-size:14px; font-weight:600; color:#111827; margin:0;">{{ $viewMaestraData['cuotas'] }}</p>
+                </div>
+                <div style="background:#F9FAFB; border-radius:10px; padding:12px 14px;">
+                    <p style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 4px;">Días</p>
+                    <p style="font-size:14px; font-weight:600; color:#111827; margin:0;">{{ $viewMaestraData['dias'] }}</p>
+                </div>
+                <div style="background:#F9FAFB; border-radius:10px; padding:12px 14px;">
+                    <p style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 4px;">C. Inicial</p>
+                    <p style="font-size:14px; font-weight:600; color:#111827; margin:0;">{{ $viewMaestraData['cuota_ini'] }}</p>
+                </div>
+            </div>
+
+        </div>
+
+        {{-- Footer --}}
+        <div style="padding:12px 20px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end;">
+            <button wire:click="closeView"
+                    style="height:36px; padding:0 20px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
 @endif
 
 </div>

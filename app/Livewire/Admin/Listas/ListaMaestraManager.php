@@ -41,6 +41,10 @@ class ListaMaestraManager extends Component
     public string $newTipoCuotaInicial  = 'ninguna';
     public string $newValorCuotaInicial = '0';
 
+    // ── Ver detalle (modal) ───────────────────────────────────────────────────
+    public bool  $showViewModal   = false;
+    public array $viewMaestraData = [];
+
     // ── Inline edit ───────────────────────────────────────────────────────────
     public ?int   $editingId             = null;
     public string $editName              = '';
@@ -239,6 +243,45 @@ class ListaMaestraManager extends Component
             'active' => $newActive,
             'estado' => $newActive ? 'activa' : 'cerrada',
         ]);
+    }
+
+    // ── Ver detalle ───────────────────────────────────────────────────────────
+
+    public function openView(int $id): void
+    {
+        $m = ListaMaestra::with('cycle')->findOrFail($id);
+
+        $inc = '';
+        if ($m->tipo_incremento && $m->valor_incremento) {
+            $inc = $m->tipo_incremento === 'porcentaje'
+                ? $m->valor_incremento . '%'
+                : 'Bs ' . number_format($m->valor_incremento, 2);
+        }
+
+        $ci = '';
+        if ($m->usa_cuota_inicial && $m->tipo_cuota_inicial !== 'ninguna' && $m->valor_cuota_inicial) {
+            $ci = $m->tipo_cuota_inicial === 'porcentaje'
+                ? $m->valor_cuota_inicial . '%'
+                : 'Bs ' . number_format($m->valor_cuota_inicial, 2);
+        }
+
+        $this->viewMaestraData = [
+            'name'         => $m->name,
+            'code'         => $m->code ?? '—',
+            'ciclo'        => $m->cycle?->code ?? '—',
+            'active'       => $m->active,
+            'cuotas'       => $m->cantidad_cuotas ? $m->cantidad_cuotas . 'c' : '—',
+            'dias'         => $m->dias_entre_cuotas ?? '—',
+            'incremento'   => $inc ?: '—',
+            'cuota_ini'    => $ci ?: '—',
+        ];
+        $this->showViewModal = true;
+    }
+
+    public function closeView(): void
+    {
+        $this->showViewModal   = false;
+        $this->viewMaestraData = [];
     }
 
     // ── Items mode ────────────────────────────────────────────────────────────
