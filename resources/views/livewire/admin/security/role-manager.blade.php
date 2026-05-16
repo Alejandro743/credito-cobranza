@@ -153,7 +153,7 @@
         <button wire:click="backToList" class="flex-1 sm:flex-none"
                 style="height:36px; padding:0 18px; background:#FEF2F2; color:#EF4444; border:1px solid #FEE2E2; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;"
                 @mouseenter="$el.style.background='#FEE2E2'" @mouseleave="$el.style.background='#FEF2F2'">
-            Cancelar
+            Salir
         </button>
         <button wire:click="savePermissions" wire:loading.attr="disabled" class="flex-1 sm:flex-none"
                 style="height:36px; padding:0 22px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;">
