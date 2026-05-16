@@ -163,7 +163,7 @@
                 <col style="width:110px;">
                 <col style="width:140px;">
                 <col style="width:90px;">
-                <col style="width:90px;">
+                <col style="width:150px;">
             </colgroup>
             <thead>
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
