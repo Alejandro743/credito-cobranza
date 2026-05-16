@@ -8,9 +8,9 @@ $mobileColorMap = [
 @endphp
 
 {{-- ═══ PANEL DE MÓDULOS (móvil) ═══ --}}
-<div x-cloak x-show="mobileTab === 'modulos'"
+<div x-show="mobileTab === 'modulos'"
      class="md:hidden fixed inset-0 z-40 flex flex-col"
-     style="background:#F0F2F5; padding-bottom:60px;">
+     style="display:none; background:#F0F2F5; padding-bottom:60px;">
 
     {{-- Cabecera --}}
     <div style="padding:18px 20px 14px; background:#fff; border-bottom:1px solid #E5E7EB; flex-shrink:0;">
