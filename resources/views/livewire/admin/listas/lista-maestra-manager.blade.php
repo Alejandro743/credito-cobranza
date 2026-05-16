@@ -21,31 +21,34 @@
 {{-- ═══════════════════════════════════════════════════════ ITEMS MODE ═══ --}}
 @if ($mode === 'items' && $viewingMaestra)
 
-<div class="flex items-center justify-between mb-5">
-    <div class="flex items-center gap-3">
-        <button wire:click="backToList" class="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        </button>
-        <div>
-            <p class="font-mono text-xs text-lavanda-600 font-semibold">{{ $viewingMaestra->code }}</p>
-            <h2 class="text-base font-bold text-gray-800">{{ $viewingMaestra->name }}</h2>
-        </div>
-        <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $viewingMaestra->active ? 'bg-mint-100 text-mint-700' : 'bg-red-100 text-red-600' }}">
-            {{ $viewingMaestra->active ? 'Activa' : 'Inactiva' }}
-        </span>
+<div style="display:flex; flex-wrap:wrap; align-items:center; gap:10px; margin-bottom:20px;">
+    <button wire:click="backToList"
+            style="width:32px; height:32px; border-radius:8px; border:1px solid #E5E7EB; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+            @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+    </button>
+    <div>
+        <p style="font-size:11px; font-family:monospace; color:#7B6FE8; font-weight:700; margin:0;">{{ $viewingMaestra->code }}</p>
+        <p style="font-size:15px; font-weight:800; color:#111827; margin:0;">{{ $viewingMaestra->name }}</p>
     </div>
-    <div class="flex gap-2">
-        <button wire:click="refreshFromCatalog"
-                class="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold border border-gray-200 text-gray-600 hover:bg-gray-50 rounded-xl transition-colors">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            Actualizar
-        </button>
-        <button wire:click="showAddItem"
-                class="flex items-center gap-1.5 px-4 py-2 text-xs font-semibold bg-lavanda-500 hover:bg-lavanda-600 text-white rounded-xl transition-colors">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-            Nuevo Producto
-        </button>
-    </div>
+    <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600;
+                 background:{{ $viewingMaestra->active ? '#D1FAE5' : '#F3F4F6' }};
+                 color:{{ $viewingMaestra->active ? '#059669' : '#9CA3AF' }};">
+        {{ $viewingMaestra->active ? 'Activa' : 'Inactiva' }}
+    </span>
+    <div style="flex:1;"></div>
+    <button wire:click="refreshFromCatalog"
+            style="height:36px; padding:0 14px; border:1px solid #E5E7EB; background:#fff; color:#6B7280; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;"
+            @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+        Actualizar
+    </button>
+    <button wire:click="showAddItem"
+            style="height:36px; padding:0 14px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;"
+            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Nuevo Producto
+    </button>
 </div>
 
 {{-- Formulario nuevo producto --}}
@@ -127,39 +130,60 @@
 @endif
 
 {{-- Filtros del catálogo --}}
-<div class="flex flex-col sm:flex-row gap-3 mb-4">
+<div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
     <input wire:model.live.debounce.300ms="filterCodigo" type="text" placeholder="Código..."
-           class="border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 w-32">
+           style="width:110px; height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 10px; font-size:13px; color:#374151; outline:none; background:#fff;">
     <input wire:model.live.debounce.300ms="filterProducto" type="text" placeholder="Nombre del producto..."
-           class="flex-1 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400">
-    <select wire:model.live="filterEnLista" class="border border-gray-200 rounded-xl px-3 py-2 text-sm bg-white focus:outline-none focus:border-lavanda-400">
+           style="flex:1; min-width:160px; height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 10px; font-size:13px; color:#374151; outline:none; background:#fff;">
+    <select wire:model.live="filterEnLista"
+            style="height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 10px; font-size:13px; color:#374151; outline:none; background:#fff; cursor:pointer;">
         <option value="">Todos</option>
         <option value="1">En lista</option>
         <option value="0">Disponibles</option>
     </select>
 </div>
 
-{{-- Tabla de productos --}}
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                <tr>
-                    <th class="px-3 py-3 text-center text-xs font-semibold text-gray-500 uppercase w-20">Código</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Producto</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Precio Base</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Puntos</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">St. Inicial</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Consumido</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Actual</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase hidden xl:table-cell">Tipo Inc.</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase hidden xl:table-cell">Incremento</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">P. Final</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Estado</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+{{-- Tabla de productos (desktop) --}}
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 1px 4px rgba(0,0,0,.04); overflow:hidden;">
+    {{-- Barra header --}}
+    <div style="padding:10px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F3F4F6;">
+        <span style="font-size:13px; font-weight:700; color:#111827;">Ítems del catálogo</span>
+        <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $products->count() }}</span>
+    </div>
+    <div style="overflow-x:auto;">
+        <table style="width:100%; border-collapse:collapse;">
+            <colgroup>
+                <col style="width:90px;">
+                <col>
+                <col style="width:100px;">
+                <col style="width:70px;">
+                <col style="width:85px;">
+                <col style="width:85px;">
+                <col style="width:85px;">
+                <col style="width:85px;">
+                <col style="width:95px;">
+                <col style="width:95px;">
+                <col style="width:105px;">
+                <col style="width:135px;">
+            </colgroup>
+            <thead>
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                    @php $thStyle = 'font-size:11px; font-weight:700; color:#7B6FE8; text-align:center; padding:10px 12px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none;'; @endphp
+                    <th style="{{ $thStyle }}">Código</th>
+                    <th style="{{ $thStyle }} text-align:left;">Producto</th>
+                    <th style="{{ $thStyle }}">Precio Base</th>
+                    <th style="{{ $thStyle }}">Puntos</th>
+                    <th style="{{ $thStyle }}">St. Ini.</th>
+                    <th style="{{ $thStyle }}">Consumido</th>
+                    <th style="{{ $thStyle }}">Actual</th>
+                    <th style="{{ $thStyle }}">Tipo Inc.</th>
+                    <th style="{{ $thStyle }}">Incremento</th>
+                    <th style="{{ $thStyle }}">P. Final</th>
+                    <th style="{{ $thStyle }}">Estado</th>
+                    <th style="{{ $thStyle }}">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-50">
+            <tbody>
                 @forelse ($products as $p)
                 @php $item = $itemsMap->get($p->id); $inLista = $item !== null; @endphp
 
@@ -281,32 +305,36 @@
 
                 @elseif (!$inLista && $quickAddProductId === $p->id)
                 {{-- QUICK-ADD INLINE --}}
-                <tr wire:key="qa-{{ $p->id }}" class="bg-celeste-50 border-l-2 border-celeste-400">
-                    <td class="px-3 py-2 text-center font-mono text-xs text-gray-500">{{ $p->code }}</td>
-                    <td class="px-4 py-2 text-center text-gray-700">{{ $p->name }}</td>
-                    <td class="px-4 py-2 text-center">
+                <tr wire:key="qa-{{ $p->id }}" style="background:#F0FDFA; border-left:3px solid #0E7490;">
+                    @php $tdC = 'padding:8px 10px; text-align:center;'; @endphp
+                    <td style="{{ $tdC }} font-size:12px; font-family:monospace; color:#6B7280;">{{ $p->code }}</td>
+                    <td style="padding:8px 14px; font-size:13px; color:#374151; font-weight:500;">{{ $p->name }}</td>
+                    <td style="{{ $tdC }}">
                         <input wire:model="quickAddPrecio" type="number" step="0.01" min="0" placeholder="0.00"
-                               class="w-24 border border-celeste-300 rounded-lg px-2 py-1 text-sm text-center focus:outline-none bg-white">
-                        @error('quickAddPrecio') <p class="text-red-500 text-xs">{{ $message }}</p> @enderror
+                               style="width:80px; border:1px solid #A5F3FC; border-radius:6px; padding:5px 8px; font-size:12px; text-align:center; outline:none; background:#fff;">
+                        @error('quickAddPrecio') <p style="font-size:10px; color:#ef4444; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td class="px-4 py-2 text-center">
+                    <td style="{{ $tdC }}">
                         <input wire:model="quickAddPuntos" type="number" min="0" placeholder="0"
-                               class="w-20 border border-celeste-300 rounded-lg px-2 py-1 text-sm text-center focus:outline-none bg-white">
+                               style="width:60px; border:1px solid #A5F3FC; border-radius:6px; padding:5px 8px; font-size:12px; text-align:center; outline:none; background:#fff;">
                     </td>
-                    <td class="px-4 py-2 text-center hidden lg:table-cell">
+                    <td style="{{ $tdC }}">
                         <input wire:model="quickAddStock" type="number" step="0.01" min="0" placeholder="0"
-                               class="w-24 border border-celeste-300 rounded-lg px-2 py-1 text-sm text-center focus:outline-none bg-white">
+                               style="width:68px; border:1px solid #A5F3FC; border-radius:6px; padding:5px 8px; font-size:12px; text-align:center; outline:none; background:#fff;">
                     </td>
-                    <td colspan="2" class="hidden lg:table-cell"></td>
-                    <td colspan="3" class="hidden xl:table-cell"></td>
-                    <td class="px-4 py-2 text-center"><span class="text-xs text-celeste-600 font-medium">Agregar</span></td>
-                    <td class="px-4 py-2 text-center">
-                        <div class="flex items-center justify-center gap-1">
-                            <button wire:click="saveQuickAdd" class="p-1.5 rounded-lg bg-mint-100 text-mint-700 hover:bg-mint-200 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                    <td colspan="5"></td>
+                    <td style="{{ $tdC }}"><span style="font-size:11px; color:#0E7490; font-weight:600;">Agregar</span></td>
+                    <td style="{{ $tdC }}">
+                        <div style="display:inline-flex; align-items:center; gap:4px;">
+                            <button wire:click="saveQuickAdd" title="Guardar"
+                                    style="width:28px; height:28px; border-radius:7px; background:#D1FAE5; border:1px solid #6EE7B7; color:#059669; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#A7F3D0'" @mouseleave="$el.style.background='#D1FAE5'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                             </button>
-                            <button wire:click="cancelQuickAdd" class="p-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                            <button wire:click="cancelQuickAdd" title="Cancelar"
+                                    style="width:28px; height:28px; border-radius:7px; background:#F3F4F6; border:1px solid #E5E7EB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                             </button>
                         </div>
                     </td>
@@ -314,85 +342,89 @@
 
                 @else
                 {{-- FILA NORMAL --}}
-                <tr wire:key="prod-{{ $p->id }}" class="{{ $inLista ? 'hover:bg-gray-50' : 'hover:bg-gray-50 opacity-60' }} transition-colors">
-                    <td data-label="Código" class="px-3 py-3 text-center font-mono text-xs text-gray-500">{{ $p->code }}</td>
-                    <td data-label="Producto" class="px-4 py-3 text-center font-medium text-gray-800">{{ $p->name }}</td>
-                    <td data-label="Precio Base" class="px-4 py-3 text-center text-gray-700">
+                @php
+                    $trStyle = $inLista ? 'border-bottom:1px solid #F9FAFB;' : 'border-bottom:1px solid #F9FAFB; opacity:.5;';
+                    $tdBase  = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap;';
+                @endphp
+                <tr wire:key="prod-{{ $p->id }}" style="{{ $trStyle }}"
+                    @mouseenter="$el.style.background='#FAFAFA'" @mouseleave="$el.style.background=''">
+                    <td style="{{ $tdBase }} font-family:monospace; font-size:12px; color:#6B7280;">{{ $p->code }}</td>
+                    <td style="{{ $tdBase }} text-align:left; padding-left:14px; overflow:hidden; text-overflow:ellipsis; max-width:0;">{{ $p->name }}</td>
+                    <td style="{{ $tdBase }}">
                         @if ($inLista) Bs {{ number_format($item->precio_base, 2) }}
-                        @else <span class="text-gray-300">—</span> @endif
+                        @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
-                    <td data-label="Puntos" class="px-4 py-3 text-center text-gray-700">
+                    <td style="{{ $tdBase }}">
                         @if ($inLista) {{ $item->puntos }}
-                        @else <span class="text-gray-300">—</span> @endif
+                        @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
-                    <td data-label="St. Inicial" class="px-4 py-3 text-center text-gray-500 hidden lg:table-cell text-xs">
+                    <td style="{{ $tdBase }}">
                         @if ($inLista) {{ number_format($item->stock_inicial, 2) }}
-                        @else <span class="text-gray-300">—</span> @endif
+                        @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
-                    <td data-label="Consumido" class="px-4 py-3 text-center text-gray-500 hidden lg:table-cell text-xs">
+                    <td style="{{ $tdBase }}">
                         @if ($inLista) {{ number_format($item->stock_consumido, 2) }}
-                        @else <span class="text-gray-300">—</span> @endif
+                        @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
-                    <td data-label="Actual" class="px-4 py-3 text-center hidden lg:table-cell text-xs
-                        {{ $inLista && $item->stock_actual <= 0 ? 'text-red-500 font-semibold' : 'text-gray-700' }}">
+                    <td style="{{ $tdBase }}{{ $inLista && $item->stock_actual <= 0 ? ' color:#EF4444; font-weight:700;' : '' }}">
                         @if ($inLista) {{ number_format($item->stock_actual, 2) }}
-                        @else <span class="text-gray-300">—</span> @endif
+                        @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
-                    <td data-label="Tipo Inc." class="px-4 py-3 text-center hidden xl:table-cell">
+                    <td style="{{ $tdBase }}">
                         @if ($inLista && $item->tipo_incremento)
-                        <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold bg-lavanda-100 text-lavanda-700">
+                        <span style="padding:2px 8px; border-radius:99px; font-size:11px; font-weight:600; background:#EDE9FE; color:#7B6FE8;">
                             {{ $item->tipo_incremento === 'porcentaje' ? '%' : 'Bs' }}
                         </span>
-                        @else
-                        <span class="text-gray-300">—</span>
-                        @endif
+                        @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
-                    <td data-label="Incremento" class="px-4 py-3 text-center hidden xl:table-cell text-xs text-gray-700">
+                    <td style="{{ $tdBase }}">
                         @if ($inLista && $item->factor_incremento > 0)
                             {{ $item->tipo_incremento === 'porcentaje'
                                 ? number_format($item->factor_incremento, 2).'%'
                                 : 'Bs '.number_format($item->factor_incremento, 2) }}
-                        @else
-                        <span class="text-gray-300">—</span>
-                        @endif
+                        @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
-                    <td data-label="P. Final" class="px-4 py-3 text-center text-xs font-semibold {{ $inLista ? 'text-lavanda-700' : 'text-gray-300' }}">
+                    <td style="{{ $tdBase }}{{ $inLista ? ' color:#7B6FE8; font-weight:700;' : '' }}">
                         @if ($inLista) Bs {{ number_format($item->precio_final, 2) }}
-                        @else —
-                        @endif
+                        @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
-                    <td data-label="Estado" class="px-4 py-3 text-center">
+                    <td style="padding:10px 12px; text-align:center;">
                         @if ($inLista)
-                        <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold {{ $item->active ? 'bg-mint-100 text-mint-700' : 'bg-red-100 text-red-600' }}">
+                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600;
+                                     background:{{ $item->active ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $item->active ? '#059669' : '#9CA3AF' }};">
                             {{ $item->active ? 'Activo' : 'Inactivo' }}
                         </span>
                         @else
-                        <span class="inline-flex px-2 py-0.5 rounded-full text-xs bg-gray-100 text-gray-400">Sin agregar</span>
+                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#F3F4F6; color:#9CA3AF;">Sin agregar</span>
                         @endif
                     </td>
-                    <td data-label="" class="px-4 py-3 text-center">
-                        <div class="flex items-center justify-center gap-1">
+                    <td style="padding:10px 12px; text-align:center;">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
                             @if ($inLista)
                                 <button wire:click="startEditItem({{ $item->id }})" title="Editar"
-                                        class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                        style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                 </button>
                                 <button wire:click="toggleItemActive({{ $item->id }})" title="{{ $item->active ? 'Desactivar' : 'Activar' }}"
-                                        class="p-1.5 rounded-lg transition-colors {{ $item->active ? 'text-gray-400 hover:text-red-500 hover:bg-red-50' : 'text-gray-400 hover:text-mint-600 hover:bg-mint-50' }}">
-                                    @if ($item->active)
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                                    @else
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                    @endif
+                                        style="width:28px; height:28px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+                                               border:1px solid {{ $item->active ? '#FEE2E2' : '#D1FAE5' }};
+                                               background:{{ $item->active ? '#FEF2F2' : '#ECFDF5' }};
+                                               color:{{ $item->active ? '#EF4444' : '#10B981' }};"
+                                        @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
                                 </button>
                                 <button wire:click="removeItem({{ $item->id }})" title="Quitar de lista"
-                                        class="p-1.5 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                        style="width:28px; height:28px; border-radius:7px; border:1px solid #FEE2E2; background:#FEF2F2; color:#EF4444; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                        @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
                             @else
                                 <button wire:click="startQuickAdd({{ $p->id }})" title="Agregar a lista"
-                                        class="flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs text-celeste-700 bg-celeste-100 hover:bg-celeste-200 font-medium transition-colors">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+                                        style="height:26px; padding:0 10px; border-radius:7px; border:1px solid #A5F3FC; background:#CFFAFE; color:#0E7490; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;"
+                                        @mouseenter="$el.style.background='#A5F3FC'" @mouseleave="$el.style.background='#CFFAFE'">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                                     Agregar
                                 </button>
                             @endif
@@ -401,7 +433,7 @@
                 </tr>
                 @endif
                 @empty
-                <tr><td colspan="12" class="px-5 py-14 text-center text-gray-400 text-sm">No hay productos en el catálogo.</td></tr>
+                <tr><td colspan="12" style="padding:48px 20px; text-align:center; font-size:13px; color:#9CA3AF;">No hay productos en el catálogo.</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -1002,7 +1034,7 @@
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                             </button>
                             {{-- Ver productos --}}
-                            <button wire:click="openViewItems({{ $m->id }})" title="Ver productos"
+                            <button wire:click="viewItems({{ $m->id }})" title="Ver productos"
                                     style="width:28px; height:28px; border-radius:7px; border:1px solid #A5F3FC; background:#CFFAFE; color:#0E7490; cursor:pointer; display:flex; align-items:center; justify-content:center;"
                                     @mouseenter="$el.style.background='#A5F3FC'" @mouseleave="$el.style.background='#CFFAFE'">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
@@ -1174,94 +1206,5 @@ if (!window.colResize) {
 </div>
 @endif
 
-{{-- ═══════════════════════════════════════════ MODAL VER PRODUCTOS ═══ --}}
-@if ($showItemsModal)
-<div style="position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.45);"
-     wire:click.self="closeViewItems">
-    <div style="background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,.18); width:100%; max-width:540px; height:80vh; display:flex; flex-direction:column;">
-
-        {{-- Header --}}
-        <div style="background:#F0FDFA; border-bottom:1px solid #A5F3FC; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-            <div>
-                <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.7px; margin:0 0 2px;">Productos en lista</p>
-                <p style="font-size:16px; font-weight:800; color:#0E7490; margin:0;">{{ $viewItemsMaestraName }}</p>
-            </div>
-            <button wire:click="closeViewItems"
-                    style="width:32px; height:32px; border-radius:9px; border:1px solid #A5F3FC; background:#fff; color:#9CA3AF; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-        </div>
-
-        {{-- Body --}}
-        <div style="height:calc(80vh - 130px); overflow-y:auto; padding:16px;">
-
-            {{-- Resumen --}}
-            <div style="border-radius:12px; border:1px solid #EDE9FE; overflow:hidden; margin-bottom:10px;">
-                <div style="background:#F5F3FF; padding:9px 14px; display:flex; align-items:center; gap:8px;">
-                    <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                    </svg>
-                    <span style="font-size:12px; font-weight:700; color:#111827; text-transform:uppercase; letter-spacing:.4px;">Resumen</span>
-                </div>
-                <div style="padding:12px 14px; display:flex; flex-direction:column; gap:8px;">
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F9FAFB; padding-bottom:8px;">
-                        <span style="font-size:12px; color:#6B7280; font-weight:500;">Total de ítems</span>
-                        <span style="font-size:13px; color:#374151; font-weight:600;">{{ $viewItemsData['total'] }}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F9FAFB; padding-bottom:8px;">
-                        <span style="font-size:12px; color:#6B7280; font-weight:500;">Activos</span>
-                        <span style="font-size:13px; color:#059669; font-weight:600;">{{ $viewItemsData['activos'] }}</span>
-                    </div>
-                    <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span style="font-size:12px; color:#6B7280; font-weight:500;">Inactivos</span>
-                        <span style="font-size:13px; color:#9CA3AF; font-weight:600;">{{ $viewItemsData['total'] - $viewItemsData['activos'] }}</span>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Lista de productos --}}
-            <div style="border-radius:12px; border:1px solid #CFFAFE; overflow:hidden;">
-                <div style="background:#F0FDFA; padding:9px 14px; display:flex; align-items:center; gap:8px;">
-                    <svg width="13" height="13" fill="none" stroke="#0E7490" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                        <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
-                    </svg>
-                    <span style="font-size:12px; font-weight:700; color:#111827; text-transform:uppercase; letter-spacing:.4px;">Ítems</span>
-                </div>
-                @forelse ($viewItemsData['items'] as $item)
-                <div style="padding:9px 14px; border-bottom:1px solid #F0FDFA; display:flex; align-items:center; justify-content:space-between; gap:8px;">
-                    <div style="min-width:0; flex:1;">
-                        <span style="font-size:11px; font-family:monospace; color:#0E7490; font-weight:600;">{{ $item['code'] }}</span>
-                        <span style="font-size:13px; color:#374151; font-weight:500; margin-left:8px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:inline-block; max-width:220px; vertical-align:middle;">{{ $item['name'] }}</span>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:8px; flex-shrink:0;">
-                        <span style="font-size:12px; color:#374151; font-weight:600;">{{ $item['precio'] }}</span>
-                        <span style="padding:2px 8px; border-radius:99px; font-size:11px; font-weight:600;
-                                     background:{{ $item['active'] ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $item['active'] ? '#059669' : '#9CA3AF' }};">
-                            {{ $item['active'] ? 'Activo' : 'Inactivo' }}
-                        </span>
-                    </div>
-                </div>
-                @empty
-                <div style="padding:24px 14px; text-align:center; color:#9CA3AF; font-size:13px;">Sin productos</div>
-                @endforelse
-            </div>
-
-        </div>
-
-        {{-- Footer --}}
-        <div style="padding:12px 20px; border-top:1px solid #F3F4F6; flex-shrink:0; display:flex; justify-content:flex-end;">
-            <button wire:click="closeViewItems"
-                    style="height:36px; padding:0 24px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
-                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
-                Cerrar
-            </button>
-        </div>
-    </div>
-</div>
-@endif
 
 </div>
