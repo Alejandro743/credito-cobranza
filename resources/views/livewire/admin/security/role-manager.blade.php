@@ -343,10 +343,10 @@
         @else
         <table style="table-layout:fixed; width:100%; min-width:500px; border-collapse:collapse; font-size:13px;">
             <colgroup>
-                <col style="width:220px;">
+                <col style="width:200px;">
                 <col style="width:100px;">
                 <col style="width:120px;">
-                <col style="width:180px;">
+                <col style="width:210px;">
             </colgroup>
             <thead>
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
@@ -455,6 +455,14 @@
                                 </svg>
                                 Accesos
                             </button>
+                            <button wire:click="openView({{ $role->id }})" title="Ver accesos"
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                            </button>
                             <button wire:click="startEdit({{ $role->id }})" title="Editar"
                                     style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
                                     @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
@@ -519,6 +527,106 @@ window.colResize = function () {
 };
 </script>
 
+@endif
+
+{{-- ══ MODAL: Ver accesos ══ --}}
+@if ($showViewModal)
+@php
+$vmColorMap = [
+    'lavanda'   => ['head_bg'=>'#F5F3FF','head_border'=>'#EDE9FE','icon'=>'#7B6FE8'],
+    'mint'      => ['head_bg'=>'#F0FDF4','head_border'=>'#D1FAE5','icon'=>'#059669'],
+    'melocoton' => ['head_bg'=>'#FFF7ED','head_border'=>'#FED7AA','icon'=>'#EA580C'],
+    'celeste'   => ['head_bg'=>'#EFF6FF','head_border'=>'#BFDBFE','icon'=>'#2563EB'],
+];
+@endphp
+<div style="position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(0,0,0,.45);"
+     wire:click.self="closeView">
+    <div style="background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,.18); width:100%; max-width:580px; max-height:82vh; display:flex; flex-direction:column; overflow:hidden;">
+
+        {{-- Header --}}
+        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <div>
+                <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.7px; margin:0 0 2px;">Resumen de accesos</p>
+                <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0; text-transform:capitalize;">{{ $viewRoleName }}</p>
+            </div>
+            <button wire:click="closeView"
+                    style="width:32px; height:32px; border-radius:9px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        {{-- Body --}}
+        <div style="overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px;">
+            @foreach ($viewData as $mod)
+            @php $vmc = $vmColorMap[$mod['color']] ?? $vmColorMap['lavanda']; @endphp
+            <div style="border-radius:12px; border:1px solid {{ $vmc['head_border'] }}; overflow:hidden;">
+
+                {{-- Cabecera módulo --}}
+                <div style="background:{{ $vmc['head_bg'] }}; padding:9px 14px; display:flex; align-items:center; gap:8px;">
+                    <svg width="13" height="13" fill="none" stroke="{{ $vmc['icon'] }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                        <path d="{{ $mod['icon'] }}"/>
+                    </svg>
+                    <span style="font-size:12px; font-weight:700; color:#111827; text-transform:uppercase; letter-spacing:.4px;">{{ $mod['name'] }}</span>
+                </div>
+
+                {{-- Submodulos --}}
+                <div>
+                    @foreach ($mod['submodulos'] as $sub)
+                    @if ($sub['tipo'] === 'group')
+                    <div style="padding:8px 14px 4px; background:#FAFAFA; border-top:1px solid #F3F4F6;">
+                        <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.6px; margin:0 0 5px;">{{ $sub['name'] }}</p>
+                        @foreach ($sub['children'] as $child)
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding:4px 0 4px 10px;">
+                            <span style="font-size:12px; color:#374151;">{{ $child['name'] }}</span>
+                            @if ($child['puede_ver'])
+                            <span style="display:flex; align-items:center; gap:3px; font-size:11px; font-weight:600; color:#059669;">
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                                Con acceso
+                            </span>
+                            @else
+                            <span style="display:flex; align-items:center; gap:3px; font-size:11px; font-weight:500; color:#D1D5DB;">
+                                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                Sin acceso
+                            </span>
+                            @endif
+                        </div>
+                        @endforeach
+                    </div>
+                    @else
+                    <div style="display:flex; align-items:center; justify-content:space-between; padding:8px 14px; border-top:1px solid #F9FAFB;">
+                        <span style="font-size:12px; color:#374151;">{{ $sub['name'] }}</span>
+                        @if ($sub['puede_ver'])
+                        <span style="display:flex; align-items:center; gap:3px; font-size:11px; font-weight:600; color:#059669;">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                            Con acceso
+                        </span>
+                        @else
+                        <span style="display:flex; align-items:center; gap:3px; font-size:11px; font-weight:500; color:#D1D5DB;">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            Sin acceso
+                        </span>
+                        @endif
+                    </div>
+                    @endif
+                    @endforeach
+                </div>
+            </div>
+            @endforeach
+        </div>
+
+        {{-- Footer --}}
+        <div style="padding:12px 20px; border-top:1px solid #F3F4F6; flex-shrink:0; display:flex; justify-content:flex-end;">
+            <button wire:click="closeView"
+                    style="height:36px; padding:0 24px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
+                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
 @endif
 
 @if (session('error'))

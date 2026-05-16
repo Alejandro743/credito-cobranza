@@ -31,6 +31,11 @@ class RoleManager extends Component
     public string $permissionsRoleName = '';
     public array  $permissions         = [];
 
+    // View modal
+    public bool   $showViewModal = false;
+    public string $viewRoleName  = '';
+    public array  $viewData      = [];
+
     public function mount(): void
     {
         $this->initModuleColor();
@@ -113,6 +118,57 @@ class RoleManager extends Component
         $role = Role::findOrFail($id);
         if ($role->name === 'admin') return;
         $role->update(['activo' => !($role->activo ?? true)]);
+    }
+
+    // ── Ver accesos (modal) ───────────────────────────────────────────────────
+
+    public function openView(int $roleId): void
+    {
+        $role       = Role::findOrFail($roleId);
+        $isAdmin    = $role->name === 'admin';
+        $existentes = RolSubmoduloPermiso::where('role_id', $roleId)->get()->keyBy('submodulo_id');
+
+        $modulosArbol = Modulo::with([
+            'submodulos'          => fn($q) => $q->where('active', true)->orderBy('sort_order'),
+            'submodulos.children' => fn($q) => $q->where('active', true)->orderBy('sort_order'),
+        ])->where('active', true)->orderBy('sort_order')->get();
+
+        $this->viewRoleName = $role->name;
+        $this->viewData     = $modulosArbol->map(function ($modulo) use ($existentes, $isAdmin) {
+            $subs = $modulo->submodulos->map(function ($sub) use ($existentes, $isAdmin) {
+                if ($sub->isGroup()) {
+                    return [
+                        'name'     => $sub->name,
+                        'tipo'     => 'group',
+                        'children' => $sub->children->map(fn($child) => [
+                            'name'      => $child->name,
+                            'puede_ver' => $isAdmin || (bool) ($existentes->get($child->id)?->puede_ver ?? false),
+                        ])->toArray(),
+                    ];
+                }
+                return [
+                    'name'      => $sub->name,
+                    'tipo'      => 'leaf',
+                    'puede_ver' => $isAdmin || (bool) ($existentes->get($sub->id)?->puede_ver ?? false),
+                ];
+            })->toArray();
+
+            return [
+                'name'       => $modulo->name,
+                'color'      => $modulo->color,
+                'icon'       => $modulo->icon,
+                'submodulos' => $subs,
+            ];
+        })->toArray();
+
+        $this->showViewModal = true;
+    }
+
+    public function closeView(): void
+    {
+        $this->showViewModal = false;
+        $this->viewRoleName  = '';
+        $this->viewData      = [];
     }
 
     // ── Árbol de permisos ─────────────────────────────────────────────────────
