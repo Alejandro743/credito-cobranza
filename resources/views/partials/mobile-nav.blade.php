@@ -9,6 +9,9 @@ $mobileColorMap = [
 
 {{-- ═══ PANEL DE MÓDULOS (móvil) ═══ --}}
 <div x-cloak x-show="mobileTab === 'modulos'"
+     x-transition:leave="transition-opacity duration-500"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
      class="md:hidden fixed inset-0 z-40 flex flex-col"
      style="background:#F0F2F5; padding-bottom:60px;">
 
