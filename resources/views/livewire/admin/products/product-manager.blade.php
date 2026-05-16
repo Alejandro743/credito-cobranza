@@ -287,19 +287,19 @@
                     </td>
 
                     <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-family:monospace; font-size:12px; color:#6B7280; font-weight:500; white-space:nowrap;">{{ $p->code }}</span>
+                        <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->code }}</span>
                     </td>
 
                     <td style="padding:10px 16px; overflow:hidden;">
-                        <p style="font-size:13px; font-weight:600; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; margin:0;">{{ $p->name }}</p>
+                        <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->name }}</span>
                     </td>
 
                     <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->unidad?->abreviatura ?? $p->unidad?->name ?? '—' }}</span>
+                        <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->unidad?->abreviatura ?? $p->unidad?->name ?? '—' }}</span>
                     </td>
 
                     <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->categoria?->name ?? '—' }}</span>
+                        <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->categoria?->name ?? '—' }}</span>
                     </td>
 
                     <td style="padding:10px 16px; text-align:center;">
