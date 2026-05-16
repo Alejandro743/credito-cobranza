@@ -174,8 +174,55 @@
 </div>
 @endif
 
+{{-- ══ MOBILE: Cards ══ --}}
+<div class="sm:hidden space-y-3">
+    @forelse ($roles as $role)
+    <div wire:key="card-{{ $role->id }}"
+         style="background:#fff; border-radius:14px; border:1px solid #F3F4F6; box-shadow:0 1px 4px rgba(0,0,0,.06); padding:14px;">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:4px;">
+            <p style="font-size:14px; font-weight:700; color:#111827; margin:0; text-transform:capitalize; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $role->name }}</p>
+            @if ($role->name === 'admin')
+            <span style="margin-left:10px; padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0; background:#EDE9FE; color:#7B6FE8;">Siempre activo</span>
+            @elseif ($role->activo ?? true)
+            <span style="margin-left:10px; padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0; background:#D1FAE5; color:#059669;">Activo</span>
+            @else
+            <span style="margin-left:10px; padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0; background:#FEE2E2; color:#EF4444;">Inactivo</span>
+            @endif
+        </div>
+        <p style="font-size:12px; color:#9CA3AF; margin:0 0 12px;">{{ $role->users_count }} usuario{{ $role->users_count !== 1 ? 's' : '' }}</p>
+        <div style="display:flex; gap:7px;">
+            <button wire:click="openPermissions({{ $role->id }})"
+                    style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                Accesos
+            </button>
+            <button wire:click="startEdit({{ $role->id }})"
+                    style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Editar
+            </button>
+            @if ($role->name !== 'admin')
+            <button wire:click="toggleActivo({{ $role->id }})"
+                    style="flex:1; height:32px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;
+                           border:1px solid {{ ($role->activo ?? true) ? '#FEE2E2' : '#D1FAE5' }};
+                           background:{{ ($role->activo ?? true) ? '#FEF2F2' : '#ECFDF5' }};
+                           color:{{ ($role->activo ?? true) ? '#EF4444' : '#10B981' }};">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
+                {{ ($role->activo ?? true) ? 'Desactivar' : 'Activar' }}
+            </button>
+            @endif
+        </div>
+    </div>
+    @empty
+    <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">No hay roles registrados.</p>
+    @endforelse
+    @if ($roles->hasPages())
+    <div style="padding-top:8px;">{{ $roles->links() }}</div>
+    @endif
+</div>
+
 {{-- ══ TABLA ══ --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
 
     {{-- Barra --}}
     <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
