@@ -86,21 +86,21 @@
                    style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
         </div>
         <select wire:model.live="filterTipo"
-                style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer;">
+                style="flex:1; height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer;">
             <option value="">Todos los tipos</option>
             <option value="administrativo">Administrativo</option>
             <option value="vendedor">Vendedor</option>
             <option value="cliente">Cliente</option>
         </select>
         <select wire:model.live="filterRole"
-                style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer;">
+                style="flex:1; height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer;">
             <option value="">Todos los roles</option>
             @foreach ($roles as $role)
                 <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
             @endforeach
         </select>
         <select wire:model.live="filterStatus"
-                style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer;">
+                style="flex:1; height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer;">
             <option value="">Todos los estados</option>
             <option value="1">Activo</option>
             <option value="0">Inactivo</option>
