@@ -539,9 +539,9 @@ $vmColorMap = [
     'celeste'   => ['head_bg'=>'#EFF6FF','head_border'=>'#BFDBFE','icon'=>'#2563EB'],
 ];
 @endphp
-<div style="position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(0,0,0,.45);"
+<div style="position:fixed; inset:0; z-index:60; overflow-y:auto; background:rgba(0,0,0,.45); padding:30px 20px;"
      wire:click.self="closeView">
-    <div style="background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,.18); width:100%; max-width:580px; display:flex; flex-direction:column;">
+    <div style="background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,.18); width:100%; max-width:580px; margin:0 auto;">
 
         {{-- Header --}}
         <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
@@ -559,7 +559,7 @@ $vmColorMap = [
         </div>
 
         {{-- Body --}}
-        <div style="overflow-y:auto; max-height:60vh; padding:16px; display:flex; flex-direction:column; gap:10px;">
+        <div style="padding:16px; display:flex; flex-direction:column; gap:10px;">
             @forelse ($viewData as $mod)
             @php $vmc = $vmColorMap[$mod['color']] ?? $vmColorMap['lavanda']; @endphp
             <div style="border-radius:12px; border:1px solid {{ $vmc['head_border'] }}; overflow:hidden;">
