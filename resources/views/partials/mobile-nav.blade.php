@@ -15,8 +15,7 @@ $mobileColorMap = [
     {{-- Cabecera --}}
     <div style="padding:18px 20px 14px; background:#fff; border-bottom:1px solid #E5E7EB; flex-shrink:0;">
         <p style="font-size:11px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.8px; margin-bottom:2px;">Sistema Crédito</p>
-        <p style="font-size:20px; font-weight:800; color:#111827; line-height:1.2;">Menú principal</p>
-        <p style="font-size:12px; color:#9CA3AF; margin-top:2px;">Selecciona un módulo</p>
+        <p style="font-size:20px; font-weight:800; color:#7B6FE8; line-height:1.2;">Menú principal</p>
     </div>
 
     {{-- Lista de módulos — estado en un solo x-data padre para evitar conflictos --}}
