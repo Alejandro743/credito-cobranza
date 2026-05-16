@@ -115,7 +115,7 @@ $mobileColorMap = [
 <nav class="md:hidden fixed bottom-0 left-0 right-0 z-50 flex"
      style="background:#fff; border-top:1px solid #E8EAED; height:60px; box-shadow:0 -2px 12px rgba(0,0,0,.06);">
 
-    <a href="{{ $dashRoute }}" wire:navigate @click="mobileTab = 'inicio'"
+    <a href="{{ $dashRoute }}" wire:navigate @click="setTimeout(() => mobileTab = 'inicio', 500)"
        class="flex-1 flex flex-col items-center justify-center"
        style="gap:3px; text-decoration:none;"
        :style="mobileTab === 'inicio' ? 'color:#7B6FE8;' : 'color:#9CA3AF;'">
