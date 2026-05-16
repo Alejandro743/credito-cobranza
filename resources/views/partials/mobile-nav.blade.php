@@ -140,7 +140,7 @@ $mobileColorMap = [
         <span style="font-size:10px; font-weight:600; letter-spacing:.2px;">Módulos</span>
     </button>
 
-    <a href="{{ route('perfil') }}" wire:navigate @click="mobileTab = 'inicio'"
+    <a href="{{ route('perfil') }}" wire:navigate
        class="flex-1 flex flex-col items-center justify-center"
        style="gap:3px; text-decoration:none;"
        :style="mobileTab === 'perfil' ? 'color:#7B6FE8;' : 'color:#9CA3AF;'">
