@@ -559,10 +559,10 @@ $vmColorMap = [
         </div>
 
         {{-- Body --}}
-        <div style="height:calc(80vh - 130px); overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px;">
+        <div style="height:calc(80vh - 130px); overflow-y:auto; padding:16px;">
             @forelse ($viewData as $mod)
             @php $vmc = $vmColorMap[$mod['color']] ?? $vmColorMap['lavanda']; @endphp
-            <div style="border-radius:12px; border:1px solid {{ $vmc['head_border'] }}; overflow:hidden;">
+            <div style="border-radius:12px; border:1px solid {{ $vmc['head_border'] }}; overflow:hidden; margin-bottom:10px;">
 
                 {{-- Cabecera módulo --}}
                 <div style="background:{{ $vmc['head_bg'] }}; padding:9px 14px; display:flex; align-items:center; gap:8px;">
