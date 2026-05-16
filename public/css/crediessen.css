@@ -749,6 +749,14 @@ main thead .ds-sticky-col     { text-align: left !important; }
 main .ds-sticky-col > .flex   { justify-content: flex-start !important; }
 
 /* ─────────────────────────────────────────────────────────────
+   27b. USER-MANAGER — primeras 4 cols a la izquierda
+──────────────────────────────────────────────────────────────*/
+main table.um-table thead th:nth-child(-n+4),
+main table.um-table thead td:nth-child(-n+4),
+main table.um-table tbody  td:nth-child(-n+4),
+main table.um-table tbody  th:nth-child(-n+4) { text-align: left !important; }
+
+/* ─────────────────────────────────────────────────────────────
    28. OCULTAR DS-SECTION-HEADER
    El layout (admin-layout / user-layout) genera el page header
    automáticamente. Los ds-section-header en vistas son redundantes.

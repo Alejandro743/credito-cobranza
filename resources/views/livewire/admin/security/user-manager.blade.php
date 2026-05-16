@@ -264,7 +264,7 @@
         @if ($users->isEmpty())
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay usuarios registrados.</p>
         @else
-        <table style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
+        <table class="um-table" style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <colgroup>
                 <col style="width:180px;">  {{-- nombre --}}
                 <col style="width:180px;">  {{-- email --}}
