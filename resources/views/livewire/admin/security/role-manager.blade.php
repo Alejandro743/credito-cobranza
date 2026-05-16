@@ -620,14 +620,14 @@ $vmColorMap = [
 
 @if (session('error'))
 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
-     class="fixed bottom-5 right-5 z-50"
+     class="fixed bottom-20 sm:bottom-5 right-5 z-50"
      style="background:#EF4444; color:#fff; font-size:13px; font-weight:600; padding:12px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,.15);">
     {{ session('error') }}
 </div>
 @endif
 @if (session('success'))
 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-     class="fixed bottom-5 right-5 z-50"
+     class="fixed bottom-20 sm:bottom-5 right-5 z-50"
      style="background:#10B981; color:#fff; font-size:13px; font-weight:600; padding:12px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(0,0,0,.15);">
     {{ session('success') }}
 </div>
