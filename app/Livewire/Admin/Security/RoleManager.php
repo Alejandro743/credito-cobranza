@@ -201,8 +201,7 @@ class RoleManager extends Component
                 ['puede_ver' => (bool) ($perms['puede_ver'] ?? false)]
             );
         }
-        session()->flash('success', "Permisos guardados para \"{$this->permissionsRoleName}\".");
-        $this->backToList();
+        session()->flash('success', "Accesos guardados para \"{$this->permissionsRoleName}\".");
     }
 
     public function toggleModulo(int $moduloId, bool $value): void
