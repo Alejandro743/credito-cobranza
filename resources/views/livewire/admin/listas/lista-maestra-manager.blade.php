@@ -1321,24 +1321,28 @@
 
     @if ($editingId === $m->id)
     {{-- Card edición mobile --}}
+    @php $ml = 'font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;'; @endphp
+    @php $mi = 'width:100%; height:34px; border:1px solid #D8D3F8; border-radius:8px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;'; @endphp
     <div wire:key="mob-edit-{{ $m->id }}"
-         style="background:#F8F7FF; border-radius:14px; border:1px solid #EDE9FE; padding:14px; display:flex; flex-direction:column; gap:10px;">
+         style="background:#F8F7FF; border-radius:14px; border:1px solid #EDE9FE; border-left:3px solid #7B6FE8; padding:14px; display:flex; flex-direction:column; gap:12px;">
+
+        {{-- Título --}}
         <div style="display:flex; align-items:center; gap:8px;">
             <span style="font-family:monospace; font-size:11px; color:#9CA3AF; background:#F3F4F6; padding:2px 7px; border-radius:6px;">{{ $m->code ?? '—' }}</span>
-            <span style="font-size:13px; font-weight:700; color:#7B6FE8; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Editando</span>
+            <span style="font-size:13px; font-weight:700; color:#7B6FE8;">Editando lista</span>
         </div>
+
+        {{-- Info general --}}
         <div style="display:flex; flex-direction:column; gap:8px;">
             <div>
-                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Nombre</label>
-                <input wire:model="editName" type="text"
-                       style="width:100%; height:34px; border:1px solid #D8D3F8; border-radius:8px; padding:0 10px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
+                <label style="{{ $ml }}">Nombre</label>
+                <input wire:model="editName" type="text" style="{{ $mi }} font-size:13px; padding:0 10px;">
                 @error('editName') <p style="color:#EF4444; font-size:11px; margin-top:2px;">{{ $message }}</p> @enderror
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                 <div>
-                    <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Ciclo</label>
-                    <select wire:model="editCycleId"
-                            style="width:100%; height:34px; border:1px solid #D8D3F8; border-radius:8px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                    <label style="{{ $ml }}">Ciclo</label>
+                    <select wire:model="editCycleId" style="{{ $mi }}">
                         <option value="">— Ciclo —</option>
                         @foreach ($cycles as $cycle)
                             <option value="{{ $cycle->id }}">{{ $cycle->code }}</option>
@@ -1346,28 +1350,75 @@
                     </select>
                 </div>
                 <div>
-                    <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Estado</label>
-                    <select wire:model="editActive"
-                            style="width:100%; height:34px; border:1px solid #D8D3F8; border-radius:8px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                    <label style="{{ $ml }}">Estado</label>
+                    <select wire:model="editActive" style="{{ $mi }}">
                         <option value="1">Activa</option>
                         <option value="0">Inactiva</option>
                     </select>
                 </div>
                 <div>
-                    <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Cuotas</label>
+                    <label style="{{ $ml }}">Cant. Cuotas</label>
                     <input wire:model="editCantidadCuotas" type="number" min="1" max="999" placeholder="—"
-                           style="width:100%; height:34px; border:1px solid #D8D3F8; border-radius:8px; padding:0 8px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
+                           style="{{ $mi }} text-align:center;">
                 </div>
-                <div style="display:flex; flex-direction:column; justify-content:flex-end;">
-                    <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">C. Inicial</label>
-                    <div style="display:flex; align-items:center; gap:6px; height:34px;">
-                        <input type="checkbox" wire:model="editUsaCuotaInicial" style="width:16px; height:16px; accent-color:#7B6FE8; cursor:pointer;">
-                        <span style="font-size:12px; color:#6B7280;">Activar</span>
-                    </div>
+                <div>
+                    <label style="{{ $ml }}">Días entre Cuotas</label>
+                    <input wire:model="editDiasEntreCuotas" type="number" min="1" max="365" placeholder="30"
+                           style="{{ $mi }} text-align:center;">
                 </div>
             </div>
         </div>
-        <div style="display:flex; gap:8px; padding-top:4px;">
+
+        {{-- Separador incremento --}}
+        <div style="display:flex; align-items:center; gap:8px;">
+            <div style="flex:1; height:1px; background:#EDE9FE;"></div>
+            <span style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px;">Incremento de Precio</span>
+            <div style="flex:1; height:1px; background:#EDE9FE;"></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div>
+                <label style="{{ $ml }}">Tipo</label>
+                <select wire:model="editTipoIncremento" style="{{ $mi }}">
+                    <option value="">— Sin incremento —</option>
+                    <option value="porcentaje">Porcentaje %</option>
+                    <option value="monto_fijo">Monto Fijo Bs</option>
+                </select>
+            </div>
+            <div>
+                <label style="{{ $ml }}">Valor {{ $editTipoIncremento === 'porcentaje' ? '(%)' : ($editTipoIncremento === 'monto_fijo' ? '(Bs)' : '') }}</label>
+                <input wire:model="editValorIncremento" type="number" step="0.01" min="0" placeholder="0"
+                       style="{{ $mi }} text-align:center;">
+            </div>
+        </div>
+
+        {{-- Separador cuota inicial --}}
+        <div style="display:flex; align-items:center; gap:8px;">
+            <div style="flex:1; height:1px; background:#EDE9FE;"></div>
+            <span style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px;">Cuota Inicial</span>
+            <div style="flex:1; height:1px; background:#EDE9FE;"></div>
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div>
+                <label style="{{ $ml }}">Tipo</label>
+                <select wire:model="editTipoCuotaInicial" style="{{ $mi }}">
+                    <option value="ninguna">Sin cuota inicial</option>
+                    <option value="porcentaje">Porcentaje %</option>
+                    <option value="monto_fijo">Monto Fijo Bs</option>
+                </select>
+            </div>
+            @if ($editTipoCuotaInicial !== 'ninguna')
+            <div>
+                <label style="{{ $ml }}">Valor {{ $editTipoCuotaInicial === 'porcentaje' ? '(%)' : '(Bs)' }}</label>
+                <input wire:model="editValorCuotaInicial" type="number" step="0.01" min="0" placeholder="0"
+                       style="{{ $mi }} text-align:center;">
+            </div>
+            @endif
+        </div>
+
+        {{-- Botones --}}
+        <div style="display:flex; gap:8px; padding-top:4px; border-top:1px solid #EDE9FE;">
             <button wire:click="saveEdit"
                     style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
                 Guardar
