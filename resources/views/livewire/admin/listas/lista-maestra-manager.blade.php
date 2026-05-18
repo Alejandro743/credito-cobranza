@@ -1108,7 +1108,8 @@
 </div>
 
 {{-- ══ MOBILE: Cards ══ --}}
-<div class="block sm:hidden" style="display:flex; flex-direction:column; gap:10px;">
+<div class="block sm:hidden">
+<div style="display:flex; flex-direction:column; gap:10px;">
     @forelse ($maestras as $m)
 
     @if ($editingId === $m->id)
@@ -1260,6 +1261,7 @@
     @if ($maestras->hasPages())
     <div style="padding:8px 0;">{{ $maestras->links() }}</div>
     @endif
+</div>
 </div>
 
 <script>
