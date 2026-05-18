@@ -11,24 +11,33 @@ class ConfiguracionCorrelativo extends Model
     protected $fillable = ['prefijo', 'siguiente_numero', 'longitud', 'descripcion', 'activo'];
     protected $casts    = ['activo' => 'boolean'];
 
-    /** Genera el próximo ID_LN de forma atómica e incrementa el contador. */
+    /** Genera el próximo ID_LN único de forma atómica, saltando números ya asignados. */
     public static function generarIdLN(): string
     {
-        $config = static::where('activo', true)->first();
+        return DB::transaction(function () {
+            $config = static::lockForUpdate()->where('activo', true)->first();
 
-        if (!$config) {
-            // Fallback si no hay configuración activa
-            $n = (Cliente::withTrashed()->max('id') ?? 0) + 1;
-            return 'LN' . str_pad($n, 6, '0', STR_PAD_LEFT);
-        }
+            if (!$config) {
+                // Fallback: busca un código LN no usado
+                $n = (Cliente::withTrashed()->max('id') ?? 0) + 1;
+                do {
+                    $id = 'LN' . str_pad($n++, 6, '0', STR_PAD_LEFT);
+                } while (Cliente::withTrashed()->where('id_ln', $id)->exists());
+                return $id;
+            }
 
-        $id = $config->prefijo . str_pad($config->siguiente_numero, $config->longitud, '0', STR_PAD_LEFT);
+            // Busca el siguiente número disponible saltando los ya asignados
+            $numero = $config->siguiente_numero;
+            do {
+                $id = $config->prefijo . str_pad($numero++, $config->longitud, '0', STR_PAD_LEFT);
+            } while (Cliente::withTrashed()->where('id_ln', $id)->exists());
 
-        // Incrementar de forma segura
-        DB::table('configuracion_correlativo')
-            ->where('id', $config->id)
-            ->increment('siguiente_numero');
+            // Guarda el próximo número a usar (el que quedó libre después del elegido)
+            DB::table('configuracion_correlativo')
+                ->where('id', $config->id)
+                ->update(['siguiente_numero' => $numero]);
 
-        return $id;
+            return $id;
+        });
     }
 }

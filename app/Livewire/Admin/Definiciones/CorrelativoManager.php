@@ -62,13 +62,17 @@ class CorrelativoManager extends Component
             'newDescripcion'     => ['nullable','string','max:200'],
         ]);
 
-        ConfiguracionCorrelativo::create([
+        $c = ConfiguracionCorrelativo::create([
             'prefijo'           => strtoupper($this->newPrefijo),
             'siguiente_numero'  => (int) $this->newSiguienteNumero,
             'longitud'          => (int) $this->newLongitud,
             'descripcion'       => $this->newDescripcion ?: null,
             'activo'            => $this->newActivo,
         ]);
+
+        if ($this->newActivo) {
+            $this->desactivarOtros($c->id);
+        }
 
         $this->showAddForm = false;
         session()->flash('success', 'Correlativo creado.');
@@ -102,13 +106,18 @@ class CorrelativoManager extends Component
             'editDescripcion'     => ['nullable','string','max:200'],
         ]);
 
-        ConfiguracionCorrelativo::findOrFail($this->editingId)->update([
+        $c = ConfiguracionCorrelativo::findOrFail($this->editingId);
+        $c->update([
             'prefijo'          => strtoupper($this->editPrefijo),
             'siguiente_numero' => (int) $this->editSiguienteNumero,
             'longitud'         => (int) $this->editLongitud,
             'descripcion'      => $this->editDescripcion ?: null,
             'activo'           => $this->editActivo,
         ]);
+
+        if ($this->editActivo) {
+            $this->desactivarOtros($c->id);
+        }
 
         $this->editingId = null;
         session()->flash('success', 'Correlativo actualizado.');
@@ -119,7 +128,18 @@ class CorrelativoManager extends Component
     public function toggleActivo(int $id): void
     {
         $c = ConfiguracionCorrelativo::findOrFail($id);
-        $c->update(['activo' => !$c->activo]);
+        $nuevoEstado = !$c->activo;
+        $c->update(['activo' => $nuevoEstado]);
+        if ($nuevoEstado) {
+            $this->desactivarOtros($id);
+        }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+
+    private function desactivarOtros(int $exceptId): void
+    {
+        ConfiguracionCorrelativo::where('id', '!=', $exceptId)->update(['activo' => false]);
     }
 
     // ── Delete ────────────────────────────────────────────────────────────────
