@@ -104,7 +104,7 @@
         <table style="width:100%; border-collapse:collapse; font-size:13px;">
             <thead>
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    @php $th = 'padding:10px 16px; font-size:11px; font-weight:700; color:#6B7280; text-transform:uppercase; letter-spacing:.6px; white-space:nowrap;'; @endphp
+                    @php $th = 'padding:10px 16px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;'; @endphp
                     <th style="{{ $th }} text-align:left;">Prefijo</th>
                     <th style="{{ $th }} text-align:left;">Descripción</th>
                     <th style="{{ $th }} text-align:center;">Sig. Número</th>
