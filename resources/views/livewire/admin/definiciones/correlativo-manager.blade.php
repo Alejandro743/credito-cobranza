@@ -104,7 +104,7 @@
         <table style="width:100%; border-collapse:collapse; font-size:13px;">
             <thead>
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    @php $th = 'padding:10px 16px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;'; @endphp
+                    @php $th = 'padding:10px 16px; font-size:11px; font-weight:700; color:#6B7280; text-transform:uppercase; letter-spacing:.6px; white-space:nowrap;'; @endphp
                     <th style="{{ $th }} text-align:left;">Prefijo</th>
                     <th style="{{ $th }} text-align:left;">Descripción</th>
                     <th style="{{ $th }} text-align:center;">Sig. Número</th>
@@ -121,7 +121,7 @@
                 @php $eS = 'height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;'; @endphp
                 <tr wire:key="edit-{{ $c->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; border-left:3px solid #7B6FE8;">
                     <td colspan="6" style="padding:14px 18px;">
-                        <div style="display:flex; flex-wrap:wrap; gap:10px; align-items:flex-end;">
+                        <div style="display:flex; gap:10px; align-items:flex-end; overflow-x:auto;">
                             <div style="width:100px;">
                                 <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Prefijo *</label>
                                 <input wire:model="editPrefijo" type="text" maxlength="10"
@@ -175,7 +175,7 @@
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
                     <td style="padding:11px 16px;">
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="font-family:monospace; font-size:14px; font-weight:800; color:#111827; letter-spacing:1px;">{{ $c->prefijo }}</span>
+                            <span style="font-family:monospace; font-size:13px; font-weight:700; color:#111827; letter-spacing:.5px;">{{ $c->prefijo }}</span>
                             <span style="font-size:11px; color:#9CA3AF;">→</span>
                             <span style="font-family:monospace; font-size:12px; color:#7B6FE8; font-weight:600; background:#F0EEFF; padding:2px 7px; border-radius:6px;">
                                 {{ $c->prefijo }}{{ str_pad($c->siguiente_numero, $c->longitud, '0', STR_PAD_LEFT) }}
