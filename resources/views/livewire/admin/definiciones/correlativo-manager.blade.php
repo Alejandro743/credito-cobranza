@@ -109,7 +109,7 @@
     <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">No hay correlativos registrados.</p>
     @else
     <div style="overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+        <table class="corr-table" style="width:100%; border-collapse:collapse; font-size:13px;">
             <thead>
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                     <th style="padding:10px 16px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; text-align:left;">Prefijo</th>

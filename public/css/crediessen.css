@@ -757,6 +757,11 @@ main table.um-table tbody  td:nth-child(-n+4),
 main table.um-table tbody  th:nth-child(-n+4) { text-align: left !important; }
 
 /* ─────────────────────────────────────────────────────────────
+   27c. CORRELATIVO — col Prefijo a la izquierda
+──────────────────────────────────────────────────────────────*/
+main table.corr-table thead th:nth-child(1) { text-align: left !important; }
+
+/* ─────────────────────────────────────────────────────────────
    28. OCULTAR DS-SECTION-HEADER
    El layout (admin-layout / user-layout) genera el page header
    automáticamente. Los ds-section-header en vistas son redundantes.
