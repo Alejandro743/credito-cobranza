@@ -456,6 +456,213 @@
     </div>
 </div>
 
+{{-- ══ MOBILE: Cards productos ══ --}}
+<div class="block sm:hidden">
+<div style="display:flex; flex-direction:column; gap:10px;">
+    @forelse ($products as $p)
+    @php $item = $itemsMap->get($p->id); $inLista = $item !== null; @endphp
+
+    @if ($inLista && $editItemId === $item->id)
+    {{-- Card edición mobile --}}
+    <div wire:key="mob-item-edit-{{ $item->id }}"
+         x-data="{
+             precio: parseFloat(@js((float)$editItemPrecio)) || 0,
+             tipo:   @js($editItemTipoIncremento),
+             factor: parseFloat(@js((float)$editItemFactorIncremento)) || 0,
+             get final() {
+                 if (!this.tipo || !this.factor) return this.precio.toFixed(2);
+                 let m = this.tipo === 'porcentaje' ? this.precio * this.factor / 100 : parseFloat(this.factor);
+                 return (this.precio + m).toFixed(2);
+             }
+         }"
+         style="background:#F8F7FF; border-radius:14px; border:1px solid #EDE9FE; border-left:3px solid #7B6FE8; padding:14px; display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-family:monospace; font-size:11px; color:#9CA3AF; background:#F3F4F6; padding:2px 7px; border-radius:6px;">{{ $p->code }}</span>
+            <span style="font-size:13px; font-weight:700; color:#7B6FE8; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $p->name }}</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div>
+                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Precio (Bs)</label>
+                <input wire:model="editItemPrecio" x-on:input="precio = parseFloat($event.target.value) || 0"
+                       type="number" step="0.01" min="0"
+                       style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
+            </div>
+            <div>
+                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Puntos</label>
+                <input wire:model="editItemPuntos" type="number" min="0"
+                       style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
+            </div>
+            <div>
+                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Stock Ini.</label>
+                <input wire:model="editItemStock" type="number" step="0.01" min="0"
+                       style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
+            </div>
+            <div>
+                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Estado</label>
+                <select wire:model="editItemActive"
+                        style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 8px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select>
+            </div>
+            <div>
+                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Tipo Inc.</label>
+                <select wire:model="editItemTipoIncremento" x-on:change="tipo = $event.target.value"
+                        style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                    <option value="">— Sin inc. —</option>
+                    <option value="porcentaje">% Porcentaje</option>
+                    <option value="monto_fijo">Bs Monto Fijo</option>
+                </select>
+            </div>
+            <div>
+                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Valor Inc.</label>
+                <input wire:model="editItemFactorIncremento" x-on:input="factor = parseFloat($event.target.value) || 0"
+                       type="number" step="0.01" min="0" placeholder="0"
+                       style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
+            </div>
+        </div>
+        <div style="background:#F0EEFF; border-radius:8px; padding:8px 12px; display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-size:11px; color:#7B6FE8; font-weight:600;">P. Final</span>
+            <span style="font-size:14px; font-weight:800; color:#7B6FE8;">Bs <span x-text="final"></span></span>
+        </div>
+        <div style="display:flex; gap:8px;">
+            <button wire:click="saveEditItem"
+                    style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                Guardar
+            </button>
+            <button wire:click="cancelEditItem"
+                    style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                Cancelar
+            </button>
+        </div>
+    </div>
+
+    @elseif (!$inLista && $quickAddProductId === $p->id)
+    {{-- Card quick-add mobile --}}
+    <div wire:key="mob-qa-{{ $p->id }}"
+         style="background:#F0FDFA; border-radius:14px; border:1px solid #A5F3FC; border-left:3px solid #0E7490; padding:14px; display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; align-items:center; gap:6px;">
+            <span style="font-family:monospace; font-size:11px; color:#9CA3AF; background:#F3F4F6; padding:2px 7px; border-radius:6px;">{{ $p->code }}</span>
+            <span style="font-size:13px; font-weight:700; color:#0E7490; flex:1;">{{ $p->name }}</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
+            <div>
+                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Precio</label>
+                <input wire:model="quickAddPrecio" type="number" step="0.01" min="0" placeholder="0.00"
+                       style="width:100%; height:34px; border:1px solid #A5F3FC; border-radius:8px; padding:0 8px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
+            </div>
+            <div>
+                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Puntos</label>
+                <input wire:model="quickAddPuntos" type="number" min="0" placeholder="0"
+                       style="width:100%; height:34px; border:1px solid #A5F3FC; border-radius:8px; padding:0 8px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
+            </div>
+            <div>
+                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Stock</label>
+                <input wire:model="quickAddStock" type="number" step="0.01" min="0" placeholder="0"
+                       style="width:100%; height:34px; border:1px solid #A5F3FC; border-radius:8px; padding:0 8px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
+            </div>
+        </div>
+        <div style="display:flex; gap:8px;">
+            <button wire:click="saveQuickAdd"
+                    style="flex:1; height:36px; background:#CFFAFE; color:#0E7490; border:1px solid #A5F3FC; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                Agregar a lista
+            </button>
+            <button wire:click="cancelQuickAdd"
+                    style="width:36px; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+    </div>
+
+    @else
+    {{-- Card normal mobile --}}
+    <div wire:key="mob-prod-{{ $p->id }}"
+         style="background:#fff; border-radius:14px; border:1px solid {{ $inLista ? '#EDE9FE' : '#E5E7EB' }}; box-shadow:0 1px 3px rgba(0,0,0,.04); padding:14px;
+                {{ !$inLista ? 'opacity:.65;' : '' }}">
+        {{-- Fila 1: código + nombre + estado --}}
+        <div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:8px;">
+            <span style="font-family:monospace; font-size:11px; color:#9CA3AF; background:#F3F4F6; padding:2px 7px; border-radius:6px; white-space:nowrap; flex-shrink:0;">{{ $p->code }}</span>
+            <span style="font-size:14px; font-weight:700; color:#111827; flex:1; line-height:1.3;">{{ $p->name }}</span>
+            @if ($inLista)
+            <span style="flex-shrink:0; padding:2px 8px; border-radius:99px; font-size:11px; font-weight:600;
+                         background:{{ $item->active ? '#D1FAE5' : '#F3F4F6' }};
+                         color:{{ $item->active ? '#059669' : '#9CA3AF' }};">
+                {{ $item->active ? 'Activo' : 'Inactivo' }}
+            </span>
+            @else
+            <span style="flex-shrink:0; padding:2px 8px; border-radius:99px; font-size:11px; font-weight:600; background:#F3F4F6; color:#9CA3AF;">Sin agregar</span>
+            @endif
+        </div>
+
+        {{-- Fila 2: datos --}}
+        @if ($inLista)
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;">
+            <span style="font-size:11px; color:#6B7280; background:#F9FAFB; border:1px solid #E5E7EB; padding:2px 8px; border-radius:6px;">
+                Precio: <strong>Bs {{ number_format($item->precio_base, 2) }}</strong>
+            </span>
+            <span style="font-size:11px; color:#7B6FE8; background:#F0EEFF; border:1px solid #EDE9FE; padding:2px 8px; border-radius:6px; font-weight:700;">
+                P.Final: Bs {{ number_format($item->precio_final, 2) }}
+            </span>
+            @if ($item->puntos)
+            <span style="font-size:11px; color:#6B7280; background:#F9FAFB; border:1px solid #E5E7EB; padding:2px 8px; border-radius:6px;">
+                ★ {{ $item->puntos }}
+            </span>
+            @endif
+            <span style="font-size:11px; color:{{ $item->stock_actual <= 0 ? '#EF4444' : '#6B7280' }}; background:#F9FAFB; border:1px solid #E5E7EB; padding:2px 8px; border-radius:6px;">
+                Stock: {{ number_format($item->stock_actual, 2) }}
+            </span>
+            @if ($item->tipo_incremento)
+            <span style="font-size:11px; color:#7B6FE8; background:#EDE9FE; padding:2px 8px; border-radius:6px; font-weight:600;">
+                +{{ $item->tipo_incremento === 'porcentaje' ? number_format($item->factor_incremento,2).'%' : 'Bs '.number_format($item->factor_incremento,2) }}
+            </span>
+            @endif
+        </div>
+        @else
+        <div style="margin-bottom:12px;">
+            <span style="font-size:11px; color:#9CA3AF;">{{ $p->categoria?->name ?? '' }}{{ $p->unidad ? ' · '.$p->unidad->abreviatura : '' }}</span>
+        </div>
+        @endif
+
+        {{-- Botones --}}
+        <div style="display:flex; align-items:center; gap:6px; border-top:1px solid #F3F4F6; padding-top:10px;">
+            @if ($inLista)
+            <button wire:click="startEditItem({{ $item->id }})" title="Editar"
+                    style="flex:1; height:32px; border-radius:8px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px; font-size:11px; font-weight:600;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Editar
+            </button>
+            <button wire:click="toggleItemActive({{ $item->id }})" title="{{ $item->active ? 'Desactivar' : 'Activar' }}"
+                    style="width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+                           border:1px solid {{ $item->active ? '#FEE2E2' : '#D1FAE5' }};
+                           background:{{ $item->active ? '#FEF2F2' : '#ECFDF5' }};
+                           color:{{ $item->active ? '#EF4444' : '#10B981' }};"
+                    @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
+            </button>
+            <button wire:click="removeItem({{ $item->id }})" title="Quitar de lista"
+                    style="width:32px; height:32px; border-radius:8px; border:1px solid #FEE2E2; background:#FEF2F2; color:#EF4444; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                    @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
+            @else
+            <button wire:click="startQuickAdd({{ $p->id }})" title="Agregar a lista"
+                    style="flex:1; height:32px; border-radius:8px; border:1px solid #A5F3FC; background:#CFFAFE; color:#0E7490; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                Agregar a lista
+            </button>
+            @endif
+        </div>
+    </div>
+    @endif
+
+    @empty
+    <div style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; padding:40px; text-align:center; color:#9CA3AF; font-size:13px;">
+        No hay productos en el catálogo.
+    </div>
+    @endforelse
+</div>
+</div>
+
 {{-- ═══════════════════════════════════════════════════════ ACCESO MODE ══ --}}
 @elseif ($mode === 'acceso' && $viewingMaestra)
 
