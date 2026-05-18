@@ -67,8 +67,8 @@
             <div style="width:90px;">
                 <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:5px;">Activo</label>
                 <select wire:model="newActivo" style="{{ $iS }} cursor:pointer;">
-                    <option value="1">Sí</option>
-                    <option value="0">No</option>
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
                 </select>
             </div>
             <div style="flex:1; min-width:200px;">
@@ -161,8 +161,8 @@
                             <div style="width:80px;">
                                 <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Activo</label>
                                 <select wire:model="editActivo" style="{{ $eS }} width:100%; cursor:pointer;">
-                                    <option value="1">Sí</option>
-                                    <option value="0">No</option>
+                                    <option value="1">Activo</option>
+                                    <option value="0">Inactivo</option>
                                 </select>
                             </div>
                             {{-- Col 6: Acciones --}}
