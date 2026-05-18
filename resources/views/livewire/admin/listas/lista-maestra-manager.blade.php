@@ -1107,6 +1107,161 @@
     @endif
 </div>
 
+{{-- ══ MOBILE: Cards ══ --}}
+<div class="block sm:hidden" style="display:flex; flex-direction:column; gap:10px;">
+    @forelse ($maestras as $m)
+
+    @if ($editingId === $m->id)
+    {{-- Card edición mobile --}}
+    <div wire:key="mob-edit-{{ $m->id }}"
+         style="background:#F8F7FF; border-radius:14px; border:1px solid #EDE9FE; padding:14px; display:flex; flex-direction:column; gap:10px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-family:monospace; font-size:11px; color:#9CA3AF; background:#F3F4F6; padding:2px 7px; border-radius:6px;">{{ $m->code ?? '—' }}</span>
+            <span style="font-size:13px; font-weight:700; color:#7B6FE8; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">Editando</span>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:8px;">
+            <div>
+                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Nombre</label>
+                <input wire:model="editName" type="text"
+                       style="width:100%; height:34px; border:1px solid #D8D3F8; border-radius:8px; padding:0 10px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
+                @error('editName') <p style="color:#EF4444; font-size:11px; margin-top:2px;">{{ $message }}</p> @enderror
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <div>
+                    <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Ciclo</label>
+                    <select wire:model="editCycleId"
+                            style="width:100%; height:34px; border:1px solid #D8D3F8; border-radius:8px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                        <option value="">— Ciclo —</option>
+                        @foreach ($cycles as $cycle)
+                            <option value="{{ $cycle->id }}">{{ $cycle->code }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Estado</label>
+                    <select wire:model="editActive"
+                            style="width:100%; height:34px; border:1px solid #D8D3F8; border-radius:8px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                        <option value="1">Activa</option>
+                        <option value="0">Inactiva</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Cuotas</label>
+                    <input wire:model="editCantidadCuotas" type="number" min="1" max="999" placeholder="—"
+                           style="width:100%; height:34px; border:1px solid #D8D3F8; border-radius:8px; padding:0 8px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
+                </div>
+                <div style="display:flex; flex-direction:column; justify-content:flex-end;">
+                    <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">C. Inicial</label>
+                    <div style="display:flex; align-items:center; gap:6px; height:34px;">
+                        <input type="checkbox" wire:model="editUsaCuotaInicial" style="width:16px; height:16px; accent-color:#7B6FE8; cursor:pointer;">
+                        <span style="font-size:12px; color:#6B7280;">Activar</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="display:flex; gap:8px; padding-top:4px;">
+            <button wire:click="saveEdit"
+                    style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                Guardar
+            </button>
+            <button wire:click="cancelEdit"
+                    style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                Cancelar
+            </button>
+        </div>
+    </div>
+
+    @else
+    {{-- Card normal mobile --}}
+    <div wire:key="mob-{{ $m->id }}"
+         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 3px rgba(0,0,0,.05); padding:14px;">
+
+        {{-- Fila 1: código + nombre + estado --}}
+        <div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:8px;">
+            <span style="font-family:monospace; font-size:11px; color:#9CA3AF; background:#F3F4F6; padding:2px 7px; border-radius:6px; white-space:nowrap; flex-shrink:0;">{{ $m->code ?? '—' }}</span>
+            <span style="font-size:14px; font-weight:700; color:#111827; flex:1; line-height:1.3;">{{ $m->name }}</span>
+            <span style="flex-shrink:0; padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; white-space:nowrap;
+                         background:{{ $m->active ? '#D1FAE5' : '#F3F4F6' }};
+                         color:{{ $m->active ? '#059669' : '#9CA3AF' }};">
+                {{ $m->active ? 'Activa' : 'Inactiva' }}
+            </span>
+        </div>
+
+        {{-- Fila 2: detalles --}}
+        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;">
+            @if ($m->cycle?->code)
+            <span style="font-size:11px; color:#6B7280; background:#F9FAFB; border:1px solid #E5E7EB; padding:2px 8px; border-radius:6px;">
+                Ciclo: <strong>{{ $m->cycle->code }}</strong>
+            </span>
+            @endif
+            @if ($m->cantidad_cuotas)
+            <span style="font-size:11px; color:#6B7280; background:#F9FAFB; border:1px solid #E5E7EB; padding:2px 8px; border-radius:6px;">
+                {{ $m->cantidad_cuotas }} cuotas
+            </span>
+            @endif
+            @if ($m->usa_cuota_inicial)
+            <span style="font-size:11px; color:#6B7280; background:#F9FAFB; border:1px solid #E5E7EB; padding:2px 8px; border-radius:6px;">
+                Ini: {{ $m->tipo_cuota_inicial === 'porcentaje' ? number_format($m->valor_cuota_inicial, 0).'%' : 'Bs '.number_format($m->valor_cuota_inicial, 2) }}
+            </span>
+            @endif
+            @if ($m->tipo_incremento)
+            <span style="font-size:11px; color:#7B6FE8; background:#F0EEFF; border:1px solid #EDE9FE; padding:2px 8px; border-radius:6px;">
+                +{{ $m->tipo_incremento === 'porcentaje' ? number_format($m->valor_incremento, 0).'%' : 'Bs '.number_format($m->valor_incremento, 2) }}
+            </span>
+            @endif
+        </div>
+
+        {{-- Botones --}}
+        <div style="display:flex; align-items:center; gap:6px; border-top:1px solid #F3F4F6; padding-top:10px;">
+            {{-- Editar --}}
+            <button wire:click="startEdit({{ $m->id }})" title="Editar"
+                    style="flex:1; height:32px; border-radius:8px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px; font-size:11px; font-weight:600;"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Editar
+            </button>
+            {{-- Ver detalle --}}
+            <button wire:click="openView({{ $m->id }})" title="Ver detalle"
+                    style="width:32px; height:32px; border-radius:8px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            </button>
+            {{-- Ver productos --}}
+            <button wire:click="viewItems({{ $m->id }})" title="Ver productos"
+                    style="width:32px; height:32px; border-radius:8px; border:1px solid #A5F3FC; background:#CFFAFE; color:#0E7490; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                    @mouseenter="$el.style.opacity='.75'" @mouseleave="$el.style.opacity='1'">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
+            </button>
+            {{-- Gestionar acceso --}}
+            <button wire:click="viewAcceso({{ $m->id }})" title="Gestionar acceso"
+                    style="width:32px; height:32px; border-radius:8px; border:1px solid #FED7AA; background:#FFF7ED; color:#C2410C; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                    @mouseenter="$el.style.opacity='.75'" @mouseleave="$el.style.opacity='1'">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+            </button>
+            {{-- Toggle activo --}}
+            <button wire:click="toggleActive({{ $m->id }})" title="{{ $m->active ? 'Desactivar' : 'Activar' }}"
+                    style="width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+                           border:1px solid {{ $m->active ? '#FEE2E2' : '#D1FAE5' }};
+                           background:{{ $m->active ? '#FEF2F2' : '#ECFDF5' }};
+                           color:{{ $m->active ? '#EF4444' : '#10B981' }};"
+                    @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
+            </button>
+        </div>
+    </div>
+    @endif
+
+    @empty
+    <div style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; padding:40px; text-align:center; color:#9CA3AF; font-size:13px;">
+        No hay listas registradas.
+    </div>
+    @endforelse
+
+    @if ($maestras->hasPages())
+    <div style="padding:8px 0;">{{ $maestras->links() }}</div>
+    @endif
+</div>
+
 <script>
 if (!window.colResize) {
     window.colResize = function () {
