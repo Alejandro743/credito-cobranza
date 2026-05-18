@@ -484,71 +484,77 @@
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
     {{-- SECCIÓN A: CLIENTES --}}
-    <div class="space-y-4">
-        <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-mint-100 text-mint-700 flex items-center justify-center text-xs font-bold">A</span>
-            Clientes
-        </h3>
+    <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:26px; height:26px; border-radius:50%; background:#D1FAE5; color:#065F46; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0;">A</span>
+            <span style="font-size:14px; font-weight:700; color:#111827;">Clientes</span>
+        </div>
 
         {{-- Consulta dinámica --}}
-        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4">
-            <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Consulta dinámica</p>
+        <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:12px; padding:14px;">
+            <p style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.6px; margin:0 0 8px;">Consulta dinámica</p>
             <textarea wire:model="sqlCliente" rows="2" placeholder="email LIKE '%@empresa.com' OR id IN (1,2,3)"
-                      class="w-full border border-gray-200 rounded-xl px-3 py-2 text-xs font-mono focus:outline-none focus:border-lavanda-400 bg-white resize-none"></textarea>
+                      style="width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:7px 10px; font-size:12px; font-family:monospace; color:#374151; background:#fff; outline:none; resize:none; box-sizing:border-box;"></textarea>
             @if ($sqlClienteError)
-                <p class="text-red-500 text-xs mt-1">{{ $sqlClienteError }}</p>
+                <p style="font-size:11px; color:#ef4444; margin-top:4px;">{{ $sqlClienteError }}</p>
             @endif
         </div>
 
         {{-- Agregar manualmente --}}
-        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4">
-            <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Agregar manualmente</p>
-            <div class="relative">
-                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:12px; padding:14px;">
+            <p style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.6px; margin:0 0 8px;">Agregar manualmente</p>
+            <div style="position:relative;">
+                <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 <input wire:model.live.debounce.300ms="searchCliente" type="text" placeholder="Buscar por código, nombre o apellido..."
-                       class="w-full pl-10 pr-4 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
+                       style="width:100%; height:36px; padding:0 12px 0 32px; border:1px solid #EDE9FE; border-radius:8px; font-size:13px; background:#fff; outline:none; box-sizing:border-box;">
             </div>
             @if ($manualClienteResult !== null)
-            <div class="mt-2 rounded-xl border border-gray-200 bg-white overflow-hidden">
+            <div style="margin-top:8px; border:1px solid #EDE9FE; border-radius:8px; background:#fff; overflow:hidden;">
                 @forelse ($manualClienteResult as $u)
                 <button wire:click="addClienteManual({{ $u['id'] }})"
-                        class="w-full flex items-center gap-3 px-3 py-2.5 border-b border-gray-50 last:border-0 hover:bg-mint-50 transition-colors text-left">
-                    <span class="font-mono text-xs text-gray-400 w-8 shrink-0">#{{ $u['id'] }}</span>
-                    <span class="text-sm font-medium text-gray-800">{{ $u['name'] }}</span>
+                        style="width:100%; display:flex; align-items:center; gap:10px; padding:8px 12px; border:none; border-bottom:1px solid #F3F4F6; background:#fff; cursor:pointer; text-align:left;"
+                        @mouseenter="$el.style.background='#F0FDF4'" @mouseleave="$el.style.background='#fff'">
+                    <span style="font-family:monospace; font-size:11px; color:#9CA3AF; width:28px; flex-shrink:0;">#{{ $u['id'] }}</span>
+                    <span style="font-size:13px; font-weight:500; color:#111827;">{{ $u['name'] }}</span>
                 </button>
                 @empty
-                <p class="px-3 py-3 text-gray-400 text-xs">Sin resultados.</p>
+                <p style="padding:10px 12px; font-size:12px; color:#9CA3AF;">Sin resultados.</p>
                 @endforelse
             </div>
             @endif
         </div>
 
         {{-- Resumen clientes --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div class="px-4 py-2.5 border-b border-gray-100 bg-gray-50">
-                <p class="text-xs font-semibold text-gray-600">Clientes con acceso ({{ $accesosClientes->count() }})</p>
+        <div style="background:#fff; border-radius:12px; border:1px solid #E5E7EB; box-shadow:0 1px 3px rgba(0,0,0,.05); overflow:hidden;">
+            <div style="padding:9px 14px; border-bottom:1px solid #E5E7EB; background:#F9FAFB;">
+                <p style="font-size:11px; font-weight:600; color:#6B7280; margin:0;">Clientes con acceso ({{ $accesosClientes->count() }})</p>
             </div>
             @if ($accesosClientes->count())
-            <table class="w-full text-xs">
-                <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                    <tr>
-                        <th class="px-3 py-2 text-left text-gray-500 font-semibold uppercase w-10">ID</th>
-                        <th class="px-3 py-2 text-left text-gray-500 font-semibold uppercase">Nombre</th>
-                        <th class="px-3 py-2 text-center text-gray-500 font-semibold uppercase">Origen</th>
-                        <th class="px-3 py-2"></th>
+            <table style="width:100%; font-size:12px; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#F9FAFB;">
+                        <th style="padding:7px 12px; text-align:left; font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; width:40px;">ID</th>
+                        <th style="padding:7px 12px; text-align:left; font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px;">Nombre</th>
+                        <th style="padding:7px 12px; text-align:center; font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px;">Origen</th>
+                        <th style="width:36px;"></th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody>
                     @foreach ($accesosClientes as $acc)
-                    <tr wire:key="acc-c-{{ $acc->id }}" class="hover:bg-gray-50 transition-colors">
-                        <td class="px-3 py-2 font-mono text-gray-400">#{{ $acc->user?->id }}</td>
-                        <td class="px-3 py-2 font-medium text-gray-800">{{ $acc->user?->name }}</td>
-                        <td class="px-3 py-2 text-center">
-                            <span class="inline-flex px-2 py-0.5 rounded-full {{ $acc->origen === 'sql' ? 'bg-celeste-100 text-celeste-700' : 'bg-gray-100 text-gray-500' }}">{{ ucfirst($acc->origen) }}</span>
+                    <tr wire:key="acc-c-{{ $acc->id }}" style="border-top:1px solid #F3F4F6;">
+                        <td style="padding:7px 12px; font-family:monospace; color:#9CA3AF;">#{{ $acc->user?->id }}</td>
+                        <td style="padding:7px 12px; font-weight:500; color:#111827;">{{ $acc->user?->name }}</td>
+                        <td style="padding:7px 12px; text-align:center;">
+                            <span style="display:inline-flex; padding:1px 8px; border-radius:999px; font-size:10px; font-weight:600;
+                                {{ $acc->origen === 'sql' ? 'background:#DBEAFE; color:#1D4ED8;' : 'background:#F3F4F6; color:#6B7280;' }}">
+                                {{ ucfirst($acc->origen) }}
+                            </span>
                         </td>
-                        <td class="px-3 py-2 text-right">
-                            <button wire:click="removeAcceso({{ $acc->id }})" class="text-red-400 hover:text-red-600 transition-colors p-1">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        <td style="padding:7px 8px; text-align:right;">
+                            <button wire:click="removeAcceso({{ $acc->id }})"
+                                    style="background:transparent; border:none; cursor:pointer; color:#FCA5A5; padding:4px; display:inline-flex;"
+                                    @mouseenter="$el.style.color='#EF4444'" @mouseleave="$el.style.color='#FCA5A5'">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                             </button>
                         </td>
                     </tr>
@@ -556,83 +562,89 @@
                 </tbody>
             </table>
             @else
-            <div class="px-4 py-6 text-center space-y-2">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-mint-50 border border-mint-200 rounded-full text-mint-700 text-xs font-semibold">
-                    <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 004 0 2 2 0 012-2h.5A2.5 2.5 0 0020 5.5v-1.5"/></svg>
+            <div style="padding:20px; text-align:center;">
+                <span style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; background:#D1FAE5; border:1px solid #A7F3D0; border-radius:999px; font-size:11px; font-weight:600; color:#065F46;">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     Acceso abierto a todos los clientes
-                </div>
-                <p class="text-gray-400 text-[10px]">Sin restricciones — todos los clientes pueden acceder a esta lista</p>
+                </span>
+                <p style="font-size:11px; color:#9CA3AF; margin:6px 0 0;">Sin restricciones activas</p>
             </div>
             @endif
         </div>
     </div>
 
     {{-- SECCIÓN B: VENDEDORES --}}
-    <div class="space-y-4">
-        <h3 class="text-sm font-bold text-gray-700 flex items-center gap-2">
-            <span class="w-6 h-6 rounded-full bg-melocoton-100 text-melocoton-700 flex items-center justify-center text-xs font-bold">B</span>
-            Vendedores
-        </h3>
+    <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="width:26px; height:26px; border-radius:50%; background:#FFE4D6; color:#9A3412; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:800; flex-shrink:0;">B</span>
+            <span style="font-size:14px; font-weight:700; color:#111827;">Vendedores</span>
+        </div>
 
         {{-- Consulta dinámica --}}
-        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4">
-            <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Consulta dinámica</p>
+        <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:12px; padding:14px;">
+            <p style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.6px; margin:0 0 8px;">Consulta dinámica</p>
             <textarea wire:model="sqlVendedor" rows="2" placeholder="email LIKE '%@empresa.com' OR id IN (1,2,3)"
-                      class="w-full border border-gray-200 rounded-xl px-3 py-2 text-xs font-mono focus:outline-none focus:border-lavanda-400 bg-white resize-none"></textarea>
+                      style="width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:7px 10px; font-size:12px; font-family:monospace; color:#374151; background:#fff; outline:none; resize:none; box-sizing:border-box;"></textarea>
             @if ($sqlVendedorError)
-                <p class="text-red-500 text-xs mt-1">{{ $sqlVendedorError }}</p>
+                <p style="font-size:11px; color:#ef4444; margin-top:4px;">{{ $sqlVendedorError }}</p>
             @endif
         </div>
 
         {{-- Agregar manualmente --}}
-        <div class="bg-gray-50 border border-gray-200 rounded-2xl p-4">
-            <p class="text-xs font-semibold text-gray-500 uppercase mb-2">Agregar manualmente</p>
-            <div class="relative">
-                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:12px; padding:14px;">
+            <p style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.6px; margin:0 0 8px;">Agregar manualmente</p>
+            <div style="position:relative;">
+                <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
                 <input wire:model.live.debounce.300ms="searchVendedor" type="text" placeholder="Buscar por código, nombre o apellido..."
-                       class="w-full pl-10 pr-4 border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
+                       style="width:100%; height:36px; padding:0 12px 0 32px; border:1px solid #EDE9FE; border-radius:8px; font-size:13px; background:#fff; outline:none; box-sizing:border-box;">
             </div>
             @if ($manualVendedorResult !== null)
-            <div class="mt-2 rounded-xl border border-gray-200 bg-white overflow-hidden">
+            <div style="margin-top:8px; border:1px solid #EDE9FE; border-radius:8px; background:#fff; overflow:hidden;">
                 @forelse ($manualVendedorResult as $u)
                 <button wire:click="addVendedorManual({{ $u['id'] }})"
-                        class="w-full flex items-center gap-3 px-3 py-2.5 border-b border-gray-50 last:border-0 hover:bg-melocoton-50 transition-colors text-left">
-                    <span class="font-mono text-xs text-gray-400 w-8 shrink-0">#{{ $u['id'] }}</span>
-                    <span class="text-sm font-medium text-gray-800">{{ $u['name'] }}</span>
+                        style="width:100%; display:flex; align-items:center; gap:10px; padding:8px 12px; border:none; border-bottom:1px solid #F3F4F6; background:#fff; cursor:pointer; text-align:left;"
+                        @mouseenter="$el.style.background='#FFF7ED'" @mouseleave="$el.style.background='#fff'">
+                    <span style="font-family:monospace; font-size:11px; color:#9CA3AF; width:28px; flex-shrink:0;">#{{ $u['id'] }}</span>
+                    <span style="font-size:13px; font-weight:500; color:#111827;">{{ $u['name'] }}</span>
                 </button>
                 @empty
-                <p class="px-3 py-3 text-gray-400 text-xs">Sin resultados.</p>
+                <p style="padding:10px 12px; font-size:12px; color:#9CA3AF;">Sin resultados.</p>
                 @endforelse
             </div>
             @endif
         </div>
 
         {{-- Resumen vendedores --}}
-        <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-            <div class="px-4 py-2.5 border-b border-gray-100 bg-gray-50">
-                <p class="text-xs font-semibold text-gray-600">Vendedores con acceso ({{ $accesosVendedores->count() }})</p>
+        <div style="background:#fff; border-radius:12px; border:1px solid #E5E7EB; box-shadow:0 1px 3px rgba(0,0,0,.05); overflow:hidden;">
+            <div style="padding:9px 14px; border-bottom:1px solid #E5E7EB; background:#F9FAFB;">
+                <p style="font-size:11px; font-weight:600; color:#6B7280; margin:0;">Vendedores con acceso ({{ $accesosVendedores->count() }})</p>
             </div>
             @if ($accesosVendedores->count())
-            <table class="w-full text-xs">
-                <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                    <tr>
-                        <th class="px-3 py-2 text-left text-gray-500 font-semibold uppercase w-10">ID</th>
-                        <th class="px-3 py-2 text-left text-gray-500 font-semibold uppercase">Nombre</th>
-                        <th class="px-3 py-2 text-center text-gray-500 font-semibold uppercase">Origen</th>
-                        <th class="px-3 py-2"></th>
+            <table style="width:100%; font-size:12px; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#F9FAFB;">
+                        <th style="padding:7px 12px; text-align:left; font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; width:40px;">ID</th>
+                        <th style="padding:7px 12px; text-align:left; font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px;">Nombre</th>
+                        <th style="padding:7px 12px; text-align:center; font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px;">Origen</th>
+                        <th style="width:36px;"></th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody>
                     @foreach ($accesosVendedores as $acc)
-                    <tr wire:key="acc-v-{{ $acc->id }}" class="hover:bg-gray-50 transition-colors">
-                        <td class="px-3 py-2 font-mono text-gray-400">#{{ $acc->user?->id }}</td>
-                        <td class="px-3 py-2 font-medium text-gray-800">{{ $acc->user?->name }}</td>
-                        <td class="px-3 py-2 text-center">
-                            <span class="inline-flex px-2 py-0.5 rounded-full {{ $acc->origen === 'sql' ? 'bg-celeste-100 text-celeste-700' : 'bg-gray-100 text-gray-500' }}">{{ ucfirst($acc->origen) }}</span>
+                    <tr wire:key="acc-v-{{ $acc->id }}" style="border-top:1px solid #F3F4F6;">
+                        <td style="padding:7px 12px; font-family:monospace; color:#9CA3AF;">#{{ $acc->user?->id }}</td>
+                        <td style="padding:7px 12px; font-weight:500; color:#111827;">{{ $acc->user?->name }}</td>
+                        <td style="padding:7px 12px; text-align:center;">
+                            <span style="display:inline-flex; padding:1px 8px; border-radius:999px; font-size:10px; font-weight:600;
+                                {{ $acc->origen === 'sql' ? 'background:#DBEAFE; color:#1D4ED8;' : 'background:#F3F4F6; color:#6B7280;' }}">
+                                {{ ucfirst($acc->origen) }}
+                            </span>
                         </td>
-                        <td class="px-3 py-2 text-right">
-                            <button wire:click="removeAcceso({{ $acc->id }})" class="text-red-400 hover:text-red-600 transition-colors p-1">
-                                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        <td style="padding:7px 8px; text-align:right;">
+                            <button wire:click="removeAcceso({{ $acc->id }})"
+                                    style="background:transparent; border:none; cursor:pointer; color:#FCA5A5; padding:4px; display:inline-flex;"
+                                    @mouseenter="$el.style.color='#EF4444'" @mouseleave="$el.style.color='#FCA5A5'">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                             </button>
                         </td>
                     </tr>
@@ -640,12 +652,12 @@
                 </tbody>
             </table>
             @else
-            <div class="px-4 py-6 text-center space-y-2">
-                <div class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-melocoton-50 border border-melocoton-200 rounded-full text-melocoton-700 text-xs font-semibold">
-                    <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 004 0 2 2 0 012-2h.5A2.5 2.5 0 0020 5.5v-1.5"/></svg>
+            <div style="padding:20px; text-align:center;">
+                <span style="display:inline-flex; align-items:center; gap:6px; padding:5px 12px; background:#FFE4D6; border:1px solid #FDBA74; border-radius:999px; font-size:11px; font-weight:600; color:#9A3412;">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     Acceso abierto a todos los vendedores
-                </div>
-                <p class="text-gray-400 text-[10px]">Sin restricciones — todos los vendedores pueden acceder a esta lista</p>
+                </span>
+                <p style="font-size:11px; color:#9CA3AF; margin:6px 0 0;">Sin restricciones activas</p>
             </div>
             @endif
         </div>
