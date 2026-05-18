@@ -129,6 +129,12 @@ class CorrelativoManager extends Component
     {
         $c = ConfiguracionCorrelativo::findOrFail($id);
         $nuevoEstado = !$c->activo;
+
+        if (!$nuevoEstado && ConfiguracionCorrelativo::where('activo', true)->count() === 1) {
+            session()->flash('error', 'Debe haber siempre un correlativo activo.');
+            return;
+        }
+
         $c->update(['activo' => $nuevoEstado]);
         if ($nuevoEstado) {
             $this->desactivarOtros($id);
@@ -146,6 +152,11 @@ class CorrelativoManager extends Component
 
     public function delete(int $id): void
     {
+        if (ConfiguracionCorrelativo::count() === 1) {
+            session()->flash('error', 'No se puede eliminar el único correlativo registrado.');
+            return;
+        }
+
         ConfiguracionCorrelativo::findOrFail($id)->delete();
         session()->flash('success', 'Correlativo eliminado.');
     }
