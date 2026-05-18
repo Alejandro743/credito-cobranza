@@ -459,17 +459,26 @@
 {{-- ═══════════════════════════════════════════════════════ ACCESO MODE ══ --}}
 @elseif ($mode === 'acceso' && $viewingMaestra)
 
-<div class="flex items-center gap-3 mb-6">
-    <button wire:click="backToList" class="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-    </button>
-    <div>
-        <h2 class="text-base font-bold text-gray-800">Acceso — {{ $viewingMaestra->name }}</h2>
-        <p class="text-xs text-gray-500 font-mono">{{ $viewingMaestra->cycle?->code ?? '—' }}</p>
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); margin-bottom:20px; overflow:hidden;">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" style="padding:13px 18px;">
+        <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+            <button wire:click="backToList"
+                    style="width:34px; height:34px; border-radius:9px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            </button>
+            <div style="min-width:0;">
+                <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.6px; margin:0 0 2px;">Gestionar acceso</p>
+                <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $viewingMaestra->name }}</p>
+            </div>
+        </div>
+        <div>
+            <span style="display:inline-flex; padding:2px 10px; border-radius:999px; font-size:11px; font-weight:600;
+                {{ $viewingMaestra->active ? 'background:#D1FAE5; color:#065F46;' : 'background:#FEE2E2; color:#991B1B;' }}">
+                {{ $viewingMaestra->active ? 'Activa' : 'Inactiva' }}
+            </span>
+        </div>
     </div>
-    <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $viewingMaestra->active ? 'bg-mint-100 text-mint-700' : 'bg-red-100 text-red-600' }}">
-        {{ $viewingMaestra->active ? 'Activa' : 'Inactiva' }}
-    </span>
 </div>
 
 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
