@@ -121,24 +121,35 @@
                 <tr wire:key="edit-{{ $c->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; border-left:3px solid #7B6FE8;">
                     <td colspan="6" style="padding:14px 18px;">
                         <div style="display:flex; gap:10px; align-items:flex-end; overflow-x:auto;">
+                            {{-- Col 1: Prefijo --}}
                             <div style="width:100px;">
                                 <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Prefijo *</label>
                                 <input wire:model="editPrefijo" type="text" maxlength="10"
                                        style="{{ $eS }} width:100%; font-family:monospace; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
                                 @error('editPrefijo') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                             </div>
-                            <div style="width:120px;">
+                            {{-- Col 2: Descripción --}}
+                            <div style="flex:1; min-width:180px;">
+                                <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Descripción</label>
+                                <input wire:model="editDescripcion" type="text" maxlength="200"
+                                       style="{{ $eS }} width:100%;">
+                                @error('editDescripcion') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                            </div>
+                            {{-- Col 3: Sig. Número --}}
+                            <div style="width:110px;">
                                 <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Sig. Número *</label>
                                 <input wire:model="editSiguienteNumero" type="number" min="1"
                                        style="{{ $eS }} width:100%; text-align:center;">
                                 @error('editSiguienteNumero') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                             </div>
-                            <div style="width:100px;">
+                            {{-- Col 4: Longitud --}}
+                            <div style="width:90px;">
                                 <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Longitud *</label>
                                 <input wire:model="editLongitud" type="number" min="1" max="10"
                                        style="{{ $eS }} width:100%; text-align:center;">
                                 @error('editLongitud') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                             </div>
+                            {{-- Col 5: Estado --}}
                             <div style="width:80px;">
                                 <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Activo</label>
                                 <select wire:model="editActivo" style="{{ $eS }} width:100%; cursor:pointer;">
@@ -146,12 +157,7 @@
                                     <option value="0">No</option>
                                 </select>
                             </div>
-                            <div style="flex:1; min-width:180px;">
-                                <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Descripción</label>
-                                <input wire:model="editDescripcion" type="text" maxlength="200"
-                                       style="{{ $eS }} width:100%;">
-                                @error('editDescripcion') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                            </div>
+                            {{-- Col 6: Acciones --}}
                             <div style="display:flex; gap:6px;">
                                 <button wire:click="saveEdit"
                                         style="height:30px; padding:0 14px; background:#7B6FE8; color:#fff; border:none; border-radius:7px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;"
