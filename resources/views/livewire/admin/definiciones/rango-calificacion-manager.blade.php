@@ -44,6 +44,7 @@
                     <th style="padding:10px 16px; text-align:left;">Nombre</th>
                     <th style="padding:10px 16px; text-align:center;">Vigencia desde</th>
                     <th style="padding:10px 16px; text-align:center;">Vigencia hasta</th>
+                    <th style="padding:10px 16px; text-align:center;">Vigente</th>
                     <th style="padding:10px 16px; text-align:center;">A (desde)</th>
                     <th style="padding:10px 16px; text-align:center;">B (desde)</th>
                     <th style="padding:10px 16px; text-align:center;">C (desde)</th>
@@ -57,30 +58,30 @@
             @php $esVigente = \App\Models\RangoCalificacion::vigente()?->id === $r->id; @endphp
             <tr wire:key="rc-{{ $r->id }}" style="border-bottom:1px solid #F9FAFB; {{ $esVigente ? 'background:#FAFAFE;' : '' }}"
                 @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background='{{ $esVigente ? '#FAFAFE' : '' }}'">
-                <td style="padding:11px 16px;">
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <span style="font-size:13px; font-weight:600; color:#111827;">{{ $r->nombre }}</span>
-                        @if($esVigente)
-                        <span style="font-size:9px; font-weight:700; padding:2px 7px; border-radius:99px; background:#EDE9FE; color:#7B6FE8; white-space:nowrap;">VIGENTE</span>
-                        @endif
-                    </div>
-                </td>
-                <td style="padding:11px 16px; text-align:center; font-size:12px; color:#6B7280;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
-                <td style="padding:11px 16px; text-align:center; font-size:12px; color:#6B7280;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
+                <td style="padding:11px 16px; font-size:13px; font-weight:600; color:#111827;">{{ $r->nombre }}</td>
+                <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
+                <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
                 <td style="padding:11px 16px; text-align:center;">
-                    <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#D1FAE5; color:#059669;">≥ {{ $r->min_a }}</span>
+                    @if($esVigente)
+                    <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#EDE9FE; color:#7B6FE8;">Sí</span>
+                    @else
+                    <span style="font-size:13px; color:#9CA3AF;">—</span>
+                    @endif
                 </td>
                 <td style="padding:11px 16px; text-align:center;">
-                    <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#CFFAFE; color:#0E7490;">≥ {{ $r->min_b }}</span>
+                    <span style="font-size:13px; font-weight:700; padding:3px 10px; border-radius:99px; background:#D1FAE5; color:#059669;">≥ {{ $r->min_a }}</span>
                 </td>
                 <td style="padding:11px 16px; text-align:center;">
-                    <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#FEF3C7; color:#B45309;">≥ {{ $r->min_c }}</span>
+                    <span style="font-size:13px; font-weight:700; padding:3px 10px; border-radius:99px; background:#CFFAFE; color:#0E7490;">≥ {{ $r->min_b }}</span>
                 </td>
                 <td style="padding:11px 16px; text-align:center;">
-                    <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#FFEDD5; color:#C2410C;">≥ {{ $r->min_d }}</span>
+                    <span style="font-size:13px; font-weight:700; padding:3px 10px; border-radius:99px; background:#FEF3C7; color:#B45309;">≥ {{ $r->min_c }}</span>
                 </td>
                 <td style="padding:11px 16px; text-align:center;">
-                    <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600;
+                    <span style="font-size:13px; font-weight:700; padding:3px 10px; border-radius:99px; background:#FFEDD5; color:#C2410C;">≥ {{ $r->min_d }}</span>
+                </td>
+                <td style="padding:11px 16px; text-align:center;">
+                    <span style="padding:3px 10px; border-radius:99px; font-size:13px; font-weight:600;
                                  background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
                                  color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
                         {{ $r->activo ? 'Activo' : 'Inactivo' }}
