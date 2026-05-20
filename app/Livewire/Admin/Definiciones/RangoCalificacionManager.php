@@ -78,6 +78,15 @@ class RangoCalificacionManager extends Component
             'activo'       => (bool) $this->activo,
         ];
 
+        // Validar que no quede un hueco sin cobertura
+        $hueco = $this->detectarHueco($this->fechaInicio, $this->editId);
+        if ($hueco) {
+            $this->addError('fechaInicio',
+                "Hay un vacío sin cobertura del {$hueco['desde']} al {$hueco['hasta']}. " .
+                "Ajustá la fecha de inicio o la fecha fin del rango anterior.");
+            return;
+        }
+
         $cierreHasta = \Carbon\Carbon::parse($this->fechaInicio)->subDay()->toDateString();
 
         if ($this->editId) {
@@ -133,6 +142,38 @@ class RangoCalificacionManager extends Component
     {
         $this->resetForm();
         $this->mode = 'list';
+    }
+
+    private function detectarHueco(string $fechaInicio, ?int $excludeId = null): ?array
+    {
+        $inicio = \Carbon\Carbon::parse($fechaInicio);
+
+        // Si hay algún rango abierto (sin fecha_fin) anterior → el auto-cierre lo cubrirá, sin hueco
+        $tieneAbierto = RangoCalificacion::whereNull('fecha_fin')
+            ->where('fecha_inicio', '<', $inicio)
+            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+            ->exists();
+
+        if ($tieneAbierto) return null;
+
+        // Buscar el rango cerrado más reciente antes del nuevo inicio
+        $anterior = RangoCalificacion::whereNotNull('fecha_fin')
+            ->where('fecha_fin', '<', $inicio)
+            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+            ->orderByDesc('fecha_fin')
+            ->first();
+
+        if (!$anterior) return null;
+
+        $diaHuecoDesde = \Carbon\Carbon::parse($anterior->fecha_fin)->addDay();
+        $diaHuecoHasta = $inicio->copy()->subDay();
+
+        if ($diaHuecoDesde->gt($diaHuecoHasta)) return null; // No hay hueco
+
+        return [
+            'desde' => $diaHuecoDesde->format('d/m/Y'),
+            'hasta' => $diaHuecoHasta->format('d/m/Y'),
+        ];
     }
 
     private function resetForm(): void
