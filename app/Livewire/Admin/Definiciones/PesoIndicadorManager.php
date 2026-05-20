@@ -18,7 +18,16 @@ class PesoIndicadorManager extends Component
     public float   $pesoRiesgo         = 20;
     public float   $pesoRecuperacion   = 20;
     public float   $pesoReprogramacion = 10;
-    public bool    $activo             = true;
+    public int     $activo             = 1;
+
+    public function updatedActivo(int $value): void
+    {
+        if ($value === 0 && $this->editId &&
+            PesoIndicador::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
+            $this->activo = 1;
+            $this->addError('activo', 'No se puede colocar estado: Inactivo. Debe haber siempre mínimo una configuración activa.');
+        }
+    }
 
     public function create(): void
     {
@@ -39,7 +48,7 @@ class PesoIndicadorManager extends Component
         $this->pesoRiesgo         = $p->peso_riesgo;
         $this->pesoRecuperacion   = $p->peso_recuperacion;
         $this->pesoReprogramacion = $p->peso_reprogramacion;
-        $this->activo             = $p->activo;
+        $this->activo             = $p->activo ? 1 : 0;
         $this->mode = 'form';
     }
 
@@ -73,12 +82,35 @@ class PesoIndicadorManager extends Component
             'peso_riesgo'         => $this->pesoRiesgo,
             'peso_recuperacion'   => $this->pesoRecuperacion,
             'peso_reprogramacion' => $this->pesoReprogramacion,
-            'activo'              => $this->activo,
+            'activo'              => (bool) $this->activo,
         ];
 
+        // Validar que no quede un hueco sin cobertura
+        $hueco = $this->detectarHueco($this->fechaInicio, $this->editId);
+        if ($hueco) {
+            $this->addError('fechaInicio',
+                "Hay un vacío sin cobertura del {$hueco['desde']} al {$hueco['hasta']}. " .
+                "Ajustá la fecha de inicio o la fecha fin del rango anterior.");
+            return;
+        }
+
+        $cierreHasta = \Carbon\Carbon::parse($this->fechaInicio)->subDay()->toDateString();
+
         if ($this->editId) {
+            if ($this->activo === 0 && PesoIndicador::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
+                $this->addError('activo', 'Debe haber siempre una configuración activa.');
+                return;
+            }
+
             PesoIndicador::findOrFail($this->editId)->update($data);
+            PesoIndicador::where('id', '!=', $this->editId)
+                ->whereNull('fecha_fin')
+                ->where('fecha_inicio', '<', $this->fechaInicio)
+                ->update(['fecha_fin' => $cierreHasta]);
         } else {
+            PesoIndicador::whereNull('fecha_fin')
+                ->where('fecha_inicio', '<', $this->fechaInicio)
+                ->update(['fecha_fin' => $cierreHasta]);
             PesoIndicador::create($data);
         }
 
@@ -89,18 +121,61 @@ class PesoIndicadorManager extends Component
     public function toggleActivo(int $id): void
     {
         $p = PesoIndicador::findOrFail($id);
-        $p->update(['activo' => !$p->activo]);
+        $nuevoEstado = !$p->activo;
+
+        if (!$nuevoEstado && PesoIndicador::where('activo', true)->count() === 1) {
+            session()->flash('error', 'Debe haber siempre una configuración activa.');
+            return;
+        }
+
+        $p->update(['activo' => $nuevoEstado]);
     }
 
     public function delete(int $id): void
     {
+        if (PesoIndicador::count() === 1) {
+            session()->flash('error', 'No se puede eliminar la única configuración registrada.');
+            return;
+        }
+
         PesoIndicador::findOrFail($id)->delete();
+        session()->flash('success', 'Configuración eliminada.');
     }
 
     public function backToList(): void
     {
         $this->resetForm();
         $this->mode = 'list';
+    }
+
+    private function detectarHueco(string $fechaInicio, ?int $excludeId = null): ?array
+    {
+        $inicio = \Carbon\Carbon::parse($fechaInicio);
+
+        $tieneAbierto = PesoIndicador::whereNull('fecha_fin')
+            ->where('fecha_inicio', '<', $inicio)
+            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+            ->exists();
+
+        if ($tieneAbierto) return null;
+
+        $anterior = PesoIndicador::whereNotNull('fecha_fin')
+            ->where('fecha_fin', '<', $inicio)
+            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+            ->orderByDesc('fecha_fin')
+            ->first();
+
+        if (!$anterior) return null;
+
+        $diaHuecoDesde = \Carbon\Carbon::parse($anterior->fecha_fin)->addDay();
+        $diaHuecoHasta = $inicio->copy()->subDay();
+
+        if ($diaHuecoDesde->gt($diaHuecoHasta)) return null;
+
+        return [
+            'desde' => $diaHuecoDesde->format('d/m/Y'),
+            'hasta' => $diaHuecoHasta->format('d/m/Y'),
+        ];
     }
 
     private function resetForm(): void
@@ -114,7 +189,7 @@ class PesoIndicadorManager extends Component
         $this->pesoRiesgo         = 20;
         $this->pesoRecuperacion   = 20;
         $this->pesoReprogramacion = 10;
-        $this->activo             = true;
+        $this->activo             = 1;
     }
 
     public function render()
