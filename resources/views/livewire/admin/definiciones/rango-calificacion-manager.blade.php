@@ -238,7 +238,7 @@
                 ['D — Riesgosa',  'minD', '#FFEDD5', '#C2410C'],
             ] as [$lbl, $model, $bg, $cl])
             <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:{{ $cl }}; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">
                     Puntaje mín. {{ $lbl }}
                 </label>
                 <div style="position:relative;">
