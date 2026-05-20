@@ -102,14 +102,6 @@
                                 @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         </button>
-                        <button wire:click="toggleActivo({{ $r->id }})" title="{{ $r->activo ? 'Desactivar' : 'Activar' }}"
-                                style="width:28px; height:28px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-                                       border:1px solid {{ $r->activo ? '#FEE2E2' : '#D1FAE5' }};
-                                       background:{{ $r->activo ? '#FEF2F2' : '#ECFDF5' }};
-                                       color:{{ $r->activo ? '#EF4444' : '#10B981' }};"
-                                @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
-                        </button>
                         <button wire:click="delete({{ $r->id }})" wire:confirm="¿Eliminar esta configuración?" title="Eliminar"
                                 style="width:28px; height:28px; border-radius:7px; border:1px solid #FEE2E2; background:#FEF2F2; color:#EF4444; cursor:pointer; display:flex; align-items:center; justify-content:center;"
                                 @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
@@ -168,14 +160,6 @@
                             style="flex:1; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         Editar
-                    </button>
-                    <button wire:click="toggleActivo({{ $r->id }})"
-                            style="flex:1; height:36px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;
-                                   border:1px solid {{ $r->activo ? '#FEE2E2' : '#D1FAE5' }};
-                                   background:{{ $r->activo ? '#FEF2F2' : '#ECFDF5' }};
-                                   color:{{ $r->activo ? '#EF4444' : '#10B981' }};">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
-                        {{ $r->activo ? 'Desactivar' : 'Activar' }}
                     </button>
                     <button wire:click="delete({{ $r->id }})" wire:confirm="¿Eliminar esta configuración?"
                             style="width:36px; height:36px; border:1px solid #FEE2E2; background:#FEF2F2; color:#EF4444; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
