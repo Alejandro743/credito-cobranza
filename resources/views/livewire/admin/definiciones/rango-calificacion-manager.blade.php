@@ -1,10 +1,18 @@
 <div>
 
-{{-- Flash --}}
+{{-- Flash success --}}
 @if(session('success'))
 <div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,3000)"
      style="position:fixed; bottom:20px; right:20px; z-index:50; background:#7B6FE8; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(123,111,232,.35);">
     {{ session('success') }}
+</div>
+@endif
+
+{{-- Flash error --}}
+@if(session('error'))
+<div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,4000)"
+     style="position:fixed; bottom:20px; right:20px; z-index:50; background:#EF4444; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(239,68,68,.35);">
+    {{ session('error') }}
 </div>
 @endif
 

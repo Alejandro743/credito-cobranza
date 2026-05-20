@@ -59,19 +59,30 @@ class RangoCalificacionManager extends Component
         }
 
         $data = [
-            'nombre'      => $this->nombre,
-            'fecha_inicio'=> $this->fechaInicio,
-            'fecha_fin'   => $this->fechaFin ?: null,
-            'min_a'       => $this->minA,
-            'min_b'       => $this->minB,
-            'min_c'       => $this->minC,
-            'min_d'       => $this->minD,
-            'activo'      => $this->activo,
+            'nombre'       => $this->nombre,
+            'fecha_inicio' => $this->fechaInicio,
+            'fecha_fin'    => $this->fechaFin ?: null,
+            'min_a'        => $this->minA,
+            'min_b'        => $this->minB,
+            'min_c'        => $this->minC,
+            'min_d'        => $this->minD,
+            'activo'       => $this->activo,
         ];
+
+        $cierreHasta = \Carbon\Carbon::parse($this->fechaInicio)->subDay()->toDateString();
 
         if ($this->editId) {
             RangoCalificacion::findOrFail($this->editId)->update($data);
+            // Cerrar cualquier otro con fecha_fin abierta que empiece antes que este
+            RangoCalificacion::where('id', '!=', $this->editId)
+                ->whereNull('fecha_fin')
+                ->where('fecha_inicio', '<', $this->fechaInicio)
+                ->update(['fecha_fin' => $cierreHasta]);
         } else {
+            // Cerrar cualquier rango abierto antes de crear el nuevo
+            RangoCalificacion::whereNull('fecha_fin')
+                ->where('fecha_inicio', '<', $this->fechaInicio)
+                ->update(['fecha_fin' => $cierreHasta]);
             RangoCalificacion::create($data);
         }
 
@@ -82,12 +93,25 @@ class RangoCalificacionManager extends Component
     public function toggleActivo(int $id): void
     {
         $r = RangoCalificacion::findOrFail($id);
-        $r->update(['activo' => !$r->activo]);
+        $nuevoEstado = !$r->activo;
+
+        if (!$nuevoEstado && RangoCalificacion::where('activo', true)->count() === 1) {
+            session()->flash('error', 'Debe haber siempre una configuración activa.');
+            return;
+        }
+
+        $r->update(['activo' => $nuevoEstado]);
     }
 
     public function delete(int $id): void
     {
+        if (RangoCalificacion::count() === 1) {
+            session()->flash('error', 'No se puede eliminar la única configuración registrada.');
+            return;
+        }
+
         RangoCalificacion::findOrFail($id)->delete();
+        session()->flash('success', 'Configuración eliminada.');
     }
 
     public function backToList(): void
