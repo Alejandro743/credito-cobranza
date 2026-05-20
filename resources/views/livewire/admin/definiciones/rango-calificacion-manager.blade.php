@@ -252,7 +252,7 @@
             {{-- Estado --}}
             <div style="display:flex; flex-direction:column; justify-content:flex-end; padding-top:4px;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Estado</label>
-                <select wire:model="activo" style="{{ $iS }} cursor:pointer;">
+                <select wire:model.live="activo" style="{{ $iS }} cursor:pointer;">
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
                 </select>

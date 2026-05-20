@@ -19,6 +19,15 @@ class RangoCalificacionManager extends Component
     public float  $minD        = 30;
     public int    $activo      = 1;
 
+    public function updatedActivo(int $value): void
+    {
+        if ($value === 0 && $this->editId &&
+            RangoCalificacion::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
+            $this->activo = 1;
+            $this->addError('activo', 'No se puede colocar estado: Inactivo. Debe haber siempre mínimo una configuración activa.');
+        }
+    }
+
     public function create(): void
     {
         $this->resetForm();
