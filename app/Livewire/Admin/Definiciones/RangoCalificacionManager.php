@@ -72,6 +72,12 @@ class RangoCalificacionManager extends Component
         $cierreHasta = \Carbon\Carbon::parse($this->fechaInicio)->subDay()->toDateString();
 
         if ($this->editId) {
+            // Bloquear desactivar si es el único activo
+            if (!$this->activo && RangoCalificacion::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
+                $this->addError('activo', 'Debe haber siempre una configuración activa.');
+                return;
+            }
+
             RangoCalificacion::findOrFail($this->editId)->update($data);
             // Cerrar cualquier otro con fecha_fin abierta que empiece antes que este
             RangoCalificacion::where('id', '!=', $this->editId)

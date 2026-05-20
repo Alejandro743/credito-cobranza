@@ -256,6 +256,7 @@
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
                 </select>
+                @error('activo')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
             </div>
         </div>
 
