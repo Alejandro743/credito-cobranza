@@ -17,7 +17,7 @@ class RangoCalificacionManager extends Component
     public float  $minB        = 70;
     public float  $minC        = 50;
     public float  $minD        = 30;
-    public bool   $activo      = true;
+    public int    $activo      = 1;
 
     public function create(): void
     {
@@ -37,7 +37,7 @@ class RangoCalificacionManager extends Component
         $this->minB        = $r->min_b;
         $this->minC        = $r->min_c;
         $this->minD        = $r->min_d;
-        $this->activo      = $r->activo;
+        $this->activo      = $r->activo ? 1 : 0;
         $this->mode = 'form';
     }
 
@@ -66,14 +66,14 @@ class RangoCalificacionManager extends Component
             'min_b'        => $this->minB,
             'min_c'        => $this->minC,
             'min_d'        => $this->minD,
-            'activo'       => $this->activo,
+            'activo'       => (bool) $this->activo,
         ];
 
         $cierreHasta = \Carbon\Carbon::parse($this->fechaInicio)->subDay()->toDateString();
 
         if ($this->editId) {
             // Bloquear desactivar si es el único activo
-            if (!$this->activo && RangoCalificacion::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
+            if ($this->activo === 0 && RangoCalificacion::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
                 $this->addError('activo', 'Debe haber siempre una configuración activa.');
                 return;
             }
@@ -136,7 +136,7 @@ class RangoCalificacionManager extends Component
         $this->minB        = 70;
         $this->minC        = 50;
         $this->minD        = 30;
-        $this->activo      = true;
+        $this->activo      = 1;
     }
 
     public function render()
