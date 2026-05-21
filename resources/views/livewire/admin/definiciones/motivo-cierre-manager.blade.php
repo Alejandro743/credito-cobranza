@@ -117,7 +117,7 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 </select>
             </td>
             <td style="padding:10px 16px;">
-                <div style="display:flex; flex-direction:column; gap:5px; align-items:center;">
+                <div style="display:flex; gap:5px; justify-content:center;">
                     <button wire:click="save" wire:loading.attr="disabled"
                             style="width:70px; height:26px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:11px; font-weight:700; cursor:pointer;"
                             @mouseenter="$el.style.opacity='.85'" @mouseleave="$el.style.opacity='1'">
