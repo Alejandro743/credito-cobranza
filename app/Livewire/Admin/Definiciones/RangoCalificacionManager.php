@@ -136,8 +136,10 @@ class RangoCalificacionManager extends Component
 
     public function render()
     {
-        return view('livewire.admin.definiciones.rango-calificacion-manager', [
-            'registros' => RangoCalificacion::orderByDesc('fecha_inicio')->get(),
-        ]);
+        $vigenteId = RangoCalificacion::vigente()?->id;
+        $registros = RangoCalificacion::orderByDesc('fecha_inicio')->get()
+            ->sortByDesc(fn($r) => $r->id === $vigenteId)->values();
+
+        return view('livewire.admin.definiciones.rango-calificacion-manager', compact('registros'));
     }
 }

@@ -144,8 +144,10 @@ class PesoIndicadorManager extends Component
 
     public function render()
     {
-        return view('livewire.admin.definiciones.peso-indicador-manager', [
-            'registros' => PesoIndicador::orderByDesc('fecha_inicio')->get(),
-        ]);
+        $vigenteId = PesoIndicador::vigente()?->id;
+        $registros = PesoIndicador::orderByDesc('fecha_inicio')->get()
+            ->sortByDesc(fn($r) => $r->id === $vigenteId)->values();
+
+        return view('livewire.admin.definiciones.peso-indicador-manager', compact('registros'));
     }
 }
