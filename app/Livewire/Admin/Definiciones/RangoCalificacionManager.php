@@ -242,17 +242,6 @@ class RangoCalificacionManager extends Component
         $r->update(['activo' => $nuevoEstado]);
     }
 
-    public function delete(int $id): void
-    {
-        if (RangoCalificacion::count() === 1) {
-            session()->flash('error', 'No se puede eliminar la única configuración registrada.');
-            return;
-        }
-
-        RangoCalificacion::findOrFail($id)->delete();
-        session()->flash('success', 'Configuración eliminada.');
-    }
-
     public function backToList(): void
     {
         $this->resetForm();

@@ -249,17 +249,6 @@ class PesoIndicadorManager extends Component
         $p->update(['activo' => $nuevoEstado]);
     }
 
-    public function delete(int $id): void
-    {
-        if (PesoIndicador::count() === 1) {
-            session()->flash('error', 'No se puede eliminar la única configuración registrada.');
-            return;
-        }
-
-        PesoIndicador::findOrFail($id)->delete();
-        session()->flash('success', 'Configuración eliminada.');
-    }
-
     public function backToList(): void
     {
         $this->resetForm();
