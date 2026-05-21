@@ -106,7 +106,7 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 <th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Descripción</th>
                 <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:160px;">Afecta indicadores</th>
                 <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:110px;">Estado</th>
-                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:100px;">Acciones</th>
+                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:160px;">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -133,15 +133,15 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 </select>
             </td>
             <td style="padding:10px 16px;">
-                <div style="display:flex; gap:5px; justify-content:center;">
+                <div style="display:flex; gap:6px; justify-content:center;">
                     <button wire:click="save" wire:loading.attr="disabled"
-                            style="width:70px; height:26px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:11px; font-weight:700; cursor:pointer;"
+                            style="height:28px; padding:0 16px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;"
                             @mouseenter="$el.style.opacity='.85'" @mouseleave="$el.style.opacity='1'">
                         <span wire:loading.remove wire:target="save">Guardar</span>
                         <span wire:loading wire:target="save">...</span>
                     </button>
                     <button wire:click="cancelar"
-                            style="width:70px; height:26px; border-radius:7px; border:1px solid #E5E7EB; background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; cursor:pointer;"
+                            style="height:28px; padding:0 14px; border-radius:7px; border:1px solid #E5E7EB; background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap;"
                             @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
                         Cerrar
                     </button>
