@@ -86,7 +86,7 @@ class PesoIndicadorManager extends Component
         ];
 
         // Validar que no quede un hueco sin cobertura
-        $hueco = $this->detectarHueco($this->fechaInicio, $this->editId);
+        $hueco = $this->detectarHueco($this->fechaInicio, $this->fechaFin ?: null, $this->editId);
         if ($hueco) {
             $this->addError('fechaInicio',
                 "Hay un vacío sin cobertura del {$hueco['desde']} al {$hueco['hasta']}. " .
@@ -148,34 +148,58 @@ class PesoIndicadorManager extends Component
         $this->mode = 'list';
     }
 
-    private function detectarHueco(string $fechaInicio, ?int $excludeId = null): ?array
+    private function detectarHueco(string $fechaInicio, ?string $fechaFin, ?int $excludeId = null): ?array
     {
         $inicio = \Carbon\Carbon::parse($fechaInicio);
 
-        $tieneAbierto = PesoIndicador::whereNull('fecha_fin')
+        // Hueco ANTES: si hay rango abierto anterior, el auto-cierre lo cubre → sin hueco
+        $tieneAbiertoAntes = PesoIndicador::whereNull('fecha_fin')
             ->where('fecha_inicio', '<', $inicio)
             ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
             ->exists();
 
-        if ($tieneAbierto) return null;
+        if (!$tieneAbiertoAntes) {
+            $anterior = PesoIndicador::whereNotNull('fecha_fin')
+                ->where('fecha_fin', '<', $inicio)
+                ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+                ->orderByDesc('fecha_fin')
+                ->first();
 
-        $anterior = PesoIndicador::whereNotNull('fecha_fin')
-            ->where('fecha_fin', '<', $inicio)
-            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
-            ->orderByDesc('fecha_fin')
-            ->first();
+            if ($anterior) {
+                $diaHuecoDesde = \Carbon\Carbon::parse($anterior->fecha_fin)->addDay();
+                $diaHuecoHasta = $inicio->copy()->subDay();
 
-        if (!$anterior) return null;
+                if ($diaHuecoDesde->lte($diaHuecoHasta)) {
+                    return [
+                        'desde' => $diaHuecoDesde->format('d/m/Y'),
+                        'hasta' => $diaHuecoHasta->format('d/m/Y'),
+                    ];
+                }
+            }
+        }
 
-        $diaHuecoDesde = \Carbon\Carbon::parse($anterior->fecha_fin)->addDay();
-        $diaHuecoHasta = $inicio->copy()->subDay();
+        // Hueco DESPUÉS: si el nuevo rango tiene fecha_fin, verificar que no quede vacío antes del siguiente
+        if ($fechaFin) {
+            $fin = \Carbon\Carbon::parse($fechaFin);
+            $siguiente = PesoIndicador::where('fecha_inicio', '>', $fin)
+                ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+                ->orderBy('fecha_inicio')
+                ->first();
 
-        if ($diaHuecoDesde->gt($diaHuecoHasta)) return null;
+            if ($siguiente) {
+                $diaHuecoDesde = $fin->copy()->addDay();
+                $diaHuecoHasta = \Carbon\Carbon::parse($siguiente->fecha_inicio)->subDay();
 
-        return [
-            'desde' => $diaHuecoDesde->format('d/m/Y'),
-            'hasta' => $diaHuecoHasta->format('d/m/Y'),
-        ];
+                if ($diaHuecoDesde->lte($diaHuecoHasta)) {
+                    return [
+                        'desde' => $diaHuecoDesde->format('d/m/Y'),
+                        'hasta' => $diaHuecoHasta->format('d/m/Y'),
+                    ];
+                }
+            }
+        }
+
+        return null;
     }
 
     private function resetForm(): void
