@@ -44,7 +44,8 @@
     <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">Sin configuraciones. Creá la primera.</p>
     @else
 
-    <div style="overflow-x:auto;">
+    {{-- DESKTOP --}}
+    <div class="hidden sm:block" style="overflow-x:auto;">
         <table style="width:100%; border-collapse:collapse; min-width:860px;">
             <thead>
                 <tr>
@@ -101,6 +102,59 @@
             @endforeach
             </tbody>
         </table>
+    </div>
+
+    {{-- MOBILE --}}
+    <div class="block sm:hidden">
+        <div style="display:flex; flex-direction:column; gap:10px; padding:14px;">
+            @foreach($registros as $r)
+            @php $esVigente = \App\Models\PesoIndicador::vigente()?->id === $r->id; @endphp
+            <div wire:key="mpi-{{ $r->id }}" style="background:#fff; border-radius:12px; border:1px solid {{ $esVigente ? '#EDE9FE' : '#E5E7EB' }}; {{ $esVigente ? 'border-left:3px solid #7B6FE8;' : '' }} padding:14px; display:flex; flex-direction:column; gap:10px;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
+                    <div style="display:flex; align-items:center; gap:6px; flex:1; min-width:0;">
+                        <span style="font-size:14px; font-weight:700; color:#111827; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $r->nombre }}</span>
+                        @if($esVigente)
+                        <span style="font-size:9px; font-weight:700; padding:2px 7px; border-radius:99px; background:#EDE9FE; color:#7B6FE8; white-space:nowrap; flex-shrink:0;">VIGENTE</span>
+                        @endif
+                    </div>
+                    <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0; background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }}; color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
+                        {{ $r->activo ? 'Activo' : 'Inactivo' }}
+                    </span>
+                </div>
+                <div style="display:flex; gap:16px;">
+                    <div>
+                        <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Desde</p>
+                        <p style="font-size:12px; color:#374151; margin:0;">{{ $r->fecha_inicio->format('d/m/Y') }}</p>
+                    </div>
+                    <div>
+                        <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Hasta</p>
+                        <p style="font-size:12px; color:#374151; margin:0;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</p>
+                    </div>
+                </div>
+                <div style="display:flex; flex-wrap:wrap; gap:6px; border-top:1px solid #F3F4F6; padding-top:10px;">
+                    @foreach([
+                        ['Punt.',   $r->peso_puntualidad],
+                        ['Mora',    $r->peso_mora],
+                        ['Riesgo',  $r->peso_riesgo],
+                        ['Recup.',  $r->peso_recuperacion],
+                        ['Reprog.', $r->peso_reprogramacion],
+                    ] as [$lbl, $val])
+                    <div style="display:flex; flex-direction:column; align-items:center; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:5px 10px; min-width:52px;">
+                        <span style="font-size:9px; font-weight:700; color:#9CA3AF; text-transform:uppercase;">{{ $lbl }}</span>
+                        <span style="font-family:monospace; font-size:13px; font-weight:800; color:#7B6FE8;">{{ $val }}%</span>
+                    </div>
+                    @endforeach
+                </div>
+                <div style="border-top:1px solid #F3F4F6; padding-top:10px;">
+                    <button wire:click="edit({{ $r->id }})"
+                            style="width:100%; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        Editar
+                    </button>
+                </div>
+            </div>
+            @endforeach
+        </div>
     </div>
 
     @endif
