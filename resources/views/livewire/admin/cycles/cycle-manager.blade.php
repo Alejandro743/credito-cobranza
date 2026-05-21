@@ -32,20 +32,20 @@
     <div style="padding:16px 20px;">
         @php $iS = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;'; @endphp
 
-        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:16px;">
-            <div>
+        <div style="display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
+            <div style="min-width:120px;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Código *</label>
                 <input wire:model="newCode" type="text" maxlength="30" placeholder="CIC-202601"
                        style="width:100%; {{ $iS }} text-transform:uppercase;">
                 @error('newCode')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
             </div>
-            <div>
+            <div style="flex:1; min-width:180px;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Descripción *</label>
                 <input wire:model="newName" type="text" placeholder="Ciclo Enero 2026"
                        style="width:100%; {{ $iS }}">
                 @error('newName')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
             </div>
-            <div>
+            <div style="min-width:120px;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Estado *</label>
                 <select wire:model="newStatus" style="width:100%; {{ $iS }} cursor:pointer;">
                     <option value="abierto">Abierto</option>
@@ -53,35 +53,31 @@
                 </select>
                 @error('newStatus')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
             </div>
-            <div>
+            <div style="width:148px;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Fecha inicio *</label>
                 <input wire:model="newStartDate" type="date" style="width:100%; {{ $iS }}">
                 @error('newStartDate')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
             </div>
-            <div>
+            <div style="width:148px;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Fecha fin *</label>
                 <input wire:model="newEndDate" type="date" style="width:100%; {{ $iS }}">
                 @error('newEndDate')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Notas</label>
-                <input wire:model="newNotes" type="text" placeholder="Observaciones opcionales"
-                       style="width:100%; {{ $iS }}">
+                <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
+                    <button wire:click="saveNew" wire:loading.attr="disabled"
+                            style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                        <span wire:loading.remove wire:target="saveNew">Guardar</span>
+                        <span wire:loading wire:target="saveNew">Guardando...</span>
+                    </button>
+                    <button wire:click="cancelAdd"
+                            style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                            @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                        Cancelar
+                    </button>
+                </div>
             </div>
-        </div>
-
-        <div style="display:flex; gap:8px;">
-            <button wire:click="saveNew" wire:loading.attr="disabled"
-                    style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-                <span wire:loading.remove wire:target="saveNew">Guardar</span>
-                <span wire:loading wire:target="saveNew">Guardando...</span>
-            </button>
-            <button wire:click="cancelAdd"
-                    style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
-                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
-                Cancelar
-            </button>
         </div>
     </div>
 </div>
@@ -133,8 +129,8 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 <th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Descripción</th>
                 <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:110px;">Inicio</th>
                 <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:110px;">Fin</th>
-                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:100px;">Estado</th>
-                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:170px;">Acciones</th>
+                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:120px;">Estado</th>
+                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:160px;">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -199,26 +195,11 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 @endif
             </td>
             <td style="padding:11px 16px; text-align:center;">
-                <div style="display:flex; gap:6px; justify-content:center; align-items:center;">
-                    @if($cycle->status === 'abierto')
-                    <button wire:click="changeStatus({{ $cycle->id }},'cerrado')"
-                            style="height:26px; padding:0 12px; border-radius:7px; border:1px solid #FED7AA; background:#FFF7ED; color:#C2410C; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                            @mouseenter="$el.style.background='#FED7AA'" @mouseleave="$el.style.background='#FFF7ED'">
-                        Cerrar
-                    </button>
-                    @else
-                    <button wire:click="changeStatus({{ $cycle->id }},'abierto')"
-                            style="height:26px; padding:0 12px; border-radius:7px; border:1px solid #A7F3D0; background:#D1FAE5; color:#059669; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                            @mouseenter="$el.style.background='#A7F3D0'" @mouseleave="$el.style.background='#D1FAE5'">
-                        Abrir
-                    </button>
-                    @endif
-                    <button wire:click="startEdit({{ $cycle->id }})" title="Editar"
-                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    </button>
-                </div>
+                <button wire:click="startEdit({{ $cycle->id }})" title="Editar"
+                        style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                </button>
             </td>
         </tr>
         @endif
