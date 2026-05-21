@@ -171,6 +171,12 @@ class PesoIndicadorManager extends Component
             return;
         }
 
+        if ($this->editId && $this->activo === 0 &&
+            PesoIndicador::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
+            $this->addError('activo', 'Debe haber siempre una configuración activa.');
+            return;
+        }
+
         if ($this->esElUltimoRegistro()) {
             if ($this->fechaFin) {
                 $this->addError('fechaFin',
@@ -215,11 +221,6 @@ class PesoIndicadorManager extends Component
         $cierreHasta = \Carbon\Carbon::parse($this->fechaInicio)->subDay()->toDateString();
 
         if ($this->editId) {
-            if ($this->activo === 0 && PesoIndicador::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
-                $this->addError('activo', 'Debe haber siempre una configuración activa.');
-                return;
-            }
-
             PesoIndicador::findOrFail($this->editId)->update($data);
             PesoIndicador::where('id', '!=', $this->editId)
                 ->whereNull('fecha_fin')
