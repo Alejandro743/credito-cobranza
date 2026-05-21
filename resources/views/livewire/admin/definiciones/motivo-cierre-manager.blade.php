@@ -88,7 +88,7 @@
 </div>
 
 @php
-$iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px; font-size:12px; color:#374151; background:#fff; outline:none; box-sizing:border-box;';
+$iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;';
 @endphp
 
 {{-- ══════ TABLA ESCRITORIO ══════ --}}
@@ -135,13 +135,13 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
             <td style="padding:10px 16px;">
                 <div style="display:flex; gap:6px; justify-content:center;">
                     <button wire:click="save" wire:loading.attr="disabled"
-                            style="height:34px; padding:0 16px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                            style="height:34px; padding:0 16px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
                             @mouseenter="$el.style.opacity='.85'" @mouseleave="$el.style.opacity='1'">
                         <span wire:loading.remove wire:target="save">Guardar</span>
                         <span wire:loading wire:target="save">...</span>
                     </button>
                     <button wire:click="cancelar"
-                            style="height:34px; padding:0 14px; border-radius:7px; border:1px solid #E5E7EB; background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                            style="height:34px; padding:0 14px; border-radius:7px; border:1px solid #E5E7EB; background:#F3F4F6; color:#6B7280; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
                             @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
                         Cerrar
                     </button>
