@@ -48,12 +48,6 @@ class RangoCalificacionManager extends Component
             return;
         }
 
-        if ($this->esElUltimoRegistro() && \Carbon\Carbon::parse($this->fechaInicio)->gt(\Carbon\Carbon::today())) {
-            $this->addError('fechaInicio',
-                'La fecha de inicio no puede ser futura. El registro más reciente debe iniciar hoy o antes.');
-            return;
-        }
-
         if (!$this->fechaFin) {
             $conflicto = $this->detectarSolapamiento($this->fechaInicio, null, $this->editId);
             if ($conflicto) {
@@ -185,18 +179,11 @@ class RangoCalificacionManager extends Component
             return;
         }
 
-        if ($this->esElUltimoRegistro()) {
-            if ($this->fechaFin) {
-                $this->addError('fechaFin',
-                    'El registro más reciente no puede tener fecha fin. ' .
-                    'Para agregar un nuevo período, creá un nuevo registro y el sistema cerrará este automáticamente.');
-                return;
-            }
-            if (\Carbon\Carbon::parse($this->fechaInicio)->gt(\Carbon\Carbon::today())) {
-                $this->addError('fechaInicio',
-                    'La fecha de inicio no puede ser futura. El registro más reciente debe iniciar hoy o antes.');
-                return;
-            }
+        if ($this->esElUltimoRegistro() && $this->fechaFin) {
+            $this->addError('fechaFin',
+                'El registro más reciente no puede tener fecha fin. ' .
+                'Para agregar un nuevo período, creá un nuevo registro y el sistema cerrará este automáticamente.');
+            return;
         }
 
         if ($this->quedaraSinVigente()) {
@@ -275,8 +262,6 @@ class RangoCalificacionManager extends Component
 
     private function quedaraSinVigente(): bool
     {
-        if (!$this->editId && RangoCalificacion::count() === 0) return false;
-
         $today = \Carbon\Carbon::today();
 
         $thisWillBeVigente = (bool) $this->activo
