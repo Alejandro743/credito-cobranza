@@ -7,27 +7,30 @@ use Livewire\Component;
 
 class MotivoCierreManager extends Component
 {
-    public string $mode = 'list';
+    public bool   $showForm  = false;
 
-    public ?int  $editId     = null;
-    public string $nombre    = '';
-    public bool  $afectaMora = false;
-    public bool  $activo     = true;
+    public ?int   $editId     = null;
+    public string $nombre     = '';
+    public bool   $afectaMora = false;
+    public bool   $activo     = true;
 
     public function create(): void
     {
         $this->resetForm();
-        $this->mode = 'form';
+        $this->resetErrorBag();
+        $this->showForm = true;
     }
 
     public function edit(int $id): void
     {
         $m = MotivoCierre::findOrFail($id);
+        $this->resetForm();
+        $this->resetErrorBag();
         $this->editId     = $m->id;
         $this->nombre     = $m->nombre;
         $this->afectaMora = $m->afecta_mora;
         $this->activo     = $m->activo;
-        $this->mode       = 'form';
+        $this->showForm   = true;
     }
 
     public function save(): void
@@ -49,7 +52,14 @@ class MotivoCierreManager extends Component
         }
 
         session()->flash('success', 'Motivo guardado.');
-        $this->backToList();
+        $this->cancelar();
+    }
+
+    public function cancelar(): void
+    {
+        $this->resetForm();
+        $this->resetErrorBag();
+        $this->showForm = false;
     }
 
     public function toggleActivo(int $id): void
@@ -63,12 +73,6 @@ class MotivoCierreManager extends Component
         MotivoCierre::findOrFail($id)->delete();
     }
 
-    public function backToList(): void
-    {
-        $this->resetForm();
-        $this->mode = 'list';
-    }
-
     private function resetForm(): void
     {
         $this->editId     = null;
@@ -80,7 +84,7 @@ class MotivoCierreManager extends Component
     public function render()
     {
         return view('livewire.admin.definiciones.motivo-cierre-manager', [
-            'registros' => MotivoCierre::orderBy('nombre')->get(),
+            'registros' => MotivoCierre::orderByDesc('activo')->orderBy('nombre')->get(),
         ]);
     }
 }
