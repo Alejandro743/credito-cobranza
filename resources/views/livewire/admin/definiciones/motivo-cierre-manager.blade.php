@@ -9,6 +9,15 @@
 </div>
 @endif
 
+{{-- Flash error --}}
+@if(session('error'))
+<div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,4000)"
+     style="position:fixed; bottom:20px; right:20px; z-index:50; background:#DC2626; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(220,38,38,.35); display:flex; align-items:center; gap:8px; max-width:340px;">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    {{ session('error') }}
+</div>
+@endif
+
 {{-- ══════ PANEL NUEVO REGISTRO ══════ --}}
 @if($showForm)
 <div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px; overflow:hidden;">

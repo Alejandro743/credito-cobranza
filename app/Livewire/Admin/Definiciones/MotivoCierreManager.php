@@ -64,7 +64,14 @@ class MotivoCierreManager extends Component
 
     public function delete(int $id): void
     {
-        MotivoCierre::findOrFail($id)->delete();
+        $m = MotivoCierre::findOrFail($id);
+
+        if ($m->cierres()->exists()) {
+            session()->flash('error', 'No se puede eliminar: el motivo ya fue utilizado en cierres de pedidos.');
+            return;
+        }
+
+        $m->delete();
     }
 
     private function resetForm(): void
