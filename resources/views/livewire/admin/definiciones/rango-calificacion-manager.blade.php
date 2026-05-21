@@ -210,14 +210,14 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Vigencia desde *</label>
-                <input wire:model="fechaInicio" type="date" style="{{ $iS }}">
+                <input wire:model.blur="fechaInicio" type="date" style="{{ $iS }}">
                 @error('fechaInicio')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
             </div>
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">
                     Vigencia hasta <span style="font-weight:400; color:#9CA3AF; text-transform:none;">(vacío = abierto)</span>
                 </label>
-                <input wire:model="fechaFin" type="date" style="{{ $iS }}">
+                <input wire:model.blur="fechaFin" type="date" style="{{ $iS }}">
                 @error('fechaFin')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
             </div>
         </div>

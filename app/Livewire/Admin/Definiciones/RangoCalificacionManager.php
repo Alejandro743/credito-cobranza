@@ -28,9 +28,36 @@ class RangoCalificacionManager extends Component
         }
     }
 
+    public function updatedFechaInicio(): void
+    {
+        if (!$this->fechaInicio) return;
+        $this->resetErrorBag('fechaInicio');
+
+        $hueco = $this->detectarHuecoAntes($this->fechaInicio, $this->editId);
+        if ($hueco) {
+            $this->addError('fechaInicio',
+                "Hay un vacío sin cobertura del {$hueco['desde']} al {$hueco['hasta']}. " .
+                "Ajustá la fecha de inicio o la fecha fin del rango anterior.");
+        }
+    }
+
+    public function updatedFechaFin(): void
+    {
+        if (!$this->fechaFin) return;
+        $this->resetErrorBag('fechaFin');
+
+        $hueco = $this->detectarHuecoDespues($this->fechaFin, $this->editId);
+        if ($hueco) {
+            $this->addError('fechaFin',
+                "Hay un vacío sin cobertura del {$hueco['desde']} al {$hueco['hasta']}. " .
+                "Ajustá la fecha fin o la fecha de inicio del siguiente rango.");
+        }
+    }
+
     public function create(): void
     {
         $this->resetForm();
+        $this->resetErrorBag();
         $this->fechaInicio = now()->toDateString();
         $this->mode = 'form';
     }
@@ -38,6 +65,8 @@ class RangoCalificacionManager extends Component
     public function edit(int $id): void
     {
         $r = RangoCalificacion::findOrFail($id);
+        $this->resetForm();
+        $this->resetErrorBag();
         $this->editId      = $r->id;
         $this->nombre      = $r->nombre;
         $this->fechaInicio = $r->fecha_inicio->toDateString();
@@ -67,6 +96,24 @@ class RangoCalificacionManager extends Component
             return;
         }
 
+        $huecoAntes = $this->detectarHuecoAntes($this->fechaInicio, $this->editId);
+        if ($huecoAntes) {
+            $this->addError('fechaInicio',
+                "Hay un vacío sin cobertura del {$huecoAntes['desde']} al {$huecoAntes['hasta']}. " .
+                "Ajustá la fecha de inicio o la fecha fin del rango anterior.");
+            return;
+        }
+
+        if ($this->fechaFin) {
+            $huecoDespues = $this->detectarHuecoDespues($this->fechaFin, $this->editId);
+            if ($huecoDespues) {
+                $this->addError('fechaFin',
+                    "Hay un vacío sin cobertura del {$huecoDespues['desde']} al {$huecoDespues['hasta']}. " .
+                    "Ajustá la fecha fin o la fecha de inicio del siguiente rango.");
+                return;
+            }
+        }
+
         $data = [
             'nombre'       => $this->nombre,
             'fecha_inicio' => $this->fechaInicio,
@@ -78,32 +125,20 @@ class RangoCalificacionManager extends Component
             'activo'       => (bool) $this->activo,
         ];
 
-        // Validar que no quede un hueco sin cobertura
-        $hueco = $this->detectarHueco($this->fechaInicio, $this->fechaFin ?: null, $this->editId);
-        if ($hueco) {
-            $this->addError('fechaInicio',
-                "Hay un vacío sin cobertura del {$hueco['desde']} al {$hueco['hasta']}. " .
-                "Ajustá la fecha de inicio o la fecha fin del rango anterior.");
-            return;
-        }
-
         $cierreHasta = \Carbon\Carbon::parse($this->fechaInicio)->subDay()->toDateString();
 
         if ($this->editId) {
-            // Bloquear desactivar si es el único activo
             if ($this->activo === 0 && RangoCalificacion::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
                 $this->addError('activo', 'Debe haber siempre una configuración activa.');
                 return;
             }
 
             RangoCalificacion::findOrFail($this->editId)->update($data);
-            // Cerrar cualquier otro con fecha_fin abierta que empiece antes que este
             RangoCalificacion::where('id', '!=', $this->editId)
                 ->whereNull('fecha_fin')
                 ->where('fecha_inicio', '<', $this->fechaInicio)
                 ->update(['fecha_fin' => $cierreHasta]);
         } else {
-            // Cerrar cualquier rango abierto antes de crear el nuevo
             RangoCalificacion::whereNull('fecha_fin')
                 ->where('fecha_inicio', '<', $this->fechaInicio)
                 ->update(['fecha_fin' => $cierreHasta]);
@@ -144,58 +179,50 @@ class RangoCalificacionManager extends Component
         $this->mode = 'list';
     }
 
-    private function detectarHueco(string $fechaInicio, ?string $fechaFin, ?int $excludeId = null): ?array
+    private function detectarHuecoAntes(string $fechaInicio, ?int $excludeId = null): ?array
     {
         $inicio = \Carbon\Carbon::parse($fechaInicio);
 
-        // Hueco ANTES: si hay rango abierto anterior, el auto-cierre lo cubre → sin hueco
         $tieneAbiertoAntes = RangoCalificacion::whereNull('fecha_fin')
             ->where('fecha_inicio', '<', $inicio)
             ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
             ->exists();
 
-        if (!$tieneAbiertoAntes) {
-            $anterior = RangoCalificacion::whereNotNull('fecha_fin')
-                ->where('fecha_fin', '<', $inicio)
-                ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
-                ->orderByDesc('fecha_fin')
-                ->first();
+        if ($tieneAbiertoAntes) return null;
 
-            if ($anterior) {
-                $diaHuecoDesde = \Carbon\Carbon::parse($anterior->fecha_fin)->addDay();
-                $diaHuecoHasta = $inicio->copy()->subDay();
+        $anterior = RangoCalificacion::whereNotNull('fecha_fin')
+            ->where('fecha_fin', '<', $inicio)
+            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+            ->orderByDesc('fecha_fin')
+            ->first();
 
-                if ($diaHuecoDesde->lte($diaHuecoHasta)) {
-                    return [
-                        'desde' => $diaHuecoDesde->format('d/m/Y'),
-                        'hasta' => $diaHuecoHasta->format('d/m/Y'),
-                    ];
-                }
-            }
-        }
+        if (!$anterior) return null;
 
-        // Hueco DESPUÉS: si el nuevo rango tiene fecha_fin, verificar que no quede vacío antes del siguiente
-        if ($fechaFin) {
-            $fin = \Carbon\Carbon::parse($fechaFin);
-            $siguiente = RangoCalificacion::where('fecha_inicio', '>', $fin)
-                ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
-                ->orderBy('fecha_inicio')
-                ->first();
+        $diaHuecoDesde = \Carbon\Carbon::parse($anterior->fecha_fin)->addDay();
+        $diaHuecoHasta = $inicio->copy()->subDay();
 
-            if ($siguiente) {
-                $diaHuecoDesde = $fin->copy()->addDay();
-                $diaHuecoHasta = \Carbon\Carbon::parse($siguiente->fecha_inicio)->subDay();
+        if ($diaHuecoDesde->gt($diaHuecoHasta)) return null;
 
-                if ($diaHuecoDesde->lte($diaHuecoHasta)) {
-                    return [
-                        'desde' => $diaHuecoDesde->format('d/m/Y'),
-                        'hasta' => $diaHuecoHasta->format('d/m/Y'),
-                    ];
-                }
-            }
-        }
+        return ['desde' => $diaHuecoDesde->format('d/m/Y'), 'hasta' => $diaHuecoHasta->format('d/m/Y')];
+    }
 
-        return null;
+    private function detectarHuecoDespues(string $fechaFin, ?int $excludeId = null): ?array
+    {
+        $fin = \Carbon\Carbon::parse($fechaFin);
+
+        $siguiente = RangoCalificacion::where('fecha_inicio', '>', $fin)
+            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+            ->orderBy('fecha_inicio')
+            ->first();
+
+        if (!$siguiente) return null;
+
+        $diaHuecoDesde = $fin->copy()->addDay();
+        $diaHuecoHasta = \Carbon\Carbon::parse($siguiente->fecha_inicio)->subDay();
+
+        if ($diaHuecoDesde->gt($diaHuecoHasta)) return null;
+
+        return ['desde' => $diaHuecoDesde->format('d/m/Y'), 'hasta' => $diaHuecoHasta->format('d/m/Y')];
     }
 
     private function resetForm(): void
