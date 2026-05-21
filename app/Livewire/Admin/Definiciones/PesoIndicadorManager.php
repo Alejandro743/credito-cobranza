@@ -67,6 +67,19 @@ class PesoIndicadorManager extends Component
             return;
         }
 
+        if ($this->editId && (int) $this->activo === 0 && PesoIndicador::vigente()?->id === $this->editId) {
+            $today = \Carbon\Carbon::today();
+            $hayOtro = PesoIndicador::where('activo', true)
+                ->where('id', '!=', $this->editId)
+                ->where('fecha_inicio', '<=', $today)
+                ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $today))
+                ->exists();
+            if (!$hayOtro) {
+                $this->addError('activo', 'No se puede inactivar: es la única configuración vigente para hoy.');
+                return;
+            }
+        }
+
         $data = [
             'nombre'              => $this->nombre,
             'fecha_inicio'        => $this->fechaInicio,
@@ -92,6 +105,20 @@ class PesoIndicadorManager extends Component
     public function toggleActivo(int $id): void
     {
         $p = PesoIndicador::findOrFail($id);
+
+        if ($p->activo && PesoIndicador::vigente()?->id === $id) {
+            $today = \Carbon\Carbon::today();
+            $hayOtro = PesoIndicador::where('activo', true)
+                ->where('id', '!=', $id)
+                ->where('fecha_inicio', '<=', $today)
+                ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $today))
+                ->exists();
+            if (!$hayOtro) {
+                session()->flash('error', 'No se puede inactivar: es la única configuración vigente para hoy.');
+                return;
+            }
+        }
+
         $p->update(['activo' => !$p->activo]);
     }
 

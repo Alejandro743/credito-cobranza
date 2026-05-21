@@ -61,6 +61,19 @@ class RangoCalificacionManager extends Component
             return;
         }
 
+        if ($this->editId && (int) $this->activo === 0 && RangoCalificacion::vigente()?->id === $this->editId) {
+            $today = \Carbon\Carbon::today();
+            $hayOtro = RangoCalificacion::where('activo', true)
+                ->where('id', '!=', $this->editId)
+                ->where('fecha_inicio', '<=', $today)
+                ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $today))
+                ->exists();
+            if (!$hayOtro) {
+                $this->addError('activo', 'No se puede inactivar: es la única configuración vigente para hoy.');
+                return;
+            }
+        }
+
         $data = [
             'nombre'       => $this->nombre,
             'fecha_inicio' => $this->fechaInicio,
@@ -85,6 +98,20 @@ class RangoCalificacionManager extends Component
     public function toggleActivo(int $id): void
     {
         $r = RangoCalificacion::findOrFail($id);
+
+        if ($r->activo && RangoCalificacion::vigente()?->id === $id) {
+            $today = \Carbon\Carbon::today();
+            $hayOtro = RangoCalificacion::where('activo', true)
+                ->where('id', '!=', $id)
+                ->where('fecha_inicio', '<=', $today)
+                ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $today))
+                ->exists();
+            if (!$hayOtro) {
+                session()->flash('error', 'No se puede inactivar: es la única configuración vigente para hoy.');
+                return;
+            }
+        }
+
         $r->update(['activo' => !$r->activo]);
     }
 
