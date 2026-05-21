@@ -38,19 +38,48 @@ class RangoCalificacionManager extends Component
             $this->addError('fechaInicio',
                 "Hay un vacío sin cobertura del {$hueco['desde']} al {$hueco['hasta']}. " .
                 "Ajustá la fecha de inicio o la fecha fin del rango anterior.");
+            return;
+        }
+
+        if (!$this->fechaFin) {
+            $conflicto = $this->detectarSolapamiento($this->fechaInicio, null, $this->editId);
+            if ($conflicto) {
+                $this->addError('fechaInicio',
+                    "Sin fecha fin, solaparías con el rango que inicia el {$conflicto}. " .
+                    "Establecé una fecha fin antes de esa fecha.");
+            }
         }
     }
 
     public function updatedFechaFin(): void
     {
-        if (!$this->fechaFin) return;
         $this->resetErrorBag('fechaFin');
+
+        if (!$this->fechaFin) {
+            if ($this->fechaInicio) {
+                $conflicto = $this->detectarSolapamiento($this->fechaInicio, null, $this->editId);
+                if ($conflicto) {
+                    $this->addError('fechaFin',
+                        "Sin fecha fin, solaparías con el rango que inicia el {$conflicto}. " .
+                        "Establecé una fecha fin antes de esa fecha.");
+                }
+            }
+            return;
+        }
 
         $hueco = $this->detectarHuecoDespues($this->fechaFin, $this->editId);
         if ($hueco) {
             $this->addError('fechaFin',
                 "Hay un vacío sin cobertura del {$hueco['desde']} al {$hueco['hasta']}. " .
                 "Ajustá la fecha fin o la fecha de inicio del siguiente rango.");
+            return;
+        }
+
+        $conflicto = $this->detectarSolapamiento($this->fechaInicio, $this->fechaFin, $this->editId);
+        if ($conflicto) {
+            $this->addError('fechaFin',
+                "La fecha fin se solapa con el rango que inicia el {$conflicto}. " .
+                "Reducí la fecha fin para no solapar.");
         }
     }
 
@@ -112,6 +141,16 @@ class RangoCalificacionManager extends Component
                     "Ajustá la fecha fin o la fecha de inicio del siguiente rango.");
                 return;
             }
+        }
+
+        $conflicto = $this->detectarSolapamiento($this->fechaInicio, $this->fechaFin ?: null, $this->editId);
+        if ($conflicto) {
+            $campo = $this->fechaFin ? 'fechaFin' : 'fechaFin';
+            $msg = $this->fechaFin
+                ? "La fecha fin se solapa con el rango que inicia el {$conflicto}. Reducí la fecha fin."
+                : "Sin fecha fin, solaparías con el rango que inicia el {$conflicto}. Establecé una fecha fin antes de esa fecha.";
+            $this->addError('fechaFin', $msg);
+            return;
         }
 
         $data = [
@@ -223,6 +262,29 @@ class RangoCalificacionManager extends Component
         if ($diaHuecoDesde->gt($diaHuecoHasta)) return null;
 
         return ['desde' => $diaHuecoDesde->format('d/m/Y'), 'hasta' => $diaHuecoHasta->format('d/m/Y')];
+    }
+
+    private function detectarSolapamiento(string $fechaInicio, ?string $fechaFin, ?int $excludeId = null): ?string
+    {
+        $inicio = \Carbon\Carbon::parse($fechaInicio);
+
+        if (!$fechaFin) {
+            $siguiente = RangoCalificacion::where('fecha_inicio', '>', $inicio)
+                ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+                ->orderBy('fecha_inicio')
+                ->first();
+
+            return $siguiente ? $siguiente->fecha_inicio->format('d/m/Y') : null;
+        }
+
+        $fin = \Carbon\Carbon::parse($fechaFin);
+        $solapado = RangoCalificacion::where('fecha_inicio', '>', $inicio)
+            ->where('fecha_inicio', '<=', $fin)
+            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+            ->orderBy('fecha_inicio')
+            ->first();
+
+        return $solapado ? $solapado->fecha_inicio->format('d/m/Y') : null;
     }
 
     private function resetForm(): void
