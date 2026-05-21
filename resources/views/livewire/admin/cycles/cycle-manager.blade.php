@@ -1,185 +1,240 @@
 <div>
 
-@php
-    $theadClass = match($moduleColor ?? '') {
-        'lavanda'   => 'bg-lavanda-100 text-lavanda-700',
-        'mint'      => 'bg-mint-100 text-mint-700',
-        'melocoton' => 'bg-melocoton-100 text-melocoton-700',
-        'celeste'   => 'bg-celeste-100 text-celeste-700',
-        default     => 'bg-gray-50 text-gray-600',
-    };
-@endphp
-{{-- Flash --}}
-@if (session('success'))
-<div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-     class="fixed bottom-5 right-5 z-50 bg-mint-500 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg">
+{{-- Flash success --}}
+@if(session('success'))
+<div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,3000)"
+     style="position:fixed; bottom:20px; right:20px; z-index:50; background:#7B6FE8; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(123,111,232,.35); display:flex; align-items:center; gap:8px;">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
     {{ session('success') }}
 </div>
 @endif
 
-{{-- Toolbar --}}
-<div class="flex flex-col sm:flex-row gap-3 mb-5">
-    <div class="relative flex-1">
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por código o descripción..."
-               class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-lavanda-400 focus:ring-2 focus:ring-lavanda-100">
-    </div>
-    <select wire:model.live="filterStatus" class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
-        <option value="">Todos los estados</option>
-        <option value="abierto">Abierto</option>
-        <option value="cerrado">Cerrado</option>
-    </select>
-    <button wire:click="showAdd" class="flex items-center gap-2 bg-lavanda-500 hover:bg-lavanda-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-        Nuevo Ciclo
-    </button>
+{{-- Flash error --}}
+@if(session('error'))
+<div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,4000)"
+     style="position:fixed; bottom:20px; right:20px; z-index:50; background:#DC2626; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(220,38,38,.35); display:flex; align-items:center; gap:8px; max-width:340px;">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+    {{ session('error') }}
 </div>
+@endif
 
-{{-- Inline add form --}}
-@if ($showAddForm)
-<div class="bg-lavanda-50 border border-lavanda-200 rounded-2xl p-5 mb-5">
-    <h3 class="text-sm font-bold text-lavanda-700 mb-4">Nuevo Ciclo Comercial</h3>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-        <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Código *</label>
-            <input wire:model="newCode" type="text" maxlength="30" placeholder="CIC-202601"
-                   class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white uppercase">
-            @error('newCode') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Descripción *</label>
-            <input wire:model="newName" type="text" placeholder="Ciclo Enero 2026"
-                   class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
-            @error('newName') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Estado *</label>
-            <select wire:model="newStatus" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
-                <option value="abierto">Abierto</option>
-                <option value="cerrado">Cerrado</option>
-            </select>
-            @error('newStatus') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Fecha inicio *</label>
-            <input wire:model="newStartDate" type="date"
-                   class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
-            @error('newStartDate') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Fecha fin *</label>
-            <input wire:model="newEndDate" type="date"
-                   class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
-            @error('newEndDate') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Notas</label>
-            <input wire:model="newNotes" type="text" placeholder="Observaciones opcionales"
-                   class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
-        </div>
+{{-- ══════ PANEL NUEVO REGISTRO ══════ --}}
+@if($showAddForm)
+<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px; overflow:hidden;">
+    <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:14px; font-weight:800; color:#7B6FE8;">Nuevo Ciclo Comercial</span>
+        <button wire:click="cancelAdd"
+                style="width:30px; height:30px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
     </div>
-    <div class="flex gap-3">
-        <button wire:click="saveNew" class="px-5 py-2 bg-lavanda-500 hover:bg-lavanda-600 text-white text-sm font-semibold rounded-xl transition-colors">Guardar</button>
-        <button wire:click="cancelAdd" class="px-5 py-2 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium rounded-xl transition-colors">Cancelar</button>
+    <div style="padding:16px 20px;">
+        @php $iS = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;'; @endphp
+
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:16px;">
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Código *</label>
+                <input wire:model="newCode" type="text" maxlength="30" placeholder="CIC-202601"
+                       style="width:100%; {{ $iS }} text-transform:uppercase;">
+                @error('newCode')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Descripción *</label>
+                <input wire:model="newName" type="text" placeholder="Ciclo Enero 2026"
+                       style="width:100%; {{ $iS }}">
+                @error('newName')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Estado *</label>
+                <select wire:model="newStatus" style="width:100%; {{ $iS }} cursor:pointer;">
+                    <option value="abierto">Abierto</option>
+                    <option value="cerrado">Cerrado</option>
+                </select>
+                @error('newStatus')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Fecha inicio *</label>
+                <input wire:model="newStartDate" type="date" style="width:100%; {{ $iS }}">
+                @error('newStartDate')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Fecha fin *</label>
+                <input wire:model="newEndDate" type="date" style="width:100%; {{ $iS }}">
+                @error('newEndDate')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Notas</label>
+                <input wire:model="newNotes" type="text" placeholder="Observaciones opcionales"
+                       style="width:100%; {{ $iS }}">
+            </div>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+            <button wire:click="saveNew" wire:loading.attr="disabled"
+                    style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                <span wire:loading.remove wire:target="saveNew">Guardar</span>
+                <span wire:loading wire:target="saveNew">Guardando...</span>
+            </button>
+            <button wire:click="cancelAdd"
+                    style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                Cancelar
+            </button>
+        </div>
     </div>
 </div>
 @endif
 
-{{-- Table --}}
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                <tr>
-                    <th class="px-5 py-3 text-left">Código</th>
-                    <th class="px-5 py-3 text-left">Descripción</th>
-                    <th class="px-5 py-3 text-left hidden md:table-cell">Inicio</th>
-                    <th class="px-5 py-3 text-left hidden md:table-cell">Fin</th>
-                    <th class="px-5 py-3 text-center">Estado</th>
-                    <th class="px-5 py-3 text-right">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50">
-                @forelse ($cycles as $cycle)
-                @if ($editingId === $cycle->id)
-                {{-- Inline edit row --}}
-                <tr wire:key="edit-{{ $cycle->id }}" class="bg-lavanda-50">
-                    <td class="px-3 py-2">
-                        <span class="font-mono text-xs text-lavanda-700 font-semibold">{{ $cycle->code }}</span>
-                    </td>
-                    <td class="px-3 py-2">
-                        <input wire:model="editName" type="text" placeholder="Descripción"
-                               class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-lavanda-400 bg-white">
-                        @error('editName') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
-                    </td>
-                    <td class="px-3 py-2 hidden md:table-cell">
-                        <input wire:model="editStartDate" type="date"
-                               class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-lavanda-400 bg-white">
-                        @error('editStartDate') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
-                    </td>
-                    <td class="px-3 py-2 hidden md:table-cell">
-                        <input wire:model="editEndDate" type="date"
-                               class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-lavanda-400 bg-white">
-                        @error('editEndDate') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
-                    </td>
-                    <td class="px-3 py-2">
-                        <select wire:model="editStatus" class="w-full border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-lavanda-400 bg-white">
-                            <option value="abierto">Abierto</option>
-                            <option value="cerrado">Cerrado</option>
-                        </select>
-                        @error('editStatus') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
-                    </td>
-                    <td class="px-3 py-2 text-right">
-                        <div class="flex gap-1 justify-end">
-                            <button wire:click="saveEdit" class="px-3 py-1.5 bg-lavanda-500 hover:bg-lavanda-600 text-white text-xs font-semibold rounded-lg transition-colors">Guardar</button>
-                            <button wire:click="cancelEdit" class="px-3 py-1.5 border border-gray-200 text-gray-600 hover:bg-gray-50 text-xs font-medium rounded-lg transition-colors">Cancelar</button>
-                        </div>
-                    </td>
-                </tr>
-                @else
-                {{-- Normal row --}}
-                <tr wire:key="c-{{ $cycle->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td data-label="Código" class="px-5 py-3.5 font-mono text-xs text-lavanda-700 font-semibold">{{ $cycle->code }}</td>
-                    <td data-label="Descripción" class="px-5 py-3.5 font-medium text-gray-800">{{ $cycle->name }}</td>
-                    <td data-label="Inicio" class="px-5 py-3.5 text-gray-500 text-xs hidden md:table-cell">{{ $cycle->start_date->format('d/m/Y') }}</td>
-                    <td data-label="Fin" class="px-5 py-3.5 text-gray-500 text-xs hidden md:table-cell">{{ $cycle->end_date->format('d/m/Y') }}</td>
-                    <td data-label="Estado" class="px-5 py-3.5 text-center">
-                        @php
-                            $bc = match($cycle->status) {
-                                'abierto' => 'bg-mint-100 text-mint-700',
-                                default   => 'bg-gray-100 text-gray-600',
-                            };
-                            $label = match($cycle->status) {
-                                'abierto' => 'Abierto',
-                                default   => 'Cerrado',
-                            };
-                        @endphp
-                        <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $bc }}">{{ $label }}</span>
-                    </td>
-                    <td data-label="" class="px-5 py-3.5 text-right">
-                        <div class="flex items-center gap-1 justify-end">
-                            @if ($cycle->status === 'abierto')
-                                <button wire:click="changeStatus({{ $cycle->id }},'cerrado')"
-                                        class="px-2.5 py-1 text-xs bg-melocoton-100 text-melocoton-700 rounded-lg hover:bg-melocoton-200 font-medium transition-colors">Cerrar</button>
-                            @else
-                                <button wire:click="changeStatus({{ $cycle->id }},'abierto')"
-                                        class="px-2.5 py-1 text-xs bg-mint-100 text-mint-700 rounded-lg hover:bg-mint-200 font-medium transition-colors">Abrir</button>
-                            @endif
-                            <button wire:click="startEdit({{ $cycle->id }})" class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                @endif
-                @empty
-                <tr><td colspan="6" class="px-5 py-12 text-center text-gray-400 text-sm">No hay ciclos registrados.</td></tr>
-                @endforelse
-            </tbody>
-        </table>
+{{-- ══════ TOOLBAR ══════ --}}
+<div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+
+    <div style="position:relative; flex:1; min-width:200px;">
+        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#9CA3AF;" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por código o descripción..."
+               style="width:100%; height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 12px 0 32px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;">
     </div>
-    @if ($cycles->hasPages())
-    <div class="px-5 py-3 border-t border-gray-100">{{ $cycles->links() }}</div>
+
+    <select wire:model.live="filterStatus"
+            style="height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 12px; font-size:13px; color:#374151; background:#fff; outline:none; cursor:pointer;">
+        <option value="">Todos los estados</option>
+        <option value="abierto">Abierto</option>
+        <option value="cerrado">Cerrado</option>
+    </select>
+
+    @if(!$showAddForm)
+    <button wire:click="showAdd"
+            style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;"
+            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Nuevo Ciclo
+    </button>
     @endif
 </div>
+
+{{-- ══════ TABLA ══════ --}}
+@php
+$iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;';
+@endphp
+
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+
+    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6;">
+        <span style="font-size:13px; font-weight:700; color:#111827;">Ciclos Comerciales</span>
+        <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $cycles->total() }}</span>
+    </div>
+
+    <div style="overflow-x:auto;">
+    <table style="width:100%; border-collapse:collapse; min-width:640px;">
+        <thead>
+            <tr style="background:#F8F7FF;">
+                <th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:120px;">Código</th>
+                <th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Descripción</th>
+                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:110px;">Inicio</th>
+                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:110px;">Fin</th>
+                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:100px;">Estado</th>
+                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:170px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        @forelse($cycles as $cycle)
+
+        @if($editingId === $cycle->id)
+        {{-- ── FILA EDICIÓN INLINE ── --}}
+        <tr wire:key="edit-{{ $cycle->id }}" style="background:#FAFAFE; border-bottom:1px solid #EDE9FE;">
+            <td style="padding:10px 16px;">
+                <span style="font-size:13px; font-weight:700; color:#7B6FE8; font-family:monospace;">{{ $cycle->code }}</span>
+            </td>
+            <td style="padding:10px 16px;">
+                <input wire:model="editName" type="text" placeholder="Descripción"
+                       style="width:100%; {{ $iRow }}">
+                @error('editName')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+            </td>
+            <td style="padding:10px 16px;">
+                <input wire:model="editStartDate" type="date" style="width:100%; {{ $iRow }}">
+                @error('editStartDate')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+            </td>
+            <td style="padding:10px 16px;">
+                <input wire:model="editEndDate" type="date" style="width:100%; {{ $iRow }}">
+                @error('editEndDate')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+            </td>
+            <td style="padding:10px 16px;">
+                <select wire:model="editStatus" style="width:100%; {{ $iRow }} cursor:pointer;">
+                    <option value="abierto">Abierto</option>
+                    <option value="cerrado">Cerrado</option>
+                </select>
+                @error('editStatus')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+            </td>
+            <td style="padding:10px 16px;">
+                <div style="display:flex; gap:6px; justify-content:center;">
+                    <button wire:click="saveEdit" wire:loading.attr="disabled"
+                            style="height:34px; padding:0 16px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                            @mouseenter="$el.style.opacity='.85'" @mouseleave="$el.style.opacity='1'">
+                        <span wire:loading.remove wire:target="saveEdit">Guardar</span>
+                        <span wire:loading wire:target="saveEdit">...</span>
+                    </button>
+                    <button wire:click="cancelEdit"
+                            style="height:34px; padding:0 14px; border-radius:7px; border:1px solid #E5E7EB; background:#F3F4F6; color:#6B7280; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                            @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                        Cerrar
+                    </button>
+                </div>
+            </td>
+        </tr>
+
+        @else
+        {{-- ── FILA NORMAL ── --}}
+        <tr wire:key="c-{{ $cycle->id }}" style="border-bottom:1px solid #F9FAFB;"
+            @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+            <td style="padding:11px 16px; font-size:13px; font-weight:700; color:#7B6FE8; font-family:monospace;">{{ $cycle->code }}</td>
+            <td style="padding:11px 16px; font-size:13px; font-weight:600; color:#111827;">{{ $cycle->name }}</td>
+            <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $cycle->start_date->format('d/m/Y') }}</td>
+            <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $cycle->end_date->format('d/m/Y') }}</td>
+            <td style="padding:11px 16px; text-align:center;">
+                @if($cycle->status === 'abierto')
+                <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#D1FAE5; color:#059669;">Abierto</span>
+                @else
+                <span style="font-size:11px; font-weight:600; padding:3px 10px; border-radius:99px; background:#F3F4F6; color:#9CA3AF;">Cerrado</span>
+                @endif
+            </td>
+            <td style="padding:11px 16px; text-align:center;">
+                <div style="display:flex; gap:6px; justify-content:center; align-items:center;">
+                    @if($cycle->status === 'abierto')
+                    <button wire:click="changeStatus({{ $cycle->id }},'cerrado')"
+                            style="height:26px; padding:0 12px; border-radius:7px; border:1px solid #FED7AA; background:#FFF7ED; color:#C2410C; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                            @mouseenter="$el.style.background='#FED7AA'" @mouseleave="$el.style.background='#FFF7ED'">
+                        Cerrar
+                    </button>
+                    @else
+                    <button wire:click="changeStatus({{ $cycle->id }},'abierto')"
+                            style="height:26px; padding:0 12px; border-radius:7px; border:1px solid #A7F3D0; background:#D1FAE5; color:#059669; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                            @mouseenter="$el.style.background='#A7F3D0'" @mouseleave="$el.style.background='#D1FAE5'">
+                        Abrir
+                    </button>
+                    @endif
+                    <button wire:click="startEdit({{ $cycle->id }})" title="Editar"
+                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </button>
+                </div>
+            </td>
+        </tr>
+        @endif
+
+        @empty
+        <tr><td colspan="6" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">No hay ciclos registrados.</td></tr>
+        @endforelse
+        </tbody>
+    </table>
+    </div>
+
+    @if($cycles->hasPages())
+    <div style="padding:12px 18px; border-top:1px solid #F3F4F6;">
+        {{ $cycles->links() }}
+    </div>
+    @endif
+</div>
+
 </div>
