@@ -145,11 +145,24 @@ class RangoCalificacionManager extends Component
 
         $conflicto = $this->detectarSolapamiento($this->fechaInicio, $this->fechaFin ?: null, $this->editId);
         if ($conflicto) {
-            $campo = $this->fechaFin ? 'fechaFin' : 'fechaFin';
             $msg = $this->fechaFin
                 ? "La fecha fin se solapa con el rango que inicia el {$conflicto}. Reducí la fecha fin."
                 : "Sin fecha fin, solaparías con el rango que inicia el {$conflicto}. Establecé una fecha fin antes de esa fecha.";
             $this->addError('fechaFin', $msg);
+            return;
+        }
+
+        if ($this->quedaraSinVigente()) {
+            $today = \Carbon\Carbon::today();
+            if ($this->fechaFin && \Carbon\Carbon::parse($this->fechaFin)->lt($today)) {
+                $this->addError('fechaFin',
+                    'La fecha fin queda en el pasado y dejaría el sistema sin configuración vigente para hoy. ' .
+                    'Ajustá la fecha fin o creá una nueva configuración que cubra la fecha actual.');
+            } else {
+                $this->addError('fechaInicio',
+                    'Con estas fechas no quedaría ninguna configuración vigente para hoy. ' .
+                    'Ajustá las fechas o asegurate de que otra configuración cubra la fecha actual.');
+            }
             return;
         }
 
@@ -216,6 +229,29 @@ class RangoCalificacionManager extends Component
     {
         $this->resetForm();
         $this->mode = 'list';
+    }
+
+    private function quedaraSinVigente(): bool
+    {
+        if (!$this->editId && RangoCalificacion::count() === 0) return false;
+
+        $today = \Carbon\Carbon::today();
+
+        $thisWillBeVigente = (bool) $this->activo
+            && \Carbon\Carbon::parse($this->fechaInicio)->lte($today)
+            && (!$this->fechaFin || \Carbon\Carbon::parse($this->fechaFin)->gte($today));
+
+        if ($thisWillBeVigente) return false;
+
+        $query = RangoCalificacion::where('activo', true)
+            ->where('fecha_inicio', '<=', $today)
+            ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $today));
+
+        if ($this->editId) {
+            $query->where('id', '!=', $this->editId);
+        }
+
+        return !$query->exists();
     }
 
     private function detectarHuecoAntes(string $fechaInicio, ?int $excludeId = null): ?array

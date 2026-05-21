@@ -158,6 +158,20 @@ class PesoIndicadorManager extends Component
             return;
         }
 
+        if ($this->quedaraSinVigente()) {
+            $today = \Carbon\Carbon::today();
+            if ($this->fechaFin && \Carbon\Carbon::parse($this->fechaFin)->lt($today)) {
+                $this->addError('fechaFin',
+                    'La fecha fin queda en el pasado y dejaría el sistema sin configuración vigente para hoy. ' .
+                    'Ajustá la fecha fin o creá una nueva configuración que cubra la fecha actual.');
+            } else {
+                $this->addError('fechaInicio',
+                    'Con estas fechas no quedaría ninguna configuración vigente para hoy. ' .
+                    'Ajustá las fechas o asegurate de que otra configuración cubra la fecha actual.');
+            }
+            return;
+        }
+
         $data = [
             'nombre'              => $this->nombre,
             'fecha_inicio'        => $this->fechaInicio,
@@ -222,6 +236,29 @@ class PesoIndicadorManager extends Component
     {
         $this->resetForm();
         $this->mode = 'list';
+    }
+
+    private function quedaraSinVigente(): bool
+    {
+        if (!$this->editId && PesoIndicador::count() === 0) return false;
+
+        $today = \Carbon\Carbon::today();
+
+        $thisWillBeVigente = (bool) $this->activo
+            && \Carbon\Carbon::parse($this->fechaInicio)->lte($today)
+            && (!$this->fechaFin || \Carbon\Carbon::parse($this->fechaFin)->gte($today));
+
+        if ($thisWillBeVigente) return false;
+
+        $query = PesoIndicador::where('activo', true)
+            ->where('fecha_inicio', '<=', $today)
+            ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $today));
+
+        if ($this->editId) {
+            $query->where('id', '!=', $this->editId);
+        }
+
+        return !$query->exists();
     }
 
     private function detectarHuecoAntes(string $fechaInicio, ?int $excludeId = null): ?array
