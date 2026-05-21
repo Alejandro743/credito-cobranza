@@ -20,84 +20,6 @@ class PesoIndicadorManager extends Component
     public float   $pesoReprogramacion = 10;
     public int     $activo             = 1;
 
-    public function updatedActivo(int $value): void
-    {
-        if ($value === 0 && $this->editId &&
-            PesoIndicador::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
-            $this->activo = 1;
-            $this->addError('activo', 'No se puede colocar estado: Inactivo. Debe haber siempre mínimo una configuración activa.');
-        }
-    }
-
-    public function updatedFechaInicio(): void
-    {
-        if (!$this->fechaInicio) return;
-        $this->resetErrorBag('fechaInicio');
-
-        $hueco = $this->detectarHuecoAntes($this->fechaInicio, $this->editId);
-        if ($hueco) {
-            $this->addError('fechaInicio',
-                "Hay un vacío sin cobertura del {$hueco['desde']} al {$hueco['hasta']}. " .
-                "Ajustá la fecha de inicio o la fecha fin del rango anterior.");
-            return;
-        }
-
-        $solapo = $this->detectarSolapoConAnterior($this->fechaInicio, $this->editId);
-        if ($solapo) {
-            $this->addError('fechaInicio',
-                "La fecha de inicio cae dentro del período {$solapo}. Los rangos no pueden solaparse.");
-            return;
-        }
-
-        if (!$this->fechaFin) {
-            $conflicto = $this->detectarSolapamiento($this->fechaInicio, null, $this->editId);
-            if ($conflicto) {
-                $this->addError('fechaInicio',
-                    "Sin fecha fin, solaparías con el rango que inicia el {$conflicto}. " .
-                    "Establecé una fecha fin antes de esa fecha.");
-            }
-        }
-    }
-
-    public function updatedFechaFin(): void
-    {
-        $this->resetErrorBag('fechaFin');
-
-        if (!$this->fechaFin) {
-            if ($this->fechaInicio) {
-                $conflicto = $this->detectarSolapamiento($this->fechaInicio, null, $this->editId);
-                if ($conflicto) {
-                    $this->addError('fechaFin',
-                        "Sin fecha fin, solaparías con el rango que inicia el {$conflicto}. " .
-                        "Establecé una fecha fin antes de esa fecha.");
-                }
-            }
-            return;
-        }
-
-        if ($this->fechaInicio && $this->esElUltimoRegistro()) {
-            $this->addError('fechaFin',
-                'El registro más reciente no puede tener fecha fin. ' .
-                'Para agregar un nuevo período, creá un nuevo registro y el sistema cerrará este automáticamente.');
-            return;
-        }
-
-        $hueco = $this->detectarHuecoDespues($this->fechaFin, $this->editId);
-        if ($hueco) {
-            $this->addError('fechaFin',
-                "Hay un vacío sin cobertura del {$hueco['desde']} al {$hueco['hasta']}. " .
-                "Ajustá la fecha fin o la fecha de inicio del siguiente rango.");
-            return;
-        }
-
-        $conflicto = $this->detectarSolapamiento($this->fechaInicio, $this->fechaFin, $this->editId);
-        if ($conflicto) {
-            $this->addError('fechaFin',
-                "La fecha fin se solapa con el rango que inicia el {$conflicto}. " .
-                "Reducí la fecha fin para no solapar.");
-        }
-    }
-
     public function create(): void
     {
         $this->resetForm();
@@ -145,70 +67,6 @@ class PesoIndicadorManager extends Component
             return;
         }
 
-        $huecoAntes = $this->detectarHuecoAntes($this->fechaInicio, $this->editId);
-        if ($huecoAntes) {
-            $this->addError('fechaInicio',
-                "Hay un vacío sin cobertura del {$huecoAntes['desde']} al {$huecoAntes['hasta']}. " .
-                "Ajustá la fecha de inicio o la fecha fin del rango anterior.");
-            return;
-        }
-
-        $solapoAnterior = $this->detectarSolapoConAnterior($this->fechaInicio, $this->editId);
-        if ($solapoAnterior) {
-            $this->addError('fechaInicio',
-                "La fecha de inicio cae dentro del período {$solapoAnterior}. Los rangos no pueden solaparse.");
-            return;
-        }
-
-        if ($this->fechaFin) {
-            $huecoDespues = $this->detectarHuecoDespues($this->fechaFin, $this->editId);
-            if ($huecoDespues) {
-                $this->addError('fechaFin',
-                    "Hay un vacío sin cobertura del {$huecoDespues['desde']} al {$huecoDespues['hasta']}. " .
-                    "Ajustá la fecha fin o la fecha de inicio del siguiente rango.");
-                return;
-            }
-        }
-
-        $conflicto = $this->detectarSolapamiento($this->fechaInicio, $this->fechaFin ?: null, $this->editId);
-        if ($conflicto) {
-            $msg = $this->fechaFin
-                ? "La fecha fin se solapa con el rango que inicia el {$conflicto}. Reducí la fecha fin."
-                : "Sin fecha fin, solaparías con el rango que inicia el {$conflicto}. Establecé una fecha fin antes de esa fecha.";
-            $this->addError('fechaFin', $msg);
-            return;
-        }
-
-        if ($this->editId && (int) $this->activo === 0 &&
-            PesoIndicador::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
-            $this->addError('activo', 'Debe haber siempre una configuración activa.');
-            return;
-        }
-
-        if ($this->esElUltimoRegistro() && $this->fechaFin) {
-            $this->addError('fechaFin',
-                'El registro más reciente no puede tener fecha fin. ' .
-                'Para agregar un nuevo período, creá un nuevo registro y el sistema cerrará este automáticamente.');
-            return;
-        }
-
-        if ($this->quedaraSinVigente()) {
-            $today = \Carbon\Carbon::today();
-            $hoy   = $today->format('d/m/Y');
-            if ((int) $this->activo === 0) {
-                $this->addError('activo', 'Debe haber siempre una configuración activa.');
-            } elseif ($this->fechaFin && \Carbon\Carbon::parse($this->fechaFin)->lt($today)) {
-                $this->addError('fechaFin',
-                    "La fecha fin queda antes de hoy ({$hoy}) y dejaría el sistema sin configuración vigente. " .
-                    'Extendé la fecha fin hasta hoy o más, o creá una nueva configuración que cubra la fecha actual.');
-            } else {
-                $this->addError('fechaInicio',
-                    "Con estas fechas no quedaría ninguna configuración vigente para hoy ({$hoy}). " .
-                    'Ajustá las fechas o asegurate de que otra configuración cubra la fecha actual.');
-            }
-            return;
-        }
-
         $data = [
             'nombre'              => $this->nombre,
             'fecha_inicio'        => $this->fechaInicio,
@@ -221,18 +79,9 @@ class PesoIndicadorManager extends Component
             'activo'              => (bool) $this->activo,
         ];
 
-        $cierreHasta = \Carbon\Carbon::parse($this->fechaInicio)->subDay()->toDateString();
-
         if ($this->editId) {
             PesoIndicador::findOrFail($this->editId)->update($data);
-            PesoIndicador::where('id', '!=', $this->editId)
-                ->whereNull('fecha_fin')
-                ->where('fecha_inicio', '<', $this->fechaInicio)
-                ->update(['fecha_fin' => $cierreHasta]);
         } else {
-            PesoIndicador::whereNull('fecha_fin')
-                ->where('fecha_inicio', '<', $this->fechaInicio)
-                ->update(['fecha_fin' => $cierreHasta]);
             PesoIndicador::create($data);
         }
 
@@ -243,133 +92,13 @@ class PesoIndicadorManager extends Component
     public function toggleActivo(int $id): void
     {
         $p = PesoIndicador::findOrFail($id);
-        $nuevoEstado = !$p->activo;
-
-        if (!$nuevoEstado && PesoIndicador::where('activo', true)->count() === 1) {
-            session()->flash('error', 'Debe haber siempre una configuración activa.');
-            return;
-        }
-
-        $p->update(['activo' => $nuevoEstado]);
+        $p->update(['activo' => !$p->activo]);
     }
 
     public function backToList(): void
     {
         $this->resetForm();
         $this->mode = 'list';
-    }
-
-    private function esElUltimoRegistro(): bool
-    {
-        if (!$this->fechaInicio) return false;
-        return !PesoIndicador::where('fecha_inicio', '>', $this->fechaInicio)
-            ->when($this->editId, fn($q) => $q->where('id', '!=', $this->editId))
-            ->exists();
-    }
-
-    private function quedaraSinVigente(): bool
-    {
-        $today = \Carbon\Carbon::today();
-
-        $thisWillBeVigente = (bool) $this->activo
-            && \Carbon\Carbon::parse($this->fechaInicio)->lte($today)
-            && (!$this->fechaFin || \Carbon\Carbon::parse($this->fechaFin)->gte($today));
-
-        if ($thisWillBeVigente) return false;
-
-        $query = PesoIndicador::where('activo', true)
-            ->where('fecha_inicio', '<=', $today)
-            ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $today));
-
-        if ($this->editId) {
-            $query->where('id', '!=', $this->editId);
-        }
-
-        return !$query->exists();
-    }
-
-    private function detectarSolapoConAnterior(string $fechaInicio, ?int $excludeId = null): ?string
-    {
-        $inicio   = \Carbon\Carbon::parse($fechaInicio);
-        $solapado = PesoIndicador::whereNotNull('fecha_fin')
-            ->where('fecha_inicio', '<', $inicio)
-            ->where('fecha_fin', '>=', $inicio)
-            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
-            ->orderByDesc('fecha_inicio')
-            ->first();
-
-        return $solapado
-            ? $solapado->fecha_inicio->format('d/m/Y').' — '.$solapado->fecha_fin->format('d/m/Y')
-            : null;
-    }
-
-    private function detectarHuecoAntes(string $fechaInicio, ?int $excludeId = null): ?array
-    {
-        $inicio = \Carbon\Carbon::parse($fechaInicio);
-
-        $tieneAbiertoAntes = PesoIndicador::whereNull('fecha_fin')
-            ->where('fecha_inicio', '<', $inicio)
-            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
-            ->exists();
-
-        if ($tieneAbiertoAntes) return null;
-
-        $anterior = PesoIndicador::whereNotNull('fecha_fin')
-            ->where('fecha_fin', '<', $inicio)
-            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
-            ->orderByDesc('fecha_fin')
-            ->first();
-
-        if (!$anterior) return null;
-
-        $diaHuecoDesde = \Carbon\Carbon::parse($anterior->fecha_fin)->addDay();
-        $diaHuecoHasta = $inicio->copy()->subDay();
-
-        if ($diaHuecoDesde->gt($diaHuecoHasta)) return null;
-
-        return ['desde' => $diaHuecoDesde->format('d/m/Y'), 'hasta' => $diaHuecoHasta->format('d/m/Y')];
-    }
-
-    private function detectarHuecoDespues(string $fechaFin, ?int $excludeId = null): ?array
-    {
-        $fin = \Carbon\Carbon::parse($fechaFin);
-
-        $siguiente = PesoIndicador::where('fecha_inicio', '>', $fin)
-            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
-            ->orderBy('fecha_inicio')
-            ->first();
-
-        if (!$siguiente) return null;
-
-        $diaHuecoDesde = $fin->copy()->addDay();
-        $diaHuecoHasta = \Carbon\Carbon::parse($siguiente->fecha_inicio)->subDay();
-
-        if ($diaHuecoDesde->gt($diaHuecoHasta)) return null;
-
-        return ['desde' => $diaHuecoDesde->format('d/m/Y'), 'hasta' => $diaHuecoHasta->format('d/m/Y')];
-    }
-
-    private function detectarSolapamiento(string $fechaInicio, ?string $fechaFin, ?int $excludeId = null): ?string
-    {
-        $inicio = \Carbon\Carbon::parse($fechaInicio);
-
-        if (!$fechaFin) {
-            $siguiente = PesoIndicador::where('fecha_inicio', '>', $inicio)
-                ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
-                ->orderBy('fecha_inicio')
-                ->first();
-
-            return $siguiente ? $siguiente->fecha_inicio->format('d/m/Y') : null;
-        }
-
-        $fin = \Carbon\Carbon::parse($fechaFin);
-        $solapado = PesoIndicador::where('fecha_inicio', '>', $inicio)
-            ->where('fecha_inicio', '<=', $fin)
-            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
-            ->orderBy('fecha_inicio')
-            ->first();
-
-        return $solapado ? $solapado->fecha_inicio->format('d/m/Y') : null;
     }
 
     private function resetForm(): void
