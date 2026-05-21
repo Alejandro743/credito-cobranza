@@ -42,6 +42,12 @@ class PesoIndicadorManager extends Component
             return;
         }
 
+        if ($this->esElUltimoRegistro() && \Carbon\Carbon::parse($this->fechaInicio)->gt(\Carbon\Carbon::today())) {
+            $this->addError('fechaInicio',
+                'La fecha de inicio no puede ser futura. El registro más reciente debe iniciar hoy o antes.');
+            return;
+        }
+
         if (!$this->fechaFin) {
             $conflicto = $this->detectarSolapamiento($this->fechaInicio, null, $this->editId);
             if ($conflicto) {
@@ -65,6 +71,13 @@ class PesoIndicadorManager extends Component
                         "Establecé una fecha fin antes de esa fecha.");
                 }
             }
+            return;
+        }
+
+        if ($this->fechaInicio && $this->esElUltimoRegistro()) {
+            $this->addError('fechaFin',
+                'El registro más reciente no puede tener fecha fin. ' .
+                'Para agregar un nuevo período, creá un nuevo registro y el sistema cerrará este automáticamente.');
             return;
         }
 
@@ -158,6 +171,20 @@ class PesoIndicadorManager extends Component
             return;
         }
 
+        if ($this->esElUltimoRegistro()) {
+            if ($this->fechaFin) {
+                $this->addError('fechaFin',
+                    'El registro más reciente no puede tener fecha fin. ' .
+                    'Para agregar un nuevo período, creá un nuevo registro y el sistema cerrará este automáticamente.');
+                return;
+            }
+            if (\Carbon\Carbon::parse($this->fechaInicio)->gt(\Carbon\Carbon::today())) {
+                $this->addError('fechaInicio',
+                    'La fecha de inicio no puede ser futura. El registro más reciente debe iniciar hoy o antes.');
+                return;
+            }
+        }
+
         if ($this->quedaraSinVigente()) {
             $today = \Carbon\Carbon::today();
             $hoy   = $today->format('d/m/Y');
@@ -237,6 +264,14 @@ class PesoIndicadorManager extends Component
     {
         $this->resetForm();
         $this->mode = 'list';
+    }
+
+    private function esElUltimoRegistro(): bool
+    {
+        if (!$this->fechaInicio) return false;
+        return !PesoIndicador::where('fecha_inicio', '>', $this->fechaInicio)
+            ->when($this->editId, fn($q) => $q->where('id', '!=', $this->editId))
+            ->exists();
     }
 
     private function quedaraSinVigente(): bool
