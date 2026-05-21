@@ -47,12 +47,19 @@
 
         <div>
             <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
-            <button wire:click="save" wire:loading.attr="disabled"
-                    style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-                <span wire:loading.remove wire:target="save">Guardar</span>
-                <span wire:loading wire:target="save">Guardando...</span>
-            </button>
+            <div style="display:flex; gap:8px;">
+                <button wire:click="save" wire:loading.attr="disabled"
+                        style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                        @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                    <span wire:loading.remove wire:target="save">Guardar</span>
+                    <span wire:loading wire:target="save">Guardando...</span>
+                </button>
+                <button wire:click="cancelar"
+                        style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                        @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                    Cancelar
+                </button>
+            </div>
         </div>
     </div>
 </div>
