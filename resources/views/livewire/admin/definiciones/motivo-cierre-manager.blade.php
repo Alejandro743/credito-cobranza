@@ -61,7 +61,7 @@
 {{-- ══════ TOOLBAR ══════ --}}
 <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
     <span style="font-size:12px; color:#9CA3AF; font-weight:500;">{{ $registros->count() }} motivo(s)</span>
-    @if(!$showForm && !$editId)
+    @if(!$showForm)
     <button wire:click="create"
             style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;"
             @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
