@@ -7,12 +7,12 @@ use Livewire\Component;
 
 class MotivoCierreManager extends Component
 {
-    public bool   $showForm  = false;
+    public bool $showForm = false;  // panel nuevo registro
 
     public ?int   $editId     = null;
     public string $nombre     = '';
-    public bool   $afectaMora = false;
-    public bool   $activo     = true;
+    public int    $afectaMora = 0;
+    public int    $activo     = 1;
 
     public function create(): void
     {
@@ -28,9 +28,9 @@ class MotivoCierreManager extends Component
         $this->resetErrorBag();
         $this->editId     = $m->id;
         $this->nombre     = $m->nombre;
-        $this->afectaMora = $m->afecta_mora;
-        $this->activo     = $m->activo;
-        $this->showForm   = true;
+        $this->afectaMora = $m->afecta_mora ? 1 : 0;
+        $this->activo     = $m->activo     ? 1 : 0;
+        $this->showForm   = false;
     }
 
     public function save(): void
@@ -41,8 +41,8 @@ class MotivoCierreManager extends Component
 
         $data = [
             'nombre'      => trim($this->nombre),
-            'afecta_mora' => $this->afectaMora,
-            'activo'      => $this->activo,
+            'afecta_mora' => (bool) $this->afectaMora,
+            'activo'      => (bool) $this->activo,
         ];
 
         if ($this->editId) {
@@ -62,12 +62,6 @@ class MotivoCierreManager extends Component
         $this->showForm = false;
     }
 
-    public function toggleActivo(int $id): void
-    {
-        $m = MotivoCierre::findOrFail($id);
-        $m->update(['activo' => !$m->activo]);
-    }
-
     public function delete(int $id): void
     {
         MotivoCierre::findOrFail($id)->delete();
@@ -77,8 +71,8 @@ class MotivoCierreManager extends Component
     {
         $this->editId     = null;
         $this->nombre     = '';
-        $this->afectaMora = false;
-        $this->activo     = true;
+        $this->afectaMora = 0;
+        $this->activo     = 1;
     }
 
     public function render()
