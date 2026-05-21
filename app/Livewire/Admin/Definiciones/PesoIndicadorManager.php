@@ -160,13 +160,14 @@ class PesoIndicadorManager extends Component
 
         if ($this->quedaraSinVigente()) {
             $today = \Carbon\Carbon::today();
+            $hoy   = $today->format('d/m/Y');
             if ($this->fechaFin && \Carbon\Carbon::parse($this->fechaFin)->lt($today)) {
                 $this->addError('fechaFin',
-                    'La fecha fin queda en el pasado y dejaría el sistema sin configuración vigente para hoy. ' .
-                    'Ajustá la fecha fin o creá una nueva configuración que cubra la fecha actual.');
+                    "La fecha fin queda antes de hoy ({$hoy}) y dejaría el sistema sin configuración vigente. " .
+                    'Extendé la fecha fin hasta hoy o más, o creá una nueva configuración que cubra la fecha actual.');
             } else {
                 $this->addError('fechaInicio',
-                    'Con estas fechas no quedaría ninguna configuración vigente para hoy. ' .
+                    "Con estas fechas no quedaría ninguna configuración vigente para hoy ({$hoy}). " .
                     'Ajustá las fechas o asegurate de que otra configuración cubra la fecha actual.');
             }
             return;
