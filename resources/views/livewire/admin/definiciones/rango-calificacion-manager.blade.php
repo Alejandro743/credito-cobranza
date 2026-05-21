@@ -184,11 +184,21 @@
 <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
     <div style="padding:20px 22px; display:flex; flex-direction:column; gap:16px;">
 
-        {{-- Nombre --}}
-        <div>
-            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Nombre *</label>
-            <input wire:model="nombre" type="text" placeholder="Ej: Rangos 2026" style="{{ $iS }}">
-            @error('nombre')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+        {{-- Nombre + Estado --}}
+        <div style="display:grid; grid-template-columns:1fr auto; gap:12px; align-items:start;">
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Nombre *</label>
+                <input wire:model="nombre" type="text" placeholder="Ej: Rangos 2026" style="{{ $iS }}">
+                @error('nombre')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Estado</label>
+                <select wire:model.live="activo" style="height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; cursor:pointer;">
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select>
+                @error('activo')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+            </div>
         </div>
 
         {{-- Vigencia --}}
@@ -233,16 +243,6 @@
                 </div>
             </div>
             @endforeach
-
-            {{-- Estado --}}
-            <div style="display:flex; flex-direction:column; justify-content:flex-end; padding-top:4px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Estado</label>
-                <select wire:model.live="activo" style="{{ $iS }} cursor:pointer;">
-                    <option value="1">Activo</option>
-                    <option value="0">Inactivo</option>
-                </select>
-                @error('activo')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
-            </div>
         </div>
 
         {{-- Preview rangos --}}
