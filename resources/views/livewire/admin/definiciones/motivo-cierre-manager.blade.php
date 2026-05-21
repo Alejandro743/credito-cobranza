@@ -117,16 +117,17 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 </select>
             </td>
             <td style="padding:10px 16px;">
-                <div style="display:flex; gap:6px; justify-content:center;">
-                    <button wire:click="save" wire:loading.attr="disabled" title="Guardar"
-                            style="width:28px; height:28px; border-radius:7px; border:1px solid #A7F3D0; background:#D1FAE5; color:#059669; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                            @mouseenter="$el.style.background='#A7F3D0'" @mouseleave="$el.style.background='#D1FAE5'">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                <div style="display:flex; flex-direction:column; gap:5px; align-items:center;">
+                    <button wire:click="save" wire:loading.attr="disabled"
+                            style="width:70px; height:26px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:11px; font-weight:700; cursor:pointer;"
+                            @mouseenter="$el.style.opacity='.85'" @mouseleave="$el.style.opacity='1'">
+                        <span wire:loading.remove wire:target="save">Guardar</span>
+                        <span wire:loading wire:target="save">...</span>
                     </button>
-                    <button wire:click="cancelar" title="Cancelar"
-                            style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F3F4F6; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                    <button wire:click="cancelar"
+                            style="width:70px; height:26px; border-radius:7px; border:1px solid #E5E7EB; background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; cursor:pointer;"
                             @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        Cerrar
                     </button>
                 </div>
             </td>
