@@ -41,6 +41,13 @@ class RangoCalificacionManager extends Component
             return;
         }
 
+        $solapo = $this->detectarSolapoConAnterior($this->fechaInicio, $this->editId);
+        if ($solapo) {
+            $this->addError('fechaInicio',
+                "La fecha de inicio cae dentro del período {$solapo}. Los rangos no pueden solaparse.");
+            return;
+        }
+
         if ($this->esElUltimoRegistro() && \Carbon\Carbon::parse($this->fechaInicio)->gt(\Carbon\Carbon::today())) {
             $this->addError('fechaInicio',
                 'La fecha de inicio no puede ser futura. El registro más reciente debe iniciar hoy o antes.');
@@ -143,6 +150,13 @@ class RangoCalificacionManager extends Component
             $this->addError('fechaInicio',
                 "Hay un vacío sin cobertura del {$huecoAntes['desde']} al {$huecoAntes['hasta']}. " .
                 "Ajustá la fecha de inicio o la fecha fin del rango anterior.");
+            return;
+        }
+
+        $solapoAnterior = $this->detectarSolapoConAnterior($this->fechaInicio, $this->editId);
+        if ($solapoAnterior) {
+            $this->addError('fechaInicio',
+                "La fecha de inicio cae dentro del período {$solapoAnterior}. Los rangos no pueden solaparse.");
             return;
         }
 
@@ -280,6 +294,21 @@ class RangoCalificacionManager extends Component
         }
 
         return !$query->exists();
+    }
+
+    private function detectarSolapoConAnterior(string $fechaInicio, ?int $excludeId = null): ?string
+    {
+        $inicio   = \Carbon\Carbon::parse($fechaInicio);
+        $solapado = RangoCalificacion::whereNotNull('fecha_fin')
+            ->where('fecha_inicio', '<', $inicio)
+            ->where('fecha_fin', '>=', $inicio)
+            ->when($excludeId, fn($q) => $q->where('id', '!=', $excludeId))
+            ->orderByDesc('fecha_inicio')
+            ->first();
+
+        return $solapado
+            ? $solapado->fecha_inicio->format('d/m/Y').' — '.$solapado->fecha_fin->format('d/m/Y')
+            : null;
     }
 
     private function detectarHuecoAntes(string $fechaInicio, ?int $excludeId = null): ?array
