@@ -146,7 +146,11 @@ class PesoIndicadorManager extends Component
     {
         $vigenteId = PesoIndicador::vigente()?->id;
         $registros = PesoIndicador::orderByDesc('fecha_inicio')->get()
-            ->sortByDesc(fn($r) => $r->id === $vigenteId)->values();
+            ->sortByDesc(function ($r) use ($vigenteId) {
+                if ($r->id === $vigenteId) return 2;
+                if ($r->activo)            return 1;
+                return 0;
+            })->values();
 
         return view('livewire.admin.definiciones.peso-indicador-manager', compact('registros'));
     }
