@@ -46,12 +46,13 @@
 
     {{-- DESKTOP --}}
     <div class="hidden sm:block" style="overflow-x:auto;">
-        <table style="width:100%; border-collapse:collapse; min-width:780px;">
+        <table style="width:100%; border-collapse:collapse; min-width:860px;">
             <thead>
                 <tr>
                     <th style="padding:10px 16px; text-align:left;">Nombre</th>
                     <th style="padding:10px 16px; text-align:center;">Vigencia desde</th>
                     <th style="padding:10px 16px; text-align:center;">Vigencia hasta</th>
+                    <th style="padding:10px 16px; text-align:center;">Vigente</th>
                     <th style="padding:10px 16px; text-align:center;">Punt%</th>
                     <th style="padding:10px 16px; text-align:center;">Mora%</th>
                     <th style="padding:10px 16px; text-align:center;">Riesgo%</th>
@@ -66,16 +67,16 @@
             @php $esVigente = \App\Models\PesoIndicador::vigente()?->id === $r->id; @endphp
             <tr wire:key="pi-{{ $r->id }}" style="border-bottom:1px solid #F9FAFB; {{ $esVigente ? 'background:#FAFAFE;' : '' }}"
                 @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background='{{ $esVigente ? '#FAFAFE' : '' }}'">
-                <td style="padding:11px 16px;">
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <span style="font-size:13px; font-weight:600; color:#111827;">{{ $r->nombre }}</span>
-                        @if($esVigente)
-                        <span style="font-size:9px; font-weight:700; padding:2px 7px; border-radius:99px; background:#EDE9FE; color:#7B6FE8; white-space:nowrap;">VIGENTE</span>
-                        @endif
-                    </div>
+                <td style="padding:11px 16px; font-size:13px; font-weight:600; color:#111827;">{{ $r->nombre }}</td>
+                <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
+                <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
+                <td style="padding:11px 16px; text-align:center;">
+                    @if($esVigente)
+                    <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#EDE9FE; color:#7B6FE8;">Sí</span>
+                    @else
+                    <span style="font-size:13px; color:#9CA3AF;">—</span>
+                    @endif
                 </td>
-                <td style="padding:11px 16px; text-align:center; font-size:12px; color:#6B7280;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
-                <td style="padding:11px 16px; text-align:center; font-size:12px; color:#6B7280;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
                 <td style="padding:11px 16px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#374151;">{{ $r->peso_puntualidad }}%</td>
                 <td style="padding:11px 16px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#374151;">{{ $r->peso_mora }}%</td>
                 <td style="padding:11px 16px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#374151;">{{ $r->peso_riesgo }}%</td>
@@ -258,8 +259,8 @@
             @endforeach
 
             {{-- Estado --}}
-            <div style="display:flex; flex-direction:column; gap:4px; padding-top:24px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</label>
+            <div style="display:flex; flex-direction:column; gap:4px;">
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Estado</label>
                 <select wire:model.live="activo" style="{{ $iS }} width:auto; cursor:pointer;">
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
