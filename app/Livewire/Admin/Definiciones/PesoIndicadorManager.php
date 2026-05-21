@@ -171,7 +171,7 @@ class PesoIndicadorManager extends Component
             return;
         }
 
-        if ($this->editId && $this->activo === 0 &&
+        if ($this->editId && (int) $this->activo === 0 &&
             PesoIndicador::where('activo', true)->where('id', '!=', $this->editId)->count() === 0) {
             $this->addError('activo', 'Debe haber siempre una configuración activa.');
             return;
@@ -194,7 +194,9 @@ class PesoIndicadorManager extends Component
         if ($this->quedaraSinVigente()) {
             $today = \Carbon\Carbon::today();
             $hoy   = $today->format('d/m/Y');
-            if ($this->fechaFin && \Carbon\Carbon::parse($this->fechaFin)->lt($today)) {
+            if ((int) $this->activo === 0) {
+                $this->addError('activo', 'Debe haber siempre una configuración activa.');
+            } elseif ($this->fechaFin && \Carbon\Carbon::parse($this->fechaFin)->lt($today)) {
                 $this->addError('fechaFin',
                     "La fecha fin queda antes de hoy ({$hoy}) y dejaría el sistema sin configuración vigente. " .
                     'Extendé la fecha fin hasta hoy o más, o creá una nueva configuración que cubra la fecha actual.');
