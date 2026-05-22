@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Cycles;
 
 use App\Models\CommercialCycle;
+use App\Models\FinancialMatrix;
 use Illuminate\Validation\Rule;
 use App\Livewire\Concerns\HasModuleColor;
 use Livewire\Component;
@@ -26,6 +27,7 @@ class CycleManager extends Component
 
     // Inline row edit
     public ?int   $editingId    = null;
+    public string $editCode     = '';
     public string $editName     = '';
     public string $editStartDate = '';
     public string $editEndDate   = '';
@@ -100,6 +102,7 @@ class CycleManager extends Component
     {
         $c = CommercialCycle::findOrFail($id);
         $this->editingId     = $id;
+        $this->editCode      = $c->code;
         $this->editName      = $c->name;
         $this->editStartDate = $c->start_date->format('Y-m-d');
         $this->editEndDate   = $c->end_date->format('Y-m-d');
@@ -118,12 +121,14 @@ class CycleManager extends Component
     public function saveEdit(): void
     {
         $this->validate([
+            'editCode'      => ['required', 'string', 'max:30', Rule::unique('commercial_cycles', 'code')->ignore($this->editingId)],
             'editName'      => 'required|string|min:2',
             'editStartDate' => 'required|date',
             'editEndDate'   => 'required|date|after_or_equal:editStartDate',
             'editStatus'    => 'required|in:abierto,cerrado',
         ], [], [
-            'editName'      => 'nombre',
+            'editCode'      => 'código',
+            'editName'      => 'descripción',
             'editStartDate' => 'fecha inicio',
             'editEndDate'   => 'fecha fin',
             'editStatus'    => 'estado',
@@ -135,6 +140,7 @@ class CycleManager extends Component
         }
 
         CommercialCycle::findOrFail($this->editingId)->update([
+            'code'       => strtoupper(trim($this->editCode)),
             'name'       => $this->editName,
             'start_date' => $this->editStartDate,
             'end_date'   => $this->editEndDate,
@@ -144,6 +150,23 @@ class CycleManager extends Component
 
         $this->editingId = null;
         session()->flash('success', 'Ciclo actualizado.');
+    }
+
+    public function delete(int $id): void
+    {
+        $c = CommercialCycle::findOrFail($id);
+
+        $enlazado = $c->listasMaestra()->exists()
+            || $c->configuracionPuntos()->exists()
+            || FinancialMatrix::where('cycle_id', $id)->exists();
+
+        if ($enlazado) {
+            session()->flash('error', 'No se puede eliminar: el ciclo ya tiene registros enlazados.');
+            return;
+        }
+
+        $c->delete();
+        session()->flash('success', 'Ciclo eliminado.');
     }
 
     public function changeStatus(int $id, string $status): void

@@ -141,7 +141,9 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
         {{-- ── FILA EDICIÓN INLINE ── --}}
         <tr wire:key="edit-{{ $cycle->id }}" style="background:#FAFAFE; border-bottom:1px solid #EDE9FE;">
             <td style="padding:10px 16px;">
-                <span style="font-size:13px; font-weight:700; color:#7B6FE8; font-family:monospace;">{{ $cycle->code }}</span>
+                <input wire:model="editCode" type="text" maxlength="30"
+                       style="width:100%; {{ $iRow }} text-transform:uppercase;">
+                @error('editCode')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
             </td>
             <td style="padding:10px 16px;">
                 <input wire:model="editName" type="text" placeholder="Descripción"
@@ -196,11 +198,18 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 @endif
             </td>
             <td style="padding:11px 16px; text-align:center;">
-                <button wire:click="startEdit({{ $cycle->id }})" title="Editar"
-                        style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
-                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                </button>
+                <div style="display:flex; gap:6px; justify-content:center;">
+                    <button wire:click="startEdit({{ $cycle->id }})" title="Editar"
+                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
+                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </button>
+                    <button wire:click="delete({{ $cycle->id }})" wire:confirm="¿Eliminar este ciclo?" title="Eliminar"
+                            style="width:28px; height:28px; border-radius:7px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
+                            @mouseenter="$el.style.background='#FECACA'" @mouseleave="$el.style.background='#FEF2F2'">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
+                </div>
             </td>
         </tr>
         @endif
