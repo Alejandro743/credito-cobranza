@@ -48,6 +48,7 @@ class ListaMaestraManager extends Component
 
     // ── Inline edit ───────────────────────────────────────────────────────────
     public ?int   $editingId             = null;
+    public string $editCode              = '';
     public string $editName              = '';
     public ?int   $editCycleId           = null;
     public bool   $editActive            = true;
@@ -172,6 +173,7 @@ class ListaMaestraManager extends Component
     {
         $m = ListaMaestra::findOrFail($id);
         $this->editingId             = $id;
+        $this->editCode              = $m->code ?? '';
         $this->editName              = $m->name;
         $this->editCycleId           = $m->cycle_id;
         $this->editActive            = (bool) $m->active;
@@ -194,9 +196,12 @@ class ListaMaestraManager extends Component
     public function saveEdit(): void
     {
         $this->validate([
+            'editCode'    => ['required', 'string', 'max:30',
+                              Rule::unique('lista_maestra', 'code')->ignore($this->editingId)],
             'editName'    => 'required|string|min:2',
             'editCycleId' => ['required', 'integer', 'exists:commercial_cycles,id'],
         ], [], [
+            'editCode'    => 'código',
             'editName'    => 'nombre',
             'editCycleId' => 'ciclo',
         ]);
@@ -205,6 +210,7 @@ class ListaMaestraManager extends Component
         $valorInc  = (float) $this->editValorIncremento;
 
         ListaMaestra::findOrFail($this->editingId)->update([
+            'code'                => strtoupper(trim($this->editCode)),
             'cycle_id'            => $this->editCycleId,
             'name'                => $this->editName,
             'active'              => $this->editActive,
