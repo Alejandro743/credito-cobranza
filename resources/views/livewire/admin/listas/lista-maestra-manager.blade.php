@@ -1003,20 +1003,20 @@
         </div>
 
         {{-- Fila 3: Financiamiento --}}
-        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; align-items:flex-end;">
-            <div>
+        <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;">
+            <div style="width:150px;">
                 <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Cant. de Cuotas</label>
                 <input wire:model="newCantidadCuotas" x-on:input="cantCuotas = parseInt($event.target.value) || 0"
                        type="number" min="1" max="999" placeholder="Ej: 6"
                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
             </div>
-            <div>
+            <div style="width:150px;">
                 <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Días entre Cuotas</label>
                 <input wire:model="newDiasEntreCuotas"
                        type="number" min="1" max="365" placeholder="Ej: 30"
                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
             </div>
-            <div>
+            <div style="width:170px;">
                 <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Tipo Cuota Inicial</label>
                 <select wire:model="newTipoCuotaInicial" x-on:change="tipoCuotaIni = $event.target.value"
                         style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
@@ -1025,13 +1025,13 @@
                     <option value="monto_fijo">Monto Fijo Bs</option>
                 </select>
             </div>
-            <div x-show="tipoCuotaIni !== 'ninguna'" x-cloak>
+            <div x-show="tipoCuotaIni !== 'ninguna'" x-cloak style="width:130px;">
                 <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Valor Inicial</label>
                 <input wire:model="newValorCuotaInicial" x-on:input="valorCuotaIni = parseFloat($event.target.value) || 0"
                        type="number" step="0.01" min="0" placeholder="Ej: 20"
                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
             </div>
-            <div x-show="badgeResumen" x-cloak style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:8px 12px;">
+            <div x-show="badgeResumen" x-cloak style="flex:1; min-width:220px; background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:8px 12px;">
                 <span x-text="badgeResumen" style="font-size:12px; font-weight:600; color:#065F46;"></span>
             </div>
         </div>
