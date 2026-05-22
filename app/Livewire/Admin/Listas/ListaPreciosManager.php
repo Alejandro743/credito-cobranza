@@ -17,8 +17,9 @@ class ListaPreciosManager extends Component
 {
     use WithPagination, HasModuleColor;
 
-    public string $mode   = 'list';
-    public string $search = '';
+    public string $mode        = 'list';
+    public string $search      = '';
+    public bool   $showAddForm = false;
 
     public bool  $editing   = false;
     public ?int  $editingId = null;
@@ -66,17 +67,30 @@ class ListaPreciosManager extends Component
 
     // ── CRUD cabecera ─────────────────────────────────────────────────────────
 
-    public function create(): void { $this->resetForm(); $this->mode = 'form'; }
+    public function create(): void
+    {
+        $this->resetForm();
+        $this->showAddForm = true;
+    }
+
+    public function cancelForm(): void
+    {
+        $this->showAddForm = false;
+        $this->editing     = false;
+        $this->editingId   = null;
+        $this->resetValidation();
+    }
 
     public function edit(int $id): void
     {
         $m = ListaMaestra::findOrFail($id);
-        $this->editingId = $id;
-        $this->editing   = true;
-        $this->cycle_id  = $m->cycle_id;
-        $this->name      = $m->name;
-        $this->estado    = $m->estado;
-        $this->mode = 'form';
+        $this->editingId   = $id;
+        $this->editing     = true;
+        $this->cycle_id    = $m->cycle_id;
+        $this->name        = $m->name;
+        $this->estado      = $m->estado;
+        $this->showAddForm = true;
+        $this->mode        = 'list';
     }
 
     public function save(): void
@@ -298,6 +312,7 @@ class ListaPreciosManager extends Component
     private function resetForm(): void
     {
         $this->reset(['cycle_id', 'name', 'editingId', 'editing', 'viewingId']);
+        $this->showAddForm       = false;
         $this->estado            = 'activa';
         $this->showAddItemForm   = false;
         $this->editItemId        = null;

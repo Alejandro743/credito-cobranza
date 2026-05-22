@@ -327,50 +327,15 @@
     </div>
 </div>
 
-{{-- ══════════════════════════════════════════════════════════ FORM MODE ══ --}}
-@elseif ($mode === 'form')
-<div class="max-w-xl mx-auto">
-    <div class="flex items-center gap-3 mb-6">
-        <button wire:click="backToList" class="p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-        </button>
-        <h2 class="text-lg font-bold text-gray-800">{{ $editing ? 'Editar Lista de Precios' : 'Nueva Lista de Precios' }}</h2>
-    </div>
-    <form wire:submit="save" class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 space-y-5">
-        <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Ciclo Comercial *</label>
-            <select wire:model="cycle_id" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-lavanda-400">
-                <option value="">— Seleccionar ciclo —</option>
-                @foreach ($cycles as $c)
-                    <option value="{{ $c->id }}">{{ $c->code }}</option>
-                @endforeach
-            </select>
-            @error('cycle_id') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Nombre *</label>
-            <input wire:model="name" type="text" placeholder="Lista de Precios Ene-2026"
-                   class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-lavanda-400 focus:ring-2 focus:ring-lavanda-100">
-            @error('name') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
-        </div>
-        <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1.5">Estado</label>
-            <select wire:model="estado" class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-lavanda-400">
-                <option value="activa">Activa</option>
-                <option value="cerrada">Cerrada</option>
-            </select>
-        </div>
-        <div class="flex items-center justify-end gap-3 pt-2">
-            <button type="button" wire:click="backToList" class="px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-600 hover:bg-gray-100 transition-colors">Cancelar</button>
-            <button type="submit" class="px-6 py-2.5 rounded-xl text-sm font-semibold bg-lavanda-500 hover:bg-lavanda-600 text-white transition-colors">
-                {{ $editing ? 'Guardar cambios' : 'Crear lista' }}
-            </button>
-        </div>
-    </form>
-</div>
-
 {{-- ══════════════════════════════════════════════════════════ LIST MODE ══ --}}
 @else
+@php
+$iS = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;';
+$lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;';
+@endphp
+
+{{-- Toolbar (se oculta cuando hay formulario abierto) --}}
+@if(!$showAddForm)
 <div class="flex flex-col sm:flex-row gap-3 mb-5">
     <div class="relative flex-1">
         <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
@@ -382,8 +347,71 @@
         Nueva Lista de Precios
     </button>
 </div>
+@endif
 
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+{{-- Formulario inline --}}
+@if($showAddForm)
+<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; margin-bottom:20px; overflow:hidden;">
+    <div style="background:#F8F7FF; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #EDE9FE;">
+        <span style="font-size:14px; font-weight:800; color:#7B6FE8;">{{ $editing ? 'Editar Lista de Precios' : 'Nueva Lista de Precios' }}</span>
+        <button wire:click="cancelForm" style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; border:1px solid #EDE9FE; border-radius:8px; background:#fff; cursor:pointer; color:#9CA3AF;" type="button">
+            <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+    </div>
+    <div style="padding:16px 18px;">
+        <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;">
+
+            {{-- Ciclo Comercial --}}
+            <div style="display:flex; flex-direction:column;">
+                <label style="{{ $lbl }}">Ciclo Comercial *</label>
+                <select wire:model="cycle_id" style="{{ $iS }} width:190px;">
+                    <option value="">— Seleccionar —</option>
+                    @foreach ($cycles as $c)
+                        <option value="{{ $c->id }}">{{ $c->code }}</option>
+                    @endforeach
+                </select>
+                @error('cycle_id') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Nombre --}}
+            <div style="display:flex; flex-direction:column;">
+                <label style="{{ $lbl }}">Nombre *</label>
+                <input wire:model="name" type="text" placeholder="Lista de Precios Ene-2026"
+                       style="{{ $iS }} width:260px;">
+                @error('name') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
+
+            {{-- Estado --}}
+            <div style="display:flex; flex-direction:column;">
+                <label style="{{ $lbl }}">Estado</label>
+                <select wire:model="estado" style="{{ $iS }} width:140px;">
+                    <option value="activa">Activa</option>
+                    <option value="cerrada">Cerrada</option>
+                </select>
+            </div>
+
+            {{-- Botones --}}
+            <div style="display:flex; flex-direction:column;">
+                <label style="color:transparent; font-size:11px; margin-bottom:5px;">.</label>
+                <div style="display:flex; gap:8px;">
+                    <button wire:click="save" type="button"
+                            style="height:38px; padding:0 18px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; border:none; border-radius:8px; cursor:pointer;">
+                        Guardar
+                    </button>
+                    <button wire:click="cancelForm" type="button"
+                            style="height:38px; padding:0 14px; background:#F3F4F6; color:#374151; font-size:13px; font-weight:600; border:1px solid #E5E7EB; border-radius:8px; cursor:pointer;">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+@endif
+
+{{-- Tabla escritorio --}}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hidden sm:block">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
@@ -391,23 +419,23 @@
                     <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nombre</th>
                     <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Ciclo</th>
                     <th class="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Estado</th>
-                    <th class="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Creada</th>
+                    <th class="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Creada</th>
                     <th class="px-5 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Acciones</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-gray-50">
                 @forelse ($listas as $lista)
                 <tr class="hover:bg-gray-50 transition-colors">
-                    <td data-label="Nombre" class="px-5 py-3.5 font-medium text-gray-800">{{ $lista->name }}</td>
-                    <td data-label="Ciclo" class="px-5 py-3.5 font-mono text-xs text-gray-500">{{ $lista->cycle?->code ?? '—' }}</td>
-                    <td data-label="Estado" class="px-5 py-3.5 text-center">
+                    <td class="px-5 py-3.5 font-medium text-gray-800">{{ $lista->name }}</td>
+                    <td class="px-5 py-3.5 font-mono text-xs text-gray-500">{{ $lista->cycle?->code ?? '—' }}</td>
+                    <td class="px-5 py-3.5 text-center">
                         <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold
                             {{ $lista->estado === 'activa' ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-600' }}">
                             {{ ucfirst($lista->estado) }}
                         </span>
                     </td>
-                    <td data-label="Creada" class="px-5 py-3.5 text-center text-gray-500 hidden md:table-cell">{{ $lista->created_at->format('d/m/Y') }}</td>
-                    <td data-label="" class="px-5 py-3.5">
+                    <td class="px-5 py-3.5 text-center text-gray-500 text-xs">{{ $lista->created_at->format('d/m/Y') }}</td>
+                    <td class="px-5 py-3.5">
                         <div class="flex items-center justify-end gap-1">
                             <button wire:click="viewItems({{ $lista->id }})" title="Ver productos"
                                     class="p-1.5 rounded-lg text-gray-400 hover:text-celeste-600 hover:bg-celeste-50 transition-colors">
@@ -430,6 +458,45 @@
     </div>
     @if ($listas->hasPages())
     <div class="px-5 py-3 border-t border-gray-100">{{ $listas->links() }}</div>
+    @endif
+</div>
+
+{{-- Cards móvil --}}
+<div class="sm:hidden flex flex-col gap-3">
+    @forelse ($listas as $lista)
+    <div style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; overflow:hidden;">
+        {{-- Cabecera card --}}
+        <div style="background:#F8F7FF; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #EDE9FE;">
+            <span style="font-size:14px; font-weight:700; color:#1F2937;">{{ $lista->name }}</span>
+            <span style="display:inline-flex; padding:2px 10px; border-radius:99px; font-size:11px; font-weight:700;
+                {{ $lista->estado === 'activa' ? 'background:#D1FAE5; color:#065F46;' : 'background:#F3F4F6; color:#6B7280;' }}">
+                {{ ucfirst($lista->estado) }}
+            </span>
+        </div>
+        {{-- Cuerpo card --}}
+        <div style="padding:10px 14px; display:flex; flex-direction:column; gap:4px;">
+            <div style="font-size:12px; color:#6B7280;">
+                Ciclo: <span style="font-family:monospace; font-weight:600; color:#374151;">{{ $lista->cycle?->code ?? '—' }}</span>
+            </div>
+            <div style="font-size:12px; color:#9CA3AF;">Creada: {{ $lista->created_at->format('d/m/Y') }}</div>
+        </div>
+        {{-- Footer card --}}
+        <div style="padding:8px 14px; border-top:1px solid #F3F4F6; display:flex; gap:8px; justify-content:flex-end;">
+            <button wire:click="viewItems({{ $lista->id }})"
+                    style="height:32px; padding:0 12px; background:#EFF6FF; color:#0369A1; font-size:12px; font-weight:600; border:none; border-radius:8px; cursor:pointer;">
+                Ver productos
+            </button>
+            <button wire:click="edit({{ $lista->id }})"
+                    style="height:32px; padding:0 12px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; border:1px solid #EDE9FE; border-radius:8px; cursor:pointer;">
+                Editar
+            </button>
+        </div>
+    </div>
+    @empty
+    <div style="padding:40px 20px; text-align:center; color:#9CA3AF; font-size:14px;">No hay listas de precios registradas.</div>
+    @endforelse
+    @if ($listas->hasPages())
+    <div class="px-2 py-3">{{ $listas->links() }}</div>
     @endif
 </div>
 @endif
