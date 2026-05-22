@@ -74,7 +74,6 @@ class ModulosSubmodulosSeeder extends Seeder
                         'children' => [
                             ['name' => 'Ciclos Comerciales', 'slug' => 'ciclos-comerciales',  'route_name' => 'admin.ciclo.ciclos',   'sort_order' => 1],
                             ['name' => 'Puntos',             'slug' => 'ciclo-puntos',         'route_name' => 'admin.ciclo.puntos',   'sort_order' => 2],
-                            ['name' => 'Matriz Financiera',  'slug' => 'matriz-financiera',    'route_name' => 'admin.finance.index',  'sort_order' => 3],
                         ],
                     ],
                 ],
