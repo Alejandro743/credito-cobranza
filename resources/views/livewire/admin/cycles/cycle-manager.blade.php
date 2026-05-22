@@ -34,12 +34,14 @@
         <option value="cerrado">Cerrado</option>
     </select>
 
+    @if(!$showAddForm)
     <button wire:click="showAdd"
             style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;"
             @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         Nuevo Ciclo
     </button>
+    @endif
 </div>
 
 {{-- ══════ PANEL NUEVO REGISTRO ══════ --}}
@@ -49,7 +51,10 @@
 {{-- PANEL NUEVO — ESCRITORIO --}}
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px; overflow:hidden;">
     <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
-        <span style="font-size:14px; font-weight:800; color:#7B6FE8;">Nuevo Ciclo Comercial</span>
+        <span style="font-size:14px; font-weight:800; color:#7B6FE8; display:flex; align-items:center; gap:7px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#7B6FE8;"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            Nuevo Ciclo Comercial
+        </span>
         <button wire:click="cancelAdd"
                 style="width:30px; height:30px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;"
                 @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
@@ -253,11 +258,6 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                             @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                     </button>
-                    <button wire:click="delete({{ $cycle->id }})" wire:confirm="¿Eliminar este ciclo?" title="Eliminar"
-                            style="width:28px; height:28px; border-radius:7px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
-                            @mouseenter="$el.style.background='#FECACA'" @mouseleave="$el.style.background='#FEF2F2'">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    </button>
                 </div>
             </td>
         </tr>
@@ -375,11 +375,6 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                     style="flex:1; height:34px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;"
                     @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
                 Editar
-            </button>
-            <button wire:click="delete({{ $cycle->id }})" wire:confirm="¿Eliminar este ciclo?"
-                    style="width:34px; height:34px; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
-                    @mouseenter="$el.style.background='#FECACA'" @mouseleave="$el.style.background='#FEF2F2'">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             </button>
         </div>
     </div>
