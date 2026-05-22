@@ -155,8 +155,8 @@
         <span wire:loading wire:target="savePermissions">Guardando...</span>
     </button>
     <button wire:click="backToList"
-            style="height:36px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;"
-            @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+            style="height:36px; padding:0 18px; background:#fff; color:#374151; border:1px solid #D1D5DB; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;"
+            @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
         Cerrar
     </button>
 </div>
