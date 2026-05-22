@@ -322,6 +322,8 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
     @else
     <div wire:key="card-{{ $punto->id }}"
          style="background:#fff;border-radius:14px;border:1px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,.05);overflow:hidden;">
+
+        {{-- Header: código + badge --}}
         <div style="background:#F8F7FF;padding:10px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #EDE9FE;">
             <span style="font-family:monospace;font-size:13px;font-weight:800;color:#7B6FE8;letter-spacing:.5px;">{{ $punto->cycle->code }}</span>
             @if($punto->active)
@@ -330,17 +332,32 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
             <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#F3F4F6;color:#9CA3AF;">Inactivo</span>
             @endif
         </div>
-        <div style="padding:12px 14px 10px;">
-            <p style="font-size:14px;font-weight:700;color:#111827;margin:0 0 4px;">{{ $punto->cycle->name }}</p>
-            <p style="font-size:12px;color:#6B7280;margin:0 0 8px;">{{ $punto->cycle->start_date->format('d/m/Y') }} — {{ $punto->cycle->end_date->format('d/m/Y') }}</p>
-            <p style="font-size:15px;font-weight:700;color:#7B6FE8;margin:0;">Bs {{ number_format((float)$punto->valor_punto, 2) }} <span style="font-size:11px;font-weight:400;color:#9CA3AF;">/ punto</span></p>
+
+        {{-- Cuerpo --}}
+        <div style="padding:12px 14px;">
+            <p style="font-size:13px;font-weight:600;color:#111827;margin:0 0 10px;">{{ $punto->cycle->name }}</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <div>
+                    <span style="display:block;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Valor / Punto</span>
+                    <span style="font-size:15px;font-weight:800;color:#7B6FE8;">Bs {{ number_format((float)$punto->valor_punto, 2) }}</span>
+                    <span style="font-size:11px;color:#9CA3AF;"> / pto</span>
+                </div>
+                <div>
+                    <span style="display:block;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Período</span>
+                    <span style="font-size:12px;font-weight:500;color:#374151;">{{ $punto->cycle->start_date->format('d/m/Y') }}</span>
+                    <span style="font-size:11px;color:#9CA3AF;"> — </span>
+                    <span style="font-size:12px;font-weight:500;color:#374151;">{{ $punto->cycle->end_date->format('d/m/Y') }}</span>
+                </div>
+            </div>
             @if($punto->description)
-            <p style="font-size:12px;color:#9CA3AF;margin:4px 0 0;">{{ $punto->description }}</p>
+            <p style="font-size:12px;color:#9CA3AF;margin:8px 0 0;font-style:italic;">{{ $punto->description }}</p>
             @endif
         </div>
+
+        {{-- Footer --}}
         <div style="padding:10px 14px;border-top:1px solid #F3F4F6;">
             <button wire:click="startEdit({{ $punto->id }})"
-                    style="width:100%;height:34px;background:#F8F7FF;color:#7B6FE8;border:1px solid #EDE9FE;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;"
+                    style="width:100%;height:34px;background:#F8F7FF;color:#7B6FE8;border:1px solid #EDE9FE;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;"
                     @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
                 Editar
             </button>
