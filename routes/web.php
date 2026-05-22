@@ -47,8 +47,8 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('admin')->name('admin.'
         Route::get('/puntos', fn() => view('admin.ciclo.puntos.index'))->name('puntos');
     });
 
-    // Config. Financiera
-    Route::prefix('finance')->name('finance.')->group(function () {
+    // Config. Financiera (deshabilitada — solo admin)
+    Route::prefix('finance')->name('finance.')->middleware('role:admin')->group(function () {
         Route::get('/', fn() => view('admin.finance.index'))->name('index');
     });
 
