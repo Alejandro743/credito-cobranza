@@ -151,8 +151,8 @@
     <p class="hidden sm:block" style="font-size:11px; color:#9CA3AF; margin:0;">Solo submódulos con acceso activo serán visibles en el menú.</p>
     <div style="display:flex; gap:8px;">
         <button wire:click="backToList" class="flex-1 sm:flex-none"
-                style="height:36px; padding:0 18px; background:#FEF2F2; color:#EF4444; border:1px solid #FEE2E2; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;"
-                @mouseenter="$el.style.background='#FEE2E2'" @mouseleave="$el.style.background='#FEF2F2'">
+                style="height:36px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;"
+                @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
             Salir
         </button>
         <button wire:click="savePermissions" wire:loading.attr="disabled" class="flex-1 sm:flex-none"
