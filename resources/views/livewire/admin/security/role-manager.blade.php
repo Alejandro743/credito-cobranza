@@ -229,8 +229,90 @@
 </div>
 @endif
 
-{{-- ══ TABLA ══ --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+{{-- ══ MOBILE: Cards ══ --}}
+<div class="sm:hidden flex flex-col" style="gap:10px;">
+    @forelse ($roles as $role)
+
+    @if ($editingId === $role->id)
+    <div wire:key="card-edit-{{ $role->id }}"
+         style="background:#FAFAFE; border-radius:14px; border:1px solid #EDE9FE; padding:14px 16px; box-shadow:0 1px 4px rgba(123,111,232,.1);">
+        <p style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin:0 0 10px;">Editando rol</p>
+        @if ($role->name !== 'admin')
+        <div style="margin-bottom:10px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Nombre</label>
+            <input wire:model="editRoleName" type="text"
+                   style="width:100%; height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
+            @error('editRoleName')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+        </div>
+        <div style="margin-bottom:12px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Estado</label>
+            <select wire:model="editActivo"
+                    style="width:100%; height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box; cursor:pointer;">
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
+        </div>
+        @else
+        <p style="font-size:12px; color:#9CA3AF; margin:0 0 12px; font-style:italic;">El rol admin no se puede modificar.</p>
+        @endif
+        <div style="display:flex; gap:8px;">
+            @if ($role->name !== 'admin')
+            <button wire:click="saveEdit" style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">Guardar</button>
+            @endif
+            <button wire:click="cancelEdit" style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
+        </div>
+    </div>
+
+    @else
+    <div wire:key="card-{{ $role->id }}"
+         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
+        <div style="background:#F8F7FF; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #EDE9FE;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <div style="width:26px; height:26px; border-radius:7px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/></svg>
+                </div>
+                <span style="font-size:13px; font-weight:700; color:#111827; text-transform:capitalize;">{{ $role->name }}</span>
+            </div>
+            @if ($role->name === 'admin')
+            <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#EDE9FE; color:#7B6FE8; flex-shrink:0;">Siempre activo</span>
+            @elseif ($role->activo ?? true)
+            <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#D1FAE5; color:#059669; flex-shrink:0;">Activo</span>
+            @else
+            <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#FEE2E2; color:#EF4444; flex-shrink:0;">Inactivo</span>
+            @endif
+        </div>
+        <div style="padding:8px 14px; border-bottom:1px solid #F3F4F6;">
+            <span style="font-size:12px; color:#9CA3AF;">{{ $role->users_count }} usuario{{ $role->users_count !== 1 ? 's' : '' }}</span>
+        </div>
+        <div style="padding:10px 14px; display:flex; gap:7px;">
+            <button wire:click="openPermissions({{ $role->id }})"
+                    style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/></svg>
+                Accesos
+            </button>
+            <button wire:click="openView({{ $role->id }})"
+                    style="width:32px; height:32px; border:1px solid #E5E7EB; border-radius:8px; background:#F9FAFB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            </button>
+            <button wire:click="startEdit({{ $role->id }})"
+                    style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Editar
+            </button>
+        </div>
+    </div>
+    @endif
+
+    @empty
+    <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">No hay roles registrados.</p>
+    @endforelse
+    @if ($roles->hasPages())
+    <div style="padding-top:8px;">{{ $roles->links() }}</div>
+    @endif
+</div>
+
+{{-- ══ DESKTOP: Tabla ══ --}}
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
 
     {{-- Barra --}}
     <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
