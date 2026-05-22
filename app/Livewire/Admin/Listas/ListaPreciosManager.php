@@ -53,6 +53,7 @@ class ListaPreciosManager extends Component
 
     // Edición inline de ítem ya en la lista
     public ?int   $editItemId       = null;
+    public string $editCode         = '';
     public string $editPrecio       = '0';
     public string $editPuntos       = '0';
     public string $editStockInicial = '0';
@@ -239,8 +240,9 @@ class ListaPreciosManager extends Component
 
     public function startEditItem(int $id): void
     {
-        $item = ListaMaestraItem::findOrFail($id);
+        $item = ListaMaestraItem::with('product')->findOrFail($id);
         $this->editItemId       = $id;
+        $this->editCode         = $item->product->code ?? '';
         $this->editPrecio       = (string) $item->precio_base;
         $this->editPuntos       = (string) $item->puntos;
         $this->editStockInicial = (string) $item->stock_inicial;
@@ -257,17 +259,25 @@ class ListaPreciosManager extends Component
 
     public function saveEditItem(): void
     {
+        $item = ListaMaestraItem::with('product')->findOrFail($this->editItemId);
+
         $this->validate([
+            'editCode'         => ['required', 'string', 'max:30',
+                                   Rule::unique('products', 'code')
+                                       ->ignore($item->product_id)
+                                       ->whereNull('deleted_at')],
             'editPrecio'       => 'required|numeric|min:0',
             'editPuntos'       => 'required|integer|min:0',
             'editStockInicial' => 'required|numeric|min:0',
         ], [], [
+            'editCode'         => 'código',
             'editPrecio'       => 'precio',
             'editPuntos'       => 'puntos',
             'editStockInicial' => 'stock inicial',
         ]);
 
-        $item         = ListaMaestraItem::findOrFail($this->editItemId);
+        $item->product->update(['code' => strtoupper(trim($this->editCode))]);
+
         $nuevoInicial = (float) $this->editStockInicial;
         $nuevoActual  = $nuevoInicial - (float) $item->stock_consumido;
 
