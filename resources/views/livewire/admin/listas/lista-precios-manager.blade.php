@@ -351,9 +351,14 @@ $lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase
 
 {{-- Formulario inline --}}
 @if($showAddForm)
-<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; margin-bottom:20px; overflow:hidden;">
-    <div style="background:#F8F7FF; padding:12px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #EDE9FE;">
-        <span style="font-size:14px; font-weight:800; color:#7B6FE8;">{{ $editing ? 'Editar Lista de Precios' : 'Nueva Lista de Precios' }}</span>
+<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px; overflow:hidden;">
+    <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:14px; font-weight:800; color:#7B6FE8; display:flex; align-items:center; gap:7px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#7B6FE8;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+            </svg>
+            {{ $editing ? 'Editar Lista de Precios' : 'Nueva Lista de Precios' }}
+        </span>
         <button wire:click="cancelForm" style="width:30px; height:30px; display:flex; align-items:center; justify-content:center; border:1px solid #EDE9FE; border-radius:8px; background:#fff; cursor:pointer; color:#9CA3AF;" type="button">
             <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
