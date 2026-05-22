@@ -201,7 +201,7 @@
     <div style="padding:20px 22px; display:flex; flex-direction:column; gap:16px;">
 
         {{-- Nombre + Estado --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-3">
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Nombre *</label>
                 <input wire:model="nombre" type="text" placeholder="Ej: Rangos 2026" style="{{ $iS }}">
@@ -218,16 +218,14 @@
         </div>
 
         {{-- Vigencia --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-3">
             <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Vigencia desde *</label>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Desde *</label>
                 <input wire:model.blur="fechaInicio" type="date" style="{{ $iS }}">
                 @error('fechaInicio')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
             </div>
             <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">
-                    Vigencia hasta <span style="font-weight:400; color:#9CA3AF; text-transform:none;">(vacío = abierto)</span>
-                </label>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Hasta <span style="font-weight:400; color:#9CA3AF; text-transform:none; font-size:10px;">(vacío=∞)</span></label>
                 <input wire:model.blur="fechaFin" type="date" style="{{ $iS }}">
                 @error('fechaFin')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
             </div>
@@ -241,16 +239,16 @@
         @error('minA')<p style="font-size:11px; color:#EF4444; margin-top:-8px;">{{ $message }}</p>@enderror
 
         {{-- Grid umbrales --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div class="grid grid-cols-2 gap-3">
             @foreach([
-                ['A — Excelente', 'minA', '#D1FAE5', '#059669'],
-                ['B — Buena',     'minB', '#CFFAFE', '#0E7490'],
-                ['C — Observada', 'minC', '#FEF3C7', '#B45309'],
-                ['D — Riesgosa',  'minD', '#FFEDD5', '#C2410C'],
+                ['A – Excelente', 'minA', '#D1FAE5', '#059669'],
+                ['B – Buena',     'minB', '#CFFAFE', '#0E7490'],
+                ['C – Observada', 'minC', '#FEF3C7', '#B45309'],
+                ['D – Riesgosa',  'minD', '#FFEDD5', '#C2410C'],
             ] as [$lbl, $model, $bg, $cl])
             <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">
-                    Puntaje mín. {{ $lbl }}
+                <label style="display:block; font-size:11px; font-weight:700; color:{{ $cl }}; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">
+                    {{ $lbl }}
                 </label>
                 <div style="position:relative;">
                     <input wire:model.live="{{ $model }}" type="number" min="0" max="100" step="0.5"

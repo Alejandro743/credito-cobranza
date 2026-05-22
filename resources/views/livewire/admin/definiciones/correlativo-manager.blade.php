@@ -222,34 +222,16 @@
             @if ($editingId === $c->id)
             {{-- Card edición mobile --}}
             @php $mS = 'width:100%; height:38px; border:1px solid #D8D3F8; border-radius:8px; padding:0 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;'; @endphp
-            <div wire:key="medit-{{ $c->id }}" style="background:#F8F7FF; border-radius:12px; border:1px solid #EDE9FE; border-left:3px solid #7B6FE8; padding:14px; display:flex; flex-direction:column; gap:12px;">
+            <div wire:key="medit-{{ $c->id }}" style="background:#F8F7FF; border-radius:14px; border:1px solid #EDE9FE; border-left:3px solid #7B6FE8; padding:14px; display:flex; flex-direction:column; gap:10px;">
                 <p style="font-size:11px; font-weight:700; color:#7B6FE8; margin:0; text-transform:uppercase; letter-spacing:.5px;">Editando correlativo</p>
-                <div style="display:flex; flex-direction:column; gap:10px;">
+
+                {{-- Fila 1: Prefijo + Estado --}}
+                <div class="grid grid-cols-2 gap-3">
                     <div>
                         <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Prefijo *</label>
                         <input wire:model="editPrefijo" type="text" maxlength="10"
-                               style="{{ $mS }} font-family:monospace; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
+                               style="{{ $mS }} font-family:monospace; font-weight:700; text-transform:uppercase; letter-spacing:1px; text-align:center;">
                         @error('editPrefijo') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-                    </div>
-                    <div>
-                        <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Descripción</label>
-                        <input wire:model="editDescripcion" type="text" maxlength="200"
-                               style="{{ $mS }}">
-                        @error('editDescripcion') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-                    </div>
-                    <div style="display:flex; gap:10px;">
-                        <div style="flex:1;">
-                            <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Sig. Número *</label>
-                            <input wire:model="editSiguienteNumero" type="number" min="1"
-                                   style="{{ $mS }} text-align:center;">
-                            @error('editSiguienteNumero') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-                        </div>
-                        <div style="flex:1;">
-                            <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Longitud *</label>
-                            <input wire:model="editLongitud" type="number" min="1" max="10"
-                                   style="{{ $mS }} text-align:center;">
-                            @error('editLongitud') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-                        </div>
                     </div>
                     <div>
                         <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Estado</label>
@@ -259,13 +241,37 @@
                         </select>
                     </div>
                 </div>
-                <div style="display:flex; gap:8px; padding-top:4px; border-top:1px solid #EDE9FE;">
+
+                {{-- Fila 2: Descripción --}}
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Descripción</label>
+                    <input wire:model="editDescripcion" type="text" maxlength="200" style="{{ $mS }}">
+                    @error('editDescripcion') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+                </div>
+
+                {{-- Fila 3: Sig. Número + Longitud --}}
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Sig. Número *</label>
+                        <input wire:model="editSiguienteNumero" type="number" min="1"
+                               style="{{ $mS }} text-align:center;">
+                        @error('editSiguienteNumero') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Longitud *</label>
+                        <input wire:model="editLongitud" type="number" min="1" max="10"
+                               style="{{ $mS }} text-align:center;">
+                        @error('editLongitud') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2" style="padding-top:4px; border-top:1px solid #EDE9FE;">
                     <button wire:click="saveEdit"
-                            style="flex:1; height:38px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
+                            style="height:38px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
                         Guardar
                     </button>
                     <button wire:click="cancelEdit"
-                            style="flex:1; height:38px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+                            style="height:38px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
                         Cancelar
                     </button>
                 </div>
