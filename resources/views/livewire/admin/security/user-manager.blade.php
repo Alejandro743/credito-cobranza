@@ -194,85 +194,113 @@
 @endif
 
 {{-- ══ MOBILE: Cards ══ --}}
-@php $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;'; @endphp
-<div class="sm:hidden flex flex-col" style="gap:10px;">
+@php
+$iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;';
+$tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
+    'vendedor' => ['bg'=>'rgba(249,115,22,.1)','color'=>'#EA580C'],
+    'cliente'  => ['bg'=>'rgba(59,130,246,.1)','color'=>'#2563EB'],
+    default    => ['bg'=>'rgba(123,111,232,.1)','color'=>'#7B6FE8'],
+};
+@endphp
+<div class="sm:hidden" style="display:flex; flex-direction:column; gap:10px;">
     @forelse ($users as $user)
-    @php $roleName = $user->getRoleNames()->first() ?? '—'; @endphp
+    @php $roleName = $user->getRoleNames()->first() ?? '—'; $tb = $tipoBadgeMobile($user->tipo); @endphp
 
     @if($editingId === $user->id)
+    {{-- Card edición --}}
     <div wire:key="card-edit-{{ $user->id }}"
-         style="background:#FAFAFE; border-radius:14px; border:1px solid #EDE9FE; padding:14px 16px; box-shadow:0 1px 4px rgba(123,111,232,.1);">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Nombre *</label>
-                <input wire:model="editName" type="text" style="{{ $iM }}">
-                @error('editName')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Usuario *</label>
-                <input wire:model="editUsuario" type="text" style="{{ $iM }} font-family:monospace;">
-                @error('editUsuario')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
-            </div>
+         style="background:#fff; border-radius:14px; border:1px solid #EDE9FE; border-left:3px solid #7B6FE8; box-shadow:0 2px 8px rgba(123,111,232,.1); overflow:hidden;">
+        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:10px 14px;">
+            <p style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin:0;">Editando usuario</p>
         </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:12px;">
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Tipo</label>
-                <select wire:model="editTipo" style="{{ $iM }} cursor:pointer;">
-                    <option value="administrativo">Admin.</option>
-                    <option value="vendedor">Vendedor</option>
-                    <option value="cliente">Cliente</option>
-                </select>
+        <div style="padding:14px; display:flex; flex-direction:column; gap:10px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Nombre *</label>
+                    <input wire:model="editName" type="text" style="{{ $iM }}">
+                    @error('editName')<p style="font-size:11px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Usuario *</label>
+                    <input wire:model="editUsuario" type="text" style="{{ $iM }} font-family:monospace;">
+                    @error('editUsuario')<p style="font-size:11px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+                </div>
             </div>
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Rol</label>
-                <select wire:model="editRole" style="{{ $iM }} cursor:pointer;">
-                    <option value="">— Rol —</option>
-                    @foreach($roles as $role)
-                    <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
-                    @endforeach
-                </select>
-                @error('editRole')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Tipo</label>
+                    <select wire:model="editTipo" style="{{ $iM }} cursor:pointer;">
+                        <option value="administrativo">Admin.</option>
+                        <option value="vendedor">Vendedor</option>
+                        <option value="cliente">Cliente</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Rol</label>
+                    <select wire:model="editRole" style="{{ $iM }} cursor:pointer;">
+                        <option value="">— Rol —</option>
+                        @foreach($roles as $role)
+                        <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                        @endforeach
+                    </select>
+                    @error('editRole')<p style="font-size:11px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Estado</label>
+                    <select wire:model="editActive" style="{{ $iM }} cursor:pointer;">
+                        <option value="1">Activo</option>
+                        <option value="0">Inactivo</option>
+                    </select>
+                </div>
             </div>
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Estado</label>
-                <select wire:model="editActive" style="{{ $iM }} cursor:pointer;">
-                    <option value="1">Activo</option>
-                    <option value="0">Inactivo</option>
-                </select>
+            <div style="display:flex; gap:8px; padding-top:4px; border-top:1px solid #F3F4F6;">
+                <button wire:click="saveEdit" style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">Guardar</button>
+                <button wire:click="cancelEdit" style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
             </div>
-        </div>
-        <div style="display:flex; gap:8px;">
-            <button wire:click="saveEdit" style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">Guardar</button>
-            <button wire:click="cancelEdit" style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
         </div>
     </div>
 
     @else
+    {{-- Card normal --}}
     <div wire:key="card-{{ $user->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
-        <div style="background:#F8F7FF; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #EDE9FE;">
-            <span style="font-size:13px; font-weight:700; color:#111827; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; margin-right:8px;">{{ $user->name }}</span>
+
+        {{-- Header --}}
+        <div style="padding:12px 14px; display:flex; align-items:center; gap:12px; border-bottom:1px solid #F3F4F6;">
+            {{-- Avatar inicial --}}
+            <div style="width:38px; height:38px; border-radius:10px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:15px; font-weight:800; color:#7B6FE8;">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+                <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $user->name }}</p>
+                <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $user->email }}</p>
+            </div>
             <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0;
                          background:{{ $user->active ? '#D1FAE5' : '#F3F4F6' }};
                          color:{{ $user->active ? '#059669' : '#9CA3AF' }};">
                 {{ $user->active ? 'Activo' : 'Inactivo' }}
             </span>
         </div>
-        <div style="padding:10px 14px; display:flex; flex-direction:column; gap:4px;">
-            <p style="font-size:12px; color:#7B6FE8; font-family:monospace; font-weight:600; margin:0;">{{ $user->email }}</p>
-            <div style="display:flex; gap:10px;">
-                <span style="font-size:12px; color:#6B7280; margin:0;">{{ ucfirst($user->tipo ?? 'administrativo') }}</span>
-                <span style="font-size:12px; color:#9CA3AF;">·</span>
-                <span style="font-size:12px; color:#6B7280; text-transform:capitalize;">{{ $roleName }}</span>
-            </div>
+
+        {{-- Info: tipo + rol --}}
+        <div style="padding:10px 14px; display:flex; gap:8px; align-items:center;">
+            <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:{{ $tb['bg'] }}; color:{{ $tb['color'] }};">
+                {{ ucfirst($user->tipo ?? 'administrativo') }}
+            </span>
+            <span style="font-size:11px; color:#D1D5DB;">|</span>
+            <span style="font-size:12px; color:#6B7280; text-transform:capitalize; font-weight:500;">{{ $roleName }}</span>
         </div>
-        <div style="padding:10px 14px; border-top:1px solid #F3F4F6; display:flex; gap:7px;">
+
+        {{-- Acciones --}}
+        <div style="padding:10px 14px; border-top:1px solid #F3F4F6; display:flex; gap:8px;">
             <button wire:click="startEdit({{ $user->id }})"
-                    style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer;">
+                    style="flex:1; height:34px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
             </button>
             <button wire:click="openPasswordModal({{ $user->id }})"
-                    style="flex:1; height:32px; border:1px solid #E5E7EB; border-radius:8px; background:#F9FAFB; color:#6B7280; font-size:12px; font-weight:600; cursor:pointer;">
+                    style="flex:1; height:34px; border:1px solid #E5E7EB; border-radius:8px; background:#F9FAFB; color:#6B7280; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                 Contraseña
             </button>
         </div>
