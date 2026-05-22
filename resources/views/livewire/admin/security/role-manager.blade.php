@@ -147,7 +147,7 @@
 </div>
 
 {{-- Footer --}}
-<div style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; padding:13px 18px; display:flex; align-items:center; gap:8px;">
+<div style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; padding:13px 18px; display:flex; align-items:center; justify-content:flex-end; gap:8px;">
     <button wire:click="savePermissions" wire:loading.attr="disabled"
             style="height:36px; padding:0 22px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;"
             @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
