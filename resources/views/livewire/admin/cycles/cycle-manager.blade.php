@@ -115,7 +115,7 @@
 $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;';
 @endphp
 
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
 
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Ciclos Comerciales</span>
@@ -225,6 +225,114 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
     <div style="padding:12px 18px; border-top:1px solid #F3F4F6;">
         {{ $cycles->links() }}
     </div>
+    @endif
+</div>
+
+{{-- ══════ CARDS MOBILE ══════ --}}
+<div class="sm:hidden">
+
+    @if($cycles->isEmpty())
+    <p style="text-align:center; color:#9CA3AF; font-size:13px; padding:48px 0;">No hay ciclos registrados.</p>
+    @endif
+
+    @foreach($cycles as $cycle)
+
+    @if($editingId === $cycle->id)
+    {{-- CARD EDICIÓN --}}
+    <div wire:key="edit-mobile-{{ $cycle->id }}"
+         style="background:#FAFAFE; border-radius:14px; border:1px solid #EDE9FE; margin-bottom:10px; padding:14px 16px; box-shadow:0 1px 4px rgba(123,111,232,.1);">
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Código *</label>
+                <input wire:model="editCode" type="text" maxlength="30"
+                       style="width:100%; {{ $iRow }} text-transform:uppercase;">
+                @error('editCode')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Estado</label>
+                <select wire:model="editStatus" style="width:100%; {{ $iRow }} cursor:pointer;">
+                    <option value="abierto">Abierto</option>
+                    <option value="cerrado">Cerrado</option>
+                </select>
+            </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Descripción *</label>
+            <input wire:model="editName" type="text"
+                   style="width:100%; {{ $iRow }}">
+            @error('editName')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Inicio *</label>
+                <input wire:model="editStartDate" type="date" style="width:100%; {{ $iRow }}">
+                @error('editStartDate')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Fin *</label>
+                <input wire:model="editEndDate" type="date" style="width:100%; {{ $iRow }}">
+                @error('editEndDate')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+            </div>
+        </div>
+
+        <div style="display:flex; gap:8px;">
+            <button wire:click="saveEdit" wire:loading.attr="disabled"
+                    style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                <span wire:loading.remove wire:target="saveEdit">Guardar</span>
+                <span wire:loading wire:target="saveEdit">Guardando...</span>
+            </button>
+            <button wire:click="cancelEdit"
+                    style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                Cerrar
+            </button>
+        </div>
+    </div>
+
+    @else
+    {{-- CARD NORMAL --}}
+    <div wire:key="mobile-{{ $cycle->id }}"
+         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; margin-bottom:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
+
+        <div style="padding:12px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
+            <span style="font-size:14px; font-weight:800; color:#7B6FE8; font-family:monospace;">{{ $cycle->code }}</span>
+            @if($cycle->status === 'abierto')
+            <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#D1FAE5; color:#059669;">Abierto</span>
+            @else
+            <span style="font-size:11px; font-weight:600; padding:3px 10px; border-radius:99px; background:#F3F4F6; color:#9CA3AF;">Cerrado</span>
+            @endif
+        </div>
+
+        <div style="padding:10px 14px; border-bottom:1px solid #F3F4F6;">
+            <p style="font-size:13px; font-weight:600; color:#111827; margin:0;">{{ $cycle->name }}</p>
+        </div>
+
+        <div style="padding:8px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
+            <span style="font-size:12px; color:#6B7280; font-weight:500;">Vigencia</span>
+            <span style="font-size:12px; color:#374151; font-weight:600;">{{ $cycle->start_date->format('d/m/Y') }} → {{ $cycle->end_date->format('d/m/Y') }}</span>
+        </div>
+
+        <div style="padding:10px 14px; display:flex; gap:8px;">
+            <button wire:click="startEdit({{ $cycle->id }})"
+                    style="flex:1; height:34px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                Editar
+            </button>
+            <button wire:click="delete({{ $cycle->id }})" wire:confirm="¿Eliminar este ciclo?"
+                    style="width:34px; height:34px; background:#FEF2F2; color:#DC2626; border:1px solid #FECACA; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+                    @mouseenter="$el.style.background='#FECACA'" @mouseleave="$el.style.background='#FEF2F2'">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
+        </div>
+    </div>
+    @endif
+
+    @endforeach
+
+    @if($cycles->hasPages())
+    <div style="margin-top:4px;">{{ $cycles->links() }}</div>
     @endif
 </div>
 
