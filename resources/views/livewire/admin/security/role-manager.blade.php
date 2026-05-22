@@ -147,20 +147,18 @@
 </div>
 
 {{-- Footer --}}
-<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; padding:13px 18px;">
-    <p class="hidden sm:block" style="font-size:11px; color:#9CA3AF; margin:0;">Solo submódulos con acceso activo serán visibles en el menú.</p>
-    <div style="display:flex; gap:8px;">
-        <button wire:click="backToList" class="flex-1 sm:flex-none"
-                style="height:36px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;"
-                @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
-            Salir
-        </button>
-        <button wire:click="savePermissions" wire:loading.attr="disabled" class="flex-1 sm:flex-none"
-                style="height:36px; padding:0 22px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;">
-            <span wire:loading.remove wire:target="savePermissions">Guardar accesos</span>
-            <span wire:loading wire:target="savePermissions">Guardando...</span>
-        </button>
-    </div>
+<div style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; padding:13px 18px; display:flex; align-items:center; justify-content:space-between; gap:8px;">
+    <button wire:click="savePermissions" wire:loading.attr="disabled"
+            style="height:36px; padding:0 22px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;"
+            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+        <span wire:loading.remove wire:target="savePermissions">Guardar accesos</span>
+        <span wire:loading wire:target="savePermissions">Guardando...</span>
+    </button>
+    <button wire:click="backToList"
+            style="height:36px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;"
+            @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+        Cerrar
+    </button>
 </div>
 
 @else
