@@ -708,7 +708,7 @@ class ListaMaestraManager extends Component
 
     public function render()
     {
-        $cycles = CommercialCycle::orderByDesc('start_date')->get();
+        $cycles = CommercialCycle::where('status', '!=', 'cerrado')->orderByDesc('start_date')->get();
 
         // List mode
         $maestras = ListaMaestra::with('cycle')
