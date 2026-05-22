@@ -21,13 +21,13 @@ class ConfiguracionPuntosManager extends Component
     public ?int   $newCycleId      = null;
     public string $newValorPunto   = '1.00';
     public string $newDescription  = '';
-    public bool   $newActive       = true;
+    public int    $newActive        = 1;
 
     // Inline row edit
     public ?int   $editingId       = null;
     public string $editValorPunto  = '1.00';
     public string $editDescription = '';
-    public bool   $editActive      = true;
+    public int    $editActive      = 1;
 
     public function mount(): void
     {
@@ -44,7 +44,7 @@ class ConfiguracionPuntosManager extends Component
         $this->newCycleId     = null;
         $this->newValorPunto  = '1.00';
         $this->newDescription = '';
-        $this->newActive      = true;
+        $this->newActive      = 1;
         $this->editingId      = null;
         $this->resetValidation();
     }
@@ -86,7 +86,7 @@ class ConfiguracionPuntosManager extends Component
         $this->editingId      = $id;
         $this->editValorPunto  = number_format((float) $p->valor_punto, 2, '.', '');
         $this->editDescription = $p->description ?? '';
-        $this->editActive      = (bool) $p->active;
+        $this->editActive      = $p->active ? 1 : 0;
         $this->showAddForm     = false;
         $this->resetValidation();
     }

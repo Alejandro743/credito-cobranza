@@ -1,171 +1,341 @@
 <div>
 
 @php
-    $theadClass = match($moduleColor ?? '') {
-        'lavanda'   => 'bg-lavanda-100 text-lavanda-700',
-        'mint'      => 'bg-mint-100 text-mint-700',
-        'melocoton' => 'bg-melocoton-100 text-melocoton-700',
-        'celeste'   => 'bg-celeste-100 text-celeste-700',
-        default     => 'bg-gray-50 text-gray-600',
-    };
+$iRow = 'height:34px; font-size:13px; border:1px solid #D1D5DB; border-radius:6px; padding:0 8px; background:#fff; width:100%; box-sizing:border-box;';
 @endphp
-{{-- Flash --}}
-@if (session('success'))
-<div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-     class="fixed bottom-5 right-5 z-50 bg-mint-500 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg">
+
+{{-- Toast success --}}
+@if(session('success'))
+<div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,3000)"
+     style="position:fixed;bottom:20px;right:20px;z-index:50;background:#10B981;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15);">
     {{ session('success') }}
+</div>
+@endif
+@if(session('error'))
+<div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,4000)"
+     style="position:fixed;bottom:20px;right:20px;z-index:50;background:#EF4444;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.15);">
+    {{ session('error') }}
 </div>
 @endif
 
 {{-- Toolbar --}}
-<div class="flex flex-col sm:flex-row gap-3 mb-5">
-    <div class="relative flex-1">
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+<div style="display:flex;gap:10px;margin-bottom:16px;align-items:center;">
+    <div style="position:relative;flex:1;">
+        <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
         <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por nombre o código de ciclo..."
-               class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:border-lavanda-400 focus:ring-2 focus:ring-lavanda-100">
+               style="width:100%;height:36px;font-size:13px;border:1px solid #D1D5DB;border-radius:8px;padding:0 12px 0 34px;box-sizing:border-box;outline:none;">
     </div>
-    <select wire:model.live="filterStatus" class="border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
+    <select wire:model.live="filterStatus"
+            style="height:36px;font-size:13px;border:1px solid #D1D5DB;border-radius:8px;padding:0 10px;background:#fff;outline:none;">
         <option value="">Todos los estados</option>
         <option value="1">Activo</option>
         <option value="0">Inactivo</option>
     </select>
-    @if ($ciclosDisponibles->isNotEmpty())
-    <button wire:click="showAdd" class="flex items-center gap-2 bg-lavanda-500 hover:bg-lavanda-600 text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors whitespace-nowrap">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+    @if($ciclosDisponibles->isNotEmpty() && !$showAddForm)
+    <button wire:click="showAdd"
+            style="height:36px;font-size:13px;font-weight:600;background:#7C3AED;color:#fff;border:none;border-radius:8px;padding:0 16px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;">
+        <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+        </svg>
         Nueva Config.
     </button>
     @endif
 </div>
 
-{{-- Inline add form --}}
-@if ($showAddForm)
-<div class="bg-lavanda-50 border border-lavanda-200 rounded-2xl p-5 mb-5">
-    <h3 class="text-sm font-bold text-lavanda-700 mb-4">Nueva Configuración de Puntos</h3>
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
-        <div class="lg:col-span-2">
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Ciclo *</label>
-            <select wire:model="newCycleId" class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
-                <option value="">— Seleccionar ciclo —</option>
-                @foreach ($ciclosDisponibles as $ciclo)
-                    <option value="{{ $ciclo->id }}">{{ $ciclo->code }} — {{ $ciclo->name }}</option>
+{{-- Panel nuevo --}}
+@if($showAddForm)
+
+{{-- Desktop --}}
+<div class="hidden sm:block" style="background:#F5F3FF;border:1px solid #DDD6FE;border-radius:12px;padding:16px;margin-bottom:16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:13px;font-weight:700;color:#6D28D9;">Nueva Configuración de Puntos</span>
+        <button wire:click="cancelAdd" style="background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:20px;line-height:1;">&times;</button>
+    </div>
+    <div style="display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap;">
+        <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px;">Ciclo *</label>
+            <select wire:model="newCycleId" style="{{ $iRow }} width:260px;">
+                <option value="">— Seleccionar —</option>
+                @foreach($ciclosDisponibles as $ciclo)
+                <option value="{{ $ciclo->id }}">{{ $ciclo->code }} — {{ $ciclo->name }}</option>
                 @endforeach
             </select>
-            @error('newCycleId') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            @error('newCycleId') <p style="color:#EF4444;font-size:11px;margin-top:2px;">{{ $message }}</p> @enderror
         </div>
         <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Valor del punto (Bs) *</label>
-            <div class="relative">
-                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs font-medium">Bs</span>
+            <label style="display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px;">Valor / Punto *</label>
+            <div style="position:relative;">
+                <span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:12px;color:#9CA3AF;font-weight:500;">Bs</span>
                 <input wire:model="newValorPunto" type="number" step="0.01" min="0.01" placeholder="1.00"
-                       class="w-full border border-gray-200 rounded-xl pl-8 pr-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
+                       style="{{ $iRow }} width:110px;padding-left:26px;">
             </div>
-            @error('newValorPunto') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            @error('newValorPunto') <p style="color:#EF4444;font-size:11px;margin-top:2px;">{{ $message }}</p> @enderror
         </div>
         <div>
-            <label class="block text-xs font-semibold text-gray-600 mb-1">Descripción</label>
+            <label style="display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px;">Descripción</label>
             <input wire:model="newDescription" type="text" placeholder="Observación opcional"
-                   class="w-full border border-gray-200 rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400 bg-white">
+                   style="{{ $iRow }} width:200px;">
         </div>
-        <div class="flex items-end pb-1">
-            <label class="flex items-center gap-2 cursor-pointer">
-                <input wire:model="newActive" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-lavanda-500 focus:ring-lavanda-400">
-                <span class="text-sm font-medium text-gray-700">Activo</span>
-            </label>
+        <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px;">Estado</label>
+            <select wire:model="newActive" style="{{ $iRow }} width:110px;">
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
         </div>
-    </div>
-    <div class="flex gap-3">
-        <button wire:click="saveNew" class="px-5 py-2 bg-lavanda-500 hover:bg-lavanda-600 text-white text-sm font-semibold rounded-xl transition-colors">Guardar</button>
-        <button wire:click="cancelAdd" class="px-5 py-2 border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-medium rounded-xl transition-colors">Cancelar</button>
+        <div>
+            <label style="display:block;font-size:11px;color:transparent;margin-bottom:4px;">·</label>
+            <div style="display:flex;gap:6px;">
+                <button wire:click="saveNew"
+                        style="height:34px;font-size:13px;font-weight:600;background:#7C3AED;color:#fff;border:none;border-radius:6px;padding:0 14px;cursor:pointer;">
+                    Guardar
+                </button>
+                <button wire:click="cancelAdd"
+                        style="height:34px;font-size:13px;font-weight:500;background:#fff;color:#6B7280;border:1px solid #D1D5DB;border-radius:6px;padding:0 14px;cursor:pointer;">
+                    Cancelar
+                </button>
+            </div>
+        </div>
     </div>
 </div>
+
+{{-- Móvil --}}
+<div class="sm:hidden" style="background:#F5F3FF;border:1px solid #DDD6FE;border-radius:12px;padding:14px;margin-bottom:16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span style="font-size:13px;font-weight:700;color:#6D28D9;">Nueva Config. de Puntos</span>
+        <button wire:click="cancelAdd" style="background:none;border:none;cursor:pointer;color:#9CA3AF;font-size:20px;line-height:1;">&times;</button>
+    </div>
+    <div style="margin-bottom:10px;">
+        <label style="display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px;">Ciclo *</label>
+        <select wire:model="newCycleId" style="{{ $iRow }}">
+            <option value="">— Seleccionar —</option>
+            @foreach($ciclosDisponibles as $ciclo)
+            <option value="{{ $ciclo->id }}">{{ $ciclo->code }} — {{ $ciclo->name }}</option>
+            @endforeach
+        </select>
+        @error('newCycleId') <p style="color:#EF4444;font-size:11px;margin-top:2px;">{{ $message }}</p> @enderror
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px;">Valor / Punto *</label>
+            <div style="position:relative;">
+                <span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:12px;color:#9CA3AF;">Bs</span>
+                <input wire:model="newValorPunto" type="number" step="0.01" min="0.01" placeholder="1.00"
+                       style="{{ $iRow }} padding-left:26px;">
+            </div>
+            @error('newValorPunto') <p style="color:#EF4444;font-size:11px;margin-top:2px;">{{ $message }}</p> @enderror
+        </div>
+        <div>
+            <label style="display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px;">Estado</label>
+            <select wire:model="newActive" style="{{ $iRow }}">
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
+        </div>
+    </div>
+    <div style="margin-bottom:10px;">
+        <label style="display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px;">Descripción</label>
+        <input wire:model="newDescription" type="text" placeholder="Observación opcional" style="{{ $iRow }}">
+    </div>
+    <div style="display:flex;gap:8px;">
+        <button wire:click="saveNew"
+                style="flex:1;height:36px;font-size:13px;font-weight:600;background:#7C3AED;color:#fff;border:none;border-radius:8px;cursor:pointer;">
+            Guardar
+        </button>
+        <button wire:click="cancelAdd"
+                style="flex:1;height:36px;font-size:13px;font-weight:500;background:#fff;color:#6B7280;border:1px solid #D1D5DB;border-radius:8px;cursor:pointer;">
+            Cancelar
+        </button>
+    </div>
+</div>
+
 @endif
 
-{{-- Table --}}
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                <tr>
-                    <th class="px-5 py-3 text-left">Ciclo</th>
-                    <th class="px-5 py-3 text-left hidden md:table-cell">Período</th>
-                    <th class="px-5 py-3 text-center">Valor / Punto</th>
-                    <th class="px-5 py-3 text-left hidden lg:table-cell">Descripción</th>
-                    <th class="px-5 py-3 text-center">Estado</th>
-                    <th class="px-5 py-3 text-right">Acciones</th>
+{{-- Tabla escritorio --}}
+<div class="hidden sm:block" style="background:#fff;border-radius:12px;border:1px solid #E5E7EB;overflow:hidden;">
+    <div style="overflow-x:auto;">
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:#EDE9FE;">
+                    <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#6D28D9;text-transform:uppercase;letter-spacing:.5px;width:190px;">Ciclo</th>
+                    <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#6D28D9;text-transform:uppercase;letter-spacing:.5px;width:160px;">Período</th>
+                    <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:#6D28D9;text-transform:uppercase;letter-spacing:.5px;width:120px;">Valor / Pto</th>
+                    <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#6D28D9;text-transform:uppercase;letter-spacing:.5px;">Descripción</th>
+                    <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:#6D28D9;text-transform:uppercase;letter-spacing:.5px;width:100px;">Estado</th>
+                    <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:#6D28D9;text-transform:uppercase;letter-spacing:.5px;width:160px;">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-50">
-                @forelse ($puntos as $punto)
-                @if ($editingId === $punto->id)
-                {{-- Inline edit row --}}
-                <tr wire:key="edit-{{ $punto->id }}" class="bg-lavanda-50">
-                    <td class="px-3 py-2" colspan="2">
-                        <div>
-                            <p class="font-mono text-xs text-lavanda-700 font-semibold">{{ $punto->cycle->code }}</p>
-                            <p class="text-xs text-gray-600">{{ $punto->cycle->name }}</p>
-                        </div>
+            <tbody>
+                @forelse($puntos as $punto)
+                @if($editingId === $punto->id)
+                {{-- Fila edición inline --}}
+                <tr wire:key="edit-{{ $punto->id }}" style="background:#F5F3FF;border-top:1px solid #E5E7EB;">
+                    <td style="padding:8px 10px;" colspan="2">
+                        <p style="font-family:monospace;font-size:12px;font-weight:700;color:#6D28D9;margin:0;">{{ $punto->cycle->code }}</p>
+                        <p style="font-size:12px;color:#374151;margin:2px 0 0;">{{ $punto->cycle->name }}</p>
+                        <p style="font-size:11px;color:#9CA3AF;margin:2px 0 0;">{{ $punto->cycle->start_date->format('d/m/Y') }} — {{ $punto->cycle->end_date->format('d/m/Y') }}</p>
                     </td>
-                    <td class="px-3 py-2">
-                        <div class="relative">
-                            <span class="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400 text-xs">Bs</span>
+                    <td style="padding:8px 10px;">
+                        <div style="position:relative;">
+                            <span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:12px;color:#9CA3AF;font-weight:500;">Bs</span>
                             <input wire:model="editValorPunto" type="number" step="0.01" min="0.01"
-                                   class="w-full border border-gray-200 rounded-lg pl-7 pr-2 py-1.5 text-xs focus:outline-none focus:border-lavanda-400 bg-white">
+                                   style="{{ $iRow }} padding-left:26px;">
                         </div>
-                        @error('editValorPunto') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
+                        @error('editValorPunto') <p style="color:#EF4444;font-size:11px;margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td class="px-3 py-2 hidden lg:table-cell">
+                    <td style="padding:8px 10px;">
                         <input wire:model="editDescription" type="text" placeholder="Descripción"
-                               class="w-full border border-gray-200 rounded-lg px-2.5 py-1.5 text-xs focus:outline-none focus:border-lavanda-400 bg-white">
+                               style="{{ $iRow }}">
                     </td>
-                    <td class="px-3 py-2 text-center">
-                        <input wire:model="editActive" type="checkbox" class="w-4 h-4 rounded border-gray-300 text-lavanda-500 cursor-pointer">
+                    <td style="padding:8px 10px;text-align:center;">
+                        <select wire:model="editActive" style="{{ $iRow }} width:90px;">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
                     </td>
-                    <td class="px-3 py-2 text-right">
-                        <div class="flex gap-1 justify-end">
-                            <button wire:click="saveEdit" class="px-3 py-1.5 bg-lavanda-500 hover:bg-lavanda-600 text-white text-xs font-semibold rounded-lg transition-colors">Guardar</button>
-                            <button wire:click="cancelEdit" class="px-3 py-1.5 border border-gray-200 text-gray-600 hover:bg-gray-50 text-xs font-medium rounded-lg transition-colors">Cancelar</button>
+                    <td style="padding:8px 10px;text-align:center;">
+                        <div style="display:flex;gap:4px;justify-content:center;">
+                            <button wire:click="saveEdit"
+                                    style="height:34px;font-size:12px;font-weight:600;background:#7C3AED;color:#fff;border:none;border-radius:6px;padding:0 10px;cursor:pointer;white-space:nowrap;">
+                                Guardar
+                            </button>
+                            <button wire:click="cancelEdit"
+                                    style="height:34px;font-size:12px;font-weight:500;background:#fff;color:#6B7280;border:1px solid #D1D5DB;border-radius:6px;padding:0 10px;cursor:pointer;white-space:nowrap;">
+                                Cerrar
+                            </button>
                         </div>
                     </td>
                 </tr>
                 @else
-                {{-- Normal row --}}
-                <tr wire:key="p-{{ $punto->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td data-label="Ciclo" class="px-5 py-3.5">
-                        <p class="font-mono text-xs text-lavanda-700 font-semibold">{{ $punto->cycle->code }}</p>
-                        <p class="text-gray-700 text-sm">{{ $punto->cycle->name }}</p>
+                {{-- Fila normal --}}
+                <tr wire:key="p-{{ $punto->id }}" style="border-top:1px solid #F3F4F6;"
+                    onmouseover="this.style.background='#FAFAFF'" onmouseout="this.style.background=''">
+                    <td style="padding:10px 14px;">
+                        <p style="font-family:monospace;font-size:12px;font-weight:700;color:#6D28D9;margin:0;">{{ $punto->cycle->code }}</p>
+                        <p style="font-size:12px;color:#374151;margin:2px 0 0;">{{ $punto->cycle->name }}</p>
                     </td>
-                    <td data-label="Período" class="px-5 py-3.5 text-gray-500 text-xs hidden md:table-cell">
+                    <td style="padding:10px 14px;font-size:12px;color:#6B7280;">
                         {{ $punto->cycle->start_date->format('d/m/Y') }} — {{ $punto->cycle->end_date->format('d/m/Y') }}
                     </td>
-                    <td data-label="Valor" class="px-5 py-3.5 text-center">
-                        <span class="font-bold text-lavanda-700">Bs {{ number_format((float) $punto->valor_punto, 2) }}</span>
-                        <span class="text-gray-400 text-xs"> / pto</span>
+                    <td style="padding:10px 14px;text-align:center;">
+                        <span style="font-size:13px;font-weight:700;color:#6D28D9;">Bs {{ number_format((float)$punto->valor_punto, 2) }}</span>
+                        <span style="font-size:11px;color:#9CA3AF;"> / pto</span>
                     </td>
-                    <td data-label="Descripción" class="px-5 py-3.5 text-gray-500 text-xs hidden lg:table-cell">
+                    <td style="padding:10px 14px;font-size:12px;color:#6B7280;">
                         {{ $punto->description ?? '—' }}
                     </td>
-                    <td data-label="Estado" class="px-5 py-3.5 text-center">
-                        <button wire:click="toggleActive({{ $punto->id }})"
-                                class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors
-                                    {{ $punto->active ? 'bg-mint-100 text-mint-700 hover:bg-mint-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
-                            {{ $punto->active ? 'Activo' : 'Inactivo' }}
-                        </button>
+                    <td style="padding:10px 14px;text-align:center;">
+                        @if($punto->active)
+                        <span style="background:#D1FAE5;color:#065F46;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;">Activo</span>
+                        @else
+                        <span style="background:#F3F4F6;color:#6B7280;font-size:11px;font-weight:600;padding:2px 10px;border-radius:20px;">Inactivo</span>
+                        @endif
                     </td>
-                    <td data-label="" class="px-5 py-3.5 text-right">
-                        <button wire:click="startEdit({{ $punto->id }})" class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    <td style="padding:10px 14px;text-align:center;">
+                        <button wire:click="startEdit({{ $punto->id }})"
+                                style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:none;background:transparent;border-radius:6px;cursor:pointer;color:#9CA3AF;"
+                                onmouseover="this.style.background='#EDE9FE';this.style.color='#6D28D9'"
+                                onmouseout="this.style.background='transparent';this.style.color='#9CA3AF'">
+                            <svg style="width:15px;height:15px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
                         </button>
                     </td>
                 </tr>
                 @endif
                 @empty
-                <tr><td colspan="6" class="px-5 py-12 text-center text-gray-400 text-sm">No hay configuraciones de puntos registradas.</td></tr>
+                <tr>
+                    <td colspan="6" style="padding:40px;text-align:center;font-size:13px;color:#9CA3AF;">
+                        No hay configuraciones de puntos registradas.
+                    </td>
+                </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
-    @if ($puntos->hasPages())
-    <div class="px-5 py-3 border-t border-gray-100">{{ $puntos->links() }}</div>
+    @if($puntos->hasPages())
+    <div style="padding:12px 16px;border-top:1px solid #F3F4F6;">
+        {{ $puntos->links() }}
+    </div>
     @endif
 </div>
+
+{{-- Tarjetas móvil --}}
+<div class="sm:hidden">
+    @forelse($puntos as $punto)
+    @if($editingId === $punto->id)
+    <div wire:key="card-edit-{{ $punto->id }}" style="background:#F5F3FF;border:1px solid #DDD6FE;border-radius:10px;padding:14px;margin-bottom:10px;">
+        <p style="font-family:monospace;font-size:12px;font-weight:700;color:#6D28D9;margin:0 0 10px;">{{ $punto->cycle->code }} — {{ $punto->cycle->name }}</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+            <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px;">Valor / Punto *</label>
+                <div style="position:relative;">
+                    <span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:12px;color:#9CA3AF;">Bs</span>
+                    <input wire:model="editValorPunto" type="number" step="0.01" min="0.01"
+                           style="{{ $iRow }} padding-left:26px;">
+                </div>
+                @error('editValorPunto') <p style="color:#EF4444;font-size:11px;margin-top:2px;">{{ $message }}</p> @enderror
+            </div>
+            <div>
+                <label style="display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px;">Estado</label>
+                <select wire:model="editActive" style="{{ $iRow }}">
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select>
+            </div>
+        </div>
+        <div style="margin-bottom:10px;">
+            <label style="display:block;font-size:11px;font-weight:600;color:#6B7280;margin-bottom:4px;">Descripción</label>
+            <input wire:model="editDescription" type="text" placeholder="Descripción" style="{{ $iRow }}">
+        </div>
+        <div style="display:flex;gap:8px;">
+            <button wire:click="saveEdit"
+                    style="flex:1;height:36px;font-size:13px;font-weight:600;background:#7C3AED;color:#fff;border:none;border-radius:8px;cursor:pointer;">
+                Guardar
+            </button>
+            <button wire:click="cancelEdit"
+                    style="flex:1;height:36px;font-size:13px;font-weight:500;background:#fff;color:#6B7280;border:1px solid #D1D5DB;border-radius:8px;cursor:pointer;">
+                Cerrar
+            </button>
+        </div>
+    </div>
+    @else
+    <div wire:key="card-{{ $punto->id }}" style="background:#fff;border-radius:10px;border:1px solid #E5E7EB;margin-bottom:10px;overflow:hidden;">
+        <div style="background:#F8F7FF;padding:10px 14px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #EDE9FE;">
+            <span style="font-family:monospace;font-size:13px;font-weight:700;color:#6D28D9;">{{ $punto->cycle->code }}</span>
+            @if($punto->active)
+            <span style="background:#D1FAE5;color:#065F46;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;">Activo</span>
+            @else
+            <span style="background:#F3F4F6;color:#6B7280;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;">Inactivo</span>
+            @endif
+        </div>
+        <div style="padding:10px 14px;">
+            <p style="font-size:13px;font-weight:600;color:#374151;margin:0 0 4px;">{{ $punto->cycle->name }}</p>
+            <p style="font-size:12px;color:#6B7280;margin:0 0 6px;">{{ $punto->cycle->start_date->format('d/m/Y') }} — {{ $punto->cycle->end_date->format('d/m/Y') }}</p>
+            <p style="font-size:14px;font-weight:700;color:#6D28D9;margin:0;">
+                Bs {{ number_format((float)$punto->valor_punto, 2) }}
+                <span style="font-size:11px;font-weight:400;color:#9CA3AF;">/ punto</span>
+            </p>
+            @if($punto->description)
+            <p style="font-size:12px;color:#9CA3AF;margin:4px 0 0;">{{ $punto->description }}</p>
+            @endif
+        </div>
+        <div style="padding:8px 14px;border-top:1px solid #F3F4F6;">
+            <button wire:click="startEdit({{ $punto->id }})"
+                    style="width:100%;height:34px;font-size:13px;font-weight:600;background:#EDE9FE;color:#6D28D9;border:none;border-radius:6px;cursor:pointer;">
+                Editar
+            </button>
+        </div>
+    </div>
+    @endif
+    @empty
+    <p style="text-align:center;font-size:13px;color:#9CA3AF;padding:40px 0;">No hay configuraciones registradas.</p>
+    @endforelse
+    @if($puntos->hasPages())
+    <div style="padding:12px 0;">{{ $puntos->links() }}</div>
+    @endif
+</div>
+
 </div>
