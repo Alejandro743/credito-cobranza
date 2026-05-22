@@ -157,8 +157,10 @@
                 {{-- Fila edición inline --}}
                 @if ($editingId === $cat->id)
                 <tr wire:key="edit-{{ $cat->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
-                    <td style="padding:7px 16px;">
-                        <span style="font-family:monospace; font-size:11px; color:#9CA3AF;">{{ $cat->code }}</span>
+                    <td style="padding:7px 10px;">
+                        <input wire:model="editCode" type="text"
+                               style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; font-family:monospace; text-transform:uppercase;">
+                        @error('editCode') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:7px 10px;">
                         <input wire:model="editName" type="text" placeholder="Nombre *"

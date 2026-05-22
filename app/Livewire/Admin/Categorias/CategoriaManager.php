@@ -24,6 +24,7 @@ class CategoriaManager extends Component
 
     // Edición inline en fila
     public ?int   $editingId       = null;
+    public string $editCode        = '';
     public string $editName        = '';
     public string $editDescripcion = '';
     public bool   $editActive      = true;
@@ -82,6 +83,7 @@ class CategoriaManager extends Component
     {
         $c = Categoria::findOrFail($id);
         $this->editingId       = $id;
+        $this->editCode        = $c->code;
         $this->editName        = $c->name;
         $this->editDescripcion = $c->descripcion ?? '';
         $this->editActive     = $c->active;
@@ -98,16 +100,19 @@ class CategoriaManager extends Component
     public function saveEdit(): void
     {
         $this->validate([
+            'editCode' => ['required', 'string', 'max:30',
+                           Rule::unique('categorias', 'code')->ignore($this->editingId)],
             'editName' => ['required', 'string', 'min:2', 'max:100',
                            Rule::unique('categorias', 'name')->ignore($this->editingId)],
         ], [], [
+            'editCode' => 'código',
             'editName' => 'nombre',
         ]);
 
         $c = Categoria::findOrFail($this->editingId);
 
         $c->update([
-            'code'        => $this->generarCode($this->editName, $this->editingId),
+            'code'        => strtoupper(trim($this->editCode)),
             'name'        => $this->editName,
             'descripcion' => $this->editDescripcion ?: null,
             'active'      => $this->editActive,
