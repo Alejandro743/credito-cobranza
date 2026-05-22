@@ -31,6 +31,7 @@ class ProductManager extends Component
 
     // Edición inline en fila
     public ?int   $editingId       = null;
+    public string $editCode        = '';
     public string $editName        = '';
     public ?int   $editUnidadId    = null;
     public ?int   $editCategoriaId = null;
@@ -108,6 +109,7 @@ class ProductManager extends Component
     {
         $p = Product::findOrFail($id);
         $this->editingId        = $id;
+        $this->editCode         = $p->code;
         $this->editName         = $p->name;
         $this->editUnidadId     = $p->unidad_id;
         $this->editCategoriaId  = $p->categoria_id;
@@ -129,12 +131,15 @@ class ProductManager extends Component
     public function saveEdit(): void
     {
         $this->validate([
+            'editCode' => ['required', 'string', 'max:30',
+                           Rule::unique('products', 'code')->ignore($this->editingId)->whereNull('deleted_at')],
             'editName' => ['required', 'string', 'min:2',
                            Rule::unique('products', 'name')->ignore($this->editingId)->whereNull('deleted_at')],
             'editUnidadId'    => 'nullable|integer|exists:unidades,id',
             'editCategoriaId' => 'nullable|integer|exists:categorias,id',
             'editImage'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ], [], [
+            'editCode'        => 'código',
             'editName'        => 'nombre',
             'editUnidadId'    => 'unidad',
             'editCategoriaId' => 'categoría',
@@ -152,7 +157,7 @@ class ProductManager extends Component
         }
 
         $p->update([
-            'code'         => $this->generarCode($this->editName, $this->editingId),
+            'code'         => strtoupper(trim($this->editCode)),
             'name'         => $this->editName,
             'unidad_id'    => $this->editUnidadId,
             'categoria_id' => $this->editCategoriaId,
