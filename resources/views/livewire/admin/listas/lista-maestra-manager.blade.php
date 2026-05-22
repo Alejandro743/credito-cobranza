@@ -990,7 +990,7 @@
                        type="number" step="0.01" min="0" placeholder="Ej: 10"
                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
             </div>
-            <div x-show="badgeInc" x-cloak style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:8px 12px;">
+            <div x-show="badgeInc" x-cloak style="background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:7px 12px; display:flex; align-items:center;">
                 <span x-text="badgeInc" style="font-size:12px; font-weight:600; color:#065F46;"></span>
             </div>
         </div>
@@ -1031,7 +1031,7 @@
                        type="number" step="0.01" min="0" placeholder="Ej: 20"
                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
             </div>
-            <div x-show="badgeResumen" x-cloak style="flex:1; min-width:220px; background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:8px 12px;">
+            <div x-show="badgeResumen" x-cloak style="flex:1; min-width:220px; background:#ECFDF5; border:1px solid #A7F3D0; border-radius:8px; padding:7px 12px; display:flex; align-items:center;">
                 <span x-text="badgeResumen" style="font-size:12px; font-weight:600; color:#065F46;"></span>
             </div>
         </div>
