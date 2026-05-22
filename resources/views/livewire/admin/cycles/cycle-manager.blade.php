@@ -20,7 +20,10 @@
 
 {{-- ══════ PANEL NUEVO REGISTRO ══════ --}}
 @if($showAddForm)
-<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px; overflow:hidden;">
+@php $iS = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;'; @endphp
+
+{{-- PANEL NUEVO — ESCRITORIO --}}
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px; overflow:hidden;">
     <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
         <span style="font-size:14px; font-weight:800; color:#7B6FE8;">Nuevo Ciclo Comercial</span>
         <button wire:click="cancelAdd"
@@ -29,57 +32,105 @@
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
     </div>
-    <div style="padding:16px 20px;">
-        @php $iS = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;'; @endphp
-
-        <div style="display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:14px;">
-            <div style="min-width:120px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Código *</label>
-                <input wire:model="newCode" type="text" maxlength="30" placeholder="CIC-202601"
-                       style="width:100%; {{ $iS }} text-transform:uppercase;">
-                @error('newCode')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
-            </div>
-            <div style="flex:1; min-width:180px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Descripción *</label>
-                <input wire:model="newName" type="text" placeholder="Ciclo Enero 2026"
-                       style="width:100%; {{ $iS }}">
-                @error('newName')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
-            </div>
-            <div style="min-width:120px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Estado *</label>
-                <select wire:model="newStatus" style="width:100%; {{ $iS }} cursor:pointer;">
-                    <option value="abierto">Abierto</option>
-                    <option value="cerrado">Cerrado</option>
-                </select>
-                @error('newStatus')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
-            </div>
-            <div style="width:148px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Fecha inicio *</label>
-                <input wire:model="newStartDate" type="date" style="width:100%; {{ $iS }}">
-                @error('newStartDate')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
-            </div>
-            <div style="width:148px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Fecha fin *</label>
-                <input wire:model="newEndDate" type="date" style="width:100%; {{ $iS }}">
-                @error('newEndDate')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
-                <div style="display:flex; gap:8px;">
-                    <button wire:click="saveNew" wire:loading.attr="disabled"
-                            style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-                        <span wire:loading.remove wire:target="saveNew">Guardar</span>
-                        <span wire:loading wire:target="saveNew">Guardando...</span>
-                    </button>
-                    <button wire:click="cancelAdd"
-                            style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
-                            @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
-                        Cancelar
-                    </button>
-                </div>
+    <div style="padding:16px 20px; display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+        <div style="min-width:120px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Código *</label>
+            <input wire:model="newCode" type="text" maxlength="30" placeholder="CIC-202601"
+                   style="width:100%; {{ $iS }} text-transform:uppercase;">
+            @error('newCode')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+        </div>
+        <div style="flex:1; min-width:180px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Descripción *</label>
+            <input wire:model="newName" type="text" placeholder="Ciclo Enero 2026"
+                   style="width:100%; {{ $iS }}">
+            @error('newName')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+        </div>
+        <div style="width:148px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Fecha inicio *</label>
+            <input wire:model="newStartDate" type="date" style="width:100%; {{ $iS }}">
+            @error('newStartDate')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+        </div>
+        <div style="width:148px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Fecha fin *</label>
+            <input wire:model="newEndDate" type="date" style="width:100%; {{ $iS }}">
+            @error('newEndDate')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+        </div>
+        <div style="min-width:120px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Estado *</label>
+            <select wire:model="newStatus" style="width:100%; {{ $iS }} cursor:pointer;">
+                <option value="abierto">Abierto</option>
+                <option value="cerrado">Cerrado</option>
+            </select>
+            @error('newStatus')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
+        </div>
+        <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
+            <div style="display:flex; gap:8px;">
+                <button wire:click="saveNew" wire:loading.attr="disabled"
+                        style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                        @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                    <span wire:loading.remove wire:target="saveNew">Guardar</span>
+                    <span wire:loading wire:target="saveNew">Guardando...</span>
+                </button>
+                <button wire:click="cancelAdd"
+                        style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                        @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                    Cancelar
+                </button>
             </div>
         </div>
+    </div>
+</div>
+
+{{-- PANEL NUEVO — MOBILE --}}
+<div class="sm:hidden" style="background:#FAFAFE; border-radius:14px; border:1px solid #EDE9FE; margin-bottom:16px; padding:14px 16px; box-shadow:0 1px 4px rgba(123,111,232,.1);">
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+        <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Código *</label>
+            <input wire:model="newCode" type="text" maxlength="30" placeholder="CIC-202601"
+                   style="width:100%; {{ $iS }} text-transform:uppercase;">
+            @error('newCode')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+        </div>
+        <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Estado *</label>
+            <select wire:model="newStatus" style="width:100%; {{ $iS }} cursor:pointer;">
+                <option value="abierto">Abierto</option>
+                <option value="cerrado">Cerrado</option>
+            </select>
+        </div>
+    </div>
+
+    <div style="margin-bottom:10px;">
+        <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Descripción *</label>
+        <input wire:model="newName" type="text" placeholder="Ciclo Enero 2026"
+               style="width:100%; {{ $iS }}">
+        @error('newName')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
+        <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Inicio *</label>
+            <input wire:model="newStartDate" type="date" style="width:100%; {{ $iS }}">
+            @error('newStartDate')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+        </div>
+        <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Fin *</label>
+            <input wire:model="newEndDate" type="date" style="width:100%; {{ $iS }}">
+            @error('newEndDate')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+        </div>
+    </div>
+
+    <div style="display:flex; gap:8px;">
+        <button wire:click="saveNew" wire:loading.attr="disabled"
+                style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+            <span wire:loading.remove wire:target="saveNew">Guardar</span>
+            <span wire:loading wire:target="saveNew">Guardando...</span>
+        </button>
+        <button wire:click="cancelAdd"
+                style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+            Cancelar
+        </button>
     </div>
 </div>
 @endif
