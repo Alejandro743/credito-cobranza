@@ -205,7 +205,8 @@ class ProductManager extends Component
                   ->orWhere('code', 'like', "%{$this->search}%"))
             ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
             ->when($this->filterCategoriaId, fn($q) => $q->where('categoria_id', $this->filterCategoriaId))
-            ->orderBy('name')
+            ->orderByDesc('active')
+            ->orderByDesc('code')
             ->paginate(20);
 
         $categorias = Categoria::where('active', true)->orderBy('name')->get();
