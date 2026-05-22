@@ -18,6 +18,32 @@
 </div>
 @endif
 
+{{-- ══════ TOOLBAR ══════ --}}
+<div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
+
+    <div style="position:relative; flex:1; min-width:200px;">
+        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#9CA3AF;" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por código o descripción..."
+               style="width:100%; height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 12px 0 32px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;">
+    </div>
+
+    <select wire:model.live="filterStatus"
+            style="height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 12px; font-size:13px; color:#374151; background:#fff; outline:none; cursor:pointer;">
+        <option value="">Todos los estados</option>
+        <option value="abierto">Abierto</option>
+        <option value="cerrado">Cerrado</option>
+    </select>
+
+    @if(!$showAddForm)
+    <button wire:click="showAdd"
+            style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;"
+            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Nuevo Ciclo
+    </button>
+    @endif
+</div>
+
 {{-- ══════ PANEL NUEVO REGISTRO ══════ --}}
 @if($showAddForm)
 @php $iS = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;'; @endphp
@@ -134,32 +160,6 @@
     </div>
 </div>
 @endif
-
-{{-- ══════ TOOLBAR ══════ --}}
-<div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
-
-    <div style="position:relative; flex:1; min-width:200px;">
-        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#9CA3AF;" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por código o descripción..."
-               style="width:100%; height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 12px 0 32px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;">
-    </div>
-
-    <select wire:model.live="filterStatus"
-            style="height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 12px; font-size:13px; color:#374151; background:#fff; outline:none; cursor:pointer;">
-        <option value="">Todos los estados</option>
-        <option value="abierto">Abierto</option>
-        <option value="cerrado">Cerrado</option>
-    </select>
-
-    @if(!$showAddForm)
-    <button wire:click="showAdd"
-            style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;"
-            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        Nuevo Ciclo
-    </button>
-    @endif
-</div>
 
 {{-- ══════ TABLA ══════ --}}
 @php
