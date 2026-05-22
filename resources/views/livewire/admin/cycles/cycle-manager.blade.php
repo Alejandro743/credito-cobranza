@@ -347,8 +347,9 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
     <div wire:key="mobile-{{ $cycle->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; margin-bottom:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
 
-        <div style="padding:12px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
-            <span style="font-size:14px; font-weight:800; color:#7B6FE8; font-family:monospace;">{{ $cycle->code }}</span>
+        {{-- Header: código + estado --}}
+        <div style="background:#F8F7FF; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #EDE9FE;">
+            <span style="font-size:13px; font-weight:800; color:#7B6FE8; font-family:monospace; letter-spacing:.5px;">{{ $cycle->code }}</span>
             @if($cycle->status === 'abierto')
             <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#D1FAE5; color:#059669;">Abierto</span>
             @else
@@ -356,16 +357,22 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
             @endif
         </div>
 
-        <div style="padding:10px 14px; border-bottom:1px solid #F3F4F6;">
-            <p style="font-size:13px; font-weight:600; color:#111827; margin:0;">{{ $cycle->name }}</p>
+        {{-- Descripción + fechas --}}
+        <div style="padding:12px 14px 10px;">
+            <p style="font-size:14px; font-weight:700; color:#111827; margin:0 0 12px;">{{ $cycle->name }}</p>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div>
+                    <span style="display:block; font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin-bottom:2px;">Inicio</span>
+                    <span style="font-size:13px; font-weight:600; color:#374151;">{{ $cycle->start_date->format('d/m/Y') }}</span>
+                </div>
+                <div>
+                    <span style="display:block; font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin-bottom:2px;">Fin</span>
+                    <span style="font-size:13px; font-weight:600; color:#374151;">{{ $cycle->end_date->format('d/m/Y') }}</span>
+                </div>
+            </div>
         </div>
 
-        <div style="padding:8px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
-            <span style="font-size:12px; color:#6B7280; font-weight:500;">Vigencia</span>
-            <span style="font-size:12px; color:#374151; font-weight:600;">{{ $cycle->start_date->format('d/m/Y') }} → {{ $cycle->end_date->format('d/m/Y') }}</span>
-        </div>
-
-        <div style="padding:10px 14px; display:flex; gap:8px;">
+        <div style="padding:10px 14px; border-top:1px solid #F3F4F6; display:flex; gap:8px;">
             <button wire:click="startEdit({{ $cycle->id }})"
                     style="flex:1; height:34px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;"
                     @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
