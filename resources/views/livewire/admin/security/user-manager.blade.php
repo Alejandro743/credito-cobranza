@@ -188,7 +188,7 @@
 
 {{-- ══ MOBILE: Cards ══ --}}
 @php $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;'; @endphp
-<div class="sm:hidden" style="display:flex; flex-direction:column; gap:10px;">
+<div class="sm:hidden flex flex-col" style="gap:10px;">
     @forelse ($users as $user)
     @php $roleName = $user->getRoleNames()->first() ?? '—'; @endphp
 
