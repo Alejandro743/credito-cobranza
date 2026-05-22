@@ -74,6 +74,7 @@
 @endif
 
 {{-- ══ TOOLBAR ══ --}}
+@if(!$showAddForm)
 <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
 
     <div class="relative w-full sm:flex-1" style="min-width:0; max-width:100%; sm:max-width:280px;">
@@ -115,6 +116,8 @@
         Nuevo usuario
     </button>
 </div>
+
+@endif
 
 {{-- ══ FORM: Nuevo usuario ══ --}}
 @if ($showAddForm)
