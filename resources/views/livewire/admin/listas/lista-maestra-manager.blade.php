@@ -1426,39 +1426,24 @@
     <div wire:key="mob-{{ $m->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 3px rgba(0,0,0,.05); padding:14px;">
 
-        {{-- Fila 1: código + nombre + estado --}}
-        <div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:8px;">
+        {{-- Fila 1: código + ciclo + estado --}}
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
             <span style="font-family:monospace; font-size:11px; color:#9CA3AF; background:#F3F4F6; padding:2px 7px; border-radius:6px; white-space:nowrap; flex-shrink:0;">{{ $m->code ?? '—' }}</span>
-            <span style="font-size:14px; font-weight:700; color:#111827; flex:1; line-height:1.3;">{{ $m->name }}</span>
-            <span style="flex-shrink:0; padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; white-space:nowrap;
+            @if ($m->cycle?->code)
+            <span style="font-size:11px; color:#6B7280; background:#F9FAFB; border:1px solid #E5E7EB; padding:2px 8px; border-radius:6px; white-space:nowrap;">
+                <strong>{{ $m->cycle->code }}</strong>
+            </span>
+            @endif
+            <span style="margin-left:auto; flex-shrink:0; padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; white-space:nowrap;
                          background:{{ $m->active ? '#D1FAE5' : '#F3F4F6' }};
                          color:{{ $m->active ? '#059669' : '#9CA3AF' }};">
                 {{ $m->active ? 'Activa' : 'Inactiva' }}
             </span>
         </div>
 
-        {{-- Fila 2: detalles --}}
-        <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:12px;">
-            @if ($m->cycle?->code)
-            <span style="font-size:11px; color:#6B7280; background:#F9FAFB; border:1px solid #E5E7EB; padding:2px 8px; border-radius:6px;">
-                Ciclo: <strong>{{ $m->cycle->code }}</strong>
-            </span>
-            @endif
-            @if ($m->cantidad_cuotas)
-            <span style="font-size:11px; color:#6B7280; background:#F9FAFB; border:1px solid #E5E7EB; padding:2px 8px; border-radius:6px;">
-                {{ $m->cantidad_cuotas }} cuotas
-            </span>
-            @endif
-            @if ($m->usa_cuota_inicial)
-            <span style="font-size:11px; color:#6B7280; background:#F9FAFB; border:1px solid #E5E7EB; padding:2px 8px; border-radius:6px;">
-                Ini: {{ $m->tipo_cuota_inicial === 'porcentaje' ? number_format($m->valor_cuota_inicial, 0).'%' : 'Bs '.number_format($m->valor_cuota_inicial, 2) }}
-            </span>
-            @endif
-            @if ($m->tipo_incremento)
-            <span style="font-size:11px; color:#7B6FE8; background:#F0EEFF; border:1px solid #EDE9FE; padding:2px 8px; border-radius:6px;">
-                +{{ $m->tipo_incremento === 'porcentaje' ? number_format($m->valor_incremento, 0).'%' : 'Bs '.number_format($m->valor_incremento, 2) }}
-            </span>
-            @endif
+        {{-- Fila 2: nombre --}}
+        <div style="margin-bottom:12px;">
+            <span style="font-size:14px; font-weight:700; color:#111827; line-height:1.3;">{{ $m->name }}</span>
         </div>
 
         {{-- Botones --}}
