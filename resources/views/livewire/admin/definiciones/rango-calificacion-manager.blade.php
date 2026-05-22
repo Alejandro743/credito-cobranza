@@ -198,7 +198,7 @@
 
 {{-- Form card --}}
 <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
-    <div style="padding:20px 22px; display:flex; flex-direction:column; gap:16px;">
+    <div style="padding:14px 16px; display:flex; flex-direction:column; gap:10px;">
 
         {{-- Nombre + Estado --}}
         <div class="grid grid-cols-2 gap-3">
@@ -272,7 +272,7 @@
         </div>
 
         {{-- Botones --}}
-        <div class="flex flex-col sm:flex-row gap-2" style="padding-top:4px; border-top:1px solid #F3F4F6;">
+        <div class="grid grid-cols-2 gap-2" style="padding-top:2px; border-top:1px solid #F3F4F6;">
             <button wire:click="save" wire:loading.attr="disabled"
                     style="flex:1; height:42px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
                     @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
