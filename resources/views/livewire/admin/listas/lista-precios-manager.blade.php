@@ -335,7 +335,7 @@ $lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase
 @endphp
 
 {{-- Toolbar (se oculta cuando hay formulario abierto) --}}
-@if(!$showAddForm)
+@if($mode !== 'form')
 <div class="flex flex-col sm:flex-row gap-3 mb-5">
     <div class="relative flex-1">
         <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
@@ -350,7 +350,7 @@ $lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase
 @endif
 
 {{-- Formulario inline --}}
-@if($showAddForm)
+@if($mode === 'form')
 <div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px; overflow:hidden;">
     <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
         <span style="font-size:14px; font-weight:800; color:#7B6FE8; display:flex; align-items:center; gap:7px;">
@@ -416,6 +416,7 @@ $lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase
 @endif
 
 {{-- Tabla escritorio --}}
+{{-- (siempre visible en mode list o form) --}}
 <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hidden sm:block">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
