@@ -266,7 +266,10 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
 
         {{-- Header --}}
-        <div style="padding:12px 14px; display:flex; align-items:center; gap:12px; border-bottom:1px solid #F3F4F6;">
+        <div style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #F3F4F6;">
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8;">{{ strtoupper(substr($user->name, 0, 1)) }}</span>
+            </div>
             <div style="flex:1; min-width:0;">
                 <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $user->name }}</p>
                 <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $user->email }}</p>
