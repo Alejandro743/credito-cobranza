@@ -151,7 +151,7 @@
     <button wire:click="savePermissions" wire:loading.attr="disabled"
             style="height:36px; padding:0 22px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;"
             @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-        <span wire:loading.remove wire:target="savePermissions">Guardar accesos</span>
+        <span wire:loading.remove wire:target="savePermissions">Guardar</span>
         <span wire:loading wire:target="savePermissions">Guardando...</span>
     </button>
     <button wire:click="backToList"
