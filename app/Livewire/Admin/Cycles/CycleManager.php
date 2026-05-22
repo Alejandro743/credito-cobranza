@@ -93,6 +93,7 @@ class CycleManager extends Component
         ]);
 
         $this->showAddForm = false;
+        $this->resetPage();
         session()->flash('success', 'Ciclo creado.');
     }
 
@@ -149,6 +150,7 @@ class CycleManager extends Component
         ]);
 
         $this->editingId = null;
+        $this->resetPage();
         session()->flash('success', 'Ciclo actualizado.');
     }
 
