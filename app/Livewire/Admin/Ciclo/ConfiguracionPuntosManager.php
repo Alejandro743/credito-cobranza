@@ -138,7 +138,9 @@ class ConfiguracionPuntosManager extends Component
                     $r->where('name', 'like', "%{$this->search}%")
                       ->orWhere('code', 'like', "%{$this->search}%")))
             ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
-            ->orderByDesc('created_at')
+            ->join('commercial_cycles', 'commercial_cycles.id', '=', 'configuracion_puntos.cycle_id')
+            ->orderBy('commercial_cycles.code')
+            ->select('configuracion_puntos.*')
             ->paginate(15);
 
         // Ciclos que aún no tienen puntos configurados
