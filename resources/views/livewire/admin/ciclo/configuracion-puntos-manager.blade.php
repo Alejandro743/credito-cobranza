@@ -169,8 +169,7 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
         <table style="width:100%;border-collapse:collapse;min-width:640px;">
             <thead>
                 <tr style="background:#F8F7FF;">
-                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;width:190px;">Ciclo</th>
-                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;width:160px;">Período</th>
+                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;width:150px;">Ciclo</th>
                     <th style="padding:10px 16px;text-align:center;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;width:120px;">Valor / Pto</th>
                     <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;">Descripción</th>
                     <th style="padding:10px 16px;text-align:center;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;width:100px;">Estado</th>
@@ -182,10 +181,14 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 @if($editingId === $punto->id)
                 {{-- Fila edición inline --}}
                 <tr wire:key="edit-{{ $punto->id }}" style="background:#FAFAFE;border-bottom:1px solid #EDE9FE;">
-                    <td style="padding:10px 16px;" colspan="2">
-                        <p style="font-family:monospace;font-size:12px;font-weight:700;color:#7B6FE8;margin:0;">{{ $punto->cycle->code }}</p>
-                        <p style="font-size:12px;color:#374151;margin:2px 0 0;">{{ $punto->cycle->name }}</p>
-                        <p style="font-size:11px;color:#9CA3AF;margin:2px 0 0;">{{ $punto->cycle->start_date->format('d/m/Y') }} — {{ $punto->cycle->end_date->format('d/m/Y') }}</p>
+                    <td style="padding:10px 16px;">
+                        <select wire:model="editCycleId" style="width:100%;{{ $iRow }} cursor:pointer;">
+                            <option value="{{ $punto->cycle->id }}">{{ $punto->cycle->code }}</option>
+                            @foreach($ciclosDisponibles as $ciclo)
+                            <option value="{{ $ciclo->id }}">{{ $ciclo->code }}</option>
+                            @endforeach
+                        </select>
+                        @error('editCycleId')<p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p>@enderror
                     </td>
                     <td style="padding:10px 16px;">
                         <div style="position:relative;">
@@ -226,11 +229,7 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 <tr wire:key="p-{{ $punto->id }}" style="border-bottom:1px solid #F9FAFB;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
                     <td style="padding:11px 16px;">
-                        <p style="font-family:monospace;font-size:12px;font-weight:700;color:#7B6FE8;margin:0;">{{ $punto->cycle->code }}</p>
-                        <p style="font-size:12px;color:#374151;margin:2px 0 0;">{{ $punto->cycle->name }}</p>
-                    </td>
-                    <td style="padding:11px 16px;font-size:13px;color:#6B7280;">
-                        {{ $punto->cycle->start_date->format('d/m/Y') }} — {{ $punto->cycle->end_date->format('d/m/Y') }}
+                        <span style="font-family:monospace;font-size:13px;font-weight:700;color:#7B6FE8;">{{ $punto->cycle->code }}</span>
                     </td>
                     <td style="padding:11px 16px;text-align:center;">
                         <span style="font-size:13px;font-weight:700;color:#7B6FE8;">Bs {{ number_format((float)$punto->valor_punto, 2) }}</span>
@@ -256,7 +255,7 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 </tr>
                 @endif
                 @empty
-                <tr><td colspan="6" style="padding:48px;text-align:center;color:#9CA3AF;font-size:13px;">No hay configuraciones de puntos registradas.</td></tr>
+                <tr><td colspan="5" style="padding:48px;text-align:center;color:#9CA3AF;font-size:13px;">No hay configuraciones de puntos registradas.</td></tr>
                 @endforelse
             </tbody>
         </table>

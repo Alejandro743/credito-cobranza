@@ -25,6 +25,7 @@ class ConfiguracionPuntosManager extends Component
 
     // Inline row edit
     public ?int   $editingId       = null;
+    public ?int   $editCycleId     = null;
     public string $editValorPunto  = '1.00';
     public string $editDescription = '';
     public int    $editActive      = 1;
@@ -83,7 +84,8 @@ class ConfiguracionPuntosManager extends Component
     public function startEdit(int $id): void
     {
         $p = ConfiguracionPuntos::findOrFail($id);
-        $this->editingId      = $id;
+        $this->editingId       = $id;
+        $this->editCycleId     = $p->cycle_id;
         $this->editValorPunto  = number_format((float) $p->valor_punto, 2, '.', '');
         $this->editDescription = $p->description ?? '';
         $this->editActive      = $p->active ? 1 : 0;
@@ -100,12 +102,17 @@ class ConfiguracionPuntosManager extends Component
     public function saveEdit(): void
     {
         $this->validate([
+            'editCycleId'    => ['required', 'integer', 'exists:commercial_cycles,id', Rule::unique('configuracion_puntos', 'cycle_id')->ignore($this->editingId)],
             'editValorPunto' => 'required|numeric|min:0.01',
-        ], [], [
+        ], [
+            'editCycleId.unique' => 'Ese ciclo ya tiene un valor de punto configurado.',
+        ], [
+            'editCycleId'    => 'ciclo',
             'editValorPunto' => 'valor del punto',
         ]);
 
         ConfiguracionPuntos::findOrFail($this->editingId)->update([
+            'cycle_id'    => $this->editCycleId,
             'valor_punto' => $this->editValorPunto,
             'description' => $this->editDescription ?: null,
             'active'      => $this->editActive,
