@@ -200,14 +200,6 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
         <header class="flex items-center gap-3 px-4 flex-shrink-0"
                 style="background:#fff; border-bottom:1px solid #E5E7EB; min-height:56px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
 
-            {{-- Hamburguesa --}}
-            <button @click="sidebarOpen = !sidebarOpen"
-                    class="flex md:hidden"
-                    style="width:32px; height:32px; border-radius:8px; background:#F3F4F6; border:none; cursor:pointer; flex-shrink:0; align-items:center; justify-content:center;">
-                <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2.2" stroke-linecap="round" viewBox="0 0 24 24">
-                    <path d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
-            </button>
 
             {{-- Ícono del módulo --}}
             <div style="width:32px; height:32px; border-radius:9px; background:{{ $hdrIconBg }}; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
