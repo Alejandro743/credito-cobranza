@@ -10,6 +10,7 @@
 @endif
 
 {{-- ══ TOOLBAR ══ --}}
+@if(!$showAddForm)
 <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
 
     <div class="relative w-full sm:flex-1" style="min-width:0;">
@@ -35,45 +36,57 @@
         Nueva categoría
     </button>
 </div>
+@endif
 
 {{-- ══ FORM: Nueva categoría ══ --}}
 @if ($showAddForm)
-<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:20px; overflow:hidden;">
-    <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:11px 18px; display:flex; align-items:center; justify-content:space-between;">
-        <p style="font-size:13px; font-weight:700; color:#5B21B6; margin:0; display:flex; align-items:center; gap:7px;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+@php $iS = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;'; @endphp
+<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px; overflow:hidden;">
+    <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:14px; font-weight:800; color:#7B6FE8; display:flex; align-items:center; gap:7px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#7B6FE8;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>
             </svg>
             Nueva Categoría
-        </p>
-        <button wire:click="cancelAdd" style="background:transparent; border:none; cursor:pointer; color:#9CA3AF; display:flex; padding:3px;">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </span>
+        <button wire:click="cancelAdd"
+                style="width:30px; height:30px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
     </div>
-    <div style="padding:16px 18px;">
-        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; margin-bottom:14px;">
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Nombre *</label>
-                <input wire:model="newName" type="text" placeholder="Ej. Electrónica"
-                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box;">
-                @error('newName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-            </div>
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Descripción</label>
-                <input wire:model="newDescripcion" type="text" placeholder="Descripción opcional"
-                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box;">
-            </div>
+    <div style="padding:16px 20px; display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+        <div style="min-width:110px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Código *</label>
+            <input wire:model="newCode" type="text" placeholder="Ej. ELEC"
+                   style="width:100%; {{ $iS }} font-family:monospace; text-transform:uppercase;">
+            @error('newCode') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
         </div>
-        <div style="display:flex; align-items:center; gap:12px; padding-top:12px; border-top:1px solid #F3F4F6;">
-            <div style="flex:1;"></div>
-            <button wire:click="saveNew"
-                    style="height:36px; padding:0 20px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;">
-                Guardar
-            </button>
-            <button wire:click="cancelAdd"
-                    style="height:36px; padding:0 16px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;">
-                Cancelar
-            </button>
+        <div style="flex:1; min-width:160px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Nombre *</label>
+            <input wire:model="newName" type="text" placeholder="Ej. Electrónica"
+                   style="width:100%; {{ $iS }}">
+            @error('newName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+        <div style="flex:1; min-width:160px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Descripción</label>
+            <input wire:model="newDescripcion" type="text" placeholder="Opcional"
+                   style="width:100%; {{ $iS }}">
+        </div>
+        <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
+            <div style="display:flex; gap:8px;">
+                <button wire:click="saveNew"
+                        style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                        @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                    Guardar
+                </button>
+                <button wire:click="cancelAdd"
+                        style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                        @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                    Cancelar
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -212,16 +225,6 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                 </svg>
                             </button>
-                            <button wire:click="toggleActive({{ $cat->id }})" title="{{ $cat->active ? 'Desactivar' : 'Activar' }}"
-                                    style="width:28px; height:28px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-                                           border:1px solid {{ $cat->active ? '#FEE2E2' : '#D1FAE5' }};
-                                           background:{{ $cat->active ? '#FEF2F2' : '#ECFDF5' }};
-                                           color:{{ $cat->active ? '#EF4444' : '#10B981' }};"
-                                    @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/>
-                                </svg>
-                            </button>
                         </div>
                     </td>
                 </tr>
@@ -310,14 +313,6 @@
                     style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
-            </button>
-            <button wire:click="toggleActive({{ $cat->id }})"
-                    style="flex:1; height:32px; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;
-                           border:1px solid {{ $cat->active ? '#FEE2E2' : '#D1FAE5' }};
-                           background:{{ $cat->active ? '#FEF2F2' : '#ECFDF5' }};
-                           color:{{ $cat->active ? '#EF4444' : '#10B981' }};">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
-                {{ $cat->active ? 'Desactivar' : 'Activar' }}
             </button>
         </div>
     </div>

@@ -17,6 +17,7 @@ class CategoriaManager extends Component
 
     // Formulario de agregar (inline)
     public bool   $showAddForm    = false;
+    public string $newCode        = '';
     public string $newName        = '';
     public string $newDescripcion = '';
     public bool   $newActive      = true;
@@ -39,6 +40,7 @@ class CategoriaManager extends Component
     public function showAdd(): void
     {
         $this->showAddForm    = true;
+        $this->newCode        = '';
         $this->newName        = '';
         $this->newDescripcion = '';
         $this->newActive      = true;
@@ -54,14 +56,17 @@ class CategoriaManager extends Component
     public function saveNew(): void
     {
         $this->validate([
+            'newCode' => ['required', 'string', 'max:30',
+                          Rule::unique('categorias', 'code')],
             'newName' => ['required', 'string', 'min:2', 'max:100',
                           Rule::unique('categorias', 'name')],
         ], [], [
+            'newCode' => 'código',
             'newName' => 'nombre',
         ]);
 
         Categoria::create([
-            'code'        => $this->generarCode($this->newName),
+            'code'        => strtoupper(trim($this->newCode)),
             'name'        => $this->newName,
             'descripcion' => $this->newDescripcion ?: null,
             'active'      => $this->newActive,
