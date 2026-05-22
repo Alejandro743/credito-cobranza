@@ -341,7 +341,7 @@
 @endif
 
 {{-- Tabla --}}
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+<div class="hidden sm:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
@@ -456,6 +456,86 @@
     </div>
     @if ($groups->hasPages())
     <div class="px-5 py-3 border-t border-gray-100">{{ $groups->links() }}</div>
+    @endif
+</div>
+
+{{-- MOBILE --}}
+<div class="sm:hidden">
+    @forelse ($groups as $g)
+    @if ($editingId === $g->id)
+    <div wire:key="edit-mobile-{{ $g->id }}" class="bg-lavanda-50 border border-lavanda-200 rounded-2xl mb-3 p-4">
+        <p class="text-xs font-bold text-lavanda-700 uppercase tracking-wide mb-3">Editando grupo</p>
+        <div class="mb-3">
+            <label class="block text-xs font-semibold text-lavanda-600 mb-1">Nombre *</label>
+            <input wire:model="editName" type="text"
+                   class="w-full border border-lavanda-200 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400">
+            @error('editName') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+        </div>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+                <label class="block text-xs font-semibold text-lavanda-600 mb-1">Tipo *</label>
+                <select wire:model="editType" class="w-full border border-lavanda-200 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400">
+                    <option value="clientes">Clientes</option>
+                    <option value="vendedores">Vendedores</option>
+                </select>
+            </div>
+            <div class="flex items-center pt-5">
+                <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
+                    <input type="checkbox" wire:model="editActive" class="w-4 h-4 rounded text-lavanda-500">
+                    <span>{{ $editActive ? 'Activo' : 'Inactivo' }}</span>
+                </label>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="block text-xs font-semibold text-lavanda-600 mb-1">Descripción</label>
+            <input wire:model="editDescription" type="text" placeholder="Descripción opcional"
+                   class="w-full border border-lavanda-200 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400">
+        </div>
+        <div class="flex gap-2">
+            <button wire:click="saveEdit" class="flex-1 h-9 bg-lavanda-500 hover:bg-lavanda-600 text-white rounded-xl text-sm font-semibold transition-colors">Guardar</button>
+            <button wire:click="cancelEdit" class="flex-1 h-9 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-semibold transition-colors">Cancelar</button>
+        </div>
+    </div>
+    @else
+    <div wire:key="mobile-{{ $g->id }}" class="bg-white rounded-2xl border border-gray-100 mb-3 shadow-sm overflow-hidden {{ !$g->active ? 'opacity-60' : '' }}">
+        <div class="flex items-center gap-3 p-3">
+            <div style="width:30px;height:30px;border-radius:8px;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span style="font-size:12px;font-weight:700;color:#7B6FE8;">{{ strtoupper(substr($g->name, 0, 1)) }}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="font-semibold text-sm text-gray-800 truncate">{{ $g->name }}</span>
+                    <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold shrink-0
+                        {{ $g->type === 'clientes' ? 'bg-celeste-100 text-celeste-700' : 'bg-melocoton-100 text-melocoton-700' }}">
+                        {{ $g->type === 'clientes' ? 'Clientes' : 'Vendedores' }}
+                    </span>
+                </div>
+                <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+                    <span class="text-xs text-gray-400">{{ $g->users_count + $g->miembros_manual_count }} miembros · {{ $g->listas_count }} listas</span>
+                    <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold
+                        {{ $g->active ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-500' }}">
+                        {{ $g->active ? 'Activo' : 'Inactivo' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-100 px-3 py-2 flex gap-2">
+            <button wire:click="viewDetail({{ $g->id }})"
+                    class="flex-1 h-8 bg-celeste-50 text-celeste-700 border border-celeste-100 rounded-lg text-xs font-semibold">
+                Ver
+            </button>
+            <button wire:click="startEdit({{ $g->id }})"
+                    class="flex-1 h-8 bg-lavanda-50 text-lavanda-700 border border-lavanda-100 rounded-lg text-xs font-semibold">
+                Editar
+            </button>
+        </div>
+    </div>
+    @endif
+    @empty
+    <p class="text-center text-gray-400 text-sm py-12">No hay grupos registrados.</p>
+    @endforelse
+    @if ($groups->hasPages())
+    <div class="mt-2">{{ $groups->links() }}</div>
     @endif
 </div>
 

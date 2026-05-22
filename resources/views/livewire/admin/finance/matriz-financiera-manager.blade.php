@@ -256,7 +256,7 @@
 @endif
 
 {{-- Tabla --}}
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+<div class="hidden sm:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     <div class="overflow-x-auto">
         <table class="w-full text-sm">
             <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
@@ -350,6 +350,87 @@
     </div>
     @if ($matrices->hasPages())
     <div class="px-5 py-3 border-t border-gray-100">{{ $matrices->links() }}</div>
+    @endif
+</div>
+
+{{-- MOBILE --}}
+<div class="sm:hidden">
+    @forelse ($matrices as $m)
+    @if ($editingId === $m->id)
+    <div wire:key="edit-mobile-m-{{ $m->id }}" class="bg-lavanda-50 border border-lavanda-200 rounded-2xl mb-3 p-4">
+        <p class="text-xs font-bold text-lavanda-700 uppercase tracking-wide mb-3">Editando matriz</p>
+        <div class="grid grid-cols-2 gap-3 mb-3">
+            <div>
+                <label class="block text-xs font-semibold text-lavanda-600 mb-1">Ciclo</label>
+                <select wire:model="editCycleId" class="w-full border border-lavanda-200 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400">
+                    <option value="">—</option>
+                    @foreach ($cycles as $c)
+                        <option value="{{ $c->id }}">{{ $c->code }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-lavanda-600 mb-1">Código *</label>
+                <input wire:model="editCode" type="text" maxlength="30"
+                       class="w-full border border-lavanda-200 bg-white rounded-xl px-3 py-2 text-sm font-mono focus:outline-none focus:border-lavanda-400">
+                @error('editCode') <p class="text-red-500 text-xs mt-1">{{ $message }}</p> @enderror
+            </div>
+        </div>
+        <div class="mb-3">
+            <label class="block text-xs font-semibold text-lavanda-600 mb-1">Descripción</label>
+            <input wire:model="editDescription" type="text"
+                   class="w-full border border-lavanda-200 bg-white rounded-xl px-3 py-2 text-sm focus:outline-none focus:border-lavanda-400">
+        </div>
+        <div class="mb-3">
+            <label class="flex items-center gap-2 cursor-pointer text-sm text-gray-700">
+                <input type="checkbox" wire:model="editActive" class="w-4 h-4 rounded text-lavanda-500 border-gray-300">
+                <span>Activa</span>
+            </label>
+        </div>
+        <div class="flex gap-2">
+            <button wire:click="saveEdit" class="flex-1 h-9 bg-lavanda-500 hover:bg-lavanda-600 text-white rounded-xl text-sm font-semibold transition-colors">Guardar</button>
+            <button wire:click="cancelEdit" class="flex-1 h-9 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-xl text-sm font-semibold transition-colors">Cancelar</button>
+        </div>
+    </div>
+    @else
+    <div wire:key="mobile-m-{{ $m->id }}" class="bg-white rounded-2xl border border-gray-100 mb-3 shadow-sm overflow-hidden">
+        <div class="flex items-center gap-3 p-3">
+            <div style="width:30px;height:30px;border-radius:8px;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span style="font-size:12px;font-weight:700;color:#7B6FE8;">{{ strtoupper(substr($m->code, 0, 1)) }}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="font-mono text-sm font-bold text-lavanda-700">{{ $m->code }}</span>
+                    @if ($m->cycle)
+                    <span class="font-mono text-xs text-gray-400">{{ $m->cycle->code }}</span>
+                    @endif
+                </div>
+                <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+                    <span class="text-xs text-gray-600 truncate">{{ $m->description ?? '—' }}</span>
+                    <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold shrink-0
+                        {{ $m->active ? 'bg-mint-100 text-mint-700' : 'bg-red-100 text-red-600' }}">
+                        {{ $m->active ? 'Activa' : 'Inactiva' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-100 px-3 py-2 flex gap-2">
+            <button wire:click="startEdit({{ $m->id }})"
+                    class="flex-1 h-8 bg-lavanda-50 text-lavanda-700 border border-lavanda-100 rounded-lg text-xs font-semibold">
+                Editar
+            </button>
+            <button wire:click="openConfig({{ $m->id }})"
+                    class="flex-1 h-8 bg-celeste-50 text-celeste-700 border border-celeste-100 rounded-lg text-xs font-semibold">
+                Configurar
+            </button>
+        </div>
+    </div>
+    @endif
+    @empty
+    <p class="text-center text-gray-400 text-sm py-12">No hay matrices registradas.</p>
+    @endforelse
+    @if ($matrices->hasPages())
+    <div class="mt-2">{{ $matrices->links() }}</div>
     @endif
 </div>
 

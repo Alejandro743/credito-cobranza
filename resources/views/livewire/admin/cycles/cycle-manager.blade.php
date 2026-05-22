@@ -345,9 +345,12 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
     <div wire:key="mobile-{{ $cycle->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; margin-bottom:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
 
-        {{-- Header: código + estado --}}
-        <div style="background:#F8F7FF; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #EDE9FE;">
-            <span style="font-size:13px; font-weight:800; color:#7B6FE8; font-family:monospace; letter-spacing:.5px;">{{ $cycle->code }}</span>
+        {{-- Header: avatar + código + estado --}}
+        <div style="background:#F8F7FF; padding:10px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #EDE9FE;">
+            <div style="width:30px;height:30px;border-radius:8px;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span style="font-size:12px;font-weight:700;color:#7B6FE8;">{{ strtoupper(substr($cycle->name, 0, 1)) }}</span>
+            </div>
+            <span style="flex:1;font-size:13px; font-weight:800; color:#7B6FE8; font-family:monospace; letter-spacing:.5px;">{{ $cycle->code }}</span>
             @if($cycle->status === 'abierto')
             <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#D1FAE5; color:#059669;">Abierto</span>
             @else

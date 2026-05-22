@@ -109,7 +109,7 @@
     </button>
 </div>
 
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+<div class="hidden sm:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
     @if ($rules->isEmpty())
         <div class="py-16 text-center text-gray-400 text-sm">No hay reglas registradas.</div>
     @else
@@ -160,6 +160,51 @@
         </table>
     </div>
     <div class="px-5 py-3 border-t border-gray-100">{{ $rules->links() }}</div>
+    @endif
+</div>
+
+{{-- MOBILE --}}
+<div class="sm:hidden">
+    @forelse ($rules as $r)
+    <div wire:key="mobile-r-{{ $r->id }}" class="bg-white rounded-2xl border border-gray-100 mb-3 shadow-sm overflow-hidden">
+        <div class="flex items-center gap-3 p-3">
+            <div style="width:30px;height:30px;border-radius:8px;background:#EDE9FE;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span style="font-size:12px;font-weight:700;color:#7B6FE8;">{{ strtoupper(substr($r->name, 0, 1)) }}</span>
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="font-semibold text-sm text-gray-800 truncate">{{ $r->name }}</span>
+                    <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold shrink-0
+                        @switch($r->type)
+                            @case('segmento') bg-lavanda-100 text-lavanda-700 @break
+                            @case('geografica') bg-celeste-100 text-celeste-700 @break
+                            @case('comercial') bg-mint-100 text-mint-700 @break
+                            @default bg-melocoton-100 text-melocoton-700
+                        @endswitch">
+                        {{ ucfirst($r->type) }}
+                    </span>
+                </div>
+                <div class="flex items-center gap-2 mt-0.5 flex-wrap">
+                    <span class="text-xs text-gray-400">Prioridad {{ $r->priority }} · {{ $r->groups_count }} grupos</span>
+                    <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold
+                        {{ $r->active ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-500' }}">
+                        {{ $r->active ? 'Activa' : 'Inactiva' }}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div class="border-t border-gray-100 px-3 py-2">
+            <button wire:click="edit({{ $r->id }})"
+                    class="w-full h-8 bg-lavanda-50 text-lavanda-700 border border-lavanda-100 rounded-lg text-xs font-semibold">
+                Editar
+            </button>
+        </div>
+    </div>
+    @empty
+    <p class="text-center text-gray-400 text-sm py-12">No hay reglas registradas.</p>
+    @endforelse
+    @if ($rules->hasPages())
+    <div class="mt-2">{{ $rules->links() }}</div>
     @endif
 </div>
 @endif
