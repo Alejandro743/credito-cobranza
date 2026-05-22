@@ -33,7 +33,7 @@ $iRow = 'height:34px; font-size:13px; border:1px solid #D1D5DB; border-radius:6p
         <option value="1">Activo</option>
         <option value="0">Inactivo</option>
     </select>
-    @if($ciclosDisponibles->isNotEmpty() && !$showAddForm)
+    @if($ciclosDisponibles->isNotEmpty())
     <button wire:click="showAdd"
             style="height:36px;font-size:13px;font-weight:600;background:#7C3AED;color:#fff;border:none;border-radius:8px;padding:0 16px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:6px;">
         <svg style="width:14px;height:14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
