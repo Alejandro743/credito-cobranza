@@ -19,6 +19,7 @@
 @endif
 
 {{-- ══════ TOOLBAR ══════ --}}
+@if(!$showAddForm)
 <div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
 
     <div style="position:relative; flex:1; min-width:200px;">
@@ -34,15 +35,14 @@
         <option value="cerrado">Cerrado</option>
     </select>
 
-    @if(!$showAddForm)
     <button wire:click="showAdd"
             style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;"
             @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         Nuevo Ciclo
     </button>
-    @endif
 </div>
+@endif
 
 {{-- ══════ PANEL NUEVO REGISTRO ══════ --}}
 @if($showAddForm)
