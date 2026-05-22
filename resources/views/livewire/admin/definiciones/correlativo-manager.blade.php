@@ -273,42 +273,36 @@
 
             @else
             {{-- Card normal mobile --}}
-            <div wire:key="mrow-{{ $c->id }}" style="background:#fff; border-radius:12px; border:1px solid #E5E7EB; padding:14px; display:flex; flex-direction:column; gap:10px;">
-                {{-- Header card --}}
-                <div style="display:flex; align-items:center; justify-content:space-between;">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <span style="font-family:monospace; font-size:15px; font-weight:800; color:#111827; letter-spacing:.5px;">{{ $c->prefijo }}</span>
-                        <span style="font-size:11px; color:#9CA3AF;">→</span>
-                        <span style="font-family:monospace; font-size:13px; color:#7B6FE8; font-weight:700; background:#F0EEFF; padding:3px 8px; border-radius:6px;">
-                            {{ $c->prefijo }}{{ str_pad($c->siguiente_numero, $c->longitud, '0', STR_PAD_LEFT) }}
-                        </span>
+            <div wire:key="mrow-{{ $c->id }}" style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); padding:12px 14px;">
+
+                {{-- Fila 1: avatar + prefijo + preview + estado --}}
+                <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                    <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <span style="font-size:12px; font-weight:700; color:#7B6FE8; text-transform:uppercase; line-height:1;">{{ mb_substr($c->prefijo, 0, 1) }}</span>
                     </div>
-                    <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600;
+                    <span style="font-family:monospace; font-size:14px; font-weight:800; color:#111827;">{{ $c->prefijo }}</span>
+                    <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8; background:#F0EEFF; padding:2px 7px; border-radius:6px; white-space:nowrap;">
+                        {{ $c->prefijo }}{{ str_pad($c->siguiente_numero, $c->longitud, '0', STR_PAD_LEFT) }}
+                    </span>
+                    <span style="margin-left:auto; flex-shrink:0; padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600;
                                  background:{{ $c->activo ? '#D1FAE5' : '#F3F4F6' }};
                                  color:{{ $c->activo ? '#059669' : '#9CA3AF' }};">
                         {{ $c->activo ? 'Activo' : 'Inactivo' }}
                     </span>
                 </div>
-                {{-- Descripción --}}
+
+                {{-- Fila 2: descripción --}}
                 @if ($c->descripcion)
-                <p style="font-size:12px; color:#6B7280; margin:0;">{{ $c->descripcion }}</p>
+                <p style="font-size:12px; color:#6B7280; margin:0 0 8px 38px;">{{ $c->descripcion }}</p>
                 @endif
-                {{-- Datos --}}
-                <div style="display:flex; gap:16px; border-top:1px solid #F3F4F6; padding-top:10px;">
-                    <div>
-                        <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Sig. Número</p>
-                        <p style="font-family:monospace; font-size:13px; font-weight:700; color:#374151; margin:0;">{{ $c->siguiente_numero }}</p>
-                    </div>
-                    <div>
-                        <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Longitud</p>
-                        <p style="font-size:13px; color:#6B7280; margin:0;">{{ $c->longitud }} dígitos</p>
-                    </div>
-                </div>
-                {{-- Acciones --}}
-                <div style="display:flex; gap:8px; padding-top:4px; border-top:1px solid #F3F4F6;">
+
+                {{-- Fila 3: datos + botón --}}
+                <div style="display:flex; align-items:center; gap:12px; border-top:1px solid #F3F4F6; padding-top:10px;">
+                    <span style="font-size:12px; color:#6B7280;">Sig. <strong style="color:#374151; font-family:monospace;">{{ $c->siguiente_numero }}</strong></span>
+                    <span style="font-size:12px; color:#6B7280;">Long. <strong style="color:#374151;">{{ $c->longitud }}</strong></span>
                     <button wire:click="startEdit({{ $c->id }})"
-                            style="flex:1; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                            style="margin-left:auto; height:32px; padding:0 14px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         Editar
                     </button>
                 </div>

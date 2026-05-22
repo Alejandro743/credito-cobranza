@@ -119,22 +119,23 @@
                  style="background:#fff; border-radius:14px; border:1px solid {{ $esVigente ? '#C4B5FD' : '#E5E7EB' }}; {{ $esVigente ? 'box-shadow:0 0 0 3px #EDE9FE;' : 'box-shadow:0 1px 3px rgba(0,0,0,.06);' }} overflow:hidden;">
 
                 {{-- Header --}}
-                <div style="padding:12px 14px; display:flex; align-items:center; justify-content:space-between; gap:8px; {{ $esVigente ? 'background:#F8F7FF; border-bottom:1px solid #EDE9FE;' : 'border-bottom:1px solid #F3F4F6;' }}">
-                    <div style="display:flex; flex-direction:column; gap:3px; flex:1; min-width:0;">
-                        <div style="display:flex; align-items:center; gap:6px;">
-                            <span style="font-size:14px; font-weight:800; color:#111827; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $r->nombre }}</span>
-                            @if($esVigente)
-                            <span style="font-size:9px; font-weight:800; padding:2px 7px; border-radius:99px; background:#7B6FE8; color:#fff; white-space:nowrap; flex-shrink:0; letter-spacing:.3px;">VIGENTE</span>
-                            @endif
+                <div style="padding:12px 14px; {{ $esVigente ? 'background:#F8F7FF; border-bottom:1px solid #EDE9FE;' : 'border-bottom:1px solid #F3F4F6;' }}">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
+                        <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <span style="font-size:12px; font-weight:700; color:#7B6FE8; text-transform:uppercase; line-height:1;">{{ mb_substr($r->nombre, 0, 1) }}</span>
                         </div>
-                        <span style="font-size:11px; color:#9CA3AF;">
-                            {{ $r->fecha_inicio->format('d/m/Y') }} → {{ $r->fecha_fin?->format('d/m/Y') ?? 'sin límite' }}
+                        <span style="font-size:14px; font-weight:800; color:#111827; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $r->nombre }}</span>
+                        @if($esVigente)
+                        <span style="font-size:9px; font-weight:800; padding:2px 7px; border-radius:99px; background:#7B6FE8; color:#fff; white-space:nowrap; flex-shrink:0; letter-spacing:.3px;">VIGENTE</span>
+                        @endif
+                        <span style="flex-shrink:0; padding:2px 9px; border-radius:99px; font-size:11px; font-weight:700;
+                                     background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
+                            {{ $r->activo ? 'Activo' : 'Inactivo' }}
                         </span>
                     </div>
-                    <span style="padding:4px 10px; border-radius:99px; font-size:11px; font-weight:700; flex-shrink:0;
-                                 background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
-                                 color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
-                        {{ $r->activo ? 'Activo' : 'Inactivo' }}
+                    <span style="font-size:11px; color:#9CA3AF; display:block; padding-left:38px;">
+                        {{ $r->fecha_inicio->format('d/m/Y') }} → {{ $r->fecha_fin?->format('d/m/Y') ?? 'sin límite' }}
                     </span>
                 </div>
 

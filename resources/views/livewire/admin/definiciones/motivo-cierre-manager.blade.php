@@ -245,30 +245,32 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
     @else
     {{-- CARD NORMAL --}}
     <div wire:key="mc-mobile-{{ $r->id }}"
-         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; margin-bottom:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
+         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; margin-bottom:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); padding:12px 14px;">
 
-        <div style="padding:12px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
-            <span style="font-size:14px; font-weight:700; color:#111827; flex:1; margin-right:10px;">{{ $r->nombre }}</span>
-            <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; white-space:nowrap;
+        {{-- Fila 1: avatar + nombre + estado --}}
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8; text-transform:uppercase; line-height:1;">{{ mb_substr($r->nombre, 0, 1) }}</span>
+            </div>
+            <span style="font-size:14px; font-weight:700; color:#111827; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $r->nombre }}</span>
+            <span style="flex-shrink:0; padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600;
                          background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
                          color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
                 {{ $r->activo ? 'Activo' : 'Inactivo' }}
             </span>
         </div>
 
-        <div style="padding:10px 14px; display:flex; align-items:center; justify-content:space-between;">
-            <span style="font-size:12px; color:#6B7280; font-weight:500;">Afecta indicadores</span>
+        {{-- Fila 2: afecta mora + botón --}}
+        <div style="display:flex; align-items:center; gap:8px; border-top:1px solid #F3F4F6; padding-top:10px;">
             @if($r->afecta_mora)
-            <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#FEE2E2; color:#DC2626;">Sí afecta</span>
+            <span style="font-size:11px; font-weight:700; padding:2px 10px; border-radius:99px; background:#FEE2E2; color:#DC2626;">Sí afecta mora</span>
             @else
-            <span style="font-size:11px; font-weight:600; padding:3px 10px; border-radius:99px; background:#F3F4F6; color:#9CA3AF;">No afecta</span>
+            <span style="font-size:11px; font-weight:600; padding:2px 10px; border-radius:99px; background:#F3F4F6; color:#9CA3AF;">No afecta</span>
             @endif
-        </div>
-
-        <div style="padding:10px 14px 12px; display:flex; gap:8px; border-top:1px solid #F3F4F6;">
             <button wire:click="edit({{ $r->id }})"
-                    style="flex:1; height:34px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;"
+                    style="margin-left:auto; height:32px; padding:0 14px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;"
                     @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
             </button>
         </div>
