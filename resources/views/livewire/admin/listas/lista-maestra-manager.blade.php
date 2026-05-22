@@ -423,14 +423,6 @@
                                         @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
                                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                                 </button>
-                                <button wire:click="toggleItemActive({{ $item->id }})" title="{{ $item->active ? 'Desactivar' : 'Activar' }}"
-                                        style="width:28px; height:28px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-                                               border:1px solid {{ $item->active ? '#FEE2E2' : '#D1FAE5' }};
-                                               background:{{ $item->active ? '#FEF2F2' : '#ECFDF5' }};
-                                               color:{{ $item->active ? '#EF4444' : '#10B981' }};"
-                                        @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
-                                </button>
                                 <button wire:click="removeItem({{ $item->id }})" title="Quitar de lista"
                                         style="width:28px; height:28px; border-radius:7px; border:1px solid #FEE2E2; background:#FEF2F2; color:#EF4444; cursor:pointer; display:flex; align-items:center; justify-content:center;"
                                         @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
@@ -630,14 +622,6 @@
                     style="flex:1; height:32px; border-radius:8px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px; font-size:11px; font-weight:600;">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
-            </button>
-            <button wire:click="toggleItemActive({{ $item->id }})" title="{{ $item->active ? 'Desactivar' : 'Activar' }}"
-                    style="width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-                           border:1px solid {{ $item->active ? '#FEE2E2' : '#D1FAE5' }};
-                           background:{{ $item->active ? '#FEF2F2' : '#ECFDF5' }};
-                           color:{{ $item->active ? '#EF4444' : '#10B981' }};"
-                    @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
             </button>
             <button wire:click="removeItem({{ $item->id }})" title="Quitar de lista"
                     style="width:32px; height:32px; border-radius:8px; border:1px solid #FEE2E2; background:#FEF2F2; color:#EF4444; cursor:pointer; display:flex; align-items:center; justify-content:center;"
@@ -1291,15 +1275,6 @@
                                     @mouseenter="$el.style.opacity='.75'" @mouseleave="$el.style.opacity='1'">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
                             </button>
-                            {{-- Toggle activo --}}
-                            <button wire:click="toggleActive({{ $m->id }})" title="{{ $m->active ? 'Desactivar' : 'Activar' }}"
-                                    style="width:28px; height:28px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-                                           border:1px solid {{ $m->active ? '#FEE2E2' : '#D1FAE5' }};
-                                           background:{{ $m->active ? '#FEF2F2' : '#ECFDF5' }};
-                                           color:{{ $m->active ? '#EF4444' : '#10B981' }};"
-                                    @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
-                            </button>
                         </div>
                     </td>
                 </tr>
@@ -1498,15 +1473,6 @@
                     style="width:32px; height:32px; border-radius:8px; border:1px solid #FED7AA; background:#FFF7ED; color:#C2410C; cursor:pointer; display:flex; align-items:center; justify-content:center;"
                     @mouseenter="$el.style.opacity='.75'" @mouseleave="$el.style.opacity='1'">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
-            </button>
-            {{-- Toggle activo --}}
-            <button wire:click="toggleActive({{ $m->id }})" title="{{ $m->active ? 'Desactivar' : 'Activar' }}"
-                    style="width:32px; height:32px; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-                           border:1px solid {{ $m->active ? '#FEE2E2' : '#D1FAE5' }};
-                           background:{{ $m->active ? '#FEF2F2' : '#ECFDF5' }};
-                           color:{{ $m->active ? '#EF4444' : '#10B981' }};"
-                    @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/></svg>
             </button>
         </div>
     </div>
