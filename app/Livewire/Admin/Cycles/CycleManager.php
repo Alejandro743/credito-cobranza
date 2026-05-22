@@ -194,7 +194,7 @@ class CycleManager extends Component
                         $q->where('code', 'like', "%{$this->search}%")
                           ->orWhere('name', 'like', "%{$this->search}%"))
                     ->when($this->filterStatus, fn($q) => $q->where('status', $this->filterStatus))
-                    ->orderByDesc('start_date')
+                    ->orderBy('code')
                     ->paginate(15);
 
         return view('livewire.admin.cycles.cycle-manager', compact('cycles'));
