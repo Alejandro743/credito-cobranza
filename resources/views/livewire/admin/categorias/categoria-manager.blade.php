@@ -251,44 +251,51 @@
     @if ($editingId === $cat->id)
     {{-- CARD EDICIÓN --}}
     <div wire:key="card-edit-{{ $cat->id }}"
-         style="background:#FAFAFE; border-radius:14px; border:1px solid #EDE9FE; padding:14px 16px; box-shadow:0 1px 4px rgba(123,111,232,.1);">
+         style="background:#fff; border-radius:14px; border:1px solid #EDE9FE; border-left:3px solid #7B6FE8; box-shadow:0 2px 8px rgba(123,111,232,.1); overflow:hidden;">
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Código *</label>
-                <input wire:model="editCode" type="text" style="{{ $iM }} font-family:monospace; text-transform:uppercase;">
-                @error('editCode')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Nombre *</label>
-                <input wire:model="editName" type="text" style="{{ $iM }}">
-                @error('editName')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
-            </div>
+        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:10px 14px; display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-size:12px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Editando categoría</span>
+            <button wire:click="cancelEdit" style="background:transparent; border:none; cursor:pointer; color:#9CA3AF; display:flex; padding:2px;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
 
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px;">
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Descripción</label>
-                <input wire:model="editDescripcion" type="text" placeholder="Opcional" style="{{ $iM }}">
+        <div style="padding:14px; display:flex; flex-direction:column; gap:10px;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Código *</label>
+                    <input wire:model="editCode" type="text" style="{{ $iM }} font-family:monospace; text-transform:uppercase;">
+                    @error('editCode')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Nombre *</label>
+                    <input wire:model="editName" type="text" style="{{ $iM }}">
+                    @error('editName')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+                </div>
             </div>
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Estado</label>
-                <select wire:model="editActive" style="{{ $iM }} cursor:pointer;">
-                    <option value="1">Activa</option>
-                    <option value="0">Inactiva</option>
-                </select>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Descripción</label>
+                    <input wire:model="editDescripcion" type="text" placeholder="Opcional" style="{{ $iM }}">
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Estado</label>
+                    <select wire:model="editActive" style="{{ $iM }} cursor:pointer;">
+                        <option value="1">Activa</option>
+                        <option value="0">Inactiva</option>
+                    </select>
+                </div>
             </div>
-        </div>
-
-        <div style="display:flex; gap:8px;">
-            <button wire:click="saveEdit"
-                    style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
-                Guardar
-            </button>
-            <button wire:click="cancelEdit"
-                    style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
-                Cancelar
-            </button>
+            <div style="display:flex; gap:8px; padding-top:2px;">
+                <button wire:click="saveEdit"
+                        style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                    Guardar
+                </button>
+                <button wire:click="cancelEdit"
+                        style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                    Cancelar
+                </button>
+            </div>
         </div>
     </div>
 
@@ -297,8 +304,14 @@
     <div wire:key="card-{{ $cat->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
 
-        <div style="background:#F8F7FF; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #EDE9FE;">
-            <p style="font-size:14px; font-weight:700; color:#111827; margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1; margin-right:10px;">{{ $cat->name }}</p>
+        <div style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #F3F4F6;">
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8;">{{ mb_strtoupper(mb_substr($cat->name, 0, 1)) }}</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+                <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $cat->name }}</p>
+                <p style="font-size:11px; font-family:monospace; color:#7B6FE8; font-weight:600; margin:2px 0 0;">{{ $cat->code }}</p>
+            </div>
             <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0;
                          background:{{ $cat->active ? '#D1FAE5' : '#F3F4F6' }};
                          color:{{ $cat->active ? '#059669' : '#9CA3AF' }};">
@@ -306,14 +319,16 @@
             </span>
         </div>
 
-        <div style="padding:10px 14px 12px;">
-            <p style="font-size:12px; color:#7B6FE8; font-family:monospace; font-weight:600; margin:0 0 4px;">{{ $cat->code }}</p>
-            <p style="font-size:12px; color:#6B7280; margin:0;">{{ $cat->descripcion ?? '—' }}</p>
+        @if($cat->descripcion)
+        <div style="padding:8px 14px; border-bottom:1px solid #F3F4F6;">
+            <p style="font-size:12px; color:#6B7280; margin:0;">{{ $cat->descripcion }}</p>
         </div>
+        @endif
 
-        <div style="padding:10px 14px; border-top:1px solid #F3F4F6; display:flex; gap:7px;">
+        <div style="padding:10px 14px; display:flex; gap:7px;">
             <button wire:click="startEdit({{ $cat->id }})"
-                    style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer;">
+                    style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
             </button>
         </div>

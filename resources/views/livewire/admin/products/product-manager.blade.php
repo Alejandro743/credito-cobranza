@@ -339,31 +339,32 @@
 </div>
 
 {{-- ══ MOBILE: Cards ══ --}}
-<div class="sm:hidden space-y-3">
+@php $iMp = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;'; @endphp
+<div class="sm:hidden flex flex-col" style="gap:10px;">
     @forelse ($products as $p)
 
     @if ($editingId === $p->id)
-    {{-- Card edición mobile --}}
+    {{-- CARD EDICIÓN --}}
     <div wire:key="card-edit-{{ $p->id }}"
-         style="background:#fff; border-radius:14px; border:1px solid #EDE9FE; box-shadow:0 2px 8px rgba(123,111,232,.1); overflow:hidden;">
-        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:11px 14px; display:flex; align-items:center; justify-content:space-between;">
-            <p style="font-size:13px; font-weight:700; color:#5B21B6; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->name }}</p>
-            <button wire:click="cancelEdit" style="background:transparent; border:none; cursor:pointer; color:#9CA3AF; display:flex; padding:3px; flex-shrink:0;">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+         style="background:#fff; border-radius:14px; border:1px solid #EDE9FE; border-left:3px solid #7B6FE8; box-shadow:0 2px 8px rgba(123,111,232,.1); overflow:hidden;">
+
+        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:10px 14px; display:flex; align-items:center; justify-content:space-between;">
+            <span style="font-size:12px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Editando producto</span>
+            <button wire:click="cancelEdit" style="background:transparent; border:none; cursor:pointer; color:#9CA3AF; display:flex; padding:2px;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
+
         <div style="padding:14px; display:flex; flex-direction:column; gap:10px;">
             <div>
-                <label style="display:block; font-size:11px; font-weight:600; color:#374151; margin-bottom:4px;">Nombre</label>
-                <input wire:model="editName" type="text"
-                       style="width:100%; border:1px solid #D8D3F8; border-radius:8px; padding:8px 10px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
-                @error('editName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Nombre *</label>
+                <input wire:model="editName" type="text" style="{{ $iMp }}">
+                @error('editName')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <div>
-                    <label style="display:block; font-size:11px; font-weight:600; color:#374151; margin-bottom:4px;">Unidad</label>
-                    <select wire:model="editUnidadId"
-                            style="width:100%; border:1px solid #D8D3F8; border-radius:8px; padding:8px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
+                    <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Unidad</label>
+                    <select wire:model="editUnidadId" style="{{ $iMp }} cursor:pointer;">
                         <option value="">— Unidad —</option>
                         @foreach ($unidades as $u)
                             <option value="{{ $u->id }}">{{ $u->abreviatura ?? $u->name }}</option>
@@ -371,9 +372,8 @@
                     </select>
                 </div>
                 <div>
-                    <label style="display:block; font-size:11px; font-weight:600; color:#374151; margin-bottom:4px;">Categoría</label>
-                    <select wire:model="editCategoriaId"
-                            style="width:100%; border:1px solid #D8D3F8; border-radius:8px; padding:8px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
+                    <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Categoría</label>
+                    <select wire:model="editCategoriaId" style="{{ $iMp }} cursor:pointer;">
                         <option value="">— Categoría —</option>
                         @foreach ($categorias as $cat)
                             <option value="{{ $cat->id }}">{{ $cat->name }}</option>
@@ -382,20 +382,19 @@
                 </div>
             </div>
             <div>
-                <label style="display:block; font-size:11px; font-weight:600; color:#374151; margin-bottom:4px;">Estado</label>
-                <select wire:model="editActive"
-                        style="width:100%; border:1px solid #D8D3F8; border-radius:8px; padding:8px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Estado</label>
+                <select wire:model="editActive" style="{{ $iMp }} cursor:pointer;">
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
                 </select>
             </div>
-            <div style="display:flex; gap:8px; padding-top:4px;">
+            <div style="display:flex; gap:8px; padding-top:2px;">
                 <button wire:click="saveEdit"
                         style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
                     Guardar
                 </button>
                 <button wire:click="cancelEdit"
-                        style="flex:1; height:36px; background:#FEF2F2; color:#EF4444; border:1px solid #FEE2E2; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                        style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
                     Cancelar
                 </button>
             </div>
@@ -403,22 +402,22 @@
     </div>
 
     @else
-    {{-- Card normal --}}
+    {{-- CARD NORMAL --}}
     <div wire:key="card-{{ $p->id }}"
-         style="background:#fff; border-radius:14px; border:1px solid #F3F4F6; box-shadow:0 1px 4px rgba(0,0,0,.06); padding:14px;">
-        <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
+
+        <div style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #F3F4F6;">
             @if($p->foto_url)
             <img src="{{ $p->foto_url }}" alt="{{ $p->name }}"
-                 style="width:44px; height:44px; border-radius:10px; object-fit:cover; border:1px solid #E5E7EB; flex-shrink:0;"
-                 onerror="this.style.display='none';">
-            @else
-            <div style="width:44px; height:44px; border-radius:10px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg width="18" height="18" fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            </div>
+                 style="width:38px; height:38px; border-radius:9px; object-fit:cover; border:1px solid #E5E7EB; flex-shrink:0;"
+                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
             @endif
+            <div style="width:38px; height:38px; border-radius:9px; background:#EDE9FE; display:{{ $p->foto_url ? 'none' : 'flex' }}; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </div>
             <div style="flex:1; min-width:0;">
                 <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->name }}</p>
-                <p style="font-size:11px; font-family:monospace; color:#9CA3AF; margin:2px 0 0;">{{ $p->code }}</p>
+                <p style="font-size:11px; font-family:monospace; color:#7B6FE8; font-weight:600; margin:2px 0 0;">{{ $p->code }}</p>
             </div>
             <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0;
                          background:{{ $p->active ? '#D1FAE5' : '#F3F4F6' }};
@@ -426,10 +425,16 @@
                 {{ $p->active ? 'Activo' : 'Inactivo' }}
             </span>
         </div>
-        <p style="font-size:12px; color:#6B7280; margin:0 0 12px;">
-            {{ $p->categoria?->name ?? '—' }} · {{ $p->unidad?->abreviatura ?? $p->unidad?->name ?? '—' }}
-        </p>
-        <div style="display:flex; gap:7px;">
+
+        <div style="padding:8px 14px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
+            <span style="font-size:12px; color:#6B7280;">{{ $p->categoria?->name ?? '—' }}</span>
+            @if($p->unidad)
+            <span style="color:#D1D5DB; font-size:11px;">·</span>
+            <span style="display:inline-block; padding:2px 8px; border-radius:6px; background:#F3F4F6; font-family:monospace; font-size:11px; font-weight:600; color:#374151;">{{ $p->unidad->abreviatura ?? $p->unidad->name }}</span>
+            @endif
+        </div>
+
+        <div style="padding:10px 14px; display:flex; gap:7px;">
             <button wire:click="startEdit({{ $p->id }})"
                     style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
