@@ -118,69 +118,73 @@
 
 {{-- ══ FORM: Nuevo usuario ══ --}}
 @if ($showAddForm)
-<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:20px; overflow:hidden;">
-    <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:11px 18px; display:flex; align-items:center; justify-content:space-between;">
-        <p style="font-size:13px; font-weight:700; color:#5B21B6; margin:0; display:flex; align-items:center; gap:7px;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+@php $iS = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;'; @endphp
+<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px; overflow:hidden;">
+    <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
+        <span style="font-size:14px; font-weight:800; color:#7B6FE8; display:flex; align-items:center; gap:7px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#7B6FE8;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
             </svg>
             Nuevo usuario
-        </p>
-        <button wire:click="cancelAdd" style="background:transparent; border:none; cursor:pointer; color:#9CA3AF; display:flex; padding:3px;">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </span>
+        <button wire:click="cancelAdd"
+                style="width:30px; height:30px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
     </div>
-    <div style="padding:16px 18px;">
-        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px; margin-bottom:14px;">
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Nombre Completo *</label>
-                <input wire:model="newName" type="text" placeholder="Ej. María García"
-                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box;">
-                @error('newName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-            </div>
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Usuario *</label>
-                <input wire:model="newUsuario" type="text" placeholder="Ej. maria.garcia"
-                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; font-family:monospace;">
-                @error('newUsuario') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-            </div>
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Contraseña *</label>
-                <input wire:model="newPassword" type="password" placeholder="Mín. 6 caracteres"
-                       style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box;">
-                @error('newPassword') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-            </div>
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Tipo *</label>
-                <select wire:model="newTipo"
-                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
-                    <option value="administrativo">Administrativo</option>
-                    <option value="vendedor">Vendedor</option>
-                    <option value="cliente">Cliente</option>
-                </select>
-                @error('newTipo') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-            </div>
-            <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Rol *</label>
-                <select wire:model="newRole"
-                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
-                    <option value="">— Seleccionar —</option>
-                    @foreach ($roles as $role)
-                        <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
-                    @endforeach
-                </select>
-                @error('newRole') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-            </div>
+    <div style="padding:16px 20px; display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap;">
+        <div style="flex:1; min-width:150px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Nombre Completo *</label>
+            <input wire:model="newName" type="text" placeholder="Ej. María García"
+                   style="width:100%; {{ $iS }}">
+            @error('newName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
         </div>
-        <div style="display:flex; gap:8px; padding-top:12px; border-top:1px solid #F3F4F6;">
-            <button wire:click="saveNew"
-                    style="height:36px; padding:0 20px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;">
-                Guardar nuevo
-            </button>
-            <button wire:click="cancelAdd"
-                    style="height:36px; padding:0 16px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;">
-                Cancelar
-            </button>
+        <div style="flex:1; min-width:140px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Usuario *</label>
+            <input wire:model="newUsuario" type="text" placeholder="Ej. maria.garcia"
+                   style="width:100%; {{ $iS }} font-family:monospace;">
+            @error('newUsuario') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+        <div style="flex:1; min-width:140px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Contraseña *</label>
+            <input wire:model="newPassword" type="password" placeholder="Mín. 6 caracteres"
+                   style="width:100%; {{ $iS }}">
+            @error('newPassword') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+        <div style="min-width:130px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Tipo *</label>
+            <select wire:model="newTipo" style="width:100%; {{ $iS }} cursor:pointer;">
+                <option value="administrativo">Administrativo</option>
+                <option value="vendedor">Vendedor</option>
+                <option value="cliente">Cliente</option>
+            </select>
+            @error('newTipo') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+        <div style="min-width:130px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Rol *</label>
+            <select wire:model="newRole" style="width:100%; {{ $iS }} cursor:pointer;">
+                <option value="">— Seleccionar —</option>
+                @foreach ($roles as $role)
+                    <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                @endforeach
+            </select>
+            @error('newRole') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+        <div>
+            <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
+            <div style="display:flex; gap:8px;">
+                <button wire:click="saveNew"
+                        style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                        @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                    Guardar
+                </button>
+                <button wire:click="cancelAdd"
+                        style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                        @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                    Cancelar
+                </button>
+            </div>
         </div>
     </div>
 </div>
@@ -475,16 +479,6 @@
                                     @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
-                                </svg>
-                            </button>
-                            <button wire:click="toggleActive({{ $user->id }})" title="{{ $user->active ? 'Desactivar' : 'Activar' }}"
-                                    style="width:28px; height:28px; border-radius:7px; cursor:pointer; display:flex; align-items:center; justify-content:center;
-                                           border:1px solid {{ $user->active ? '#FEE2E2' : '#D1FAE5' }};
-                                           background:{{ $user->active ? '#FEF2F2' : '#ECFDF5' }};
-                                           color:{{ $user->active ? '#EF4444' : '#10B981' }};"
-                                    @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M5.636 5.636a9 9 0 1012.728 0M12 3v9"/>
                                 </svg>
                             </button>
                         </div>
