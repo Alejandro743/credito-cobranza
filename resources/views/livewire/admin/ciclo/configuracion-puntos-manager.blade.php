@@ -271,7 +271,18 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
     @if($editingId === $punto->id)
     <div wire:key="card-edit-{{ $punto->id }}"
          style="background:#FAFAFE;border-radius:14px;border:1px solid #EDE9FE;padding:14px 16px;box-shadow:0 1px 4px rgba(123,111,232,.1);">
-        <p style="font-family:monospace;font-size:12px;font-weight:700;color:#7B6FE8;margin:0 0 10px;">{{ $punto->cycle->code }} — {{ $punto->cycle->name }}</p>
+
+        <div style="margin-bottom:10px;">
+            <label style="display:block;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Ciclo *</label>
+            <select wire:model="editCycleId" style="width:100%;{{ $iRow }} cursor:pointer;">
+                <option value="{{ $punto->cycle->id }}">{{ $punto->cycle->code }}</option>
+                @foreach($ciclosDisponibles as $ciclo)
+                <option value="{{ $ciclo->id }}">{{ $ciclo->code }}</option>
+                @endforeach
+            </select>
+            @error('editCycleId')<p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p>@enderror
+        </div>
+
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
             <div>
                 <label style="display:block;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Valor / Punto *</label>
@@ -290,10 +301,12 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 </select>
             </div>
         </div>
+
         <div style="margin-bottom:12px;">
             <label style="display:block;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px;">Descripción</label>
             <input wire:model="editDescription" type="text" placeholder="Descripción" style="width:100%;{{ $iRow }}">
         </div>
+
         <div style="display:flex;gap:8px;">
             <button wire:click="saveEdit" wire:loading.attr="disabled"
                     style="flex:1;height:36px;background:#7B6FE8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;">
