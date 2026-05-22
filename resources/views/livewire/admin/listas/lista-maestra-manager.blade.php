@@ -211,11 +211,12 @@
 
                             @php $h = 'height:36px; box-sizing:border-box;'; @endphp
 
-                            {{-- Código (disabled) --}}
+                            {{-- Código (editable) --}}
                             <div style="width:90px;">
                                 <p style="{{ $eLabel }}">Código</p>
-                                <input type="text" value="{{ $p->code }}" disabled
-                                       style="{{ $h }} width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:12px; font-family:monospace; color:#9CA3AF; background:#F3F4F6; cursor:not-allowed;">
+                                <input wire:model="editItemCode" type="text"
+                                       style="{{ $h }} width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:12px; font-family:monospace; color:#374151; background:#fff; outline:none; text-transform:uppercase;">
+                                @error('editItemCode') <p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
                             </div>
 
                             {{-- Nombre (disabled) --}}
@@ -468,9 +469,16 @@
              }
          }"
          style="background:#F8F7FF; border-radius:14px; border:1px solid #EDE9FE; border-left:3px solid #7B6FE8; padding:14px; display:flex; flex-direction:column; gap:10px;">
-        <div style="display:flex; align-items:center; gap:6px;">
-            <span style="font-family:monospace; font-size:11px; color:#9CA3AF; background:#F3F4F6; padding:2px 7px; border-radius:6px;">{{ $p->code }}</span>
+        <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
             <span style="font-size:13px; font-weight:700; color:#7B6FE8; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $p->name }}</span>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+            <div style="grid-column:1/-1;">
+                <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Código *</label>
+                <input wire:model="editItemCode" type="text"
+                       style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; font-family:monospace; text-transform:uppercase; outline:none; box-sizing:border-box; background:#fff; color:#374151;">
+                @error('editItemCode') <p style="font-size:11px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
         </div>
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
             <div>

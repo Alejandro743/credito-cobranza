@@ -79,6 +79,7 @@ class ListaMaestraManager extends Component
     public string $quickAddStock     = '0';
 
     public ?int   $editItemId              = null;
+    public string $editItemCode            = '';
     public string $editItemPrecio          = '0';
     public string $editItemPuntos          = '0';
     public string $editItemStock           = '0';
@@ -425,8 +426,9 @@ class ListaMaestraManager extends Component
 
     public function startEditItem(int $id): void
     {
-        $item = ListaMaestraItem::findOrFail($id);
+        $item = ListaMaestraItem::with('product')->findOrFail($id);
         $this->editItemId              = $id;
+        $this->editItemCode            = $item->product->code ?? '';
         $this->editItemPrecio          = (string) $item->precio_base;
         $this->editItemPuntos          = (string) $item->puntos;
         $this->editItemStock           = (string) $item->stock_inicial;
@@ -447,20 +449,27 @@ class ListaMaestraManager extends Component
 
     public function saveEditItem(): void
     {
+        $item = ListaMaestraItem::with('product')->findOrFail($this->editItemId);
+
         $this->validate([
+            'editItemCode'             => ['required', 'string', 'max:30',
+                                          Rule::unique('products', 'code')
+                                              ->ignore($item->product_id)
+                                              ->whereNull('deleted_at')],
             'editItemPrecio'           => 'required|numeric|min:0',
             'editItemPuntos'           => 'required|integer|min:0',
             'editItemStock'            => 'required|numeric|min:0',
             'editItemTipoIncremento'   => 'nullable|in:porcentaje,monto_fijo',
             'editItemFactorIncremento' => 'required|numeric|min:0',
         ], [], [
+            'editItemCode'             => 'código',
             'editItemPrecio'           => 'precio',
             'editItemPuntos'           => 'puntos',
             'editItemStock'            => 'stock inicial',
             'editItemFactorIncremento' => 'factor incremento',
         ]);
 
-        $item        = ListaMaestraItem::findOrFail($this->editItemId);
+        $item->product->update(['code' => strtoupper(trim($this->editItemCode))]);
         $nuevoStock  = (float) $this->editItemStock;
         $nuevoActual = max(0, $nuevoStock - (float) $item->stock_consumido);
         $precioBase  = (float) $this->editItemPrecio;
