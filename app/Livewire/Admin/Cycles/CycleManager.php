@@ -83,7 +83,7 @@ class CycleManager extends Component
             return;
         }
 
-        CommercialCycle::create([
+        $cycle = CommercialCycle::create([
             'code'       => strtoupper(trim($this->newCode)),
             'name'       => $this->newName,
             'start_date' => $this->newStartDate,
@@ -91,6 +91,10 @@ class CycleManager extends Component
             'status'     => $this->newStatus,
             'notes'      => $this->newNotes ?: null,
         ]);
+
+        if ($this->newStatus === 'abierto') {
+            $this->cerrarOtros($cycle->id);
+        }
 
         $this->showAddForm = false;
         $this->resetPage();
@@ -149,6 +153,10 @@ class CycleManager extends Component
             'notes'      => $this->editNotes ?: null,
         ]);
 
+        if ($this->editStatus === 'abierto') {
+            $this->cerrarOtros($this->editingId);
+        }
+
         $this->editingId = null;
         $this->resetPage();
         session()->flash('success', 'Ciclo actualizado.');
@@ -177,6 +185,13 @@ class CycleManager extends Component
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
+
+    private function cerrarOtros(int $exceptId): void
+    {
+        CommercialCycle::where('id', '!=', $exceptId)
+            ->where('status', 'abierto')
+            ->update(['status' => 'cerrado']);
+    }
 
     private function datesOverlap(string $start, string $end, ?int $excludeId = null): bool
     {

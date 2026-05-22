@@ -23,6 +23,11 @@ class CommercialCycle extends Model
         return $this->status === 'abierto';
     }
 
+    public static function vigente(): ?self
+    {
+        return self::where('status', 'abierto')->first();
+    }
+
     public function configuracionPuntos(): HasOne
     {
         return $this->hasOne(ConfiguracionPuntos::class, 'cycle_id');
