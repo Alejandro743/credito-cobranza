@@ -428,7 +428,7 @@ class ListaMaestraManager extends Component
     {
         $item = ListaMaestraItem::with('product')->findOrFail($id);
         $this->editItemId              = $id;
-        $this->editItemCode            = $item->product->code ?? '';
+        $this->editItemCode            = $item->product?->code ?? '';
         $this->editItemPrecio          = (string) $item->precio_base;
         $this->editItemPuntos          = (string) $item->puntos;
         $this->editItemStock           = (string) $item->stock_inicial;

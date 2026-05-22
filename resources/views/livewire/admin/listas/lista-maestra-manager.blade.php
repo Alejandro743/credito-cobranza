@@ -214,7 +214,7 @@
                             {{-- Código (editable) --}}
                             <div style="width:90px;">
                                 <p style="{{ $eLabel }}">Código</p>
-                                <input wire:model="editItemCode" type="text"
+                                <input wire:model.live="editItemCode" type="text"
                                        style="{{ $h }} width:100%; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:12px; font-family:monospace; color:#374151; background:#fff; outline:none; text-transform:uppercase;">
                                 @error('editItemCode') <p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
                             </div>
@@ -475,7 +475,7 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
             <div style="grid-column:1/-1;">
                 <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Código *</label>
-                <input wire:model="editItemCode" type="text"
+                <input wire:model.live="editItemCode" type="text"
                        style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; font-family:monospace; text-transform:uppercase; outline:none; box-sizing:border-box; background:#fff; color:#374151;">
                 @error('editItemCode') <p style="font-size:11px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
