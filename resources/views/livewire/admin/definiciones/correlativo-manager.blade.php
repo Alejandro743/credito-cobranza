@@ -296,12 +296,10 @@
                 <p style="font-size:12px; color:#6B7280; margin:0 0 8px 38px;">{{ $c->descripcion }}</p>
                 @endif
 
-                {{-- Fila 3: datos + botón --}}
-                <div style="display:flex; align-items:center; gap:12px; border-top:1px solid #F3F4F6; padding-top:10px;">
-                    <span style="font-size:12px; color:#6B7280;">Sig. <strong style="color:#374151; font-family:monospace;">{{ $c->siguiente_numero }}</strong></span>
-                    <span style="font-size:12px; color:#6B7280;">Long. <strong style="color:#374151;">{{ $c->longitud }}</strong></span>
+                {{-- Botón --}}
+                <div style="border-top:1px solid #F3F4F6; padding-top:10px;">
                     <button wire:click="startEdit({{ $c->id }})"
-                            style="margin-left:auto; height:32px; padding:0 14px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;">
+                            style="width:100%; height:32px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
                         <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         Editar
                     </button>

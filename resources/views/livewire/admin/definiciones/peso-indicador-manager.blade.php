@@ -195,7 +195,7 @@
     <div style="padding:20px 22px; display:flex; flex-direction:column; gap:16px;">
 
         {{-- Nombre + Estado --}}
-        <div style="display:grid; grid-template-columns:1fr auto; gap:12px; align-items:start;">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Nombre *</label>
                 <input wire:model="nombre" type="text" placeholder="Ej: Pesos 2026" style="{{ $iS }}">
@@ -203,7 +203,7 @@
             </div>
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Estado</label>
-                <select wire:model.live="activo" style="height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; cursor:pointer;">
+                <select wire:model.live="activo" style="{{ $iS }} cursor:pointer;">
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
                 </select>
@@ -212,7 +212,7 @@
         </div>
 
         {{-- Vigencia --}}
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Vigencia desde *</label>
                 <input wire:model.blur="fechaInicio" type="date" style="{{ $iS }}">
@@ -241,7 +241,7 @@
         @error('pesoPuntualidad')<p style="font-size:11px; color:#EF4444; margin-top:-8px;">{{ $message }}</p>@enderror
 
         {{-- Grid pesos --}}
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
             @foreach([
                 ['Puntualidad',    'pesoPuntualidad',    25],
                 ['Mora generada',  'pesoMora',           25],
@@ -263,15 +263,15 @@
         </div>
 
         {{-- Botones --}}
-        <div style="display:flex; gap:8px; padding-top:4px; border-top:1px solid #F3F4F6;">
+        <div class="flex flex-col sm:flex-row gap-2" style="padding-top:4px; border-top:1px solid #F3F4F6;">
             <button wire:click="save" wire:loading.attr="disabled"
-                    style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
+                    style="flex:1; height:42px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
                     @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
                 <span wire:loading.remove wire:target="save">Guardar configuración</span>
                 <span wire:loading wire:target="save">Guardando...</span>
             </button>
             <button wire:click="backToList"
-                    style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
+                    style="flex:1; height:42px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
                     @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
                 Cancelar
             </button>
