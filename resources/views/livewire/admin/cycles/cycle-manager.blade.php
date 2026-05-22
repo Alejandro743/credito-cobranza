@@ -65,6 +65,7 @@
             </div>
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
+                <div style="display:flex; gap:8px;">
                     <button wire:click="saveNew" wire:loading.attr="disabled"
                             style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
                             @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
