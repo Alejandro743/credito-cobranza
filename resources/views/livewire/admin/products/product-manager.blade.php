@@ -356,10 +356,17 @@
         </div>
 
         <div style="padding:14px; display:flex; flex-direction:column; gap:10px;">
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Nombre *</label>
-                <input wire:model="editName" type="text" style="{{ $iMp }}">
-                @error('editName')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+            <div style="display:grid; grid-template-columns:1fr 2fr; gap:10px;">
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Código *</label>
+                    <input wire:model="editCode" type="text" style="{{ $iMp }} font-family:monospace; text-transform:uppercase;">
+                    @error('editCode')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Nombre *</label>
+                    <input wire:model="editName" type="text" style="{{ $iMp }}">
+                    @error('editName')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
+                </div>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <div>
@@ -404,39 +411,47 @@
     @else
     {{-- CARD NORMAL --}}
     <div wire:key="card-{{ $p->id }}"
-         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
+         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); padding:12px 14px;">
 
-        <div style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #F3F4F6;">
+        {{-- Fila 1: avatar + nombre + estado --}}
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:6px;">
             @if($p->foto_url)
             <img src="{{ $p->foto_url }}" alt="{{ $p->name }}"
-                 style="width:38px; height:38px; border-radius:9px; object-fit:cover; border:1px solid #E5E7EB; flex-shrink:0;"
+                 style="width:30px; height:30px; border-radius:8px; object-fit:cover; border:1px solid #E5E7EB; flex-shrink:0;"
                  onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:none; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8; text-transform:uppercase; line-height:1;">{{ mb_substr($p->name, 0, 1) }}</span>
+            </div>
+            @else
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8; text-transform:uppercase; line-height:1;">{{ mb_substr($p->name, 0, 1) }}</span>
+            </div>
             @endif
-            <div style="width:38px; height:38px; border-radius:9px; background:#EDE9FE; display:{{ $p->foto_url ? 'none' : 'flex' }}; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg width="16" height="16" fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-            </div>
-            <div style="flex:1; min-width:0;">
-                <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->name }}</p>
-                <p style="font-size:11px; font-family:monospace; color:#7B6FE8; font-weight:600; margin:2px 0 0;">{{ $p->code }}</p>
-            </div>
-            <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0;
+            <span style="font-size:14px; font-weight:700; color:#111827; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $p->name }}</span>
+            <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0;
                          background:{{ $p->active ? '#D1FAE5' : '#F3F4F6' }};
                          color:{{ $p->active ? '#059669' : '#9CA3AF' }};">
                 {{ $p->active ? 'Activo' : 'Inactivo' }}
             </span>
         </div>
 
-        <div style="padding:8px 14px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-            <span style="font-size:12px; color:#6B7280;">{{ $p->categoria?->name ?? '—' }}</span>
+        {{-- Fila 2: código + categoría · unidad --}}
+        <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+            <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8; background:#F0EEFF; padding:2px 7px; border-radius:6px;">{{ $p->code }}</span>
+            @if($p->categoria)
+            <span style="color:#D1D5DB; font-size:11px;">·</span>
+            <span style="font-size:12px; color:#6B7280;">{{ $p->categoria->name }}</span>
+            @endif
             @if($p->unidad)
             <span style="color:#D1D5DB; font-size:11px;">·</span>
-            <span style="display:inline-block; padding:2px 8px; border-radius:6px; background:#F3F4F6; font-family:monospace; font-size:11px; font-weight:600; color:#374151;">{{ $p->unidad->abreviatura ?? $p->unidad->name }}</span>
+            <span style="font-family:monospace; font-size:11px; font-weight:600; color:#374151; background:#F3F4F6; padding:2px 7px; border-radius:6px;">{{ $p->unidad->abreviatura ?? $p->unidad->name }}</span>
             @endif
         </div>
 
-        <div style="padding:10px 14px; display:flex; gap:7px;">
+        {{-- Botón editar --}}
+        <div style="border-top:1px solid #F3F4F6; padding-top:10px;">
             <button wire:click="startEdit({{ $p->id }})"
-                    style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
+                    style="width:100%; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
             </button>
