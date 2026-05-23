@@ -169,10 +169,6 @@
             </select>
         </div>
         @endif
-        <div class="flex flex-col items-center justify-end pb-0.5">
-            <p class="text-xs text-lavanda-600 font-medium mb-1">Activo</p>
-            <input type="checkbox" wire:model="newActive" class="w-4 h-4 mt-1.5 rounded text-lavanda-500 border-gray-300 cursor-pointer">
-        </div>
     </div>
     <div class="flex justify-end gap-2">
         <button wire:click="cancelAdd" class="px-4 py-2 text-sm text-gray-600 hover:bg-lavanda-100 rounded-xl transition-colors">Cancelar</button>
