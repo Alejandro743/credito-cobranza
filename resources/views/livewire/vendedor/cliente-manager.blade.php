@@ -124,20 +124,21 @@
                 </select>
                 @error('newMunicipio') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-            <div style="grid-column: span 2;">
+        </div>
+        {{-- Línea 2: Dirección + botones --}}
+        <div style="display:flex; align-items:flex-end; gap:10px; padding-top:12px; border-top:1px solid #F3F4F6;">
+            <div style="flex:1; min-width:0;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Dirección *</label>
                 <input wire:model="newDireccion" type="text" maxlength="255" style="{{ $iF }}">
                 @error('newDireccion') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-        </div>
-        <div style="display:flex; gap:8px; padding-top:12px; border-top:1px solid #F3F4F6;">
             <button wire:click="saveNew"
-                    style="height:38px; padding:0 28px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
+                    style="height:38px; padding:0 28px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; flex-shrink:0;"
                     @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
                 Guardar
             </button>
             <button wire:click="cancelAdd"
-                    style="height:38px; padding:0 20px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
+                    style="height:38px; padding:0 20px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; flex-shrink:0;"
                     @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
                 Cancelar
             </button>
