@@ -98,6 +98,19 @@
 <div class="hidden md:block bg-white border-b border-gray-100 px-3 py-2">
     <div class="flex gap-2 items-stretch" style="min-height:46px;">
 
+        {{-- BUSCAR --}}
+        <div class="relative flex items-center justify-center flex-shrink-0"
+             style="width:54px; border-radius:8px; background:#f97316; box-shadow:0 2px 8px rgba(249,115,22,0.30);">
+            <button @click="showSearch = true; $nextTick(() => { let el = document.getElementById('clienteSearchInput'); if(el) el.focus(); })"
+                    class="w-full h-full flex flex-col items-center justify-center gap-0.5 active:scale-95"
+                    style="cursor:pointer;">
+                <svg class="w-5 h-5" fill="none" stroke="#fff" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <span style="font-size:8px; font-weight:700; color:#fff; letter-spacing:0.03em; line-height:1;">Buscar</span>
+            </button>
+        </div>
+
         {{-- CLIENTE --}}
         <div style="flex:1; min-width:0; background:#EEEDFE; border:0.5px solid rgba(206,203,246,0.6); border-radius:8px; padding:8px 14px; display:flex; flex-direction:column; justify-content:center; box-shadow:0 2px 8px rgba(124,58,237,0.08);">
             <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; margin-bottom:2px; text-transform:uppercase; letter-spacing:0.06em;">Cliente</span>
@@ -109,13 +122,7 @@
                 <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
             </div>
             @else
-            <button @click="showSearch = true; $nextTick(() => { let el = document.getElementById('clienteSearchInput'); if(el) el.focus(); })"
-                    style="background:#f97316; color:#fff; border:none; border-radius:8px; padding:6px 14px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; margin-top:2px; box-shadow:0 2px 8px rgba(249,115,22,0.35);">
-                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-                Buscar cliente
-            </button>
+            <span style="font-size:13px; font-weight:400; color:#c4b5fd; display:block;">Seleccioná un cliente...</span>
             @endif
         </div>
 
@@ -144,6 +151,19 @@
 {{-- ── STATS BAR — MÓVIL ────────────────────────────────────────────────── --}}
 <div class="md:hidden bg-white border-b border-gray-100 px-2 py-2 flex gap-2 items-stretch" style="min-height:46px;">
 
+    {{-- BUSCAR --}}
+    <div class="relative flex items-center justify-center flex-shrink-0"
+         style="width:48px; border-radius:8px; background:#f97316; box-shadow:0 2px 6px rgba(249,115,22,0.30);">
+        <button @click="showSearch = true; $nextTick(() => { let el = document.getElementById('clienteSearchInput'); if(el) el.focus(); })"
+                class="w-full h-full flex flex-col items-center justify-center gap-0.5 active:scale-95"
+                style="cursor:pointer;">
+            <svg class="w-4 h-4" fill="none" stroke="#fff" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <span style="font-size:7px; font-weight:700; color:#fff; letter-spacing:0.03em; line-height:1;">Buscar</span>
+        </button>
+    </div>
+
     {{-- CLIENTE --}}
     <div style="flex:1; min-width:0; background:#EEEDFE; border:0.5px solid rgba(206,203,246,0.6); border-radius:8px; padding:8px 10px; display:flex; flex-direction:column; justify-content:center;">
         <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; margin-bottom:2px; text-transform:uppercase; letter-spacing:0.06em;">Cliente</span>
@@ -152,13 +172,7 @@
         @elseif ($sinListasActivas)
         <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
         @else
-        <button @click="showSearch = true; $nextTick(() => { let el = document.getElementById('clienteSearchInput'); if(el) el.focus(); })"
-                style="background:#f97316; color:#fff; border:none; border-radius:7px; padding:5px 11px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:1px; box-shadow:0 2px 6px rgba(249,115,22,0.35);">
-            <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            Buscar cliente
-        </button>
+        <span style="font-size:12px; font-weight:400; color:#c4b5fd; display:block;">Seleccioná un cliente...</span>
         @endif
     </div>
 
@@ -840,7 +854,7 @@
      x-transition:enter-end="opacity-100"
      x-transition:leave="transition ease-in duration-100"
      x-transition:leave-end="opacity-0"
-     style="position:fixed; inset:0; z-index:98; display:flex; align-items:flex-start; justify-content:center; padding:60px 16px 16px; background:rgba(60,52,137,0.45);"
+     style="position:fixed; inset:0; z-index:98; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(60,52,137,0.45);"
      @click.self="showSearch = false">
 
     <div x-show="showSearch"
