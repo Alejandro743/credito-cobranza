@@ -256,7 +256,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
             </div>
             <div style="flex:1; min-width:0;">
                 <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $c->usuario->name ?? '—' }} {{ $c->apellido }}</p>
-                <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;">{{ $c->ci }}</p>
+                <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;"><span style="color:#9CA3AF; font-family:inherit;">CI:</span> {{ $c->ci }}</p>
             </div>
             <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0;
                          background:{{ $c->active ? '#D1FAE5' : '#F3F4F6' }};
@@ -266,13 +266,10 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
         </div>
 
         {{-- Info --}}
-        <div style="padding:10px 14px; display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-            <span style="font-size:11px; font-weight:700; color:#7B6FE8; font-family:monospace;">{{ $c->id_ln ?? '—' }}</span>
-            <span style="font-size:11px; color:#D1D5DB;">|</span>
-            <span style="font-size:12px; color:#6B7280;">{{ $c->ciudad }}</span>
+        <div style="padding:10px 14px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+            <span style="font-size:12px; color:#6B7280;"><span style="font-weight:600; color:#9CA3AF;">Ciudad:</span> {{ $c->ciudad }}</span>
             @if($c->telefono)
-            <span style="font-size:11px; color:#D1D5DB;">|</span>
-            <span style="font-size:12px; color:#6B7280;">{{ $c->telefono }}</span>
+            <span style="font-size:12px; color:#6B7280;"><span style="font-weight:600; color:#9CA3AF;">Celular:</span> {{ $c->telefono }}</span>
             @endif
         </div>
 
