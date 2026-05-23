@@ -38,6 +38,7 @@ class OfertaManager extends Component
     // ── Cliente ───────────────────────────────────────────────────────────────
     public string $searchCliente     = '';
     public array  $resultadosCliente = [];
+    public array  $clientesPropios   = [];
     public ?int   $clienteId         = null;
     public ?int   $clienteUserId     = null;
     public string $clienteNombre     = '';
@@ -100,6 +101,19 @@ class OfertaManager extends Component
                 $q->whereDoesntHave('accesosVendedores')
                   ->orWhereHas('accesosVendedores', fn($a) => $a->where('user_id', auth()->id()));
             })->exists();
+
+        $this->clientesPropios = Cliente::where('active', true)
+            ->where('vendedor_id', auth()->id())
+            ->with('usuario')
+            ->latest()
+            ->limit(12)
+            ->get()
+            ->map(fn($c) => [
+                'id'      => $c->id,
+                'user_id' => $c->usuario_id,
+                'nombre'  => trim(($c->usuario->name ?? '') . ' ' . ($c->apellido ?? '')),
+                'ci'      => $c->ci ?? '',
+            ])->toArray();
     }
 
     // ── Búsqueda de cliente ───────────────────────────────────────────────────
