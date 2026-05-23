@@ -39,6 +39,12 @@ class ClienteManager extends Component
     public ?int   $newVendedorId = null;
     public bool   $newActive     = true;
 
+    // ── Modal Ver ────────────────────────────────────────────────────────────
+    public ?int $viewingClienteId = null;
+
+    public function openViewModal(int $id): void { $this->viewingClienteId = $id; }
+    public function closeViewModal(): void       { $this->viewingClienteId = null; }
+
     // ── Inline edit ───────────────────────────────────────────────────────────
     public ?int   $editingId      = null;
     public string $editCi         = '';
@@ -245,10 +251,13 @@ class ClienteManager extends Component
         $editProvObj    = Provincia::where('nombre', $this->editProvincia)->where('ciudad_id', $editCiudadObj?->id)->first();
         $editMunicipios = $editProvObj ? Municipio::where('provincia_id', $editProvObj->id)->orderBy('nombre')->get() : collect();
 
+        $viewingClienteId = $this->viewingClienteId;
+
         return view('livewire.credito.cliente-manager', compact(
             'clientes', 'ciudades', 'vendedores',
             'ciudadesAll', 'newProvincias', 'newMunicipios',
-            'editProvincias', 'editMunicipios'
+            'editProvincias', 'editMunicipios',
+            'viewingClienteId'
         ));
     }
 }
