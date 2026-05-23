@@ -1,4 +1,4 @@
-<div x-data="{ toastShow: false, toastMsg: '' }"
+<div x-data="{ toastShow: false, toastMsg: '', showSearch: false }"
      x-on:producto-agregado.window="toastMsg = $event.detail.nombre; toastShow = true; setTimeout(() => toastShow = false, 2200)">
 
 {{-- Toast --}}
@@ -32,6 +32,7 @@
 @if ($step === 'cliente' || $step === 'oferta')
 
 {{-- ── BUSCADOR DE CLIENTE ───────────────────────────────────────────────── --}}
+@if (false) {{-- compact search bar replaced by modal --}}
 <div class="bg-white px-3 pt-2.5 pb-2 border-b border-gray-100">
     @if ($sinListasActivas)
     <div class="flex items-center gap-2 py-1" style="color:#e24b4a;">
@@ -91,6 +92,7 @@
     </div>
     @endif
 </div>
+@endif {{-- /compact search bar --}}
 
 {{-- ── STATS BAR — DESKTOP ──────────────────────────────────────────────── --}}
 <div class="hidden md:block bg-white border-b border-gray-100 px-3 py-2">
@@ -101,8 +103,19 @@
             <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; margin-bottom:2px; text-transform:uppercase; letter-spacing:0.06em;">Cliente</span>
             @if ($clienteId)
             <span style="font-size:14px; font-weight:600; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
+            @elseif ($sinListasActivas)
+            <div style="display:flex; align-items:center; gap:5px;">
+                <svg width="11" height="11" fill="none" stroke="#e24b4a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
+            </div>
             @else
-            <span style="font-size:13px; font-weight:400; color:#c4b5fd; display:block;">Seleccioná un cliente para comenzar</span>
+            <button @click="showSearch = true; $nextTick(() => { let el = document.getElementById('clienteSearchInput'); if(el) el.focus(); })"
+                    style="background:#f97316; color:#fff; border:none; border-radius:8px; padding:6px 14px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; margin-top:2px; box-shadow:0 2px 8px rgba(249,115,22,0.35);">
+                <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                Buscar cliente
+            </button>
             @endif
         </div>
 
@@ -136,8 +149,16 @@
         <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; margin-bottom:2px; text-transform:uppercase; letter-spacing:0.06em;">Cliente</span>
         @if ($clienteId)
         <span style="font-size:13px; font-weight:600; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
+        @elseif ($sinListasActivas)
+        <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
         @else
-        <span style="font-size:12px; font-weight:400; color:#c4b5fd; display:block;">Seleccioná un cliente...</span>
+        <button @click="showSearch = true; $nextTick(() => { let el = document.getElementById('clienteSearchInput'); if(el) el.focus(); })"
+                style="background:#f97316; color:#fff; border:none; border-radius:7px; padding:5px 11px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; margin-top:1px; box-shadow:0 2px 6px rgba(249,115,22,0.35);">
+            <svg width="11" height="11" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            Buscar cliente
+        </button>
         @endif
     </div>
 
@@ -811,6 +832,121 @@
     </div>
 </div>
 @endif {{-- step entrega --}}
+
+{{-- ══ MODAL: BUSCAR CLIENTE ════════════════════════════════════════════════ --}}
+<div x-show="showSearch" x-cloak
+     x-transition:enter="transition ease-out duration-150"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
+     x-transition:leave="transition ease-in duration-100"
+     x-transition:leave-end="opacity-0"
+     style="position:fixed; inset:0; z-index:98; display:flex; align-items:flex-start; justify-content:center; padding:60px 16px 16px; background:rgba(60,52,137,0.45);"
+     @click.self="showSearch = false">
+
+    <div x-show="showSearch"
+         x-transition:enter="transition ease-out duration-150"
+         x-transition:enter-start="opacity-0 -translate-y-4 scale-97"
+         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+         style="background:#fff; border-radius:20px; width:100%; max-width:540px; max-height:80vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.22); overflow:hidden;">
+
+        {{-- Header --}}
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:#EEEDFE; border-bottom:1px solid #CECBF6; flex-shrink:0;">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <div style="width:36px; height:36px; border-radius:10px; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(124,58,237,0.15); flex-shrink:0;">
+                    <svg width="18" height="18" fill="none" stroke="#7c3aed" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                </div>
+                <div>
+                    <p style="font-size:16px; font-weight:800; color:#3C3489; margin:0; line-height:1.2;">Buscar cliente</p>
+                    <p style="font-size:11px; color:#7c3aed; margin:0; line-height:1.4;">Por CI, nombre o apellido</p>
+                </div>
+            </div>
+            <button @click="showSearch = false"
+                    style="width:32px; height:32px; border-radius:8px; background:#fff; border:1.5px solid #CECBF6; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="13" height="13" fill="none" stroke="#534AB7" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+
+        {{-- Input de búsqueda --}}
+        <div style="padding:14px 20px; border-bottom:1px solid #f3f4f6; flex-shrink:0;">
+            <div style="position:relative;">
+                <svg fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"
+                     style="position:absolute; left:14px; top:50%; transform:translateY(-50%); width:18px; height:18px; pointer-events:none; flex-shrink:0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input id="clienteSearchInput"
+                       wire:model.live.debounce.300ms="searchCliente"
+                       type="text"
+                       placeholder="Ingresá CI, nombre o apellido..."
+                       style="width:100%; padding:13px 14px 13px 44px; font-size:15px; border-radius:12px; border:2px solid #CECBF6; background:#F8F7FF; outline:none; color:#3C3489; box-sizing:border-box;"
+                       onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
+                       onblur="this.style.borderColor='#CECBF6'; this.style.background='#F8F7FF';">
+            </div>
+        </div>
+
+        {{-- Resultados --}}
+        <div style="overflow-y:auto; flex:1; min-height:0;">
+
+            @if (count($resultadosCliente))
+            @foreach ($resultadosCliente as $c)
+            <button wire:click="seleccionarCliente({{ $c['id'] }}, {{ $c['user_id'] }}, '{{ addslashes($c['nombre']) }}', '{{ addslashes($c['ci']) }}')"
+                    @click="showSearch = false"
+                    class="w-full flex items-center gap-3 text-left border-b border-gray-50 last:border-0"
+                    style="padding:14px 20px; background:#fff; cursor:pointer;"
+                    onmouseover="this.style.background='#F8F7FF'" onmouseout="this.style.background='#fff'">
+                <div style="width:42px; height:42px; border-radius:50%; background:#7c3aed; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; color:#fff; flex-shrink:0;">
+                    {{ strtoupper(substr($c['nombre'], 0, 1)) }}
+                </div>
+                <div style="min-width:0; flex:1; text-align:left;">
+                    <p style="font-weight:700; font-size:13px; color:#3C3489; margin:0; font-family:monospace;">{{ $c['ci'] }}</p>
+                    <p style="font-size:13px; color:#6B7280; margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $c['nombre'] }}</p>
+                </div>
+                <svg width="15" height="15" fill="none" stroke="#CECBF6" viewBox="0 0 24 24" style="flex-shrink:0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+                </svg>
+            </button>
+            @endforeach
+
+            @elseif (strlen(trim($searchCliente)) >= 2)
+            <div style="padding:16px 20px;">
+                <p style="text-align:center; font-size:13px; color:#9CA3AF; margin:0 0 14px;">
+                    Sin resultados para "<strong style="color:#6B7280;">{{ $searchCliente }}</strong>"
+                </p>
+                <button wire:click="abrirRegistroCliente"
+                        @click="showSearch = false"
+                        style="width:100%; display:flex; align-items:center; gap:12px; padding:14px 16px; background:#F8F7FF; border-radius:12px; border:1.5px dashed #CECBF6; cursor:pointer;"
+                        onmouseover="this.style.background='#EEEDFE'; this.style.borderColor='#7c3aed';"
+                        onmouseout="this.style.background='#F8F7FF'; this.style.borderColor='#CECBF6';">
+                    <div style="width:42px; height:42px; border-radius:50%; background:#EEEDFE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="18" height="18" fill="none" stroke="#7c3aed" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                        </svg>
+                    </div>
+                    <div style="text-align:left; min-width:0;">
+                        <p style="font-weight:700; font-size:14px; color:#3C3489; margin:0;">Registrar nuevo cliente</p>
+                        <p style="font-size:12px; color:#9CA3AF; margin:2px 0 0;">CI: {{ $searchCliente }}</p>
+                    </div>
+                </button>
+            </div>
+
+            @else
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px 20px; color:#9CA3AF;">
+                <div style="width:56px; height:56px; border-radius:16px; background:#F8F7FF; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+                    <svg width="26" height="26" fill="none" stroke="#CECBF6" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </div>
+                <p style="font-size:13px; margin:0; font-weight:500;">Escribí para buscar un cliente</p>
+                <p style="font-size:12px; margin:4px 0 0; color:#c4b5fd;">CI, nombre o apellido</p>
+            </div>
+            @endif
+
+        </div>
+    </div>
+</div>
 
 {{-- ══ MODAL: REGISTRAR NUEVO CLIENTE ══════════════════════════════════════ --}}
 @if ($showRegistroCliente)
