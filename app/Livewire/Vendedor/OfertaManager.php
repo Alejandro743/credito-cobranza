@@ -125,13 +125,7 @@ class OfertaManager extends Component
         if (strlen($q) < 2) { $this->resultadosCliente = []; return; }
 
         $this->resultadosCliente = Cliente::where('active', true)
-            ->where(fn($query) =>
-                $query->where('ci', 'like', "%{$q}%")
-                      ->orWhere('apellido', 'like', "%{$q}%")
-                      ->orWhereHas('usuario', fn($u) =>
-                          $u->where('name', 'like', "%{$q}%")
-                      )
-            )
+            ->where('ci', 'like', "%{$q}%")
             ->with('usuario')
             ->limit(8)
             ->get()
