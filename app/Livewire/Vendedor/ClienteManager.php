@@ -255,7 +255,8 @@ class ClienteManager extends Component
             })
             ->when($this->filterCiudad, fn($q) => $q->where('ciudad', $this->filterCiudad))
             ->when($this->filterActivo !== '', fn($q) => $q->where('active', (bool) $this->filterActivo))
-            ->orderByDesc('id')
+            ->orderByDesc('active')
+            ->orderBy('apellido')
             ->paginate(15);
 
         $ciudades = Cliente::where('vendedor_id', auth()->id())
