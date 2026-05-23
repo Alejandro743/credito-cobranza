@@ -288,7 +288,8 @@ class ClienteManager extends Component
             })
             ->when($this->filterCiudad, fn($q) => $q->where('ciudad', $this->filterCiudad))
             ->when($this->filterActivo !== '', fn($q) => $q->where('active', (bool)$this->filterActivo))
-            ->orderByDesc('id')
+            ->orderByDesc('active')
+            ->orderBy('nombre')
             ->paginate(20);
 
         $ciudades  = Cliente::select('ciudad')->distinct()->orderBy('ciudad')->pluck('ciudad');
