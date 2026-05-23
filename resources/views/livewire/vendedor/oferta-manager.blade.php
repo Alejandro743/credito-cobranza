@@ -31,27 +31,6 @@
 {{-- ══════════════════════════════════ STEPS: CLIENTE + OFERTA ══════════════ --}}
 @if ($step === 'cliente' || $step === 'oferta')
 
-{{-- ── TOPBAR ────────────────────────────────────────────────────────────── --}}
-<div class="px-3 py-3 flex items-center justify-between" style="background:#FAEEDA;">
-    {{-- Botón hamburguesa solo en móvil (sidebar oculto cuando no hay layout header) --}}
-    <button @click="$dispatch('open-sidebar')" onclick="window.dispatchEvent(new CustomEvent('open-sidebar'))"
-            class="md:hidden w-8 h-8 flex items-center justify-center rounded-lg mr-2 flex-shrink-0 transition-colors hover:opacity-75"
-            style="background:rgba(99,56,6,0.12);">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#633806;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-        </svg>
-    </button>
-    <h1 class="font-bold text-base flex-1" style="color:#633806;">Registrar Nuevo Plan</h1>
-    <span class="text-sm font-medium" style="color:#633806;">{{ now()->format('d/m/Y') }}</span>
-</div>
-
-{{-- ── TÍTULO ────────────────────────────────────────────────────────────── --}}
-<div style="padding:14px 16px 10px;">
-    <div style="background:#EEEDFE; border:1px solid #CECBF6; border-radius:14px; padding:14px 18px; text-align:center;">
-        <h2 style="font-size:20px; font-weight:800; color:#3C3489; letter-spacing:-0.3px; margin:0;">REGISTRAR NUEVA SOLICITUD</h2>
-    </div>
-</div>
-
 {{-- ── BUSCADOR DE CLIENTE ───────────────────────────────────────────────── --}}
 <div class="bg-white px-3 pt-2.5 pb-2 border-b border-gray-100">
     @if ($sinListasActivas)
@@ -443,13 +422,7 @@
 @if ($step === 'resumen')
 <div>
 
-{{-- Topbar --}}
-<div class="px-4 py-3 flex items-center justify-between" style="background:#FAEEDA;">
-    <h1 class="font-bold text-base" style="color:#633806;">Registrar Nuevo Plan</h1>
-    <span class="text-sm font-medium" style="color:#854F0B;">{{ now()->format('d/m/Y') }}</span>
-</div>
-
-<div class="max-w-2xl mx-auto px-4 pb-10">
+<div class="max-w-2xl mx-auto px-4 pb-10 pt-4">
 
     {{-- Card título VERIFICACIÓN con botones adentro --}}
     <div style="background:#EEEDFE; border:1px solid #CECBF6; border-radius:14px; padding:14px 18px; margin-bottom:16px;">
@@ -623,12 +596,6 @@
 {{-- ═════════════════════════════════════════════ STEP: ENTREGA ══════════ --}}
 @if ($step === 'entrega')
 <div style="background:#F5F4FC; min-height:100vh;">
-
-    {{-- Franja superior (igual que todas las páginas) --}}
-    <div class="px-4 py-3 flex items-center justify-between" style="background:#FAEEDA;">
-        <h1 class="font-bold text-base" style="color:#633806;">Registrar Nuevo Plan</h1>
-        <span class="text-sm font-medium" style="color:#854F0B;">{{ now()->format('d/m/Y') }}</span>
-    </div>
 
     <div class="max-w-2xl mx-auto px-4 pt-4 pb-10">
 
