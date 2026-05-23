@@ -97,7 +97,7 @@
             </div>
         </div>
         {{-- Fila 2: Ciudad · Provincia · Municipio · Dirección · botones --}}
-        <div style="display:flex; align-items:flex-end; gap:10px;">
+        <div style="display:flex; align-items:flex-end; gap:10px; flex-wrap:wrap;">
             <div style="width:130px; flex-shrink:0;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Ciudad *</label>
                 <select wire:model.live="newCiudad" style="{{ $iF }} cursor:pointer;">
@@ -128,7 +128,7 @@
                 </select>
                 @error('newMunicipio') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-            <div style="flex:1; min-width:0;">
+            <div style="flex:1; min-width:220px;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Dirección *</label>
                 <input wire:model="newDireccion" type="text" maxlength="255" style="{{ $iF }}">
                 @error('newDireccion') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
