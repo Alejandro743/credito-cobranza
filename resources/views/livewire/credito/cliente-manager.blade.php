@@ -468,103 +468,137 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
 
                 {{-- Fila edición inline --}}
                 @if ($editingId === $c->id)
-                @php $iE = 'width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;'; @endphp
-                <tr wire:key="edit-{{ $c->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
-                    <td colspan="9" style="padding:0;">
-                        <div style="padding:14px 18px;">
-                            <p style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin:0 0 12px;">Editando: {{ $c->usuario->name ?? $c->ci }}</p>
-                            <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:10px; margin-bottom:12px;">
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">CI *</label>
-                                    <input wire:model="editCi" type="text" maxlength="20" style="{{ $iE }}">
-                                    @error('editCi') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                @php $iE = 'width:100%; height:32px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; color:#374151;'; @endphp
+                <tr wire:key="edit-{{ $c->id }}">
+                    <td colspan="9" style="padding:0; background:#F8F7FF; border-bottom:2px solid #EDE9FE;">
+                        {{-- Header del panel --}}
+                        <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 20px; background:#F0EFFE; border-bottom:1px solid #EDE9FE;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <div style="width:6px; height:6px; border-radius:99px; background:#7B6FE8;"></div>
+                                <span style="font-size:12px; font-weight:700; color:#7B6FE8;">Editando:</span>
+                                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $c->usuario->name ?? $c->ci }} {{ $c->apellido }}</span>
+                                <span style="font-size:11px; font-family:monospace; color:#A78BFA; background:#EDE9FE; padding:2px 8px; border-radius:99px;">{{ $c->id_ln }}</span>
+                            </div>
+                            <button wire:click="cancelEdit"
+                                    style="width:26px; height:26px; border-radius:7px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+
+                        {{-- Cuerpo del panel --}}
+                        <div style="padding:16px 20px; display:flex; flex-direction:column; gap:14px;">
+
+                            {{-- Sección: Datos personales --}}
+                            <div>
+                                <p style="font-size:10px; font-weight:700; color:#A78BFA; text-transform:uppercase; letter-spacing:.6px; margin:0 0 8px;">Datos personales</p>
+                                <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:10px;">
+                                    <div>
+                                        <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">CI *</label>
+                                        <input wire:model="editCi" type="text" maxlength="20" style="{{ $iE }} font-family:monospace;">
+                                        @error('editCi') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div>
+                                        <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">Nombre *</label>
+                                        <input wire:model="editNombre" type="text" style="{{ $iE }}">
+                                        @error('editNombre') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div>
+                                        <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">Apellido *</label>
+                                        <input wire:model="editApellido" type="text" style="{{ $iE }}">
+                                        @error('editApellido') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div>
+                                        <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">Teléfono *</label>
+                                        <input wire:model="editTelefono" type="text" style="{{ $iE }}">
+                                        @error('editTelefono') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div>
+                                        <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">NIT</label>
+                                        <input wire:model="editNit" type="text" style="{{ $iE }}">
+                                    </div>
+                                    <div>
+                                        <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">Correo</label>
+                                        <input wire:model="editCorreo" type="email" style="{{ $iE }}">
+                                        @error('editCorreo') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                                    </div>
                                 </div>
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Nombre *</label>
-                                    <input wire:model="editNombre" type="text" style="{{ $iE }}">
-                                    @error('editNombre') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                            </div>
+
+                            {{-- Sección: Ubicación --}}
+                            <div>
+                                <p style="font-size:10px; font-weight:700; color:#A78BFA; text-transform:uppercase; letter-spacing:.6px; margin:0 0 8px;">Ubicación</p>
+                                <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:10px;">
+                                    <div>
+                                        <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">Ciudad *</label>
+                                        <select wire:model.live="editCiudad" style="{{ $iE }} cursor:pointer;">
+                                            <option value="">— Seleccionar —</option>
+                                            @foreach($ciudadesAll as $ciudad)
+                                            <option value="{{ $ciudad->nombre }}">{{ $ciudad->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('editCiudad') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div>
+                                        <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">Provincia *</label>
+                                        <select wire:model.live="editProvincia" style="{{ $iE }} cursor:pointer;" @disabled(!$editCiudad)>
+                                            <option value="">— Seleccionar —</option>
+                                            @foreach($editProvincias as $prov)
+                                            <option value="{{ $prov->nombre }}">{{ $prov->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('editProvincia') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div>
+                                        <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">Municipio *</label>
+                                        <select wire:model.live="editMunicipio" style="{{ $iE }} cursor:pointer;" @disabled(!$editProvincia)>
+                                            <option value="">— Seleccionar —</option>
+                                            @foreach($editMunicipios as $mun)
+                                            <option value="{{ $mun->nombre }}">{{ $mun->nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('editMunicipio') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                                    </div>
+                                    <div style="grid-column:span 2;">
+                                        <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">Dirección *</label>
+                                        <input wire:model="editDireccion" type="text" maxlength="255" style="{{ $iE }}">
+                                        @error('editDireccion') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                                    </div>
                                 </div>
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Apellido *</label>
-                                    <input wire:model="editApellido" type="text" style="{{ $iE }}">
-                                    @error('editApellido') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                                </div>
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Teléfono *</label>
-                                    <input wire:model="editTelefono" type="text" style="{{ $iE }}">
-                                    @error('editTelefono') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                                </div>
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">NIT</label>
-                                    <input wire:model="editNit" type="text" style="{{ $iE }}">
-                                </div>
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Correo</label>
-                                    <input wire:model="editCorreo" type="email" style="{{ $iE }}">
-                                    @error('editCorreo') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                                </div>
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Ciudad *</label>
-                                    <select wire:model.live="editCiudad" style="{{ $iE }} cursor:pointer; height:30px; padding:0 8px;">
-                                        <option value="">— Ciudad —</option>
-                                        @foreach($ciudadesAll as $ciudad)
-                                        <option value="{{ $ciudad->nombre }}">{{ $ciudad->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('editCiudad') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                                </div>
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Provincia *</label>
-                                    <select wire:model.live="editProvincia" style="{{ $iE }} cursor:pointer; height:30px; padding:0 8px;" @disabled(!$editCiudad)>
-                                        <option value="">— Provincia —</option>
-                                        @foreach($editProvincias as $prov)
-                                        <option value="{{ $prov->nombre }}">{{ $prov->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('editProvincia') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                                </div>
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Municipio *</label>
-                                    <select wire:model.live="editMunicipio" style="{{ $iE }} cursor:pointer; height:30px; padding:0 8px;" @disabled(!$editProvincia)>
-                                        <option value="">— Municipio —</option>
-                                        @foreach($editMunicipios as $mun)
-                                        <option value="{{ $mun->nombre }}">{{ $mun->nombre }}</option>
-                                        @endforeach
-                                    </select>
-                                    @error('editMunicipio') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                                </div>
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Dirección *</label>
-                                    <input wire:model="editDireccion" type="text" maxlength="255" style="{{ $iE }}">
-                                    @error('editDireccion') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                                </div>
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Vendedor</label>
-                                    <select wire:model="editVendedorId" style="{{ $iE }} cursor:pointer; height:30px; padding:0 8px;">
+                            </div>
+
+                            {{-- Sección: Asignación + estado + botones --}}
+                            <div style="display:flex; align-items:flex-end; gap:10px;">
+                                <div style="flex:1;">
+                                    <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">Vendedor</label>
+                                    <select wire:model="editVendedorId" style="{{ $iE }} cursor:pointer;">
                                         <option value="">Sin asignar</option>
                                         @foreach ($vendedores as $v)
                                             <option value="{{ $v->id }}">{{ $v->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div>
-                                    <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Estado</label>
-                                    <select wire:model="editActive" style="{{ $iE }} cursor:pointer; height:30px; padding:0 8px;">
+                                <div style="width:110px;">
+                                    <label style="display:block; font-size:10px; font-weight:600; color:#6B7280; margin-bottom:4px;">Estado</label>
+                                    <select wire:model="editActive" style="{{ $iE }} cursor:pointer;">
                                         <option value="1">Activo</option>
                                         <option value="0">Inactivo</option>
                                     </select>
                                 </div>
+                                <div style="display:flex; gap:6px; flex-shrink:0;">
+                                    <button wire:click="saveEdit"
+                                            style="height:32px; padding:0 20px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                                            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                                        Guardar cambios
+                                    </button>
+                                    <button wire:click="cancelEdit"
+                                            style="height:32px; padding:0 14px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                                            @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                                        Cancelar
+                                    </button>
+                                </div>
                             </div>
-                            <div style="display:flex; gap:8px; padding-top:10px; border-top:1px solid #EDE9FE;">
-                                <button wire:click="saveEdit"
-                                        style="height:32px; padding:0 20px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer;">
-                                    Guardar
-                                </button>
-                                <button wire:click="cancelEdit"
-                                        style="height:32px; padding:0 14px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer;">
-                                    Cancelar
-                                </button>
-                            </div>
+
                         </div>
                     </td>
                 </tr>
@@ -612,20 +646,13 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                 </svg>
                             </button>
-                            <button wire:click="toggleActivo({{ $c->id }})" title="{{ $c->active ? 'Desactivar' : 'Activar' }}"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:{{ $c->active ? '#6B7280' : '#D1D5DB' }}; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                          d="{{ $c->active ? 'M5.636 18.364a9 9 0 010-12.728M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z' : 'M18.364 5.636a9 9 0 010 12.728M12 21v-1m0-16V3m-9 9h1m16 0h1M5.636 5.636l.707.707M18.364 18.364l.707.707m0-13.435l-.707.707M5.636 18.364l-.707.707M8 12a4 4 0 118 0 4 4 0 01-8 0z' }}"/>
-                                </svg>
-                            </button>
                             <button wire:click="startEdit({{ $c->id }})" title="Editar"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    style="height:28px; padding:0 12px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; gap:5px; font-size:12px; font-weight:600;"
                                     @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                 </svg>
+                                Editar
                             </button>
                         </div>
                     </td>
