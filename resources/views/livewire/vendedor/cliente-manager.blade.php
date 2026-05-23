@@ -325,7 +325,7 @@
         <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:14px 20px; border-radius:20px 20px 0 0; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
             <div>
                 <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.7px; margin:0 0 2px;">Datos del cliente</p>
-                <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0;">{{ $viewingCliente->nombre }} {{ $viewingCliente->apellido }}</p>
+                <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0;">{{ $viewingCliente->usuario->name ?? '—' }} {{ $viewingCliente->apellido }}</p>
                 <p style="font-size:12px; color:#9CA3AF; margin:2px 0 0; font-family:monospace;">CI: {{ $viewingCliente->ci }}</p>
             </div>
             <div style="display:flex; align-items:center; gap:8px;">
