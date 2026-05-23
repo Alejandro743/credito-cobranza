@@ -202,7 +202,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
     default    => ['bg'=>'rgba(123,111,232,.1)','color'=>'#7B6FE8'],
 };
 @endphp
-<div class="sm:hidden" style="display:flex; flex-direction:column; gap:10px;">
+<div class="sm:hidden flex flex-col" style="gap:10px;">
     @forelse ($users as $user)
     @php $roleName = $user->getRoleNames()->first() ?? '—'; $tb = $tipoBadgeMobile($user->tipo); @endphp
 

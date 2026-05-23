@@ -230,7 +230,7 @@
 @endif
 
 {{-- ══ MOBILE: Cards ══ --}}
-<div class="sm:hidden" style="display:flex; flex-direction:column; gap:10px;">
+<div class="sm:hidden flex flex-col" style="gap:10px;">
     @forelse ($roles as $role)
 
     @if ($editingId === $role->id)
