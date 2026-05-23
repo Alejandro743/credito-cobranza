@@ -64,8 +64,7 @@
         </button>
     </div>
     <div style="padding:16px 20px;">
-        {{-- Fila 1: campos --}}
-        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; margin-bottom:12px;">
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; margin-bottom:14px;">
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">CI * <span style="color:#CBCBCB; font-weight:400; text-transform:none;">(usuario de acceso)</span></label>
                 <input wire:model="newCi" type="text" maxlength="20" placeholder="12345678" style="{{ $iF }}">
@@ -125,21 +124,20 @@
                 </select>
                 @error('newMunicipio') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-        </div>
-        {{-- Fila 2: Dirección + botones --}}
-        <div style="display:flex; gap:12px; align-items:flex-end; padding-top:4px; border-top:1px solid #F3F4F6; padding-top:12px;">
-            <div style="flex:1; min-width:0;">
+            <div style="grid-column: span 2;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Dirección *</label>
                 <input wire:model="newDireccion" type="text" maxlength="255" style="{{ $iF }}">
                 @error('newDireccion') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
+        </div>
+        <div style="display:flex; gap:8px; padding-top:12px; border-top:1px solid #F3F4F6;">
             <button wire:click="saveNew"
-                    style="height:38px; padding:0 28px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; flex-shrink:0;"
+                    style="height:38px; padding:0 28px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
                     @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
                 Guardar
             </button>
             <button wire:click="cancelAdd"
-                    style="height:38px; padding:0 20px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; flex-shrink:0;"
+                    style="height:38px; padding:0 20px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
                     @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
                 Cancelar
             </button>
