@@ -97,70 +97,34 @@
     @endif
 </div>
 
-{{-- ── STATS BAR — DESKTOP (6 celdas) ─────────────────────────────────── --}}
-<div class="hidden md:block bg-white border-b border-gray-100 px-2 py-2">
-    <div class="flex gap-1.5 items-stretch">
+{{-- ── STATS BAR — DESKTOP ──────────────────────────────────────────────── --}}
+<div class="hidden md:block bg-white border-b border-gray-100 px-3 py-2">
+    <div class="flex gap-2 items-stretch" style="min-height:46px;">
 
         {{-- CLIENTE --}}
-        <div style="flex:2; min-width:0; background-color:#EEEDFE; border:0.5px solid rgba(206,203,246,0.6); border-radius:8px; padding:8px 10px; display:flex; flex-direction:column; justify-content:center; box-shadow:0 2px 8px rgba(124,58,237,0.08),0 1px 3px rgba(0,0,0,0.05);">
-            <span style="font-size:9px; font-weight:500; color:#534AB7; display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.04em;">CLIENTE</span>
+        <div style="flex:1; min-width:0; background:#EEEDFE; border:0.5px solid rgba(206,203,246,0.6); border-radius:8px; padding:8px 14px; display:flex; flex-direction:column; justify-content:center; box-shadow:0 2px 8px rgba(124,58,237,0.08);">
+            <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; margin-bottom:2px; text-transform:uppercase; letter-spacing:0.06em;">Cliente</span>
             @if ($clienteId)
-            <span style="font-size:13px; font-weight:500; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' - ' : '' }}{{ $clienteNombre }}</span>
+            <span style="font-size:14px; font-weight:600; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
             @else
-            <span style="font-size:13px; font-weight:500; color:#d1d5db; display:block;">—</span>
+            <span style="font-size:13px; font-weight:400; color:#c4b5fd; display:block;">Seleccioná un cliente para comenzar</span>
             @endif
-        </div>
-
-        {{-- SALDO --}}
-        <div class="flex flex-col items-center justify-center px-1 py-1.5"
-             style="flex:1; background:#F8F7FF; border-radius:8px; border:0.5px solid rgba(206,203,246,0.6); box-shadow:0 2px 8px rgba(124,58,237,0.08),0 1px 3px rgba(0,0,0,0.05);">
-            <p class="text-[9px] font-semibold uppercase tracking-wide leading-none mb-1" style="color:#534AB7;">Saldo Bs</p>
-            <p class="font-bold text-xs leading-none tabular-nums" style="color:#3C3489;">
-                @if ($clienteId) {{ number_format($total, 2) }} @else <span style="color:#d1d5db;">0.00</span> @endif
-            </p>
-        </div>
-
-        {{-- CARGADO --}}
-        <div class="flex flex-col items-center justify-center px-1 py-1.5"
-             style="flex:1; background:#F8F7FF; border-radius:8px; border:0.5px solid rgba(206,203,246,0.6); box-shadow:0 2px 8px rgba(124,58,237,0.08),0 1px 3px rgba(0,0,0,0.05);">
-            <p class="text-[9px] font-semibold uppercase tracking-wide leading-none mb-1" style="color:#534AB7;">Cargado</p>
-            <p class="font-bold text-xs leading-none tabular-nums" style="color:#BA7517;">
-                @if ($clienteId) {{ $cantidad }} @else <span style="color:#d1d5db;">0</span> @endif
-            </p>
-        </div>
-
-        {{-- DISP. --}}
-        <div class="flex flex-col items-center justify-center px-1 py-1.5"
-             style="flex:1; background:#F8F7FF; border-radius:8px; border:0.5px solid rgba(206,203,246,0.6); box-shadow:0 2px 8px rgba(124,58,237,0.08),0 1px 3px rgba(0,0,0,0.05);">
-            <p class="text-[9px] font-semibold uppercase tracking-wide leading-none mb-1" style="color:#534AB7;">Disp.</p>
-            <p class="font-bold text-xs leading-none tabular-nums" style="color:#0F6E56;">
-                @if ($clienteId) {{ count($oferta) }} @else <span style="color:#d1d5db;">—</span> @endif
-            </p>
-        </div>
-
-        {{-- PUNTOS --}}
-        <div class="flex flex-col items-center justify-center px-1 py-1.5"
-             style="flex:1; background:#F8F7FF; border-radius:8px; border:0.5px solid rgba(206,203,246,0.6); box-shadow:0 2px 8px rgba(124,58,237,0.08),0 1px 3px rgba(0,0,0,0.05);">
-            <p class="text-[9px] font-semibold uppercase tracking-wide leading-none mb-1" style="color:#534AB7;">Puntos</p>
-            <p class="font-bold text-xs leading-none tabular-nums" style="color:#0F6E56;">
-                @if ($clienteId) +{{ $puntos }} @else <span style="color:#d1d5db;">0</span> @endif
-            </p>
         </div>
 
         {{-- CARRITO --}}
         <div class="relative flex items-center justify-center flex-shrink-0"
-             style="width:44px; border-radius:8px; background:#f97316; box-shadow:0 2px 8px rgba(249,115,22,0.25);">
+             style="width:54px; border-radius:8px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 8px rgba(249,115,22,0.30)' }}; transition:all 0.15s;">
             <button wire:click="irResumen"
                     @disabled(empty($carrito))
                     class="w-full h-full flex items-center justify-center transition-all active:scale-95"
-                    style="min-height:46px; {{ empty($carrito) ? 'opacity:0.45; cursor:default;' : 'cursor:pointer;' }}">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
+                <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                 </svg>
             </button>
             @if ($cantidad > 0)
             <span class="absolute flex items-center justify-center font-bold text-white leading-none"
-                  style="top:-4px; right:-4px; min-width:16px; height:16px; border-radius:50%; background:#e24b4a; font-size:9px; padding:0 2px;">
+                  style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
                 {{ $cantidad > 9 ? '9+' : $cantidad }}
             </span>
             @endif
@@ -169,82 +133,38 @@
     </div>
 </div>
 
-{{-- ── STATS BAR — MÓVIL (grid 2×2 + carrito) ─────────────────────────── --}}
-<div class="md:hidden bg-white border-b border-gray-100 px-2 py-2 flex flex-col gap-1.5">
+{{-- ── STATS BAR — MÓVIL ────────────────────────────────────────────────── --}}
+<div class="md:hidden bg-white border-b border-gray-100 px-2 py-2 flex gap-2 items-stretch" style="min-height:46px;">
 
     {{-- CLIENTE --}}
-    <div style="background-color:#EEEDFE; border:0.5px solid rgba(206,203,246,0.6); border-radius:8px; padding:8px 10px; width:100%; box-shadow:0 2px 8px rgba(124,58,237,0.08),0 1px 3px rgba(0,0,0,0.05);">
-        <span style="font-size:9px; font-weight:500; color:#534AB7; display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.04em;">CLIENTE</span>
+    <div style="flex:1; min-width:0; background:#EEEDFE; border:0.5px solid rgba(206,203,246,0.6); border-radius:8px; padding:8px 10px; display:flex; flex-direction:column; justify-content:center;">
+        <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; margin-bottom:2px; text-transform:uppercase; letter-spacing:0.06em;">Cliente</span>
         @if ($clienteId)
-        <span style="font-size:13px; font-weight:500; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' - ' : '' }}{{ $clienteNombre }}</span>
+        <span style="font-size:13px; font-weight:600; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
         @else
-        <span style="font-size:13px; font-weight:500; color:#d1d5db; display:block;">—</span>
+        <span style="font-size:12px; font-weight:400; color:#c4b5fd; display:block;">Seleccioná un cliente...</span>
         @endif
     </div>
 
-    <div class="flex gap-1.5 items-stretch">
+    {{-- CARRITO --}}
+    <div class="relative flex items-center justify-center flex-shrink-0"
+         style="width:48px; border-radius:8px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 8px rgba(249,115,22,0.30)' }};">
+        <button wire:click="irResumen"
+                @disabled(empty($carrito))
+                class="w-full h-full flex items-center justify-center transition-all active:scale-95"
+                style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
+            <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
+        </button>
+        @if ($cantidad > 0)
+        <span class="absolute flex items-center justify-center font-bold text-white leading-none"
+              style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
+            {{ $cantidad > 9 ? '9+' : $cantidad }}
+        </span>
+        @endif
+    </div>
 
-        {{-- Grid 2×2 --}}
-        <div class="flex-1 grid grid-cols-2 gap-1.5">
-
-            {{-- SALDO --}}
-            <div class="flex flex-col items-center justify-center px-2 py-1.5"
-                 style="background:#EEEDFE; border-radius:8px; border:0.5px solid #CECBF6;">
-                <p class="text-[9px] font-semibold uppercase tracking-wide leading-none mb-1" style="color:#534AB7;">Saldo Bs</p>
-                <p class="font-bold text-xs leading-none tabular-nums" style="color:#3C3489;">
-                    @if ($clienteId) {{ number_format($total, 2) }} @else <span style="color:#d1d5db;">0.00</span> @endif
-                </p>
-            </div>
-
-            {{-- CARGADO --}}
-            <div class="flex flex-col items-center justify-center px-2 py-1.5"
-                 style="background:#EEEDFE; border-radius:8px; border:0.5px solid #CECBF6;">
-                <p class="text-[9px] font-semibold uppercase tracking-wide leading-none mb-1" style="color:#534AB7;">Cargado</p>
-                <p class="font-bold text-xs leading-none tabular-nums" style="color:#BA7517;">
-                    @if ($clienteId) {{ $cantidad }} @else <span style="color:#d1d5db;">0</span> @endif
-                </p>
-            </div>
-
-            {{-- DISP. --}}
-            <div class="flex flex-col items-center justify-center px-2 py-1.5"
-                 style="background:#EEEDFE; border-radius:8px; border:0.5px solid #CECBF6;">
-                <p class="text-[9px] font-semibold uppercase tracking-wide leading-none mb-1" style="color:#534AB7;">Disp.</p>
-                <p class="font-bold text-xs leading-none tabular-nums" style="color:#0F6E56;">
-                    @if ($clienteId) {{ count($oferta) }} @else <span style="color:#d1d5db;">—</span> @endif
-                </p>
-            </div>
-
-            {{-- PUNTOS --}}
-            <div class="flex flex-col items-center justify-center px-2 py-1.5"
-                 style="background:#EEEDFE; border-radius:8px; border:0.5px solid #CECBF6;">
-                <p class="text-[9px] font-semibold uppercase tracking-wide leading-none mb-1" style="color:#534AB7;">Puntos</p>
-                <p class="font-bold text-xs leading-none tabular-nums" style="color:#0F6E56;">
-                    @if ($clienteId) +{{ $puntos }} @else <span style="color:#d1d5db;">0</span> @endif
-                </p>
-            </div>
-
-        </div>
-
-        {{-- CARRITO --}}
-        <div class="relative flex items-center justify-center flex-shrink-0"
-             style="width:44px; border-radius:8px; background:#f97316; box-shadow:0 2px 8px rgba(249,115,22,0.25);">
-            <button wire:click="irResumen"
-                    @disabled(empty($carrito))
-                    class="w-full h-full flex items-center justify-center transition-all active:scale-95"
-                    style="min-height:80px; {{ empty($carrito) ? 'opacity:0.45; cursor:default;' : 'cursor:pointer;' }}">
-                <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-            </button>
-            @if ($cantidad > 0)
-            <span class="absolute flex items-center justify-center font-bold text-white leading-none"
-                  style="top:-4px; right:-4px; min-width:16px; height:16px; border-radius:50%; background:#e24b4a; font-size:9px; padding:0 2px;">
-                {{ $cantidad > 9 ? '9+' : $cantidad }}
-            </span>
-            @endif
-        </div>
-
-    </div>{{-- /flex grid+carrito --}}
 </div>
 
 {{-- ── FILTROS + BUSCADOR (solo en step oferta con cliente) ──────────────── --}}
