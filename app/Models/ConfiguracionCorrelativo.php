@@ -19,10 +19,10 @@ class ConfiguracionCorrelativo extends Model
 
             if (!$config) {
                 // Fallback: busca un código LN no usado
-                $n = (Cliente::withTrashed()->max('id') ?? 0) + 1;
+                $n = (Cliente::max('id') ?? 0) + 1;
                 do {
                     $id = 'LN' . str_pad($n++, 6, '0', STR_PAD_LEFT);
-                } while (Cliente::withTrashed()->where('id_ln', $id)->exists());
+                } while (Cliente::where('id_ln', $id)->exists());
                 return $id;
             }
 
@@ -30,7 +30,7 @@ class ConfiguracionCorrelativo extends Model
             $numero = $config->siguiente_numero;
             do {
                 $id = $config->prefijo . str_pad($numero++, $config->longitud, '0', STR_PAD_LEFT);
-            } while (Cliente::withTrashed()->where('id_ln', $id)->exists());
+            } while (Cliente::where('id_ln', $id)->exists());
 
             // Guarda el próximo número a usar (el que quedó libre después del elegido)
             DB::table('configuracion_correlativo')
