@@ -198,43 +198,6 @@
 </div>
 @endif
 
-{{-- ── SIN CLIENTE: empty state ─────────────────────────────────────────── --}}
-@if ($step === 'cliente')
-<div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px 24px 56px; text-align:center;">
-
-    <p style="font-size:20px; font-weight:800; color:#3C3489; margin:0 0 6px; letter-spacing:-0.3px;">¿A quién le registramos el plan?</p>
-    <p style="font-size:13px; color:#9CA3AF; margin:0 0 36px;">Buscá el cliente arriba o registrá uno nuevo</p>
-
-    <div style="display:flex; gap:16px; flex-wrap:wrap; justify-content:center; width:100%; max-width:520px;">
-
-        {{-- Buscar --}}
-        <div style="flex:1; min-width:200px; background:#F8F7FF; border:1.5px solid #CECBF6; border-radius:16px; padding:28px 20px;">
-            <div style="width:52px; height:52px; border-radius:14px; background:#EEEDFE; display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
-                <svg width="24" height="24" fill="none" stroke="#7c3aed" stroke-width="1.8" viewBox="0 0 24 24">
-                    <circle cx="11" cy="11" r="8"/><path stroke-linecap="round" d="m21 21-4.35-4.35"/>
-                </svg>
-            </div>
-            <p style="font-size:15px; font-weight:700; color:#3C3489; margin:0 0 6px;">Buscar cliente</p>
-            <p style="font-size:12px; color:#9CA3AF; margin:0; line-height:1.5;">Ingresá el CI, nombre o apellido<br>en el campo de búsqueda de arriba</p>
-        </div>
-
-        {{-- Registrar --}}
-        <button wire:click="abrirRegistroCliente"
-                style="flex:1; min-width:200px; background:linear-gradient(135deg, #7c3aed 0%, #5b21b6 100%); border:none; border-radius:16px; padding:28px 20px; cursor:pointer; text-align:center; box-shadow:0 8px 24px rgba(124,58,237,.35); transition:transform .15s, box-shadow .15s;"
-                onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='0 12px 32px rgba(124,58,237,.45)'"
-                onmouseout="this.style.transform='';this.style.boxShadow='0 8px 24px rgba(124,58,237,.35)'">
-            <div style="width:52px; height:52px; border-radius:14px; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; margin:0 auto 14px;">
-                <svg width="24" height="24" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                </svg>
-            </div>
-            <p style="font-size:15px; font-weight:700; color:#fff; margin:0 0 6px;">Nuevo cliente</p>
-            <p style="font-size:12px; color:rgba(255,255,255,.75); margin:0; line-height:1.5;">¿No está registrado?<br>Registralo ahora y continuá el plan</p>
-        </button>
-
-    </div>
-</div>
-@endif
 
 {{-- ── STEP OFERTA ──────────────────────────────────────────────────────── --}}
 @if ($step === 'oferta')
