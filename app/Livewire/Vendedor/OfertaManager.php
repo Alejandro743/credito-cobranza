@@ -5,19 +5,23 @@ namespace App\Livewire\Vendedor;
 use App\Livewire\Concerns\HasModuleColor;
 use App\Models\Ciudad;
 use App\Models\Cliente;
-use App\Models\Municipio;
-use App\Models\Provincia;
+use App\Models\ConfiguracionCorrelativo;
 use App\Models\Cuota;
 use App\Models\ListaAcceso;
 use App\Models\ListaMaestra;
 use App\Models\ListaMaestraItem;
+use App\Models\Municipio;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
 use App\Models\PlanPago;
+use App\Models\Provincia;
+use App\Models\User;
 use App\Models\Vendedor;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
@@ -58,6 +62,19 @@ class OfertaManager extends Component
     public $docAnversoDoc = null;
     public $docReversoDoc = null;
     public $docAvisoLuz   = null;
+
+    // ── Registro rápido de cliente ────────────────────────────────────────────
+    public bool   $showRegistroCliente = false;
+    public string $regCi        = '';
+    public string $regNombre    = '';
+    public string $regApellido  = '';
+    public string $regTelefono  = '';
+    public string $regCorreo    = '';
+    public string $regNit       = '';
+    public string $regCiudad    = '';
+    public string $regProvincia = '';
+    public string $regMunicipio = '';
+    public string $regDireccion = '';
 
     // ── Entrega ───────────────────────────────────────────────────────────────
     public string $tipoEntrega = 'domicilio'; // 'domicilio' | 'nuevo'
@@ -146,6 +163,98 @@ class OfertaManager extends Component
 
         $this->cargarOferta();
     }
+
+    // ── Registro rápido de cliente ────────────────────────────────────────────
+
+    public function abrirRegistroCliente(): void
+    {
+        $this->regCi        = trim($this->searchCliente);
+        $this->regNombre    = '';
+        $this->regApellido  = '';
+        $this->regTelefono  = '';
+        $this->regCorreo    = '';
+        $this->regNit       = '';
+        $this->regCiudad    = '';
+        $this->regProvincia = '';
+        $this->regMunicipio = '';
+        $this->regDireccion = '';
+        $this->resultadosCliente    = [];
+        $this->showRegistroCliente  = true;
+        $this->resetValidation();
+    }
+
+    public function cancelarRegistroCliente(): void
+    {
+        $this->showRegistroCliente = false;
+        $this->resetValidation();
+    }
+
+    public function updatedRegCiudad(): void   { $this->regProvincia = ''; $this->regMunicipio = ''; }
+    public function updatedRegProvincia(): void { $this->regMunicipio = ''; }
+
+    public function guardarNuevoCliente(): void
+    {
+        $this->validate([
+            'regCi'        => ['required','string','max:20',
+                               Rule::unique('clientes','ci'),
+                               Rule::unique('users','email')],
+            'regNombre'    => ['required','string','min:2','max:120'],
+            'regApellido'  => ['required','string','min:2','max:120'],
+            'regTelefono'  => ['required','string','max:30'],
+            'regCorreo'    => ['nullable','email','max:191'],
+            'regNit'       => ['nullable','string','max:30'],
+            'regCiudad'    => ['required','string','max:100'],
+            'regProvincia' => ['required','string','max:100'],
+            'regMunicipio' => ['required','string','max:100'],
+            'regDireccion' => ['required','string','max:255'],
+        ], [], [
+            'regCi'        => 'CI',
+            'regNombre'    => 'nombre',
+            'regApellido'  => 'apellido',
+            'regTelefono'  => 'teléfono',
+            'regCiudad'    => 'ciudad',
+            'regProvincia' => 'provincia',
+            'regMunicipio' => 'municipio',
+            'regDireccion' => 'dirección',
+        ]);
+
+        $user = User::create([
+            'name'     => trim($this->regNombre),
+            'email'    => trim($this->regCi),
+            'password' => Hash::make($this->regTelefono),
+            'tipo'     => 'cliente',
+            'active'   => true,
+        ]);
+        $user->assignRole('cliente');
+
+        $cliente = Cliente::create([
+            'usuario_id'  => $user->id,
+            'vendedor_id' => auth()->id(),
+            'id_ln'       => ConfiguracionCorrelativo::generarIdLN(),
+            'ci'          => trim($this->regCi),
+            'apellido'    => trim($this->regApellido),
+            'nit'         => trim($this->regNit) ?: null,
+            'correo'      => trim($this->regCorreo) ?: null,
+            'telefono'    => trim($this->regTelefono),
+            'ciudad'      => trim($this->regCiudad),
+            'provincia'   => trim($this->regProvincia),
+            'municipio'   => trim($this->regMunicipio),
+            'direccion'   => trim($this->regDireccion),
+            'active'      => true,
+        ]);
+
+        $this->showRegistroCliente = false;
+        $this->searchCliente       = '';
+
+        $this->seleccionarCliente(
+            $cliente->id,
+            $user->id,
+            trim($this->regNombre) . ' ' . trim($this->regApellido),
+            trim($this->regCi)
+        );
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
 
     public function cambiarCliente(): void
     {
@@ -603,10 +712,16 @@ class OfertaManager extends Component
         }
 
         $ciudadesAll       = Ciudad::orderBy('nombre')->get();
+
         $entregaCiudadObj  = Ciudad::where('nombre', $this->entregaNuevoCiudad)->first();
         $entregaProvincias = $entregaCiudadObj ? Provincia::where('ciudad_id', $entregaCiudadObj->id)->orderBy('nombre')->get() : collect();
         $entregaProvObj    = Provincia::where('nombre', $this->entregaNuevaProvincia)->where('ciudad_id', $entregaCiudadObj?->id)->first();
         $entregaMunicipios = $entregaProvObj ? Municipio::where('provincia_id', $entregaProvObj->id)->orderBy('nombre')->get() : collect();
+
+        $regCiudadObj   = Ciudad::where('nombre', $this->regCiudad)->first();
+        $regProvincias  = $regCiudadObj ? Provincia::where('ciudad_id', $regCiudadObj->id)->orderBy('nombre')->get() : collect();
+        $regProvObj     = Provincia::where('nombre', $this->regProvincia)->where('ciudad_id', $regCiudadObj?->id)->first();
+        $regMunicipios  = $regProvObj ? Municipio::where('provincia_id', $regProvObj->id)->orderBy('nombre')->get() : collect();
 
         return view('livewire.vendedor.oferta-manager', [
             'ofertaPorLista'    => $filtrada->groupBy('lista_id'),
@@ -616,6 +731,8 @@ class OfertaManager extends Component
             'ciudadesAll'       => $ciudadesAll,
             'entregaProvincias' => $entregaProvincias,
             'entregaMunicipios' => $entregaMunicipios,
+            'regProvincias'     => $regProvincias,
+            'regMunicipios'     => $regMunicipios,
         ]);
     }
 }
