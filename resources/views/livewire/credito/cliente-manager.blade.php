@@ -551,25 +551,25 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
 @if ($viewingClienteId)
 @php $vc = \App\Models\Cliente::with(['usuario','vendedorUsuario'])->find($viewingClienteId); @endphp
 @if ($vc)
-<div style="position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.45);"
+<div style="position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.45);"
      wire:click.self="closeViewModal">
-    <div style="background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,.18); width:100%; max-width:560px; display:flex; flex-direction:column;">
+    <div style="background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,.18); width:100%; max-width:560px; display:flex; flex-direction:column; max-height:calc(100vh - 32px);">
 
         {{-- Header --}}
-        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:14px 20px; border-radius:20px 20px 0 0; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
-            <div>
+        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:14px 20px; border-radius:20px 20px 0 0; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; min-width:0;">
+            <div style="min-width:0; flex:1; padding-right:12px;">
                 <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.7px; margin:0 0 2px;">Datos del cliente</p>
-                <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0;">{{ $vc->usuario->name ?? '—' }} {{ $vc->apellido }}</p>
+                <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $vc->usuario->name ?? '—' }} {{ $vc->apellido }}</p>
             </div>
-            <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; {{ $vc->active ? 'background:#D1FAE5; color:#059669;' : 'background:#F3F4F6; color:#9CA3AF;' }}">
+            <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; flex-shrink:0; {{ $vc->active ? 'background:#D1FAE5; color:#059669;' : 'background:#F3F4F6; color:#9CA3AF;' }}">
                 {{ $vc->active ? 'Activo' : 'Inactivo' }}
             </span>
         </div>
 
         {{-- Body --}}
-        <div style="padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div style="padding:16px 20px; overflow-y:auto; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
             @php
-                $field = fn($label, $value) => '<div><p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 3px;">'.$label.'</p><p style="font-size:13px; color:#374151; margin:0; font-weight:500;">'.e($value ?: '—').'</p></div>';
+                $field = fn($label, $value) => '<div style="min-width:0;"><p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 3px;">'.$label.'</p><p style="font-size:13px; color:#374151; margin:0; font-weight:500; overflow-wrap:break-word; word-break:break-word;">'.e($value ?: '—').'</p></div>';
             @endphp
             {!! $field('CI', $vc->ci) !!}
             {!! $field('ID_LN', $vc->id_ln) !!}
@@ -580,9 +580,9 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
             {!! $field('Provincia', $vc->provincia) !!}
             {!! $field('Municipio', $vc->municipio) !!}
             {!! $field('Vendedor', $vc->vendedorUsuario?->name) !!}
-            <div style="grid-column:1/-1;">
+            <div style="grid-column:1/-1; min-width:0;">
                 <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 3px;">Dirección</p>
-                <p style="font-size:13px; color:#374151; margin:0; font-weight:500;">{{ $vc->direccion ?: '—' }}</p>
+                <p style="font-size:13px; color:#374151; margin:0; font-weight:500; overflow-wrap:break-word; word-break:break-word;">{{ $vc->direccion ?: '—' }}</p>
             </div>
         </div>
 
