@@ -269,7 +269,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
 
     @else
     {{-- Card normal --}}
-    <div wire:key="card-{{ $c->id }}" x-data="{ modal: false }"
+    <div wire:key="card-{{ $c->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
 
         {{-- Header --}}
@@ -301,7 +301,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
 
         {{-- Acciones --}}
         <div style="padding:10px 14px; border-top:1px solid #F3F4F6; display:flex; gap:8px;">
-            <button @click="modal = true"
+            <button wire:click="openViewModal({{ $c->id }})"
                     style="flex:1; height:34px; border:1px solid #E5E7EB; border-radius:8px; background:#F9FAFB; color:#6B7280; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                 Ver
@@ -312,61 +312,6 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                 Editar
             </button>
         </div>
-
-        {{-- Modal Ver Cliente --}}
-        <template x-teleport="body">
-        <div x-show="modal"
-             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-             x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-             style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(20,10,40,0.4);"
-             @click.self="modal = false">
-            <div x-show="modal"
-                 x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                 style="background:#fff;border:1px solid #EDE9FE;border-radius:16px;box-shadow:0 8px 32px rgba(123,111,232,.18);width:100%;max-width:540px;overflow:hidden;max-height:90vh;overflow-y:auto;">
-                <div style="background:#F8F7FF;border-bottom:1px solid #EDE9FE;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                    <span style="font-size:14px;font-weight:800;color:#7B6FE8;display:flex;align-items:center;gap:8px;min-width:0;">
-                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ $c->usuario->name ?? '' }} {{ $c->apellido }}</span>
-                    </span>
-                    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
-                        <span style="padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;background:{{ $c->active ? '#D1FAE5' : '#F3F4F6' }};color:{{ $c->active ? '#059669' : '#9CA3AF' }};">{{ $c->active ? 'Activo' : 'Inactivo' }}</span>
-                        <button @click="modal = false"
-                                style="width:28px;height:28px;border-radius:7px;background:#fff;border:1px solid #EDE9FE;cursor:pointer;display:flex;align-items:center;justify-content:center;"
-                                @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
-                            <svg width="12" height="12" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                        </button>
-                    </div>
-                </div>
-                @php
-                $fV = 'display:flex;flex-direction:column;gap:3px;';
-                $lV = 'font-size:10px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;';
-                $vV = 'font-size:13px;font-weight:500;color:#374151;';
-                @endphp
-                <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-                        <div style="{{ $fV }}"><span style="{{ $lV }}">Nombre</span><span style="{{ $vV }}">{{ $c->usuario->name ?? '—' }}</span></div>
-                        <div style="{{ $fV }}"><span style="{{ $lV }}">Apellido</span><span style="{{ $vV }}">{{ $c->apellido ?: '—' }}</span></div>
-                        <div style="{{ $fV }}"><span style="{{ $lV }}">CI</span><span style="{{ $vV }};font-family:monospace;">{{ $c->ci }}</span></div>
-                    </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-                        <div style="{{ $fV }}"><span style="{{ $lV }}">Teléfono</span><span style="{{ $vV }}">{{ $c->telefono ?: '—' }}</span></div>
-                        <div style="{{ $fV }}"><span style="{{ $lV }}">Correo</span><span style="{{ $vV }}">{{ $c->correo ?: '—' }}</span></div>
-                        <div style="{{ $fV }}"><span style="{{ $lV }}">NIT</span><span style="{{ $vV }}">{{ $c->nit ?: '—' }}</span></div>
-                    </div>
-                    <div style="border-top:1px solid #EDE9FE;"></div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-                        <div style="{{ $fV }}"><span style="{{ $lV }}">Ciudad</span><span style="{{ $vV }}">{{ $c->ciudad ?: '—' }}</span></div>
-                        <div style="{{ $fV }}"><span style="{{ $lV }}">Provincia</span><span style="{{ $vV }}">{{ $c->provincia ?: '—' }}</span></div>
-                        <div style="{{ $fV }}"><span style="{{ $lV }}">Municipio</span><span style="{{ $vV }}">{{ $c->municipio ?: '—' }}</span></div>
-                    </div>
-                    <div style="{{ $fV }}"><span style="{{ $lV }}">Dirección</span><span style="{{ $vV }}">{{ $c->direccion ?: '—' }}</span></div>
-                    @if($c->vendedorUsuario)
-                    <div style="{{ $fV }}"><span style="{{ $lV }}">Vendedor</span><span style="{{ $vV }}">{{ $c->vendedorUsuario->name }}</span></div>
-                    @endif
-                </div>
-            </div>
-        </div>
-        </template>
     </div>
     @endif
 
@@ -538,7 +483,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
 
                 {{-- Fila normal --}}
                 @else
-                <tr wire:key="c-{{ $c->id }}" x-data="{ modal: false }"
+                <tr wire:key="c-{{ $c->id }}"
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
 
@@ -572,7 +517,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                     </td>
                     <td style="padding:10px 16px; text-align:center;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
-                            <button @click="modal = true" title="Ver detalle"
+                            <button wire:click="openViewModal({{ $c->id }})" title="Ver detalle"
                                     style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center;"
                                     @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -588,61 +533,6 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                             </button>
                         </div>
                     </td>
-
-                    {{-- Modal Ver Cliente --}}
-                    <template x-teleport="body">
-                    <div x-show="modal"
-                         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-                         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                         style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(20,10,40,0.4);"
-                         @click.self="modal = false">
-                        <div x-show="modal"
-                             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                             style="background:#fff;border:1px solid #EDE9FE;border-radius:16px;box-shadow:0 8px 32px rgba(123,111,232,.18);width:100%;max-width:560px;overflow:hidden;max-height:90vh;overflow-y:auto;">
-                            <div style="background:#F8F7FF;border-bottom:1px solid #EDE9FE;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
-                                <span style="font-size:14px;font-weight:800;color:#7B6FE8;display:flex;align-items:center;gap:8px;min-width:0;">
-                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ $c->usuario->name ?? '' }} {{ $c->apellido }}</span>
-                                </span>
-                                <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
-                                    <span style="padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;background:{{ $c->active ? '#D1FAE5' : '#F3F4F6' }};color:{{ $c->active ? '#059669' : '#9CA3AF' }};">{{ $c->active ? 'Activo' : 'Inactivo' }}</span>
-                                    <button @click="modal = false"
-                                            style="width:28px;height:28px;border-radius:7px;background:#fff;border:1px solid #EDE9FE;cursor:pointer;display:flex;align-items:center;justify-content:center;"
-                                            @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
-                                        <svg width="12" height="12" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                                    </button>
-                                </div>
-                            </div>
-                            @php
-                            $fV = 'display:flex;flex-direction:column;gap:3px;';
-                            $lV = 'font-size:10px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;';
-                            $vV = 'font-size:13px;font-weight:500;color:#374151;';
-                            @endphp
-                            <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
-                                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Nombre</span><span style="{{ $vV }}">{{ $c->usuario->name ?? '—' }}</span></div>
-                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Apellido</span><span style="{{ $vV }}">{{ $c->apellido ?: '—' }}</span></div>
-                                    <div style="{{ $fV }}"><span style="{{ $lV }}">CI</span><span style="{{ $vV }};font-family:monospace;">{{ $c->ci }}</span></div>
-                                </div>
-                                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Teléfono</span><span style="{{ $vV }}">{{ $c->telefono ?: '—' }}</span></div>
-                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Correo</span><span style="{{ $vV }}">{{ $c->correo ?: '—' }}</span></div>
-                                    <div style="{{ $fV }}"><span style="{{ $lV }}">NIT</span><span style="{{ $vV }}">{{ $c->nit ?: '—' }}</span></div>
-                                </div>
-                                <div style="border-top:1px solid #EDE9FE;"></div>
-                                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
-                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Ciudad</span><span style="{{ $vV }}">{{ $c->ciudad ?: '—' }}</span></div>
-                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Provincia</span><span style="{{ $vV }}">{{ $c->provincia ?: '—' }}</span></div>
-                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Municipio</span><span style="{{ $vV }}">{{ $c->municipio ?: '—' }}</span></div>
-                                </div>
-                                <div style="{{ $fV }}"><span style="{{ $lV }}">Dirección</span><span style="{{ $vV }}">{{ $c->direccion ?: '—' }}</span></div>
-                                @if($c->vendedorUsuario)
-                                <div style="{{ $fV }}"><span style="{{ $lV }}">Vendedor</span><span style="{{ $vV }}">{{ $c->vendedorUsuario->name }}</span></div>
-                                @endif
-                            </div>
-                        </div>
-                    </div>
-                    </template>
                 </tr>
                 @endif
 
@@ -656,6 +546,65 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
     <div style="padding:10px 18px; border-top:1px solid #F3F4F6;">{{ $clientes->links() }}</div>
     @endif
 </div>
+
+{{-- ══ MODAL: Ver cliente ══ --}}
+@if ($viewingClienteId)
+@php $vc = \App\Models\Cliente::with(['usuario','vendedorUsuario'])->find($viewingClienteId); @endphp
+@if ($vc)
+<div style="position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.45);"
+     wire:click.self="closeViewModal">
+    <div style="background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,.18); width:100%; max-width:560px; display:flex; flex-direction:column;">
+
+        {{-- Header --}}
+        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:14px 20px; border-radius:20px 20px 0 0; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <div>
+                <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.7px; margin:0 0 2px;">Datos del cliente</p>
+                <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0;">{{ $vc->usuario->name ?? '—' }} {{ $vc->apellido }}</p>
+                <p style="font-size:12px; color:#9CA3AF; margin:2px 0 0; font-family:monospace;">CI: {{ $vc->ci }}</p>
+            </div>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; {{ $vc->active ? 'background:#D1FAE5; color:#059669;' : 'background:#F3F4F6; color:#9CA3AF;' }}">
+                    {{ $vc->active ? 'Activo' : 'Inactivo' }}
+                </span>
+                <button wire:click="closeViewModal"
+                        style="width:32px; height:32px; border-radius:9px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                        @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+        </div>
+
+        {{-- Body --}}
+        <div style="padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            @php
+                $field = fn($label, $value) => '<div><p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 3px;">'.$label.'</p><p style="font-size:13px; color:#374151; margin:0; font-weight:500;">'.e($value ?: '—').'</p></div>';
+            @endphp
+            {!! $field('ID_LN', $vc->id_ln) !!}
+            {!! $field('Teléfono', $vc->telefono) !!}
+            {!! $field('NIT', $vc->nit) !!}
+            {!! $field('Correo', $vc->correo) !!}
+            {!! $field('Ciudad', $vc->ciudad) !!}
+            {!! $field('Provincia', $vc->provincia) !!}
+            {!! $field('Municipio', $vc->municipio) !!}
+            {!! $field('Vendedor', $vc->vendedorUsuario?->name) !!}
+            <div style="grid-column:1/-1;">
+                <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 3px;">Dirección</p>
+                <p style="font-size:13px; color:#374151; margin:0; font-weight:500;">{{ $vc->direccion ?: '—' }}</p>
+            </div>
+        </div>
+
+        {{-- Footer --}}
+        <div style="padding:12px 20px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end;">
+            <button wire:click="closeViewModal"
+                    style="height:36px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
+                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+@endif
+@endif
 
 <script>
 window.colResize = function () {
