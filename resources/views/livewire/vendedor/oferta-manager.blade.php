@@ -100,14 +100,14 @@
 
         {{-- BUSCAR --}}
         <div class="relative flex items-center justify-center flex-shrink-0"
-             style="width:54px; border-radius:8px; background:#f97316; box-shadow:0 2px 8px rgba(249,115,22,0.30);">
+             style="border-radius:8px; background:#f97316; box-shadow:0 2px 8px rgba(249,115,22,0.30);">
             <button @click="showSearch = true; $nextTick(() => { let el = document.getElementById('clienteSearchInput'); if(el) el.focus(); })"
-                    class="w-full h-full flex flex-col items-center justify-center gap-0.5 active:scale-95"
-                    style="cursor:pointer;">
-                <svg class="w-5 h-5" fill="none" stroke="#fff" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    class="h-full flex items-center gap-2 active:scale-95"
+                    style="cursor:pointer; padding:0 16px;">
+                <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#fff" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
-                <span style="font-size:8px; font-weight:700; color:#fff; letter-spacing:0.03em; line-height:1;">Buscar</span>
+                <span style="font-size:13px; font-weight:700; color:#fff; white-space:nowrap;">Buscar Cliente</span>
             </button>
         </div>
 
@@ -153,14 +153,14 @@
 
     {{-- BUSCAR --}}
     <div class="relative flex items-center justify-center flex-shrink-0"
-         style="width:48px; border-radius:8px; background:#f97316; box-shadow:0 2px 6px rgba(249,115,22,0.30);">
+         style="border-radius:8px; background:#f97316; box-shadow:0 2px 6px rgba(249,115,22,0.30);">
         <button @click="showSearch = true; $nextTick(() => { let el = document.getElementById('clienteSearchInput'); if(el) el.focus(); })"
-                class="w-full h-full flex flex-col items-center justify-center gap-0.5 active:scale-95"
-                style="cursor:pointer;">
-            <svg class="w-4 h-4" fill="none" stroke="#fff" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                class="h-full flex items-center gap-1.5 active:scale-95"
+                style="cursor:pointer; padding:0 12px;">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#fff" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
-            <span style="font-size:7px; font-weight:700; color:#fff; letter-spacing:0.03em; line-height:1;">Buscar</span>
+            <span style="font-size:12px; font-weight:700; color:#fff; white-space:nowrap;">Buscar Cliente</span>
         </button>
     </div>
 
