@@ -97,7 +97,7 @@
             </div>
         </div>
         {{-- Fila 2: Ciudad · Provincia · Municipio · Dirección · botones --}}
-        <div style="display:flex; align-items:flex-end; gap:10px; padding-top:12px; border-top:1px solid #F3F4F6;">
+        <div style="display:flex; align-items:flex-end; gap:10px;">
             <div style="width:130px; flex-shrink:0;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Ciudad *</label>
                 <select wire:model.live="newCiudad" style="{{ $iF }} cursor:pointer;">
