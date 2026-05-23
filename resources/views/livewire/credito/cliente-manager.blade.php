@@ -560,18 +560,10 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
             <div>
                 <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.7px; margin:0 0 2px;">Datos del cliente</p>
                 <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0;">{{ $vc->usuario->name ?? '—' }} {{ $vc->apellido }}</p>
-                <p style="font-size:12px; color:#9CA3AF; margin:2px 0 0; font-family:monospace;">CI: {{ $vc->ci }}</p>
             </div>
-            <div style="display:flex; align-items:center; gap:8px;">
-                <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; {{ $vc->active ? 'background:#D1FAE5; color:#059669;' : 'background:#F3F4F6; color:#9CA3AF;' }}">
-                    {{ $vc->active ? 'Activo' : 'Inactivo' }}
-                </span>
-                <button wire:click="closeViewModal"
-                        style="width:32px; height:32px; border-radius:9px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                        @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-            </div>
+            <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; {{ $vc->active ? 'background:#D1FAE5; color:#059669;' : 'background:#F3F4F6; color:#9CA3AF;' }}">
+                {{ $vc->active ? 'Activo' : 'Inactivo' }}
+            </span>
         </div>
 
         {{-- Body --}}
@@ -579,6 +571,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
             @php
                 $field = fn($label, $value) => '<div><p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 3px;">'.$label.'</p><p style="font-size:13px; color:#374151; margin:0; font-weight:500;">'.e($value ?: '—').'</p></div>';
             @endphp
+            {!! $field('CI', $vc->ci) !!}
             {!! $field('ID_LN', $vc->id_ln) !!}
             {!! $field('Teléfono', $vc->telefono) !!}
             {!! $field('NIT', $vc->nit) !!}
