@@ -317,49 +317,26 @@
 
 {{-- Modal Ver Cliente --}}
 @if ($viewingCliente)
-<div x-data="{ open: true }"
-     x-show="open"
-     x-transition:enter="transition ease-out duration-200"
-     x-transition:enter-start="opacity-0"
-     x-transition:enter-end="opacity-100"
-     x-transition:leave="transition ease-in duration-150"
-     x-transition:leave-start="opacity-100"
-     x-transition:leave-end="opacity-0"
-     class="fixed inset-0 z-50 flex items-center justify-center p-4"
-     style="background:rgba(30,20,10,0.45);"
-     @click.self="open=false; $wire.closeModal()">
-
-    <div x-show="open"
-         x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 scale-95"
-         x-transition:enter-end="opacity-100 scale-100"
-         class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden">
+<div style="position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.45);"
+     wire:click.self="closeModal">
+    <div style="background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,.18); width:100%; max-width:520px; display:flex; flex-direction:column;">
 
         {{-- Header --}}
-        <div class="flex items-center justify-between px-5 py-4" style="background:#FFFFE3; border-bottom:1px solid #CBCBCB;">
-            <div class="flex items-center gap-3">
-                <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0"
-                     style="background:#E8F0F7;">
-                    <svg class="w-5 h-5" fill="none" stroke="#6D8196" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-                    </svg>
-                </div>
-                <div>
-                    <p class="font-bold text-sm leading-tight" style="color:#4A4A4A;">
-                        {{ $viewingCliente->usuario->name ?? '—' }} {{ $viewingCliente->apellido }}
-                    </p>
-                    <p class="text-xs" style="color:#6D8196;">CI: {{ $viewingCliente->ci }}</p>
-                </div>
+        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:14px 20px; border-radius:20px 20px 0 0; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+            <div>
+                <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.7px; margin:0 0 2px;">Datos del cliente</p>
+                <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0;">{{ $viewingCliente->nombre }} {{ $viewingCliente->apellido }}</p>
+                <p style="font-size:12px; color:#9CA3AF; margin:2px 0 0; font-family:monospace;">CI: {{ $viewingCliente->ci }}</p>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="ds-badge {{ $viewingCliente->active ? 'ds-badge-aprobado' : 'ds-badge-cerrado' }}">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px;
+                    {{ $viewingCliente->active ? 'background:#D1FAE5; color:#059669;' : 'background:#F3F4F6; color:#9CA3AF;' }}">
                     {{ $viewingCliente->active ? 'Activo' : 'Inactivo' }}
                 </span>
-                <button @click="open=false; $wire.closeModal()"
-                        class="w-7 h-7 flex items-center justify-center rounded-lg transition-colors"
-                        style="color:#6D8196; background:#E8F0F7;">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <button wire:click="closeModal"
+                        style="width:32px; height:32px; border-radius:9px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                        @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                     </svg>
                 </button>
@@ -367,46 +344,36 @@
         </div>
 
         {{-- Body --}}
-        <div class="p-5 grid grid-cols-2 gap-x-6 gap-y-4">
-
-            @php
-                $fields = [
-                    ['Teléfono',  $viewingCliente->telefono  ?: '—'],
-                    ['NIT',       $viewingCliente->nit       ?: '—'],
-                    ['Correo',    $viewingCliente->correo    ?: '—'],
-                    ['Ciudad',    $viewingCliente->ciudad    ?: '—'],
-                    ['Provincia', $viewingCliente->provincia ?: '—'],
-                    ['Municipio', $viewingCliente->municipio ?: '—'],
-                ];
-            @endphp
-
-            @foreach ($fields as [$label, $value])
+        <div style="padding:20px; display:grid; grid-template-columns:1fr 1fr; gap:16px 24px;">
+            @foreach ([
+                ['Teléfono',  $viewingCliente->telefono  ?: '—'],
+                ['NIT',       $viewingCliente->nit       ?: '—'],
+                ['Correo',    $viewingCliente->correo    ?: '—'],
+                ['Ciudad',    $viewingCliente->ciudad    ?: '—'],
+                ['Provincia', $viewingCliente->provincia ?: '—'],
+                ['Municipio', $viewingCliente->municipio ?: '—'],
+            ] as [$label, $value])
             <div>
-                <p class="text-xs font-medium uppercase tracking-wide mb-0.5" style="color:#AFA9EC;">{{ $label }}</p>
-                <p class="text-sm font-semibold" style="color:#534AB7;">{{ $value }}</p>
+                <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.6px; margin:0 0 3px;">{{ $label }}</p>
+                <p style="font-size:13px; font-weight:600; color:#374151; margin:0;">{{ $value }}</p>
             </div>
             @endforeach
-
-            <div class="col-span-2">
-                <p class="text-xs font-medium uppercase tracking-wide mb-0.5" style="color:#AFA9EC;">Dirección</p>
-                <p class="text-sm font-semibold" style="color:#534AB7;">{{ $viewingCliente->direccion ?: '—' }}</p>
+            <div style="grid-column:span 2;">
+                <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.6px; margin:0 0 3px;">Dirección</p>
+                <p style="font-size:13px; font-weight:600; color:#374151; margin:0;">{{ $viewingCliente->direccion ?: '—' }}</p>
             </div>
-
         </div>
 
         {{-- Footer --}}
-        <div class="px-5 pb-4 flex justify-end gap-2 border-t border-gray-100 pt-3">
-            <button wire:click="startEdit({{ $viewingCliente->id }})"
-                    @click="open=false"
-                    class="ds-btn ds-btn-ghost ds-btn-sm">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                </svg>
+        <div style="padding:12px 20px; border-top:1px solid #F3F4F6; border-radius:0 0 20px 20px; display:flex; justify-content:flex-end; gap:8px;">
+            <button wire:click="startEdit({{ $viewingCliente->id }}); $wire.closeModal()"
+                    style="height:36px; padding:0 20px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
                 Editar
             </button>
-            <button @click="open=false; $wire.closeModal()"
-                    class="ds-btn ds-btn-secondary ds-btn-sm">
+            <button wire:click="closeModal"
+                    style="height:36px; padding:0 24px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
+                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
                 Cerrar
             </button>
         </div>
