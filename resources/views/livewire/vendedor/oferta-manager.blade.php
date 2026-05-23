@@ -849,112 +849,102 @@
 
 {{-- ══ MODAL: BUSCAR CLIENTE ════════════════════════════════════════════════ --}}
 <div x-show="showSearch" x-cloak
-     x-transition:enter="transition ease-out duration-150"
+     x-transition:enter="transition ease-out duration-200"
      x-transition:enter-start="opacity-0"
      x-transition:enter-end="opacity-100"
-     x-transition:leave="transition ease-in duration-100"
+     x-transition:leave="transition ease-in duration-150"
      x-transition:leave-end="opacity-0"
-     style="position:fixed; inset:0; z-index:98; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(60,52,137,0.45);"
+     class="fixed inset-0 flex items-center justify-center p-4"
+     style="z-index:98; background:rgba(60,52,137,0.5);"
      @click.self="showSearch = false">
 
-    <div x-show="showSearch"
-         x-transition:enter="transition ease-out duration-150"
-         x-transition:enter-start="opacity-0 -translate-y-4 scale-97"
-         x-transition:enter-end="opacity-100 translate-y-0 scale-100"
-         style="background:#fff; border-radius:20px; width:100%; max-width:540px; max-height:80vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.22); overflow:hidden;">
+    <div class="w-full flex flex-col"
+         style="max-width:480px; max-height:82vh; background:#fff; border-radius:20px; box-shadow:0 32px 80px rgba(60,52,137,0.30); overflow:hidden;">
 
-        {{-- Header --}}
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:#EEEDFE; border-bottom:1px solid #CECBF6; flex-shrink:0;">
-            <div style="display:flex; align-items:center; gap:10px;">
-                <div style="width:36px; height:36px; border-radius:10px; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(124,58,237,0.15); flex-shrink:0;">
-                    <svg width="18" height="18" fill="none" stroke="#7c3aed" viewBox="0 0 24 24">
+        {{-- Header púrpura con input integrado --}}
+        <div style="background:#7c3aed; padding:18px 18px 16px; flex-shrink:0; border-radius:20px 20px 0 0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:14px;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <svg width="18" height="18" fill="none" stroke="rgba(255,255,255,0.7)" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
+                    <span style="font-size:17px; font-weight:800; color:#fff;">Buscar Cliente</span>
                 </div>
-                <div>
-                    <p style="font-size:16px; font-weight:800; color:#3C3489; margin:0; line-height:1.2;">Buscar cliente</p>
-                    <p style="font-size:11px; color:#7c3aed; margin:0; line-height:1.4;">Por CI, nombre o apellido</p>
-                </div>
+                <button @click="showSearch = false"
+                        style="width:30px; height:30px; border-radius:8px; background:rgba(255,255,255,0.18); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="13" height="13" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
             </div>
-            <button @click="showSearch = false"
-                    style="width:32px; height:32px; border-radius:8px; background:#fff; border:1.5px solid #CECBF6; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg width="13" height="13" fill="none" stroke="#534AB7" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-            </button>
-        </div>
-
-        {{-- Input de búsqueda --}}
-        <div style="padding:14px 20px; border-bottom:1px solid #f3f4f6; flex-shrink:0;">
+            {{-- Input en el header --}}
             <div style="position:relative;">
                 <svg fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"
-                     style="position:absolute; left:14px; top:50%; transform:translateY(-50%); width:18px; height:18px; pointer-events:none; flex-shrink:0;">
+                     style="position:absolute; left:13px; top:50%; transform:translateY(-50%); width:17px; height:17px; pointer-events:none;">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
                 <input id="clienteSearchInput"
                        wire:model.live.debounce.300ms="searchCliente"
                        type="text"
-                       placeholder="Ingresá CI, nombre o apellido..."
-                       style="width:100%; padding:13px 14px 13px 44px; font-size:15px; border-radius:12px; border:2px solid #CECBF6; background:#F8F7FF; outline:none; color:#3C3489; box-sizing:border-box;"
-                       onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
-                       onblur="this.style.borderColor='#CECBF6'; this.style.background='#F8F7FF';">
+                       placeholder="CI, nombre o apellido..."
+                       style="width:100%; padding:12px 14px 12px 42px; font-size:15px; border-radius:12px; border:none; background:#fff; outline:none; color:#3C3489; box-sizing:border-box; box-shadow:0 2px 12px rgba(0,0,0,0.12);">
             </div>
         </div>
 
-        {{-- Resultados --}}
+        {{-- Lista de resultados --}}
         <div style="overflow-y:auto; flex:1; min-height:0;">
 
             @if (count($resultadosCliente))
             @foreach ($resultadosCliente as $c)
             <button wire:click="seleccionarCliente({{ $c['id'] }}, {{ $c['user_id'] }}, '{{ addslashes($c['nombre']) }}', '{{ addslashes($c['ci']) }}')"
                     @click="showSearch = false"
-                    class="w-full flex items-center gap-3 text-left border-b border-gray-50 last:border-0"
-                    style="padding:14px 20px; background:#fff; cursor:pointer;"
+                    class="w-full flex items-center gap-3 text-left"
+                    style="padding:13px 20px; background:#fff; cursor:pointer; border-bottom:1px solid #f3f4f6;"
                     onmouseover="this.style.background='#F8F7FF'" onmouseout="this.style.background='#fff'">
-                <div style="width:42px; height:42px; border-radius:50%; background:#7c3aed; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:16px; color:#fff; flex-shrink:0;">
+                <div style="width:40px; height:40px; border-radius:10px; background:#EEEDFE; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:16px; color:#7c3aed; flex-shrink:0;">
                     {{ strtoupper(substr($c['nombre'], 0, 1)) }}
                 </div>
                 <div style="min-width:0; flex:1; text-align:left;">
-                    <p style="font-weight:700; font-size:13px; color:#3C3489; margin:0; font-family:monospace;">{{ $c['ci'] }}</p>
-                    <p style="font-size:13px; color:#6B7280; margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $c['nombre'] }}</p>
+                    <p style="font-weight:700; font-size:14px; color:#3C3489; margin:0;">{{ $c['nombre'] }}</p>
+                    <p style="font-size:12px; color:#9CA3AF; margin:2px 0 0; font-family:monospace;">CI: {{ $c['ci'] }}</p>
                 </div>
-                <svg width="15" height="15" fill="none" stroke="#CECBF6" viewBox="0 0 24 24" style="flex-shrink:0;">
+                <svg width="14" height="14" fill="none" stroke="#d1d5db" viewBox="0 0 24 24" style="flex-shrink:0;">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                 </svg>
             </button>
             @endforeach
 
             @elseif (strlen(trim($searchCliente)) >= 2)
-            <div style="padding:16px 20px;">
+            <div style="padding:20px 20px 16px;">
                 <p style="text-align:center; font-size:13px; color:#9CA3AF; margin:0 0 14px;">
                     Sin resultados para "<strong style="color:#6B7280;">{{ $searchCliente }}</strong>"
                 </p>
                 <button wire:click="abrirRegistroCliente"
                         @click="showSearch = false"
-                        style="width:100%; display:flex; align-items:center; gap:12px; padding:14px 16px; background:#F8F7FF; border-radius:12px; border:1.5px dashed #CECBF6; cursor:pointer;"
+                        style="width:100%; display:flex; align-items:center; gap:12px; padding:14px 16px; background:#F8F7FF; border-radius:12px; border:1.5px dashed #CECBF6; cursor:pointer; box-sizing:border-box;"
                         onmouseover="this.style.background='#EEEDFE'; this.style.borderColor='#7c3aed';"
                         onmouseout="this.style.background='#F8F7FF'; this.style.borderColor='#CECBF6';">
-                    <div style="width:42px; height:42px; border-radius:50%; background:#EEEDFE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="18" height="18" fill="none" stroke="#7c3aed" viewBox="0 0 24 24">
+                    <div style="width:40px; height:40px; border-radius:10px; background:#EEEDFE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="16" height="16" fill="none" stroke="#7c3aed" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
                         </svg>
                     </div>
-                    <div style="text-align:left; min-width:0;">
+                    <div style="text-align:left;">
                         <p style="font-weight:700; font-size:14px; color:#3C3489; margin:0;">Registrar nuevo cliente</p>
-                        <p style="font-size:12px; color:#9CA3AF; margin:2px 0 0;">CI: {{ $searchCliente }}</p>
+                        <p style="font-size:12px; color:#9CA3AF; margin:2px 0 0; font-family:monospace;">CI: {{ $searchCliente }}</p>
                     </div>
                 </button>
             </div>
 
             @else
-            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:48px 20px; color:#9CA3AF;">
-                <div style="width:56px; height:56px; border-radius:16px; background:#F8F7FF; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
-                    <svg width="26" height="26" fill="none" stroke="#CECBF6" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; padding:44px 20px;">
+                <div style="width:60px; height:60px; border-radius:18px; background:#F8F7FF; display:flex; align-items:center; justify-content:center; margin-bottom:14px;">
+                    <svg width="28" height="28" fill="none" stroke="#CECBF6" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
                 </div>
-                <p style="font-size:13px; margin:0; font-weight:500;">Escribí para buscar un cliente</p>
-                <p style="font-size:12px; margin:4px 0 0; color:#c4b5fd;">CI, nombre o apellido</p>
+                <p style="font-size:14px; font-weight:600; color:#9CA3AF; margin:0;">Escribí para buscar</p>
+                <p style="font-size:12px; color:#c4b5fd; margin:5px 0 0;">CI, nombre o apellido del cliente</p>
             </div>
             @endif
 
