@@ -325,82 +325,50 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
         <div x-show="modal"
              x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
              x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-             style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(20,10,40,0.4);"
+             style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(20,10,40,0.4);"
              @click.self="modal = false">
             <div x-show="modal"
                  x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                 style="background:#FFFFE3;border:1px solid #CBCBCB;border-radius:8px;width:100%;max-width:440px;overflow:hidden;position:relative;max-height:90vh;overflow-y:auto;">
-                <button @click="modal = false"
-                        style="position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:6px;background:#fff;border:1px solid #CBCBCB;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1;">
-                    <svg width="11" height="11" fill="none" stroke="#6D8196" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                </button>
-                <div style="padding:18px 16px 16px;">
-                    @php
-                    $fSty = 'background:#fff;border:1px solid #CBCBCB;border-radius:6px;padding:8px 10px;display:flex;align-items:center;gap:8px;';
-                    $iBox = 'width:30px;height:30px;border-radius:6px;background:#E8F0F7;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
-                    $vClr = 'font-size:11px;font-weight:700;color:#4A4A4A;margin:0;';
-                    $lClr = 'font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#CBCBCB;margin-bottom:1px;';
-                    @endphp
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-right:36px;">
-                        <span style="font-size:13px;font-weight:700;color:#4A4A4A;">Datos del Cliente</span>
-                        <div style="flex:1;height:1px;background:#CBCBCB;"></div>
-                        <span class="ds-badge {{ $c->active ? 'ds-badge-active' : 'ds-badge-inactive' }}">{{ $c->active ? 'Activo' : 'Inactivo' }}</span>
+                 style="background:#fff;border:1px solid #EDE9FE;border-radius:16px;box-shadow:0 8px 32px rgba(123,111,232,.18);width:100%;max-width:540px;overflow:hidden;max-height:90vh;overflow-y:auto;">
+                <div style="background:#F8F7FF;border-bottom:1px solid #EDE9FE;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                    <span style="font-size:14px;font-weight:800;color:#7B6FE8;display:flex;align-items:center;gap:8px;min-width:0;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ $c->usuario->name ?? '' }} {{ $c->apellido }}</span>
+                    </span>
+                    <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
+                        <span style="padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;background:{{ $c->active ? '#D1FAE5' : '#F3F4F6' }};color:{{ $c->active ? '#059669' : '#9CA3AF' }};">{{ $c->active ? 'Activo' : 'Inactivo' }}</span>
+                        <button @click="modal = false"
+                                style="width:28px;height:28px;border-radius:7px;background:#fff;border:1px solid #EDE9FE;cursor:pointer;display:flex;align-items:center;justify-content:center;"
+                                @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+                            <svg width="12" height="12" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
                     </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
-                        <div style="{{ $fSty }}">
-                            <div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
-                            <div style="min-width:0;"><p style="{{ $lClr }}">Nombre</p><p style="{{ $vClr }}">{{ $c->usuario->name ?? '—' }}</p></div>
-                        </div>
-                        <div style="{{ $fSty }}">
-                            <div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/></svg></div>
-                            <div><p style="{{ $lClr }}">CI</p><p style="{{ $vClr }} font-family:monospace;">{{ $c->ci }}</p></div>
-                        </div>
-                        <div style="{{ $fSty }}">
-                            <div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
-                            <div><p style="{{ $lClr }}">Apellido</p><p style="{{ $vClr }}">{{ $c->apellido ?: '—' }}</p></div>
-                        </div>
-                        <div style="{{ $fSty }}">
-                            <div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div>
-                            <div><p style="{{ $lClr }}">Teléfono</p><p style="{{ $vClr }}">{{ $c->telefono ?: '—' }}</p></div>
-                        </div>
-                        <div style="{{ $fSty }}">
-                            <div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div>
-                            <div><p style="{{ $lClr }}">Correo</p><p style="{{ $vClr }}">{{ $c->correo ?: '—' }}</p></div>
-                        </div>
-                        <div style="{{ $fSty }}">
-                            <div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div>
-                            <div><p style="{{ $lClr }}">NIT</p><p style="{{ $vClr }}">{{ $c->nit ?: '—' }}</p></div>
-                        </div>
+                </div>
+                @php
+                $fV = 'display:flex;flex-direction:column;gap:3px;';
+                $lV = 'font-size:10px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;';
+                $vV = 'font-size:13px;font-weight:500;color:#374151;';
+                @endphp
+                <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                        <div style="{{ $fV }}"><span style="{{ $lV }}">Nombre</span><span style="{{ $vV }}">{{ $c->usuario->name ?? '—' }}</span></div>
+                        <div style="{{ $fV }}"><span style="{{ $lV }}">Apellido</span><span style="{{ $vV }}">{{ $c->apellido ?: '—' }}</span></div>
+                        <div style="{{ $fV }}"><span style="{{ $lV }}">CI</span><span style="{{ $vV }};font-family:monospace;">{{ $c->ci }}</span></div>
                     </div>
-                    <div style="display:flex;align-items:center;gap:8px;margin:8px 0 6px;">
-                        <span style="font-size:11px;font-weight:700;color:#6D8196;white-space:nowrap;">Dirección</span>
-                        <div style="flex:1;height:1px;background:#CBCBCB;"></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                        <div style="{{ $fV }}"><span style="{{ $lV }}">Teléfono</span><span style="{{ $vV }}">{{ $c->telefono ?: '—' }}</span></div>
+                        <div style="{{ $fV }}"><span style="{{ $lV }}">Correo</span><span style="{{ $vV }}">{{ $c->correo ?: '—' }}</span></div>
+                        <div style="{{ $fV }}"><span style="{{ $lV }}">NIT</span><span style="{{ $vV }}">{{ $c->nit ?: '—' }}</span></div>
                     </div>
-                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-                        <div style="{{ $fSty }}">
-                            <div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
-                            <div><p style="{{ $lClr }}">Ciudad</p><p style="{{ $vClr }}">{{ strtoupper($c->ciudad ?: '—') }}</p></div>
-                        </div>
-                        <div style="{{ $fSty }}">
-                            <div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
-                            <div><p style="{{ $lClr }}">Provincia</p><p style="{{ $vClr }}">{{ strtoupper($c->provincia ?: '—') }}</p></div>
-                        </div>
-                        <div style="{{ $fSty }}">
-                            <div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div>
-                            <div><p style="{{ $lClr }}">Municipio</p><p style="{{ $vClr }}">{{ strtoupper($c->municipio ?: '—') }}</p></div>
-                        </div>
-                        <div style="{{ $fSty }}">
-                            <div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div>
-                            <div><p style="{{ $lClr }}">Dirección</p><p style="{{ $vClr }}">{{ $c->direccion ?: '—' }}</p></div>
-                        </div>
+                    <div style="border-top:1px solid #EDE9FE;"></div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                        <div style="{{ $fV }}"><span style="{{ $lV }}">Ciudad</span><span style="{{ $vV }}">{{ $c->ciudad ?: '—' }}</span></div>
+                        <div style="{{ $fV }}"><span style="{{ $lV }}">Provincia</span><span style="{{ $vV }}">{{ $c->provincia ?: '—' }}</span></div>
+                        <div style="{{ $fV }}"><span style="{{ $lV }}">Municipio</span><span style="{{ $vV }}">{{ $c->municipio ?: '—' }}</span></div>
                     </div>
+                    <div style="{{ $fV }}"><span style="{{ $lV }}">Dirección</span><span style="{{ $vV }}">{{ $c->direccion ?: '—' }}</span></div>
                     @if($c->vendedorUsuario)
-                    <div style="margin-top:6px;">
-                        <div style="{{ $fSty }}">
-                            <div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div>
-                            <div><p style="{{ $lClr }}">Vendedor</p><p style="{{ $vClr }}">{{ $c->vendedorUsuario->name }}</p></div>
-                        </div>
-                    </div>
+                    <div style="{{ $fV }}"><span style="{{ $lV }}">Vendedor</span><span style="{{ $vV }}">{{ $c->vendedorUsuario->name }}</span></div>
                     @endif
                 </div>
             </div>
@@ -633,44 +601,50 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                     <div x-show="modal"
                          x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                          x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                         style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:16px;background:rgba(20,10,40,0.4);"
+                         style="position:fixed;inset:0;z-index:50;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(20,10,40,0.4);"
                          @click.self="modal = false">
                         <div x-show="modal"
                              x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                             style="background:#FFFFE3;border:1px solid #CBCBCB;border-radius:8px;width:100%;max-width:440px;overflow:hidden;position:relative;max-height:90vh;overflow-y:auto;">
-                            <button @click="modal = false"
-                                    style="position:absolute;top:12px;right:12px;width:26px;height:26px;border-radius:6px;background:#fff;border:1px solid #CBCBCB;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:1;">
-                                <svg width="11" height="11" fill="none" stroke="#6D8196" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
-                            <div style="padding:18px 16px 16px;">
-                                @php
-                                $fSty = 'background:#fff;border:1px solid #CBCBCB;border-radius:6px;padding:8px 10px;display:flex;align-items:center;gap:8px;';
-                                $iBox = 'width:30px;height:30px;border-radius:6px;background:#E8F0F7;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
-                                $vClr = 'font-size:11px;font-weight:700;color:#4A4A4A;margin:0;';
-                                $lClr = 'font-size:9px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#CBCBCB;margin-bottom:1px;';
-                                @endphp
-                                <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-right:36px;">
-                                    <span style="font-size:13px;font-weight:700;color:#4A4A4A;">Datos del Cliente</span>
-                                    <div style="flex:1;height:1px;background:#CBCBCB;"></div>
+                             style="background:#fff;border:1px solid #EDE9FE;border-radius:16px;box-shadow:0 8px 32px rgba(123,111,232,.18);width:100%;max-width:560px;overflow:hidden;max-height:90vh;overflow-y:auto;">
+                            <div style="background:#F8F7FF;border-bottom:1px solid #EDE9FE;padding:14px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+                                <span style="font-size:14px;font-weight:800;color:#7B6FE8;display:flex;align-items:center;gap:8px;min-width:0;">
+                                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                                    <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ $c->usuario->name ?? '' }} {{ $c->apellido }}</span>
+                                </span>
+                                <div style="display:flex;align-items:center;gap:8px;flex-shrink:0;">
                                     <span style="padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;background:{{ $c->active ? '#D1FAE5' : '#F3F4F6' }};color:{{ $c->active ? '#059669' : '#9CA3AF' }};">{{ $c->active ? 'Activo' : 'Inactivo' }}</span>
+                                    <button @click="modal = false"
+                                            style="width:28px;height:28px;border-radius:7px;background:#fff;border:1px solid #EDE9FE;cursor:pointer;display:flex;align-items:center;justify-content:center;"
+                                            @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+                                        <svg width="12" height="12" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                    </button>
                                 </div>
-                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:8px;">
-                                    <div style="{{ $fSty }}"><div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div><div style="min-width:0;"><p style="{{ $lClr }}">Nombre</p><p style="{{ $vClr }}">{{ $c->usuario->name ?? '—' }}</p></div></div>
-                                    <div style="{{ $fSty }}"><div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/></svg></div><div><p style="{{ $lClr }}">CI</p><p style="{{ $vClr }} font-family:monospace;">{{ $c->ci }}</p></div></div>
-                                    <div style="{{ $fSty }}"><div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div><div><p style="{{ $lClr }}">Apellido</p><p style="{{ $vClr }}">{{ $c->apellido ?: '—' }}</p></div></div>
-                                    <div style="{{ $fSty }}"><div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg></div><div><p style="{{ $lClr }}">Teléfono</p><p style="{{ $vClr }}">{{ $c->telefono ?: '—' }}</p></div></div>
-                                    <div style="{{ $fSty }}"><div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg></div><div><p style="{{ $lClr }}">Correo</p><p style="{{ $vClr }}">{{ $c->correo ?: '—' }}</p></div></div>
-                                    <div style="{{ $fSty }}"><div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg></div><div><p style="{{ $lClr }}">NIT</p><p style="{{ $vClr }}">{{ $c->nit ?: '—' }}</p></div></div>
+                            </div>
+                            @php
+                            $fV = 'display:flex;flex-direction:column;gap:3px;';
+                            $lV = 'font-size:10px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;';
+                            $vV = 'font-size:13px;font-weight:500;color:#374151;';
+                            @endphp
+                            <div style="padding:20px;display:flex;flex-direction:column;gap:14px;">
+                                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Nombre</span><span style="{{ $vV }}">{{ $c->usuario->name ?? '—' }}</span></div>
+                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Apellido</span><span style="{{ $vV }}">{{ $c->apellido ?: '—' }}</span></div>
+                                    <div style="{{ $fV }}"><span style="{{ $lV }}">CI</span><span style="{{ $vV }};font-family:monospace;">{{ $c->ci }}</span></div>
                                 </div>
-                                <div style="display:flex;align-items:center;gap:8px;margin:8px 0 6px;"><span style="font-size:11px;font-weight:700;color:#6D8196;white-space:nowrap;">Dirección</span><div style="flex:1;height:1px;background:#CBCBCB;"></div></div>
-                                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
-                                    <div style="{{ $fSty }}"><div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><div><p style="{{ $lClr }}">Ciudad</p><p style="{{ $vClr }}">{{ strtoupper($c->ciudad ?: '—') }}</p></div></div>
-                                    <div style="{{ $fSty }}"><div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><div><p style="{{ $lClr }}">Provincia</p><p style="{{ $vClr }}">{{ strtoupper($c->provincia ?: '—') }}</p></div></div>
-                                    <div style="{{ $fSty }}"><div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg></div><div><p style="{{ $lClr }}">Municipio</p><p style="{{ $vClr }}">{{ strtoupper($c->municipio ?: '—') }}</p></div></div>
-                                    <div style="{{ $fSty }}"><div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg></div><div><p style="{{ $lClr }}">Dirección</p><p style="{{ $vClr }}">{{ $c->direccion ?: '—' }}</p></div></div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Teléfono</span><span style="{{ $vV }}">{{ $c->telefono ?: '—' }}</span></div>
+                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Correo</span><span style="{{ $vV }}">{{ $c->correo ?: '—' }}</span></div>
+                                    <div style="{{ $fV }}"><span style="{{ $lV }}">NIT</span><span style="{{ $vV }}">{{ $c->nit ?: '—' }}</span></div>
                                 </div>
+                                <div style="border-top:1px solid #EDE9FE;"></div>
+                                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;">
+                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Ciudad</span><span style="{{ $vV }}">{{ $c->ciudad ?: '—' }}</span></div>
+                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Provincia</span><span style="{{ $vV }}">{{ $c->provincia ?: '—' }}</span></div>
+                                    <div style="{{ $fV }}"><span style="{{ $lV }}">Municipio</span><span style="{{ $vV }}">{{ $c->municipio ?: '—' }}</span></div>
+                                </div>
+                                <div style="{{ $fV }}"><span style="{{ $lV }}">Dirección</span><span style="{{ $vV }}">{{ $c->direccion ?: '—' }}</span></div>
                                 @if($c->vendedorUsuario)
-                                <div style="margin-top:6px;"><div style="{{ $fSty }}"><div style="{{ $iBox }}"><svg width="13" height="13" fill="none" stroke="#6D8196" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg></div><div><p style="{{ $lClr }}">Vendedor</p><p style="{{ $vClr }}">{{ $c->vendedorUsuario->name }}</p></div></div></div>
+                                <div style="{{ $fV }}"><span style="{{ $lV }}">Vendedor</span><span style="{{ $vV }}">{{ $c->vendedorUsuario->name }}</span></div>
                                 @endif
                             </div>
                         </div>
