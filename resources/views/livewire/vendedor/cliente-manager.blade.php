@@ -63,10 +63,11 @@
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
     </div>
-    <div style="padding:16px 20px;">
-        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:12px; margin-bottom:14px;">
+    <div style="padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
+        {{-- Fila 1 --}}
+        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(170px,1fr)); gap:12px;">
             <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">CI * <span style="color:#CBCBCB; font-weight:400; text-transform:none;">(usuario de acceso)</span></label>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">CI * <span style="color:#CBCBCB; font-weight:400; text-transform:none;">(usuario)</span></label>
                 <input wire:model="newCi" type="text" maxlength="20" placeholder="12345678" style="{{ $iF }}">
                 @error('newCi') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
@@ -81,7 +82,7 @@
                 @error('newApellido') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
             <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Teléfono * <span style="color:#CBCBCB; font-weight:400; text-transform:none;">(contraseña inicial)</span></label>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Teléfono * <span style="color:#CBCBCB; font-weight:400; text-transform:none;">(contraseña)</span></label>
                 <input wire:model="newTelefono" type="text" maxlength="30" style="{{ $iF }}">
                 @error('newTelefono') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
@@ -94,51 +95,51 @@
                 <input wire:model="newCorreo" type="email" maxlength="191" style="{{ $iF }}">
                 @error('newCorreo') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-            <div>
+        </div>
+        {{-- Fila 2: Ciudad · Provincia · Municipio · Dirección · botones --}}
+        <div style="display:flex; align-items:flex-end; gap:10px; padding-top:12px; border-top:1px solid #F3F4F6;">
+            <div style="width:130px; flex-shrink:0;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Ciudad *</label>
                 <select wire:model.live="newCiudad" style="{{ $iF }} cursor:pointer;">
-                    <option value="">— Seleccionar —</option>
+                    <option value="">— —</option>
                     @foreach($ciudadesAll as $c)
                     <option value="{{ $c->nombre }}">{{ $c->nombre }}</option>
                     @endforeach
                 </select>
                 @error('newCiudad') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-            <div>
+            <div style="width:130px; flex-shrink:0;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Provincia *</label>
                 <select wire:model.live="newProvincia" style="{{ $iF }} cursor:pointer;" @disabled(!$newCiudad)>
-                    <option value="">— Seleccionar —</option>
+                    <option value="">— —</option>
                     @foreach($newProvincias as $p)
                     <option value="{{ $p->nombre }}">{{ $p->nombre }}</option>
                     @endforeach
                 </select>
                 @error('newProvincia') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-            <div>
+            <div style="width:130px; flex-shrink:0;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Municipio *</label>
                 <select wire:model.live="newMunicipio" style="{{ $iF }} cursor:pointer;" @disabled(!$newProvincia)>
-                    <option value="">— Seleccionar —</option>
+                    <option value="">— —</option>
                     @foreach($newMunicipios as $m)
                     <option value="{{ $m->nombre }}">{{ $m->nombre }}</option>
                     @endforeach
                 </select>
                 @error('newMunicipio') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-        </div>
-        {{-- Línea 2: Dirección + botones --}}
-        <div style="display:flex; align-items:flex-end; gap:10px; padding-top:12px; border-top:1px solid #F3F4F6;">
             <div style="flex:1; min-width:0;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Dirección *</label>
                 <input wire:model="newDireccion" type="text" maxlength="255" style="{{ $iF }}">
                 @error('newDireccion') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
             <button wire:click="saveNew"
-                    style="height:38px; padding:0 28px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; flex-shrink:0;"
+                    style="height:38px; padding:0 22px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; flex-shrink:0;"
                     @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
                 Guardar
             </button>
             <button wire:click="cancelAdd"
-                    style="height:38px; padding:0 20px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; flex-shrink:0;"
+                    style="height:38px; padding:0 16px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; flex-shrink:0;"
                     @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
                 Cancelar
             </button>
