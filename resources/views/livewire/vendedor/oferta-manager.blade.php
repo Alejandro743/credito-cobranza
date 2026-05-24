@@ -463,13 +463,14 @@
 
                 {{-- CUERPO MÓVIL --}}
                 <div class="card-body-mob" style="padding:8px 10px 6px; display:flex; flex-direction:column; gap:6px; flex:1;">
-                    {{-- Línea 1: código + nombre --}}
-                    <div style="display:flex; align-items:baseline; gap:5px; min-width:0; overflow:hidden;">
+                    {{-- Línea 1: código — nombre --}}
+                    <div style="display:flex; align-items:baseline; gap:4px; min-width:0; overflow:hidden;">
                         <span style="font-size:13px; font-weight:700; color:#534AB7; flex-shrink:0;">{{ $p['code'] ?? '' }}</span>
+                        <span style="font-size:12px; color:#C4B5FD; flex-shrink:0;">—</span>
                         <span style="font-size:13px; font-weight:600; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $p['nombre'] }}</span>
                     </div>
                     {{-- Fila: imagen izquierda + datos derecha --}}
-                    <div style="display:flex; gap:10px; align-items:stretch;">
+                    <div style="display:flex; gap:10px; align-items:center;">
                         {{-- Imagen --}}
                         <div style="width:42%; flex-shrink:0; border-radius:8px; overflow:hidden; background:#f9fafb; display:flex; align-items:center; justify-content:center; min-height:95px; position:relative;">
                             @if ($qty > 0)
@@ -487,21 +488,21 @@
                             </div>
                         </div>
                         {{-- Datos --}}
-                        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:2px;">
-                            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:4px;">
+                        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:3px;">
+                            <div style="display:flex; align-items:baseline; gap:5px;">
                                 <span style="font-size:10px; font-weight:600; color:#9B93E0; white-space:nowrap;">Precio Bs</span>
                                 <span style="font-size:13px; font-weight:700; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
                             </div>
-                            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:4px;">
+                            <div style="display:flex; align-items:baseline; gap:5px;">
                                 <span style="font-size:10px; font-weight:600; color:#9B93E0; white-space:nowrap;">Puntos</span>
                                 <span style="font-size:13px; font-weight:700; color:#0F6E56;">{{ $p['puntos'] }}</span>
                             </div>
-                            <div style="height:1px; background:#EDE9FE; margin:2px 0;"></div>
-                            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:4px;">
+                            <div style="height:1px; background:#EDE9FE; margin:1px 0;"></div>
+                            <div style="display:flex; align-items:baseline; gap:5px;">
                                 <span style="font-size:10px; font-weight:600; color:#9B93E0; white-space:nowrap;">Total Bs</span>
                                 <span x-text="(precio * n).toFixed(2)" style="font-size:13px; font-weight:700; color:#3C3489;">{{ number_format($p['precio'] * $qty, 2) }}</span>
                             </div>
-                            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:4px;">
+                            <div style="display:flex; align-items:baseline; gap:5px;">
                                 <span style="font-size:10px; font-weight:600; color:#9B93E0; white-space:nowrap;">Total Pts</span>
                                 <span x-text="'+' + (puntos * n) + ' pts'" style="font-size:13px; font-weight:700; color:#0F6E56;">+{{ $p['puntos'] * $qty }} pts</span>
                             </div>
@@ -536,7 +537,7 @@
                 </div>
 
                 {{-- PIE --}}
-                <div style="padding:8px 12px 12px; display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                <div style="padding:8px 12px 12px; display:flex; align-items:center; gap:6px; flex-shrink:0; justify-content:flex-end;">
                     {{-- [−] --}}
                     <button @click="n > 0 ? n-- : null"
                             class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
