@@ -465,15 +465,16 @@
 {{-- Botón flotante carrito --}}
 @if (!$sinListasComunes && $cantidad > 0)
 <div style="position:fixed; bottom:80px; right:20px; z-index:200; display:flex; flex-direction:column; align-items:center; gap:4px;">
-    <div style="position:relative; width:64px; height:64px; flex-shrink:0;">
+    <div style="position:relative;">
         <div wire:click="irResumen"
-             style="all:unset; box-sizing:border-box; display:flex; align-items:center; justify-content:center;
-                    width:64px; height:64px; border-radius:9999px; overflow:hidden;
-                    background:#F97316; cursor:pointer;
+             style="display:block; width:64px; height:64px; border-radius:32px; background:#F97316;
+                    cursor:pointer; overflow:hidden;
                     box-shadow:0 4px 20px rgba(249,115,22,0.55);">
-            <svg style="width:28px;height:28px;display:block;flex-shrink:0;" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </svg>
+            <div style="width:64px; height:64px; display:flex; align-items:center; justify-content:center;">
+                <svg style="width:28px;height:28px;display:block;" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+            </div>
         </div>
         <span style="position:absolute; top:-4px; right:-4px; min-width:20px; height:20px;
                      background:#ef4444; color:#fff; font-size:10px; font-weight:700;
