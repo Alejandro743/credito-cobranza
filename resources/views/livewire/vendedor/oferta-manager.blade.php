@@ -302,7 +302,6 @@
         <span class="flex-shrink-0" style="font-size:12px; font-weight:600; color:#C4B5FD; white-space:nowrap;">{{ $totalProductos }} {{ $totalProductos === 1 ? 'producto' : 'productos' }}</span>
     </div>
 
-    </div>
 </div>
 @endif
 
