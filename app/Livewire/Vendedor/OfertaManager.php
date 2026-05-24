@@ -110,7 +110,7 @@ class OfertaManager extends Component
             ->map(fn($c) => [
                 'id'      => $c->id,
                 'user_id' => $c->usuario_id,
-                'nombre'  => trim(($c->usuario->name ?? '') . ' ' . ($c->apellido ?? '')),
+                'nombre'  => ucwords(strtolower(trim(($c->usuario->name ?? '') . ' ' . ($c->apellido ?? '')))),
                 'ci'      => $c->ci ?? '',
             ])->sortBy('nombre')->values()->toArray();
     }
@@ -151,7 +151,7 @@ class OfertaManager extends Component
             ->map(fn($c) => [
                 'id'      => $c->id,
                 'user_id' => $c->usuario_id,
-                'nombre'  => trim(($c->usuario->name ?? '') . ' ' . ($c->apellido ?? '')),
+                'nombre'  => ucwords(strtolower(trim(($c->usuario->name ?? '') . ' ' . ($c->apellido ?? '')))),
                 'ci'      => $c->ci ?? '',
             ])->sortBy('nombre')->values()->toArray();
     }
