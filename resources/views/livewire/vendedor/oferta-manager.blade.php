@@ -859,6 +859,7 @@
     box-shadow: 0 8px 40px rgba(60,52,137,0.16), 0 0 0 1px rgba(196,181,253,0.15);
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 }
 @media (min-width: 640px) {
     .buscar-sheet {
