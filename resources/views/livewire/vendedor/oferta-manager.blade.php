@@ -216,56 +216,52 @@
 @if ($clienteId && !$sinListasComunes && $step === 'oferta')
 <div class="bg-white border-b border-gray-100 px-4 py-3">
 
-    {{-- Heading (solo desktop) --}}
-    <div class="hidden md:flex items-center gap-2 mb-3">
-        <div style="width:24px; height:24px; border-radius:50%; background:#FFF7ED; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <svg width="12" height="12" fill="none" stroke="#F97316" stroke-width="2" viewBox="0 0 24 24">
+    @php
+    $cardColors = [
+        ['bg'=>'#FFF7ED','iconBg'=>'#F97316','selBorder'=>'#F97316','selCard'=>'#FFF7ED','text'=>'#C2410C','sub'=>'#FB923C'],
+        ['bg'=>'#F0EEFF','iconBg'=>'#7c3aed','selBorder'=>'#7c3aed','selCard'=>'#EDE9FE','text'=>'#5B21B6','sub'=>'#8B5CF6'],
+        ['bg'=>'#F0FDF4','iconBg'=>'#059669','selBorder'=>'#059669','selCard'=>'#DCFCE7','text'=>'#065F46','sub'=>'#10B981'],
+        ['bg'=>'#EFF6FF','iconBg'=>'#3B82F6','selBorder'=>'#3B82F6','selCard'=>'#DBEAFE','text'=>'#1D4ED8','sub'=>'#60A5FA'],
+    ];
+    $iconPaths = [
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>',
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>',
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 8v1m0-8c-1.11 0-2.08.402-2.599 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>',
+    ];
+    @endphp
+
+    {{-- FILA 1: Label "Promociones" + cards deslizables --}}
+    <div class="flex items-center gap-3 mb-2" style="overflow:hidden;">
+
+        {{-- Label fijo --}}
+        <div class="flex items-center gap-1.5 flex-shrink-0">
+            <svg width="13" height="13" fill="none" stroke="#F97316" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
             </svg>
+            <span style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Promociones</span>
         </div>
-        <span style="font-size:13px; font-weight:700; color:#3C3489;">Promociones disponibles para este cliente</span>
-        <svg width="14" height="14" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-    </div>
 
-    {{-- Pills + Buscador: misma fila en desktop, apilados en móvil --}}
-    <div class="flex flex-col md:flex-row md:items-center gap-2">
+        {{-- Divisor vertical --}}
+        <div style="width:1px; height:20px; background:#EDE9FE; flex-shrink:0;"></div>
 
-        {{-- Cards de filtro --}}
-        @php
-        $cardColors = [
-            ['bg'=>'#FFF7ED','iconBg'=>'#F97316','selBorder'=>'#F97316','selCard'=>'#FFF7ED','text'=>'#C2410C','sub'=>'#FB923C'],
-            ['bg'=>'#F0EEFF','iconBg'=>'#7c3aed','selBorder'=>'#7c3aed','selCard'=>'#EDE9FE','text'=>'#5B21B6','sub'=>'#8B5CF6'],
-            ['bg'=>'#F0FDF4','iconBg'=>'#059669','selBorder'=>'#059669','selCard'=>'#DCFCE7','text'=>'#065F46','sub'=>'#10B981'],
-            ['bg'=>'#EFF6FF','iconBg'=>'#3B82F6','selBorder'=>'#3B82F6','selCard'=>'#DBEAFE','text'=>'#1D4ED8','sub'=>'#60A5FA'],
-        ];
-        $iconPaths = [
-            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>',
-            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>',
-            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 8v1m0-8c-1.11 0-2.08.402-2.599 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
-            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>',
-        ];
-        @endphp
-        <div class="flex items-center gap-2 flex-wrap flex-1">
+        {{-- Cards deslizables --}}
+        <div class="flex items-center gap-2" style="overflow-x:auto; padding-bottom:2px; scrollbar-width:none; -ms-overflow-style:none; flex:1;">
+            <style>.promo-scroll::-webkit-scrollbar{display:none;}</style>
 
             {{-- Todos --}}
             @php $selTodos = $filterLista === ''; @endphp
             <button wire:click="$set('filterLista', '')"
-                    class="flex items-center gap-2.5 flex-shrink-0 transition-all active:scale-95"
-                    style="padding:8px 16px 8px 8px; border-radius:20px; border:1.5px solid {{ $selTodos ? '#F97316' : '#E5E7EB' }}; background:{{ $selTodos ? '#FFF7ED' : '#fff' }}; cursor:pointer; box-shadow:{{ $selTodos ? '0 2px 8px rgba(249,115,22,0.15)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
-                <div style="width:34px; height:34px; border-radius:10px; background:{{ $selTodos ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="16" height="16" fill="none" stroke="{{ $selTodos ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24">
+                    class="promo-scroll flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
+                    style="padding:6px 14px 6px 6px; border-radius:20px; border:1.5px solid {{ $selTodos ? '#F97316' : '#E5E7EB' }}; background:{{ $selTodos ? '#FFF7ED' : '#fff' }}; cursor:pointer; box-shadow:{{ $selTodos ? '0 2px 8px rgba(249,115,22,0.15)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
+                <div style="width:28px; height:28px; border-radius:10px; background:{{ $selTodos ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="13" height="13" fill="none" stroke="{{ $selTodos ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
                     </svg>
                 </div>
-                <div style="text-align:left;">
-                    <span style="font-size:12px; font-weight:700; color:{{ $selTodos ? '#C2410C' : '#374151' }}; display:block; line-height:1.3;">Todos</span>
-                    <span style="font-size:10px; color:{{ $selTodos ? '#FB923C' : '#9CA3AF' }}; display:block; line-height:1.2;">Ver todo</span>
-                </div>
+                <span style="font-size:12px; font-weight:700; color:{{ $selTodos ? '#C2410C' : '#374151' }}; white-space:nowrap;">Todos</span>
             </button>
 
-            {{-- Una card por lista --}}
             @foreach ($listasInfo as $lid => $info)
             @php
                 $ci  = $loop->index % count($cardColors);
@@ -274,36 +270,37 @@
                 $ico = $iconPaths[$ci];
             @endphp
             <button wire:click="$set('filterLista', '{{ $lid }}')"
-                    class="flex items-center gap-2.5 flex-shrink-0 transition-all active:scale-95"
-                    style="padding:8px 16px 8px 8px; border-radius:20px; border:1.5px solid {{ $sel ? $col['selBorder'] : '#E5E7EB' }}; background:{{ $sel ? $col['selCard'] : '#fff' }}; cursor:pointer; max-width:200px; box-shadow:{{ $sel ? '0 2px 8px rgba(0,0,0,0.10)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
-                <div style="width:34px; height:34px; border-radius:10px; background:{{ $sel ? $col['iconBg'] : $col['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="16" height="16" fill="none" stroke="{{ $sel ? '#fff' : $col['iconBg'] }}" viewBox="0 0 24 24">{!! $ico !!}</svg>
+                    class="flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
+                    style="padding:6px 14px 6px 6px; border-radius:20px; border:1.5px solid {{ $sel ? $col['selBorder'] : '#E5E7EB' }}; background:{{ $sel ? $col['selCard'] : '#fff' }}; cursor:pointer; box-shadow:{{ $sel ? '0 2px 8px rgba(0,0,0,0.10)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
+                <div style="width:28px; height:28px; border-radius:10px; background:{{ $sel ? $col['iconBg'] : $col['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="13" height="13" fill="none" stroke="{{ $sel ? '#fff' : $col['iconBg'] }}" viewBox="0 0 24 24">{!! $ico !!}</svg>
                 </div>
                 <div style="text-align:left; min-width:0;">
-                    <span style="font-size:12px; font-weight:700; color:{{ $sel ? $col['text'] : '#374151' }}; display:block; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px;">{{ $info['nombre'] }}</span>
-                    <span style="font-size:10px; color:{{ $sel ? $col['sub'] : '#9CA3AF' }}; display:block; line-height:1.2;">{{ $info['code'] }}</span>
+                    <span style="font-size:12px; font-weight:700; color:{{ $sel ? $col['text'] : '#374151' }}; display:block; line-height:1.2; white-space:nowrap;">{{ $info['nombre'] }}</span>
+                    <span style="font-size:10px; color:{{ $sel ? $col['sub'] : '#9CA3AF' }}; display:block; white-space:nowrap;">{{ $info['code'] }}</span>
                 </div>
             </button>
             @endforeach
 
         </div>
+    </div>
 
-        {{-- Buscador + contador --}}
-        <div class="flex items-center gap-3 flex-shrink-0">
-            <div class="relative">
-                <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-                <input wire:model.live.debounce.300ms="searchProducto" type="text"
-                       placeholder="Buscar producto..."
-                       class="pl-8 pr-3 py-2 text-sm focus:outline-none"
-                       style="background:#F8F7FF; border:1.5px solid #EDE9FE; border-radius:10px; font-size:12px; color:#3C3489; width:200px;"
-                       onfocus="this.style.borderColor='#C4B5FD'; this.style.background='#fff';"
-                       onblur="this.style.borderColor='#EDE9FE'; this.style.background='#F8F7FF';">
-            </div>
-            @php $totalProductos = collect($ofertaPorLista)->flatten(1)->count(); @endphp
-            <span class="hidden md:block flex-shrink-0" style="font-size:12px; font-weight:600; color:#C4B5FD; white-space:nowrap;">{{ $totalProductos }} {{ $totalProductos === 1 ? 'producto' : 'productos' }}</span>
+    {{-- FILA 2: Buscador + contador --}}
+    <div class="flex items-center gap-3">
+        <div class="relative flex-1">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input wire:model.live.debounce.300ms="searchProducto" type="text"
+                   placeholder="Buscar producto..."
+                   class="w-full pl-8 pr-3 py-2 focus:outline-none"
+                   style="background:#F8F7FF; border:1.5px solid #EDE9FE; border-radius:10px; font-size:12px; color:#3C3489;"
+                   onfocus="this.style.borderColor='#C4B5FD'; this.style.background='#fff';"
+                   onblur="this.style.borderColor='#EDE9FE'; this.style.background='#F8F7FF';">
         </div>
+        @php $totalProductos = collect($ofertaPorLista)->flatten(1)->count(); @endphp
+        <span class="flex-shrink-0" style="font-size:12px; font-weight:600; color:#C4B5FD; white-space:nowrap;">{{ $totalProductos }} {{ $totalProductos === 1 ? 'producto' : 'productos' }}</span>
+    </div>
 
     </div>
 </div>
