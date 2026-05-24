@@ -236,47 +236,55 @@
     <div class="flex flex-col md:flex-row md:items-center gap-2">
 
         {{-- Cards de filtro --}}
+        @php
+        $cardColors = [
+            ['bg'=>'#FFF7ED','iconBg'=>'#F97316','selBorder'=>'#F97316','selCard'=>'#FFF7ED','text'=>'#C2410C','sub'=>'#FB923C'],
+            ['bg'=>'#F0EEFF','iconBg'=>'#7c3aed','selBorder'=>'#7c3aed','selCard'=>'#EDE9FE','text'=>'#5B21B6','sub'=>'#8B5CF6'],
+            ['bg'=>'#F0FDF4','iconBg'=>'#059669','selBorder'=>'#059669','selCard'=>'#DCFCE7','text'=>'#065F46','sub'=>'#10B981'],
+            ['bg'=>'#EFF6FF','iconBg'=>'#3B82F6','selBorder'=>'#3B82F6','selCard'=>'#DBEAFE','text'=>'#1D4ED8','sub'=>'#60A5FA'],
+        ];
+        $iconPaths = [
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>',
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>',
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 8v1m0-8c-1.11 0-2.08.402-2.599 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>',
+        ];
+        @endphp
         <div class="flex items-center gap-2 flex-wrap flex-1">
 
             {{-- Todos --}}
+            @php $selTodos = $filterLista === ''; @endphp
             <button wire:click="$set('filterLista', '')"
-                    class="flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
-                    style="padding:7px 14px 7px 8px; border-radius:12px; border:1.5px solid {{ $filterLista === '' ? '#F97316' : '#E5E7EB' }}; background:{{ $filterLista === '' ? '#FFF7ED' : '#fff' }}; cursor:pointer;">
-                <div style="width:30px; height:30px; border-radius:8px; background:{{ $filterLista === '' ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="14" height="14" fill="none" stroke="{{ $filterLista === '' ? '#fff' : '#9CA3AF' }}" stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                    class="flex items-center gap-2.5 flex-shrink-0 transition-all active:scale-95"
+                    style="padding:8px 16px 8px 8px; border-radius:20px; border:1.5px solid {{ $selTodos ? '#F97316' : '#E5E7EB' }}; background:{{ $selTodos ? '#FFF7ED' : '#fff' }}; cursor:pointer; box-shadow:{{ $selTodos ? '0 2px 8px rgba(249,115,22,0.15)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
+                <div style="width:34px; height:34px; border-radius:12px; background:{{ $selTodos ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="16" height="16" fill="none" stroke="{{ $selTodos ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
                     </svg>
                 </div>
                 <div style="text-align:left;">
-                    <span style="font-size:12px; font-weight:700; color:{{ $filterLista === '' ? '#C2410C' : '#374151' }}; display:block; line-height:1.2;">Todos</span>
-                    <span style="font-size:10px; color:{{ $filterLista === '' ? '#FB923C' : '#9CA3AF' }}; display:block;">Ver todo</span>
+                    <span style="font-size:12px; font-weight:700; color:{{ $selTodos ? '#C2410C' : '#374151' }}; display:block; line-height:1.3;">Todos</span>
+                    <span style="font-size:10px; color:{{ $selTodos ? '#FB923C' : '#9CA3AF' }}; display:block; line-height:1.2;">Ver todo</span>
                 </div>
             </button>
 
             {{-- Una card por lista --}}
-            @php
-                $cardColors = [
-                    ['bg'=>'#F0EEFF','icon'=>'#7c3aed','selBg'=>'#EDE9FE','text'=>'#5B21B6'],
-                    ['bg'=>'#FFF7ED','icon'=>'#F97316','selBg'=>'#FFEDD5','text'=>'#C2410C'],
-                    ['bg'=>'#F0FDF4','icon'=>'#059669','selBg'=>'#DCFCE7','text'=>'#065F46'],
-                    ['bg'=>'#EFF6FF','icon'=>'#3B82F6','selBg'=>'#DBEAFE','text'=>'#1D4ED8'],
-                ];
-            @endphp
             @foreach ($listasInfo as $lid => $info)
             @php
-                $ci = $loop->index % count($cardColors);
+                $ci  = $loop->index % count($cardColors);
                 $col = $cardColors[$ci];
-                $selected = $filterLista === (string)$lid;
+                $sel = $filterLista === (string)$lid;
+                $ico = $iconPaths[$ci];
             @endphp
             <button wire:click="$set('filterLista', '{{ $lid }}')"
-                    class="flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
-                    style="padding:7px 14px 7px 8px; border-radius:12px; border:1.5px solid {{ $selected ? $col['icon'] : '#E5E7EB' }}; background:{{ $selected ? $col['selBg'] : '#fff' }}; cursor:pointer; max-width:180px;">
-                <div style="width:30px; height:30px; border-radius:8px; background:{{ $selected ? $col['icon'] : $col['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <span style="font-size:10px; font-weight:800; color:{{ $selected ? '#fff' : $col['icon'] }}; letter-spacing:-0.5px;">{{ strtoupper(substr($info['code'], 0, 2)) }}</span>
+                    class="flex items-center gap-2.5 flex-shrink-0 transition-all active:scale-95"
+                    style="padding:8px 16px 8px 8px; border-radius:20px; border:1.5px solid {{ $sel ? $col['selBorder'] : '#E5E7EB' }}; background:{{ $sel ? $col['selCard'] : '#fff' }}; cursor:pointer; max-width:200px; box-shadow:{{ $sel ? '0 2px 8px rgba(0,0,0,0.10)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
+                <div style="width:34px; height:34px; border-radius:12px; background:{{ $sel ? $col['iconBg'] : $col['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="16" height="16" fill="none" stroke="{{ $sel ? '#fff' : $col['iconBg'] }}" viewBox="0 0 24 24">{!! $ico !!}</svg>
                 </div>
                 <div style="text-align:left; min-width:0;">
-                    <span style="font-size:12px; font-weight:700; color:{{ $selected ? $col['text'] : '#374151' }}; display:block; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $info['nombre'] }}</span>
-                    <span style="font-size:10px; color:{{ $selected ? $col['icon'] : '#9CA3AF' }}; display:block;">{{ $info['code'] }}</span>
+                    <span style="font-size:12px; font-weight:700; color:{{ $sel ? $col['text'] : '#374151' }}; display:block; line-height:1.3; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:130px;">{{ $info['nombre'] }}</span>
+                    <span style="font-size:10px; color:{{ $sel ? $col['sub'] : '#9CA3AF' }}; display:block; line-height:1.2;">{{ $info['code'] }}</span>
                 </div>
             </button>
             @endforeach
