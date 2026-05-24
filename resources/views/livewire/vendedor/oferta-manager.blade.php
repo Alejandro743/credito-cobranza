@@ -599,12 +599,11 @@
 
 {{-- ═════════════════════════════════════════════ STEP: RESUMEN ══════════ --}}
 @if ($step === 'resumen')
-<div>
-
+<div style="background:#F5F4FC; min-height:100vh;">
 <div class="max-w-2xl mx-auto px-4 pb-10 pt-4">
 
-    {{-- Card título VERIFICACIÓN con botones adentro --}}
-    <div style="background:#EEEDFE; border:1px solid #CECBF6; border-radius:14px; padding:14px 18px; margin-bottom:16px;">
+    {{-- Header: VERIFICACIÓN --}}
+    <div style="background:#EEEDFE; border:1px solid #CECBF6; border-radius:14px; padding:14px 18px; margin-bottom:14px;">
         <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
             <button wire:click="volverOferta"
                     style="background:#fff; border:1.5px solid #CECBF6; border-radius:8px; padding:5px 10px; display:flex; align-items:center; gap:5px; flex-shrink:0; cursor:pointer;">
@@ -635,135 +634,118 @@
         <p style="font-size:11px; color:#534AB7; margin:4px 0 0; text-align:center;">Revisá tu pedido antes de continuar</p>
     </div>
 
-
-    {{-- Card cliente --}}
-    <div style="background-color:#EEEDFE; border:0.5px solid #CECBF6; border-radius:8px; padding:8px 10px; margin-bottom:12px;">
-        <span style="font-size:9px; font-weight:500; color:#534AB7; display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.04em;">CLIENTE</span>
-        <span style="font-size:13px; font-weight:500; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' - ' : '' }}{{ $clienteNombre }}</span>
+    {{-- Cliente --}}
+    <div style="background:#EEEDFE; border:0.5px solid #CECBF6; border-radius:10px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px;">
+        <div style="width:32px; height:32px; border-radius:8px; background:#fff; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span style="font-size:14px; font-weight:700; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
+        </div>
+        <div style="min-width:0; flex:1;">
+            <span style="font-size:9px; font-weight:700; color:#9B93E0; display:block; text-transform:uppercase; letter-spacing:0.08em;">Cliente</span>
+            <span style="font-size:14px; font-weight:700; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' — ' : '' }}{{ $clienteNombre }}</span>
+        </div>
     </div>
 
-    {{-- Separador Resumen Productos --}}
-    <div class="flex items-center gap-3 mb-3">
-        <span class="text-xs font-bold uppercase tracking-widest" style="color:#534AB7;">Resumen Productos</span>
-        <div class="flex-1 h-px" style="background:#CECBF6;"></div>
+    {{-- Separador Productos --}}
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+        <svg width="13" height="13" fill="none" stroke="#7B6FE8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <span style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Productos del Pedido</span>
+        <div style="flex:1; height:1px; background:#CECBF6;"></div>
+        <span style="font-size:11px; font-weight:600; color:#9B93E0;">{{ count($carrito) }} {{ count($carrito) === 1 ? 'ítem' : 'ítems' }}</span>
     </div>
 
-
-    {{-- Sección productos --}}
-    <p class="text-[11px] font-semibold uppercase tracking-wide mb-2" style="color:#9ca3af;">Productos del Pedido</p>
-
-    <div class="bg-white overflow-hidden mb-5" style="border:0.5px solid #CECBF6; border-radius:10px; box-shadow:2px 6px 20px rgba(0,0,0,0.22);">
+    {{-- Tabla Productos --}}
+    <div style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:2px 6px 20px rgba(60,52,137,0.10); margin-bottom:14px;">
         @foreach ($carrito as $pid => $item)
-        <div class="flex items-center gap-2.5 px-3 py-2.5" wire:key="res-{{ $pid }}"
-             style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}">
+        <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }}" wire:key="res-{{ $pid }}">
 
-            {{-- Foto 44px --}}
-            <div class="flex-shrink-0 overflow-hidden" style="width:44px;height:44px;border-radius:8px;border:0.5px solid #e5e7eb;background:#fff;">
+            {{-- Foto --}}
+            <div style="width:52px; height:52px; border-radius:10px; border:1px solid #EDE9FE; background:#FAFAFE; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
                 @if ($item['image'])
-                <img src="{{ $item['image'] }}" alt="{{ $item['nombre'] }}"
-                     style="width:100%;height:100%;object-fit:contain;">
+                <img src="{{ $item['image'] }}" alt="{{ $item['nombre'] }}" style="width:100%; height:100%; object-fit:contain;">
                 @else
-                <div class="w-full h-full flex items-center justify-center">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#CECBF6;">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                              d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
-                </div>
+                <svg width="22" height="22" fill="none" stroke="#CECBF6" stroke-width="1.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
                 @endif
             </div>
 
             {{-- Info --}}
-            <div class="flex-1 min-w-0">
-                <span class="inline-block px-1.5 py-0.5 text-[9px] font-bold rounded uppercase tracking-wide mb-0.5"
-                      style="background:#EEEDFE; color:#534AB7;">
-                    {{ $item['code'] ?? '' }}
-                </span>
-                <p class="text-xs font-medium text-gray-800 truncate leading-tight">{{ $item['nombre'] }}</p>
-                <p class="text-[10px] text-gray-400 leading-tight">
-                    {{ $item['cantidad'] }} × Bs {{ number_format($item['precio'], 2) }}
-                </p>
+            <div style="flex:1; min-width:0;">
+                <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
+                    <span style="font-size:9px; font-weight:700; color:#7B6FE8; background:#EEEDFE; border-radius:4px; padding:1px 5px; text-transform:uppercase; letter-spacing:0.06em; white-space:nowrap;">{{ $item['code'] ?? '' }}</span>
+                    <span style="font-size:10px; font-weight:600; color:#9B93E0; white-space:nowrap;">{{ $item['cantidad'] }}×</span>
+                </div>
+                <span style="font-size:13px; font-weight:700; color:#3C3489; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $item['nombre'] }}</span>
+                <span style="font-size:11px; color:#9B93E0;">Bs {{ number_format($item['precio'], 2) }} c/u</span>
             </div>
 
             {{-- Total + puntos --}}
-            <div class="text-right flex-shrink-0">
-                <p class="text-sm font-bold" style="color:#7c3aed;">Bs {{ number_format($item['precio'] * $item['cantidad'], 2) }}</p>
+            <div style="text-align:right; flex-shrink:0;">
+                <span style="font-size:15px; font-weight:800; color:#7c3aed; display:block;">Bs {{ number_format($item['precio'] * $item['cantidad'], 2) }}</span>
                 @if ($item['puntos'] > 0)
-                <span class="text-[9px] font-semibold px-1.5 py-0.5 rounded-full"
-                      style="background:#E1F5EE; color:#0F6E56;">+{{ $item['puntos'] * $item['cantidad'] }} pts</span>
+                <span style="font-size:10px; font-weight:700; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:1px 7px;">+{{ $item['puntos'] * $item['cantidad'] }} pts</span>
                 @endif
             </div>
 
             {{-- Eliminar --}}
             <button wire:click="quitar({{ $item['product_id'] }})"
-                    class="w-7 h-7 flex items-center justify-center flex-shrink-0 transition-colors hover:opacity-80"
-                    style="background:#fef2f2; border-radius:6px;">
-                <svg class="w-3.5 h-3.5" fill="none" stroke="#ef4444" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                          d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                    style="width:28px; height:28px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#FEF2F2; border-radius:8px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; clip-path:inset(0 round 8px);">
+                <svg width="14" height="14" fill="none" stroke="#ef4444" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                 </svg>
             </button>
         </div>
         @endforeach
 
-        {{-- Fila total --}}
-        <div class="flex justify-end items-center gap-2 px-3 py-2.5" style="border-top:0.5px solid #e5e7eb;">
-            <p class="font-bold" style="font-size:16px; color:#3C3489;">Total: Bs {{ number_format($total, 2) }}</p>
-            <span class="font-semibold px-2 py-0.5 rounded-full" style="font-size:12px; background:#E1F5EE; color:#0F6E56;">+{{ number_format($puntos) }} pts</span>
+        {{-- Total --}}
+        <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px; padding:10px 14px; background:#F8F7FF; border-top:1px solid #EDE9FE;">
+            <span style="font-size:12px; font-weight:600; color:#534AB7;">Total</span>
+            <span style="font-size:18px; font-weight:800; color:#3C3489;">Bs {{ number_format($total, 2) }}</span>
+            <span style="font-size:11px; font-weight:700; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:2px 9px;">+{{ number_format($puntos) }} pts</span>
         </div>
-    </div>
-
-    {{-- Separador Plan de Pagos --}}
-    <div class="flex items-center gap-3 mb-4 mt-2">
-        <span class="text-xs font-bold uppercase tracking-widest" style="color:#534AB7;">Plan de Pagos</span>
-        <div class="flex-1 h-px" style="background:#CECBF6;"></div>
     </div>
 
     @if ($simulacion && !empty($simulacion['cuotas_preview']))
 
-    {{-- Título cuotas --}}
-    <p class="text-[11px] font-semibold uppercase tracking-wide mb-2" style="color:#9ca3af;">Detalle de Cuotas</p>
+    {{-- Separador Plan de Pagos --}}
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+        <svg width="13" height="13" fill="none" stroke="#7B6FE8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 12h6M9 16h4"/>
+        </svg>
+        <span style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Plan de Pagos</span>
+        <div style="flex:1; height:1px; background:#CECBF6;"></div>
+        <span style="font-size:11px; font-weight:600; color:#9B93E0;">{{ count($simulacion['cuotas_preview']) }} cuotas</span>
+    </div>
 
     {{-- Tabla cuotas --}}
-    <div class="bg-white overflow-hidden mb-5" style="border:0.5px solid #CECBF6; border-radius:10px; box-shadow:2px 6px 20px rgba(0,0,0,0.22);">
-
+    <div style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:2px 6px 20px rgba(60,52,137,0.10); margin-bottom:14px;">
         {{-- Header --}}
-        <div class="grid grid-cols-3 px-3 py-2" style="background:#F8F7FF;">
-            <p class="text-[10px] font-semibold text-gray-500">Cuota</p>
-            <p class="text-[10px] font-semibold text-gray-500">Fecha Venc.</p>
-            <p class="text-[10px] font-semibold text-gray-500 text-right">Monto</p>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; padding:8px 12px; background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+            <span style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.06em;">Cuota</span>
+            <span style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.06em;">Vencimiento</span>
+            <span style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Monto</span>
         </div>
-
         {{-- Filas --}}
         @foreach ($simulacion['cuotas_preview'] as $cuota)
-        <div class="grid grid-cols-3 items-center px-3 py-2.5"
-             style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}">
-
-            <div class="flex items-center gap-1.5">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; align-items:center; padding:10px 12px; {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }}">
+            <div style="display:flex; align-items:center; gap:8px;">
                 @if ($cuota['tipo'] === 'inicial')
-                <span class="flex-shrink-0 flex items-center justify-center font-bold text-[9px] leading-none"
-                      style="width:26px;height:26px;border-radius:50%;background:#E1F5EE;color:#0F6E56;">0</span>
-                <div class="min-w-0">
-                    <p class="text-[11px] font-medium text-gray-700 leading-tight truncate">Cuota Inicial</p>
-                    <span class="text-[8px] font-bold px-1 py-0.5 rounded uppercase leading-none"
-                          style="background:#E1F5EE;color:#0F6E56;">Inicial</span>
+                <span style="width:26px; height:26px; border-radius:50%; background:#E1F5EE; color:#0F6E56; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">0</span>
+                <div>
+                    <span style="font-size:11px; font-weight:700; color:#0F6E56; display:block;">Inicial</span>
+                    <span style="font-size:9px; font-weight:600; background:#E1F5EE; color:#0F6E56; border-radius:4px; padding:1px 4px;">Inicial</span>
                 </div>
                 @else
-                <span class="flex-shrink-0 flex items-center justify-center font-bold text-[10px] leading-none"
-                      style="width:26px;height:26px;border-radius:50%;background:#EEEDFE;color:#534AB7;">{{ $cuota['numero'] }}</span>
-                <p class="text-[11px] font-medium text-gray-700 truncate">Cuota {{ $cuota['numero'] }}</p>
+                <span style="width:26px; height:26px; border-radius:50%; background:#EEEDFE; color:#534AB7; font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ $cuota['numero'] }}</span>
+                <span style="font-size:11px; font-weight:600; color:#3C3489;">Cuota {{ $cuota['numero'] }}</span>
                 @endif
             </div>
-
-            @if ($cuota['tipo'] === 'inicial')
-            <p class="text-[11px] font-medium" style="color:#0F6E56;">{{ $cuota['fecha'] }}</p>
-            @else
-            <p class="text-[11px] text-gray-500">{{ $cuota['fecha'] }}</p>
-            @endif
-
-            <p class="text-sm font-bold text-right" style="color:#7c3aed;">Bs {{ number_format($cuota['monto'], 2) }}</p>
+            <span style="font-size:11px; {{ $cuota['tipo'] === 'inicial' ? 'font-weight:700; color:#0F6E56;' : 'color:#6B7280;' }}">{{ $cuota['fecha'] }}</span>
+            <span style="font-size:14px; font-weight:800; color:#7c3aed; text-align:right;">Bs {{ number_format($cuota['monto'], 2) }}</span>
         </div>
         @endforeach
-
     </div>
     @endif
 
