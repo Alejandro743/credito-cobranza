@@ -294,9 +294,9 @@
             <input wire:model.live.debounce.300ms="searchProducto" type="text"
                    placeholder="Buscar producto..."
                    class="w-full pl-8 pr-3 py-2 focus:outline-none"
-                   style="background:#F8F7FF; border:1.5px solid #EDE9FE; border-radius:10px; font-size:12px; color:#3C3489;"
-                   onfocus="this.style.borderColor='#C4B5FD'; this.style.background='#fff';"
-                   onblur="this.style.borderColor='#EDE9FE'; this.style.background='#F8F7FF';">
+                   style="background:#F8F7FF; border:2.5px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489;"
+                   onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
+                   onblur="this.style.borderColor='#C4B5FD'; this.style.background='#F8F7FF';">
         </div>
         @php $totalProductos = collect($ofertaPorLista)->flatten(1)->count(); @endphp
         <span class="flex-shrink-0" style="font-size:12px; font-weight:600; color:#C4B5FD; white-space:nowrap;">{{ $totalProductos }} {{ $totalProductos === 1 ? 'producto' : 'productos' }}</span>
