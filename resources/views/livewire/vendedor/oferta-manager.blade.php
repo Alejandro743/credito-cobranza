@@ -404,35 +404,18 @@
 </div>
 @else
 
-{{-- Separador Productos --}}
-<div class="px-4 pt-4 pb-1 flex items-center gap-3">
-    <span class="text-xs font-bold uppercase tracking-widest" style="color:#C4B5FD; letter-spacing:0.12em;">Productos</span>
-    <div class="flex-1 h-px" style="background:#F0EEFF;"></div>
-</div>
-
-<div class="px-3 pt-2 pb-10 space-y-5">
-    @forelse ($ofertaPorLista as $listaId => $productos)
-    @php $listaNombre = $listasInfo[(string)$listaId]['nombre'] ?? ''; @endphp
-    <div>
-
-        {{-- Header de lista --}}
-        <div class="flex items-center justify-between mb-2 px-0.5">
-            <span class="text-gray-500" style="font-size:13px;">{{ $listaNombre }}</span>
-            <span class="text-gray-400" style="font-size:11px;">{{ $productos->count() }} productos</span>
-        </div>
-
-        {{-- Grid de cards --}}
-        <style>
-        @media (max-width:767px){ .card-body-desk, .card-foto{ display:none !important; } }
-        @media (min-width:768px){ .card-body-mob{ display:none !important; } }
-        </style>
-        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px;">
-            @foreach ($productos as $p)
-            @php
-                $pid       = (string)$p['product_id'];
-                $enCarrito = isset($carrito[$pid]);
-                $qty       = $enCarrito ? $carrito[$pid]['cantidad'] : 0;
-            @endphp
+<div class="px-3 pt-2 pb-10">
+    <style>
+    @media (max-width:767px){ .card-body-desk, .card-foto{ display:none !important; } }
+    @media (min-width:768px){ .card-body-mob{ display:none !important; } }
+    </style>
+    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px;">
+        @forelse (collect($ofertaPorLista)->flatten(1) as $p)
+        @php
+            $pid       = (string)$p['product_id'];
+            $enCarrito = isset($carrito[$pid]);
+            $qty       = $enCarrito ? $carrito[$pid]['cantidad'] : 0;
+        @endphp
             <div class="flex flex-col w-full"
                  x-data="{ n: 0, precio: @js((float)$p['precio']), puntos: @js((int)$p['puntos']), maxStock: @js((int)$p['stock']) }"
                  x-on:carrito-vaciado.window="n = 0"
@@ -465,8 +448,8 @@
                 <div class="card-body-mob" style="padding:8px 10px 6px; display:flex; flex-direction:column; gap:6px; flex:1;">
                     {{-- Nombre arriba, código abajo --}}
                     <div style="display:flex; flex-direction:column; gap:1px; min-width:0;">
-                        <span style="font-size:13px; font-weight:800; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; letter-spacing:0.01em; text-transform:uppercase;">{{ $p['nombre'] }}</span>
-                        <span style="font-size:12px; font-weight:700; color:#A89FD8; letter-spacing:0.06em; text-transform:uppercase;">{{ $p['code'] ?? '' }}</span>
+                        <span style="font-size:15px; font-weight:800; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; letter-spacing:0.01em; text-transform:uppercase;">{{ $p['nombre'] }}</span>
+                        <span style="font-size:13px; font-weight:700; color:#A89FD8; letter-spacing:0.06em; text-transform:uppercase;">{{ $p['code'] ?? '' }}</span>
                     </div>
                     {{-- Fila: imagen izquierda + datos derecha --}}
                     <div style="display:flex; gap:10px; align-items:center;">
@@ -489,21 +472,21 @@
                         {{-- Datos --}}
                         <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:3px;">
                             <div style="display:flex; align-items:baseline; justify-content:flex-end; gap:5px;">
-                                <span style="font-size:10px; font-weight:600; color:#9B93E0; white-space:nowrap;">Precio Bs</span>
-                                <span style="font-size:13px; font-weight:700; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
+                                <span style="font-size:11px; font-weight:600; color:#9B93E0; white-space:nowrap;">Precio Bs</span>
+                                <span style="font-size:15px; font-weight:700; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
                             </div>
                             <div style="display:flex; align-items:baseline; justify-content:flex-end; gap:5px;">
-                                <span style="font-size:10px; font-weight:600; color:#9B93E0; white-space:nowrap;">Puntos</span>
-                                <span style="font-size:13px; font-weight:700; color:#0F6E56;">{{ $p['puntos'] }}</span>
+                                <span style="font-size:11px; font-weight:600; color:#9B93E0; white-space:nowrap;">Puntos</span>
+                                <span style="font-size:15px; font-weight:700; color:#0F6E56;">{{ $p['puntos'] }}</span>
                             </div>
                             <div style="height:1px; background:#EDE9FE; margin:1px 0;"></div>
                             <div style="display:flex; align-items:baseline; justify-content:flex-end; gap:5px;">
-                                <span style="font-size:10px; font-weight:600; color:#9B93E0; white-space:nowrap;">Total Bs</span>
-                                <span x-text="(precio * n).toFixed(2)" style="font-size:13px; font-weight:700; color:#3C3489;">{{ number_format($p['precio'] * $qty, 2) }}</span>
+                                <span style="font-size:11px; font-weight:600; color:#9B93E0; white-space:nowrap;">Total Bs</span>
+                                <span x-text="(precio * n).toFixed(2)" style="font-size:15px; font-weight:700; color:#3C3489;">{{ number_format($p['precio'] * $qty, 2) }}</span>
                             </div>
                             <div style="display:flex; align-items:baseline; justify-content:flex-end; gap:5px;">
-                                <span style="font-size:10px; font-weight:600; color:#9B93E0; white-space:nowrap;">Total Pts</span>
-                                <span x-text="'+' + (puntos * n) + ' pts'" style="font-size:13px; font-weight:700; color:#0F6E56;">+{{ $p['puntos'] * $qty }} pts</span>
+                                <span style="font-size:11px; font-weight:600; color:#9B93E0; white-space:nowrap;">Total Pts</span>
+                                <span x-text="'+' + (puntos * n) + ' pts'" style="font-size:15px; font-weight:700; color:#0F6E56;">+{{ $p['puntos'] * $qty }} pts</span>
                             </div>
                         </div>
                     </div>
@@ -574,17 +557,15 @@
                 </div>
 
             </div>
-            @endforeach
+        @empty
+        <div class="flex flex-col items-center justify-center py-16 text-gray-400" style="grid-column:1/-1;">
+            <svg class="w-12 h-12 mb-3 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            <p class="font-medium text-sm">No hay productos disponibles</p>
         </div>
+        @endforelse
     </div>
-    @empty
-    <div class="flex flex-col items-center justify-center py-16 text-gray-400">
-        <svg class="w-12 h-12 mb-3 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        <p class="font-medium text-sm">No hay productos disponibles</p>
-    </div>
-    @endforelse
 </div>
 
 {{-- Botón flotante carrito --}}
