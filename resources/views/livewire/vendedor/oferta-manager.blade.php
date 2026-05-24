@@ -896,7 +896,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
                     </div>
-                    <span style="font-size:14px; font-weight:600; color:#534AB7; letter-spacing:-0.1px;">Buscar cliente</span>
+                    <span style="font-size:17px; font-weight:700; color:#534AB7; letter-spacing:-0.2px;">Buscar cliente</span>
                 </div>
                 <button @click="showSearch = false"
                         style="width:26px; height:26px; border-radius:8px; background:#F5F3FF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
