@@ -998,7 +998,7 @@
                         <span style="font-weight:700; font-size:13px; color:#7c3aed;">{{ strtoupper(substr($c['nombre'], 0, 1)) }}</span>
                     </div>
                     <div style="min-width:0; flex:1; text-align:left;">
-                        <p class="nombre-text" style="font-weight:700; font-size:14px; color:#534AB7; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:color 0.12s;">{{ $c['nombre'] }}</p>
+                        <p class="nombre-text" style="font-weight:600; font-size:13px; color:#534AB7; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:color 0.12s;">{{ $c['nombre'] }}</p>
                         <p style="font-size:11px; font-weight:700; color:#9B93E0; margin:1px 0 0; font-family:monospace;">CI: {{ $c['ci'] }}</p>
                     </div>
                     <svg width="11" height="11" fill="none" stroke="#DDD8FB" viewBox="0 0 24 24" style="flex-shrink:0;">
