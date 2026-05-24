@@ -608,6 +608,15 @@
         <p style="font-size:11px; color:rgba(255,255,255,0.75); margin:0; text-align:center;">Revisá tu pedido antes de continuar</p>
     </div>
 
+    {{-- Separador Cliente --}}
+    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+        <svg width="13" height="13" fill="none" stroke="#7B6FE8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+        </svg>
+        <span style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Cliente</span>
+        <div style="flex:1; height:1px; background:#CECBF6;"></div>
+    </div>
+
     {{-- Cliente --}}
     <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px; box-shadow:0 2px 12px rgba(123,111,232,0.12);">
         <div style="width:32px; height:32px; border-radius:8px; background:#fff; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
