@@ -1,4 +1,4 @@
-@props(['title' => '', 'noHeader' => false, 'noPadding' => false, 'headerTitle' => '', 'bgMain' => '#F0F2F5'])
+@props(['title' => '', 'noHeader' => false, 'noPadding' => false, 'headerTitle' => '', 'bgMain' => '#F0F2F5', 'customHeaderText' => ''])
 <!DOCTYPE html>
 <html lang="es" x-data="{
     sidebarOpen: false,
@@ -228,13 +228,17 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
                 @endif
             </div>
 
-            {{-- Breadcrumb en lila --}}
+            {{-- Breadcrumb --}}
             <div class="flex-1 min-w-0" style="display:flex; align-items:center; gap:6px; overflow:hidden;">
+                @if($customHeaderText)
+                <span style="font-size:16px; font-weight:800; color:#4B5563; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $customHeaderText }}</span>
+                @else
                 @if($activeModuloName)
                 <span style="font-size:13px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">{{ $activeModuloName }}</span>
                 <span style="font-size:13px; color:#C4B5FD;">/</span>
                 @endif
                 <span style="font-size:13px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $headerTitle ?: $pageTitle }}</span>
+                @endif
             </div>
 
             {{-- Fecha --}}
