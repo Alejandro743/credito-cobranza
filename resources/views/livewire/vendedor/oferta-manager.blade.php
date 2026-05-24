@@ -605,33 +605,7 @@
     {{-- Header: VERIFICACIÓN --}}
     <div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:14px; padding:16px 18px; margin-bottom:14px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
         <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin:0 0 2px; text-align:center;">VERIFICACIÓN</h2>
-        <p style="font-size:11px; color:rgba(255,255,255,0.75); margin:0 0 14px; text-align:center;">Revisá tu pedido antes de continuar</p>
-        <div style="display:flex; align-items:center; gap:8px;">
-            <button wire:click="volverOferta"
-                    style="background:rgba(255,255,255,0.18); border:1.5px solid rgba(255,255,255,0.35); border-radius:8px; padding:6px 12px; display:flex; align-items:center; gap:5px; flex-shrink:0; cursor:pointer;">
-                <svg width="13" height="13" fill="none" stroke="#fff" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 18l-6-6 6-6"/>
-                </svg>
-                <svg width="13" height="13" fill="none" stroke="#fff" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m12-9l2 9m-9-4h4"/>
-                </svg>
-                <span style="font-size:11px; font-weight:600; color:#fff;">Carrito</span>
-            </button>
-            <div style="flex:1;"></div>
-            <button wire:click="irEntrega"
-                    @disabled(empty($carrito))
-                    style="{{ !empty($carrito) ? 'background:#fff; border:1.5px solid #fff; cursor:pointer;' : 'background:rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.2); opacity:0.5; cursor:not-allowed;' }} border-radius:8px; padding:6px 12px; display:flex; align-items:center; gap:5px; flex-shrink:0;">
-                <span style="font-size:11px; font-weight:700; color:{{ !empty($carrito) ? '#5B4FD4' : '#fff' }};">Entrega</span>
-                <svg width="14" height="14" fill="none" stroke="{{ !empty($carrito) ? '#5B4FD4' : '#fff' }}" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z"/>
-                    <circle cx="5.5" cy="18.5" r="2.5" stroke-width="1.8"/>
-                    <circle cx="18.5" cy="18.5" r="2.5" stroke-width="1.8"/>
-                </svg>
-                <svg width="12" height="12" fill="none" stroke="{{ !empty($carrito) ? '#5B4FD4' : '#fff' }}" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
-                </svg>
-            </button>
-        </div>
+        <p style="font-size:11px; color:rgba(255,255,255,0.75); margin:0; text-align:center;">Revisá tu pedido antes de continuar</p>
     </div>
 
     {{-- Cliente --}}
@@ -748,6 +722,34 @@
         @endforeach
     </div>
     @endif
+
+    {{-- Navegación inferior --}}
+    <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
+        <button wire:click="volverOferta"
+                style="background:#fff; border:1.5px solid #CECBF6; border-radius:10px; padding:10px 16px; display:flex; align-items:center; gap:6px; flex-shrink:0; cursor:pointer; -webkit-appearance:none; appearance:none; clip-path:inset(0 round 10px);">
+            <svg width="13" height="13" fill="none" stroke="#534AB7" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 18l-6-6 6-6"/>
+            </svg>
+            <svg width="13" height="13" fill="none" stroke="#534AB7" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m12-9l2 9m-9-4h4"/>
+            </svg>
+            <span style="font-size:12px; font-weight:600; color:#534AB7;">Carrito</span>
+        </button>
+        <div style="flex:1;"></div>
+        <button wire:click="irEntrega"
+                @disabled(empty($carrito))
+                style="{{ !empty($carrito) ? 'background:#7B6FE8; border:1.5px solid #7B6FE8; cursor:pointer; box-shadow:0 2px 10px rgba(123,111,232,0.35);' : 'background:#f3f4f6; border:1.5px solid #d1d5db; opacity:0.5; cursor:not-allowed;' }} border-radius:10px; padding:10px 16px; display:flex; align-items:center; gap:6px; flex-shrink:0; -webkit-appearance:none; appearance:none; clip-path:inset(0 round 10px);">
+            <span style="font-size:12px; font-weight:700; color:{{ !empty($carrito) ? '#fff' : '#9ca3af' }};">Ir a Entrega</span>
+            <svg width="14" height="14" fill="none" stroke="{{ !empty($carrito) ? '#fff' : '#9ca3af' }}" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z"/>
+                <circle cx="5.5" cy="18.5" r="2.5" stroke-width="1.8"/>
+                <circle cx="18.5" cy="18.5" r="2.5" stroke-width="1.8"/>
+            </svg>
+            <svg width="12" height="12" fill="none" stroke="{{ !empty($carrito) ? '#fff' : '#9ca3af' }}" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
+            </svg>
+        </button>
+    </div>
 
 </div>
 </div>
