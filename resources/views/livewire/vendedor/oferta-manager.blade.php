@@ -852,7 +852,7 @@
 .buscar-sheet {
     width: calc(100% - 32px);
     max-height: 66vh;
-    border-radius: 18px;
+    border-radius: 0;
     background: #fff;
     box-shadow: 0 8px 40px rgba(60,52,137,0.16), 0 0 0 1px rgba(196,181,253,0.15);
     overflow: hidden;
@@ -864,6 +864,7 @@
         width: 100%;
         max-width: 400px;
         max-height: 80vh;
+        border-radius: 0;
     }
 }
 </style>
