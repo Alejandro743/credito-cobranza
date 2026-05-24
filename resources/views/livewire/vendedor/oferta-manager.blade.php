@@ -122,7 +122,7 @@
                     <span style="font-size:12px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
                 </div>
                 @else
-                <span style="font-size:13px; font-weight:400; color:#9B93E0; display:block;">Seleccionar cliente...</span>
+                <span style="font-size:15px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar cliente</span>
                 @endif
             </div>
             <svg width="14" height="14" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
@@ -177,7 +177,7 @@
                 @elseif ($sinListasActivas)
                 <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
                 @else
-                <span style="font-size:11px; font-weight:400; color:#9B93E0; display:block;">Seleccionar cliente...</span>
+                <span style="font-size:14px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar cliente</span>
                 @endif
             </div>
         </div>
@@ -465,8 +465,8 @@
                 <div class="card-body-mob" style="padding:8px 10px 6px; display:flex; flex-direction:column; gap:6px; flex:1;">
                     {{-- Línea 1: código + nombre --}}
                     <div style="display:flex; align-items:baseline; gap:5px; min-width:0; overflow:hidden;">
-                        <span style="font-size:11px; font-weight:700; color:#534AB7; flex-shrink:0;">{{ $p['code'] ?? '' }}</span>
-                        <span style="font-size:11px; font-weight:600; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $p['nombre'] }}</span>
+                        <span style="font-size:13px; font-weight:700; color:#534AB7; flex-shrink:0;">{{ $p['code'] ?? '' }}</span>
+                        <span style="font-size:13px; font-weight:600; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $p['nombre'] }}</span>
                     </div>
                     {{-- Fila: imagen izquierda + datos derecha --}}
                     <div style="display:flex; gap:10px; align-items:stretch;">
@@ -487,7 +487,7 @@
                             </div>
                         </div>
                         {{-- Datos --}}
-                        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:4px;">
+                        <div style="flex:1; display:flex; flex-direction:column; justify-content:center; gap:2px;">
                             <div style="display:flex; justify-content:space-between; align-items:baseline; gap:4px;">
                                 <span style="font-size:10px; font-weight:600; color:#9B93E0; white-space:nowrap;">Precio Bs</span>
                                 <span style="font-size:13px; font-weight:700; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
@@ -551,7 +551,7 @@
 
                     {{-- Botón Agregar --}}
                     <button @click="if(n === 0) n = 1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n = 0)"
-                            class="flex items-center justify-center gap-1 transition-all active:scale-95 flex-1"
+                            class="flex items-center justify-center gap-1 transition-all active:scale-95 flex-shrink-0"
                             style="background:#7B6FE8; border:1.5px solid #7B6FE8; color:#fff; border-radius:8px; padding:8px 10px; font-size:12px; font-weight:700; box-shadow:0 2px 8px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none; clip-path:inset(0 round 8px);">
                         <svg style="width:15px; height:15px; flex-shrink:0;" fill="none" stroke="#fff" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
