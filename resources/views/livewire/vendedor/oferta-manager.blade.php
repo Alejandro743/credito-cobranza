@@ -1108,26 +1108,26 @@
                         @error('regCi')<p class="reg-err">{{ $message }}</p>@enderror
                     </div>
 
-                    <div>
+                    <div style="grid-column:span 2;">
                         <label class="reg-label">Nombre <span style="color:#F97316;">*</span></label>
                         <input wire:model="regNombre" type="text" placeholder="María"
                                class="reg-input">
                         @error('regNombre')<p class="reg-err">{{ $message }}</p>@enderror
                     </div>
 
-                    <div>
+                    <div style="grid-column:span 2;">
                         <label class="reg-label">Apellido <span style="color:#F97316;">*</span></label>
                         <input wire:model="regApellido" type="text" placeholder="García"
                                class="reg-input">
                         @error('regApellido')<p class="reg-err">{{ $message }}</p>@enderror
                     </div>
 
-                    <div>
+                    <div style="grid-column:span 2;">
                         <label class="reg-label">NIT <span style="color:#D1D5DB; font-weight:400; text-transform:none; letter-spacing:0;">· opcional</span></label>
                         <input wire:model="regNit" type="text" placeholder="—" class="reg-input">
                     </div>
 
-                    <div>
+                    <div style="grid-column:span 2;">
                         <label class="reg-label">Teléfono <span style="color:#F97316;">*</span></label>
                         <input wire:model="regTelefono" type="text" placeholder="70012345"
                                class="reg-input">
@@ -1154,7 +1154,7 @@
                 <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px;">
 
                     {{-- Ciudad --}}
-                    <div>
+                    <div style="grid-column:span 2;">
                         <label class="reg-label">Ciudad <span style="color:#F97316;">*</span></label>
                         <button type="button"
                                 @click="ubModal=true; ubTipo='ciudad'; ubOpciones=@js($ciudadesAll->pluck('nombre')->toArray()); ubSearch=''"
@@ -1170,7 +1170,7 @@
                     </div>
 
                     {{-- Provincia --}}
-                    <div>
+                    <div style="grid-column:span 2;">
                         <label class="reg-label">Provincia <span style="color:#F97316;">*</span></label>
                         <button type="button"
                                 @if($regCiudad) @click="ubModal=true; ubTipo='provincia'; ubOpciones=@js($regProvincias->pluck('nombre')->toArray()); ubSearch=''" @endif
