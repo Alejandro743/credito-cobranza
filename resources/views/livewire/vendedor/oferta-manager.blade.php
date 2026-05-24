@@ -246,7 +246,8 @@
         <div style="width:1px; height:20px; background:#EDE9FE; flex-shrink:0;"></div>
 
         {{-- Cards deslizables --}}
-        <div class="flex items-center gap-2" style="overflow-x:auto; padding-bottom:2px; scrollbar-width:none; -ms-overflow-style:none; flex:1;">
+        <div style="position:relative; flex:1; min-width:0; overflow:hidden;">
+        <div class="flex items-center gap-2" style="overflow-x:auto; padding-bottom:2px; scrollbar-width:none; -ms-overflow-style:none;">
             <style>.promo-scroll::-webkit-scrollbar{display:none;}</style>
 
             {{-- Todos --}}
@@ -282,6 +283,8 @@
             </button>
             @endforeach
 
+        </div>
+        <div style="position:absolute; right:0; top:0; bottom:0; width:48px; pointer-events:none; background:linear-gradient(to right, transparent, #fff);"></div>
         </div>
     </div>
 
