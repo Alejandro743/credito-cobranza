@@ -1077,8 +1077,7 @@
                     </svg>
                 </div>
                 <div>
-                    <p style="font-size:14px; font-weight:600; color:#3C3489; margin:0; letter-spacing:-0.1px;">Nuevo cliente</p>
-                    <p style="font-size:10px; color:#C4B5FD; margin:1px 0 0;">Quedará seleccionado automáticamente</p>
+                    <p style="font-size:17px; font-weight:700; color:#3C3489; margin:0; letter-spacing:-0.2px;">Nuevo cliente</p>
                 </div>
             </div>
             <button wire:click="cancelarRegistroCliente"
@@ -1216,7 +1215,7 @@
         {{-- Footer --}}
         <div style="display:flex; gap:8px; padding:14px 20px; border-top:1px solid #F0EEFF; flex-shrink:0;">
             <button wire:click="cancelarRegistroCliente" type="button"
-                    style="padding:10px 16px; border:none; border-radius:10px; font-size:13px; font-weight:500; color:#9CA3AF; background:transparent; cursor:pointer; flex-shrink:0;">
+                    style="padding:10px 16px; border:1.5px solid #E5E7EB; border-radius:10px; font-size:13px; font-weight:600; color:#6B7280; background:#fff; cursor:pointer; flex-shrink:0;">
                 Cancelar
             </button>
             <button wire:click="guardarNuevoCliente" wire:loading.attr="disabled"
