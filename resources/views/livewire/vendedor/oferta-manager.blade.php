@@ -947,19 +947,19 @@
                 </p>
                 <button wire:click="abrirRegistroCliente"
                         @click="showSearch = false"
-                        style="width:100%; display:flex; align-items:center; gap:10px; padding:11px 12px; background:#FAFAFE; border-radius:12px; border:1px dashed #DDD8FB; cursor:pointer; box-sizing:border-box; transition:background 0.12s, border-color 0.12s;"
-                        onmouseover="this.style.background='#F5F3FF'; this.style.borderColor='#C4B5FD';"
-                        onmouseout="this.style.background='#FAFAFE'; this.style.borderColor='#DDD8FB';">
-                    <div style="width:32px; height:32px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="12" height="12" fill="none" stroke="#7c3aed" viewBox="0 0 24 24">
+                        style="width:100%; display:flex; align-items:center; gap:10px; padding:11px 12px; background:#FFF7ED; border-radius:12px; border:1px dashed #FBD0A4; cursor:pointer; box-sizing:border-box; transition:background 0.12s, border-color 0.12s;"
+                        onmouseover="this.style.background='#FEF3E2'; this.style.borderColor='#F97316';"
+                        onmouseout="this.style.background='#FFF7ED'; this.style.borderColor='#FBD0A4';">
+                    <div style="width:32px; height:32px; border-radius:50%; background:#FFEDD5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="12" height="12" fill="none" stroke="#F97316" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
                         </svg>
                     </div>
                     <div style="text-align:left;">
-                        <p style="font-weight:600; font-size:13px; color:#534AB7; margin:0;">Registrar nuevo cliente</p>
-                        <p style="font-size:11px; color:#C4B5FD; margin:1px 0 0; font-family:monospace;">CI: {{ $searchCliente }}</p>
+                        <p style="font-weight:600; font-size:13px; color:#C2410C; margin:0;">Registrar nuevo cliente</p>
+                        <p style="font-size:11px; color:#FDBA74; margin:1px 0 0; font-family:monospace;">CI: {{ $searchCliente }}</p>
                     </div>
-                    <svg width="11" height="11" fill="none" stroke="#D1D5DB" viewBox="0 0 24 24" style="flex-shrink:0; margin-left:auto;">
+                    <svg width="11" height="11" fill="none" stroke="#FBD0A4" viewBox="0 0 24 24" style="flex-shrink:0; margin-left:auto;">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                     </svg>
                 </button>
@@ -999,15 +999,15 @@
             <div style="margin-top:8px;">
                 <button wire:click="abrirRegistroCliente"
                         @click="showSearch = false"
-                        style="width:100%; display:flex; align-items:center; gap:10px; padding:8px 11px; background:transparent; border-radius:10px; border:1px dashed #E0DAFF; cursor:pointer; box-sizing:border-box; transition:background 0.12s, border-color 0.12s;"
-                        onmouseover="this.style.background='#F5F3FF'; this.style.borderColor='#C4B5FD';"
-                        onmouseout="this.style.background='transparent'; this.style.borderColor='#E0DAFF';">
-                    <div style="width:26px; height:26px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="10" height="10" fill="none" stroke="#7c3aed" viewBox="0 0 24 24">
+                        style="width:100%; display:flex; align-items:center; gap:10px; padding:8px 11px; background:#FFF7ED; border-radius:10px; border:1px dashed #FBD0A4; cursor:pointer; box-sizing:border-box; transition:background 0.12s, border-color 0.12s;"
+                        onmouseover="this.style.background='#FEF3E2'; this.style.borderColor='#F97316';"
+                        onmouseout="this.style.background='#FFF7ED'; this.style.borderColor='#FBD0A4';">
+                    <div style="width:26px; height:26px; border-radius:50%; background:#FFEDD5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="10" height="10" fill="none" stroke="#F97316" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
                         </svg>
                     </div>
-                    <span style="font-size:12px; font-weight:500; color:#7c3aed;">Registrar nuevo cliente</span>
+                    <span style="font-size:12px; font-weight:500; color:#C2410C;">Registrar nuevo cliente</span>
                 </button>
             </div>
             @endif
