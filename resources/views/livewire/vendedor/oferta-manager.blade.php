@@ -1232,12 +1232,16 @@
     </div>
 
     {{-- ── Mini modal ubicación (fixed, fuera del card) ──────────────────── --}}
+    {{-- x-show va en el overlay sin display:flex para que Alpine no pise el layout --}}
     <div x-show="ubModal" x-cloak
          x-transition:enter="transition ease-out duration-150"
          x-transition:enter-start="opacity-0"
          x-transition:enter-end="opacity-100"
-         @click.self="ubModal=false; ubSearch=''"
-         style="position:fixed; inset:0; z-index:150; display:flex; align-items:center; justify-content:center; background:rgba(30,24,80,0.32); backdrop-filter:blur(2px);">
+         style="position:fixed; inset:0; z-index:150; background:rgba(30,24,80,0.32); backdrop-filter:blur(2px);">
+
+        {{-- div hijo siempre flex para centrar --}}
+        <div style="width:100%; height:100%; display:flex; align-items:center; justify-content:center;"
+             @click.self="ubModal=false; ubSearch=''">
 
         <div x-transition:enter="transition ease-out duration-150"
              x-transition:enter-start="opacity-0 scale-95"
@@ -1287,7 +1291,9 @@
             </div>
 
         </div>
-    </div>
+
+        </div>{{-- /centering --}}
+    </div>{{-- /overlay --}}
 
 </div>
 @endif
