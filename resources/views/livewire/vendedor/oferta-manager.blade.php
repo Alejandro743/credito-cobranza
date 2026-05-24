@@ -603,39 +603,39 @@
 <div class="max-w-2xl mx-auto px-4 pb-10 pt-4">
 
     {{-- Header: VERIFICACIÓN --}}
-    <div style="background:#EEEDFE; border:1px solid #CECBF6; border-radius:14px; padding:14px 18px; margin-bottom:14px;">
-        <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+    <div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:14px; padding:16px 18px; margin-bottom:14px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
+        <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin:0 0 2px; text-align:center;">VERIFICACIÓN</h2>
+        <p style="font-size:11px; color:rgba(255,255,255,0.75); margin:0 0 14px; text-align:center;">Revisá tu pedido antes de continuar</p>
+        <div style="display:flex; align-items:center; gap:8px;">
             <button wire:click="volverOferta"
-                    style="background:#fff; border:1.5px solid #CECBF6; border-radius:8px; padding:5px 10px; display:flex; align-items:center; gap:5px; flex-shrink:0; cursor:pointer;">
-                <svg width="13" height="13" fill="none" stroke="#534AB7" viewBox="0 0 24 24">
+                    style="background:rgba(255,255,255,0.18); border:1.5px solid rgba(255,255,255,0.35); border-radius:8px; padding:6px 12px; display:flex; align-items:center; gap:5px; flex-shrink:0; cursor:pointer;">
+                <svg width="13" height="13" fill="none" stroke="#fff" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 18l-6-6 6-6"/>
                 </svg>
-                <svg width="13" height="13" fill="none" stroke="#534AB7" viewBox="0 0 24 24">
+                <svg width="13" height="13" fill="none" stroke="#fff" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m12-9l2 9m-9-4h4"/>
                 </svg>
-                <span style="font-size:11px; font-weight:500; color:#534AB7;">Carrito</span>
+                <span style="font-size:11px; font-weight:600; color:#fff;">Carrito</span>
             </button>
             <div style="flex:1;"></div>
             <button wire:click="irEntrega"
                     @disabled(empty($carrito))
-                    style="{{ !empty($carrito) ? 'background:#fff; border:1.5px solid #D97706; cursor:pointer;' : 'background:#f3f4f6; border:1.5px solid #d1d5db; opacity:0.5; cursor:not-allowed;' }} border-radius:8px; padding:5px 10px; display:flex; align-items:center; gap:5px; flex-shrink:0;">
-                <span style="font-size:11px; font-weight:500; color:{{ !empty($carrito) ? '#854F0B' : '#9ca3af' }};">Entrega</span>
-                <svg width="14" height="14" fill="none" stroke="{{ !empty($carrito) ? '#854F0B' : '#9ca3af' }}" viewBox="0 0 24 24">
+                    style="{{ !empty($carrito) ? 'background:#fff; border:1.5px solid #fff; cursor:pointer;' : 'background:rgba(255,255,255,0.12); border:1.5px solid rgba(255,255,255,0.2); opacity:0.5; cursor:not-allowed;' }} border-radius:8px; padding:6px 12px; display:flex; align-items:center; gap:5px; flex-shrink:0;">
+                <span style="font-size:11px; font-weight:700; color:{{ !empty($carrito) ? '#5B4FD4' : '#fff' }};">Entrega</span>
+                <svg width="14" height="14" fill="none" stroke="{{ !empty($carrito) ? '#5B4FD4' : '#fff' }}" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M1 3h15v13H1zM16 8h4l3 3v5h-7V8z"/>
                     <circle cx="5.5" cy="18.5" r="2.5" stroke-width="1.8"/>
                     <circle cx="18.5" cy="18.5" r="2.5" stroke-width="1.8"/>
                 </svg>
-                <svg width="12" height="12" fill="none" stroke="{{ !empty($carrito) ? '#854F0B' : '#9ca3af' }}" viewBox="0 0 24 24">
+                <svg width="12" height="12" fill="none" stroke="{{ !empty($carrito) ? '#5B4FD4' : '#fff' }}" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
                 </svg>
             </button>
         </div>
-        <h2 style="font-size:20px; font-weight:800; color:#3C3489; letter-spacing:-0.3px; margin:0; text-align:center;">VERIFICACIÓN</h2>
-        <p style="font-size:11px; color:#534AB7; margin:4px 0 0; text-align:center;">Revisá tu pedido antes de continuar</p>
     </div>
 
     {{-- Cliente --}}
-    <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px;">
+    <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px; box-shadow:0 2px 12px rgba(123,111,232,0.12);">
         <div style="width:32px; height:32px; border-radius:8px; background:#fff; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
             <span style="font-size:14px; font-weight:700; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
         </div>
@@ -691,8 +691,8 @@
 
             {{-- Eliminar --}}
             <button wire:click="quitar({{ $item['product_id'] }})"
-                    style="width:28px; height:28px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#FEF2F2; border-radius:8px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; clip-path:inset(0 round 8px);">
-                <svg width="14" height="14" fill="none" stroke="#ef4444" viewBox="0 0 24 24">
+                    style="width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#FEF2F2; border-radius:10px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; clip-path:inset(0 round 10px);">
+                <svg width="17" height="17" fill="none" stroke="#ef4444" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                 </svg>
             </button>
