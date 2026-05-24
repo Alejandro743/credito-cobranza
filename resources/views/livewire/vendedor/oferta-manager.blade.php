@@ -101,7 +101,7 @@
         {{-- BUSCAR --}}
         <div class="relative flex items-center justify-center flex-shrink-0"
              style="border-radius:8px; background:#f97316; box-shadow:0 2px 8px rgba(249,115,22,0.30);">
-            <button @click="showSearch = true; $nextTick(() => { let el = document.getElementById('clienteSearchInput'); if(el) el.focus(); })"
+            <button @click="showSearch = true"
                     class="h-full flex items-center gap-2 active:scale-95"
                     style="cursor:pointer; padding:0 16px;">
                 <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#fff" viewBox="0 0 24 24">
@@ -154,7 +154,7 @@
     {{-- BUSCAR --}}
     <div class="relative flex items-center justify-center flex-shrink-0"
          style="border-radius:8px; background:#f97316; box-shadow:0 2px 6px rgba(249,115,22,0.30);">
-        <button @click="showSearch = true; $nextTick(() => { let el = document.getElementById('clienteSearchInput'); if(el) el.focus(); })"
+        <button @click="showSearch = true"
                 class="h-full flex items-center gap-1.5 active:scale-95"
                 style="cursor:pointer; padding:0 12px;">
             <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#fff" viewBox="0 0 24 24">
@@ -848,24 +848,41 @@
 @endif {{-- step entrega --}}
 
 {{-- ══ MODAL: BUSCAR CLIENTE ════════════════════════════════════════════════ --}}
+<style>
+.buscar-sheet {
+    width: 100%;
+    height: 54vh;
+    border-radius: 18px 18px 0 0;
+    background: #fff;
+    box-shadow: 0 -2px 40px rgba(60,52,137,0.12), 0 0 0 1px rgba(196,181,253,0.18);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+@media (min-width: 640px) {
+    .buscar-sheet {
+        height: auto;
+        max-height: 80vh;
+        max-width: 400px;
+        border-radius: 18px;
+    }
+}
+</style>
+
 <div x-show="showSearch" x-cloak
      x-transition:enter="transition ease-out duration-200"
      x-transition:enter-start="opacity-0"
      x-transition:enter-end="opacity-100"
      x-transition:leave="transition ease-in duration-150"
      x-transition:leave-end="opacity-0"
-     class="fixed inset-0 flex items-end sm:items-center sm:justify-center sm:p-4"
-     style="z-index:98; background:rgba(30,24,80,0.22); backdrop-filter:blur(2px);"
+     class="fixed inset-0 flex items-end justify-center sm:items-center sm:p-4"
+     style="z-index:98; background:rgba(30,24,80,0.22); backdrop-filter:blur(2px); padding-bottom:20px;"
      @click.self="showSearch = false">
 
-    <div class="w-full flex flex-col"
+    <div class="buscar-sheet"
          x-transition:enter="transition ease-out duration-220"
          x-transition:enter-start="opacity-0 translate-y-6"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         style="max-width:400px; max-height:72vh; background:#fff;
-                border-radius:20px 20px 0 0;
-                box-shadow:0 -2px 40px rgba(60,52,137,0.12), 0 0 0 1px rgba(196,181,253,0.18);
-                overflow:hidden;">
+         x-transition:enter-end="opacity-100 translate-y-0">
 
         {{-- Handle bar (solo móvil) --}}
         <div class="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
