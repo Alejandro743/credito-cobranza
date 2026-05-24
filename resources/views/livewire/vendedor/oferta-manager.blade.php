@@ -142,7 +142,7 @@
 
         {{-- CARRITO --}}
         <div class="relative flex-shrink-0"
-             style="width:58px; border-radius:10px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 10px rgba(249,115,22,0.30)' }}; transition:all 0.2s;">
+             style="width:58px; border-radius:10px; background:{{ empty($carrito) ? '#f9fafb' : '#f97316' }}; border:1.5px solid {{ empty($carrito) ? '#E5E7EB' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 10px rgba(249,115,22,0.30)' }}; transition:all 0.2s;">
             <button wire:click="irResumen"
                     @disabled(empty($carrito))
                     class="w-full h-full flex items-center justify-center transition-all active:scale-95"
