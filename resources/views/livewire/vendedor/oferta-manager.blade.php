@@ -1,5 +1,5 @@
 <div x-data="{ toastShow: false, toastMsg: '', showSearch: false }"
-     x-effect="document.body.style.overflow = showSearch ? 'hidden' : ''"
+     x-effect="document.body.style.overflow = showSearch ? 'hidden' : ''; if (!showSearch) $wire.set('searchCliente', '')"
      x-on:producto-agregado.window="toastMsg = $event.detail.nombre; toastShow = true; setTimeout(() => toastShow = false, 2200)">
 
 {{-- Toast --}}
