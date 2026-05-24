@@ -1,4 +1,4 @@
-@props(['title' => '', 'noHeader' => false, 'noPadding' => false, 'headerTitle' => ''])
+@props(['title' => '', 'noHeader' => false, 'noPadding' => false, 'headerTitle' => '', 'bgMain' => '#F0F2F5'])
 <!DOCTYPE html>
 <html lang="es" x-data="{
     sidebarOpen: false,
@@ -187,13 +187,13 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
            || request()->routeIs('cliente.dashboard');
 @endphp
 
-<div class="flex h-screen overflow-hidden" style="background:#F0F2F5;"
+<div class="flex h-screen overflow-hidden" style="background:{{ $bgMain }};"
      x-on:open-sidebar.window="sidebarOpen = true">
 
     @include('partials.sidebar')
 
     {{-- ═══ MAIN ═══ --}}
-    <div class="flex-1 flex flex-col min-w-0 overflow-hidden" style="background:#F0F2F5;">
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden" style="background:{{ $bgMain }};">
 
         @unless($noHeader)
         {{-- Topbar --}}
