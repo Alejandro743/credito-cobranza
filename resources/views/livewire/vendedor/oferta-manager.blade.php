@@ -171,7 +171,7 @@
     {{-- FILA 1: Buscar Cliente (ancho completo) --}}
     <button @click="showSearch = true"
             class="w-full flex items-center justify-center gap-2 active:scale-95"
-            style="background:#f97316; border-radius:999px; padding:9px; cursor:pointer; box-shadow:0 2px 6px rgba(249,115,22,0.25);">
+            style="background:#f97316; border-radius:14px; padding:9px; cursor:pointer; box-shadow:0 2px 6px rgba(249,115,22,0.25);">
         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#fff" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
