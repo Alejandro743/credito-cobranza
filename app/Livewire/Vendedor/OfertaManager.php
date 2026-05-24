@@ -105,7 +105,6 @@ class OfertaManager extends Component
         $this->clientesPropios = Cliente::where('active', true)
             ->where('vendedor_id', auth()->id())
             ->with('usuario')
-            ->orderBy('apellido')
             ->limit(12)
             ->get()
             ->map(fn($c) => [
@@ -113,7 +112,7 @@ class OfertaManager extends Component
                 'user_id' => $c->usuario_id,
                 'nombre'  => trim(($c->usuario->name ?? '') . ' ' . ($c->apellido ?? '')),
                 'ci'      => $c->ci ?? '',
-            ])->toArray();
+            ])->sortBy('nombre')->values()->toArray();
     }
 
     // ── Búsqueda de cliente ───────────────────────────────────────────────────
@@ -147,7 +146,6 @@ class OfertaManager extends Component
                       )
             )
             ->with('usuario')
-            ->orderBy('apellido')
             ->limit(8)
             ->get()
             ->map(fn($c) => [
@@ -155,7 +153,7 @@ class OfertaManager extends Component
                 'user_id' => $c->usuario_id,
                 'nombre'  => trim(($c->usuario->name ?? '') . ' ' . ($c->apellido ?? '')),
                 'ci'      => $c->ci ?? '',
-            ])->toArray();
+            ])->sortBy('nombre')->values()->toArray();
     }
 
     public function seleccionarCliente(int $id, int $userId, string $nombre, string $ci = ''): void
