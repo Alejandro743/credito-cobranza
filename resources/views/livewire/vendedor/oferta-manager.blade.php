@@ -463,11 +463,10 @@
 
                 {{-- CUERPO MÓVIL --}}
                 <div class="card-body-mob" style="padding:8px 10px 6px; display:flex; flex-direction:column; gap:6px; flex:1;">
-                    {{-- Línea 1: código — nombre --}}
-                    <div style="display:flex; align-items:baseline; gap:4px; min-width:0; overflow:hidden;">
-                        <span style="font-size:13px; font-weight:700; color:#534AB7; flex-shrink:0;">{{ $p['code'] ?? '' }}</span>
-                        <span style="font-size:12px; color:#C4B5FD; flex-shrink:0;">—</span>
-                        <span style="font-size:13px; font-weight:600; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $p['nombre'] }}</span>
+                    {{-- Nombre arriba, código abajo --}}
+                    <div style="display:flex; flex-direction:column; gap:1px; min-width:0;">
+                        <span style="font-size:13px; font-weight:800; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; letter-spacing:0.01em;">{{ $p['nombre'] }}</span>
+                        <span style="font-size:10px; font-weight:600; color:#A89FD8; letter-spacing:0.08em; text-transform:uppercase;">{{ $p['code'] ?? '' }}</span>
                     </div>
                     {{-- Fila: imagen izquierda + datos derecha --}}
                     <div style="display:flex; gap:10px; align-items:center;">
