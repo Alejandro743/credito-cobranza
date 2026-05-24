@@ -1037,119 +1037,179 @@
 
 {{-- ══ MODAL: REGISTRAR NUEVO CLIENTE ══════════════════════════════════════ --}}
 @if ($showRegistroCliente)
-<div style="position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(60,52,137,.45);"
+<style>
+.reg-input {
+    width: 100%; padding: 10px 12px; border: 1.5px solid #EDE9FE;
+    border-radius: 10px; font-size: 13px; color: #3C3489;
+    background: #FAFAFE; outline: none; box-sizing: border-box;
+    transition: border-color 0.15s, background 0.15s;
+    -webkit-appearance: none; appearance: none;
+}
+.reg-input:focus { border-color: #C4B5FD; background: #fff; }
+.reg-input:disabled { opacity: 0.45; cursor: not-allowed; }
+.reg-select-wrap { position: relative; }
+.reg-select-wrap::after {
+    content: '';
+    position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid #C4B5FD;
+    pointer-events: none;
+}
+.reg-label {
+    font-size: 10px; font-weight: 600; color: #9CA3AF;
+    text-transform: uppercase; letter-spacing: .04em;
+    display: block; margin-bottom: 5px;
+}
+.reg-err { font-size: 10px; color: #ef4444; margin-top: 3px; }
+</style>
+
+<div style="position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(30,24,80,0.28); backdrop-filter:blur(2px);"
      wire:click.self="cancelarRegistroCliente">
 
-    <div style="background:#fff; border-radius:16px; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; box-shadow:0 24px 60px rgba(0,0,0,.25);">
+    <div style="background:#fff; border-radius:20px; width:100%; max-width:500px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15);">
 
         {{-- Header --}}
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; background:#EEEDFE; border-radius:16px 16px 0 0; border-bottom:1px solid #CECBF6;">
-            <div>
-                <p style="font-size:16px; font-weight:800; color:#3C3489; margin:0;">Nuevo Cliente</p>
-                <p style="font-size:11px; color:#7c3aed; margin:2px 0 0;">Completá los datos — quedará seleccionado automáticamente</p>
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
+            <div style="display:flex; align-items:center; gap:9px;">
+                <div style="width:30px; height:30px; border-radius:50%; background:#FFEDD5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="14" height="14" fill="none" stroke="#F97316" stroke-width="1.8" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                </div>
+                <div>
+                    <p style="font-size:14px; font-weight:600; color:#3C3489; margin:0; letter-spacing:-0.1px;">Nuevo cliente</p>
+                    <p style="font-size:10px; color:#C4B5FD; margin:1px 0 0;">Quedará seleccionado automáticamente</p>
+                </div>
             </div>
             <button wire:click="cancelarRegistroCliente"
-                    style="width:30px; height:30px; border-radius:8px; background:#fff; border:1.5px solid #CECBF6; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg width="13" height="13" fill="none" stroke="#534AB7" stroke-width="2.5" viewBox="0 0 24 24">
+                    style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="10" height="10" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
                 </svg>
             </button>
         </div>
 
-        {{-- Body --}}
-        <div style="padding:20px;">
+        {{-- Body (scrollable) --}}
+        <div style="overflow-y:auto; flex:1; min-height:0; padding:18px 20px 4px;">
 
-            {{-- Datos personales --}}
-            <p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:.5px; margin:0 0 12px;">Datos personales</p>
-            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(155px, 1fr)); gap:10px; margin-bottom:18px;">
+            {{-- Sección: Datos personales --}}
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                <span style="font-size:9px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.1em; white-space:nowrap;">Datos personales</span>
+                <div style="flex:1; height:1px; background:#F0EEFF;"></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+
                 <div>
-                    <label style="font-size:10px; font-weight:600; color:#6B7280; text-transform:uppercase; letter-spacing:.3px; display:block; margin-bottom:4px;">CI *</label>
+                    <label class="reg-label">CI <span style="color:#F97316;">*</span></label>
                     <input wire:model="regCi" type="text" placeholder="Ej: 1234567"
-                           style="width:100%; padding:8px 10px; border:1.5px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; font-family:monospace; box-sizing:border-box;">
-                    @error('regCi')<p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p>@enderror
+                           class="reg-input" style="font-family:monospace;">
+                    @error('regCi')<p class="reg-err">{{ $message }}</p>@enderror
                 </div>
+
                 <div>
-                    <label style="font-size:10px; font-weight:600; color:#6B7280; text-transform:uppercase; letter-spacing:.3px; display:block; margin-bottom:4px;">Nombre *</label>
-                    <input wire:model="regNombre" type="text" placeholder="Ej: María"
-                           style="width:100%; padding:8px 10px; border:1.5px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; box-sizing:border-box;">
-                    @error('regNombre')<p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label style="font-size:10px; font-weight:600; color:#6B7280; text-transform:uppercase; letter-spacing:.3px; display:block; margin-bottom:4px;">Apellido *</label>
-                    <input wire:model="regApellido" type="text" placeholder="Ej: García"
-                           style="width:100%; padding:8px 10px; border:1.5px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; box-sizing:border-box;">
-                    @error('regApellido')<p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label style="font-size:10px; font-weight:600; color:#6B7280; text-transform:uppercase; letter-spacing:.3px; display:block; margin-bottom:4px;">Teléfono *</label>
+                    <label class="reg-label">Teléfono <span style="color:#F97316;">*</span></label>
                     <input wire:model="regTelefono" type="text" placeholder="Ej: 70012345"
-                           style="width:100%; padding:8px 10px; border:1.5px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; box-sizing:border-box;">
-                    @error('regTelefono')<p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p>@enderror
+                           class="reg-input">
+                    @error('regTelefono')<p class="reg-err">{{ $message }}</p>@enderror
                 </div>
+
                 <div>
-                    <label style="font-size:10px; font-weight:600; color:#6B7280; text-transform:uppercase; letter-spacing:.3px; display:block; margin-bottom:4px;">NIT</label>
-                    <input wire:model="regNit" type="text" placeholder="Opcional"
-                           style="width:100%; padding:8px 10px; border:1.5px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; box-sizing:border-box;">
+                    <label class="reg-label">Nombre <span style="color:#F97316;">*</span></label>
+                    <input wire:model="regNombre" type="text" placeholder="Ej: María"
+                           class="reg-input">
+                    @error('regNombre')<p class="reg-err">{{ $message }}</p>@enderror
                 </div>
+
                 <div>
-                    <label style="font-size:10px; font-weight:600; color:#6B7280; text-transform:uppercase; letter-spacing:.3px; display:block; margin-bottom:4px;">Correo</label>
-                    <input wire:model="regCorreo" type="email" placeholder="Opcional"
-                           style="width:100%; padding:8px 10px; border:1.5px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; box-sizing:border-box;">
-                    @error('regCorreo')<p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p>@enderror
+                    <label class="reg-label">Apellido <span style="color:#F97316;">*</span></label>
+                    <input wire:model="regApellido" type="text" placeholder="Ej: García"
+                           class="reg-input">
+                    @error('regApellido')<p class="reg-err">{{ $message }}</p>@enderror
                 </div>
+
+                <div>
+                    <label class="reg-label">NIT <span style="color:#D1D5DB; font-weight:400; text-transform:none; letter-spacing:0;">(opcional)</span></label>
+                    <input wire:model="regNit" type="text" placeholder="—"
+                           class="reg-input">
+                </div>
+
+                <div>
+                    <label class="reg-label">Correo <span style="color:#D1D5DB; font-weight:400; text-transform:none; letter-spacing:0;">(opcional)</span></label>
+                    <input wire:model="regCorreo" type="email" placeholder="—"
+                           class="reg-input">
+                    @error('regCorreo')<p class="reg-err">{{ $message }}</p>@enderror
+                </div>
+
             </div>
 
-            {{-- Dirección --}}
-            <p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:.5px; margin:0 0 12px;">Dirección</p>
-            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(155px, 1fr)); gap:10px; margin-bottom:10px;">
+            {{-- Sección: Dirección --}}
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;">
+                <span style="font-size:9px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.1em; white-space:nowrap;">Dirección</span>
+                <div style="flex:1; height:1px; background:#F0EEFF;"></div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
+
                 <div>
-                    <label style="font-size:10px; font-weight:600; color:#6B7280; text-transform:uppercase; letter-spacing:.3px; display:block; margin-bottom:4px;">Ciudad *</label>
-                    <select wire:model.live="regCiudad" style="width:100%; padding:8px 10px; border:1.5px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
-                        <option value="">-- Ciudad --</option>
-                        @foreach($ciudadesAll as $ciu)
-                        <option value="{{ $ciu->nombre }}">{{ $ciu->nombre }}</option>
-                        @endforeach
-                    </select>
-                    @error('regCiudad')<p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p>@enderror
+                    <label class="reg-label">Ciudad <span style="color:#F97316;">*</span></label>
+                    <div class="reg-select-wrap">
+                        <select wire:model.live="regCiudad" class="reg-input" style="padding-right:28px; cursor:pointer;">
+                            <option value="">Seleccionar</option>
+                            @foreach($ciudadesAll as $ciu)
+                            <option value="{{ $ciu->nombre }}">{{ $ciu->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('regCiudad')<p class="reg-err">{{ $message }}</p>@enderror
                 </div>
+
                 <div>
-                    <label style="font-size:10px; font-weight:600; color:#6B7280; text-transform:uppercase; letter-spacing:.3px; display:block; margin-bottom:4px;">Provincia *</label>
-                    <select wire:model.live="regProvincia" style="width:100%; padding:8px 10px; border:1.5px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;" @disabled(!$regCiudad)>
-                        <option value="">-- Provincia --</option>
-                        @foreach($regProvincias as $prov)
-                        <option value="{{ $prov->nombre }}">{{ $prov->nombre }}</option>
-                        @endforeach
-                    </select>
-                    @error('regProvincia')<p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p>@enderror
+                    <label class="reg-label">Provincia <span style="color:#F97316;">*</span></label>
+                    <div class="reg-select-wrap">
+                        <select wire:model.live="regProvincia" class="reg-input" style="padding-right:28px; cursor:pointer;" @disabled(!$regCiudad)>
+                            <option value="">Seleccionar</option>
+                            @foreach($regProvincias as $prov)
+                            <option value="{{ $prov->nombre }}">{{ $prov->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('regProvincia')<p class="reg-err">{{ $message }}</p>@enderror
                 </div>
+
                 <div>
-                    <label style="font-size:10px; font-weight:600; color:#6B7280; text-transform:uppercase; letter-spacing:.3px; display:block; margin-bottom:4px;">Municipio *</label>
-                    <select wire:model.live="regMunicipio" style="width:100%; padding:8px 10px; border:1.5px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;" @disabled(!$regProvincia)>
-                        <option value="">-- Municipio --</option>
-                        @foreach($regMunicipios as $mun)
-                        <option value="{{ $mun->nombre }}">{{ $mun->nombre }}</option>
-                        @endforeach
-                    </select>
-                    @error('regMunicipio')<p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p>@enderror
+                    <label class="reg-label">Municipio <span style="color:#F97316;">*</span></label>
+                    <div class="reg-select-wrap">
+                        <select wire:model.live="regMunicipio" class="reg-input" style="padding-right:28px; cursor:pointer;" @disabled(!$regProvincia)>
+                            <option value="">Seleccionar</option>
+                            @foreach($regMunicipios as $mun)
+                            <option value="{{ $mun->nombre }}">{{ $mun->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    @error('regMunicipio')<p class="reg-err">{{ $message }}</p>@enderror
                 </div>
-                <div style="grid-column: span 2; min-width:0;">
-                    <label style="font-size:10px; font-weight:600; color:#6B7280; text-transform:uppercase; letter-spacing:.3px; display:block; margin-bottom:4px;">Dirección *</label>
+
+                <div style="grid-column:span 2;">
+                    <label class="reg-label">Dirección <span style="color:#F97316;">*</span></label>
                     <input wire:model="regDireccion" type="text" placeholder="Calle y número"
-                           style="width:100%; padding:8px 10px; border:1.5px solid #e5e7eb; border-radius:8px; font-size:13px; outline:none; box-sizing:border-box;">
-                    @error('regDireccion')<p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p>@enderror
+                           class="reg-input">
+                    @error('regDireccion')<p class="reg-err">{{ $message }}</p>@enderror
                 </div>
-            </div>
 
+            </div>
         </div>
 
         {{-- Footer --}}
-        <div style="display:flex; gap:10px; justify-content:flex-end; padding:14px 20px; border-top:1px solid #f3f4f6;">
+        <div style="display:flex; gap:8px; padding:14px 20px; border-top:1px solid #F0EEFF; flex-shrink:0;">
             <button wire:click="cancelarRegistroCliente" type="button"
-                    style="padding:9px 18px; border:1.5px solid #e5e7eb; border-radius:8px; font-size:13px; font-weight:600; color:#6B7280; background:#fff; cursor:pointer;">
+                    style="padding:10px 16px; border:none; border-radius:10px; font-size:13px; font-weight:500; color:#9CA3AF; background:transparent; cursor:pointer; flex-shrink:0;">
                 Cancelar
             </button>
             <button wire:click="guardarNuevoCliente" wire:loading.attr="disabled"
-                    style="padding:9px 22px; border-radius:8px; font-size:13px; font-weight:700; color:#fff; background:#7c3aed; border:none; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                    style="flex:1; padding:11px; border-radius:10px; font-size:13px; font-weight:700; color:#fff; background:#F97316; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 10px rgba(249,115,22,0.30);">
                 <svg wire:loading.remove wire:target="guardarNuevoCliente" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                 </svg>
