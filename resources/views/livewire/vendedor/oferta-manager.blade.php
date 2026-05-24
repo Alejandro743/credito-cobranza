@@ -1229,65 +1229,66 @@
             </button>
         </div>
 
-        {{-- ── Mini modal ubicación ──────────────────────────────────────────── --}}
-        <div x-show="ubModal" x-cloak
-             x-transition:enter="transition ease-out duration-150"
-             x-transition:enter-start="opacity-0"
-             x-transition:enter-end="opacity-100"
-             @click.self="ubModal=false; ubSearch=''"
-             style="position:absolute; inset:0; z-index:10; display:flex; align-items:center; justify-content:center; background:rgba(30,24,80,0.22); border-radius:20px; backdrop-filter:blur(1px);">
-
-            <div x-transition:enter="transition ease-out duration-150"
-                 x-transition:enter-start="opacity-0 scale-95"
-                 x-transition:enter-end="opacity-100 scale-100"
-                 style="background:#fff; border-radius:16px; width:85%; max-width:300px; max-height:60vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 8px 32px rgba(60,52,137,0.18);">
-
-                {{-- Header --}}
-                <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 16px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
-                    <span x-text="ubTipo === 'ciudad' ? 'Seleccionar ciudad' : ubTipo === 'provincia' ? 'Seleccionar provincia' : 'Seleccionar municipio'"
-                          style="font-size:13px; font-weight:600; color:#534AB7;"></span>
-                    <button type="button" @click="ubModal=false; ubSearch=''"
-                            style="width:24px; height:24px; border-radius:6px; background:#F5F3FF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;">
-                        <svg width="9" height="9" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                </div>
-
-                {{-- Buscador --}}
-                <div style="padding:10px 12px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
-                    <div style="position:relative;">
-                        <svg style="position:absolute; left:9px; top:50%; transform:translateY(-50%); pointer-events:none;" width="12" height="12" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                        <input x-model="ubSearch" type="text" placeholder="Buscar..."
-                               style="width:100%; padding:7px 10px 7px 26px; border:1.5px solid #EDE9FE; border-radius:8px; font-size:12px; color:#3C3489; background:#FAFAFE; outline:none; box-sizing:border-box;"
-                               onfocus="this.style.borderColor='#C4B5FD'" onblur="this.style.borderColor='#EDE9FE'">
-                    </div>
-                </div>
-
-                {{-- Lista --}}
-                <div style="overflow-y:auto; flex:1; min-height:0; padding:4px 0;">
-                    <template x-for="op in ubOpciones.filter(o => o.toLowerCase().includes(ubSearch.toLowerCase()))" :key="op">
-                        <button type="button"
-                                @click="
-                                    if(ubTipo==='ciudad') $wire.set('regCiudad', op);
-                                    else if(ubTipo==='provincia') $wire.set('regProvincia', op);
-                                    else $wire.set('regMunicipio', op);
-                                    ubModal=false; ubSearch='';
-                                "
-                                x-text="op.toLowerCase().replace(/\b\w/g, l => l.toUpperCase())"
-                                style="width:100%; padding:10px 16px; text-align:left; font-size:13px; color:#374151; border:none; background:transparent; cursor:pointer; display:block;"
-                                onmouseover="this.style.background='#F5F3FF'; this.style.color='#7c3aed';"
-                                onmouseout="this.style.background='transparent'; this.style.color='#374151';">
-                        </button>
-                    </template>
-                    <p x-show="ubOpciones.filter(o => o.toLowerCase().includes(ubSearch.toLowerCase())).length === 0"
-                       style="text-align:center; font-size:12px; color:#C4B5FD; padding:20px;">
-                        Sin resultados
-                    </p>
-                </div>
-
-            </div>
-        </div>
-
     </div>
+
+    {{-- ── Mini modal ubicación (fixed, fuera del card) ──────────────────── --}}
+    <div x-show="ubModal" x-cloak
+         x-transition:enter="transition ease-out duration-150"
+         x-transition:enter-start="opacity-0"
+         x-transition:enter-end="opacity-100"
+         @click.self="ubModal=false; ubSearch=''"
+         style="position:fixed; inset:0; z-index:150; display:flex; align-items:center; justify-content:center; background:rgba(30,24,80,0.32); backdrop-filter:blur(2px);">
+
+        <div x-transition:enter="transition ease-out duration-150"
+             x-transition:enter-start="opacity-0 scale-95"
+             x-transition:enter-end="opacity-100 scale-100"
+             style="background:#fff; border-radius:16px; width:85%; max-width:300px; max-height:60vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 8px 32px rgba(60,52,137,0.22);">
+
+            {{-- Header --}}
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:13px 16px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
+                <span x-text="ubTipo === 'ciudad' ? 'Seleccionar ciudad' : ubTipo === 'provincia' ? 'Seleccionar provincia' : 'Seleccionar municipio'"
+                      style="font-size:13px; font-weight:600; color:#534AB7;"></span>
+                <button type="button" @click="ubModal=false; ubSearch=''"
+                        style="width:24px; height:24px; border-radius:6px; background:#F5F3FF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center;">
+                    <svg width="9" height="9" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            {{-- Buscador --}}
+            <div style="padding:10px 12px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
+                <div style="position:relative;">
+                    <svg style="position:absolute; left:9px; top:50%; transform:translateY(-50%); pointer-events:none;" width="12" height="12" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                    <input x-model="ubSearch" type="text" placeholder="Buscar..."
+                           style="width:100%; padding:7px 10px 7px 26px; border:1.5px solid #EDE9FE; border-radius:8px; font-size:12px; color:#3C3489; background:#FAFAFE; outline:none; box-sizing:border-box;"
+                           onfocus="this.style.borderColor='#C4B5FD'" onblur="this.style.borderColor='#EDE9FE'">
+                </div>
+            </div>
+
+            {{-- Lista --}}
+            <div style="overflow-y:auto; flex:1; min-height:0; padding:4px 0;">
+                <template x-for="op in ubOpciones.filter(o => o.toLowerCase().includes(ubSearch.toLowerCase()))" :key="op">
+                    <button type="button"
+                            @click="
+                                if(ubTipo==='ciudad') $wire.set('regCiudad', op);
+                                else if(ubTipo==='provincia') $wire.set('regProvincia', op);
+                                else $wire.set('regMunicipio', op);
+                                ubModal=false; ubSearch='';
+                            "
+                            x-text="op.toLowerCase().replace(/\b\w/g, l => l.toUpperCase())"
+                            style="width:100%; padding:10px 16px; text-align:left; font-size:13px; color:#374151; border:none; background:transparent; cursor:pointer; display:block;"
+                            onmouseover="this.style.background='#F5F3FF'; this.style.color='#7c3aed';"
+                            onmouseout="this.style.background='transparent'; this.style.color='#374151';">
+                    </button>
+                </template>
+                <p x-show="ubOpciones.filter(o => o.toLowerCase().includes(ubSearch.toLowerCase())).length === 0"
+                   style="text-align:center; font-size:12px; color:#C4B5FD; padding:20px;">
+                    Sin resultados
+                </p>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 @endif
 
