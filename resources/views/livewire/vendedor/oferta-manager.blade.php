@@ -99,29 +99,21 @@
 <div class="hidden md:block bg-white border-b border-gray-100 px-4 py-2.5">
     <div class="flex gap-3 items-stretch" style="min-height:52px;">
 
-        {{-- BUSCAR --}}
-        <button @click="showSearch = true"
-                class="flex items-center gap-2 active:scale-95 flex-shrink-0"
-                style="background:#F97316; border-radius:10px; padding:0 22px; cursor:pointer; box-shadow:0 2px 10px rgba(249,115,22,0.35); -webkit-appearance:none; appearance:none; border:none; clip-path:inset(0 round 10px);">
-            <svg width="15" height="15" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <span style="font-size:13px; font-weight:600; color:#fff; white-space:nowrap;">Buscar cliente</span>
-        </button>
-
-        {{-- CLIENTE --}}
-        <div style="flex:1; min-width:0; background:#EEEDFE; border:1px solid #DDD8FB; border-radius:10px; padding:0 16px; display:flex; align-items:center; gap:12px;">
+        {{-- CLIENTE (clickeable para buscar/cambiar) --}}
+        <div @click="showSearch = true"
+             style="flex:1; min-width:0; background:#EEEDFE; border:1px solid #DDD8FB; border-radius:10px; padding:0 16px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:background 0.15s;"
+             @mouseenter="$el.style.background='#E5E3FC'" @mouseleave="$el.style.background='#EEEDFE'">
             <div style="width:34px; height:34px; border-radius:10px; background:#fff; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 @if ($clienteId)
                 <span style="font-size:14px; font-weight:700; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
                 @else
-                <svg width="15" height="15" fill="none" stroke="#C4B5FD" stroke-width="1.8" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                <svg width="14" height="14" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
                 @endif
             </div>
             <div style="min-width:0; flex:1;">
-                <span style="font-size:9px; font-weight:700; color:#9B93E0; display:block; text-transform:uppercase; letter-spacing:0.08em;">Cliente seleccionado</span>
+                <span style="font-size:9px; font-weight:700; color:#9B93E0; display:block; text-transform:uppercase; letter-spacing:0.08em;">{{ $clienteId ? 'Cliente seleccionado' : 'Cliente' }}</span>
                 @if ($clienteId)
                 <span style="font-size:14px; font-weight:700; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' — ' : '' }}{{ $clienteNombre }}</span>
                 @elseif ($sinListasActivas)
@@ -130,14 +122,12 @@
                     <span style="font-size:12px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
                 </div>
                 @else
-                <span style="font-size:13px; font-weight:400; color:#C4B5FD; display:block;">Seleccioná un cliente para comenzar...</span>
+                <span style="font-size:13px; font-weight:400; color:#9B93E0; display:block;">Seleccionar cliente...</span>
                 @endif
             </div>
-            @if ($clienteId)
-            <button wire:click="cambiarCliente" style="flex-shrink:0; background:transparent; border:none; cursor:pointer; padding:4px;">
-                <svg width="12" height="12" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
-            </button>
-            @endif
+            <svg width="14" height="14" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
         </div>
 
         {{-- CARRITO --}}
@@ -165,29 +155,31 @@
 {{-- ── STATS BAR — MÓVIL ────────────────────────────────────────────────── --}}
 <div class="md:hidden bg-white border-b border-gray-100 px-2 pt-2 pb-2 flex flex-col gap-1.5">
 
-    {{-- FILA 1: Buscar Cliente (ancho completo) --}}
-    <button @click="showSearch = true"
-            class="w-full flex items-center justify-center gap-2 active:scale-95"
-            style="background:#f97316; border-radius:14px; padding:9px; cursor:pointer; box-shadow:0 2px 6px rgba(249,115,22,0.25); -webkit-appearance:none; appearance:none; border:none; clip-path:inset(0 round 14px);">
-        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#fff" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-        <span style="font-size:12px; font-weight:700; color:#fff;">Buscar Cliente</span>
-    </button>
+    {{-- FILA: Cliente (clickeable) + Carrito --}}
+    <div class="flex gap-1.5 items-stretch" style="min-height:44px;">
 
-    {{-- FILA 2: Cliente + Carrito --}}
-    <div class="flex gap-1.5 items-stretch" style="min-height:38px;">
-
-        {{-- CLIENTE --}}
-        <div style="flex:1; min-width:0; background:#EEEDFE; border:0.5px solid rgba(206,203,246,0.6); border-radius:8px; padding:6px 10px; display:flex; flex-direction:column; justify-content:center;">
-            <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; margin-bottom:1px; text-transform:uppercase; letter-spacing:0.06em;">Cliente</span>
-            @if ($clienteId)
-            <span style="font-size:12px; font-weight:600; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
-            @elseif ($sinListasActivas)
-            <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
-            @else
-            <span style="font-size:11px; font-weight:400; color:#c4b5fd; display:block;">Seleccioná un cliente...</span>
-            @endif
+        {{-- CLIENTE clickeable --}}
+        <div @click="showSearch = true"
+             style="flex:1; min-width:0; background:#EEEDFE; border:0.5px solid rgba(206,203,246,0.6); border-radius:8px; padding:6px 10px; display:flex; align-items:center; gap:8px; cursor:pointer;">
+            <div style="width:28px; height:28px; border-radius:8px; background:#fff; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                @if ($clienteId)
+                <span style="font-size:12px; font-weight:700; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
+                @else
+                <svg width="13" height="13" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                @endif
+            </div>
+            <div style="min-width:0; flex:1;">
+                <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; text-transform:uppercase; letter-spacing:0.06em;">{{ $clienteId ? 'Cliente' : 'Cliente' }}</span>
+                @if ($clienteId)
+                <span style="font-size:12px; font-weight:600; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
+                @elseif ($sinListasActivas)
+                <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
+                @else
+                <span style="font-size:11px; font-weight:400; color:#9B93E0; display:block;">Seleccionar cliente...</span>
+                @endif
+            </div>
         </div>
 
         {{-- CARRITO --}}
