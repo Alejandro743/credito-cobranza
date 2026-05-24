@@ -618,13 +618,21 @@
     </div>
 
     {{-- Cliente --}}
-    <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px; box-shadow:0 2px 12px rgba(123,111,232,0.12);">
-        <div style="width:32px; height:32px; border-radius:8px; background:#fff; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <span style="font-size:14px; font-weight:700; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
+    <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:12px 14px; margin-bottom:14px; box-shadow:0 2px 12px rgba(123,111,232,0.12); display:flex; align-items:center; gap:12px;">
+        <div style="width:40px; height:40px; border-radius:10px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <span style="font-size:17px; font-weight:800; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
         </div>
-        <div style="min-width:0; flex:1;">
-            <span style="font-size:9px; font-weight:700; color:#9B93E0; display:block; text-transform:uppercase; letter-spacing:0.08em;">Cliente</span>
-            <span style="font-size:14px; font-weight:700; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' — ' : '' }}{{ $clienteNombre }}</span>
+        <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;">
+            @if ($clienteCI)
+            <div style="display:flex; align-items:baseline; gap:6px;">
+                <span style="font-size:10px; font-weight:700; color:#9B93E0; white-space:nowrap; text-transform:uppercase; letter-spacing:0.06em;">CI</span>
+                <span style="font-size:13px; font-weight:700; color:#534AB7;">{{ $clienteCI }}</span>
+            </div>
+            @endif
+            <div style="display:flex; align-items:baseline; gap:6px;">
+                <span style="font-size:10px; font-weight:700; color:#9B93E0; white-space:nowrap; text-transform:uppercase; letter-spacing:0.06em;">Nombre</span>
+                <span style="font-size:13px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $clienteNombre }}</span>
+            </div>
         </div>
     </div>
 
