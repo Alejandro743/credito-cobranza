@@ -100,14 +100,17 @@
     <div class="flex gap-3 items-stretch" style="min-height:52px;">
 
         {{-- BUSCAR --}}
-        <button @click="showSearch = true"
-                class="flex items-center gap-2 active:scale-95 flex-shrink-0"
-                style="background:#F97316; border-radius:999px; padding:0 22px; cursor:pointer; box-shadow:0 2px 10px rgba(249,115,22,0.35);">
-            <svg width="15" height="15" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <span style="font-size:13px; font-weight:600; color:#fff; white-space:nowrap;">Buscar cliente</span>
-        </button>
+        <div class="flex-shrink-0"
+             style="background:#F97316; border-radius:999px; box-shadow:0 2px 10px rgba(249,115,22,0.35); overflow:hidden;">
+            <button @click="showSearch = true"
+                    class="w-full h-full flex items-center gap-2 active:scale-95"
+                    style="padding:0 22px; cursor:pointer;">
+                <svg width="15" height="15" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <span style="font-size:13px; font-weight:600; color:#fff; white-space:nowrap;">Buscar cliente</span>
+            </button>
+        </div>
 
         {{-- CLIENTE --}}
         <div style="flex:1; min-width:0; background:#EEEDFE; border:1px solid #DDD8FB; border-radius:10px; padding:0 16px; display:flex; align-items:center; gap:12px;">
