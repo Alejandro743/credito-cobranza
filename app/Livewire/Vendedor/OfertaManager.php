@@ -105,7 +105,7 @@ class OfertaManager extends Component
         $this->clientesPropios = Cliente::where('active', true)
             ->where('vendedor_id', auth()->id())
             ->with('usuario')
-            ->latest()
+            ->orderBy('apellido')
             ->limit(12)
             ->get()
             ->map(fn($c) => [
@@ -147,6 +147,7 @@ class OfertaManager extends Component
                       )
             )
             ->with('usuario')
+            ->orderBy('apellido')
             ->limit(8)
             ->get()
             ->map(fn($c) => [
