@@ -102,7 +102,7 @@
         {{-- BUSCAR --}}
         <button @click="showSearch = true"
                 class="flex items-center gap-2 active:scale-95 flex-shrink-0"
-                style="background:#F97316; border-radius:20px; padding:0 22px; cursor:pointer; box-shadow:0 2px 10px rgba(249,115,22,0.35); -webkit-appearance:none; appearance:none; border:none;">
+                style="background:#F97316; border-radius:20px; padding:0 22px; cursor:pointer; box-shadow:0 2px 10px rgba(249,115,22,0.35); -webkit-appearance:none; appearance:none; border:none; clip-path:inset(0 round 20px);">
             <svg width="15" height="15" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
@@ -168,7 +168,7 @@
     {{-- FILA 1: Buscar Cliente (ancho completo) --}}
     <button @click="showSearch = true"
             class="w-full flex items-center justify-center gap-2 active:scale-95"
-            style="background:#f97316; border-radius:14px; padding:9px; cursor:pointer; box-shadow:0 2px 6px rgba(249,115,22,0.25);">
+            style="background:#f97316; border-radius:14px; padding:9px; cursor:pointer; box-shadow:0 2px 6px rgba(249,115,22,0.25); -webkit-appearance:none; appearance:none; border:none; clip-path:inset(0 round 14px);">
         <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#fff" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
         </svg>
@@ -465,16 +465,17 @@
 {{-- Botón flotante carrito --}}
 @if (!$sinListasComunes && $cantidad > 0)
 <div style="position:fixed; bottom:80px; right:20px; z-index:200; display:flex; flex-direction:column; align-items:center; gap:4px;">
-    <div style="position:relative;">
+    <div style="position:relative; width:64px; height:64px;">
+        {{-- Sombra circular separada (clip-path corta la sombra, se pone en wrapper) --}}
+        <div style="position:absolute; inset:0; border-radius:32px;
+                    box-shadow:0 4px 20px rgba(249,115,22,0.6); pointer-events:none;"></div>
         <div wire:click="irResumen"
-             style="display:block; width:64px; height:64px; border-radius:32px; background:#F97316;
-                    cursor:pointer; overflow:hidden;
-                    box-shadow:0 4px 20px rgba(249,115,22,0.55);">
-            <div style="width:64px; height:64px; display:flex; align-items:center; justify-content:center;">
-                <svg style="width:28px;height:28px;display:block;" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-            </div>
+             style="position:absolute; inset:0; background:#F97316; cursor:pointer;
+                    clip-path:circle(32px at 32px 32px);
+                    display:flex; align-items:center; justify-content:center;">
+            <svg style="width:28px;height:28px;display:block;" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+            </svg>
         </div>
         <span style="position:absolute; top:-4px; right:-4px; min-width:20px; height:20px;
                      background:#ef4444; color:#fff; font-size:10px; font-weight:700;
