@@ -235,22 +235,52 @@
     {{-- Pills + Buscador: misma fila en desktop, apilados en móvil --}}
     <div class="flex flex-col md:flex-row md:items-center gap-2">
 
-        {{-- Pills --}}
+        {{-- Cards de filtro --}}
         <div class="flex items-center gap-2 flex-wrap flex-1">
+
+            {{-- Todos --}}
             <button wire:click="$set('filterLista', '')"
-                    class="font-semibold transition-all flex-shrink-0"
-                    style="font-size:12px; padding:5px 16px; border-radius:20px;
-                           {{ $filterLista === '' ? 'background:#F97316; color:#fff; border:1.5px solid #F97316;' : 'background:#FFF7ED; color:#F97316; border:1.5px solid #FBD0A4;' }}">
-                Todos
+                    class="flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
+                    style="padding:7px 14px 7px 8px; border-radius:12px; border:1.5px solid {{ $filterLista === '' ? '#F97316' : '#E5E7EB' }}; background:{{ $filterLista === '' ? '#FFF7ED' : '#fff' }}; cursor:pointer;">
+                <div style="width:30px; height:30px; border-radius:8px; background:{{ $filterLista === '' ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="14" height="14" fill="none" stroke="{{ $filterLista === '' ? '#fff' : '#9CA3AF' }}" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 10h16M4 14h16M4 18h16"/>
+                    </svg>
+                </div>
+                <div style="text-align:left;">
+                    <span style="font-size:12px; font-weight:700; color:{{ $filterLista === '' ? '#C2410C' : '#374151' }}; display:block; line-height:1.2;">Todos</span>
+                    <span style="font-size:10px; color:{{ $filterLista === '' ? '#FB923C' : '#9CA3AF' }}; display:block;">Ver todo</span>
+                </div>
             </button>
+
+            {{-- Una card por lista --}}
+            @php
+                $cardColors = [
+                    ['bg'=>'#F0EEFF','icon'=>'#7c3aed','selBg'=>'#EDE9FE','text'=>'#5B21B6'],
+                    ['bg'=>'#FFF7ED','icon'=>'#F97316','selBg'=>'#FFEDD5','text'=>'#C2410C'],
+                    ['bg'=>'#F0FDF4','icon'=>'#059669','selBg'=>'#DCFCE7','text'=>'#065F46'],
+                    ['bg'=>'#EFF6FF','icon'=>'#3B82F6','selBg'=>'#DBEAFE','text'=>'#1D4ED8'],
+                ];
+            @endphp
             @foreach ($listasInfo as $lid => $info)
+            @php
+                $ci = $loop->index % count($cardColors);
+                $col = $cardColors[$ci];
+                $selected = $filterLista === (string)$lid;
+            @endphp
             <button wire:click="$set('filterLista', '{{ $lid }}')"
-                    class="font-semibold transition-all flex-shrink-0"
-                    style="font-size:12px; padding:5px 16px; border-radius:20px;
-                           {{ $filterLista === (string)$lid ? 'background:#F97316; color:#fff; border:1.5px solid #F97316;' : 'background:#FFF7ED; color:#F97316; border:1.5px solid #FBD0A4;' }}">
-                {{ $info['nombre'] }}
+                    class="flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
+                    style="padding:7px 14px 7px 8px; border-radius:12px; border:1.5px solid {{ $selected ? $col['icon'] : '#E5E7EB' }}; background:{{ $selected ? $col['selBg'] : '#fff' }}; cursor:pointer; max-width:180px;">
+                <div style="width:30px; height:30px; border-radius:8px; background:{{ $selected ? $col['icon'] : $col['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <span style="font-size:10px; font-weight:800; color:{{ $selected ? '#fff' : $col['icon'] }}; letter-spacing:-0.5px;">{{ strtoupper(substr($info['code'], 0, 2)) }}</span>
+                </div>
+                <div style="text-align:left; min-width:0;">
+                    <span style="font-size:12px; font-weight:700; color:{{ $selected ? $col['text'] : '#374151' }}; display:block; line-height:1.2; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $info['nombre'] }}</span>
+                    <span style="font-size:10px; color:{{ $selected ? $col['icon'] : '#9CA3AF' }}; display:block;">{{ $info['code'] }}</span>
+                </div>
             </button>
             @endforeach
+
         </div>
 
         {{-- Buscador + contador --}}
