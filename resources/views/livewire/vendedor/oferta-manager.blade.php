@@ -1100,7 +1100,7 @@
                     <span style="font-size:9px; font-weight:700; color:#A89EE8; text-transform:uppercase; letter-spacing:.12em;">Datos personales</span>
                 </div>
 
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px;">
 
                     <div>
                         <label class="reg-label">CI <span style="color:#F97316;">*</span></label>
@@ -1152,19 +1152,19 @@
                     <span style="font-size:9px; font-weight:700; color:#A89EE8; text-transform:uppercase; letter-spacing:.12em;">Dirección</span>
                 </div>
 
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px;">
 
                     {{-- Ciudad --}}
                     <div>
                         <label class="reg-label">Ciudad <span style="color:#F97316;">*</span></label>
                         <button type="button"
                                 @click="ubModal=true; ubTipo='ciudad'; ubOpciones=@js($ciudadesAll->pluck('nombre')->toArray()); ubSearch=''"
-                                style="width:100%; padding:10px 12px; border:1.5px solid {{ $regCiudad ? '#C4B5FD' : '#EDE9FE' }}; border-radius:10px; background:{{ $regCiudad ? '#EEEDFE' : '#fff' }}; cursor:pointer; box-sizing:border-box; display:flex; align-items:center; gap:8px; transition:all 0.15s;">
+                                style="width:100%; padding:10px 12px; border:1.5px solid {{ $regCiudad ? '#C4B5FD' : '#EDE9FE' }}; border-radius:10px; background:{{ $regCiudad ? '#EEEDFE' : '#fff' }}; cursor:pointer; box-sizing:border-box; display:flex; align-items:center; gap:8px; overflow:hidden; transition:all 0.15s;">
                             <svg width="13" height="13" fill="none" stroke="{{ $regCiudad ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
-                            <span style="flex:1; text-align:left; font-size:13px; color:{{ $regCiudad ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $regCiudad ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $regCiudad ? ucwords(strtolower($regCiudad)) : 'Seleccionar' }}</span>
+                            <span style="flex:1; min-width:0; text-align:left; font-size:13px; color:{{ $regCiudad ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $regCiudad ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $regCiudad ? ucwords(strtolower($regCiudad)) : 'Seleccionar' }}</span>
                             <svg width="9" height="9" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         @error('regCiudad')<p class="reg-err">{{ $message }}</p>@enderror
@@ -1175,11 +1175,11 @@
                         <label class="reg-label">Provincia <span style="color:#F97316;">*</span></label>
                         <button type="button"
                                 @if($regCiudad) @click="ubModal=true; ubTipo='provincia'; ubOpciones=@js($regProvincias->pluck('nombre')->toArray()); ubSearch=''" @endif
-                                style="width:100%; padding:10px 12px; border:1.5px solid {{ $regProvincia ? '#C4B5FD' : '#EDE9FE' }}; border-radius:10px; background:{{ $regProvincia ? '#EEEDFE' : ($regCiudad ? '#fff' : '#FAFAFE') }}; {{ $regCiudad ? 'cursor:pointer;' : 'cursor:not-allowed; opacity:0.5;' }} box-sizing:border-box; display:flex; align-items:center; gap:8px; transition:all 0.15s;">
+                                style="width:100%; padding:10px 12px; border:1.5px solid {{ $regProvincia ? '#C4B5FD' : '#EDE9FE' }}; border-radius:10px; background:{{ $regProvincia ? '#EEEDFE' : ($regCiudad ? '#fff' : '#FAFAFE') }}; {{ $regCiudad ? 'cursor:pointer;' : 'cursor:not-allowed; opacity:0.5;' }} box-sizing:border-box; display:flex; align-items:center; gap:8px; overflow:hidden; transition:all 0.15s;">
                             <svg width="13" height="13" fill="none" stroke="{{ $regProvincia ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
                             </svg>
-                            <span style="flex:1; text-align:left; font-size:13px; color:{{ $regProvincia ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $regProvincia ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $regProvincia ? ucwords(strtolower($regProvincia)) : 'Seleccionar' }}</span>
+                            <span style="flex:1; min-width:0; text-align:left; font-size:13px; color:{{ $regProvincia ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $regProvincia ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $regProvincia ? ucwords(strtolower($regProvincia)) : 'Seleccionar' }}</span>
                             <svg width="9" height="9" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         @error('regProvincia')<p class="reg-err">{{ $message }}</p>@enderror
@@ -1190,11 +1190,11 @@
                         <label class="reg-label">Municipio <span style="color:#F97316;">*</span></label>
                         <button type="button"
                                 @if($regProvincia) @click="ubModal=true; ubTipo='municipio'; ubOpciones=@js($regMunicipios->pluck('nombre')->toArray()); ubSearch=''" @endif
-                                style="width:100%; padding:10px 12px; border:1.5px solid {{ $regMunicipio ? '#C4B5FD' : '#EDE9FE' }}; border-radius:10px; background:{{ $regMunicipio ? '#EEEDFE' : ($regProvincia ? '#fff' : '#FAFAFE') }}; {{ $regProvincia ? 'cursor:pointer;' : 'cursor:not-allowed; opacity:0.5;' }} box-sizing:border-box; display:flex; align-items:center; gap:8px; transition:all 0.15s;">
+                                style="width:100%; padding:10px 12px; border:1.5px solid {{ $regMunicipio ? '#C4B5FD' : '#EDE9FE' }}; border-radius:10px; background:{{ $regMunicipio ? '#EEEDFE' : ($regProvincia ? '#fff' : '#FAFAFE') }}; {{ $regProvincia ? 'cursor:pointer;' : 'cursor:not-allowed; opacity:0.5;' }} box-sizing:border-box; display:flex; align-items:center; gap:8px; overflow:hidden; transition:all 0.15s;">
                             <svg width="13" height="13" fill="none" stroke="{{ $regMunicipio ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                             </svg>
-                            <span style="flex:1; text-align:left; font-size:13px; color:{{ $regMunicipio ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $regMunicipio ? '500' : '400' }};">{{ $regMunicipio ? ucwords(strtolower($regMunicipio)) : 'Seleccionar municipio' }}</span>
+                            <span style="flex:1; min-width:0; text-align:left; font-size:13px; color:{{ $regMunicipio ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $regMunicipio ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $regMunicipio ? ucwords(strtolower($regMunicipio)) : 'Seleccionar municipio' }}</span>
                             <svg width="9" height="9" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                         </button>
                         @error('regMunicipio')<p class="reg-err">{{ $message }}</p>@enderror
