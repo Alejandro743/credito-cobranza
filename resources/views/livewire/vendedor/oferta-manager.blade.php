@@ -464,23 +464,23 @@
 
 {{-- Botón flotante carrito --}}
 @if (!$sinListasComunes && $cantidad > 0)
-<div style="position:fixed; bottom:80px; right:20px; z-index:200;">
-    <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
-        <button wire:click="irResumen"
-                style="width:64px; height:64px; border-radius:50%; background:#F97316; border:none; cursor:pointer;
-                       display:flex; align-items:center; justify-content:center;
-                       box-shadow:0 4px 18px rgba(249,115,22,0.5); position:relative;
-                       -webkit-appearance:none; appearance:none; flex-shrink:0;">
-            <svg style="width:28px;height:28px;" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+<div style="position:fixed; bottom:80px; right:20px; z-index:200; display:flex; flex-direction:column; align-items:center; gap:4px;">
+    <div style="position:relative; width:64px; height:64px; flex-shrink:0;">
+        <div wire:click="irResumen"
+             style="all:unset; box-sizing:border-box; display:flex; align-items:center; justify-content:center;
+                    width:64px; height:64px; border-radius:9999px; overflow:hidden;
+                    background:#F97316; cursor:pointer;
+                    box-shadow:0 4px 20px rgba(249,115,22,0.55);">
+            <svg style="width:28px;height:28px;display:block;flex-shrink:0;" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
-            <span style="position:absolute; top:-4px; right:-4px; min-width:20px; height:20px;
-                         background:#ef4444; color:#fff; font-size:10px; font-weight:700;
-                         border-radius:999px; display:flex; align-items:center; justify-content:center;
-                         padding:0 4px; border:2px solid #fff; line-height:1;">{{ $cantidad }}</span>
-        </button>
-        <span style="font-size:10px; font-weight:700; color:#F97316; letter-spacing:0.02em;">Ir carrito</span>
+        </div>
+        <span style="position:absolute; top:-4px; right:-4px; min-width:20px; height:20px;
+                     background:#ef4444; color:#fff; font-size:10px; font-weight:700;
+                     border-radius:9999px; display:flex; align-items:center; justify-content:center;
+                     padding:0 4px; border:2px solid #fff; line-height:1; pointer-events:none;">{{ $cantidad }}</span>
     </div>
+    <span style="font-size:10px; font-weight:700; color:#F97316; letter-spacing:0.02em;">Ir carrito</span>
 </div>
 @endif
 
