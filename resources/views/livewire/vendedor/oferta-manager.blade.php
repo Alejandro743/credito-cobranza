@@ -1055,8 +1055,8 @@
     pointer-events: none;
 }
 .reg-label {
-    font-size: 10px; font-weight: 600; color: #9CA3AF;
-    text-transform: uppercase; letter-spacing: .04em;
+    font-size: 10px; font-weight: 700; color: #6B65B0;
+    text-transform: uppercase; letter-spacing: .05em;
     display: block; margin-bottom: 5px;
 }
 .reg-err { font-size: 10px; color: #ef4444; margin-top: 3px; }
@@ -1097,7 +1097,7 @@
 
                 <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">
                     <div style="width:5px; height:5px; border-radius:50%; background:#C4B5FD; flex-shrink:0;"></div>
-                    <span style="font-size:9px; font-weight:700; color:#A89EE8; text-transform:uppercase; letter-spacing:.12em;">Datos personales</span>
+                    <span style="font-size:9px; font-weight:700; color:#6B65B0; text-transform:uppercase; letter-spacing:.12em;">Datos personales</span>
                 </div>
 
                 <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px;">
@@ -1149,7 +1149,7 @@
 
                 <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">
                     <div style="width:5px; height:5px; border-radius:50%; background:#FBD0A4; flex-shrink:0;"></div>
-                    <span style="font-size:9px; font-weight:700; color:#A89EE8; text-transform:uppercase; letter-spacing:.12em;">Dirección</span>
+                    <span style="font-size:9px; font-weight:700; color:#6B65B0; text-transform:uppercase; letter-spacing:.12em;">Dirección</span>
                 </div>
 
                 <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px;">
