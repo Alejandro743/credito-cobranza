@@ -102,7 +102,7 @@
         {{-- BUSCAR --}}
         <button @click="showSearch = true"
                 class="flex items-center gap-2 active:scale-95 flex-shrink-0"
-                style="background:#F97316; border-radius:999px; height:44px; padding:0 24px; cursor:pointer; box-shadow:0 2px 10px rgba(249,115,22,0.35);">
+                style="background:#F97316; border-radius:999px; padding:0 22px; cursor:pointer; box-shadow:0 2px 10px rgba(249,115,22,0.35);">
             <svg width="15" height="15" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
             </svg>
