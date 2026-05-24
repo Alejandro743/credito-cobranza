@@ -850,21 +850,20 @@
 {{-- ══ MODAL: BUSCAR CLIENTE ════════════════════════════════════════════════ --}}
 <style>
 .buscar-sheet {
-    width: 100%;
-    height: 54vh;
-    border-radius: 18px 18px 0 0;
+    width: calc(100% - 32px);
+    max-height: 66vh;
+    border-radius: 18px;
     background: #fff;
-    box-shadow: 0 -2px 40px rgba(60,52,137,0.12), 0 0 0 1px rgba(196,181,253,0.18);
+    box-shadow: 0 8px 40px rgba(60,52,137,0.16), 0 0 0 1px rgba(196,181,253,0.15);
     overflow: hidden;
     display: flex;
     flex-direction: column;
 }
 @media (min-width: 640px) {
     .buscar-sheet {
-        height: auto;
-        max-height: 80vh;
+        width: 100%;
         max-width: 400px;
-        border-radius: 18px;
+        max-height: 80vh;
     }
 }
 </style>
@@ -875,22 +874,17 @@
      x-transition:enter-end="opacity-100"
      x-transition:leave="transition ease-in duration-150"
      x-transition:leave-end="opacity-0"
-     class="fixed inset-0 flex items-end justify-center sm:items-center sm:p-4"
-     style="z-index:98; background:rgba(30,24,80,0.22); backdrop-filter:blur(2px); padding-bottom:20px;"
+     class="fixed inset-0 flex items-center justify-center"
+     style="z-index:98; background:rgba(30,24,80,0.22); backdrop-filter:blur(2px);"
      @click.self="showSearch = false">
 
     <div class="buscar-sheet"
-         x-transition:enter="transition ease-out duration-220"
-         x-transition:enter-start="opacity-0 translate-y-6"
-         x-transition:enter-end="opacity-100 translate-y-0">
-
-        {{-- Handle bar (solo móvil) --}}
-        <div class="sm:hidden flex justify-center pt-3 pb-1 flex-shrink-0">
-            <div style="width:36px; height:3px; border-radius:99px; background:#E0DAFF;"></div>
-        </div>
+         x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 scale-95"
+         x-transition:enter-end="opacity-100 scale-100">
 
         {{-- Header --}}
-        <div style="padding:10px 16px 12px; flex-shrink:0;">
+        <div style="padding:14px 16px 12px; flex-shrink:0;">
             <div style="display:flex; align-items:center; justify-content:space-between;">
                 <div style="display:flex; align-items:center; gap:8px;">
                     {{-- Ícono persona outline sutil --}}
@@ -1065,7 +1059,7 @@
 .reg-err { font-size: 10px; color: #ef4444; margin-top: 3px; }
 </style>
 
-<div style="position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; padding:20px; background:rgba(30,24,80,0.28); backdrop-filter:blur(2px);"
+<div style="position:fixed; inset:0; z-index:100; display:flex; align-items:center; justify-content:center; padding:16px 10px; background:rgba(30,24,80,0.28); backdrop-filter:blur(2px);"
      wire:click.self="cancelarRegistroCliente">
 
     <div style="background:#fff; border-radius:20px; width:100%; max-width:500px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15);">
