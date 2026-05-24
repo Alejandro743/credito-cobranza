@@ -149,52 +149,53 @@
 </div>
 
 {{-- ── STATS BAR — MÓVIL ────────────────────────────────────────────────── --}}
-<div class="md:hidden bg-white border-b border-gray-100 px-2 py-2 flex gap-2 items-stretch" style="min-height:46px;">
+<div class="md:hidden bg-white border-b border-gray-100 px-2 pt-2 pb-2 flex flex-col gap-1.5">
 
-    {{-- BUSCAR --}}
-    <div class="relative flex items-center justify-center flex-shrink-0"
-         style="border-radius:8px; background:#f97316; box-shadow:0 2px 6px rgba(249,115,22,0.30);">
-        <button @click="showSearch = true"
-                class="h-full flex items-center gap-1.5 active:scale-95"
-                style="cursor:pointer; padding:0 12px;">
-            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#fff" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <span style="font-size:12px; font-weight:700; color:#fff; white-space:nowrap;">Buscar Cliente</span>
-        </button>
+    {{-- FILA 1: Buscar Cliente (ancho completo) --}}
+    <button @click="showSearch = true"
+            class="w-full flex items-center justify-center gap-2 active:scale-95"
+            style="background:#f97316; border-radius:8px; padding:9px; cursor:pointer; box-shadow:0 2px 6px rgba(249,115,22,0.25);">
+        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="#fff" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <span style="font-size:12px; font-weight:700; color:#fff;">Buscar Cliente</span>
+    </button>
+
+    {{-- FILA 2: Cliente + Carrito --}}
+    <div class="flex gap-1.5 items-stretch" style="min-height:38px;">
+
+        {{-- CLIENTE --}}
+        <div style="flex:1; min-width:0; background:#EEEDFE; border:0.5px solid rgba(206,203,246,0.6); border-radius:8px; padding:6px 10px; display:flex; flex-direction:column; justify-content:center;">
+            <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; margin-bottom:1px; text-transform:uppercase; letter-spacing:0.06em;">Cliente</span>
+            @if ($clienteId)
+            <span style="font-size:12px; font-weight:600; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
+            @elseif ($sinListasActivas)
+            <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
+            @else
+            <span style="font-size:11px; font-weight:400; color:#c4b5fd; display:block;">Seleccioná un cliente...</span>
+            @endif
+        </div>
+
+        {{-- CARRITO --}}
+        <div class="relative flex items-center justify-center flex-shrink-0"
+             style="width:44px; border-radius:8px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 8px rgba(249,115,22,0.30)' }};">
+            <button wire:click="irResumen"
+                    @disabled(empty($carrito))
+                    class="w-full h-full flex items-center justify-center transition-all active:scale-95"
+                    style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
+                <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+            </button>
+            @if ($cantidad > 0)
+            <span class="absolute flex items-center justify-center font-bold text-white leading-none"
+                  style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
+                {{ $cantidad > 9 ? '9+' : $cantidad }}
+            </span>
+            @endif
+        </div>
+
     </div>
-
-    {{-- CLIENTE --}}
-    <div style="flex:1; min-width:0; background:#EEEDFE; border:0.5px solid rgba(206,203,246,0.6); border-radius:8px; padding:8px 10px; display:flex; flex-direction:column; justify-content:center;">
-        <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; margin-bottom:2px; text-transform:uppercase; letter-spacing:0.06em;">Cliente</span>
-        @if ($clienteId)
-        <span style="font-size:13px; font-weight:600; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
-        @elseif ($sinListasActivas)
-        <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
-        @else
-        <span style="font-size:12px; font-weight:400; color:#c4b5fd; display:block;">Seleccioná un cliente...</span>
-        @endif
-    </div>
-
-    {{-- CARRITO --}}
-    <div class="relative flex items-center justify-center flex-shrink-0"
-         style="width:48px; border-radius:8px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 8px rgba(249,115,22,0.30)' }};">
-        <button wire:click="irResumen"
-                @disabled(empty($carrito))
-                class="w-full h-full flex items-center justify-center transition-all active:scale-95"
-                style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
-            <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </svg>
-        </button>
-        @if ($cantidad > 0)
-        <span class="absolute flex items-center justify-center font-bold text-white leading-none"
-              style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
-            {{ $cantidad > 9 ? '9+' : $cantidad }}
-        </span>
-        @endif
-    </div>
-
 </div>
 
 {{-- ── FILTROS + BUSCADOR (solo en step oferta con cliente) ──────────────── --}}
