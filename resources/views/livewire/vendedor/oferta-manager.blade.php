@@ -726,14 +726,14 @@
     {{-- Navegación inferior --}}
     <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
         <button wire:click="volverOferta"
-                style="background:#fff; border:1.5px solid #CECBF6; border-radius:10px; padding:10px 16px; display:flex; align-items:center; gap:6px; flex-shrink:0; cursor:pointer; -webkit-appearance:none; appearance:none; clip-path:inset(0 round 10px);">
-            <svg width="13" height="13" fill="none" stroke="#534AB7" viewBox="0 0 24 24">
+                style="background:#F97316; border:1.5px solid #F97316; border-radius:10px; padding:10px 16px; display:flex; align-items:center; gap:6px; flex-shrink:0; cursor:pointer; box-shadow:0 2px 10px rgba(249,115,22,0.35); -webkit-appearance:none; appearance:none; clip-path:inset(0 round 10px);">
+            <svg width="14" height="14" fill="none" stroke="#fff" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15 18l-6-6 6-6"/>
             </svg>
-            <svg width="13" height="13" fill="none" stroke="#534AB7" viewBox="0 0 24 24">
+            <svg width="14" height="14" fill="none" stroke="#fff" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2 9m12-9l2 9m-9-4h4"/>
             </svg>
-            <span style="font-size:12px; font-weight:600; color:#534AB7;">Carrito</span>
+            <span style="font-size:12px; font-weight:700; color:#fff;">Carrito</span>
         </button>
         <div style="flex:1;"></div>
         <button wire:click="irEntrega"
