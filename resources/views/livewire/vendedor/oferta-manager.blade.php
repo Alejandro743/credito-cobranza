@@ -629,10 +629,7 @@
                 <span style="font-size:13px; font-weight:700; color:#534AB7;">{{ $clienteCI }}</span>
             </div>
             @endif
-            <div style="display:flex; align-items:baseline; gap:6px;">
-                <span style="font-size:10px; font-weight:700; color:#9B93E0; white-space:nowrap; text-transform:uppercase; letter-spacing:0.06em;">Nombre</span>
-                <span style="font-size:13px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $clienteNombre }}</span>
-            </div>
+            <span style="font-size:13px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block;">{{ $clienteNombre }}</span>
         </div>
     </div>
 
