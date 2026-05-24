@@ -223,8 +223,8 @@
     ];
     @endphp
 
-    {{-- FILA 1: Label "Promociones" + cards deslizables --}}
-    <div class="flex items-center gap-3 mb-2" style="overflow:hidden;">
+    {{-- FILA 1: Label "Promociones" + cards deslizables (SOLO DESKTOP) --}}
+    <div class="hidden md:flex items-center gap-3 mb-2" style="overflow:hidden;">
 
         {{-- Label fijo --}}
         <div class="flex items-center gap-1.5 flex-shrink-0">
@@ -280,8 +280,8 @@
         </div>
     </div>
 
-    {{-- FILA 2: Buscador + contador --}}
-    <div class="flex items-center gap-3">
+    {{-- FILA 2 DESKTOP: Buscador + contador --}}
+    <div class="hidden md:flex items-center gap-3">
         <div class="relative flex-1">
             <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -295,6 +295,89 @@
         </div>
         @php $totalProductos = collect($ofertaPorLista)->flatten(1)->count(); @endphp
         <span class="flex-shrink-0" style="font-size:12px; font-weight:600; color:#C4B5FD; white-space:nowrap;">{{ $totalProductos }} {{ $totalProductos === 1 ? 'producto' : 'productos' }}</span>
+    </div>
+
+    {{-- FILA MÓVIL: botón selector promo + buscador --}}
+    @php
+        $selLabel  = $filterLista === '' ? 'Todos' : ($listasInfo[(string)$filterLista]['nombre'] ?? 'Todos');
+        $selIsAll  = $filterLista === '';
+        $selIdx    = $selIsAll ? -1 : array_search((string)$filterLista, array_keys($listasInfo));
+        $selColMob = (!$selIsAll && $selIdx !== false) ? $cardColors[$selIdx % count($cardColors)] : null;
+    @endphp
+    <div class="flex md:hidden items-center gap-2 pt-0" x-data="{ promoOpen: false }">
+
+        {{-- Botón selector --}}
+        <div style="position:relative; flex-shrink:0;">
+            <button @click="promoOpen = !promoOpen"
+                    style="display:flex; align-items:center; gap:6px; padding:8px 10px; border-radius:10px;
+                           border:1.5px solid {{ $selIsAll ? '#E5E7EB' : ($selColMob['selBorder'] ?? '#7B6FE8') }};
+                           background:{{ $selIsAll ? '#fff' : ($selColMob['selCard'] ?? '#EEEDFE') }};
+                           cursor:pointer; -webkit-appearance:none; appearance:none;">
+                <div style="width:22px; height:22px; border-radius:6px; background:{{ $selIsAll ? '#F3F4F6' : ($selColMob['iconBg'] ?? '#7B6FE8') }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    @if ($selIsAll)
+                    <svg width="11" height="11" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                    @else
+                    <svg width="11" height="11" fill="none" stroke="#fff" viewBox="0 0 24 24">{!! $iconPaths[$selIdx % count($iconPaths)] !!}</svg>
+                    @endif
+                </div>
+                <span style="font-size:12px; font-weight:700; color:{{ $selIsAll ? '#374151' : ($selColMob['text'] ?? '#534AB7') }}; white-space:nowrap; max-width:90px; overflow:hidden; text-overflow:ellipsis;">{{ $selLabel }}</span>
+                <svg width="10" height="10" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" style="flex-shrink:0;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+
+            {{-- Dropdown --}}
+            <div x-show="promoOpen" x-cloak @click.away="promoOpen = false"
+                 style="position:absolute; top:calc(100% + 4px); left:0; background:#fff;
+                        border-radius:12px; box-shadow:0 8px 24px rgba(60,52,137,0.18);
+                        border:1px solid #EDE9FE; z-index:200; min-width:210px; overflow:hidden;">
+
+                {{-- Todos --}}
+                <button wire:click="$set('filterLista', '')" @click="promoOpen = false"
+                        style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
+                               background:{{ $selIsAll ? '#FFF7ED' : '#fff' }}; border:none; cursor:pointer;
+                               border-bottom:1px solid #F3F4F6; -webkit-appearance:none; appearance:none;">
+                    <div style="width:28px; height:28px; border-radius:8px; background:{{ $selIsAll ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="13" height="13" fill="none" stroke="{{ $selIsAll ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                    </div>
+                    <span style="font-size:13px; font-weight:700; color:{{ $selIsAll ? '#C2410C' : '#374151' }};">Todos</span>
+                </button>
+
+                @foreach ($listasInfo as $lid => $info)
+                @php
+                    $ci3  = $loop->index % count($cardColors);
+                    $col3 = $cardColors[$ci3];
+                    $sel3 = $filterLista === (string)$lid;
+                    $ico3 = $iconPaths[$ci3];
+                @endphp
+                <button wire:click="$set('filterLista', '{{ $lid }}')" @click="promoOpen = false"
+                        style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
+                               background:{{ $sel3 ? $col3['selCard'] : '#fff' }}; border:none; cursor:pointer;
+                               {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }} -webkit-appearance:none; appearance:none;">
+                    <div style="width:28px; height:28px; border-radius:8px; background:{{ $sel3 ? $col3['iconBg'] : $col3['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="13" height="13" fill="none" stroke="{{ $sel3 ? '#fff' : $col3['iconBg'] }}" viewBox="0 0 24 24">{!! $ico3 !!}</svg>
+                    </div>
+                    <div style="text-align:left; min-width:0;">
+                        <span style="font-size:13px; font-weight:700; color:{{ $sel3 ? $col3['text'] : '#374151' }}; display:block; white-space:nowrap;">{{ $info['nombre'] }}</span>
+                        <span style="font-size:11px; color:{{ $sel3 ? $col3['sub'] : '#9CA3AF' }};">{{ $info['code'] }}</span>
+                    </div>
+                </button>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Buscador --}}
+        <div class="relative flex-1">
+            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <input wire:model.live.debounce.300ms="searchProducto" type="text"
+                   placeholder="Buscar producto..."
+                   class="w-full pl-8 pr-3 py-2 focus:outline-none"
+                   style="background:#F8F7FF; border:2.5px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489;"
+                   onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
+                   onblur="this.style.borderColor='#C4B5FD'; this.style.background='#F8F7FF';">
+        </div>
     </div>
 
 </div>
