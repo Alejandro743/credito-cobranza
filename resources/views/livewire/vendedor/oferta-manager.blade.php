@@ -599,7 +599,7 @@
 
 {{-- ═════════════════════════════════════════════ STEP: RESUMEN ══════════ --}}
 @if ($step === 'resumen')
-<div style="background:#F5F4FC; min-height:100vh;">
+<div style="background:#fff; min-height:100vh;">
 <div class="max-w-2xl mx-auto px-4 pb-10 pt-4">
 
     {{-- Header: VERIFICACIÓN --}}
@@ -635,7 +635,7 @@
     </div>
 
     {{-- Cliente --}}
-    <div style="background:#EEEDFE; border:0.5px solid #CECBF6; border-radius:10px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px;">
+    <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px;">
         <div style="width:32px; height:32px; border-radius:8px; background:#fff; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
             <span style="font-size:14px; font-weight:700; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
         </div>
