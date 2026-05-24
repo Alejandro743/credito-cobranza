@@ -464,7 +464,7 @@
 
 {{-- Botón flotante carrito --}}
 @if (!$sinListasComunes && $cantidad > 0)
-<div style="position:fixed; bottom:24px; right:20px; z-index:50;">
+<div style="position:fixed; bottom:80px; right:20px; z-index:200;">
     <div style="display:flex; flex-direction:column; align-items:center; gap:4px;">
         <button wire:click="irResumen"
                 style="width:64px; height:64px; border-radius:50%; background:#F97316; border:none; cursor:pointer;
