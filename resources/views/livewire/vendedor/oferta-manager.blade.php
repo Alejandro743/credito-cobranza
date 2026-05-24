@@ -1150,42 +1150,98 @@
 
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:20px;">
 
+                {{-- Ciudad --}}
                 <div>
                     <label class="reg-label">Ciudad <span style="color:#F97316;">*</span></label>
-                    <div class="reg-select-wrap">
-                        <select wire:model.live="regCiudad" class="reg-input" style="padding-right:28px; cursor:pointer;">
-                            <option value="">Seleccionar</option>
+                    <div x-data="{ open: false }" @click.outside="open = false">
+                        <button type="button" @click="open = !open"
+                                class="reg-input"
+                                style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; text-align:left;"
+                                :style="open ? 'border-radius:10px 10px 0 0; border-bottom-color:#fff;' : ''">
+                            <span style="color:{{ $regCiudad ? '#3C3489' : '#9CA3AF' }}; font-size:13px;">{{ $regCiudad ? ucwords(strtolower($regCiudad)) : 'Seleccionar' }}</span>
+                            <svg :style="open ? 'transform:rotate(180deg)' : ''" style="transition:transform 0.15s; flex-shrink:0;" width="10" height="10" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div x-show="open" x-cloak
+                             style="background:#fff; border:1.5px solid #EDE9FE; border-top:none; border-radius:0 0 10px 10px; max-height:150px; overflow-y:auto;">
                             @foreach($ciudadesAll as $ciu)
-                            <option value="{{ $ciu->nombre }}">{{ $ciu->nombre }}</option>
+                            <button type="button"
+                                    @click="$wire.set('regCiudad', @js($ciu->nombre)); open = false"
+                                    style="width:100%; padding:8px 12px; text-align:left; font-size:13px; border:none; cursor:pointer; display:block; {{ $regCiudad === $ciu->nombre ? 'background:#F5F3FF; color:#7c3aed; font-weight:600;' : 'background:transparent; color:#374151;' }}"
+                                    onmouseover="this.style.background='#F5F3FF'"
+                                    onmouseout="this.style.background='{{ $regCiudad === $ciu->nombre ? '#F5F3FF' : 'transparent' }}'">
+                                {{ ucwords(strtolower($ciu->nombre)) }}
+                            </button>
                             @endforeach
-                        </select>
+                        </div>
                     </div>
                     @error('regCiudad')<p class="reg-err">{{ $message }}</p>@enderror
                 </div>
 
+                {{-- Provincia --}}
                 <div>
                     <label class="reg-label">Provincia <span style="color:#F97316;">*</span></label>
-                    <div class="reg-select-wrap">
-                        <select wire:model.live="regProvincia" class="reg-input" style="padding-right:28px; cursor:pointer;" @disabled(!$regCiudad)>
-                            <option value="">Seleccionar</option>
-                            @foreach($regProvincias as $prov)
-                            <option value="{{ $prov->nombre }}">{{ $prov->nombre }}</option>
-                            @endforeach
-                        </select>
+                    @if(!$regCiudad)
+                    <div class="reg-input" style="display:flex; align-items:center; justify-content:space-between; opacity:0.4; cursor:not-allowed;">
+                        <span style="color:#9CA3AF; font-size:13px;">Seleccionar</span>
+                        <svg width="10" height="10" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                     </div>
+                    @else
+                    <div x-data="{ open: false }" @click.outside="open = false">
+                        <button type="button" @click="open = !open"
+                                class="reg-input"
+                                style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; text-align:left;"
+                                :style="open ? 'border-radius:10px 10px 0 0; border-bottom-color:#fff;' : ''">
+                            <span style="color:{{ $regProvincia ? '#3C3489' : '#9CA3AF' }}; font-size:13px;">{{ $regProvincia ? ucwords(strtolower($regProvincia)) : 'Seleccionar' }}</span>
+                            <svg :style="open ? 'transform:rotate(180deg)' : ''" style="transition:transform 0.15s; flex-shrink:0;" width="10" height="10" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div x-show="open" x-cloak
+                             style="background:#fff; border:1.5px solid #EDE9FE; border-top:none; border-radius:0 0 10px 10px; max-height:150px; overflow-y:auto;">
+                            @foreach($regProvincias as $prov)
+                            <button type="button"
+                                    @click="$wire.set('regProvincia', @js($prov->nombre)); open = false"
+                                    style="width:100%; padding:8px 12px; text-align:left; font-size:13px; border:none; cursor:pointer; display:block; {{ $regProvincia === $prov->nombre ? 'background:#F5F3FF; color:#7c3aed; font-weight:600;' : 'background:transparent; color:#374151;' }}"
+                                    onmouseover="this.style.background='#F5F3FF'"
+                                    onmouseout="this.style.background='{{ $regProvincia === $prov->nombre ? '#F5F3FF' : 'transparent' }}'">
+                                {{ ucwords(strtolower($prov->nombre)) }}
+                            </button>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                     @error('regProvincia')<p class="reg-err">{{ $message }}</p>@enderror
                 </div>
 
+                {{-- Municipio --}}
                 <div>
                     <label class="reg-label">Municipio <span style="color:#F97316;">*</span></label>
-                    <div class="reg-select-wrap">
-                        <select wire:model.live="regMunicipio" class="reg-input" style="padding-right:28px; cursor:pointer;" @disabled(!$regProvincia)>
-                            <option value="">Seleccionar</option>
-                            @foreach($regMunicipios as $mun)
-                            <option value="{{ $mun->nombre }}">{{ $mun->nombre }}</option>
-                            @endforeach
-                        </select>
+                    @if(!$regProvincia)
+                    <div class="reg-input" style="display:flex; align-items:center; justify-content:space-between; opacity:0.4; cursor:not-allowed;">
+                        <span style="color:#9CA3AF; font-size:13px;">Seleccionar</span>
+                        <svg width="10" height="10" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                     </div>
+                    @else
+                    <div x-data="{ open: false }" @click.outside="open = false">
+                        <button type="button" @click="open = !open"
+                                class="reg-input"
+                                style="display:flex; align-items:center; justify-content:space-between; cursor:pointer; text-align:left;"
+                                :style="open ? 'border-radius:10px 10px 0 0; border-bottom-color:#fff;' : ''">
+                            <span style="color:{{ $regMunicipio ? '#3C3489' : '#9CA3AF' }}; font-size:13px;">{{ $regMunicipio ? ucwords(strtolower($regMunicipio)) : 'Seleccionar' }}</span>
+                            <svg :style="open ? 'transform:rotate(180deg)' : ''" style="transition:transform 0.15s; flex-shrink:0;" width="10" height="10" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
+                        </button>
+                        <div x-show="open" x-cloak
+                             style="background:#fff; border:1.5px solid #EDE9FE; border-top:none; border-radius:0 0 10px 10px; max-height:150px; overflow-y:auto;">
+                            @foreach($regMunicipios as $mun)
+                            <button type="button"
+                                    @click="$wire.set('regMunicipio', @js($mun->nombre)); open = false"
+                                    style="width:100%; padding:8px 12px; text-align:left; font-size:13px; border:none; cursor:pointer; display:block; {{ $regMunicipio === $mun->nombre ? 'background:#F5F3FF; color:#7c3aed; font-weight:600;' : 'background:transparent; color:#374151;' }}"
+                                    onmouseover="this.style.background='#F5F3FF'"
+                                    onmouseout="this.style.background='{{ $regMunicipio === $mun->nombre ? '#F5F3FF' : 'transparent' }}'">
+                                {{ ucwords(strtolower($mun->nombre)) }}
+                            </button>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
                     @error('regMunicipio')<p class="reg-err">{{ $message }}</p>@enderror
                 </div>
 
