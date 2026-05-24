@@ -1101,18 +1101,11 @@
 
                 <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px;">
 
-                    <div>
+                    <div style="grid-column:span 2;">
                         <label class="reg-label">CI <span style="color:#F97316;">*</span></label>
                         <input wire:model="regCi" type="text" placeholder="1234567"
                                class="reg-input" style="font-family:monospace;">
                         @error('regCi')<p class="reg-err">{{ $message }}</p>@enderror
-                    </div>
-
-                    <div>
-                        <label class="reg-label">Teléfono <span style="color:#F97316;">*</span></label>
-                        <input wire:model="regTelefono" type="text" placeholder="70012345"
-                               class="reg-input">
-                        @error('regTelefono')<p class="reg-err">{{ $message }}</p>@enderror
                     </div>
 
                     <div>
@@ -1135,6 +1128,13 @@
                     </div>
 
                     <div>
+                        <label class="reg-label">Teléfono <span style="color:#F97316;">*</span></label>
+                        <input wire:model="regTelefono" type="text" placeholder="70012345"
+                               class="reg-input">
+                        @error('regTelefono')<p class="reg-err">{{ $message }}</p>@enderror
+                    </div>
+
+                    <div style="grid-column:span 2;">
                         <label class="reg-label">Correo <span style="color:#D1D5DB; font-weight:400; text-transform:none; letter-spacing:0;">· opcional</span></label>
                         <input wire:model="regCorreo" type="email" placeholder="—" class="reg-input">
                         @error('regCorreo')<p class="reg-err">{{ $message }}</p>@enderror
@@ -1199,10 +1199,10 @@
                         @error('regMunicipio')<p class="reg-err">{{ $message }}</p>@enderror
                     </div>
 
-                    {{-- Dirección (ancho completo) --}}
+                    {{-- Observación (ancho completo) --}}
                     <div style="grid-column:span 2;">
-                        <label class="reg-label">Dirección <span style="color:#F97316;">*</span></label>
-                        <input wire:model="regDireccion" type="text" placeholder="Calle y número"
+                        <label class="reg-label">Observación <span style="color:#D1D5DB; font-weight:400; text-transform:none; letter-spacing:0;">· opcional</span></label>
+                        <input wire:model="regDireccion" type="text" placeholder="Referencia, notas..."
                                class="reg-input">
                         @error('regDireccion')<p class="reg-err">{{ $message }}</p>@enderror
                     </div>
