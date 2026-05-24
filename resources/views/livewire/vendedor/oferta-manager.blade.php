@@ -347,6 +347,10 @@
         </div>
 
         {{-- Grid de cards --}}
+        <style>
+        @media (max-width:767px){ .card-foto,.card-body-desk{ display:none !important; } }
+        @media (min-width:768px){ .card-body-mob{ display:none !important; } }
+        </style>
         <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px;">
             @foreach ($productos as $p)
             @php
@@ -360,8 +364,8 @@
                  style="background:#fff; border:none; border-radius:12px; overflow:hidden; box-shadow:2px 6px 20px rgba(0,0,0,0.22);"
                  wire:key="prod-{{ $pid }}">
 
-                {{-- FOTO --}}
-                <div class="relative flex-shrink-0"
+                {{-- FOTO (solo escritorio) --}}
+                <div class="card-foto relative flex-shrink-0"
                      style="width:100%; height:160px; overflow:hidden; background:#ffffff; border-bottom:0.5px solid #e5e7eb;">
                     @if ($p['image'])
                     <img src="{{ $p['image'] }}" alt="{{ $p['nombre'] }}"
@@ -382,10 +386,40 @@
                     @endif
                 </div>
 
-                {{-- CUERPO --}}
-                <div style="padding:10px 12px 8px; display:flex; flex-direction:column; gap:6px; flex:1;">
+                {{-- CUERPO MÓVIL --}}
+                <div class="card-body-mob" style="padding:10px 12px 6px; display:flex; flex-direction:column; gap:6px; flex:1;">
+                    {{-- Línea 1: código — descripción --}}
+                    <div style="display:flex; align-items:baseline; gap:4px; min-width:0; overflow:hidden;">
+                        <span style="font-size:11px; font-weight:700; color:#534AB7; flex-shrink:0;">{{ $p['code'] ?? '' }}</span>
+                        <span style="font-size:10px; color:#C4B5FD; flex-shrink:0;">—</span>
+                        <span style="font-size:11px; font-weight:600; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $p['nombre'] }}</span>
+                    </div>
+                    {{-- Línea 2: Precio | Puntos (misma fila) --}}
+                    <div style="display:flex; gap:6px;">
+                        <div style="flex:1; background:#F8F7FF; border-radius:8px; padding:6px 8px;">
+                            <span style="font-size:9px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:1px;">Precio Bs</span>
+                            <span style="font-size:14px; font-weight:700; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
+                        </div>
+                        <div style="flex:1; background:#F8F7FF; border-radius:8px; padding:6px 8px;">
+                            <span style="font-size:9px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:1px;">Puntos</span>
+                            <span style="font-size:14px; font-weight:700; color:#0F6E56;">{{ $p['puntos'] }}</span>
+                        </div>
+                    </div>
+                    {{-- Línea 3: Total Bs | Total Puntos (misma fila) --}}
+                    <div style="display:flex; gap:6px;">
+                        <div style="flex:1; background:#EEEDFE; border-radius:8px; padding:6px 8px;">
+                            <span style="font-size:9px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:1px;">Total Bs</span>
+                            <span x-text="(precio * n).toFixed(2)" style="font-size:14px; font-weight:700; color:#3C3489;">{{ number_format($p['precio'] * $qty, 2) }}</span>
+                        </div>
+                        <div style="flex:1; background:#EEEDFE; border-radius:8px; padding:6px 8px;">
+                            <span style="font-size:9px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:1px;">Total Pts</span>
+                            <span x-text="'+' + (puntos * n) + ' pts'" style="font-size:14px; font-weight:700; color:#0F6E56;">+{{ $p['puntos'] * $qty }} pts</span>
+                        </div>
+                    </div>
+                </div>
 
-                    {{-- Recuadro 1: Info del producto --}}
+                {{-- CUERPO ESCRITORIO --}}
+                <div class="card-body-desk" style="padding:10px 12px 8px; display:flex; flex-direction:column; gap:6px; flex:1;">
                     <div style="background:#F8F7FF; border-radius:8px; padding:8px 10px; display:flex; flex-direction:column; gap:4px;">
                         <span style="font-size:11px; font-weight:700; color:#534AB7;">{{ $p['code'] ?? '' }}</span>
                         <span style="font-size:11px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ $p['nombre'] }}">{{ $p['nombre'] }}</span>
@@ -398,8 +432,6 @@
                             <span style="font-size:11px; font-weight:500; color:#0F6E56;">{{ $p['puntos'] }}</span>
                         </div>
                     </div>
-
-                    {{-- Recuadro 2: Totalizados en tiempo real (Alpine) --}}
                     <div style="background:#EEEDFE; border-radius:8px; padding:8px 10px; display:flex; flex-direction:column; gap:3px;">
                         <div style="display:flex; justify-content:space-between; align-items:baseline; gap:6px;">
                             <span style="font-size:11px; font-weight:500; color:#534AB7;">Total Bs:</span>
@@ -410,7 +442,6 @@
                             <span x-text="'+' + (puntos * n) + ' pts'" style="font-size:13px; font-weight:500; color:#0F6E56;">+{{ $p['puntos'] * $qty }} pts</span>
                         </div>
                     </div>
-
                 </div>
 
                 {{-- PIE --}}
