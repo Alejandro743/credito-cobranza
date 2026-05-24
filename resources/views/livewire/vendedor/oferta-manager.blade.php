@@ -101,14 +101,12 @@
 
         {{-- BUSCAR --}}
         <button @click="showSearch = true"
-                class="flex items-center gap-0 active:scale-95 flex-shrink-0"
-                style="background:#F0EEFF; border:1.5px solid #DDD8FB; border-radius:50px; padding:6px 20px 6px 6px; cursor:pointer; box-shadow:0 1px 4px rgba(124,58,237,0.10);">
-            <div style="width:34px; height:34px; border-radius:50%; background:#F97316; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-right:10px; box-shadow:0 2px 8px rgba(249,115,22,0.30);">
-                <svg width="15" height="15" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-            </div>
-            <span style="font-size:13px; font-weight:600; color:#534AB7; white-space:nowrap;">Buscar cliente</span>
+                class="flex items-center gap-2 active:scale-95 flex-shrink-0"
+                style="background:#F97316; border-radius:50px; padding:0 22px; cursor:pointer; box-shadow:0 2px 10px rgba(249,115,22,0.35);">
+            <svg width="15" height="15" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24" style="flex-shrink:0;">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            </svg>
+            <span style="font-size:13px; font-weight:600; color:#fff; white-space:nowrap;">Buscar cliente</span>
         </button>
 
         {{-- CLIENTE --}}
