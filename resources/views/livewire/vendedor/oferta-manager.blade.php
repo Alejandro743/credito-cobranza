@@ -393,6 +393,96 @@
 
 </div>{{-- /sticky header --}}
 
+{{-- ── DOCUMENTACIÓN DEL PLAN (solo si hay cliente) ─────────────────────── --}}
+@if ($step === 'oferta' && $clienteId)
+<div style="padding:10px 12px 12px; background:#fff; border-bottom:1px solid #EDE9FE;">
+    <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+        <svg width="11" height="11" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <span style="font-size:9px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:0.06em;">Documentación del Plan</span>
+        <div style="flex:1; height:1px; background:#C4B5FD;"></div>
+    </div>
+    <div class="doc-grid" style="display:grid; grid-template-columns:repeat(5,1fr); gap:6px;">
+        {{-- 1. Anverso CI --}}
+        <label style="cursor:pointer;">
+            <div style="{{ $docAnversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#FAFAFE;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:70px; box-sizing:border-box;">
+                <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAnversoCi ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
+                    @if($docAnversoCi)
+                    <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    @else
+                    <svg style="width:13px;height:13px;" fill="none" stroke="#534AB7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/></svg>
+                    @endif
+                </div>
+                <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:{{ $docAnversoCi ? '#0F6E56' : '#534AB7' }};">Anverso CI</span>
+                <span style="font-size:8px; color:{{ $docAnversoCi ? '#0F6E56' : '#AFA9EC' }};">{{ $docAnversoCi ? 'OK' : 'JPG/PDF' }}</span>
+            </div>
+            <input type="file" wire:model="docAnversoCi" accept="image/*,application/pdf" class="hidden">
+        </label>
+        {{-- 2. Reverso CI --}}
+        <label style="cursor:pointer;">
+            <div style="{{ $docReversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#FAFAFE;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:70px; box-sizing:border-box;">
+                <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docReversoCi ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
+                    @if($docReversoCi)
+                    <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    @else
+                    <svg style="width:13px;height:13px;" fill="none" stroke="#534AB7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/></svg>
+                    @endif
+                </div>
+                <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:{{ $docReversoCi ? '#0F6E56' : '#534AB7' }};">Reverso CI</span>
+                <span style="font-size:8px; color:{{ $docReversoCi ? '#0F6E56' : '#AFA9EC' }};">{{ $docReversoCi ? 'OK' : 'JPG/PDF' }}</span>
+            </div>
+            <input type="file" wire:model="docReversoCi" accept="image/*,application/pdf" class="hidden">
+        </label>
+        {{-- 3. Anverso Documento --}}
+        <label style="cursor:pointer;">
+            <div style="{{ $docAnversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#FAFAFE;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:70px; box-sizing:border-box;">
+                <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAnversoDoc ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
+                    @if($docAnversoDoc)
+                    <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    @else
+                    <svg style="width:13px;height:13px;" fill="none" stroke="#534AB7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                    @endif
+                </div>
+                <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:{{ $docAnversoDoc ? '#0F6E56' : '#534AB7' }};">Anverso Doc</span>
+                <span style="font-size:8px; color:{{ $docAnversoDoc ? '#0F6E56' : '#AFA9EC' }};">{{ $docAnversoDoc ? 'OK' : 'JPG/PDF' }}</span>
+            </div>
+            <input type="file" wire:model="docAnversoDoc" accept="image/*,application/pdf" class="hidden">
+        </label>
+        {{-- 4. Reverso Documento --}}
+        <label style="cursor:pointer;">
+            <div style="{{ $docReversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#FAFAFE;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:70px; box-sizing:border-box;">
+                <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docReversoDoc ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
+                    @if($docReversoDoc)
+                    <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    @else
+                    <svg style="width:13px;height:13px;" fill="none" stroke="#534AB7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/></svg>
+                    @endif
+                </div>
+                <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:{{ $docReversoDoc ? '#0F6E56' : '#534AB7' }};">Reverso Doc</span>
+                <span style="font-size:8px; color:{{ $docReversoDoc ? '#0F6E56' : '#AFA9EC' }};">{{ $docReversoDoc ? 'OK' : 'JPG/PDF' }}</span>
+            </div>
+            <input type="file" wire:model="docReversoDoc" accept="image/*,application/pdf" class="hidden">
+        </label>
+        {{-- 5. Aviso Luz --}}
+        <label style="cursor:pointer;">
+            <div style="{{ $docAvisoLuz ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#FAFAFE;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:70px; box-sizing:border-box;">
+                <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAvisoLuz ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
+                    @if($docAvisoLuz)
+                    <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+                    @else
+                    <svg style="width:13px;height:13px;" fill="none" stroke="#534AB7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                    @endif
+                </div>
+                <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:{{ $docAvisoLuz ? '#0F6E56' : '#534AB7' }};">Aviso Luz</span>
+                <span style="font-size:8px; color:{{ $docAvisoLuz ? '#0F6E56' : '#AFA9EC' }};">{{ $docAvisoLuz ? 'OK' : 'JPG/PDF' }}</span>
+            </div>
+            <input type="file" wire:model="docAvisoLuz" accept="image/*,application/pdf" class="hidden">
+        </label>
+    </div>
+</div>
+@endif
+
 {{-- ── STEP OFERTA ──────────────────────────────────────────────────────── --}}
 @if ($step === 'oferta')
 
@@ -811,19 +901,7 @@
         </div>
     </div>
 
-    {{-- Separador Documentación --}}
-    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-        <svg width="13" height="13" fill="none" stroke="#7B6FE8" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-        </svg>
-        <span style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Documentación del Plan</span>
-        <div style="flex:1; height:1px; background:#CECBF6;"></div>
-    </div>
-
-    {{-- Card Documentación --}}
-    <div style="background:#fff; border-radius:12px; padding:12px; box-shadow:2px 6px 20px rgba(60,52,137,0.10); margin-bottom:14px;">
-        <div class="doc-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
-        <style>@media(min-width:480px){.doc-grid{grid-template-columns:repeat(5,1fr)!important;}}</style>
+    @if(false){{-- doc section moved to step oferta --}}
 
             {{-- 1. Anverso CI --}}
             <label style="cursor:pointer;">
@@ -907,6 +985,7 @@
 
         </div>
     </div>
+    @endif{{-- /doc section moved --}}
 
     {{-- Separador Dirección de Entrega --}}
     <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
