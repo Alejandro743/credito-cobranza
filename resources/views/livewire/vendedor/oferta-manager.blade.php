@@ -1,5 +1,5 @@
-<div x-data="{ toastShow: false, toastMsg: '', showSearch: false, showProductModal: false }"
-     x-effect="document.body.style.overflow = (showSearch || showProductModal) ? 'hidden' : ''; if (!showSearch) $wire.set('searchCliente', '')"
+<div x-data="{ toastShow: false, toastMsg: '', showSearch: false }"
+     x-effect="document.body.style.overflow = showSearch ? 'hidden' : ''; if (!showSearch) $wire.set('searchCliente', '')"
      x-on:producto-agregado.window="toastMsg = $event.detail.nombre; toastShow = true; setTimeout(() => toastShow = false, 2200)">
 
 {{-- Toast --}}
@@ -161,18 +161,6 @@
         </div>
 
     </div>
-
-    {{-- Botón Agregar Producto (mobile, solo si hay cliente y hay productos) --}}
-    @if ($clienteId && !$sinListasComunes && $step === 'oferta')
-    <button @click="showProductModal = true"
-            style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:10px; border-radius:10px; background:#7B6FE8; border:none; cursor:pointer; box-shadow:0 2px 10px rgba(123,111,232,0.35); clip-path:inset(0 round 10px);">
-        <svg width="16" height="16" fill="none" stroke="#fff" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-        </svg>
-        <span style="font-size:13px; font-weight:700; color:#fff;">Agregar Producto</span>
-    </button>
-    @endif
-
 </div>
 
 {{-- ── FILTROS + BUSCADOR (solo en step oferta con cliente) ──────────────── --}}
@@ -559,135 +547,6 @@
 
 @endif {{-- sinListasComunes --}}
 @endif {{-- step oferta --}}
-
-{{-- ══════════════════════ MODAL AGREGAR PRODUCTO (MOBILE) ══════════════ --}}
-@if ($clienteId && !$sinListasComunes)
-<div x-show="showProductModal" x-cloak
-     class="md:hidden"
-     style="position:fixed; inset:0; z-index:500; display:flex; flex-direction:column; background:#fff;"
-     x-transition:enter="transition ease-out duration-200"
-     x-transition:enter-start="opacity-0 translateY(100%)"
-     x-transition:enter-end="opacity-100 translateY(0)"
-     x-transition:leave="transition ease-in duration-150"
-     x-transition:leave-end="opacity-0 translateY(100%)">
-
-    {{-- Header --}}
-    <div style="display:flex; align-items:center; gap:10px; padding:14px 16px; border-bottom:1px solid #EDE9FE; flex-shrink:0;">
-        <button @click="showProductModal = false"
-                style="width:36px; height:36px; border-radius:10px; background:#F3F4F6; border:none; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; clip-path:inset(0 round 10px);">
-            <svg width="16" height="16" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
-        </button>
-        <div style="flex:1; min-width:0;">
-            <span style="font-size:16px; font-weight:800; color:#3C3489; display:block;">Agregar Producto</span>
-            <span style="font-size:11px; color:#9B93E0;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
-        </div>
-        @if ($cantidad > 0)
-        <div style="background:#F97316; border-radius:10px; padding:6px 12px; display:flex; align-items:center; gap:5px; flex-shrink:0;">
-            <svg width="14" height="14" fill="none" stroke="#fff" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </svg>
-            <span style="font-size:12px; font-weight:800; color:#fff;">{{ $cantidad }}</span>
-        </div>
-        @endif
-    </div>
-
-    {{-- Buscador --}}
-    <div style="padding:10px 16px; flex-shrink:0; border-bottom:1px solid #F3F4F6; background:#fff;">
-        <div style="position:relative;">
-            <svg style="position:absolute; left:12px; top:50%; transform:translateY(-50%);" width="14" height="14" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <input wire:model.live.debounce.300ms="searchProducto" type="text"
-                   placeholder="Buscar producto..."
-                   style="width:100%; padding:10px 12px 10px 36px; border-radius:12px; border:2px solid #C4B5FD; background:#F8F7FF; font-size:13px; color:#3C3489; outline:none; box-sizing:border-box; -webkit-appearance:none;"
-                   onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
-                   onblur="this.style.borderColor='#C4B5FD'; this.style.background='#F8F7FF';">
-        </div>
-    </div>
-
-    {{-- Lista productos --}}
-    <div style="flex:1; overflow-y:auto; padding:12px 16px; display:flex; flex-direction:column; gap:10px;">
-        @forelse (collect($ofertaPorLista)->flatten(1) as $p)
-        @php
-            $pid2      = (string)$p['product_id'];
-            $qty2      = isset($carrito[$pid2]) ? $carrito[$pid2]['cantidad'] : 0;
-        @endphp
-        <div x-data="{ n: {{ $qty2 }}, maxStock: {{ $p['stock_actual'] ?? 999 }} }"
-             style="background:#fff; border-radius:14px; box-shadow:2px 4px 16px rgba(60,52,137,0.09); overflow:hidden;"
-             wire:key="modal-prod-{{ $pid2 }}">
-            {{-- Info del producto --}}
-            <div style="display:flex; gap:10px; padding:10px 12px; align-items:center;">
-                <div style="width:58px; height:58px; border-radius:10px; border:1px solid #EDE9FE; background:#FAFAFE; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center; position:relative;">
-                    @if ($qty2 > 0)
-                    <span style="position:absolute; top:3px; left:3px; width:18px; height:18px; border-radius:50%; background:#f97316; color:#fff; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; z-index:1;">{{ $qty2 }}</span>
-                    @endif
-                    @if ($p['image'])
-                    <img src="{{ $p['image'] }}" alt="{{ $p['nombre'] }}" style="width:100%; height:100%; object-fit:contain;">
-                    @else
-                    <svg width="24" height="24" fill="none" stroke="#CECBF6" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    @endif
-                </div>
-                <div style="flex:1; min-width:0;">
-                    <span style="font-size:13px; font-weight:800; color:#3C3489; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase;">{{ $p['nombre'] }}</span>
-                    <div style="display:flex; align-items:center; gap:5px; margin-top:2px; flex-wrap:wrap;">
-                        <span style="font-size:9px; font-weight:700; color:#7B6FE8; background:#EEEDFE; border-radius:4px; padding:1px 5px; text-transform:uppercase; letter-spacing:0.06em; white-space:nowrap;">{{ $p['code'] ?? '' }}</span>
-                        <span style="font-size:12px; font-weight:700; color:#7c3aed; white-space:nowrap;">Bs {{ number_format($p['precio'], 2) }}</span>
-                        @if ($p['puntos'] > 0)
-                        <span style="font-size:10px; font-weight:700; color:#0F6E56; background:#E1F5EE; border-radius:99px; padding:1px 6px; white-space:nowrap;">+{{ $p['puntos'] }} pts</span>
-                        @endif
-                    </div>
-                </div>
-            </div>
-            {{-- Controles --}}
-            <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#F8F7FF; border-top:1px solid #EDE9FE;">
-                <button @click="n > 0 ? n-- : null" :style="n === 0 ? 'opacity:0.3; cursor:default;' : 'cursor:pointer;'"
-                        style="width:32px; height:32px; border-radius:50%; background:#fff; border:1.5px solid #CECBF6; color:#534AB7; font-size:18px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; line-height:1;">−</button>
-                <span x-text="n" style="font-size:15px; font-weight:800; color:#3C3489; min-width:22px; text-align:center; flex-shrink:0;">{{ $qty2 }}</span>
-                <button @click="n < maxStock ? n++ : null"
-                        style="width:32px; height:32px; border-radius:50%; background:#fff; border:1.5px solid #CECBF6; color:#534AB7; font-size:18px; font-weight:700; display:flex; align-items:center; justify-content:center; cursor:pointer; flex-shrink:0; line-height:1;">+</button>
-                <div style="flex:1;"></div>
-                <button @click="if(n === 0) n = 1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n = 0)"
-                        style="background:#7B6FE8; color:#fff; border:none; border-radius:10px; padding:8px 16px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px; box-shadow:0 2px 8px rgba(123,111,232,0.35); clip-path:inset(0 round 10px); flex-shrink:0;">
-                    <svg width="13" height="13" fill="none" stroke="#fff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                    Agregar
-                </button>
-                @if ($qty2 > 0)
-                <button wire:click="quitar({{ $p['product_id'] }})"
-                        style="width:34px; height:34px; border-radius:9px; background:#FEF2F2; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; clip-path:inset(0 round 9px);">
-                    <svg width="14" height="14" fill="none" stroke="#ef4444" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                </button>
-                @endif
-            </div>
-        </div>
-        @empty
-        <div style="text-align:center; padding:40px 20px; color:#9B93E0;">
-            <svg width="40" height="40" fill="none" stroke="#CECBF6" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 10px; display:block;"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <p style="font-size:13px; font-weight:600; margin:0;">No hay productos disponibles</p>
-        </div>
-        @endforelse
-    </div>
-
-    {{-- Footer: Listo --}}
-    <div style="padding:12px 16px; border-top:1px solid #EDE9FE; flex-shrink:0; background:#fff;">
-        @if ($cantidad > 0)
-        <button @click="showProductModal = false"
-                style="width:100%; background:#7B6FE8; color:#fff; border:none; border-radius:12px; padding:14px; font-size:14px; font-weight:800; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; clip-path:inset(0 round 12px); box-shadow:0 4px 14px rgba(123,111,232,0.40); -webkit-appearance:none;">
-            <svg width="16" height="16" fill="none" stroke="#fff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-            Listo · {{ $cantidad }} {{ $cantidad === 1 ? 'producto' : 'productos' }} agregados
-        </button>
-        @else
-        <button @click="showProductModal = false"
-                style="width:100%; background:#F3F4F6; color:#6B7280; border:none; border-radius:12px; padding:14px; font-size:14px; font-weight:700; cursor:pointer; clip-path:inset(0 round 12px); -webkit-appearance:none;">
-            Cerrar
-        </button>
-        @endif
-    </div>
-
-</div>
-@endif {{-- modal agregar producto --}}
-
 @endif {{-- step cliente || oferta --}}
 
 
