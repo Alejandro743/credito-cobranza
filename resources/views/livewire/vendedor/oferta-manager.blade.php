@@ -95,6 +95,9 @@
 </div>
 @endif {{-- /compact search bar --}}
 
+{{-- ════════════ STICKY HEADER (stats + filtros) ════════════ --}}
+<div style="position:sticky; top:0; z-index:100; background:#fff;">
+
 {{-- ── STATS BAR — DESKTOP ──────────────────────────────────────────────── --}}
 <div class="hidden md:block bg-white border-b border-gray-100 px-4 py-2.5">
     <div class="flex gap-3 items-stretch" style="min-height:52px;">
@@ -336,6 +339,7 @@
 </div>
 @endif
 
+</div>{{-- /sticky header --}}
 
 {{-- ── STEP OFERTA ──────────────────────────────────────────────────────── --}}
 @if ($step === 'oferta')
