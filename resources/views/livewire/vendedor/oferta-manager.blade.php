@@ -795,33 +795,31 @@
         <div style="flex:1; height:1px; background:#CECBF6;"></div>
     </div>
 
-    {{-- Card Cliente --}}
-    <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:12px 14px; margin-bottom:14px; box-shadow:0 2px 12px rgba(123,111,232,0.12); display:flex; align-items:center; gap:12px;">
-        <div style="width:40px; height:40px; border-radius:10px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <span style="font-size:17px; font-weight:800; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
-        </div>
-        <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;">
-            @if ($clienteCI)
-            <div style="display:flex; align-items:baseline; gap:6px;">
-                <span style="font-size:10px; font-weight:700; color:#9B93E0; white-space:nowrap; text-transform:uppercase; letter-spacing:0.06em;">CI</span>
-                <span style="font-size:13px; font-weight:700; color:#534AB7;">{{ $clienteCI }}</span>
+    {{-- Card Cliente + Documentación --}}
+    <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:12px 14px; margin-bottom:14px; box-shadow:0 2px 12px rgba(123,111,232,0.12);">
+        {{-- Fila avatar + datos --}}
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div style="width:40px; height:40px; border-radius:10px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:17px; font-weight:800; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
             </div>
-            @endif
-            <span style="font-size:13px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block;">{{ $clienteNombre }}</span>
+            <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;">
+                @if ($clienteCI)
+                <div style="display:flex; align-items:baseline; gap:6px;">
+                    <span style="font-size:10px; font-weight:700; color:#9B93E0; white-space:nowrap; text-transform:uppercase; letter-spacing:0.06em;">CI</span>
+                    <span style="font-size:13px; font-weight:700; color:#534AB7;">{{ $clienteCI }}</span>
+                </div>
+                @endif
+                <span style="font-size:13px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block;">{{ $clienteNombre }}</span>
+            </div>
         </div>
-    </div>
-
-    {{-- Separador Documentación --}}
-    <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-        <svg width="13" height="13" fill="none" stroke="#7B6FE8" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-        </svg>
-        <span style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Documentación del Plan</span>
-        <div style="flex:1; height:1px; background:#CECBF6;"></div>
-    </div>
-
-    {{-- Card Documentación --}}
-    <div style="background:#fff; border-radius:12px; padding:12px; box-shadow:2px 6px 20px rgba(60,52,137,0.10); margin-bottom:14px;">
+        {{-- Separador interno Documentación --}}
+        <div style="display:flex; align-items:center; gap:6px; margin:12px 0 10px;">
+            <svg width="11" height="11" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+            <span style="font-size:10px; font-weight:800; color:#7B6FE8; white-space:nowrap; text-transform:uppercase; letter-spacing:0.06em;">Documentación del Plan</span>
+            <div style="flex:1; height:1px; background:#EDE9FE;"></div>
+        </div>
         <div class="doc-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
         <style>@media(min-width:480px){.doc-grid{grid-template-columns:repeat(5,1fr)!important;}}</style>
 
