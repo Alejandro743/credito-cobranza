@@ -98,8 +98,7 @@
 @if ($step === 'oferta')
 <div style="padding:12px 12px 0;">
     <div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:14px; padding:16px 18px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
-        <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin:0 0 2px; text-align:center;">CARGAR PRODUCTOS</h2>
-        <p style="font-size:11px; color:rgba(255,255,255,0.75); margin:0; text-align:center;">Seleccioná los artículos para el pedido</p>
+        <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin:0; text-align:center;">CARGAR PRODUCTOS</h2>
     </div>
 </div>
 @endif
@@ -434,7 +433,7 @@
             <div class="flex flex-col w-full"
                  x-data="{ n: 0, precio: @js((float)$p['precio']), puntos: @js((int)$p['puntos']), maxStock: @js((int)$p['stock']) }"
                  x-on:carrito-vaciado.window="n = 0"
-                 style="background:#fff; border:none; border-radius:12px; overflow:hidden; box-shadow:2px 6px 20px rgba(0,0,0,0.22);"
+                 style="background:#fff; border:1.5px solid #C4B5FD; border-radius:12px; overflow:hidden; box-shadow:2px 6px 20px rgba(0,0,0,0.22);"
                  wire:key="prod-{{ $pid }}">
 
                 {{-- FOTO (solo escritorio) --}}
@@ -462,7 +461,7 @@
                 {{-- CUERPO MÓVIL --}}
                 <div class="card-body-mob" style="padding:10px 12px 6px; display:flex; flex-direction:column; gap:0; flex:1;">
                     {{-- Nombre + código + Precio/Pts --}}
-                    <div style="background:transparent; border:1.5px solid #C4B5FD; border-radius:8px; padding:7px 10px; min-width:0;">
+                    <div style="background:transparent; border-radius:8px; padding:7px 10px; min-width:0;">
                         {{-- Fila nombre --}}
                         <div style="display:flex; align-items:center; gap:6px; min-width:0;">
                             @if ($qty > 0)
