@@ -1445,17 +1445,10 @@
                         </div>
                     </div>
 
-                    {{-- Pie: − n + [Agregar icono+código-nombre] [trash rojo] --}}
+                    {{-- Pie: [Agregar flex:1] [trash] [− n +] a la derecha --}}
                     <div style="display:flex; align-items:center; gap:6px;">
-                        <button @click="n > 0 ? n-- : null"
-                                :style="{ opacity: n===0 ? '0.35' : '1', cursor: n===0 ? 'default' : 'pointer' }"
-                                style="width:30px; height:30px; border-radius:50%; background:#E5E7EB; border:none; color:#6B7280; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">−</button>
-                        <span x-text="n" style="font-size:15px; font-weight:800; color:#3C3489; min-width:22px; text-align:center; flex-shrink:0;">0</span>
-                        <button @click="n < maxStock ? n++ : null"
-                                :style="{ opacity: n>=maxStock ? '0.35' : '1', cursor: n>=maxStock ? 'not-allowed' : 'pointer' }"
-                                style="width:30px; height:30px; border-radius:50%; background:#E5E7EB; border:none; color:#6B7280; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">+</button>
                         <button @click="if(n===0) n=1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n=0)"
-                                style="background:#f97316; color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                style="flex:1; background:#f97316; color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px;">
                             <svg style="width:14px; height:14px; flex-shrink:0;" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                             Agregar
                         </button>
@@ -1465,6 +1458,13 @@
                             <svg style="width:13px; height:13px;" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
                         @endif
+                        <button @click="n > 0 ? n-- : null"
+                                :style="{ opacity: n===0 ? '0.35' : '1', cursor: n===0 ? 'default' : 'pointer' }"
+                                style="width:30px; height:30px; border-radius:50%; background:#E5E7EB; border:none; color:#6B7280; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">−</button>
+                        <span x-text="n" style="font-size:15px; font-weight:800; color:#3C3489; min-width:20px; text-align:center; flex-shrink:0;">0</span>
+                        <button @click="n < maxStock ? n++ : null"
+                                :style="{ opacity: n>=maxStock ? '0.35' : '1', cursor: n>=maxStock ? 'not-allowed' : 'pointer' }"
+                                style="width:30px; height:30px; border-radius:50%; background:#E5E7EB; border:none; color:#6B7280; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">+</button>
                     </div>
                 </div>
                 @empty
