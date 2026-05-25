@@ -104,7 +104,7 @@
 @endif
 
 {{-- ════════════ STICKY HEADER (stats + filtros) ════════════ --}}
-<div style="position:sticky; top:0; z-index:100; background:#fff;">
+<div style="position:sticky; top:0; z-index:10; background:#fff;">
 
 {{-- ── STATS BAR — DESKTOP ──────────────────────────────────────────────── --}}
 <div class="hidden md:block bg-white border-b border-gray-100 px-4 pt-2 pb-2.5">
