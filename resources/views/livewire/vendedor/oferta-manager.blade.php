@@ -1284,192 +1284,148 @@
 @if ($step === 'oferta' && $clienteId && !$sinListasComunes)
 <div x-show="showProductos" x-cloak
      x-transition:enter="transition ease-out duration-200"
-     x-transition:enter-start="opacity-0 translate-y-4"
-     x-transition:enter-end="opacity-100 translate-y-0"
+     x-transition:enter-start="opacity-0"
+     x-transition:enter-end="opacity-100"
      x-transition:leave="transition ease-in duration-150"
-     x-transition:leave-end="opacity-0 translate-y-4"
-     class="fixed inset-0 flex flex-col"
-     style="z-index:400; background:#fff;">
+     x-transition:leave-end="opacity-0"
+     class="fixed inset-0 flex items-end sm:items-center justify-center"
+     style="z-index:400; background:rgba(30,24,80,0.30); backdrop-filter:blur(2px);"
+     @click.self="showProductos = false">
 
-    {{-- TOP BAR --}}
-    <div style="flex-shrink:0; background:#fff; border-bottom:1px solid #EDE9FE; padding:12px 14px;">
-        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-            <button @click="showProductos = false"
-                    style="width:34px; height:34px; border-radius:50%; background:#F3F4F6; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
-                <svg width="16" height="16" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-                </svg>
-            </button>
-            <span style="font-size:16px; font-weight:800; color:#1a1a1a; flex:1;">Seleccionar Artículos</span>
-            @if ($cantidad > 0)
-            <span style="background:#f97316; color:#fff; border-radius:99px; padding:4px 12px; font-size:12px; font-weight:800;">{{ $cantidad }} en carrito</span>
-            @endif
+    <div x-transition:enter="transition ease-out duration-200"
+         x-transition:enter-start="opacity-0 translate-y-4"
+         x-transition:enter-end="opacity-100 translate-y-0"
+         style="background:#fff; border-radius:20px 20px 0 0; width:100%; max-width:640px; height:88vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 -8px 40px rgba(60,52,137,0.20);"
+         class="sm:rounded-2xl sm:h-auto sm:max-h-[88vh]">
+
+        {{-- TOP BAR --}}
+        <div style="flex-shrink:0; background:#fff; border-bottom:1px solid #EDE9FE; padding:12px 14px 10px;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <button @click="showProductos = false"
+                        style="width:32px; height:32px; border-radius:50%; background:#F3F4F6; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
+                    <svg width="15" height="15" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                <span style="font-size:15px; font-weight:800; color:#1a1a1a; flex:1;">Seleccionar Artículos</span>
+                @if ($cantidad > 0)
+                <span style="background:#f97316; color:#fff; border-radius:99px; padding:3px 10px; font-size:12px; font-weight:800; flex-shrink:0;">{{ $cantidad }} en carrito</span>
+                @endif
+            </div>
+
+            {{-- Select lista + Buscador en misma fila --}}
+            <div style="display:flex; align-items:center; gap:8px;">
+                {{-- Desplegable lista de precios --}}
+                @if (count($listasInfo) > 0)
+                <div style="position:relative; flex-shrink:0;">
+                    <select wire:model.live="filterLista"
+                            style="-webkit-appearance:none; appearance:none; padding:8px 28px 8px 10px; background:#F8F7FF; border:2px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489; font-weight:600; cursor:pointer; outline:none; max-width:150px;">
+                        <option value="">Todas</option>
+                        @foreach ($listasInfo as $lid => $info)
+                        <option value="{{ $lid }}">{{ ucwords(strtolower($info['nombre'])) }}</option>
+                        @endforeach
+                    </select>
+                    <svg style="position:absolute; right:8px; top:50%; transform:translateY(-50%); pointer-events:none;" width="10" height="10" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                    </svg>
+                </div>
+                @endif
+                {{-- Buscador --}}
+                <div style="position:relative; flex:1;">
+                    <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; pointer-events:none;" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    <input wire:model.live.debounce.300ms="searchProducto" type="text"
+                           placeholder="Buscar producto..."
+                           style="width:100%; padding:8px 10px 8px 28px; background:#F8F7FF; border:2px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"
+                           onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
+                           onblur="this.style.borderColor='#C4B5FD'; this.style.background='#F8F7FF';">
+                </div>
+            </div>
         </div>
 
-        {{-- Filtro promos --}}
-        @php
-        $cardColors2 = [
-            ['bg'=>'#FFF7ED','iconBg'=>'#F97316','selBorder'=>'#F97316','selCard'=>'#FFF7ED','text'=>'#C2410C'],
-            ['bg'=>'#F0EEFF','iconBg'=>'#7c3aed','selBorder'=>'#7c3aed','selCard'=>'#EDE9FE','text'=>'#5B21B6'],
-            ['bg'=>'#F0FDF4','iconBg'=>'#059669','selBorder'=>'#059669','selCard'=>'#DCFCE7','text'=>'#065F46'],
-            ['bg'=>'#EFF6FF','iconBg'=>'#3B82F6','selBorder'=>'#3B82F6','selCard'=>'#DBEAFE','text'=>'#1D4ED8'],
-        ];
-        $iconPaths2 = [
-            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>',
-            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>',
-            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 8v1m0-8c-1.11 0-2.08.402-2.599 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
-            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>',
-        ];
-        @endphp
-        <div class="flex items-center gap-2" style="overflow-x:auto; padding-bottom:2px; scrollbar-width:none; -ms-overflow-style:none;">
-            <style>.promo-modal::-webkit-scrollbar{display:none;}</style>
-            @php $selTodos2 = $filterLista === ''; @endphp
-            <button wire:click="$set('filterLista', '')"
-                    class="promo-modal flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
-                    style="padding:5px 12px 5px 5px; border-radius:20px; border:1.5px solid {{ $selTodos2 ? '#F97316' : '#E5E7EB' }}; background:{{ $selTodos2 ? '#FFF7ED' : '#fff' }}; cursor:pointer;">
-                <div style="width:24px; height:24px; border-radius:8px; background:{{ $selTodos2 ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="11" height="11" fill="none" stroke="{{ $selTodos2 ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-                </div>
-                <span style="font-size:11px; font-weight:700; color:{{ $selTodos2 ? '#C2410C' : '#374151' }}; white-space:nowrap;">Todos</span>
-            </button>
-            @foreach ($listasInfo as $lid => $info)
-            @php $ci2=$loop->index%4; $col2=$cardColors2[$ci2]; $sel2=$filterLista===(string)$lid; $ico2=$iconPaths2[$ci2]; @endphp
-            <button wire:click="$set('filterLista', '{{ $lid }}')"
-                    class="promo-modal flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
-                    style="padding:5px 12px 5px 5px; border-radius:20px; border:1.5px solid {{ $sel2 ? $col2['selBorder'] : '#E5E7EB' }}; background:{{ $sel2 ? $col2['selCard'] : '#fff' }}; cursor:pointer;">
-                <div style="width:24px; height:24px; border-radius:8px; background:{{ $sel2 ? $col2['iconBg'] : $col2['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="11" height="11" fill="none" stroke="{{ $sel2 ? '#fff' : $col2['iconBg'] }}" viewBox="0 0 24 24">{!! $ico2 !!}</svg>
-                </div>
-                <span style="font-size:11px; font-weight:700; color:{{ $sel2 ? $col2['text'] : '#374151' }}; white-space:nowrap;">{{ ucwords(strtolower($info['nombre'])) }}</span>
-            </button>
-            @endforeach
-        </div>
+        {{-- LISTA SCROLLABLE --}}
+        <div style="flex:1; overflow-y:auto; padding:10px 12px;">
+            <div style="display:flex; flex-direction:column; gap:8px;">
+                @forelse (collect($ofertaPorLista)->flatten(1) as $p)
+                @php $pid2=(string)$p['product_id']; $qty2=isset($carrito[$pid2])?$carrito[$pid2]['cantidad']:0; @endphp
+                <div x-data="{ n: 0, precio: @js((float)$p['precio']), puntos: @js((int)$p['puntos']), maxStock: @js((int)$p['stock']) }"
+                     x-on:carrito-vaciado.window="n = 0"
+                     wire:key="mod-{{ $pid2 }}"
+                     style="background:#fff; border:1.5px solid {{ $qty2 > 0 ? '#f97316' : '#C4B5FD' }}; border-radius:12px; padding:10px 12px;">
 
-        {{-- Buscador --}}
-        <div class="relative mt-2">
-            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <input wire:model.live.debounce.300ms="searchProducto" type="text"
-                   placeholder="Buscar producto..."
-                   class="w-full pl-8 pr-3 py-2 focus:outline-none"
-                   style="background:#F8F7FF; border:2px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489;">
-        </div>
-    </div>
-
-    {{-- GRID SCROLLABLE --}}
-    <div style="flex:1; overflow-y:auto; padding:12px;">
-        <style>
-        @media (max-width:767px){ .card-body-desk2, .card-foto2{ display:none !important; } }
-        @media (min-width:768px){ .card-body-mob2{ display:none !important; } }
-        </style>
-        <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:14px;">
-            @forelse (collect($ofertaPorLista)->flatten(1) as $p)
-            @php $pid2=(string)$p['product_id']; $qty2=isset($carrito[$pid2])?$carrito[$pid2]['cantidad']:0; @endphp
-            <div class="flex flex-col w-full"
-                 x-data="{ n: 0, precio: @js((float)$p['precio']), puntos: @js((int)$p['puntos']), maxStock: @js((int)$p['stock']) }"
-                 x-on:carrito-vaciado.window="n = 0"
-                 style="background:#fff; border:1.5px solid #C4B5FD; border-radius:12px; overflow:hidden; box-shadow:2px 6px 18px rgba(0,0,0,0.15);"
-                 wire:key="mod-{{ $pid2 }}">
-
-                {{-- FOTO (desktop) --}}
-                <div class="card-foto2 relative flex-shrink-0"
-                     style="width:100%; height:140px; overflow:hidden; background:#fff; border-bottom:0.5px solid #e5e7eb;">
-                    @if ($p['image'])
-                    <img src="{{ $p['image'] }}" alt="{{ $p['nombre'] }}"
-                         style="width:100%; height:100%; object-fit:contain;"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    @endif
-                    <div class="w-full h-full items-center justify-center" style="display:{{ $p['image'] ? 'none' : 'flex' }};">
-                        <svg class="w-10 h-10" fill="none" stroke="#CECBF6" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                    </div>
-                    @if ($qty2 > 0)
-                    <span class="absolute flex items-center justify-center font-bold text-white leading-none"
-                          style="top:8px; left:8px; width:24px; height:24px; border-radius:50%; background:#f97316; font-size:11px;">{{ $qty2 }}</span>
-                    @endif
-                </div>
-
-                {{-- CUERPO MÓVIL --}}
-                <div class="card-body-mob2" style="padding:10px 12px 6px; flex:1;">
-                    <div style="background:transparent; border:1.5px solid #C4B5FD; border-radius:8px; padding:7px 10px;">
-                        <div style="display:flex; align-items:center; gap:6px;">
+                    {{-- Fila 1: indicador circular + código + descripción --}}
+                    <div style="display:flex; align-items:center; gap:7px; margin-bottom:7px;">
+                        <div style="width:22px; height:22px; border-radius:50%; background:{{ $qty2 > 0 ? '#f97316' : '#EDE9FE' }}; border:1.5px solid {{ $qty2 > 0 ? '#f97316' : '#D4CFF8' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                             @if ($qty2 > 0)
-                            <span style="flex-shrink:0; width:20px; height:20px; border-radius:50%; background:#f97316; color:#fff; font-size:10px; font-weight:800; display:inline-flex; align-items:center; justify-content:center;">{{ $qty2 }}</span>
+                            <span style="font-size:10px; font-weight:800; color:#fff; line-height:1;">{{ $qty2 }}</span>
                             @endif
-                            <span style="font-size:14px; font-weight:800; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;">{{ $p['nombre'] }}</span>
                         </div>
-                        <div style="display:flex; align-items:baseline; justify-content:space-between; margin-top:3px;">
-                            <span style="font-size:14px; font-weight:900; color:#1a1a1a; text-transform:uppercase;">{{ $p['code'] ?? '' }}</span>
-                            <div style="display:flex; align-items:baseline; gap:8px;">
-                                <div style="display:flex; align-items:baseline; gap:2px;">
-                                    <span style="font-size:9px; font-weight:800; color:#9B93E0;">Precio Bs</span>
-                                    <span style="font-size:13px; font-weight:800; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
-                                </div>
-                                <div style="display:flex; align-items:baseline; gap:2px;">
-                                    <span style="font-size:9px; font-weight:800; color:#9B93E0;">Pts</span>
-                                    <span style="font-size:13px; font-weight:800; color:#0F6E56;">{{ $p['puntos'] }}</span>
-                                </div>
-                            </div>
+                        <span style="font-size:10px; font-weight:800; color:#7B6FE8; background:#EEEDFE; border-radius:4px; padding:1px 6px; flex-shrink:0; white-space:nowrap;">{{ $p['code'] ?? '' }}</span>
+                        <span style="font-size:13px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;" title="{{ $p['nombre'] }}">{{ $p['nombre'] }}</span>
+                    </div>
+
+                    {{-- Fila 2: Precio | Puntos | Total Bs | Total Pts --}}
+                    <div style="display:flex; align-items:stretch; margin-bottom:8px; background:#F8F7FF; border-radius:8px; overflow:hidden;">
+                        <div style="flex:1; text-align:center; padding:5px 4px;">
+                            <p style="font-size:8px; color:#9B93E0; margin:0 0 1px; font-weight:600; white-space:nowrap;">Precio Bs</p>
+                            <p style="font-size:13px; font-weight:800; color:#7c3aed; margin:0;">{{ number_format($p['precio'], 2) }}</p>
+                        </div>
+                        <div style="width:1px; background:#EDE9FE; flex-shrink:0;"></div>
+                        <div style="flex:1; text-align:center; padding:5px 4px;">
+                            <p style="font-size:8px; color:#9B93E0; margin:0 0 1px; font-weight:600; white-space:nowrap;">Puntos</p>
+                            <p style="font-size:13px; font-weight:800; color:#0F6E56; margin:0;">{{ $p['puntos'] }}</p>
+                        </div>
+                        <div style="width:1px; background:#EDE9FE; flex-shrink:0;"></div>
+                        <div style="flex:1; text-align:center; padding:5px 4px;">
+                            <p style="font-size:8px; color:#9B93E0; margin:0 0 1px; font-weight:600; white-space:nowrap;">Total Bs</p>
+                            <p x-text="(precio * n).toFixed(2)" style="font-size:13px; font-weight:800; color:#3C3489; margin:0;">{{ number_format($p['precio'] * $qty2, 2) }}</p>
+                        </div>
+                        <div style="width:1px; background:#EDE9FE; flex-shrink:0;"></div>
+                        <div style="flex:1; text-align:center; padding:5px 4px;">
+                            <p style="font-size:8px; color:#9B93E0; margin:0 0 1px; font-weight:600; white-space:nowrap;">Total Pts</p>
+                            <p x-text="'+' + (puntos * n)" style="font-size:13px; font-weight:800; color:#0F6E56; margin:0;">+{{ $p['puntos'] * $qty2 }}</p>
                         </div>
                     </div>
-                </div>
 
-                {{-- CUERPO DESKTOP --}}
-                <div class="card-body-desk2" style="padding:10px 12px 8px; flex:1;">
-                    <div style="background:#F8F7FF; border-radius:8px; padding:8px 10px;">
-                        <span style="font-size:11px; font-weight:700; color:#534AB7; display:block;">{{ $p['code'] ?? '' }}</span>
-                        <span style="font-size:11px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block;" title="{{ $p['nombre'] }}">{{ $p['nombre'] }}</span>
-                        <div style="display:flex; justify-content:space-between; margin-top:4px;">
-                            <span style="font-size:10px; color:#534AB7;">Precio Bs</span>
-                            <span style="font-size:14px; font-weight:700; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between;">
-                            <span style="font-size:10px; color:#534AB7;">Puntos</span>
-                            <span style="font-size:11px; font-weight:600; color:#0F6E56;">{{ $p['puntos'] }}</span>
-                        </div>
+                    {{-- Pie: − n + Agregar [trash] --}}
+                    <div style="display:flex; align-items:center; justify-content:flex-end; gap:6px;">
+                        <button @click="n > 0 ? n-- : null"
+                                :style="{ opacity: n===0?'0.35':'1', cursor: n===0?'default':'pointer' }"
+                                style="width:30px; height:30px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:18px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">−</button>
+                        <span x-text="n" style="font-size:14px; font-weight:700; color:#3C3489; min-width:20px; text-align:center; flex-shrink:0;">{{ $qty2 }}</span>
+                        <button @click="n < maxStock ? n++ : null"
+                                :style="{ opacity: n>=maxStock?'0.35':'1', cursor: n>=maxStock?'not-allowed':'pointer' }"
+                                style="width:30px; height:30px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:18px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">+</button>
+                        <button @click="if(n===0) n=1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n=0)"
+                                style="flex:1; background:#7B6FE8; color:#fff; border:none; border-radius:8px; padding:7px 10px; font-size:12px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:4px; transition:opacity 0.15s;">
+                            <svg style="width:12px; height:12px; flex-shrink:0;" fill="none" stroke="#fff" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                            Agregar
+                        </button>
+                        @if ($qty2 > 0)
+                        <button wire:click="quitar({{ $p['product_id'] }})"
+                                style="width:30px; height:30px; border-radius:50%; background:#FEF2F2; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
+                            <svg style="width:13px; height:13px;" fill="none" stroke="#e24b4a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                        @endif
                     </div>
                 </div>
-
-                {{-- PIE --}}
-                <div style="padding:6px 12px 10px; display:flex; align-items:center; justify-content:flex-end; gap:6px; flex-shrink:0;">
-                    <button @click="n > 0 ? n-- : null"
-                            class="flex items-center justify-center font-bold flex-shrink-0"
-                            :style="{ opacity: n===0?'0.35':'1', cursor: n===0?'default':'pointer' }"
-                            style="width:32px; height:32px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; -webkit-appearance:none; appearance:none; clip-path:circle(16px at 16px 16px);">−</button>
-                    <span x-text="n" style="font-size:14px; font-weight:700; color:#3C3489; min-width:22px; text-align:center;">{{ $qty2 }}</span>
-                    <button @click="n < maxStock ? n++ : null"
-                            class="flex items-center justify-center font-bold flex-shrink-0"
-                            style="width:32px; height:32px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; -webkit-appearance:none; appearance:none; clip-path:circle(16px at 16px 16px);">+</button>
-                    <button @click="if(n===0) n=1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n=0)"
-                            class="flex items-center justify-center gap-1 transition-all active:scale-95 flex-shrink-0"
-                            style="background:#fff; color:#7B6FE8; border:1.5px solid #7B6FE8; border-radius:10px; padding:7px 12px; font-size:12px; font-weight:700; -webkit-appearance:none; appearance:none;">
-                        <svg style="width:13px; height:13px;" fill="none" stroke="#7B6FE8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                        Agregar
-                    </button>
-                    @if ($qty2 > 0)
-                    <button wire:click="quitar({{ $p['product_id'] }})"
-                            class="flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
-                            style="width:32px; height:32px; border-radius:50%; background:#FEF2F2; border:none; -webkit-appearance:none; appearance:none; clip-path:circle(16px at 16px 16px);">
-                        <svg style="width:14px; height:14px;" fill="none" stroke="#e24b4a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                    </button>
-                    @endif
+                @empty
+                <div style="text-align:center; padding:40px 16px;">
+                    <svg style="width:40px; height:40px; margin:0 auto 10px; display:block;" fill="none" stroke="#CECBF6" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p style="font-size:13px; font-weight:500; color:#9B93E0; margin:0;">No hay productos disponibles</p>
                 </div>
+                @endforelse
             </div>
-            @empty
-            <div class="flex flex-col items-center justify-center py-16 text-gray-400" style="grid-column:1/-1;">
-                <svg class="w-12 h-12 mb-3 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <p class="font-medium text-sm">No hay productos disponibles</p>
-            </div>
-            @endforelse
         </div>
-    </div>
 
-    {{-- PIE MODAL: cerrar --}}
-    <div style="flex-shrink:0; padding:12px 16px; background:#fff; border-top:1px solid #EDE9FE;">
-        <button @click="showProductos = false"
-                style="width:100%; padding:13px; background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); color:#fff; font-size:15px; font-weight:800; border-radius:14px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
-            Listo — Ver seleccionados
-        </button>
+        {{-- PIE MODAL: cerrar --}}
+        <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1px solid #EDE9FE;">
+            <button @click="showProductos = false"
+                    style="width:100%; padding:12px; background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); color:#fff; font-size:14px; font-weight:800; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                Listo — Ver seleccionados
+            </button>
+        </div>
     </div>
 </div>
 @endif
