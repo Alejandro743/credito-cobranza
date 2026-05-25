@@ -1417,8 +1417,9 @@
                             <span style="font-size:10px; font-weight:800; color:#fff; line-height:1;">{{ $qty2 }}</span>
                             @endif
                         </div>
-                        <span style="font-size:13px; font-weight:800; color:#534AB7; flex-shrink:0; white-space:nowrap;">{{ $p['code'] ?? '' }}</span>
-                        <span style="font-size:13px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;" title="{{ ucwords(strtolower($p['nombre'])) }}">{{ ucwords(strtolower($p['nombre'])) }}</span>
+                        <span style="font-size:15px; font-weight:900; color:#534AB7; flex-shrink:0; white-space:nowrap;">{{ $p['code'] ?? '' }}</span>
+                        <span style="font-size:15px; font-weight:700; color:#C4B5FD; flex-shrink:0; padding:0 2px;">—</span>
+                        <span style="font-size:15px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;" title="{{ ucwords(strtolower($p['nombre'])) }}">{{ ucwords(strtolower($p['nombre'])) }}</span>
                     </div>
 
                     {{-- Fila 2: Precio | Puntos | Total Bs (qty en carrito) | Total Pts --}}
