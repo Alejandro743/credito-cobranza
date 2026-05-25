@@ -105,9 +105,9 @@
         {{-- COL 1: Dato Cliente --}}
         <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;">
             <div style="display:flex; align-items:center; gap:5px;">
-                <svg width="9" height="9" fill="none" stroke="#9B93E0" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                <span style="font-size:8px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:0.12em;">Dato Cliente</span>
-                <div style="flex:1; height:1px; background:linear-gradient(90deg, #C4B5FD55, transparent);"></div>
+                <svg width="11" height="11" fill="none" stroke="#1a1a1a" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span style="font-size:10px; font-weight:800; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.12em;">Dato Cliente</span>
+                <div style="flex:1; height:1px; background:linear-gradient(90deg, #d1d5db, transparent);"></div>
             </div>
             <div @click="showSearch = true"
                  style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:0 16px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:background 0.15s; box-shadow:0 2px 8px rgba(123,111,232,0.08);"
@@ -138,33 +138,27 @@
         </div>
 
         {{-- SEPARADOR VERTICAL --}}
-        <div style="width:20px; flex-shrink:0; display:flex; align-items:stretch; justify-content:center; padding-top:20px; padding-bottom:4px;">
+        <div style="width:20px; flex-shrink:0; display:flex; align-items:stretch; justify-content:center; padding:4px 0;">
             <div style="width:1.5px; background:linear-gradient(180deg, transparent 0%, #C4B5FD 25%, #C4B5FD 75%, transparent 100%); border-radius:1px;"></div>
         </div>
 
-        {{-- COL 2: Carrito de Productos --}}
-        <div style="display:flex; flex-direction:column; gap:4px; align-items:center; flex-shrink:0;">
-            <div style="display:flex; align-items:center; gap:4px;">
-                <svg width="9" height="9" fill="none" stroke="#9B93E0" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                <span style="font-size:8px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:0.12em; white-space:nowrap;">Carrito</span>
-            </div>
-            <div class="relative flex-shrink-0"
-                 style="width:58px; flex:1; border-radius:10px; background:{{ empty($carrito) ? '#f9fafb' : '#f97316' }}; border:1.5px solid {{ empty($carrito) ? '#E5E7EB' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 10px rgba(249,115,22,0.30)' }}; transition:all 0.2s;">
-                <button wire:click="irResumen"
-                        @disabled(empty($carrito))
-                        class="w-full h-full flex items-center justify-center transition-all active:scale-95"
-                        style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
-                    <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                </button>
-                @if ($cantidad > 0)
-                <span class="absolute flex items-center justify-center font-bold text-white leading-none"
-                      style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
-                    {{ $cantidad > 9 ? '9+' : $cantidad }}
-                </span>
-                @endif
-            </div>
+        {{-- COL 2: Carrito --}}
+        <div class="relative flex-shrink-0"
+             style="width:58px; align-self:stretch; border-radius:10px; background:{{ empty($carrito) ? '#f9fafb' : '#f97316' }}; border:1.5px solid {{ empty($carrito) ? '#E5E7EB' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 10px rgba(249,115,22,0.30)' }}; transition:all 0.2s;">
+            <button wire:click="irResumen"
+                    @disabled(empty($carrito))
+                    class="w-full h-full flex items-center justify-center transition-all active:scale-95"
+                    style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
+                <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+            </button>
+            @if ($cantidad > 0)
+            <span class="absolute flex items-center justify-center font-bold text-white leading-none"
+                  style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
+                {{ $cantidad > 9 ? '9+' : $cantidad }}
+            </span>
+            @endif
         </div>
 
     </div>
@@ -179,9 +173,9 @@
         {{-- COL 1: Dato Cliente --}}
         <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:3px;">
             <div style="display:flex; align-items:center; gap:4px;">
-                <svg width="8" height="8" fill="none" stroke="#9B93E0" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                <span style="font-size:7px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:0.1em;">Dato Cliente</span>
-                <div style="flex:1; height:1px; background:linear-gradient(90deg, #C4B5FD55, transparent);"></div>
+                <svg width="10" height="10" fill="none" stroke="#1a1a1a" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span style="font-size:9px; font-weight:800; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.1em;">Dato Cliente</span>
+                <div style="flex:1; height:1px; background:linear-gradient(90deg, #d1d5db, transparent);"></div>
             </div>
             <div @click="showSearch = true"
                  style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:8px; padding:6px 10px; display:flex; align-items:center; gap:8px; cursor:pointer; box-shadow:0 2px 8px rgba(123,111,232,0.08);">
@@ -208,33 +202,27 @@
         </div>
 
         {{-- SEPARADOR VERTICAL --}}
-        <div style="width:14px; flex-shrink:0; display:flex; align-items:stretch; justify-content:center; padding-top:17px; padding-bottom:2px;">
+        <div style="width:14px; flex-shrink:0; display:flex; align-items:stretch; justify-content:center; padding:4px 0;">
             <div style="width:1px; background:linear-gradient(180deg, transparent 0%, #C4B5FD 25%, #C4B5FD 75%, transparent 100%); border-radius:1px;"></div>
         </div>
 
         {{-- COL 2: Carrito --}}
-        <div style="display:flex; flex-direction:column; gap:3px; align-items:center; flex-shrink:0; min-width:44px;">
-            <div style="display:flex; align-items:center; gap:3px;">
-                <svg width="8" height="8" fill="none" stroke="#9B93E0" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                <span style="font-size:7px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:0.1em; white-space:nowrap;">Carrito</span>
-            </div>
-            <div class="relative flex items-center justify-center"
-                 style="width:44px; flex:1; border-radius:8px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 8px rgba(249,115,22,0.30)' }};">
-                <button wire:click="irResumen"
-                        @disabled(empty($carrito))
-                        class="w-full h-full flex items-center justify-center transition-all active:scale-95"
-                        style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
-                    <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                    </svg>
-                </button>
-                @if ($cantidad > 0)
-                <span class="absolute flex items-center justify-center font-bold text-white leading-none"
-                      style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
-                    {{ $cantidad > 9 ? '9+' : $cantidad }}
-                </span>
-                @endif
-            </div>
+        <div class="relative flex items-center justify-center flex-shrink-0"
+             style="width:44px; align-self:stretch; border-radius:8px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 8px rgba(249,115,22,0.30)' }};">
+            <button wire:click="irResumen"
+                    @disabled(empty($carrito))
+                    class="w-full h-full flex items-center justify-center transition-all active:scale-95"
+                    style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
+                <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+            </button>
+            @if ($cantidad > 0)
+            <span class="absolute flex items-center justify-center font-bold text-white leading-none"
+                  style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
+                {{ $cantidad > 9 ? '9+' : $cantidad }}
+            </span>
+            @endif
         </div>
 
     </div>
@@ -440,6 +428,11 @@
     @media (max-width:767px){ .card-body-desk, .card-foto{ display:none !important; } }
     @media (min-width:768px){ .card-body-mob{ display:none !important; } }
     </style>
+    <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+        <svg width="13" height="13" fill="none" stroke="#1a1a1a" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        <span style="font-size:11px; font-weight:800; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.1em;">Carrito de Productos</span>
+        <div style="flex:1; height:1px; background:linear-gradient(90deg, #d1d5db, transparent);"></div>
+    </div>
     <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px;">
         @forelse (collect($ofertaPorLista)->flatten(1) as $p)
         @php
