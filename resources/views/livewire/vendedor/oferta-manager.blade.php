@@ -105,8 +105,8 @@
         {{-- COL 1: Dato Cliente --}}
         <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;">
             <div style="display:flex; align-items:center; gap:5px;">
-                <svg width="11" height="11" fill="none" stroke="#1a1a1a" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                <span style="font-size:10px; font-weight:800; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.12em;">Dato Cliente</span>
+                <svg width="13" height="13" fill="none" stroke="#1a1a1a" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span style="font-size:11px; font-weight:800; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.1em;">Dato Cliente</span>
                 <div style="flex:1; height:1px; background:linear-gradient(90deg, #d1d5db, transparent);"></div>
             </div>
             <div @click="showSearch = true"
@@ -173,8 +173,8 @@
         {{-- COL 1: Dato Cliente --}}
         <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:3px;">
             <div style="display:flex; align-items:center; gap:4px;">
-                <svg width="10" height="10" fill="none" stroke="#1a1a1a" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                <span style="font-size:9px; font-weight:800; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.1em;">Dato Cliente</span>
+                <svg width="13" height="13" fill="none" stroke="#1a1a1a" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span style="font-size:11px; font-weight:800; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.1em;">Dato Cliente</span>
                 <div style="flex:1; height:1px; background:linear-gradient(90deg, #d1d5db, transparent);"></div>
             </div>
             <div @click="showSearch = true"
