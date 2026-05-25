@@ -504,37 +504,37 @@
                 </div>
 
                 {{-- PIE --}}
-                <div style="padding:6px 12px 10px; display:flex; flex-direction:column; gap:6px; flex-shrink:0;">
-                    {{-- Fila: −/N/+ + basurita --}}
-                    <div style="display:flex; align-items:center; gap:6px;">
-                        <button @click="n > 0 ? n-- : null"
-                                class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
-                                :style="n === 0 ? 'opacity:0.35; cursor:default;' : ''"
-                                style="width:30px; height:30px; border-radius:50%; background:#F8F7FF; border:1px solid #CECBF6; color:#534AB7; font-size:18px; line-height:1;">−</button>
-                        <span x-text="n" style="font-size:14px; font-weight:700; color:#3C3489; min-width:22px; text-align:center; flex-shrink:0;">{{ $qty }}</span>
-                        <button @click="n < maxStock ? n++ : null"
-                                class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
-                                style="width:30px; height:30px; border-radius:50%; background:#F8F7FF; border:1px solid #CECBF6; color:#534AB7; font-size:18px; line-height:1;">+</button>
-                        @if ($qty > 0)
-                        <div style="flex:1;"></div>
-                        <button wire:click="quitar({{ $p['product_id'] }})"
-                                class="flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
-                                style="width:32px; height:32px; border-radius:8px; background:#FEF2F2; border:1.5px solid #e24b4a; clip-path:inset(0 round 8px);">
-                            <svg style="width:14px; height:14px;" fill="none" stroke="#e24b4a" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                            </svg>
-                        </button>
-                        @endif
-                    </div>
-                    {{-- Agregar full width --}}
+                <div style="padding:6px 12px 10px; display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                    {{-- [−] --}}
+                    <button @click="n > 0 ? n-- : null"
+                            class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
+                            :style="n === 0 ? 'opacity:0.35; cursor:default;' : ''"
+                            style="width:30px; height:30px; border-radius:50%; background:#F8F7FF; border:1px solid #CECBF6; color:#534AB7; font-size:18px; line-height:1;">−</button>
+                    {{-- N --}}
+                    <span x-text="n" style="font-size:14px; font-weight:700; color:#3C3489; min-width:22px; text-align:center; flex-shrink:0;">{{ $qty }}</span>
+                    {{-- [+] --}}
+                    <button @click="n < maxStock ? n++ : null"
+                            class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
+                            style="width:30px; height:30px; border-radius:50%; background:#F8F7FF; border:1px solid #CECBF6; color:#534AB7; font-size:18px; line-height:1;">+</button>
+                    {{-- Agregar --}}
                     <button @click="if(n === 0) n = 1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n = 0)"
-                            class="flex items-center justify-center gap-2 transition-all active:scale-95 w-full"
-                            style="background:#7B6FE8; color:#fff; border:none; border-radius:10px; padding:10px; font-size:13px; font-weight:700; box-shadow:0 2px 8px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none; clip-path:inset(0 round 10px);">
-                        <svg style="width:15px; height:15px; flex-shrink:0;" fill="none" stroke="#fff" viewBox="0 0 24 24">
+                            class="flex items-center justify-center gap-1 transition-all active:scale-95 flex-shrink-0"
+                            style="flex:1; background:#7B6FE8; color:#fff; border:none; border-radius:50px; padding:8px 10px; font-size:12px; font-weight:700; box-shadow:0 2px 8px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none; clip-path:inset(0 round 50px);">
+                        <svg style="width:13px; height:13px; flex-shrink:0;" fill="none" stroke="#fff" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
                         Agregar
                     </button>
+                    {{-- Basurero círculo --}}
+                    @if ($qty > 0)
+                    <button wire:click="quitar({{ $p['product_id'] }})"
+                            class="flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
+                            style="width:32px; height:32px; border-radius:50%; background:#FEF2F2; border:none;">
+                        <svg style="width:14px; height:14px;" fill="none" stroke="#e24b4a" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                    </button>
+                    @endif
                 </div>
 
             </div>
