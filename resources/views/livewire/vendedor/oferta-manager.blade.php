@@ -97,7 +97,7 @@
 
 @if ($step === 'oferta')
 <div style="padding:12px 12px 0;">
-    <div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:14px; padding:16px 18px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
+    <div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:14px; padding:10px 18px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
         <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin:0; text-align:center;">CARGAR PRODUCTOS</h2>
     </div>
 </div>
