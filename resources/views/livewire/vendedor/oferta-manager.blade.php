@@ -100,53 +100,71 @@
 
 {{-- ── STATS BAR — DESKTOP ──────────────────────────────────────────────── --}}
 <div class="hidden md:block bg-white border-b border-gray-100 px-4 py-2.5">
-    <div class="flex gap-3 items-stretch" style="min-height:52px;">
+    <div class="flex items-stretch" style="min-height:68px; gap:0;">
 
-        {{-- CLIENTE (clickeable para buscar/cambiar) --}}
-        <div @click="showSearch = true"
-             style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:0 16px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:background 0.15s; box-shadow:0 2px 8px rgba(123,111,232,0.08);"
-             @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">
-            <div style="width:34px; height:34px; border-radius:10px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                @if ($clienteId)
-                <span style="font-size:14px; font-weight:700; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
-                @else
-                <svg width="14" height="14" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-                @endif
+        {{-- COL 1: Dato Cliente --}}
+        <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;">
+            <div style="display:flex; align-items:center; gap:5px;">
+                <svg width="9" height="9" fill="none" stroke="#9B93E0" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span style="font-size:8px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:0.12em;">Dato Cliente</span>
+                <div style="flex:1; height:1px; background:linear-gradient(90deg, #C4B5FD55, transparent);"></div>
             </div>
-            <div style="min-width:0; flex:1;">
-                <span style="font-size:9px; font-weight:700; color:#9B93E0; display:block; text-transform:uppercase; letter-spacing:0.08em;">Seleccionar Cliente</span>
-                @if ($clienteId)
-                <span style="font-size:15px; font-weight:700; color:#7B6FE8; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' — ' : '' }}{{ $clienteNombre }}</span>
-                @elseif ($sinListasActivas)
-                <div style="display:flex; align-items:center; gap:5px;">
-                    <svg width="11" height="11" fill="none" stroke="#e24b4a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                    <span style="font-size:12px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
+            <div @click="showSearch = true"
+                 style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:0 16px; display:flex; align-items:center; gap:12px; cursor:pointer; transition:background 0.15s; box-shadow:0 2px 8px rgba(123,111,232,0.08);"
+                 @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">
+                <div style="width:34px; height:34px; border-radius:10px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    @if ($clienteId)
+                    <span style="font-size:14px; font-weight:700; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
+                    @else
+                    <svg width="14" height="14" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    @endif
                 </div>
-                @else
-                <span style="font-size:15px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar cliente</span>
-                @endif
+                <div style="min-width:0; flex:1;">
+                    <span style="font-size:9px; font-weight:700; color:#9B93E0; display:block; text-transform:uppercase; letter-spacing:0.08em;">Seleccionar Cliente</span>
+                    @if ($clienteId)
+                    <span style="font-size:15px; font-weight:700; color:#7B6FE8; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' — ' : '' }}{{ $clienteNombre }}</span>
+                    @elseif ($sinListasActivas)
+                    <div style="display:flex; align-items:center; gap:5px;">
+                        <svg width="11" height="11" fill="none" stroke="#e24b4a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        <span style="font-size:12px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
+                    </div>
+                    @else
+                    <span style="font-size:15px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar cliente</span>
+                    @endif
+                </div>
             </div>
         </div>
 
-        {{-- CARRITO --}}
-        <div class="relative flex-shrink-0"
-             style="width:58px; border-radius:10px; background:{{ empty($carrito) ? '#f9fafb' : '#f97316' }}; border:1.5px solid {{ empty($carrito) ? '#E5E7EB' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 10px rgba(249,115,22,0.30)' }}; transition:all 0.2s;">
-            <button wire:click="irResumen"
-                    @disabled(empty($carrito))
-                    class="w-full h-full flex items-center justify-center transition-all active:scale-95"
-                    style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
-                <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-            </button>
-            @if ($cantidad > 0)
-            <span class="absolute flex items-center justify-center font-bold text-white leading-none"
-                  style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
-                {{ $cantidad > 9 ? '9+' : $cantidad }}
-            </span>
-            @endif
+        {{-- SEPARADOR VERTICAL --}}
+        <div style="width:20px; flex-shrink:0; display:flex; align-items:stretch; justify-content:center; padding-top:20px; padding-bottom:4px;">
+            <div style="width:1.5px; background:linear-gradient(180deg, transparent 0%, #C4B5FD 25%, #C4B5FD 75%, transparent 100%); border-radius:1px;"></div>
+        </div>
+
+        {{-- COL 2: Carrito de Productos --}}
+        <div style="display:flex; flex-direction:column; gap:4px; align-items:center; flex-shrink:0;">
+            <div style="display:flex; align-items:center; gap:4px;">
+                <svg width="9" height="9" fill="none" stroke="#9B93E0" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span style="font-size:8px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:0.12em; white-space:nowrap;">Carrito</span>
+            </div>
+            <div class="relative flex-shrink-0"
+                 style="width:58px; flex:1; border-radius:10px; background:{{ empty($carrito) ? '#f9fafb' : '#f97316' }}; border:1.5px solid {{ empty($carrito) ? '#E5E7EB' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 10px rgba(249,115,22,0.30)' }}; transition:all 0.2s;">
+                <button wire:click="irResumen"
+                        @disabled(empty($carrito))
+                        class="w-full h-full flex items-center justify-center transition-all active:scale-95"
+                        style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
+                    <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </button>
+                @if ($cantidad > 0)
+                <span class="absolute flex items-center justify-center font-bold text-white leading-none"
+                      style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
+                    {{ $cantidad > 9 ? '9+' : $cantidad }}
+                </span>
+                @endif
+            </div>
         </div>
 
     </div>
@@ -156,49 +174,67 @@
 <div class="md:hidden bg-white border-b border-gray-100 px-2 pt-2 pb-2 flex flex-col gap-1.5">
 
     {{-- FILA: Cliente (clickeable) + Carrito --}}
-    <div class="flex gap-1.5 items-stretch" style="min-height:44px;">
+    <div class="flex items-stretch" style="min-height:60px; gap:0;">
 
-        {{-- CLIENTE clickeable --}}
-        <div @click="showSearch = true"
-             style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:8px; padding:6px 10px; display:flex; align-items:center; gap:8px; cursor:pointer; box-shadow:0 2px 8px rgba(123,111,232,0.08);">
-            <div style="width:28px; height:28px; border-radius:8px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                @if ($clienteId)
-                <span style="font-size:12px; font-weight:700; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
-                @else
-                <svg width="13" height="13" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
-                @endif
+        {{-- COL 1: Dato Cliente --}}
+        <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:3px;">
+            <div style="display:flex; align-items:center; gap:4px;">
+                <svg width="8" height="8" fill="none" stroke="#9B93E0" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                <span style="font-size:7px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:0.1em;">Dato Cliente</span>
+                <div style="flex:1; height:1px; background:linear-gradient(90deg, #C4B5FD55, transparent);"></div>
             </div>
-            <div style="min-width:0; flex:1;">
-                <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; text-transform:uppercase; letter-spacing:0.06em;">Seleccionar Cliente</span>
-                @if ($clienteId)
-                <span style="font-size:14px; font-weight:700; color:#7B6FE8; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
-                @elseif ($sinListasActivas)
-                <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
-                @else
-                <span style="font-size:14px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar cliente</span>
-                @endif
+            <div @click="showSearch = true"
+                 style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:8px; padding:6px 10px; display:flex; align-items:center; gap:8px; cursor:pointer; box-shadow:0 2px 8px rgba(123,111,232,0.08);">
+                <div style="width:28px; height:28px; border-radius:8px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    @if ($clienteId)
+                    <span style="font-size:12px; font-weight:700; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
+                    @else
+                    <svg width="13" height="13" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                    @endif
+                </div>
+                <div style="min-width:0; flex:1;">
+                    <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; text-transform:uppercase; letter-spacing:0.06em;">Seleccionar Cliente</span>
+                    @if ($clienteId)
+                    <span style="font-size:14px; font-weight:700; color:#7B6FE8; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
+                    @elseif ($sinListasActivas)
+                    <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
+                    @else
+                    <span style="font-size:14px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar cliente</span>
+                    @endif
+                </div>
             </div>
         </div>
 
-        {{-- CARRITO --}}
-        <div class="relative flex items-center justify-center flex-shrink-0"
-             style="width:44px; border-radius:8px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 8px rgba(249,115,22,0.30)' }};">
-            <button wire:click="irResumen"
-                    @disabled(empty($carrito))
-                    class="w-full h-full flex items-center justify-center transition-all active:scale-95"
-                    style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
-                <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                </svg>
-            </button>
-            @if ($cantidad > 0)
-            <span class="absolute flex items-center justify-center font-bold text-white leading-none"
-                  style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
-                {{ $cantidad > 9 ? '9+' : $cantidad }}
-            </span>
-            @endif
+        {{-- SEPARADOR VERTICAL --}}
+        <div style="width:14px; flex-shrink:0; display:flex; align-items:stretch; justify-content:center; padding-top:17px; padding-bottom:2px;">
+            <div style="width:1px; background:linear-gradient(180deg, transparent 0%, #C4B5FD 25%, #C4B5FD 75%, transparent 100%); border-radius:1px;"></div>
+        </div>
+
+        {{-- COL 2: Carrito --}}
+        <div style="display:flex; flex-direction:column; gap:3px; align-items:center; flex-shrink:0; min-width:44px;">
+            <div style="display:flex; align-items:center; gap:3px;">
+                <svg width="8" height="8" fill="none" stroke="#9B93E0" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                <span style="font-size:7px; font-weight:700; color:#9B93E0; text-transform:uppercase; letter-spacing:0.1em; white-space:nowrap;">Carrito</span>
+            </div>
+            <div class="relative flex items-center justify-center"
+                 style="width:44px; flex:1; border-radius:8px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 8px rgba(249,115,22,0.30)' }};">
+                <button wire:click="irResumen"
+                        @disabled(empty($carrito))
+                        class="w-full h-full flex items-center justify-center transition-all active:scale-95"
+                        style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
+                    <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                    </svg>
+                </button>
+                @if ($cantidad > 0)
+                <span class="absolute flex items-center justify-center font-bold text-white leading-none"
+                      style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
+                    {{ $cantidad > 9 ? '9+' : $cantidad }}
+                </span>
+                @endif
+            </div>
         </div>
 
     </div>
