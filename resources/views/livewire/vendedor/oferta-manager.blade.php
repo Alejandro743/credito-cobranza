@@ -508,7 +508,7 @@
                     {{-- [−] --}}
                     <button @click="n > 0 ? n-- : null"
                             class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
-                            :style="n === 0 ? 'opacity:0.35; cursor:default;' : ''"
+                            :style="{ opacity: n === 0 ? '0.35' : '1', cursor: n === 0 ? 'default' : 'pointer' }"
                             style="width:32px; height:32px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; clip-path:circle(16px at 16px 16px);">−</button>
                     {{-- N --}}
                     <span x-text="n" style="font-size:14px; font-weight:700; color:#3C3489; min-width:22px; text-align:center; flex-shrink:0;">{{ $qty }}</span>
