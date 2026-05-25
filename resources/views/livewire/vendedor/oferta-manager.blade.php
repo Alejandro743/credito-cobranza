@@ -447,26 +447,32 @@
                         <span style="float:right; margin-left:6px; width:20px; height:20px; border-radius:50%; background:#f97316; color:#fff; font-size:10px; font-weight:800; display:inline-flex; align-items:center; justify-content:center;">{{ $qty }}</span>
                         @endif
                         <span style="font-size:15px; font-weight:800; color:#3C3489; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; letter-spacing:0.01em;">{{ $p['nombre'] }}</span>
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; background:#EEEDFE; border-radius:4px; padding:1px 7px; text-transform:uppercase; letter-spacing:0.06em; display:inline-block; margin-top:2px;">{{ $p['code'] ?? '' }}</span>
+                        <span style="font-size:13px; font-weight:700; color:#7B6FE8; background:#EEEDFE; border-radius:6px; padding:2px 8px; text-transform:uppercase; letter-spacing:0.06em; display:inline-block; margin-top:3px;">{{ $p['code'] ?? '' }}</span>
                     </div>
                     {{-- Datos --}}
                     <div style="display:flex; flex-direction:column; gap:3px;">
-                        <div style="display:flex; justify-content:space-between; align-items:baseline;">
-                            <span style="font-size:11px; font-weight:600; color:#9B93E0;">Precio Bs</span>
-                            <span style="font-size:14px; font-weight:700; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
+                        {{-- Fila 1: Precio + Puntos --}}
+                        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;">
+                            <div style="display:flex; align-items:baseline; gap:4px;">
+                                <span style="font-size:10px; font-weight:600; color:#9B93E0;">Precio Bs</span>
+                                <span style="font-size:14px; font-weight:700; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
+                            </div>
+                            <div style="display:flex; align-items:baseline; gap:4px;">
+                                <span style="font-size:10px; font-weight:600; color:#9B93E0;">Pts</span>
+                                <span style="font-size:14px; font-weight:700; color:#0F6E56;">{{ $p['puntos'] }}</span>
+                            </div>
                         </div>
-                        <div style="display:flex; justify-content:space-between; align-items:baseline;">
-                            <span style="font-size:11px; font-weight:600; color:#9B93E0;">Puntos</span>
-                            <span style="font-size:14px; font-weight:700; color:#0F6E56;">{{ $p['puntos'] }}</span>
-                        </div>
-                        <div style="height:1px; background:#EDE9FE; margin:1px 0;"></div>
-                        <div style="display:flex; justify-content:space-between; align-items:baseline;">
-                            <span style="font-size:11px; font-weight:600; color:#9B93E0;">Total Bs</span>
-                            <span x-text="(precio * n).toFixed(2)" style="font-size:14px; font-weight:800; color:#3C3489;">{{ number_format($p['precio'] * $qty, 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; align-items:baseline;">
-                            <span style="font-size:11px; font-weight:600; color:#9B93E0;">Total Pts</span>
-                            <span x-text="'+' + (puntos * n) + ' pts'" style="font-size:14px; font-weight:800; color:#0F6E56;">+{{ $p['puntos'] * $qty }} pts</span>
+                        <div style="height:1px; background:#EDE9FE;"></div>
+                        {{-- Fila 2: Total Bs + Total Pts --}}
+                        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:8px;">
+                            <div style="display:flex; align-items:baseline; gap:4px;">
+                                <span style="font-size:10px; font-weight:600; color:#9B93E0;">Total Bs</span>
+                                <span x-text="(precio * n).toFixed(2)" style="font-size:14px; font-weight:800; color:#3C3489;">{{ number_format($p['precio'] * $qty, 2) }}</span>
+                            </div>
+                            <div style="display:flex; align-items:baseline; gap:4px;">
+                                <span style="font-size:10px; font-weight:600; color:#9B93E0;">Total Pts</span>
+                                <span x-text="'+' + (puntos * n) + ' pts'" style="font-size:14px; font-weight:800; color:#0F6E56;">+{{ $p['puntos'] * $qty }} pts</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -498,41 +504,37 @@
                 </div>
 
                 {{-- PIE --}}
-                <div style="padding:8px 12px 12px; display:flex; align-items:center; gap:6px; flex-shrink:0; justify-content:flex-end;">
-                    {{-- [−] --}}
-                    <button @click="n > 0 ? n-- : null"
-                            class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
-                            :style="n === 0 ? 'opacity:0.35; cursor:default;' : ''"
-                            style="width:28px; height:28px; border-radius:50%; background:#F8F7FF; border:1px solid #CECBF6; color:#534AB7; font-size:16px; line-height:1;">−</button>
-                    {{-- num --}}
-                    <span x-text="n" style="font-size:13px; font-weight:500; color:#3C3489; min-width:18px; text-align:center; flex-shrink:0;">{{ $qty }}</span>
-                    {{-- [+] --}}
-                    <button @click="n < maxStock ? n++ : null"
-                            class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
-                            style="width:28px; height:28px; border-radius:50%; background:#F8F7FF; border:1px solid #CECBF6; color:#534AB7; font-size:16px; line-height:1;">+</button>
-
-                    {{-- Botón Agregar --}}
+                <div style="padding:6px 12px 10px; display:flex; flex-direction:column; gap:6px; flex-shrink:0;">
+                    {{-- Fila: −/N/+ + basurita --}}
+                    <div style="display:flex; align-items:center; gap:6px;">
+                        <button @click="n > 0 ? n-- : null"
+                                class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
+                                :style="n === 0 ? 'opacity:0.35; cursor:default;' : ''"
+                                style="width:30px; height:30px; border-radius:50%; background:#F8F7FF; border:1px solid #CECBF6; color:#534AB7; font-size:18px; line-height:1;">−</button>
+                        <span x-text="n" style="font-size:14px; font-weight:700; color:#3C3489; min-width:22px; text-align:center; flex-shrink:0;">{{ $qty }}</span>
+                        <button @click="n < maxStock ? n++ : null"
+                                class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
+                                style="width:30px; height:30px; border-radius:50%; background:#F8F7FF; border:1px solid #CECBF6; color:#534AB7; font-size:18px; line-height:1;">+</button>
+                        @if ($qty > 0)
+                        <div style="flex:1;"></div>
+                        <button wire:click="quitar({{ $p['product_id'] }})"
+                                class="flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
+                                style="width:32px; height:32px; border-radius:8px; background:#FEF2F2; border:1.5px solid #e24b4a; clip-path:inset(0 round 8px);">
+                            <svg style="width:14px; height:14px;" fill="none" stroke="#e24b4a" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                        @endif
+                    </div>
+                    {{-- Agregar full width --}}
                     <button @click="if(n === 0) n = 1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n = 0)"
-                            class="flex items-center justify-center gap-1 transition-all active:scale-95 flex-shrink-0"
-                            style="background:#7B6FE8; border:1.5px solid #7B6FE8; color:#fff; border-radius:8px; padding:8px 10px; font-size:12px; font-weight:700; box-shadow:0 2px 8px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none; clip-path:inset(0 round 8px);">
+                            class="flex items-center justify-center gap-2 transition-all active:scale-95 w-full"
+                            style="background:#7B6FE8; color:#fff; border:none; border-radius:10px; padding:10px; font-size:13px; font-weight:700; box-shadow:0 2px 8px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none; clip-path:inset(0 round 10px);">
                         <svg style="width:15px; height:15px; flex-shrink:0;" fill="none" stroke="#fff" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
                         </svg>
                         Agregar
                     </button>
-
-                    {{-- Botón Basurita (solo cuando hay qty en carrito) --}}
-                    @if ($qty > 0)
-                    <button wire:click="quitar({{ $p['product_id'] }})"
-                            class="flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
-                            style="width:34px; height:34px; border-radius:8px; background:#fff; border:1.5px solid #e24b4a;">
-                        <svg style="width:15px; height:15px;" fill="none" stroke="#e24b4a" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                        </svg>
-                    </button>
-                    @endif
                 </div>
 
             </div>
