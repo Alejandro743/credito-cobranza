@@ -1313,23 +1313,83 @@
                 @endif
             </div>
 
-            {{-- Select lista + Buscador en misma fila --}}
-            <div style="display:flex; align-items:center; gap:8px;">
-                {{-- Desplegable lista de precios --}}
-                @if (count($listasInfo) > 0)
+            {{-- Dropdown lista + Buscador en misma fila --}}
+            @php
+            $mColors = [
+                ['bg'=>'#FFF7ED','iconBg'=>'#F97316','selBorder'=>'#F97316','selCard'=>'#FFF7ED','text'=>'#C2410C'],
+                ['bg'=>'#F0EEFF','iconBg'=>'#7c3aed','selBorder'=>'#7c3aed','selCard'=>'#EDE9FE','text'=>'#5B21B6'],
+                ['bg'=>'#F0FDF4','iconBg'=>'#059669','selBorder'=>'#059669','selCard'=>'#DCFCE7','text'=>'#065F46'],
+                ['bg'=>'#EFF6FF','iconBg'=>'#3B82F6','selBorder'=>'#3B82F6','selCard'=>'#DBEAFE','text'=>'#1D4ED8'],
+            ];
+            $mIcons = [
+                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>',
+                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>',
+                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 8v1m0-8c-1.11 0-2.08.402-2.599 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+                '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>',
+            ];
+            $mSelAll  = $filterLista === '';
+            $mLabel   = $mSelAll ? 'Todos' : ucwords(strtolower($listasInfo[(string)$filterLista]['nombre'] ?? 'Todos'));
+            $mIdx     = $mSelAll ? -1 : array_search((string)$filterLista, array_keys($listasInfo));
+            $mCol     = (!$mSelAll && $mIdx !== false) ? $mColors[$mIdx % count($mColors)] : null;
+            @endphp
+            <div style="display:flex; align-items:center; gap:8px;" x-data="{ promoOpen: false }">
+
+                {{-- Botón dropdown lista --}}
                 <div style="position:relative; flex-shrink:0;">
-                    <select wire:model.live="filterLista"
-                            style="-webkit-appearance:none; appearance:none; padding:8px 28px 8px 10px; background:#F8F7FF; border:2px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489; font-weight:600; cursor:pointer; outline:none; max-width:150px;">
-                        <option value="">Todas</option>
+                    <button @click="promoOpen = !promoOpen"
+                            style="display:flex; align-items:center; gap:6px; padding:8px 10px; border-radius:10px;
+                                   border:1.5px solid {{ $mSelAll ? '#E5E7EB' : ($mCol['selBorder'] ?? '#7B6FE8') }};
+                                   background:{{ $mSelAll ? '#fff' : ($mCol['selCard'] ?? '#EEEDFE') }};
+                                   cursor:pointer; -webkit-appearance:none; appearance:none;">
+                        <div style="width:22px; height:22px; border-radius:6px; background:{{ $mSelAll ? '#F3F4F6' : ($mCol['iconBg'] ?? '#7B6FE8') }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            @if ($mSelAll)
+                            <svg width="11" height="11" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                            @else
+                            <svg width="11" height="11" fill="none" stroke="#fff" viewBox="0 0 24 24">{!! $mIcons[$mIdx % count($mIcons)] !!}</svg>
+                            @endif
+                        </div>
+                        <span style="font-size:12px; font-weight:700; color:{{ $mSelAll ? '#374151' : ($mCol['text'] ?? '#534AB7') }}; white-space:nowrap; max-width:100px; overflow:hidden; text-overflow:ellipsis;">{{ $mLabel }}</span>
+                        <svg width="10" height="10" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" style="flex-shrink:0;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                        </svg>
+                    </button>
+
+                    {{-- Panel dropdown --}}
+                    <div x-show="promoOpen" x-cloak @click.away="promoOpen = false"
+                         style="position:absolute; top:calc(100% + 4px); left:0; background:#fff;
+                                border-radius:12px; box-shadow:0 8px 24px rgba(60,52,137,0.18);
+                                border:1px solid #EDE9FE; z-index:500; min-width:220px; overflow:hidden;">
+
+                        <button wire:click="$set('filterLista', '')" @click="promoOpen = false"
+                                style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
+                                       background:{{ $mSelAll ? '#FFF7ED' : '#fff' }}; border:none; cursor:pointer;
+                                       border-bottom:1px solid #F3F4F6; -webkit-appearance:none; appearance:none;">
+                            <div style="width:28px; height:28px; border-radius:8px; background:{{ $mSelAll ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="13" height="13" fill="none" stroke="{{ $mSelAll ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                            </div>
+                            <span style="font-size:13px; font-weight:700; color:{{ $mSelAll ? '#C2410C' : '#374151' }};">Todos</span>
+                        </button>
+
                         @foreach ($listasInfo as $lid => $info)
-                        <option value="{{ $lid }}">{{ ucwords(strtolower($info['nombre'])) }}</option>
+                        @php
+                            $mCi  = $loop->index % count($mColors);
+                            $mC   = $mColors[$mCi];
+                            $mS   = $filterLista === (string)$lid;
+                            $mIco = $mIcons[$mCi];
+                        @endphp
+                        <button wire:click="$set('filterLista', '{{ $lid }}')" @click="promoOpen = false"
+                                style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
+                                       background:{{ $mS ? $mC['selCard'] : '#fff' }}; border:none; cursor:pointer;
+                                       {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }} -webkit-appearance:none; appearance:none;">
+                            <div style="width:28px; height:28px; border-radius:8px; background:{{ $mS ? $mC['iconBg'] : $mC['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="13" height="13" fill="none" stroke="{{ $mS ? '#fff' : $mC['iconBg'] }}" viewBox="0 0 24 24">{!! $mIco !!}</svg>
+                            </div>
+                            <span style="font-size:13px; font-weight:700; color:{{ $mS ? $mC['text'] : '#374151' }}; white-space:nowrap;">{{ ucwords(strtolower($info['nombre'])) }}</span>
+                        </button>
                         @endforeach
-                    </select>
-                    <svg style="position:absolute; right:8px; top:50%; transform:translateY(-50%); pointer-events:none;" width="10" height="10" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                    </svg>
+                    </div>
                 </div>
-                @endif
+
                 {{-- Buscador --}}
                 <div style="position:relative; flex:1;">
                     <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; pointer-events:none;" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
