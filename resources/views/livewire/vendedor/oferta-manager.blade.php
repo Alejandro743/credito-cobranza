@@ -130,6 +130,25 @@
             </div>
         </div>
 
+        {{-- CARRITO --}}
+        <div class="relative flex-shrink-0"
+             style="width:58px; border-radius:10px; background:{{ empty($carrito) ? '#f9fafb' : '#f97316' }}; border:1.5px solid {{ empty($carrito) ? '#E5E7EB' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 10px rgba(249,115,22,0.30)' }}; transition:all 0.2s;">
+            <button wire:click="irResumen"
+                    @disabled(empty($carrito))
+                    class="w-full h-full flex items-center justify-center transition-all active:scale-95"
+                    style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
+                <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+            </button>
+            @if ($cantidad > 0)
+            <span class="absolute flex items-center justify-center font-bold text-white leading-none"
+                  style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
+                {{ $cantidad > 9 ? '9+' : $cantidad }}
+            </span>
+            @endif
+        </div>
+
     </div>
 </div>
 
@@ -161,6 +180,25 @@
                 <span style="font-size:14px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar cliente</span>
                 @endif
             </div>
+        </div>
+
+        {{-- CARRITO --}}
+        <div class="relative flex items-center justify-center flex-shrink-0"
+             style="width:44px; border-radius:8px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 8px rgba(249,115,22,0.30)' }};">
+            <button wire:click="irResumen"
+                    @disabled(empty($carrito))
+                    class="w-full h-full flex items-center justify-center transition-all active:scale-95"
+                    style="cursor:{{ empty($carrito) ? 'default' : 'pointer' }};">
+                <svg class="w-5 h-5" fill="none" stroke="{{ empty($carrito) ? '#d1d5db' : '#fff' }}" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+                </svg>
+            </button>
+            @if ($cantidad > 0)
+            <span class="absolute flex items-center justify-center font-bold text-white leading-none"
+                  style="top:-5px; right:-5px; min-width:18px; height:18px; border-radius:50%; background:#e24b4a; font-size:10px; padding:0 3px; border:2px solid #fff;">
+                {{ $cantidad > 9 ? '9+' : $cantidad }}
+            </span>
+            @endif
         </div>
 
     </div>
