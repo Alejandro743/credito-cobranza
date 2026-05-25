@@ -113,7 +113,7 @@
                 @endif
             </div>
             <div style="min-width:0; flex:1;">
-                <span style="font-size:9px; font-weight:700; color:#9B93E0; display:block; text-transform:uppercase; letter-spacing:0.08em;">{{ $clienteId ? 'Cliente seleccionado' : 'Cliente' }}</span>
+                <span style="font-size:9px; font-weight:700; color:#9B93E0; display:block; text-transform:uppercase; letter-spacing:0.08em;">Seleccionar Cliente</span>
                 @if ($clienteId)
                 <span style="font-size:15px; font-weight:700; color:#7B6FE8; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' — ' : '' }}{{ $clienteNombre }}</span>
                 @elseif ($sinListasActivas)
@@ -125,9 +125,6 @@
                 <span style="font-size:15px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar cliente</span>
                 @endif
             </div>
-            <svg width="14" height="14" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
         </div>
 
     </div>
@@ -152,7 +149,7 @@
                 @endif
             </div>
             <div style="min-width:0; flex:1;">
-                <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; text-transform:uppercase; letter-spacing:0.06em;">{{ $clienteId ? 'Cliente' : 'Cliente' }}</span>
+                <span style="font-size:9px; font-weight:600; color:#534AB7; display:block; text-transform:uppercase; letter-spacing:0.06em;">Seleccionar Cliente</span>
                 @if ($clienteId)
                 <span style="font-size:14px; font-weight:700; color:#7B6FE8; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
                 @elseif ($sinListasActivas)
