@@ -1071,7 +1071,7 @@
      x-transition:leave="transition ease-in duration-150"
      x-transition:leave-end="opacity-0"
      class="fixed inset-0 flex items-center justify-center"
-     style="z-index:98; background:rgba(30,24,80,0.22); backdrop-filter:blur(2px);"
+     style="z-index:300; background:rgba(30,24,80,0.22); backdrop-filter:blur(2px);"
      @click.self="showSearch = false">
 
     <div class="buscar-sheet"
