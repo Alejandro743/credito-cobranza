@@ -509,13 +509,13 @@
                     <button @click="n > 0 ? n-- : null"
                             class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
                             :style="n === 0 ? 'opacity:0.35; cursor:default;' : ''"
-                            style="width:30px; height:30px; border-radius:50%; background:#F8F7FF; border:1px solid #CECBF6; color:#534AB7; font-size:18px; line-height:1;">−</button>
+                            style="width:32px; height:32px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; clip-path:circle(16px at 16px 16px);">−</button>
                     {{-- N --}}
                     <span x-text="n" style="font-size:14px; font-weight:700; color:#3C3489; min-width:22px; text-align:center; flex-shrink:0;">{{ $qty }}</span>
                     {{-- [+] --}}
                     <button @click="n < maxStock ? n++ : null"
                             class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
-                            style="width:30px; height:30px; border-radius:50%; background:#F8F7FF; border:1px solid #CECBF6; color:#534AB7; font-size:18px; line-height:1;">+</button>
+                            style="width:32px; height:32px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; clip-path:circle(16px at 16px 16px);">+</button>
                     {{-- Agregar --}}
                     <button @click="if(n === 0) n = 1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n = 0)"
                             class="flex items-center justify-center gap-1 transition-all active:scale-95 flex-shrink-0"
@@ -529,7 +529,7 @@
                     @if ($qty > 0)
                     <button wire:click="quitar({{ $p['product_id'] }})"
                             class="flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
-                            style="width:32px; height:32px; border-radius:50%; background:#FEF2F2; border:none;">
+                            style="width:32px; height:32px; border-radius:50%; background:#FEF2F2; border:none; -webkit-appearance:none; appearance:none; clip-path:circle(16px at 16px 16px);">
                         <svg style="width:14px; height:14px;" fill="none" stroke="#e24b4a" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                         </svg>
