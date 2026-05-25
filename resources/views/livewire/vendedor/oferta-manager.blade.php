@@ -95,6 +95,13 @@
 </div>
 @endif {{-- /compact search bar --}}
 
+@if ($step === 'oferta')
+<div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); padding:16px 18px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
+    <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin:0 0 2px; text-align:center;">CARGAR PRODUCTOS</h2>
+    <p style="font-size:11px; color:rgba(255,255,255,0.75); margin:0; text-align:center;">Seleccioná los artículos para el pedido</p>
+</div>
+@endif
+
 {{-- ════════════ STICKY HEADER (stats + filtros) ════════════ --}}
 <div style="position:sticky; top:0; z-index:100; background:#fff;">
 
@@ -405,16 +412,11 @@
 </div>
 @else
 
-<div class="px-3 pt-3 pb-10">
+<div class="px-3 pt-2 pb-10">
     <style>
     @media (max-width:767px){ .card-body-desk, .card-foto{ display:none !important; } }
     @media (min-width:768px){ .card-body-mob{ display:none !important; } }
     </style>
-    {{-- Header CARGAR PRODUCTOS --}}
-    <div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:14px; padding:16px 18px; margin-bottom:14px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
-        <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin:0 0 2px; text-align:center;">CARGAR PRODUCTOS</h2>
-        <p style="font-size:11px; color:rgba(255,255,255,0.75); margin:0; text-align:center;">Seleccioná los artículos para el pedido</p>
-    </div>
     <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
         <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
         <span style="font-size:11px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:0.1em;">Carrito de Productos</span>
