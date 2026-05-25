@@ -461,8 +461,8 @@
 
                 {{-- CUERPO MÓVIL --}}
                 <div class="card-body-mob" style="padding:10px 12px 6px; display:flex; flex-direction:column; gap:0; flex:1;">
-                    {{-- Nombre + código + Precio/Pts — fondo lila clarito --}}
-                    <div style="background:#F0EEFF; border-radius:8px; padding:7px 10px; min-width:0;">
+                    {{-- Nombre + código + Precio/Pts --}}
+                    <div style="background:transparent; border:1.5px solid #C4B5FD; border-radius:8px; padding:7px 10px; min-width:0;">
                         {{-- Fila nombre --}}
                         <div style="display:flex; align-items:center; gap:6px; min-width:0;">
                             @if ($qty > 0)
