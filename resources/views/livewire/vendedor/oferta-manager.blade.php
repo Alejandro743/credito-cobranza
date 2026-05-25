@@ -207,8 +207,13 @@
             {{-- Todos --}}
             @php $selTodos = $filterLista === ''; @endphp
             <button wire:click="$set('filterLista', '')"
-                    class="promo-scroll flex-shrink-0 transition-all active:scale-95"
-                    style="padding:6px 16px; border-radius:20px; border:1.5px solid {{ $selTodos ? '#F97316' : '#E5E7EB' }}; background:{{ $selTodos ? '#FFF7ED' : '#fff' }}; cursor:pointer; box-shadow:{{ $selTodos ? '0 2px 8px rgba(249,115,22,0.15)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
+                    class="promo-scroll flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
+                    style="padding:6px 14px 6px 6px; border-radius:20px; border:1.5px solid {{ $selTodos ? '#F97316' : '#E5E7EB' }}; background:{{ $selTodos ? '#FFF7ED' : '#fff' }}; cursor:pointer; box-shadow:{{ $selTodos ? '0 2px 8px rgba(249,115,22,0.15)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
+                <div style="width:28px; height:28px; border-radius:10px; background:{{ $selTodos ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="13" height="13" fill="none" stroke="{{ $selTodos ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                    </svg>
+                </div>
                 <span style="font-size:12px; font-weight:700; color:{{ $selTodos ? '#C2410C' : '#374151' }}; white-space:nowrap;">Todos</span>
             </button>
 
@@ -217,10 +222,14 @@
                 $ci  = $loop->index % count($cardColors);
                 $col = $cardColors[$ci];
                 $sel = $filterLista === (string)$lid;
+                $ico = $iconPaths[$ci];
             @endphp
             <button wire:click="$set('filterLista', '{{ $lid }}')"
-                    class="flex-shrink-0 transition-all active:scale-95"
-                    style="padding:6px 16px; border-radius:20px; border:1.5px solid {{ $sel ? $col['selBorder'] : '#E5E7EB' }}; background:{{ $sel ? $col['selCard'] : '#fff' }}; cursor:pointer; box-shadow:{{ $sel ? '0 2px 8px rgba(0,0,0,0.10)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
+                    class="flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
+                    style="padding:6px 14px 6px 6px; border-radius:20px; border:1.5px solid {{ $sel ? $col['selBorder'] : '#E5E7EB' }}; background:{{ $sel ? $col['selCard'] : '#fff' }}; cursor:pointer; box-shadow:{{ $sel ? '0 2px 8px rgba(0,0,0,0.10)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
+                <div style="width:28px; height:28px; border-radius:10px; background:{{ $sel ? $col['iconBg'] : $col['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="13" height="13" fill="none" stroke="{{ $sel ? '#fff' : $col['iconBg'] }}" viewBox="0 0 24 24">{!! $ico !!}</svg>
+                </div>
                 <span style="font-size:12px; font-weight:700; color:{{ $sel ? $col['text'] : '#374151' }}; white-space:nowrap;">{{ ucwords(strtolower($info['nombre'])) }}</span>
             </button>
             @endforeach
@@ -259,11 +268,18 @@
         {{-- Botón selector --}}
         <div style="position:relative; flex-shrink:0;">
             <button @click="promoOpen = !promoOpen"
-                    style="display:flex; align-items:center; gap:6px; padding:8px 12px; border-radius:10px;
+                    style="display:flex; align-items:center; gap:6px; padding:8px 10px; border-radius:10px;
                            border:1.5px solid {{ $selIsAll ? '#E5E7EB' : ($selColMob['selBorder'] ?? '#7B6FE8') }};
                            background:{{ $selIsAll ? '#fff' : ($selColMob['selCard'] ?? '#EEEDFE') }};
                            cursor:pointer; -webkit-appearance:none; appearance:none;">
-                <span style="font-size:12px; font-weight:700; color:{{ $selIsAll ? '#374151' : ($selColMob['text'] ?? '#534AB7') }}; white-space:nowrap; max-width:120px; overflow:hidden; text-overflow:ellipsis;">{{ $selLabel }}</span>
+                <div style="width:22px; height:22px; border-radius:6px; background:{{ $selIsAll ? '#F3F4F6' : ($selColMob['iconBg'] ?? '#7B6FE8') }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    @if ($selIsAll)
+                    <svg width="11" height="11" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                    @else
+                    <svg width="11" height="11" fill="none" stroke="#fff" viewBox="0 0 24 24">{!! $iconPaths[$selIdx % count($iconPaths)] !!}</svg>
+                    @endif
+                </div>
+                <span style="font-size:12px; font-weight:700; color:{{ $selIsAll ? '#374151' : ($selColMob['text'] ?? '#534AB7') }}; white-space:nowrap; max-width:90px; overflow:hidden; text-overflow:ellipsis;">{{ $selLabel }}</span>
                 <svg width="10" height="10" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" style="flex-shrink:0;">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                 </svg>
@@ -277,9 +293,12 @@
 
                 {{-- Todos --}}
                 <button wire:click="$set('filterLista', '')" @click="promoOpen = false"
-                        style="width:100%; display:flex; align-items:center; padding:10px 16px;
+                        style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
                                background:{{ $selIsAll ? '#FFF7ED' : '#fff' }}; border:none; cursor:pointer;
                                border-bottom:1px solid #F3F4F6; -webkit-appearance:none; appearance:none;">
+                    <div style="width:28px; height:28px; border-radius:8px; background:{{ $selIsAll ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="13" height="13" fill="none" stroke="{{ $selIsAll ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                    </div>
                     <span style="font-size:13px; font-weight:700; color:{{ $selIsAll ? '#C2410C' : '#374151' }};">Todos</span>
                 </button>
 
@@ -288,11 +307,15 @@
                     $ci3  = $loop->index % count($cardColors);
                     $col3 = $cardColors[$ci3];
                     $sel3 = $filterLista === (string)$lid;
+                    $ico3 = $iconPaths[$ci3];
                 @endphp
                 <button wire:click="$set('filterLista', '{{ $lid }}')" @click="promoOpen = false"
-                        style="width:100%; display:flex; align-items:center; padding:10px 16px;
+                        style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
                                background:{{ $sel3 ? $col3['selCard'] : '#fff' }}; border:none; cursor:pointer;
                                {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }} -webkit-appearance:none; appearance:none;">
+                    <div style="width:28px; height:28px; border-radius:8px; background:{{ $sel3 ? $col3['iconBg'] : $col3['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="13" height="13" fill="none" stroke="{{ $sel3 ? '#fff' : $col3['iconBg'] }}" viewBox="0 0 24 24">{!! $ico3 !!}</svg>
+                    </div>
                     <span style="font-size:13px; font-weight:700; color:{{ $sel3 ? $col3['text'] : '#374151' }}; white-space:nowrap;">{{ ucwords(strtolower($info['nombre'])) }}</span>
                 </button>
                 @endforeach
