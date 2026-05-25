@@ -1409,7 +1409,9 @@
             <div style="display:flex; flex-direction:column; gap:8px;">
                 @forelse (collect($ofertaPorLista)->flatten(1) as $p)
                 @php $pid2=(string)$p['product_id']; $qty2=isset($carrito[$pid2])?$carrito[$pid2]['cantidad']:0; @endphp
-                <div wire:key="mod-{{ $pid2 }}"
+                <div x-data="{ n: 0, maxStock: @js((int)$p['stock']) }"
+                     x-on:carrito-vaciado.window="n = 0"
+                     wire:key="mod-{{ $pid2 }}"
                      style="background:#fff; border:1.5px solid {{ $qty2 > 0 ? '#f97316' : '#C4B5FD' }}; border-radius:12px; padding:10px 12px;">
 
                     {{-- Fila 1: indicador circular + código - descripción --}}
@@ -1423,7 +1425,7 @@
                         <span style="font-size:13px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;" title="{{ ucwords(strtolower($p['nombre'])) }}">{{ ucwords(strtolower($p['nombre'])) }}</span>
                     </div>
 
-                    {{-- Fila 2: Precio | Puntos | Total Bs | Total Pts --}}
+                    {{-- Fila 2: Precio | Puntos | Total Bs (qty en carrito) | Total Pts --}}
                     <div style="display:flex; align-items:stretch; margin-bottom:8px; background:#F8F7FF; border-radius:8px; overflow:hidden;">
                         <div style="flex:1; text-align:center; padding:5px 4px;">
                             <p style="font-size:8px; color:#9B93E0; margin:0 0 1px; font-weight:600; white-space:nowrap;">Precio Bs</p>
@@ -1446,17 +1448,23 @@
                         </div>
                     </div>
 
-                    {{-- Pie: − qty + [trash] --}}
-                    <div style="display:flex; align-items:center; justify-content:flex-end; gap:8px;">
-                        <button wire:click="decrementar({{ $p['product_id'] }})"
-                                style="width:32px; height:32px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $qty2 === 0 ? 'opacity:0.3; cursor:default;' : 'cursor:pointer;' }}">−</button>
-                        <span style="font-size:15px; font-weight:800; color:#3C3489; min-width:22px; text-align:center; flex-shrink:0;">{{ $qty2 }}</span>
-                        <button wire:click="incrementar({{ $p['product_id'] }})"
-                                style="width:32px; height:32px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; line-height:1; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">+</button>
+                    {{-- Pie: − n + [Agregar naranja] [trash rojo] --}}
+                    <div style="display:flex; align-items:center; justify-content:flex-end; gap:6px;">
+                        <button @click="n > 0 ? n-- : null"
+                                :style="{ opacity: n===0 ? '0.3' : '1', cursor: n===0 ? 'default' : 'pointer' }"
+                                style="width:30px; height:30px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">−</button>
+                        <span x-text="n" style="font-size:15px; font-weight:800; color:#3C3489; min-width:22px; text-align:center; flex-shrink:0;">0</span>
+                        <button @click="n < maxStock ? n++ : null"
+                                :style="{ opacity: n>=maxStock ? '0.3' : '1', cursor: n>=maxStock ? 'not-allowed' : 'pointer' }"
+                                style="width:30px; height:30px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">+</button>
+                        <button @click="if(n===0) n=1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n=0)"
+                                style="background:#f97316; color:#fff; border:none; border-radius:8px; padding:5px 12px; font-size:12px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; white-space:nowrap; flex-shrink:0;">
+                            Agregar
+                        </button>
                         @if ($qty2 > 0)
                         <button wire:click="quitar({{ $p['product_id'] }})"
-                                style="width:32px; height:32px; border-radius:50%; background:#ef4444; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none; box-shadow:0 2px 8px rgba(239,68,68,0.40);">
-                            <svg style="width:14px; height:14px;" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                style="width:30px; height:30px; border-radius:50%; background:#ef4444; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none; box-shadow:0 2px 8px rgba(239,68,68,0.40);">
+                            <svg style="width:13px; height:13px;" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
                         @endif
                     </div>
