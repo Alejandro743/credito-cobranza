@@ -475,11 +475,11 @@
                             <span style="font-size:15px; font-weight:900; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.06em; flex-shrink:0;">{{ $p['code'] ?? '' }}</span>
                             <div style="display:flex; align-items:baseline; gap:8px; flex-shrink:0;">
                                 <div style="display:flex; align-items:baseline; gap:3px;">
-                                    <span style="font-size:9px; font-weight:600; color:#9B93E0;">Bs</span>
+                                    <span style="font-size:9px; font-weight:800; color:#9B93E0;">Precio Bs</span>
                                     <span style="font-size:13px; font-weight:800; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
                                 </div>
                                 <div style="display:flex; align-items:baseline; gap:3px;">
-                                    <span style="font-size:9px; font-weight:600; color:#9B93E0;">Pts</span>
+                                    <span style="font-size:9px; font-weight:800; color:#9B93E0;">Puntos</span>
                                     <span style="font-size:13px; font-weight:800; color:#0F6E56;">{{ $p['puntos'] }}</span>
                                 </div>
                             </div>
