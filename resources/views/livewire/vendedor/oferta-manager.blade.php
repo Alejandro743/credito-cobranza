@@ -1293,20 +1293,9 @@
 
         {{-- TOP BAR --}}
         <div style="flex-shrink:0; background:#fff; border-bottom:1.5px solid #EDE9FE; padding:12px 14px 10px;">
-            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
-                <button @click="showProductos = false"
-                        style="width:32px; height:32px; border-radius:50%; background:#F3F4F6; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
-                    <svg width="15" height="15" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-                    </svg>
-                </button>
-                <div style="flex:1; min-width:0;">
-                    <span style="font-size:13px; font-weight:900; color:#1a1a1a; letter-spacing:0.08em; text-transform:uppercase; display:block;">Seleccionar Artículos</span>
-                    <div style="height:2px; background:linear-gradient(to right,#7B6FE8,#C4B5FD,transparent); border-radius:1px; margin-top:3px;"></div>
-                </div>
-                @if ($cantidad > 0)
-                <span style="background:#f97316; color:#fff; border-radius:99px; padding:3px 10px; font-size:12px; font-weight:800; flex-shrink:0;">{{ $cantidad }} en carrito</span>
-                @endif
+            <div style="text-align:center; margin-bottom:10px;">
+                <span style="font-size:16px; font-weight:900; color:#1a1a1a; letter-spacing:0.08em; text-transform:uppercase; display:block;">Seleccionar Artículos</span>
+                <div style="height:2px; background:linear-gradient(to right,transparent,#7B6FE8,#C4B5FD,transparent); border-radius:1px; margin-top:4px;"></div>
             </div>
 
             {{-- Dropdown lista + Buscador en misma fila --}}
@@ -1480,11 +1469,8 @@
         {{-- PIE MODAL: cerrar --}}
         <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1.5px solid #EDE9FE;">
             <button @click="showProductos = false"
-                    style="width:100%; padding:13px; background:linear-gradient(180deg,#8B7FF0 0%,#6D5FE8 100%); color:#fff; font-size:14px; font-weight:800; border-radius:10px; border:none; border-bottom:4px solid #3730a3; cursor:pointer; -webkit-appearance:none; appearance:none; box-shadow:0 4px 14px rgba(79,70,229,0.35); transition:transform 0.1s, border-bottom-width 0.1s;"
-                    onmousedown="this.style.transform='translateY(3px)'; this.style.borderBottomWidth='1px';"
-                    onmouseup="this.style.transform=''; this.style.borderBottomWidth='4px';"
-                    onmouseleave="this.style.transform=''; this.style.borderBottomWidth='4px';">
-                Listo — Ver seleccionados
+                    style="width:100%; padding:13px; background:#f97316; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.07em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                &laquo; Volver &mdash; {{ $cantidad }} Unidades
             </button>
         </div>
 </div>
