@@ -112,7 +112,7 @@
     {{-- Label ancho completo --}}
     <div style="display:flex; align-items:center; gap:5px; margin-bottom:6px;">
         <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-        <span style="font-size:11px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:0.1em;">Dato Cliente</span>
+        <span style="font-size:9px; font-weight:800; color:#7B6FE8; letter-spacing:0.05em;">Dato Cliente</span>
         <div style="flex:1; height:1px; background:#C4B5FD;"></div>
     </div>
     {{-- Card cliente + botón carrito --}}
@@ -170,7 +170,7 @@
     {{-- Label ancho completo --}}
     <div style="display:flex; align-items:center; gap:4px; margin-bottom:5px;">
         <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-        <span style="font-size:11px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:0.1em;">Dato Cliente</span>
+        <span style="font-size:9px; font-weight:800; color:#7B6FE8; letter-spacing:0.05em;">Dato Cliente</span>
         <div style="flex:1; height:1px; background:#C4B5FD;"></div>
     </div>
     {{-- Card cliente + botón carrito --}}
@@ -421,7 +421,7 @@
     </style>
     <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
         <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-        <span style="font-size:11px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:0.1em;">Carrito de Productos</span>
+        <span style="font-size:9px; font-weight:800; color:#7B6FE8; letter-spacing:0.05em;">Carrito de Productos</span>
         <div style="flex:1; height:1px; background:#C4B5FD;"></div>
     </div>
     <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px;">
@@ -514,7 +514,7 @@
                 </div>
 
                 {{-- PIE --}}
-                <div style="padding:6px 12px 10px; display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                <div style="padding:6px 12px 10px; display:flex; align-items:center; justify-content:flex-end; gap:6px; flex-shrink:0;">
                     {{-- [−] --}}
                     <button @click="n > 0 ? n-- : null"
                             class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
