@@ -1288,18 +1288,11 @@
      x-transition:enter-end="opacity-100"
      x-transition:leave="transition ease-in duration-150"
      x-transition:leave-end="opacity-0"
-     class="fixed inset-0 flex items-end sm:items-center justify-center"
-     style="z-index:400; background:rgba(30,24,80,0.30); backdrop-filter:blur(2px);"
-     @click.self="showProductos = false">
-
-    <div x-transition:enter="transition ease-out duration-200"
-         x-transition:enter-start="opacity-0 translate-y-4"
-         x-transition:enter-end="opacity-100 translate-y-0"
-         style="background:#fff; border-radius:20px 20px 0 0; width:100%; max-width:640px; height:88vh; display:flex; flex-direction:column; overflow:hidden; box-shadow:0 -8px 40px rgba(60,52,137,0.20);"
-         class="sm:rounded-2xl sm:h-auto sm:max-h-[88vh]">
+     class="fixed inset-0 flex flex-col"
+     style="z-index:400; background:#fff;">
 
         {{-- TOP BAR --}}
-        <div style="flex-shrink:0; background:#fff; border-bottom:1px solid #EDE9FE; padding:12px 14px 10px;">
+        <div style="flex-shrink:0; background:#fff; border-bottom:1.5px solid #EDE9FE; padding:12px 14px 10px;">
             <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
                 <button @click="showProductos = false"
                         style="width:32px; height:32px; border-radius:50%; background:#F3F4F6; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
@@ -1307,7 +1300,10 @@
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
                     </svg>
                 </button>
-                <span style="font-size:15px; font-weight:800; color:#1a1a1a; flex:1;">Seleccionar Artículos</span>
+                <div style="flex:1; min-width:0;">
+                    <span style="font-size:13px; font-weight:900; color:#1a1a1a; letter-spacing:0.08em; text-transform:uppercase; display:block;">Seleccionar Artículos</span>
+                    <div style="height:2px; background:linear-gradient(to right,#7B6FE8,#C4B5FD,transparent); border-radius:1px; margin-top:3px;"></div>
+                </div>
                 @if ($cantidad > 0)
                 <span style="background:#f97316; color:#fff; border-radius:99px; padding:3px 10px; font-size:12px; font-weight:800; flex-shrink:0;">{{ $cantidad }} en carrito</span>
                 @endif
@@ -1448,18 +1444,19 @@
                         </div>
                     </div>
 
-                    {{-- Pie: − n + [Agregar naranja] [trash rojo] --}}
-                    <div style="display:flex; align-items:center; justify-content:flex-end; gap:6px;">
+                    {{-- Pie: − n + [Agregar icono+código-nombre] [trash rojo] --}}
+                    <div style="display:flex; align-items:center; gap:6px;">
                         <button @click="n > 0 ? n-- : null"
-                                :style="{ opacity: n===0 ? '0.3' : '1', cursor: n===0 ? 'default' : 'pointer' }"
-                                style="width:30px; height:30px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">−</button>
+                                :style="{ opacity: n===0 ? '0.35' : '1', cursor: n===0 ? 'default' : 'pointer' }"
+                                style="width:30px; height:30px; border-radius:50%; background:#E5E7EB; border:none; color:#6B7280; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">−</button>
                         <span x-text="n" style="font-size:15px; font-weight:800; color:#3C3489; min-width:22px; text-align:center; flex-shrink:0;">0</span>
                         <button @click="n < maxStock ? n++ : null"
-                                :style="{ opacity: n>=maxStock ? '0.3' : '1', cursor: n>=maxStock ? 'not-allowed' : 'pointer' }"
-                                style="width:30px; height:30px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">+</button>
+                                :style="{ opacity: n>=maxStock ? '0.35' : '1', cursor: n>=maxStock ? 'not-allowed' : 'pointer' }"
+                                style="width:30px; height:30px; border-radius:50%; background:#E5E7EB; border:none; color:#6B7280; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">+</button>
                         <button @click="if(n===0) n=1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n=0)"
-                                style="background:#f97316; color:#fff; border:none; border-radius:8px; padding:5px 12px; font-size:12px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; white-space:nowrap; flex-shrink:0;">
-                            Agregar
+                                style="flex:1; background:#f97316; color:#fff; border:none; border-radius:8px; padding:6px 10px; font-size:13px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; gap:6px; min-width:0; overflow:hidden;">
+                            <svg style="width:14px; height:14px; flex-shrink:0;" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                            <span style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;"><strong>{{ $p['code'] ?? '' }}</strong> — {{ ucwords(strtolower($p['nombre'])) }}</span>
                         </button>
                         @if ($qty2 > 0)
                         <button wire:click="quitar({{ $p['product_id'] }})"
@@ -1479,13 +1476,15 @@
         </div>
 
         {{-- PIE MODAL: cerrar --}}
-        <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1px solid #EDE9FE;">
+        <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1.5px solid #EDE9FE;">
             <button @click="showProductos = false"
-                    style="width:100%; padding:12px; background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); color:#fff; font-size:14px; font-weight:800; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                    style="width:100%; padding:13px; background:linear-gradient(180deg,#8B7FF0 0%,#6D5FE8 100%); color:#fff; font-size:14px; font-weight:800; border-radius:10px; border:none; border-bottom:4px solid #3730a3; cursor:pointer; -webkit-appearance:none; appearance:none; box-shadow:0 4px 14px rgba(79,70,229,0.35); transition:transform 0.1s, border-bottom-width 0.1s;"
+                    onmousedown="this.style.transform='translateY(3px)'; this.style.borderBottomWidth='1px';"
+                    onmouseup="this.style.transform=''; this.style.borderBottomWidth='4px';"
+                    onmouseleave="this.style.transform=''; this.style.borderBottomWidth='4px';">
                 Listo — Ver seleccionados
             </button>
         </div>
-    </div>
 </div>
 @endif
 
