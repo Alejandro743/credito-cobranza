@@ -447,7 +447,7 @@
                         <span style="float:right; margin-left:6px; width:20px; height:20px; border-radius:50%; background:#f97316; color:#fff; font-size:10px; font-weight:800; display:inline-flex; align-items:center; justify-content:center;">{{ $qty }}</span>
                         @endif
                         <span style="font-size:15px; font-weight:800; color:#3C3489; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; letter-spacing:0.01em;">{{ $p['nombre'] }}</span>
-                        <span style="font-size:13px; font-weight:900; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.06em; display:inline-block; margin-top:1px;">{{ $p['code'] ?? '' }}</span>
+                        <span style="font-size:16px; font-weight:900; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.08em; display:inline-block; margin-top:1px;">{{ $p['code'] ?? '' }}</span>
                     </div>
                     {{-- Datos --}}
                     <div style="display:flex; flex-direction:column; gap:3px;">
