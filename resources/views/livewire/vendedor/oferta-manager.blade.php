@@ -29,10 +29,80 @@
 </div>
 @endif
 
-{{-- ══════════════════════════════════ STEPS: CLIENTE + OFERTA ══════════════ --}}
-@if ($step === 'cliente' || $step === 'oferta')
+{{-- ══════════════════════════════════ STEP: CLIENTE ══════════════════════════ --}}
+@if ($step === 'cliente')
+@if (!$clienteId)
+{{-- ── LANDING: Registrar Nuevo Plan ───────────────────────────────────────── --}}
+<div style="min-height:calc(100vh - 80px); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:32px 24px;">
+    <button @click="showSearch = true"
+            style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:24px; padding:36px 48px; box-shadow:0 8px 36px rgba(123,111,232,0.45); text-align:center; border:none; cursor:pointer; transition:transform 0.15s, box-shadow 0.15s; -webkit-appearance:none; appearance:none;"
+            onmouseover="this.style.transform='scale(1.02)'; this.style.boxShadow='0 12px 44px rgba(123,111,232,0.55)'"
+            onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 8px 36px rgba(123,111,232,0.45)'">
+        <div style="width:64px; height:64px; border-radius:18px; background:rgba(255,255,255,0.20); display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
+            <svg width="32" height="32" fill="none" stroke="#fff" stroke-width="1.8" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+            </svg>
+        </div>
+        <p style="font-size:22px; font-weight:800; color:#fff; margin:0 0 6px; letter-spacing:-0.3px;">Registrar Nuevo Plan</p>
+        <p style="font-size:13px; color:rgba(255,255,255,0.75); margin:0;">Toca para buscar o crear un cliente</p>
+    </button>
+</div>
+@else
+{{-- ── DATOS CLIENTE ────────────────────────────────────────────────────────── --}}
+<div style="max-width:480px; margin:0 auto; padding:20px 16px 40px;">
+    {{-- Título lila --}}
+    <div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:14px; padding:10px 18px; box-shadow:0 4px 18px rgba(123,111,232,0.35); margin-bottom:18px;">
+        <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin:0; text-align:center;">Datos Cliente</h2>
+    </div>
+    {{-- Card cliente --}}
+    <div style="border:1.5px solid #C4B5FD; border-radius:16px; padding:20px; background:#fff; box-shadow:2px 6px 24px rgba(123,111,232,0.12); margin-bottom:14px;">
+        {{-- Avatar + nombre --}}
+        <div style="display:flex; align-items:center; gap:14px; margin-bottom:16px; padding-bottom:14px; border-bottom:1px solid #EDE9FE;">
+            <div style="width:54px; height:54px; border-radius:14px; background:#EDE9FE; border:2px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:24px; font-weight:800; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
+            </div>
+            <div style="min-width:0; flex:1;">
+                <span style="font-size:10px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:0.08em; display:block;">Nombre</span>
+                <span style="font-size:18px; font-weight:800; color:#1a1a1a; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $clienteNombre }}</span>
+            </div>
+        </div>
+        @if ($clienteCI)
+        <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:10px;">
+            <span style="font-size:10px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:0.08em; flex-shrink:0; min-width:48px;">CI</span>
+            <span style="font-size:15px; font-weight:800; color:#1a1a1a;">{{ $clienteCI }}</span>
+        </div>
+        @endif
+        @if ($entregaClienteCiudad)
+        <div style="display:flex; align-items:baseline; gap:10px; margin-bottom:10px;">
+            <span style="font-size:10px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:0.08em; flex-shrink:0; min-width:48px;">Ciudad</span>
+            <span style="font-size:15px; font-weight:700; color:#1a1a1a;">{{ $entregaClienteCiudad }}</span>
+        </div>
+        @endif
+        @if ($entregaClienteDireccion)
+        <div style="display:flex; align-items:baseline; gap:10px;">
+            <span style="font-size:10px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:0.08em; flex-shrink:0; min-width:48px;">Dir.</span>
+            <span style="font-size:14px; font-weight:600; color:#374151; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $entregaClienteDireccion }}</span>
+        </div>
+        @endif
+    </div>
+    {{-- Cambiar cliente --}}
+    <button @click="showSearch = true"
+            style="display:block; width:100%; text-align:center; padding:10px; font-size:13px; font-weight:700; color:#7B6FE8; background:none; border:1.5px solid #C4B5FD; border-radius:10px; cursor:pointer; margin-bottom:10px; -webkit-appearance:none; appearance:none;">
+        Cambiar cliente
+    </button>
+    {{-- Continuar --}}
+    <button wire:click="irOferta"
+            style="display:block; width:100%; padding:16px; font-size:16px; font-weight:800; color:#fff; background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border:none; border-radius:14px; cursor:pointer; box-shadow:0 4px 18px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none; letter-spacing:0.01em;">
+        Continuar — Cargar Productos
+    </button>
+</div>
+@endif
+@endif
 
-{{-- ── BUSCADOR DE CLIENTE ───────────────────────────────────────────────── --}}
+{{-- ══════════════════════════════════ STEP: OFERTA ════════════════════════ --}}
+@if ($step === 'oferta')
+
+{{-- ── (old compact search bar - disabled) ────────────────────────────────── --}}
 @if (false) {{-- compact search bar replaced by modal --}}
 <div class="bg-white px-3 pt-2.5 pb-2 border-b border-gray-100">
     @if ($sinListasActivas)
@@ -95,13 +165,11 @@
 </div>
 @endif {{-- /compact search bar --}}
 
-@if ($step === 'oferta')
 <div style="padding:12px 12px 0;">
     <div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:14px; padding:10px 18px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
         <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin:0; text-align:center;">CARGAR PRODUCTOS</h2>
     </div>
 </div>
-@endif
 
 {{-- ════════════ STICKY HEADER (stats + filtros) ════════════ --}}
 <div style="position:sticky; top:0; z-index:10; background:#fff;">
@@ -393,9 +461,6 @@
 
 </div>{{-- /sticky header --}}
 
-{{-- ── STEP OFERTA ──────────────────────────────────────────────────────── --}}
-@if ($step === 'oferta')
-
 @if ($sinListasComunes)
 <div class="flex flex-col items-center justify-center py-16 text-center px-4">
     <div class="w-14 h-14 rounded-full flex items-center justify-center mb-4" style="background:#EEEDFE;">
@@ -562,7 +627,6 @@
 
 @endif {{-- sinListasComunes --}}
 @endif {{-- step oferta --}}
-@endif {{-- step cliente || oferta --}}
 
 
 {{-- ═════════════════════════════════════════════ STEP: RESUMEN ══════════ --}}

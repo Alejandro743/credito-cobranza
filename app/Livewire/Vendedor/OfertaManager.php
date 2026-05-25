@@ -174,6 +174,10 @@ class OfertaManager extends Component
             $this->entregaClienteDireccion = $cliente->direccion ?? '';
         }
 
+    }
+
+    public function irOferta(): void
+    {
         $this->cargarOferta();
     }
 
