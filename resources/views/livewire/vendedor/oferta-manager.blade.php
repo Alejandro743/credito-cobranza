@@ -596,23 +596,22 @@
         <span style="font-size:11px; font-weight:600; color:#9B93E0;">{{ count($carrito) }} {{ count($carrito) === 1 ? 'ítem' : 'ítems' }}</span>
     </div>
 
-    {{-- Tabla Productos --}}
-    <div style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:2px 6px 20px rgba(60,52,137,0.10); margin-bottom:14px;">
+    <style>
+    @media (max-width:767px) { .prod-desk-wrap { display:none !important; } }
+    @media (min-width:768px) { .prod-mob-cards { display:none !important; } }
+    </style>
+
+    {{-- DESKTOP: tabla --}}
+    <div class="prod-desk-wrap" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:2px 6px 20px rgba(60,52,137,0.10); margin-bottom:14px;">
         @foreach ($carrito as $pid => $item)
         <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }}" wire:key="res-{{ $pid }}">
-
-            {{-- Foto --}}
             <div style="width:52px; height:52px; border-radius:10px; border:1px solid #EDE9FE; background:#FAFAFE; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
                 @if ($item['image'])
                 <img src="{{ $item['image'] }}" alt="{{ $item['nombre'] }}" style="width:100%; height:100%; object-fit:contain;">
                 @else
-                <svg width="22" height="22" fill="none" stroke="#CECBF6" stroke-width="1.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                </svg>
+                <svg width="22" height="22" fill="none" stroke="#CECBF6" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                 @endif
             </div>
-
-            {{-- Info --}}
             <div style="flex:1; min-width:0;">
                 <div style="display:flex; align-items:center; gap:6px; margin-bottom:2px;">
                     <span style="font-size:9px; font-weight:700; color:#7B6FE8; background:#EEEDFE; border-radius:4px; padding:1px 5px; text-transform:uppercase; letter-spacing:0.06em; white-space:nowrap;">{{ $item['code'] ?? '' }}</span>
@@ -621,30 +620,68 @@
                 <span style="font-size:13px; font-weight:700; color:#3C3489; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $item['nombre'] }}</span>
                 <span style="font-size:11px; color:#9B93E0;">Bs {{ number_format($item['precio'], 2) }} c/u</span>
             </div>
-
-            {{-- Total + puntos --}}
             <div style="text-align:right; flex-shrink:0;">
                 <span style="font-size:15px; font-weight:800; color:#7c3aed; display:block;">Bs {{ number_format($item['precio'] * $item['cantidad'], 2) }}</span>
                 @if ($item['puntos'] > 0)
                 <span style="font-size:10px; font-weight:700; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:1px 7px;">+{{ $item['puntos'] * $item['cantidad'] }} pts</span>
                 @endif
             </div>
-
-            {{-- Eliminar --}}
             <button wire:click="quitar({{ $item['product_id'] }})"
                     style="width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#FEF2F2; border-radius:10px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; clip-path:inset(0 round 10px);">
-                <svg width="17" height="17" fill="none" stroke="#ef4444" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                </svg>
+                <svg width="17" height="17" fill="none" stroke="#ef4444" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             </button>
         </div>
         @endforeach
-
-        {{-- Total --}}
         <div style="display:flex; justify-content:flex-end; align-items:center; gap:10px; padding:10px 14px; background:#F8F7FF; border-top:1px solid #EDE9FE;">
             <span style="font-size:12px; font-weight:600; color:#534AB7;">Total</span>
             <span style="font-size:18px; font-weight:800; color:#3C3489;">Bs {{ number_format($total, 2) }}</span>
             <span style="font-size:11px; font-weight:700; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:2px 9px;">+{{ number_format($puntos) }} pts</span>
+        </div>
+    </div>
+
+    {{-- MOBILE: cards carrito --}}
+    <div class="prod-mob-cards" style="margin-bottom:14px;">
+        @foreach ($carrito as $pid => $item)
+        <div style="background:#fff; border-radius:14px; box-shadow:2px 6px 20px rgba(60,52,137,0.10); margin-bottom:10px; overflow:hidden;" wire:key="mob-{{ $pid }}">
+            <div style="display:flex; gap:12px; padding:12px;">
+                {{-- Imagen --}}
+                <div style="width:68px; height:68px; border-radius:12px; border:1px solid #EDE9FE; background:#FAFAFE; overflow:hidden; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
+                    @if ($item['image'])
+                    <img src="{{ $item['image'] }}" alt="{{ $item['nombre'] }}" style="width:100%; height:100%; object-fit:contain;">
+                    @else
+                    <svg width="26" height="26" fill="none" stroke="#CECBF6" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    @endif
+                </div>
+                {{-- Info --}}
+                <div style="flex:1; min-width:0;">
+                    <span style="font-size:14px; font-weight:800; color:#3C3489; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; letter-spacing:0.01em;">{{ $item['nombre'] }}</span>
+                    <div style="display:flex; align-items:center; gap:6px; margin-top:3px;">
+                        <span style="font-size:9px; font-weight:700; color:#7B6FE8; background:#EEEDFE; border-radius:4px; padding:1px 6px; text-transform:uppercase; letter-spacing:0.06em;">{{ $item['code'] ?? '' }}</span>
+                        <span style="font-size:12px; font-weight:700; color:#A89FD8;">× {{ $item['cantidad'] }}</span>
+                    </div>
+                    <span style="font-size:11px; color:#B0A8E0; display:block; margin-top:2px;">Bs {{ number_format($item['precio'], 2) }} c/u</span>
+                </div>
+                {{-- Botón eliminar --}}
+                <button wire:click="quitar({{ $item['product_id'] }})"
+                        style="width:32px; height:32px; flex-shrink:0; align-self:flex-start; display:flex; align-items:center; justify-content:center; background:#FEF2F2; border-radius:9px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; clip-path:inset(0 round 9px);">
+                    <svg width="15" height="15" fill="none" stroke="#ef4444" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+            </div>
+            {{-- Pie: total + puntos --}}
+            <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#F8F7FF; border-top:1px solid #EDE9FE;">
+                <span style="font-size:11px; font-weight:600; color:#9B93E0; flex:1;">Total</span>
+                <span style="font-size:17px; font-weight:800; color:#7c3aed;">Bs {{ number_format($item['precio'] * $item['cantidad'], 2) }}</span>
+                @if ($item['puntos'] > 0)
+                <span style="font-size:10px; font-weight:700; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:2px 8px; white-space:nowrap;">+{{ $item['puntos'] * $item['cantidad'] }} pts</span>
+                @endif
+            </div>
+        </div>
+        @endforeach
+        {{-- Total general --}}
+        <div style="display:flex; align-items:center; gap:10px; padding:12px 14px; background:#F8F7FF; border-radius:14px; border:1px solid #EDE9FE;">
+            <span style="font-size:13px; font-weight:700; color:#534AB7; flex:1;">Total Pedido</span>
+            <span style="font-size:19px; font-weight:800; color:#3C3489;">Bs {{ number_format($total, 2) }}</span>
+            <span style="font-size:11px; font-weight:700; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:3px 10px; white-space:nowrap;">+{{ number_format($puntos) }} pts</span>
         </div>
     </div>
 
