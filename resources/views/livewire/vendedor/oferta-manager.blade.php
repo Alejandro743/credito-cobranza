@@ -563,29 +563,7 @@
     </div>
 </div>
 
-{{-- Botón flotante carrito --}}
-@if (!$sinListasComunes && $cantidad > 0)
-<div style="position:fixed; top:80px; right:16px; z-index:200; display:flex; flex-direction:column; align-items:center; gap:4px;">
-    <div style="position:relative; width:64px; height:64px;">
-        {{-- Sombra circular separada (clip-path corta la sombra, se pone en wrapper) --}}
-        <div style="position:absolute; inset:0; border-radius:32px;
-                    box-shadow:0 4px 20px rgba(249,115,22,0.6); pointer-events:none;"></div>
-        <div wire:click="irResumen"
-             style="position:absolute; inset:0; background:#F97316; cursor:pointer;
-                    clip-path:circle(32px at 32px 32px);
-                    display:flex; align-items:center; justify-content:center;">
-            <svg style="width:28px;height:28px;display:block;" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-            </svg>
-        </div>
-        <span style="position:absolute; top:-4px; right:-4px; min-width:20px; height:20px;
-                     background:#ef4444; color:#fff; font-size:10px; font-weight:700;
-                     border-radius:9999px; display:flex; align-items:center; justify-content:center;
-                     padding:0 4px; border:2px solid #fff; line-height:1; pointer-events:none;">{{ $cantidad }}</span>
-    </div>
-    <span style="font-size:10px; font-weight:700; color:#F97316; letter-spacing:0.02em;">Ir carrito</span>
-</div>
-@endif
+{{-- Botón flotante carrito (oculto) --}}
 
 @endif {{-- sinListasComunes --}}
 @endif {{-- step oferta --}}
