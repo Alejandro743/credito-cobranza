@@ -656,11 +656,8 @@
             <div style="padding:14px 14px;">
                 {{-- Hero: Total Pedido full width --}}
                 <div style="margin-bottom:8px; text-align:center;">
-                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Pedido</span>
-                    <div style="display:flex; align-items:baseline; gap:4px; justify-content:center;">
-                        <span style="font-size:12px; font-weight:700; color:#9CA3AF;">Bs.</span>
-                        <span style="font-size:26px; font-weight:900; color:#3C3489; line-height:1;">{{ number_format($total, 2) }}</span>
-                    </div>
+                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Pedido Bs.</span>
+                    <span style="font-size:26px; font-weight:900; color:#3C3489; line-height:1; display:block;">{{ number_format($total, 2) }}</span>
                 </div>
                 {{-- Divider --}}
                 <div style="height:1px; background:#EDE9FE; margin-bottom:8px;"></div>
