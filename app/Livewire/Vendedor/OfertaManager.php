@@ -383,6 +383,13 @@ class OfertaManager extends Component
     {
         $pid = (string)$productId;
         if (!isset($this->oferta[$pid])) return;
+
+        // Bloquear lista: solo se puede agregar de la misma lista del primer ítem
+        if (!empty($this->carrito)) {
+            $listaLocked = collect($this->carrito)->first()['lista_id'] ?? null;
+            if ($listaLocked && $this->oferta[$pid]['lista_id'] !== $listaLocked) return;
+        }
+
         $existing = $this->carrito[$pid]['cantidad'] ?? 0;
         $newQty   = min($existing + max(1, $qty), (int)$this->oferta[$pid]['stock']);
         $this->carrito[$pid] = array_merge($this->oferta[$pid], ['cantidad' => $newQty]);

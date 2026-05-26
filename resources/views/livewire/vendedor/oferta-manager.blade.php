@@ -636,25 +636,23 @@
 
         {{-- Total acumulado + cuotas --}}
         @php
-        $listaIdsCarrito = collect($carrito)->pluck('lista_id')->unique()->toArray();
-        $minCuotas = collect($listasInfo)
-            ->filter(fn($l, $k) => in_array($k, $listaIdsCarrito) && isset($l['cantidad_cuotas']))
-            ->min('cantidad_cuotas');
-        $montoCuota = ($minCuotas && $minCuotas > 0) ? $total / $minCuotas : null;
+        $listaLockedId = !empty($carrito) ? (collect($carrito)->first()['lista_id'] ?? null) : null;
+        $cuotasLista   = $listaLockedId ? ($listasInfo[$listaLockedId]['cantidad_cuotas'] ?? null) : null;
+        $montoCuota    = ($cuotasLista && $cuotasLista > 0) ? $total / $cuotasLista : null;
         @endphp
         <div style="background:#F8F7FF; border:1.5px solid #C4B5FD; border-radius:14px; padding:14px 16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; {{ $minCuotas ? 'margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #EDE9FE;' : '' }}">
+            <div style="display:flex; justify-content:space-between; align-items:center; {{ $cuotasLista ? 'margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #EDE9FE;' : '' }}">
                 <span style="font-size:13px; font-weight:700; color:#534AB7;">Total Pedido</span>
                 <div style="display:flex; align-items:center; gap:10px;">
                     <span style="font-size:18px; font-weight:900; color:#3C3489;">Bs {{ number_format($total, 2) }}</span>
                     <span style="font-size:11px; font-weight:700; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:2px 9px;">+{{ number_format($puntos) }} pts</span>
                 </div>
             </div>
-            @if ($minCuotas)
+            @if ($cuotasLista)
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
                 <div style="text-align:center; flex:1;">
                     <p style="font-size:9px; font-weight:600; color:#9B93E0; margin:0 0 2px; text-transform:uppercase; letter-spacing:0.05em;">N° Cuotas</p>
-                    <p style="font-size:20px; font-weight:900; color:#3C3489; margin:0;">{{ $minCuotas }}</p>
+                    <p style="font-size:20px; font-weight:900; color:#3C3489; margin:0;">{{ $cuotasLista }}</p>
                 </div>
                 <div style="width:1px; height:36px; background:#EDE9FE; flex-shrink:0;"></div>
                 <div style="text-align:center; flex:1;">
@@ -1349,31 +1347,37 @@
                 '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 8v1m0-8c-1.11 0-2.08.402-2.599 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
                 '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>',
             ];
-            $mSelAll  = $filterLista === '';
-            $mLabel   = $mSelAll ? 'Todos' : ucwords(strtolower($listasInfo[(string)$filterLista]['nombre'] ?? 'Todos'));
-            $mIdx     = $mSelAll ? -1 : array_search((string)$filterLista, array_keys($listasInfo));
-            $mCol     = (!$mSelAll && $mIdx !== false) ? $mColors[$mIdx % count($mColors)] : null;
+            $listaLocked = !empty($carrito) ? (collect($carrito)->first()['lista_id'] ?? null) : null;
+            $mSelAll  = !$listaLocked && $filterLista === '';
+            $mActiveId = $listaLocked ?? ($filterLista !== '' ? $filterLista : null);
+            $mLabel   = $mActiveId ? ucwords(strtolower($listasInfo[(string)$mActiveId]['nombre'] ?? 'Todos')) : 'Todos';
+            $mIdx     = $mActiveId ? array_search((string)$mActiveId, array_keys($listasInfo)) : -1;
+            $mCol     = ($mActiveId && $mIdx !== false) ? $mColors[$mIdx % count($mColors)] : null;
             @endphp
             <div style="display:flex; align-items:center; gap:8px;" x-data="{ promoOpen: false }">
 
                 {{-- Botón dropdown lista --}}
                 <div style="position:relative; flex-shrink:0;">
-                    <button @click="promoOpen = !promoOpen"
+                    <button @click="{{ $listaLocked ? '' : 'promoOpen = !promoOpen' }}"
                             style="display:flex; align-items:center; gap:6px; padding:8px 10px; border-radius:10px;
-                                   border:1.5px solid {{ $mSelAll ? '#E5E7EB' : ($mCol['selBorder'] ?? '#7B6FE8') }};
-                                   background:{{ $mSelAll ? '#fff' : ($mCol['selCard'] ?? '#EEEDFE') }};
-                                   cursor:pointer; -webkit-appearance:none; appearance:none;">
-                        <div style="width:22px; height:22px; border-radius:6px; background:{{ $mSelAll ? '#F3F4F6' : ($mCol['iconBg'] ?? '#7B6FE8') }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                            @if ($mSelAll)
+                                   border:1.5px solid {{ $listaLocked ? '#D1D5DB' : ($mSelAll ? '#E5E7EB' : ($mCol['selBorder'] ?? '#7B6FE8')) }};
+                                   background:{{ $listaLocked ? '#F9FAFB' : ($mSelAll ? '#fff' : ($mCol['selCard'] ?? '#EEEDFE')) }};
+                                   cursor:{{ $listaLocked ? 'default' : 'pointer' }}; -webkit-appearance:none; appearance:none;">
+                        <div style="width:22px; height:22px; border-radius:6px; background:{{ $listaLocked ? '#E5E7EB' : ($mSelAll ? '#F3F4F6' : ($mCol['iconBg'] ?? '#7B6FE8')) }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            @if ($listaLocked)
+                            <svg width="11" height="11" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            @elseif ($mSelAll)
                             <svg width="11" height="11" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                             @else
                             <svg width="11" height="11" fill="none" stroke="#fff" viewBox="0 0 24 24">{!! $mIcons[$mIdx % count($mIcons)] !!}</svg>
                             @endif
                         </div>
-                        <span style="font-size:12px; font-weight:700; color:{{ $mSelAll ? '#374151' : ($mCol['text'] ?? '#534AB7') }}; white-space:nowrap; max-width:100px; overflow:hidden; text-overflow:ellipsis;">{{ $mLabel }}</span>
+                        <span style="font-size:12px; font-weight:700; color:{{ $listaLocked ? '#6B7280' : ($mSelAll ? '#374151' : ($mCol['text'] ?? '#534AB7')) }}; white-space:nowrap; max-width:100px; overflow:hidden; text-overflow:ellipsis;">{{ $mLabel }}</span>
+                        @if (!$listaLocked)
                         <svg width="10" height="10" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" style="flex-shrink:0;">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                         </svg>
+                        @endif
                     </button>
 
                     {{-- Panel dropdown --}}
@@ -1429,7 +1433,12 @@
         {{-- LISTA SCROLLABLE --}}
         <div style="flex:1; overflow-y:auto; padding:10px 12px;">
             <div style="display:flex; flex-direction:column; gap:8px;">
-                @forelse (collect($ofertaPorLista)->flatten(1) as $p)
+                @php
+                $productosModal = $listaLocked
+                    ? collect($ofertaPorLista)->filter(fn($items, $lid) => (string)$lid === (string)$listaLocked)->flatten(1)
+                    : collect($ofertaPorLista)->flatten(1);
+                @endphp
+                @forelse ($productosModal as $p)
                 @php $pid2=(string)$p['product_id']; $qty2=isset($carrito[$pid2])?$carrito[$pid2]['cantidad']:0; @endphp
                 <div x-data="{ n: 0, maxStock: @js((int)$p['stock']) }"
                      x-on:carrito-vaciado.window="n = 0"
