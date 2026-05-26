@@ -771,11 +771,17 @@
             </div>
         </div>
 
-        {{-- Botón Verificar --}}
-        <button wire:click="irResumen"
-                style="width:100%; padding:14px; background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); color:#fff; font-size:15px; font-weight:800; border-radius:14px; border:none; cursor:pointer; box-shadow:0 4px 18px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none;">
-            Verificar Pedido →
-        </button>
+        {{-- Acciones finales --}}
+        <div style="display:flex; gap:10px; margin-top:4px;">
+            <button wire:click="cambiarCliente"
+                    style="flex:1; padding:13px; background:#fff; color:#9CA3AF; font-size:14px; font-weight:700; border-radius:10px; border:1.5px solid #E5E7EB; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                Cancelar
+            </button>
+            <button wire:click="irResumen"
+                    style="flex:2; padding:13px; background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); color:#fff; font-size:14px; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow:0 4px 18px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none;">
+                Confirmar Plan →
+            </button>
+        </div>
     </div>
     @endif
 
