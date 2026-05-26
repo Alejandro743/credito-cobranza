@@ -1402,16 +1402,17 @@
                      wire:key="mod-{{ $pid2 }}"
                      style="background:#fff; border:1.5px solid #D1D5DB; border-radius:12px; padding:20px 12px; box-shadow:0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.10), 0 24px 40px rgba(0,0,0,0.06);">
 
-                    {{-- Fila 1: indicador circular + código - descripción --}}
-                    <div style="display:flex; align-items:center; gap:7px; margin-bottom:7px;">
-                        <div style="width:22px; height:22px; border-radius:50%; background:{{ $qty2 > 0 ? '#f97316' : '#EDE9FE' }}; border:1.5px solid {{ $qty2 > 0 ? '#f97316' : '#D4CFF8' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    {{-- Fila 1: indicador circular + código arriba, descripción abajo --}}
+                    <div style="display:flex; align-items:flex-start; gap:7px; margin-bottom:7px;">
+                        <div style="width:22px; height:22px; border-radius:50%; background:{{ $qty2 > 0 ? '#f97316' : '#EDE9FE' }}; border:1.5px solid {{ $qty2 > 0 ? '#f97316' : '#D4CFF8' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;">
                             @if ($qty2 > 0)
                             <span style="font-size:10px; font-weight:800; color:#fff; line-height:1;">{{ $qty2 }}</span>
                             @endif
                         </div>
-                        <span style="font-size:15px; font-weight:900; color:#534AB7; flex-shrink:0; white-space:nowrap;">{{ $p['code'] ?? '' }}</span>
-                        <span style="font-size:15px; font-weight:700; color:#C4B5FD; flex-shrink:0; padding:0 2px;">—</span>
-                        <span style="font-size:15px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; flex:1;" title="{{ ucwords(strtolower($p['nombre'])) }}">{{ ucwords(strtolower($p['nombre'])) }}</span>
+                        <div style="flex:1; min-width:0;">
+                            <span style="font-size:16px; font-weight:900; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p['code'] ?? '' }}</span>
+                            <span style="font-size:13px; font-weight:400; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ ucwords(strtolower($p['nombre'])) }}">{{ ucwords(strtolower($p['nombre'])) }}</span>
+                        </div>
                     </div>
 
                     {{-- Fila 2: Precio | Puntos | Total Bs (qty en carrito) | Total Pts --}}
