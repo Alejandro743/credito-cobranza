@@ -655,9 +655,9 @@
             <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#f97316 100%);"></div>
             <div style="padding:14px 14px;">
                 {{-- Hero: Total Pedido full width --}}
-                <div style="margin-bottom:12px;">
+                <div style="margin-bottom:12px; text-align:center;">
                     <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:3px;">Total Pedido</span>
-                    <div style="display:flex; align-items:baseline; gap:4px;">
+                    <div style="display:flex; align-items:baseline; gap:4px; justify-content:center;">
                         <span style="font-size:13px; font-weight:700; color:#9CA3AF;">Bs.</span>
                         <span style="font-size:28px; font-weight:900; color:#3C3489; line-height:1;">{{ number_format($total, 2) }}</span>
                     </div>
@@ -681,6 +681,97 @@
                     </div>
                     @endif
                 </div>
+            </div>
+        </div>
+
+        {{-- Separador Dirección de Entrega --}}
+        <div style="display:flex; align-items:center; gap:6px; margin-top:14px; margin-bottom:10px;">
+            <svg width="13" height="13" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span style="font-size:11px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em; white-space:nowrap;">Dirección de Entrega</span>
+            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+        </div>
+
+        {{-- Card Dirección de Entrega --}}
+        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:12px; padding:12px; box-shadow:0 4px 20px rgba(123,111,232,0.10); margin-bottom:14px;">
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <button wire:click="$set('tipoEntrega','domicilio')" type="button"
+                        style="{{ $tipoEntrega === 'domicilio' ? 'background:#EEEDFE; border:1.5px solid #7c3aed; color:#3C3489;' : 'background:#f9fafb; border:1.5px solid #e5e7eb; color:#9ca3af;' }} border-radius:8px; padding:8px; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:5px; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                    🏠 Domicilio
+                </button>
+                <button wire:click="$set('tipoEntrega','nuevo')" type="button"
+                        style="{{ $tipoEntrega === 'nuevo' ? 'background:#FEF3C7; border:1.5px solid #D97706; color:#92400E;' : 'background:#f9fafb; border:1.5px solid #e5e7eb; color:#9ca3af;' }} border-radius:8px; padding:8px; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:5px; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                    📍 Nuevo lugar
+                </button>
+            </div>
+            @if ($tipoEntrega === 'domicilio')
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <div>
+                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Ciudad</p>
+                    <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500;">{{ $entregaClienteCiudad ?: '—' }}</div>
+                </div>
+                <div>
+                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Provincia</p>
+                    <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500;">{{ $entregaClienteProvincia ?: '—' }}</div>
+                </div>
+                <div>
+                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Municipio</p>
+                    <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500;">{{ $entregaClienteMunicipio ?: '—' }}</div>
+                </div>
+                <div>
+                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Dirección</p>
+                    <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaClienteDireccion ?: '—' }}</div>
+                </div>
+            </div>
+            @error('entregaClienteDireccion')
+            <p style="font-size:11px; color:#ef4444; margin-bottom:8px;">{{ $message }}</p>
+            @enderror
+            @endif
+            @if ($tipoEntrega === 'nuevo')
+            <div class="grid grid-cols-2 gap-2 mb-3">
+                <div>
+                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Ciudad *</p>
+                    <select wire:model.live="entregaNuevoCiudad" style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none;">
+                        <option value="">-- Seleccionar --</option>
+                        @foreach($ciudadesAll as $c)
+                        <option value="{{ $c->nombre }}">{{ $c->nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('entregaNuevoCiudad')<p style="font-size:10px; color:#ef4444; margin-top:2px;">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Provincia</p>
+                    <select wire:model.live="entregaNuevaProvincia" style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none;" @disabled(!$entregaNuevoCiudad)>
+                        <option value="">-- Seleccionar --</option>
+                        @foreach($entregaProvincias as $p)
+                        <option value="{{ $p->nombre }}">{{ $p->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Municipio</p>
+                    <select wire:model.live="entregaNuevoMunicipio" style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none;" @disabled(!$entregaNuevaProvincia)>
+                        <option value="">-- Seleccionar --</option>
+                        @foreach($entregaMunicipios as $m)
+                        <option value="{{ $m->nombre }}">{{ $m->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Dirección *</p>
+                    <input wire:model="entregaNuevaDireccion" type="text" placeholder="Calle y número"
+                           style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box; @error('entregaNuevaDireccion') border-color:#fca5a5; @enderror">
+                    @error('entregaNuevaDireccion')<p style="font-size:10px; color:#ef4444; margin-top:2px;">{{ $message }}</p>@enderror
+                </div>
+            </div>
+            @endif
+            <div>
+                <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Referencia <span style="color:#C4B5FD; font-weight:400; text-transform:none;">(opcional)</span></p>
+                <input wire:model="entregaReferencia" type="text"
+                       placeholder="Ej: Portón azul, frente al parque..."
+                       style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;">
             </div>
         </div>
 
