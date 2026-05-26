@@ -137,7 +137,7 @@
         </div>
         {{-- CARRITO --}}
         <div class="relative flex-shrink-0"
-             style="width:58px; border-radius:10px; background:{{ empty($carrito) ? '#f9fafb' : '#f97316' }}; border:1.5px solid {{ empty($carrito) ? '#E5E7EB' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 10px rgba(249,115,22,0.30)' }}; transition:all 0.2s;">
+             style="display:none; width:58px; border-radius:10px; background:{{ empty($carrito) ? '#f9fafb' : '#f97316' }}; border:1.5px solid {{ empty($carrito) ? '#E5E7EB' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 10px rgba(249,115,22,0.30)' }}; transition:all 0.2s;">
             <button wire:click="irResumen"
                     @disabled(empty($carrito))
                     class="w-full h-full flex items-center justify-center transition-all active:scale-95"
@@ -191,7 +191,7 @@
         </div>
         {{-- CARRITO --}}
         <div class="relative flex items-center justify-center flex-shrink-0"
-             style="width:44px; border-radius:8px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 8px rgba(249,115,22,0.30)' }};">
+             style="display:none; width:44px; border-radius:8px; background:{{ empty($carrito) ? '#f3f4f6' : '#f97316' }}; box-shadow:{{ empty($carrito) ? 'none' : '0 2px 8px rgba(249,115,22,0.30)' }};">
             <button wire:click="irResumen"
                     @disabled(empty($carrito))
                     class="w-full h-full flex items-center justify-center transition-all active:scale-95"
@@ -220,7 +220,7 @@
         <span style="font-size:9px; font-weight:800; color:#7B6FE8; letter-spacing:0.05em;">Documentación del Plan</span>
         <div style="flex:1; height:1px; background:#C4B5FD;"></div>
     </div>
-    <div style="display:grid; grid-template-columns:repeat(5,1fr); gap:6px;">
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
         {{-- 1. Anverso CI --}}
         <label style="cursor:pointer;">
             <div style="{{ $docAnversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#FAFAFE;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
@@ -1295,7 +1295,7 @@
         <div style="flex-shrink:0; background:#fff; border-bottom:1.5px solid #EDE9FE; padding:12px 14px 10px;">
             <div style="text-align:center; margin-bottom:10px;">
                 <span style="font-size:16px; font-weight:900; color:#1a1a1a; letter-spacing:0.08em; text-transform:uppercase; display:block;">Seleccionar Artículos</span>
-                <div style="height:2px; background:linear-gradient(to right,transparent,#7B6FE8,#C4B5FD,transparent); border-radius:1px; margin-top:4px;"></div>
+                <div style="height:2px; background:linear-gradient(to right,#7B6FE8,#C4B5FD); border-radius:1px; margin-top:4px;"></div>
             </div>
 
             {{-- Dropdown lista + Buscador en misma fila --}}
@@ -1469,8 +1469,8 @@
         {{-- PIE MODAL: cerrar --}}
         <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1.5px solid #EDE9FE;">
             <button @click="showProductos = false"
-                    style="width:100%; padding:13px; background:#f97316; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.07em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
-                &laquo; Volver &mdash; {{ $cantidad }} Unidades
+                    style="width:100%; padding:13px; background:#9B93E0; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.07em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                &laquo; Volver &mdash; Carrito {{ $cantidad }} U.
             </button>
         </div>
 </div>
