@@ -579,25 +579,12 @@
 </div>
 @else
 
-{{-- ── BOTÓN AGREGAR + ARTÍCULOS SELECCIONADOS ──────────────────────────── --}}
+{{-- ── ARTÍCULOS SELECCIONADOS + BOTÓN CARRITO ──────────────────────────── --}}
 <div style="padding:16px 16px 24px;">
 
-    {{-- Botón Agregar Productos --}}
-    <button @click="showProductos = true"
-            style="width:100%; padding:14px 20px; background:linear-gradient(135deg,#f97316 0%,#ea580c 100%); color:#fff; font-size:15px; font-weight:800; border-radius:14px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; box-shadow:0 4px 18px rgba(249,115,22,0.35); -webkit-appearance:none; appearance:none; transition:transform 0.15s;"
-            onmouseover="this.style.transform='scale(1.01)'" onmouseout="this.style.transform='scale(1)'">
-        <svg width="20" height="20" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-        </svg>
-        Agregar Productos
-        @if ($cantidad > 0)
-        <span style="background:rgba(255,255,255,0.25); border-radius:99px; padding:2px 10px; font-size:13px; font-weight:700;">{{ $cantidad }}</span>
-        @endif
-    </button>
-
-    {{-- Artículos seleccionados --}}
+    {{-- Artículos seleccionados (arriba del botón) --}}
     @if (!empty($carrito))
-    <div style="margin-top:16px;">
+    <div style="margin-bottom:14px;">
         <div style="display:flex; align-items:center; gap:5px; margin-bottom:10px;">
             <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
             <span style="font-size:9px; font-weight:800; color:#7B6FE8; letter-spacing:0.05em;">Artículos Seleccionados</span>
@@ -634,6 +621,18 @@
         </button>
     </div>
     @endif
+
+    {{-- Botón + Carrito --}}
+    <button @click="showProductos = true"
+            style="width:100%; padding:14px 20px; background:#FB923C; color:#fff; font-size:15px; font-weight:800; border-radius:14px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; -webkit-appearance:none; appearance:none;">
+        <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        + Carrito
+        @if ($cantidad > 0)
+        <span style="background:rgba(255,255,255,0.30); border-radius:99px; padding:2px 10px; font-size:13px; font-weight:700;">{{ $cantidad }}</span>
+        @endif
+    </button>
 
 </div>
 
