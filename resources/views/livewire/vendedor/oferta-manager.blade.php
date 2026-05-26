@@ -99,7 +99,7 @@
 <div style="background:#fff;">
 
 {{-- ── STATS BAR — DESKTOP ──────────────────────────────────────────────── --}}
-<div class="hidden md:block bg-white border-b border-gray-100 px-4 pt-2 pb-2.5">
+<div class="hidden md:block bg-white px-4 pt-2 pb-2.5">
     {{-- Label ancho completo --}}
     <div style="display:flex; align-items:center; gap:5px; margin-bottom:6px;">
         <svg width="13" height="13" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -160,7 +160,7 @@
 </div>
 
 {{-- ── STATS BAR — MÓVIL ────────────────────────────────────────────────── --}}
-<div class="md:hidden bg-white border-b border-gray-100 px-2 pt-2 pb-2">
+<div class="md:hidden bg-white px-2 pt-2 pb-2">
     {{-- Label ancho completo --}}
     <div style="display:flex; align-items:center; gap:4px; margin-bottom:5px;">
         <svg width="13" height="13" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -218,7 +218,7 @@
 
 {{-- ── DOCUMENTACIÓN DEL PLAN ──────────────────────────────────────────────── --}}
 @if ($clienteId && $step === 'oferta')
-<div class="bg-white border-b border-gray-100 px-4 py-2">
+<div class="bg-white px-4 py-2">
     <div style="display:flex; align-items:center; gap:5px; margin-bottom:7px;">
         <svg width="13" height="13" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
