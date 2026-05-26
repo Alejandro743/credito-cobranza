@@ -583,19 +583,18 @@
 <div style="padding:16px 16px 24px;">
 
     {{-- Separador Artículos Seleccionados (siempre visible) --}}
-    <div style="display:flex; align-items:center; gap:5px; margin-bottom:10px;">
-        <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-        <span style="font-size:9px; font-weight:800; color:#7B6FE8; letter-spacing:0.05em;">Artículos Seleccionados</span>
-        <div style="flex:1; height:1px; background:#C4B5FD;"></div>
+    <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">
+        <span style="font-size:11px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em; white-space:nowrap;">Artículos Seleccionados</span>
+        <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
     </div>
 
-    {{-- Botón + Carrito --}}
+    {{-- Botón Seleccionar Artículos --}}
     <button @click="showProductos = true"
             style="width:100%; padding:14px 20px; background:#FDBA74; color:#fff; font-size:15px; font-weight:800; border-radius:20px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; -webkit-appearance:none; appearance:none; margin-bottom:{{ !empty($carrito) ? '14px' : '0' }}; box-shadow:0 4px 18px rgba(249,115,22,0.25), 0 1px 4px rgba(249,115,22,0.10);">
         <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
         </svg>
-        + Carrito
+        Seleccionar Artículos
         @if ($cantidad > 0)
         <span style="background:rgba(255,255,255,0.30); border-radius:99px; padding:2px 10px; font-size:13px; font-weight:700;">{{ $cantidad }}</span>
         @endif
@@ -634,35 +633,32 @@
         </div>
         @endforeach
 
-        {{-- Total acumulado + cuotas --}}
+        {{-- Separador Resumen --}}
+        <div style="display:flex; align-items:center; gap:6px; margin-top:6px;">
+            <span style="font-size:11px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em; white-space:nowrap;">Resumen</span>
+            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+        </div>
+
+        {{-- Card Resumen --}}
         @php
         $listaLockedId = !empty($carrito) ? (collect($carrito)->first()['lista_id'] ?? null) : null;
         $cuotasLista   = $listaLockedId ? ($listasInfo[$listaLockedId]['cantidad_cuotas'] ?? null) : null;
         $montoCuota    = ($cuotasLista && $cuotasLista > 0) ? $total / $cuotasLista : null;
         @endphp
-        <div style="background:#F8F7FF; border:1.5px solid #C4B5FD; border-radius:14px; padding:14px 16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; {{ $cuotasLista ? 'margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #EDE9FE;' : '' }}">
-                <span style="font-size:13px; font-weight:700; color:#534AB7;">Total Pedido</span>
-                <div style="display:flex; align-items:center; gap:10px;">
-                    <span style="font-size:18px; font-weight:900; color:#3C3489;">Bs {{ number_format($total, 2) }}</span>
-                    <span style="font-size:11px; font-weight:700; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:2px 9px;">+{{ number_format($puntos) }} pts</span>
-                </div>
+        <div style="background:#fff; border:1.5px solid #D1D5DB; border-radius:12px; padding:14px 12px; box-shadow:0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.10);">
+            <div style="display:flex; align-items:center; gap:14px; margin-bottom:6px;">
+                <span style="font-size:12px; font-weight:600; color:#9CA3AF; white-space:nowrap;">Total Pedido Bs.: <strong style="color:#3C3489; font-size:15px; font-weight:900;">{{ number_format($total, 2) }}</strong></span>
+                <span style="font-size:12px; font-weight:600; color:#9CA3AF; white-space:nowrap;">Puntos: <strong style="color:#111827; font-size:15px; font-weight:900;">{{ number_format($puntos) }}</strong></span>
             </div>
             @if ($cuotasLista)
-            <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
-                <div style="text-align:center; flex:1;">
-                    <p style="font-size:9px; font-weight:600; color:#9B93E0; margin:0 0 2px; text-transform:uppercase; letter-spacing:0.05em;">N° Cuotas</p>
-                    <p style="font-size:20px; font-weight:900; color:#3C3489; margin:0;">{{ $cuotasLista }}</p>
-                </div>
-                <div style="width:1px; height:36px; background:#EDE9FE; flex-shrink:0;"></div>
-                <div style="text-align:center; flex:1;">
-                    <p style="font-size:9px; font-weight:600; color:#9B93E0; margin:0 0 2px; text-transform:uppercase; letter-spacing:0.05em;">Monto x Cuota</p>
-                    <p style="font-size:20px; font-weight:900; color:#7c3aed; margin:0;">Bs {{ number_format($montoCuota, 2) }}</p>
-                </div>
+            <div style="display:flex; align-items:center; gap:14px;">
+                <span style="font-size:12px; font-weight:600; color:#9CA3AF; white-space:nowrap;">N° Cuotas: <strong style="color:#3C3489; font-size:15px; font-weight:900;">{{ $cuotasLista }}</strong></span>
+                <span style="font-size:12px; font-weight:600; color:#9CA3AF; white-space:nowrap;">Monto X Cuota: <strong style="color:#7c3aed; font-size:15px; font-weight:900;">{{ number_format($montoCuota, 2) }}</strong></span>
             </div>
             @endif
         </div>
 
+        {{-- Botón Verificar --}}
         <button wire:click="irResumen"
                 style="width:100%; padding:14px; background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); color:#fff; font-size:15px; font-weight:800; border-radius:14px; border:none; cursor:pointer; box-shadow:0 4px 18px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none;">
             Verificar Pedido →
