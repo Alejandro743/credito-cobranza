@@ -218,7 +218,7 @@
     </div>
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
         {{-- 1. Anverso CI --}}
-        <div x-data style="cursor:pointer;" @click="$el.querySelector('input[type=file]').click()">
+        <label style="cursor:pointer; position:relative; display:block;">
             <div style="{{ $docAnversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAnversoCi ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docAnversoCi)
@@ -230,10 +230,10 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docAnversoCi ? '#0F6E56' : '#534AB7' }};">Anverso CI</span>
                 <span style="font-size:10px; color:{{ $docAnversoCi ? '#0F6E56' : '#AFA9EC' }};">{{ $docAnversoCi ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" accept="image/*,application/pdf" style="display:none;" @click.stop @change="$event.target.files[0] && $wire.upload('docAnversoCi', $event.target.files[0])">
-        </div>
+            <input type="file" wire:model="docAnversoCi" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+        </label>
         {{-- 2. Reverso CI --}}
-        <div x-data style="cursor:pointer;" @click="$el.querySelector('input[type=file]').click()">
+        <label style="cursor:pointer; position:relative; display:block;">
             <div style="{{ $docReversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docReversoCi ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docReversoCi)
@@ -245,10 +245,10 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docReversoCi ? '#0F6E56' : '#534AB7' }};">Reverso CI</span>
                 <span style="font-size:10px; color:{{ $docReversoCi ? '#0F6E56' : '#AFA9EC' }};">{{ $docReversoCi ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" accept="image/*,application/pdf" style="display:none;" @click.stop @change="$event.target.files[0] && $wire.upload('docReversoCi', $event.target.files[0])">
-        </div>
+            <input type="file" wire:model="docReversoCi" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+        </label>
         {{-- 3. Anverso Documento --}}
-        <div x-data style="cursor:pointer;" @click="$el.querySelector('input[type=file]').click()">
+        <label style="cursor:pointer; position:relative; display:block;">
             <div style="{{ $docAnversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAnversoDoc ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docAnversoDoc)
@@ -260,10 +260,10 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docAnversoDoc ? '#0F6E56' : '#534AB7' }};">Anverso Doc</span>
                 <span style="font-size:10px; color:{{ $docAnversoDoc ? '#0F6E56' : '#AFA9EC' }};">{{ $docAnversoDoc ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" accept="image/*,application/pdf" style="display:none;" @click.stop @change="$event.target.files[0] && $wire.upload('docAnversoDoc', $event.target.files[0])">
-        </div>
+            <input type="file" wire:model="docAnversoDoc" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+        </label>
         {{-- 4. Reverso Documento --}}
-        <div x-data style="cursor:pointer;" @click="$el.querySelector('input[type=file]').click()">
+        <label style="cursor:pointer; position:relative; display:block;">
             <div style="{{ $docReversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docReversoDoc ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docReversoDoc)
@@ -275,10 +275,10 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docReversoDoc ? '#0F6E56' : '#534AB7' }};">Reverso Doc</span>
                 <span style="font-size:10px; color:{{ $docReversoDoc ? '#0F6E56' : '#AFA9EC' }};">{{ $docReversoDoc ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" accept="image/*,application/pdf" style="display:none;" @click.stop @change="$event.target.files[0] && $wire.upload('docReversoDoc', $event.target.files[0])">
-        </div>
+            <input type="file" wire:model="docReversoDoc" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+        </label>
         {{-- 5. Aviso Luz --}}
-        <div x-data style="cursor:pointer;" @click="$el.querySelector('input[type=file]').click()">
+        <label style="cursor:pointer; position:relative; display:block;">
             <div style="{{ $docAvisoLuz ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAvisoLuz ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docAvisoLuz)
@@ -290,8 +290,8 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docAvisoLuz ? '#0F6E56' : '#534AB7' }};">Aviso Luz</span>
                 <span style="font-size:10px; color:{{ $docAvisoLuz ? '#0F6E56' : '#AFA9EC' }};">{{ $docAvisoLuz ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" accept="image/*,application/pdf" style="display:none;" @click.stop @change="$event.target.files[0] && $wire.upload('docAvisoLuz', $event.target.files[0])">
-        </div>
+            <input type="file" wire:model="docAvisoLuz" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+        </label>
     </div>
 </div>
 @endif
@@ -1566,16 +1566,9 @@
                         </div>
                     </div>
 
-                    {{-- Pie: spacer [− n + Agregar basura] todos a la derecha --}}
+                    {{-- Pie --}}
                     <div style="display:flex; align-items:center; gap:6px;">
                         <div style="flex:1;"></div>
-                        <button @click="n > 0 ? n-- : null"
-                                :style="{ opacity: n===0 ? '0.35' : '1', cursor: n===0 ? 'default' : 'pointer' }"
-                                style="width:30px; height:30px; border-radius:50%; background:#E5E7EB; border:none; color:#6B7280; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">−</button>
-                        <span x-text="n" style="font-size:15px; font-weight:800; color:#3C3489; min-width:20px; text-align:center; flex-shrink:0;">0</span>
-                        <button @click="n < maxStock ? n++ : null"
-                                :style="{ opacity: n>=maxStock ? '0.35' : '1', cursor: n>=maxStock ? 'not-allowed' : 'pointer' }"
-                                style="width:30px; height:30px; border-radius:50%; background:#E5E7EB; border:none; color:#6B7280; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; flex-shrink:0;">+</button>
                         <button @click="if(n===0) n=1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n=0)"
                                 style="background:#fff; color:#f97316; border:1.5px solid #f97316; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px; flex-shrink:0;">
                             <svg style="width:14px; height:14px; flex-shrink:0;" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
