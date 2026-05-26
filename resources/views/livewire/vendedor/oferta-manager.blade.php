@@ -1400,7 +1400,7 @@
                 <div x-data="{ n: 0, maxStock: @js((int)$p['stock']) }"
                      x-on:carrito-vaciado.window="n = 0"
                      wire:key="mod-{{ $pid2 }}"
-                     style="background:#fff; border:1.5px solid #C4B5FD; border-radius:12px; padding:20px 12px; box-shadow:0 2px 4px rgba(123,111,232,0.08), 0 8px 20px rgba(123,111,232,0.18), 0 24px 40px rgba(123,111,232,0.10);">
+                     style="background:#fff; border:1.5px solid #D1D5DB; border-radius:12px; padding:20px 12px; box-shadow:0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.10), 0 24px 40px rgba(0,0,0,0.06);">
 
                     {{-- Fila 1: indicador circular + código - descripción --}}
                     <div style="display:flex; align-items:center; gap:7px; margin-bottom:7px;">
