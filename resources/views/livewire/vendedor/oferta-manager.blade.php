@@ -1397,7 +1397,7 @@
                 <div x-data="{ n: 0, maxStock: @js((int)$p['stock']) }"
                      x-on:carrito-vaciado.window="n = 0"
                      wire:key="mod-{{ $pid2 }}"
-                     style="background:#fff; border:1.5px solid {{ $qty2 > 0 ? '#f97316' : '#C4B5FD' }}; border-radius:12px; padding:10px 12px;">
+                     style="background:#fff; border:1.5px solid #C4B5FD; border-radius:12px; padding:10px 12px;">
 
                     {{-- Fila 1: indicador circular + código - descripción --}}
                     <div style="display:flex; align-items:center; gap:7px; margin-bottom:7px;">
@@ -1470,7 +1470,7 @@
         <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1.5px solid #EDE9FE;">
             <button @click="showProductos = false"
                     style="width:100%; padding:13px; background:#9B93E0; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.07em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
-                &laquo; Volver &mdash; Carrito {{ $cantidad }} U.
+                &laquo; Volver@if($cantidad > 0) &mdash; Carrito {{ $cantidad }} Un.@endif
             </button>
         </div>
 </div>
