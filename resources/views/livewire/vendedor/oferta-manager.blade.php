@@ -1470,7 +1470,7 @@
         <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1.5px solid #EDE9FE;">
             <button @click="showProductos = false"
                     style="width:100%; padding:13px; background:#9B93E0; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.07em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
-                &laquo; Volver@if($cantidad > 0) &mdash; Carrito {{ $cantidad }} Un.@endif
+                « Volver{{ $cantidad > 0 ? ' — Carrito ' . $cantidad . ' Un.' : '' }}
             </button>
         </div>
 </div>
