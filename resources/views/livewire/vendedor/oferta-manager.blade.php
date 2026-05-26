@@ -101,7 +101,7 @@
 {{-- ── STATS BAR — DESKTOP ──────────────────────────────────────────────── --}}
 <div class="hidden md:block bg-white px-4 pt-2 pb-2.5">
     {{-- Label ancho completo --}}
-    <div style="display:flex; align-items:center; gap:5px; margin-bottom:6px;">
+    <div style="display:flex; align-items:center; gap:5px; margin-bottom:10px;">
         <svg width="13" height="13" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
         <span style="font-size:11px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em;">Dato Cliente</span>
         <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
@@ -162,7 +162,7 @@
 {{-- ── STATS BAR — MÓVIL ────────────────────────────────────────────────── --}}
 <div class="md:hidden bg-white px-2 pt-2 pb-2">
     {{-- Label ancho completo --}}
-    <div style="display:flex; align-items:center; gap:4px; margin-bottom:5px;">
+    <div style="display:flex; align-items:center; gap:4px; margin-bottom:10px;">
         <svg width="13" height="13" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
         <span style="font-size:11px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em;">Dato Cliente</span>
         <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
@@ -219,7 +219,7 @@
 {{-- ── DOCUMENTACIÓN DEL PLAN ──────────────────────────────────────────────── --}}
 @if ($clienteId && $step === 'oferta')
 <div class="bg-white px-4 py-2">
-    <div style="display:flex; align-items:center; gap:5px; margin-bottom:7px;">
+    <div style="display:flex; align-items:center; gap:5px; margin-bottom:10px;">
         <svg width="13" height="13" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>
@@ -589,7 +589,8 @@
 <div style="padding:16px 16px 24px;">
 
     {{-- Separador Artículos Seleccionados (siempre visible) --}}
-    <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">
+    <div style="display:flex; align-items:center; gap:6px; margin-top:4px; margin-bottom:14px;">
+        <svg width="13" height="13" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
         <span style="font-size:11px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em; white-space:nowrap;">Artículos Seleccionados</span>
         <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
     </div>
@@ -637,7 +638,8 @@
         @endforeach
 
         {{-- Separador Resumen --}}
-        <div style="display:flex; align-items:center; gap:6px; margin-top:6px;">
+        <div style="display:flex; align-items:center; gap:6px; margin-top:14px; margin-bottom:10px;">
+            <svg width="13" height="13" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
             <span style="font-size:11px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em; white-space:nowrap;">Resumen</span>
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
         </div>
