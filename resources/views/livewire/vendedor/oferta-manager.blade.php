@@ -655,29 +655,29 @@
             <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#f97316 100%);"></div>
             <div style="padding:14px 14px;">
                 {{-- Hero: Total Pedido full width --}}
-                <div style="margin-bottom:12px; text-align:center;">
-                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:3px;">Total Pedido</span>
+                <div style="margin-bottom:8px; text-align:center;">
+                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Pedido</span>
                     <div style="display:flex; align-items:baseline; gap:4px; justify-content:center;">
-                        <span style="font-size:13px; font-weight:700; color:#9CA3AF;">Bs.</span>
-                        <span style="font-size:28px; font-weight:900; color:#3C3489; line-height:1;">{{ number_format($total, 2) }}</span>
+                        <span style="font-size:12px; font-weight:700; color:#9CA3AF;">Bs.</span>
+                        <span style="font-size:26px; font-weight:900; color:#3C3489; line-height:1;">{{ number_format($total, 2) }}</span>
                     </div>
                 </div>
                 {{-- Divider --}}
-                <div style="height:1px; background:#EDE9FE; margin-bottom:12px;"></div>
+                <div style="height:1px; background:#EDE9FE; margin-bottom:8px;"></div>
                 {{-- Secundarios: Puntos + Cuotas + Monto centrados --}}
                 <div style="display:grid; grid-template-columns:{{ $cuotasLista ? 'repeat(3,1fr)' : '1fr' }}; text-align:center;">
                     <div style="padding:0 6px;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:3px;">Puntos</span>
-                        <span style="font-size:18px; font-weight:900; color:#f97316; line-height:1.1;">{{ number_format($puntos) }}</span>
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Puntos</span>
+                        <span style="font-size:14px; font-weight:900; color:#f97316; line-height:1.1;">{{ number_format($puntos) }}</span>
                     </div>
                     @if ($cuotasLista)
                     <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:3px;">N° Cuotas</span>
-                        <span style="font-size:18px; font-weight:900; color:#7B6FE8; line-height:1.1;">{{ $cuotasLista }}</span>
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">N° Cuotas</span>
+                        <span style="font-size:14px; font-weight:900; color:#7B6FE8; line-height:1.1;">{{ $cuotasLista }}</span>
                     </div>
                     <div style="padding:0 6px;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:3px;">Monto x Cuota</span>
-                        <span style="font-size:18px; font-weight:900; color:#7c3aed; line-height:1.1;">{{ number_format($montoCuota, 2) }}</span>
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Monto x Cuota</span>
+                        <span style="font-size:14px; font-weight:900; color:#7c3aed; line-height:1.1;">{{ number_format($montoCuota, 2) }}</span>
                     </div>
                     @endif
                 </div>
@@ -695,7 +695,7 @@
         </div>
 
         {{-- Card Dirección de Entrega --}}
-        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:12px; padding:12px; box-shadow:0 4px 20px rgba(123,111,232,0.10); margin-bottom:14px;">
+        <div style="background:#fff; border-radius:12px; padding:12px; box-shadow:0 4px 20px rgba(123,111,232,0.10); margin-bottom:14px;">
             <div class="grid grid-cols-2 gap-2 mb-3">
                 <button wire:click="$set('tipoEntrega','domicilio')" type="button"
                         style="{{ $tipoEntrega === 'domicilio' ? 'background:#EEEDFE; border:1.5px solid #7c3aed; color:#3C3489;' : 'background:#f9fafb; border:1.5px solid #e5e7eb; color:#9ca3af;' }} border-radius:8px; padding:8px; font-size:12px; font-weight:600; display:flex; align-items:center; justify-content:center; gap:5px; cursor:pointer; -webkit-appearance:none; appearance:none;">
@@ -709,19 +709,19 @@
             @if ($tipoEntrega === 'domicilio')
             <div class="grid grid-cols-2 gap-2 mb-3">
                 <div>
-                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Ciudad</p>
+                    <p style="font-size:10px; color:#9CA3AF; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Ciudad</p>
                     <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500;">{{ $entregaClienteCiudad ?: '—' }}</div>
                 </div>
                 <div>
-                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Provincia</p>
+                    <p style="font-size:10px; color:#9CA3AF; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Provincia</p>
                     <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500;">{{ $entregaClienteProvincia ?: '—' }}</div>
                 </div>
                 <div>
-                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Municipio</p>
+                    <p style="font-size:10px; color:#9CA3AF; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Municipio</p>
                     <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500;">{{ $entregaClienteMunicipio ?: '—' }}</div>
                 </div>
                 <div>
-                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Dirección</p>
+                    <p style="font-size:10px; color:#9CA3AF; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Dirección</p>
                     <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaClienteDireccion ?: '—' }}</div>
                 </div>
             </div>
@@ -732,7 +732,7 @@
             @if ($tipoEntrega === 'nuevo')
             <div class="grid grid-cols-2 gap-2 mb-3">
                 <div>
-                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Ciudad *</p>
+                    <p style="font-size:10px; color:#9CA3AF; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Ciudad *</p>
                     <select wire:model.live="entregaNuevoCiudad" style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none;">
                         <option value="">-- Seleccionar --</option>
                         @foreach($ciudadesAll as $c)
@@ -742,7 +742,7 @@
                     @error('entregaNuevoCiudad')<p style="font-size:10px; color:#ef4444; margin-top:2px;">{{ $message }}</p>@enderror
                 </div>
                 <div>
-                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Provincia</p>
+                    <p style="font-size:10px; color:#9CA3AF; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Provincia</p>
                     <select wire:model.live="entregaNuevaProvincia" style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none;" @disabled(!$entregaNuevoCiudad)>
                         <option value="">-- Seleccionar --</option>
                         @foreach($entregaProvincias as $p)
@@ -751,7 +751,7 @@
                     </select>
                 </div>
                 <div>
-                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Municipio</p>
+                    <p style="font-size:10px; color:#9CA3AF; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Municipio</p>
                     <select wire:model.live="entregaNuevoMunicipio" style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none;" @disabled(!$entregaNuevaProvincia)>
                         <option value="">-- Seleccionar --</option>
                         @foreach($entregaMunicipios as $m)
@@ -760,7 +760,7 @@
                     </select>
                 </div>
                 <div>
-                    <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Dirección *</p>
+                    <p style="font-size:10px; color:#9CA3AF; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Dirección *</p>
                     <input wire:model="entregaNuevaDireccion" type="text" placeholder="Calle y número"
                            style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box; @error('entregaNuevaDireccion') border-color:#fca5a5; @enderror">
                     @error('entregaNuevaDireccion')<p style="font-size:10px; color:#ef4444; margin-top:2px;">{{ $message }}</p>@enderror
@@ -768,7 +768,7 @@
             </div>
             @endif
             <div>
-                <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Referencia <span style="color:#C4B5FD; font-weight:400; text-transform:none;">(opcional)</span></p>
+                <p style="font-size:10px; color:#9CA3AF; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Referencia <span style="color:#9CA3AF; font-weight:400; text-transform:none;">(opcional)</span></p>
                 <input wire:model="entregaReferencia" type="text"
                        placeholder="Ej: Portón azul, frente al parque..."
                        style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;">
