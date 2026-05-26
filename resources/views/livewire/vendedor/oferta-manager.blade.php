@@ -218,7 +218,7 @@
     </div>
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
         {{-- 1. Anverso CI --}}
-        <label style="cursor:pointer;">
+        <div x-data style="cursor:pointer;" @click="$el.querySelector('input[type=file]').click()">
             <div style="{{ $docAnversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAnversoCi ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docAnversoCi)
@@ -230,10 +230,10 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docAnversoCi ? '#0F6E56' : '#534AB7' }};">Anverso CI</span>
                 <span style="font-size:10px; color:{{ $docAnversoCi ? '#0F6E56' : '#AFA9EC' }};">{{ $docAnversoCi ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" wire:model="docAnversoCi" accept="image/*,application/pdf" class="hidden">
-        </label>
+            <input type="file" accept="image/*,application/pdf" style="display:none;" @click.stop @change="$event.target.files[0] && $wire.upload('docAnversoCi', $event.target.files[0])">
+        </div>
         {{-- 2. Reverso CI --}}
-        <label style="cursor:pointer;">
+        <div x-data style="cursor:pointer;" @click="$el.querySelector('input[type=file]').click()">
             <div style="{{ $docReversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docReversoCi ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docReversoCi)
@@ -245,10 +245,10 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docReversoCi ? '#0F6E56' : '#534AB7' }};">Reverso CI</span>
                 <span style="font-size:10px; color:{{ $docReversoCi ? '#0F6E56' : '#AFA9EC' }};">{{ $docReversoCi ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" wire:model="docReversoCi" accept="image/*,application/pdf" class="hidden">
-        </label>
+            <input type="file" accept="image/*,application/pdf" style="display:none;" @click.stop @change="$event.target.files[0] && $wire.upload('docReversoCi', $event.target.files[0])">
+        </div>
         {{-- 3. Anverso Documento --}}
-        <label style="cursor:pointer;">
+        <div x-data style="cursor:pointer;" @click="$el.querySelector('input[type=file]').click()">
             <div style="{{ $docAnversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAnversoDoc ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docAnversoDoc)
@@ -260,10 +260,10 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docAnversoDoc ? '#0F6E56' : '#534AB7' }};">Anverso Doc</span>
                 <span style="font-size:10px; color:{{ $docAnversoDoc ? '#0F6E56' : '#AFA9EC' }};">{{ $docAnversoDoc ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" wire:model="docAnversoDoc" accept="image/*,application/pdf" class="hidden">
-        </label>
+            <input type="file" accept="image/*,application/pdf" style="display:none;" @click.stop @change="$event.target.files[0] && $wire.upload('docAnversoDoc', $event.target.files[0])">
+        </div>
         {{-- 4. Reverso Documento --}}
-        <label style="cursor:pointer;">
+        <div x-data style="cursor:pointer;" @click="$el.querySelector('input[type=file]').click()">
             <div style="{{ $docReversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docReversoDoc ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docReversoDoc)
@@ -275,10 +275,10 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docReversoDoc ? '#0F6E56' : '#534AB7' }};">Reverso Doc</span>
                 <span style="font-size:10px; color:{{ $docReversoDoc ? '#0F6E56' : '#AFA9EC' }};">{{ $docReversoDoc ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" wire:model="docReversoDoc" accept="image/*,application/pdf" class="hidden">
-        </label>
+            <input type="file" accept="image/*,application/pdf" style="display:none;" @click.stop @change="$event.target.files[0] && $wire.upload('docReversoDoc', $event.target.files[0])">
+        </div>
         {{-- 5. Aviso Luz --}}
-        <label style="cursor:pointer;">
+        <div x-data style="cursor:pointer;" @click="$el.querySelector('input[type=file]').click()">
             <div style="{{ $docAvisoLuz ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #CECBF6; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAvisoLuz ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docAvisoLuz)
@@ -290,8 +290,8 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docAvisoLuz ? '#0F6E56' : '#534AB7' }};">Aviso Luz</span>
                 <span style="font-size:10px; color:{{ $docAvisoLuz ? '#0F6E56' : '#AFA9EC' }};">{{ $docAvisoLuz ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" wire:model="docAvisoLuz" accept="image/*,application/pdf" class="hidden">
-        </label>
+            <input type="file" accept="image/*,application/pdf" style="display:none;" @click.stop @change="$event.target.files[0] && $wire.upload('docAvisoLuz', $event.target.files[0])">
+        </div>
     </div>
 </div>
 @endif
@@ -873,17 +873,6 @@
 
                 {{-- PIE --}}
                 <div style="padding:6px 12px 10px; display:flex; align-items:center; justify-content:flex-end; gap:6px; flex-shrink:0;">
-                    {{-- [−] --}}
-                    <button @click="n > 0 ? n-- : null"
-                            class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
-                            :style="{ opacity: n === 0 ? '0.35' : '1', cursor: n === 0 ? 'default' : 'pointer' }"
-                            style="width:32px; height:32px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; clip-path:circle(16px at 16px 16px);">−</button>
-                    {{-- N --}}
-                    <span x-text="n" style="font-size:14px; font-weight:700; color:#3C3489; min-width:22px; text-align:center; flex-shrink:0;">{{ $qty }}</span>
-                    {{-- [+] --}}
-                    <button @click="n < maxStock ? n++ : null"
-                            class="flex items-center justify-center font-bold flex-shrink-0 transition-colors"
-                            style="width:32px; height:32px; border-radius:50%; background:#EEEDFE; border:none; color:#534AB7; font-size:20px; line-height:1; -webkit-appearance:none; appearance:none; clip-path:circle(16px at 16px 16px);">+</button>
                     {{-- Agregar --}}
                     <button @click="if(n === 0) n = 1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n = 0)"
                             class="flex items-center justify-center gap-1 transition-all active:scale-95 flex-shrink-0"
