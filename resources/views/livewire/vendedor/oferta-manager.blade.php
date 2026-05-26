@@ -651,15 +651,27 @@
         $cuotasLista   = $listaLockedId ? ($listasInfo[$listaLockedId]['cantidad_cuotas'] ?? null) : null;
         $montoCuota    = ($cuotasLista && $cuotasLista > 0) ? $total / $cuotasLista : null;
         @endphp
-        <div style="background:#fff; border:1.5px solid #D1D5DB; border-radius:12px; padding:14px 12px; box-shadow:0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.10);">
-            <div style="display:flex; align-items:center; gap:14px; margin-bottom:6px;">
-                <span style="font-size:12px; font-weight:600; color:#9CA3AF; white-space:nowrap;">Total Pedido Bs.: <strong style="color:#3C3489; font-size:15px; font-weight:900;">{{ number_format($total, 2) }}</strong></span>
-                <span style="font-size:12px; font-weight:600; color:#9CA3AF; white-space:nowrap;">Puntos: <strong style="color:#111827; font-size:15px; font-weight:900;">{{ number_format($puntos) }}</strong></span>
+        <div style="background:linear-gradient(135deg,#3C3489 0%,#6D28D9 100%); border-radius:16px; padding:14px 12px; box-shadow:0 4px 20px rgba(60,52,137,0.40), 0 1px 4px rgba(60,52,137,0.20);">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; {{ $cuotasLista ? 'margin-bottom:8px;' : '' }}">
+                <div style="background:rgba(255,255,255,0.13); border-radius:10px; padding:10px 11px;">
+                    <span style="font-size:9px; font-weight:800; color:rgba(255,255,255,0.60); display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.07em;">Total Pedido Bs.</span>
+                    <span style="font-size:19px; font-weight:900; color:#fff; display:block; line-height:1.1;">{{ number_format($total, 2) }}</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.13); border-radius:10px; padding:10px 11px;">
+                    <span style="font-size:9px; font-weight:800; color:rgba(255,255,255,0.60); display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.07em;">Puntos</span>
+                    <span style="font-size:19px; font-weight:900; color:#FCD34D; display:block; line-height:1.1;">{{ number_format($puntos) }}</span>
+                </div>
             </div>
             @if ($cuotasLista)
-            <div style="display:flex; align-items:center; gap:14px;">
-                <span style="font-size:12px; font-weight:600; color:#9CA3AF; white-space:nowrap;">N° Cuotas: <strong style="color:#3C3489; font-size:15px; font-weight:900;">{{ $cuotasLista }}</strong></span>
-                <span style="font-size:12px; font-weight:600; color:#9CA3AF; white-space:nowrap;">Monto X Cuota: <strong style="color:#7c3aed; font-size:15px; font-weight:900;">{{ number_format($montoCuota, 2) }}</strong></span>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <div style="background:rgba(255,255,255,0.13); border-radius:10px; padding:10px 11px;">
+                    <span style="font-size:9px; font-weight:800; color:rgba(255,255,255,0.60); display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.07em;">N° Cuotas</span>
+                    <span style="font-size:19px; font-weight:900; color:#fff; display:block; line-height:1.1;">{{ $cuotasLista }}</span>
+                </div>
+                <div style="background:rgba(255,255,255,0.13); border-radius:10px; padding:10px 11px;">
+                    <span style="font-size:9px; font-weight:800; color:rgba(255,255,255,0.60); display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.07em;">Monto x Cuota</span>
+                    <span style="font-size:19px; font-weight:900; color:#6EE7B7; display:block; line-height:1.1;">{{ number_format($montoCuota, 2) }}</span>
+                </div>
             </div>
             @endif
         </div>
