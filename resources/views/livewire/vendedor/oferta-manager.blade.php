@@ -122,16 +122,19 @@
                 @endif
             </div>
             <div style="min-width:0; flex:1;">
-                <span style="font-size:9px; font-weight:800; color:#1a1a1a; display:block; text-transform:uppercase; letter-spacing:0.08em;">Seleccionar Cliente</span>
                 @if ($clienteId)
-                <span style="font-size:15px; font-weight:800; color:#1a1a1a; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' — ' : '' }}{{ $clienteNombre }}</span>
+                <span style="font-size:16px; font-weight:800; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteNombre }}</span>
+                <span style="font-size:12px; font-weight:500; color:#6B7280; display:block;">CI: <strong style="color:#111827;">{{ $clienteCI }}</strong></span>
+                @if ($entregaClienteCiudad)
+                <span style="font-size:12px; font-weight:500; color:#6B7280; display:block;">Ciudad: <strong style="color:#111827;">{{ $entregaClienteCiudad }}</strong></span>
+                @endif
                 @elseif ($sinListasActivas)
                 <div style="display:flex; align-items:center; gap:5px;">
                     <svg width="11" height="11" fill="none" stroke="#e24b4a" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <span style="font-size:12px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
                 </div>
                 @else
-                <span style="font-size:15px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar cliente</span>
+                <span style="font-size:16px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar Cliente</span>
                 @endif
             </div>
         </div>
@@ -179,13 +182,16 @@
                 @endif
             </div>
             <div style="min-width:0; flex:1;">
-                <span style="font-size:9px; font-weight:800; color:#1a1a1a; display:block; text-transform:uppercase; letter-spacing:0.06em;">Seleccionar Cliente</span>
                 @if ($clienteId)
-                <span style="font-size:14px; font-weight:800; color:#1a1a1a; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteCI ? $clienteCI . ' · ' : '' }}{{ $clienteNombre }}</span>
+                <span style="font-size:15px; font-weight:800; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $clienteNombre }}</span>
+                <span style="font-size:11px; font-weight:500; color:#6B7280; display:block;">CI: <strong style="color:#111827;">{{ $clienteCI }}</strong></span>
+                @if ($entregaClienteCiudad)
+                <span style="font-size:11px; font-weight:500; color:#6B7280; display:block;">Ciudad: <strong style="color:#111827;">{{ $entregaClienteCiudad }}</strong></span>
+                @endif
                 @elseif ($sinListasActivas)
                 <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
                 @else
-                <span style="font-size:14px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar cliente</span>
+                <span style="font-size:15px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar Cliente</span>
                 @endif
             </div>
         </div>
