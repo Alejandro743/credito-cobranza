@@ -582,14 +582,30 @@
 {{-- ── ARTÍCULOS SELECCIONADOS + BOTÓN CARRITO ──────────────────────────── --}}
 <div style="padding:16px 16px 24px;">
 
-    {{-- Artículos seleccionados (arriba del botón) --}}
     @if (!empty($carrito))
-    <div style="margin-bottom:14px;">
-        <div style="display:flex; align-items:center; gap:5px; margin-bottom:10px;">
-            <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-            <span style="font-size:9px; font-weight:800; color:#7B6FE8; letter-spacing:0.05em;">Artículos Seleccionados</span>
-            <div style="flex:1; height:1px; background:#C4B5FD;"></div>
-        </div>
+    {{-- Separador Artículos Seleccionados --}}
+    <div style="display:flex; align-items:center; gap:5px; margin-bottom:10px;">
+        <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        <span style="font-size:9px; font-weight:800; color:#7B6FE8; letter-spacing:0.05em;">Artículos Seleccionados</span>
+        <div style="flex:1; height:1px; background:#C4B5FD;"></div>
+    </div>
+    @endif
+
+    {{-- Botón + Carrito --}}
+    <button @click="showProductos = true"
+            style="width:100%; padding:14px 20px; background:#FB923C; color:#fff; font-size:15px; font-weight:800; border-radius:14px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; -webkit-appearance:none; appearance:none; margin-bottom:{{ !empty($carrito) ? '14px' : '0' }};">
+        <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        + Carrito
+        @if ($cantidad > 0)
+        <span style="background:rgba(255,255,255,0.30); border-radius:99px; padding:2px 10px; font-size:13px; font-weight:700;">{{ $cantidad }}</span>
+        @endif
+    </button>
+
+    {{-- Lista artículos seleccionados --}}
+    @if (!empty($carrito))
+    <div>
         <div style="border:1.5px solid #C4B5FD; border-radius:14px; overflow:hidden; background:#fff; box-shadow:2px 6px 20px rgba(123,111,232,0.10);">
             @foreach ($carrito as $pid => $item)
             <div style="display:flex; align-items:center; gap:10px; padding:10px 12px; {{ !$loop->last ? 'border-bottom:1px solid #EDE9FE;' : '' }}" wire:key="sel-{{ $pid }}">
@@ -621,18 +637,6 @@
         </button>
     </div>
     @endif
-
-    {{-- Botón + Carrito --}}
-    <button @click="showProductos = true"
-            style="width:100%; padding:14px 20px; background:#FB923C; color:#fff; font-size:15px; font-weight:800; border-radius:14px; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:10px; -webkit-appearance:none; appearance:none;">
-        <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-        </svg>
-        + Carrito
-        @if ($cantidad > 0)
-        <span style="background:rgba(255,255,255,0.30); border-radius:99px; padding:2px 10px; font-size:13px; font-weight:700;">{{ $cantidad }}</span>
-        @endif
-    </button>
 
 </div>
 
