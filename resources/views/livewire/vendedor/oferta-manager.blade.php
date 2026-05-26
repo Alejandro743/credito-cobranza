@@ -598,7 +598,7 @@
     {{-- Botón Seleccionar Artículos --}}
     <button @click="showProductos = true"
             style="width:100%; padding:11px 20px; background:#fff; color:#7B6FE8; font-size:14px; font-weight:800; border-radius:10px; border:1.5px solid #7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; -webkit-appearance:none; appearance:none; margin-bottom:{{ !empty($carrito) ? '14px' : '0' }};">
-        <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24">
+        <svg width="16" height="16" fill="none" stroke="#f97316" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
         </svg>
         Ir a Seleccionar Artículos
