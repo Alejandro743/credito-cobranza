@@ -342,7 +342,7 @@ class OfertaManager extends Component
             ])->get();
 
         $this->listasInfo = $listas->mapWithKeys(fn($l) => [
-            (string)$l->id => ['nombre' => $l->name, 'code' => $l->code]
+            (string)$l->id => ['nombre' => $l->name, 'code' => $l->code, 'cantidad_cuotas' => (int)$l->cantidad_cuotas]
         ])->toArray();
 
         $oferta = [];

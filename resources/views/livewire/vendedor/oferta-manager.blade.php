@@ -635,24 +635,31 @@
         @endforeach
 
         {{-- Total acumulado + cuotas --}}
+        @php
+        $listaIdsCarrito = collect($carrito)->pluck('lista_id')->unique()->toArray();
+        $minCuotas = collect($listasInfo)
+            ->filter(fn($l, $k) => in_array($k, $listaIdsCarrito) && isset($l['cantidad_cuotas']))
+            ->min('cantidad_cuotas');
+        $montoCuota = ($minCuotas && $minCuotas > 0) ? $total / $minCuotas : null;
+        @endphp
         <div style="background:#F8F7FF; border:1.5px solid #C4B5FD; border-radius:14px; padding:14px 16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; {{ $simulacion ? 'margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #EDE9FE;' : '' }}">
+            <div style="display:flex; justify-content:space-between; align-items:center; {{ $minCuotas ? 'margin-bottom:10px; padding-bottom:10px; border-bottom:1px solid #EDE9FE;' : '' }}">
                 <span style="font-size:13px; font-weight:700; color:#534AB7;">Total Pedido</span>
                 <div style="display:flex; align-items:center; gap:10px;">
                     <span style="font-size:18px; font-weight:900; color:#3C3489;">Bs {{ number_format($total, 2) }}</span>
                     <span style="font-size:11px; font-weight:700; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:2px 9px;">+{{ number_format($puntos) }} pts</span>
                 </div>
             </div>
-            @if ($simulacion)
+            @if ($minCuotas)
             <div style="display:flex; align-items:center; justify-content:space-between; gap:12px;">
                 <div style="text-align:center; flex:1;">
                     <p style="font-size:9px; font-weight:600; color:#9B93E0; margin:0 0 2px; text-transform:uppercase; letter-spacing:0.05em;">N° Cuotas</p>
-                    <p style="font-size:20px; font-weight:900; color:#3C3489; margin:0;">{{ $simulacion['cantidad_cuotas'] }}</p>
+                    <p style="font-size:20px; font-weight:900; color:#3C3489; margin:0;">{{ $minCuotas }}</p>
                 </div>
                 <div style="width:1px; height:36px; background:#EDE9FE; flex-shrink:0;"></div>
                 <div style="text-align:center; flex:1;">
                     <p style="font-size:9px; font-weight:600; color:#9B93E0; margin:0 0 2px; text-transform:uppercase; letter-spacing:0.05em;">Monto x Cuota</p>
-                    <p style="font-size:20px; font-weight:900; color:#7c3aed; margin:0;">Bs {{ number_format($simulacion['monto_cuota'], 2) }}</p>
+                    <p style="font-size:20px; font-weight:900; color:#7c3aed; margin:0;">Bs {{ number_format($montoCuota, 2) }}</p>
                 </div>
             </div>
             @endif
