@@ -103,7 +103,7 @@
     {{-- Label ancho completo --}}
     <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
         <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-        <span style="font-size:12px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em;">Dato Cliente</span>
+        <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em;">Dato Cliente</span>
         <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
     </div>
     {{-- Card cliente + botón carrito --}}
@@ -113,9 +113,9 @@
              style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:10px; cursor:pointer; transition:background 0.15s; box-shadow:0 2px 8px rgba(123,111,232,0.08); {{ $clienteId ? 'display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 16px; text-align:center;' : 'display:flex; align-items:center; gap:12px; padding:0 16px;' }}"
              @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">
             @if ($clienteId)
-            <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.08em; display:block; margin-bottom:3px;">Seleccionar Cliente</span>
-            <span style="font-size:17px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;">{{ $clienteNombre }}</span>
-            <span style="font-size:12px; font-weight:700; color:#7B6FE8; display:block;">CI: {{ $clienteCI }}</span>
+            <span style="font-size:10px; font-weight:800; color:#f97316; letter-spacing:0.06em; display:block; margin-bottom:3px;">← Seleccionar Cliente →</span>
+            <span style="font-size:19px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;">{{ $clienteNombre }}</span>
+            <span style="font-size:13px; font-weight:700; color:#7B6FE8; display:block;">CI: {{ $clienteCI }}</span>
             @elseif ($sinListasActivas)
             <div style="width:34px; height:34px; border-radius:10px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="14" height="14" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -161,7 +161,7 @@
     {{-- Label ancho completo --}}
     <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
         <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-        <span style="font-size:12px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em;">Dato Cliente</span>
+        <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em;">Dato Cliente</span>
         <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
     </div>
     {{-- Card cliente + botón carrito --}}
@@ -170,9 +170,9 @@
         <div @click="showSearch = true"
              style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:8px; cursor:pointer; box-shadow:0 2px 8px rgba(123,111,232,0.08); {{ $clienteId ? 'display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px 10px; text-align:center;' : 'display:flex; align-items:center; gap:8px; padding:6px 10px;' }}">
             @if ($clienteId)
-            <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.08em; display:block; margin-bottom:2px;">Seleccionar Cliente</span>
-            <span style="font-size:15px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;">{{ $clienteNombre }}</span>
-            <span style="font-size:11px; font-weight:700; color:#7B6FE8; display:block;">CI: {{ $clienteCI }}</span>
+            <span style="font-size:10px; font-weight:800; color:#f97316; letter-spacing:0.06em; display:block; margin-bottom:2px;">← Seleccionar Cliente →</span>
+            <span style="font-size:17px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;">{{ $clienteNombre }}</span>
+            <span style="font-size:12px; font-weight:700; color:#7B6FE8; display:block;">CI: {{ $clienteCI }}</span>
             @elseif ($sinListasActivas)
             <div style="width:28px; height:28px; border-radius:8px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="13" height="13" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -213,7 +213,7 @@
         <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
         </svg>
-        <span style="font-size:12px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em;">Documentación del Plan</span>
+        <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em;">Documentación del Plan</span>
         <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
     </div>
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
@@ -581,7 +581,7 @@
     {{-- Separador Artículos Seleccionados (siempre visible) --}}
     <div style="display:flex; align-items:center; gap:7px; margin-top:8px; margin-bottom:16px;">
         <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-        <span style="font-size:12px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em; white-space:nowrap;">Artículos Seleccionados</span>
+        <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Artículos Seleccionados</span>
         <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
     </div>
 
@@ -630,7 +630,7 @@
         {{-- Separador Resumen --}}
         <div style="display:flex; align-items:center; gap:7px; margin-top:16px; margin-bottom:12px;">
             <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            <span style="font-size:12px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em; white-space:nowrap;">Resumen</span>
+            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Resumen</span>
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
         </div>
 
@@ -676,7 +676,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
             </svg>
-            <span style="font-size:12px; font-weight:800; color:#9CA3AF; letter-spacing:0.07em; white-space:nowrap;">Dirección de Entrega</span>
+            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Dirección de Entrega</span>
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
         </div>
 
