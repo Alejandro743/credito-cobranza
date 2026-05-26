@@ -1415,36 +1415,16 @@
                         </div>
                     </div>
 
-                    {{-- Fila 2: [Precio Bs | Un | Puntos] arriba / [Total Bs | Total Pts] abajo --}}
-                    <div style="margin-bottom:8px; background:#F8F7FF; border-radius:8px; overflow:hidden;">
-                        {{-- Row 1 --}}
-                        <div style="display:flex; align-items:stretch; border-bottom:1px solid #EDE9FE;">
-                            <div style="flex:1; text-align:center; padding:7px 4px;">
-                                <p style="font-size:9px; color:#9B93E0; margin:0 0 2px; font-weight:600; white-space:nowrap;">Precio Bs</p>
-                                <p style="font-size:17px; font-weight:900; color:#7c3aed; margin:0;">{{ number_format($p['precio'], 2) }}</p>
-                            </div>
-                            <div style="width:1px; background:#EDE9FE; flex-shrink:0;"></div>
-                            <div style="flex:1; text-align:center; padding:7px 4px;">
-                                <p style="font-size:9px; color:#9B93E0; margin:0 0 2px; font-weight:600; white-space:nowrap;">Un.</p>
-                                <p style="font-size:17px; font-weight:900; color:#374151; margin:0;">{{ $qty2 }}</p>
-                            </div>
-                            <div style="width:1px; background:#EDE9FE; flex-shrink:0;"></div>
-                            <div style="flex:1; text-align:center; padding:7px 4px;">
-                                <p style="font-size:9px; color:#9B93E0; margin:0 0 2px; font-weight:600; white-space:nowrap;">Puntos</p>
-                                <p style="font-size:17px; font-weight:900; color:#0F6E56; margin:0;">{{ $p['puntos'] }}</p>
-                            </div>
+                    {{-- Fila 2: Precio Bs Un Puntos / Total Bs Total Puntos --}}
+                    <div style="margin-bottom:8px; background:#F8F7FF; border-radius:8px; padding:8px 10px;">
+                        <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
+                            <span style="font-size:12px; font-weight:600; color:#9B93E0; white-space:nowrap;">Precio Bs: <strong style="color:#7c3aed; font-size:14px;">{{ number_format($p['precio'], 2) }}</strong></span>
+                            <span style="font-size:12px; font-weight:600; color:#9B93E0; white-space:nowrap;">Un: <strong style="color:#374151; font-size:14px;">{{ $qty2 }}</strong></span>
+                            <span style="font-size:12px; font-weight:600; color:#9B93E0; white-space:nowrap;">Puntos: <strong style="color:#0F6E56; font-size:14px;">{{ $p['puntos'] }}</strong></span>
                         </div>
-                        {{-- Row 2 --}}
-                        <div style="display:flex; align-items:stretch;">
-                            <div style="flex:1; text-align:center; padding:7px 4px;">
-                                <p style="font-size:9px; color:#9B93E0; margin:0 0 2px; font-weight:600; white-space:nowrap;">Total Bs</p>
-                                <p style="font-size:17px; font-weight:900; color:#3C3489; margin:0;">{{ number_format($p['precio'] * $qty2, 2) }}</p>
-                            </div>
-                            <div style="width:1px; background:#EDE9FE; flex-shrink:0;"></div>
-                            <div style="flex:1; text-align:center; padding:7px 4px;">
-                                <p style="font-size:9px; color:#9B93E0; margin:0 0 2px; font-weight:600; white-space:nowrap;">Total Pts</p>
-                                <p style="font-size:17px; font-weight:900; color:#0F6E56; margin:0;">+{{ $p['puntos'] * $qty2 }}</p>
-                            </div>
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="font-size:12px; font-weight:600; color:#9B93E0; white-space:nowrap;">Total Bs: <strong style="color:#3C3489; font-size:14px;">{{ number_format($p['precio'] * $qty2, 2) }}</strong></span>
+                            <span style="font-size:12px; font-weight:600; color:#9B93E0; white-space:nowrap;">Total Puntos: <strong style="color:#0F6E56; font-size:14px;">+{{ $p['puntos'] * $qty2 }}</strong></span>
                         </div>
                     </div>
 
