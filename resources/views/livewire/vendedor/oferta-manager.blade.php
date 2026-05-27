@@ -766,7 +766,7 @@
                 <p style="font-size:10px; color:#9CA3AF; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Referencia <span style="color:#9CA3AF; font-weight:400; text-transform:none;">(opcional)</span></p>
                 <input wire:model="entregaReferencia" type="text"
                        placeholder="Ej: Portón azul, frente al parque..."
-                       style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;">
+                       style="width:100%; background:#fff; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;">
             </div>
         </div>
 
@@ -1340,7 +1340,7 @@
             <div>
                 <p style="font-size:10px; color:#9B93E0; font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Dirección *</p>
                 <input wire:model="entregaNuevaDireccion" type="text" placeholder="Calle y número"
-                       style="width:100%; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box; @error('entregaNuevaDireccion') border-color:#fca5a5; @enderror">
+                       style="width:100%; background:#fff; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box; @error('entregaNuevaDireccion') border-color:#fca5a5; @enderror">
                 @error('entregaNuevaDireccion')<p style="font-size:10px; color:#ef4444; margin-top:2px;">{{ $message }}</p>@enderror
             </div>
         </div>
