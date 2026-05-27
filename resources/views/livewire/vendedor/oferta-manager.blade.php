@@ -115,7 +115,7 @@
             @if ($clienteId)
             <div style="display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:3px;">
                 <svg width="12" height="12" fill="none" stroke="#f97316" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                <span style="font-size:13px; font-weight:800; color:#f97316; letter-spacing:0.05em;">Seleccionar Cliente</span>
+                <span style="font-size:14px; font-weight:800; color:#f97316; letter-spacing:0.05em;">Cambiar Cliente</span>
             </div>
             <span style="font-size:19px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;">{{ $clienteNombre }}</span>
             <span style="font-size:13px; font-weight:700; color:#7B6FE8; display:block;">CI: {{ $clienteCI }}</span>
@@ -173,7 +173,7 @@
             @if ($clienteId)
             <div style="display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:2px;">
                 <svg width="11" height="11" fill="none" stroke="#f97316" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                <span style="font-size:12px; font-weight:800; color:#f97316; letter-spacing:0.05em;">Seleccionar Cliente</span>
+                <span style="font-size:13px; font-weight:800; color:#f97316; letter-spacing:0.05em;">Cambiar Cliente</span>
             </div>
             <span style="font-size:17px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;">{{ $clienteNombre }}</span>
             <span style="font-size:12px; font-weight:700; color:#7B6FE8; display:block;">CI: {{ $clienteCI }}</span>
