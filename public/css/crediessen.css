@@ -626,6 +626,9 @@ main [style*="min-height:100vh"]   { min-height: auto !important; }
 main > div.min-h-screen { min-height: auto !important; }
 main div.bg-gray-50.min-h-screen { background: transparent !important; }
 
+/* pedido-manager: 2-col layout on desktop */
+@media(min-width:680px){ .pm-grid{ display:grid; grid-template-columns:300px 1fr; gap:20px; align-items:start; } }
+
 /* ─────────────────────────────────────────────────────────────
    26. SIDEBAR — navy oscuro, acento púrpura
    !important asegura q el fondo navy gane sobre Tailwind/inline
