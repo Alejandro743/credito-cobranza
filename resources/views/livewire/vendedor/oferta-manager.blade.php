@@ -1743,15 +1743,15 @@
                 <button wire:click="seleccionarCliente({{ $c['id'] }}, {{ $c['user_id'] }}, '{{ addslashes($c['nombre']) }}', '{{ addslashes($c['ci']) }}')"
                         @click="showSearch = false"
                         class="w-full flex items-center gap-3 text-left"
-                        style="padding:9px 11px; background:#FAFAFE; border-radius:11px; border:1px solid #F0EEFF; cursor:pointer; transition:all 0.12s;"
-                        onmouseover="this.style.background='#EDE9FE'; this.style.borderColor='#D4CFF8'; this.querySelector('.nombre-text').style.color='#3C3489';"
-                        onmouseout="this.style.background='#FAFAFE'; this.style.borderColor='#F0EEFF'; this.querySelector('.nombre-text').style.color='#534AB7';">
+                        style="padding:9px 11px; background:#fff; border-radius:11px; border:1px solid #D1D5DB; cursor:pointer; transition:all 0.12s;"
+                        onmouseover="this.style.background='#F9FAFB'; this.style.borderColor='#9CA3AF'; this.querySelector('.nombre-text').style.color='#3C3489';"
+                        onmouseout="this.style.background='#fff'; this.style.borderColor='#D1D5DB'; this.querySelector('.nombre-text').style.color='#534AB7';">
                     <div style="width:32px; height:32px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <span style="font-weight:700; font-size:13px; color:#7c3aed;">{{ strtoupper(substr($c['nombre'], 0, 1)) }}</span>
                     </div>
                     <div style="min-width:0; flex:1; text-align:left;">
                         <p class="nombre-text" style="font-weight:600; font-size:13px; color:#534AB7; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:color 0.12s;">{{ $c['nombre'] }}</p>
-                        <p style="font-size:11px; font-weight:700; color:#9B93E0; margin:1px 0 0; font-family:monospace;">CI: {{ $c['ci'] }}</p>
+                        <p style="font-size:11px; font-weight:700; color:#6B7280; margin:1px 0 0; font-family:monospace;">CI: {{ $c['ci'] }}</p>
                     </div>
                     <svg width="11" height="11" fill="none" stroke="#DDD8FB" viewBox="0 0 24 24" style="flex-shrink:0;">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5l7 7-7 7"/>
