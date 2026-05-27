@@ -493,7 +493,7 @@ $estilosActivos = [
 
     <div class="flex flex-wrap gap-1.5">
         @foreach($filtros as $valor => $filtro)
-        <button wire:click="$set('filtroEstado', '{{ $valor }}')"
+        <button wire:click="filtrar('{{ $valor }}')"
                 style="{{ $filtroEstado === $valor ? $estilosActivos[$valor] : 'background:#fff; border-color:#E5E7EB; color:#6B7280;' }}
                        border:1px solid; border-radius:8px; padding:5px 10px; height:36px;
                        font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap;
