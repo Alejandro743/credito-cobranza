@@ -823,9 +823,10 @@
 
         {{-- Acciones finales --}}
         <div x-show="appToastShow && appToastType==='error'" x-cloak
-             style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:10px 14px;display:flex;flex-direction:row;flex-wrap:nowrap;align-items:center;gap:8px;margin-bottom:8px;">
+             class="flex flex-row items-center gap-2"
+             style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:10px 14px;margin-bottom:8px;">
             <svg style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="#EF4444" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-            <span style="font-size:13px;font-weight:700;color:#EF4444;" x-text="appToastMsg"></span>
+            <span style="font-size:13px;font-weight:700;color:#EF4444;white-space:nowrap;" x-text="appToastMsg"></span>
         </div>
         <div style="display:flex; gap:10px;">
             <button wire:click="cambiarCliente"
@@ -1433,9 +1434,10 @@
 
     {{-- Botones pie --}}
     <div x-show="appToastShow && appToastType==='error'" x-cloak
-         style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:10px 14px;display:flex;align-items:center;gap:8px;margin-bottom:8px;margin-top:8px;">
+         class="flex flex-row items-center gap-2"
+         style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:12px;padding:10px 14px;margin-bottom:8px;margin-top:8px;">
         <svg style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="#EF4444" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-        <span style="font-size:13px;font-weight:700;color:#EF4444;" x-text="appToastMsg"></span>
+        <span style="font-size:13px;font-weight:700;color:#EF4444;white-space:nowrap;" x-text="appToastMsg"></span>
     </div>
     <div style="display:flex; align-items:center; gap:8px; margin-top:8px;">
         <button wire:click="volverResumen" type="button"
