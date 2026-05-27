@@ -500,7 +500,8 @@ $estilosActivos = [
     </div>
 
     <a href="{{ route('vendedor.oferta') }}"
-       style="height:36px; padding:0 18px; display:inline-flex; align-items:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; text-decoration:none; box-sizing:border-box; flex-shrink:0;">
+       class="w-full sm:w-auto"
+       style="height:36px; padding:0 18px; display:flex; align-items:center; justify-content:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; text-decoration:none; box-sizing:border-box; flex-shrink:0;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
             <rect x="9" y="3" width="6" height="4" rx="1"/>
@@ -522,7 +523,7 @@ $estilosActivos = [
             </div>
             <div style="flex:1; min-width:0;">
                 <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->cliente->nombre_completo }}</p>
-                <p style="font-size:12px; color:#EA580C; font-family:monospace; margin:2px 0 0;">{{ $p->numero }}</p>
+                <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;">{{ $p->numero }}</p>
             </div>
             <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0; {{ $p->estado_badge['style'] ?? '' }}">
                 {{ $p->estado_badge['label'] }}
@@ -540,7 +541,7 @@ $estilosActivos = [
         </div>
         <div style="padding:10px 14px; border-top:1px solid #F3F4F6;">
             <button wire:click="ver({{ $p->id }})"
-                    style="width:100%; height:34px; border:1px solid #FED7AA; border-radius:8px; background:#FFF7ED; color:#EA580C; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+                    style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; background:#F5F3FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
