@@ -27,6 +27,7 @@ class PedidoManager extends Component
     }
 
     public function updatingSearch(): void { $this->resetPage(); }
+    public function updatingFiltroEstado(): void { $this->resetPage(); }
 
     public function ver(int $id): void
     {

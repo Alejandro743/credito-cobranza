@@ -1,11 +1,10 @@
 ﻿<div>
-
+<style>@media(min-width:680px){.pm-grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;}}</style>
 
 {{-- ══════════════════════ DETAIL ══════════════════════ --}}
 @if ($mode === 'detail' && $pedidoDetalle)
 @php $p = $pedidoDetalle; $plan = $p->planPago; $aprobado = $p->estado === 'aprobado'; @endphp
 
-<style>@media(min-width:680px){.pm-grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;}}</style>
 <div style="max-width:1040px; margin:0 auto; padding:0 0 40px;">
 
     @php
