@@ -218,11 +218,26 @@
          err: { ci1:false, ci2:false, d1:false, d2:false, luz:false },
          doUpload(key, prop, file) {
              if (!file) return;
-             this.up[key] = true; this.err[key] = false;
-             $wire.upload(prop, file,
-                 () => { this.up[key] = false; },
-                 () => { this.up[key] = false; this.err[key] = true; setTimeout(() => this.err[key] = false, 4000); }
+             const wire = $wire, self = this;
+             self.up[key] = true; self.err[key] = false;
+             const send = (f) => wire.upload(prop, f,
+                 () => { self.up[key] = false; },
+                 () => { self.up[key] = false; self.err[key] = true; setTimeout(() => self.err[key] = false, 4000); }
              );
+             if (!file.type.startsWith('image/')) { send(file); return; }
+             const url = URL.createObjectURL(file);
+             const img = new Image();
+             img.onerror = () => { URL.revokeObjectURL(url); send(file); };
+             img.onload = () => {
+                 const max = 1200, w0 = img.width, h0 = img.height;
+                 let w = w0, h = h0;
+                 if (w > max || h > max) { if (w > h) { h = Math.round(h*max/w); w = max; } else { w = Math.round(w*max/h); h = max; } }
+                 const c = document.createElement('canvas'); c.width = w; c.height = h;
+                 c.getContext('2d').drawImage(img, 0, 0, w, h);
+                 URL.revokeObjectURL(url);
+                 c.toBlob(b => send(new File([b], 'foto.jpg', {type:'image/jpeg'})), 'image/jpeg', 0.82);
+             };
+             img.src = url;
          }
      }">
     <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
