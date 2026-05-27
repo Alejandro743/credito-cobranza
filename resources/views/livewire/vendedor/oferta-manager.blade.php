@@ -131,7 +131,7 @@
                 <svg width="14" height="14" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </div>
             <div style="min-width:0; flex:1;">
-                <span style="font-size:16px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar Cliente</span>
+                <span style="font-size:20px; font-weight:800; color:#7B6FE8; display:block;">Seleccionar Cliente</span>
             </div>
             @endif
         </div>
@@ -182,7 +182,7 @@
             <div style="width:28px; height:28px; border-radius:8px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="13" height="13" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </div>
-            <span style="font-size:15px; font-weight:700; color:#7B6FE8; display:block;">Seleccionar Cliente</span>
+            <span style="font-size:18px; font-weight:800; color:#7B6FE8; display:block;">Seleccionar Cliente</span>
             @endif
         </div>
         {{-- CARRITO --}}
@@ -587,8 +587,8 @@
 
     {{-- Botón Seleccionar Artículos --}}
     <button @click="showProductos = true"
-            style="width:100%; padding:11px 20px; background:#fff; color:#7B6FE8; font-size:14px; font-weight:800; border-radius:10px; border:1.5px solid #7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; -webkit-appearance:none; appearance:none; margin-bottom:{{ !empty($carrito) ? '14px' : '0' }};">
-        <svg width="16" height="16" fill="none" stroke="#f97316" stroke-width="2.5" viewBox="0 0 24 24">
+            style="width:100%; padding:11px 20px; background:#6B7280; color:#fff; font-size:14px; font-weight:800; border-radius:10px; border:1.5px solid #6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; -webkit-appearance:none; appearance:none; margin-bottom:{{ !empty($carrito) ? '14px' : '0' }};">
+        <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
         </svg>
         Ir a Seleccionar Artículos
@@ -654,16 +654,16 @@
                 <div style="display:grid; grid-template-columns:{{ $cuotasLista ? 'repeat(3,1fr)' : '1fr' }}; text-align:center;">
                     <div style="padding:0 6px;">
                         <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Puntos</span>
-                        <span style="font-size:14px; font-weight:900; color:#f97316; line-height:1.1;">{{ number_format($puntos) }}</span>
+                        <span style="font-size:14px; font-weight:900; color:#111827; line-height:1.1;">{{ number_format($puntos) }}</span>
                     </div>
                     @if ($cuotasLista)
                     <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
                         <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">N° Cuotas</span>
-                        <span style="font-size:14px; font-weight:900; color:#7B6FE8; line-height:1.1;">{{ $cuotasLista }}</span>
+                        <span style="font-size:14px; font-weight:900; color:#111827; line-height:1.1;">{{ $cuotasLista }}</span>
                     </div>
                     <div style="padding:0 6px;">
                         <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Monto x Cuota</span>
-                        <span style="font-size:14px; font-weight:900; color:#7c3aed; line-height:1.1;">{{ number_format($montoCuota, 2) }}</span>
+                        <span style="font-size:14px; font-weight:900; color:#111827; line-height:1.1;">{{ number_format($montoCuota, 2) }}</span>
                     </div>
                     @endif
                 </div>
@@ -768,7 +768,7 @@
                 <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 Cancelar
             </button>
-            <button wire:click="irResumen"
+            <button wire:click="confirmarPedido"
                     style="flex:2; padding:13px 10px; background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); color:#fff; font-size:13px; font-weight:800; border-radius:16px; border:none; cursor:pointer; box-shadow:0 4px 18px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px;">
                 <svg width="14" height="14" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 Confirmar Plan
@@ -1594,8 +1594,12 @@
         {{-- PIE MODAL: cerrar --}}
         <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1.5px solid #EDE9FE;">
             <button @click="showProductos = false"
-                    style="width:100%; padding:13px; background:#9B93E0; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.07em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
-                « Volver{{ $cantidad > 0 ? ' — Carrito ' . $cantidad . ' Un.' : '' }}
+                    style="width:100%; padding:13px; background:{{ $cantidad > 0 ? '#7B6FE8' : '#9CA3AF' }}; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.04em; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                @if ($cantidad > 0)
+                    «&nbsp; Confirmar &mdash; {{ $cantidad }} Un.
+                @else
+                    «&nbsp; Regresar
+                @endif
             </button>
         </div>
 </div>
