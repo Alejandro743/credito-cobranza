@@ -113,7 +113,10 @@
              style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:10px; cursor:pointer; transition:background 0.15s; box-shadow:0 2px 8px rgba(123,111,232,0.08); {{ $clienteId ? 'display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 16px; text-align:center;' : 'display:flex; align-items:center; gap:12px; padding:0 16px;' }}"
              @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">
             @if ($clienteId)
-            <span style="font-size:10px; font-weight:800; color:#f97316; letter-spacing:0.06em; display:block; margin-bottom:3px;">Seleccionar Cliente</span>
+            <div style="display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:3px;">
+                <svg width="12" height="12" fill="none" stroke="#f97316" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <span style="font-size:13px; font-weight:800; color:#f97316; letter-spacing:0.05em;">Seleccionar Cliente</span>
+            </div>
             <span style="font-size:19px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;">{{ $clienteNombre }}</span>
             <span style="font-size:13px; font-weight:700; color:#7B6FE8; display:block;">CI: {{ $clienteCI }}</span>
             @elseif ($sinListasActivas)
@@ -170,7 +173,10 @@
         <div @click="showSearch = true"
              style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:8px; cursor:pointer; box-shadow:0 2px 8px rgba(123,111,232,0.08); {{ $clienteId ? 'display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px 10px; text-align:center;' : 'display:flex; align-items:center; gap:8px; padding:6px 10px;' }}">
             @if ($clienteId)
-            <span style="font-size:10px; font-weight:800; color:#f97316; letter-spacing:0.06em; display:block; margin-bottom:2px;">Seleccionar Cliente</span>
+            <div style="display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:2px;">
+                <svg width="11" height="11" fill="none" stroke="#f97316" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <span style="font-size:12px; font-weight:800; color:#f97316; letter-spacing:0.05em;">Seleccionar Cliente</span>
+            </div>
             <span style="font-size:17px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;">{{ $clienteNombre }}</span>
             <span style="font-size:12px; font-weight:700; color:#7B6FE8; display:block;">CI: {{ $clienteCI }}</span>
             @elseif ($sinListasActivas)
@@ -848,8 +854,8 @@
                 {{-- CUERPO ESCRITORIO --}}
                 <div class="card-body-desk" style="padding:10px 12px 8px; display:flex; flex-direction:column; gap:6px; flex:1;">
                     <div style="background:#F8F7FF; border-radius:8px; padding:8px 10px; display:flex; flex-direction:column; gap:4px;">
-                        <span style="font-size:11px; font-weight:400; color:#534AB7;">{{ $p['code'] ?? '' }}</span>
                         <span style="font-size:11px; font-weight:800; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ $p['nombre'] }}">{{ $p['nombre'] }}</span>
+                        <span style="font-size:11px; font-weight:400; color:#534AB7;">{{ $p['code'] ?? '' }}</span>
                         <div style="display:flex; justify-content:space-between; align-items:baseline; gap:6px;">
                             <span style="font-size:10px; font-weight:500; color:#534AB7;">Precio Bs</span>
                             <span style="font-size:14px; font-weight:500; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
@@ -1549,8 +1555,8 @@
                             @endif
                         </div>
                         <div style="flex:1; min-width:0;">
-                            <span style="font-size:16px; font-weight:400; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p['code'] ?? '' }}</span>
-                            <span style="font-size:13px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ ucwords(strtolower($p['nombre'])) }}">{{ ucwords(strtolower($p['nombre'])) }}</span>
+                            <span style="font-size:16px; font-weight:800; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ ucwords(strtolower($p['nombre'])) }}">{{ ucwords(strtolower($p['nombre'])) }}</span>
+                            <span style="font-size:13px; font-weight:400; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p['code'] ?? '' }}</span>
                         </div>
                     </div>
 
@@ -1594,7 +1600,7 @@
         {{-- PIE MODAL: cerrar --}}
         <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1.5px solid #EDE9FE;">
             <button @click="showProductos = false"
-                    style="width:100%; padding:13px; background:#6B7280; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:8px;">
+                    style="width:100%; padding:13px; background:{{ $cantidad > 0 ? '#7B6FE8' : '#6B7280' }}; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:8px;">
                 @if ($cantidad > 0)
                     <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     Confirmar &mdash; {{ $cantidad }} Un.
