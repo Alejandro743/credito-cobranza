@@ -17,22 +17,13 @@ class PedidoManager extends Component
     public string $filtroEstado = '';
     public ?int   $viewingId    = null;
 
-    protected ?int $vendedorId = null;
-
     public function mount(): void
     {
         $this->initModuleColor();
-        $v = Vendedor::delUsuario();
-        $this->vendedorId = $v?->id;
     }
 
     public function updatingSearch(): void { $this->resetPage(); }
-
-    public function filtrar(string $estado): void
-    {
-        $this->filtroEstado = $estado;
-        $this->resetPage();
-    }
+    public function updatedFiltroEstado(): void { $this->resetPage(); }
 
     public function ver(int $id): void
     {
@@ -48,8 +39,10 @@ class PedidoManager extends Component
 
     public function render()
     {
+        $vendedorId = Vendedor::delUsuario()?->id;
+
         $pedidos = Pedido::with(['cliente.usuario'])
-            ->when($this->vendedorId, fn($q) => $q->where('vendedor_id', $this->vendedorId))
+            ->when($vendedorId, fn($q) => $q->where('vendedor_id', $vendedorId))
             ->when($this->search, fn($q) => $q->whereHas('cliente.usuario', fn($c) =>
                 $c->where('name',     'like', "%{$this->search}%")
                   ->orWhere('apellido','like', "%{$this->search}%")
