@@ -5,7 +5,8 @@
 @if ($mode === 'detail' && $pedidoDetalle)
 @php $p = $pedidoDetalle; $plan = $p->planPago; $aprobado = $p->estado === 'aprobado'; @endphp
 
-<div class="max-w-2xl mx-auto" style="padding:0 0 40px;">
+<style>@media(min-width:680px){.pm-grid{display:grid;grid-template-columns:300px 1fr;gap:20px;align-items:start;}}</style>
+<div style="max-width:1040px; margin:0 auto; padding:0 0 40px;">
 
     @php
         $estadoConfig = match($p->estado) {
@@ -47,6 +48,8 @@
 
     </div>
 
+<div class="pm-grid" style="margin-top:20px;">
+<div>
     {{-- Separador Datos Cliente --}}
     <div style="display:flex; align-items:center; gap:8px; margin:4px 0 10px;">
         <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#534AB7;">Datos Cliente</span>
@@ -314,6 +317,8 @@
     </div>
     @endif
 
+</div>
+<div>
     <div style="display:flex; align-items:center; gap:8px; margin:16px 0 10px;">
         <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#534AB7;">Productos del Pedido</span>
         <div style="flex:1; height:1px; background:#9C96E8;"></div>
@@ -450,6 +455,9 @@
         @endif
     </div>
     @endif
+
+</div>
+</div>
 
 </div>
 
