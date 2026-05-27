@@ -611,8 +611,8 @@
                     <span style="font-size:10px; font-weight:800; color:#fff; line-height:1;">{{ $item['cantidad'] }}</span>
                 </div>
                 <div style="flex:1; min-width:0;">
-                    <span style="font-size:16px; font-weight:400; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $item['code'] ?? '' }}</span>
-                    <span style="font-size:13px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
+                    <span style="font-size:16px; font-weight:800; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
+                    <span style="font-size:13px; font-weight:400; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $item['code'] ?? '' }}</span>
                 </div>
                 <button wire:click="quitar({{ $item['product_id'] }})"
                         style="width:28px; height:28px; border-radius:50%; background:#FEF2F2; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
