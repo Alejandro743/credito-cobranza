@@ -231,7 +231,10 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
             {{-- Breadcrumb --}}
             <div class="flex-1 min-w-0" style="display:flex; align-items:center; gap:6px; overflow:hidden;">
                 @if($customHeaderText)
-                <span style="font-size:16px; font-weight:800; color:#4B5563; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $customHeaderText }}</span>
+                <div style="display:flex; flex-direction:column; min-width:0;">
+                    <span style="font-size:16px; font-weight:900; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.08em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $customHeaderText }}</span>
+                    <div style="height:2px; background:linear-gradient(to right,#7B6FE8,#C4B5FD); border-radius:1px; margin-top:3px;"></div>
+                </div>
                 @else
                 @if($activeModuloName)
                 <span style="font-size:13px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">{{ $activeModuloName }}</span>
