@@ -1,14 +1,4 @@
-<div>
-
-<style>
-.mp-wrap { overflow-x: auto; background: #fff; }
-.mp-table { border-collapse: separate; border-spacing: 0; background: #fff; }
-.mp-table .sticky-combined {
-    position: sticky; left: 0; z-index: 2; background: #fff; padding: 0;
-    box-shadow: 4px 0 6px -2px rgba(0,0,0,0.07);
-}
-.mp-table thead .sticky-combined { background: #FFFFE3; }
-</style>
+﻿<div>
 
 <div class="p-4 sm:p-6">
 
@@ -471,143 +461,193 @@
 $filtros = [
     ''           => ['label' => 'Todos',       'icon' => 'M4 6h16M4 10h16M4 14h16M4 18h16'],
     'en_espera'  => ['label' => 'En espera',   'icon' => 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z'],
-    'revision'    => ['label' => 'En revisión', 'icon' => 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'],
+    'revision'   => ['label' => 'En revisión', 'icon' => 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z'],
     'aprobado'   => ['label' => 'Aprobado',    'icon' => 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z'],
     'rechazado'  => ['label' => 'Rechazado',   'icon' => 'M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z'],
 ];
 $estilosActivos = [
     ''           => 'background:#E8F0F7; border-color:#6D8196; color:#6D8196;',
     'en_espera'  => 'background:#FFF9E3; border-color:#FCD34D; color:#B45309;',
-    'revision'    => 'background:#EFF6FF; border-color:#93C5FD; color:#1D4ED8;',
+    'revision'   => 'background:#EFF6FF; border-color:#93C5FD; color:#1D4ED8;',
     'aprobado'   => 'background:#F0FDF4; border-color:#6EE7B7; color:#065F46;',
     'rechazado'  => 'background:#FEF2F2; border-color:#FCA5A5; color:#DC2626;',
 ];
 @endphp
 
 {{-- Toolbar --}}
-<div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:16px;">
+<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
 
-    {{-- Buscador --}}
-    <div style="position:relative; flex-shrink:0; width:180px;">
-        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px;"
-             viewBox="0 0 24 24" fill="none" stroke="#CBCBCB" stroke-width="2" stroke-linecap="round">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
+    <div class="relative w-full sm:flex-1" style="min-width:0; max-width:100%;">
+        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
         </svg>
-        <input wire:model.debounce.300ms="search"
-               type="text"
-               placeholder="Buscar cliente..."
-               style="width:100%; padding:7px 10px 7px 30px; font-size:12px;" />
+        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar cliente o Nº pedido..."
+               style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
     </div>
 
-    {{-- Filtros estado --}}
-    @foreach($filtros as $valor => $filtro)
-    <button wire:click="$set('filtroEstado', '{{ $valor }}')"
-            style="{{ $filtroEstado === $valor ? $estilosActivos[$valor] : 'background:transparent; border-color:#CECBF6; color:#AFA9EC;' }}
-                   border:0.5px solid; border-radius:6px; padding:6px 10px;
-                   font-size:11px; font-weight:500; cursor:pointer; transition:all .15s; white-space:nowrap;
-                   display:inline-flex; align-items:center; gap:5px;
-                   box-shadow:0 2px 6px rgba(0,0,0,0.10), 0 1px 2px rgba(0,0,0,0.06);">
-        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-            <path d="{{ $filtro['icon'] }}"/>
-        </svg>
-        {{ $filtro['label'] }}
-    </button>
-    @endforeach
+    <div class="flex flex-wrap gap-1.5">
+        @foreach($filtros as $valor => $filtro)
+        <button wire:click="$set('filtroEstado', '{{ $valor }}')"
+                style="{{ $filtroEstado === $valor ? $estilosActivos[$valor] : 'background:#fff; border-color:#E5E7EB; color:#6B7280;' }}
+                       border:1px solid; border-radius:8px; padding:5px 10px; height:36px;
+                       font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap;
+                       display:inline-flex; align-items:center; gap:5px; box-sizing:border-box;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+                <path d="{{ $filtro['icon'] }}"/>
+            </svg>
+            {{ $filtro['label'] }}
+        </button>
+        @endforeach
+    </div>
 
-    {{-- Nuevo Plan --}}
     <a href="{{ route('vendedor.oferta') }}"
-       class="ds-btn ds-btn-ghost ds-btn-sm"
-       style="text-decoration:none; white-space:nowrap; margin-left:auto;">
+       style="height:36px; padding:0 18px; display:inline-flex; align-items:center; gap:6px; border:none; border-radius:9px; background:#EA580C; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; text-decoration:none; box-sizing:border-box; flex-shrink:0;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
             <rect x="9" y="3" width="6" height="4" rx="1"/>
             <line x1="9" y1="12" x2="15" y2="12"/>
             <line x1="9" y1="16" x2="13" y2="16"/>
         </svg>
-        NUEVO PLAN
+        Nueva Solicitud
     </a>
 </div>
 
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="mp-wrap" style="-webkit-overflow-scrolling:touch;">
-    <table class="mp-table" style="width:100%; min-width:600px; font-size:13px;">
-        <thead class="tracking-wide">
-            <tr>
-                <th class="sticky-combined" style="border:0.5px solid #e5e7eb; font-weight:700; height:1px;">
-                    <div style="display:flex; align-items:stretch; height:100%;">
-                        <div style="width:110px; padding:8px 10px; text-align:center; border-right:1.5px solid #d1d5db; flex-shrink:0; display:flex; align-items:center; justify-content:center;">Pedido</div>
-                        <div style="flex:1; padding:8px 10px; text-align:center; display:flex; align-items:center; justify-content:center;">Cliente</div>
-                    </div>
-                </th>
-                <th style="width:110px; padding:8px 10px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb;">Estado</th>
-                <th style="width:110px; padding:8px 10px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb;">Fecha Solicitud</th>
-                <th style="width:115px; padding:8px 10px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb;">Fecha Aprobación</th>
-                <th style="width:90px; padding:8px 10px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb;">Total Bs.</th>
-                <th style="width:60px; padding:8px 10px; text-align:center; font-weight:700; border:0.5px solid #e5e7eb;">Acciones</th>
+{{-- MOBILE: Cards --}}
+<div class="sm:hidden flex flex-col" style="gap:10px;">
+    @forelse ($pedidos as $p)
+    <div wire:key="card-{{ $p->id }}"
+         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
+        <div style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #F3F4F6;">
+            <div style="width:30px; height:30px; border-radius:8px; background:#FFF0E8; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#EA580C;">{{ strtoupper(substr($p->cliente->nombre_completo, 0, 1)) }}</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+                <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->cliente->nombre_completo }}</p>
+                <p style="font-size:12px; color:#EA580C; font-family:monospace; margin:2px 0 0;">{{ $p->numero }}</p>
+            </div>
+            <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0; {{ $p->estado_badge['style'] ?? '' }}">
+                {{ $p->estado_badge['label'] }}
+            </span>
+        </div>
+        <div style="padding:10px 14px; display:flex; align-items:center; gap:8px;">
+            <div style="flex:1;">
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Fecha solicitud</span>
+                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->created_at->format('d/m/Y') }}</span>
+            </div>
+            <div style="text-align:right;">
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Total Bs.</span>
+                <span style="font-size:13px; font-weight:700; color:#EA580C;">{{ $p->total_pagar > 0 ? number_format($p->total_pagar, 2) : '—' }}</span>
+            </div>
+        </div>
+        <div style="padding:10px 14px; border-top:1px solid #F3F4F6;">
+            <button wire:click="ver({{ $p->id }})"
+                    style="width:100%; height:34px; border:1px solid #FED7AA; border-radius:8px; background:#FFF7ED; color:#EA580C; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                Ver detalle
+            </button>
+        </div>
+    </div>
+    @empty
+    <div style="text-align:center; padding:48px 24px;">
+        <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+        </svg>
+        <p style="font-weight:600; color:#6B7280; font-size:13px;">Sin pedidos todavía</p>
+        <p style="font-size:12px; color:#9CA3AF; margin-top:4px;">Generá tu primer pedido desde Oferta / Carrito</p>
+        <a href="{{ route('vendedor.oferta') }}"
+           style="display:inline-block; margin-top:12px; padding:8px 20px; background:#EA580C; color:#fff; font-size:13px; font-weight:600; border-radius:10px; text-decoration:none;">
+            Ir a Oferta / Carrito
+        </a>
+    </div>
+    @endforelse
+    @if ($pedidos->hasPages())
+    <div style="padding-top:8px;">{{ $pedidos->links() }}</div>
+    @endif
+</div>
+
+{{-- DESKTOP: Tabla --}}
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+
+    <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:13px; font-weight:700; color:#111827;">Mis solicitudes</span>
+            <span style="background:#FFF0E8; color:#EA580C; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidos->total() }}</span>
+        </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+    <table style="width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
+        <thead>
+            <tr style="background:#FFF7ED; border-bottom:2px solid #FED7AA;">
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#EA580C; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; position:sticky; left:0; z-index:2; background:#FFF7ED; box-shadow:4px 0 6px -2px rgba(0,0,0,0.05);">Pedido / Cliente</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#EA580C; text-transform:uppercase; letter-spacing:.5px;">Estado</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#EA580C; text-transform:uppercase; letter-spacing:.5px;">Solicitud</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#EA580C; text-transform:uppercase; letter-spacing:.5px;">Aprobación</th>
+                <th style="padding:10px 14px; text-align:right; font-size:11px; font-weight:700; color:#EA580C; text-transform:uppercase; letter-spacing:.5px;">Total Bs.</th>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#EA580C; text-transform:uppercase; letter-spacing:.5px;">Acción</th>
             </tr>
         </thead>
         <tbody>
             @forelse ($pedidos as $p)
-            <tr wire:key="p-{{ $p->id }}">
-                <td data-label="Pedido / Cliente" class="sticky-combined" style="border:0.5px solid #e5e7eb; height:1px;">
+            <tr wire:key="p-{{ $p->id }}"
+                style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
+                @mouseenter="$el.style.background='#FFFAF5'" @mouseleave="$el.style.background=''">
+                <td style="padding:0; height:1px; position:sticky; left:0; z-index:2; background:inherit; box-shadow:4px 0 6px -2px rgba(0,0,0,0.05);">
                     <div style="display:flex; align-items:stretch; height:100%;">
-                        <div style="width:110px; padding:8px 10px; text-align:center; border-right:1.5px solid #d1d5db; flex-shrink:0; font-family:monospace; font-size:11px; color:#534AB7; display:flex; align-items:center; justify-content:center;">{{ $p->numero }}</div>
-                        <div style="flex:1; padding:8px 10px; text-align:center;">
-                            <p style="font-weight:600; font-size:13px; color:#534AB7;">{{ $p->cliente->nombre_completo }}</p>
-                            @if ($p->cliente->ci)<p style="font-size:11px; color:#AFA9EC;">CI: {{ $p->cliente->ci }}</p>@endif
+                        <div style="width:110px; padding:10px 12px; border-right:1px solid #F3F4F6; font-family:monospace; font-size:11px; color:#EA580C; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ $p->numero }}</div>
+                        <div style="flex:1; padding:10px 14px;">
+                            <p style="font-size:13px; font-weight:600; color:#111827; margin:0;">{{ $p->cliente->nombre_completo }}</p>
+                            @if ($p->cliente->ci)<p style="font-size:11px; color:#9CA3AF; margin:1px 0 0;">CI: {{ $p->cliente->ci }}</p>@endif
                         </div>
                     </div>
                 </td>
-                <td data-label="Estado" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb;">
-                    <span class="inline-flex items-center text-xs font-semibold" style="{{ $p->estado_badge['style'] ?? '' }} padding:4px 10px; border-radius:6px;">
+                <td style="padding:10px 14px;">
+                    <span style="{{ $p->estado_badge['style'] ?? '' }} padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; white-space:nowrap;">
                         {{ $p->estado_badge['label'] }}
                     </span>
                 </td>
-                <td data-label="Solicitud" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-size:12px; color:#534AB7;">
-                    {{ $p->created_at->format('d/m/Y') }}
-                </td>
-                <td data-label="Aprobación" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-size:12px; color:#534AB7;">
+                <td style="padding:10px 14px; font-size:12px; color:#374151;">{{ $p->created_at->format('d/m/Y') }}</td>
+                <td style="padding:10px 14px; font-size:12px; color:#374151;">
                     @if ($p->estado === 'aprobado' && $p->updated_at)
                         {{ $p->updated_at->format('d/m/Y') }}
                     @else
-                        <span style="color:#d1d5db;">—</span>
+                        <span style="color:#D1D5DB;">—</span>
                     @endif
                 </td>
-                <td data-label="Total Bs." style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb; font-weight:700; color:#534AB7;">
+                <td style="padding:10px 14px; text-align:right; font-weight:700; color:#EA580C; font-size:13px;">
                     @if ($p->total_pagar > 0)
                         {{ number_format($p->total_pagar, 2) }}
                     @else
-                        <span style="color:#d1d5db;">—</span>
+                        <span style="color:#D1D5DB;">—</span>
                     @endif
                 </td>
-                <td data-label="" style="padding:8px 10px; text-align:center; border:0.5px solid #e5e7eb;">
+                <td style="padding:10px 14px; text-align:center;">
                     <button wire:click="ver({{ $p->id }})"
-                            class="p-1.5 rounded-lg hover:bg-melocoton-50 text-melocoton-500 transition-colors"
+                            style="width:28px; height:28px; border-radius:7px; border:1px solid #FED7AA; background:#FFF7ED; color:#EA580C; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto;"
+                            @mouseenter="$el.style.background='#FFEDD5'" @mouseleave="$el.style.background='#FFF7ED'"
                             title="Ver detalle">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
                     </button>
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="6" class="px-4 py-14 text-center">
-                    <div class="flex flex-col items-center gap-3 text-gray-400">
-                        <svg class="w-12 h-12 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                        </svg>
-                        <div>
-                            <p class="font-semibold text-gray-500">Sin pedidos todavía</p>
-                            <p class="text-sm mt-0.5">Generá tu primer pedido desde Oferta / Carrito</p>
-                        </div>
-                        <a href="{{ route('vendedor.oferta') }}"
-                           class="mt-1 px-4 py-2 bg-melocoton-500 hover:bg-melocoton-600 text-white text-sm font-semibold rounded-xl transition-colors">
-                            Ir a Oferta / Carrito
-                        </a>
-                    </div>
+                <td colspan="6" style="padding:64px 24px; text-align:center;">
+                    <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    <p style="font-weight:600; color:#6B7280; font-size:13px; margin-bottom:4px;">Sin pedidos todavía</p>
+                    <p style="font-size:12px; color:#9CA3AF;">Generá tu primer pedido desde Oferta / Carrito</p>
+                    <a href="{{ route('vendedor.oferta') }}"
+                       style="display:inline-block; margin-top:12px; padding:8px 20px; background:#EA580C; color:#fff; font-size:13px; font-weight:600; border-radius:10px; text-decoration:none;">
+                        Ir a Oferta / Carrito
+                    </a>
                 </td>
             </tr>
             @endforelse
@@ -615,9 +655,10 @@ $estilosActivos = [
     </table>
     </div>
     @if ($pedidos->hasPages())
-    <div class="px-4 py-3 border-t border-gray-100">{{ $pedidos->links() }}</div>
+    <div style="padding:10px 16px; border-top:1px solid #F3F4F6;">{{ $pedidos->links() }}</div>
     @endif
 </div>
+
 @endif
 
 </div>{{-- /padding --}}
