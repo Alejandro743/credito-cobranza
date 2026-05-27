@@ -1,6 +1,5 @@
 ﻿<div>
 
-<div class="p-4 sm:p-6">
 
 {{-- ══════════════════════ DETAIL ══════════════════════ --}}
 @if ($mode === 'detail' && $pedidoDetalle)
@@ -660,6 +659,4 @@ $estilosActivos = [
 </div>
 
 @endif
-
-</div>{{-- /padding --}}
 </div>
