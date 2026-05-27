@@ -497,7 +497,7 @@ $estilosActivos = [
             $esBase = 'border:1px solid;border-radius:8px;padding:5px 10px;height:36px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;box-sizing:border-box;';
             $esColor = $filtroEstado === $valor ? $estilosActivos[$valor] : 'background:#fff;border-color:#E5E7EB;color:#6B7280;';
         @endphp
-        <button type="button" wire:click="filtrar('{{ $valor }}')" style="{{ $esColor }}{{ $esBase }}">
+        <button type="button" x-on:click="$wire.filtrar('{{ $valor }}')" style="{{ $esColor }}{{ $esBase }}">
             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                 <path d="{{ $filtro['icon'] }}"/>
             </svg>
