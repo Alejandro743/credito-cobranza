@@ -599,7 +599,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
         </span>
-        Ir a Seleccionar Artículos
+        <span style="text-decoration:underline; text-underline-offset:3px;">Ir a Seleccionar Artículos</span>
     </button>
 
     {{-- Lista artículos seleccionados --}}
@@ -1613,12 +1613,12 @@
                     <span style="width:22px; height:22px; border-radius:50%; background:#f97316; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <svg width="12" height="12" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     </span>
-                    Confirmar &mdash; {{ $cantidad }} Un.
+                    <span style="text-decoration:underline; text-underline-offset:3px;">Confirmar &mdash; {{ $cantidad }} Un.</span>
                 @else
                     <span style="width:22px; height:22px; border-radius:50%; background:#f97316; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <svg width="12" height="12" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
                     </span>
-                    Regresar
+                    <span style="text-decoration:underline; text-underline-offset:3px;">Regresar</span>
                 @endif
             </button>
         </div>
