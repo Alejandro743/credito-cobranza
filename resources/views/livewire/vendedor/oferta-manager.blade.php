@@ -38,7 +38,8 @@
      x-transition:enter-end="opacity-100 translate-y-0 scale-100"
      x-transition:leave="transition ease-in duration-150"
      x-transition:leave-end="opacity-0 translate-y-4 scale-95"
-     style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,#10b981,#059669);border-radius:16px;padding:13px 24px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(16,185,129,0.35);font-size:15px;font-weight:700;color:#fff;pointer-events:none;white-space:nowrap;">
+     class="flex flex-row items-center gap-2"
+     style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,#10b981,#059669);border-radius:16px;padding:13px 24px;box-shadow:0 8px 32px rgba(16,185,129,0.35);font-size:15px;font-weight:700;color:#fff;pointer-events:none;white-space:nowrap;">
     <svg style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
     <span x-text="appToastMsg"></span>
 </div>
