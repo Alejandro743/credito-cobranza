@@ -16,19 +16,17 @@
     <span style="font-size:12px;color:#CBCBCB;white-space:nowrap;">{{ $pedidos->total() }} pedido{{ $pedidos->total() !== 1 ? 's' : '' }}</span>
 </div>
 
-{{-- Toolbar sticky --}}
-<div style="position:sticky;top:0;z-index:20;background:#fff;border:1px solid #E4E4DA;border-bottom:1px solid #EBEBDF;border-radius:12px 12px 0 0;padding:10px 14px;display:flex;align-items:center;gap:8px;box-shadow:0 2px 8px rgba(74,74,74,.06);">
-    <div style="position:relative;flex:1;max-width:300px;">
-        <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="#CBCBCB" stroke-width="2" stroke-linecap="round">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-        </svg>
-        <input wire:model.debounce.300ms="search" type="text" placeholder="Buscar cliente o Nº pedido..."
-               style="padding-left:32px;width:100%;">
+<div class="ds-table-card">
+    <div class="ds-table-toolbar">
+        <div style="position:relative;flex:1;max-width:300px;">
+            <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="#CBCBCB" stroke-width="2" stroke-linecap="round">
+                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+            </svg>
+            <input wire:model.debounce.300ms="search" type="text" placeholder="Buscar cliente o Nº pedido..."
+                   style="padding-left:32px;width:100%;">
+        </div>
     </div>
-    <span style="font-size:11px;color:#CBCBCB;white-space:nowrap;margin-left:auto;">{{ $pedidos->total() }} pedido{{ $pedidos->total() !== 1 ? 's' : '' }}</span>
-</div>
 
-<div class="ds-table-card" style="border-radius:0 0 12px 12px;border-top:none;">
     <div style="overflow-x:auto;">
     <table style="min-width:580px;">
         <thead>
