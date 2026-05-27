@@ -1,5 +1,5 @@
 <div x-data="{ toastShow: false, toastMsg: '', showSearch: false, showProductos: false, ubEntModal: false, ubEntTipo: '', ubEntOpciones: [], ubEntSearch: '' }"
-     x-effect="document.body.style.overflow = (showSearch || showProductos) ? 'hidden' : ''; if (!showSearch) $wire.set('searchCliente', '')"
+     x-effect="document.body.style.overflow = (showSearch || showProductos || ubEntModal) ? 'hidden' : ''; if (!showSearch) $wire.set('searchCliente', '')"
      x-on:producto-agregado.window="toastMsg = $event.detail.nombre; toastShow = true; setTimeout(() => toastShow = false, 2200)">
 
 {{-- Toast --}}
