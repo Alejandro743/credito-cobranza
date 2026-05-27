@@ -207,7 +207,7 @@ class OfertaManager extends Component
 
     public function guardarNuevoCliente(): void
     {
-        $this->validate([
+        try { $this->validate([
             'regCi'        => ['required','string','max:20',
                                Rule::unique('clientes','ci'),
                                Rule::unique('users','email')],
@@ -229,7 +229,10 @@ class OfertaManager extends Component
             'regProvincia' => 'provincia',
             'regMunicipio' => 'municipio',
             'regDireccion' => 'dirección',
-        ]);
+        ]); } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('app-toast', type: 'error', msg: '¡ Falta Información !');
+            throw $e;
+        }
 
         $user = User::create([
             'name'     => trim($this->regNombre),
@@ -265,6 +268,7 @@ class OfertaManager extends Component
             trim($this->regNombre) . ' ' . trim($this->regApellido),
             trim($this->regCi)
         );
+        $this->dispatch('app-toast', type: 'success', msg: '¡ Guardado !');
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -456,7 +460,7 @@ class OfertaManager extends Component
     {
         if (empty($this->carrito) || !$this->clienteId) return;
 
-        $this->validate([
+        try { $this->validate([
             'docAnversoCi'  => 'required',
             'docReversoCi'  => 'required',
             'docAnversoDoc' => 'required',
@@ -468,8 +472,12 @@ class OfertaManager extends Component
             'docAnversoDoc.required' => 'Anverso del documento',
             'docReversoDoc.required' => 'Reverso del documento',
             'docAvisoLuz.required'   => 'Aviso de Luz',
-        ]);
+        ]); } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('app-toast', type: 'error', msg: '¡ Falta Información !');
+            throw $e;
+        }
 
+        try {
         if ($this->tipoEntrega === 'domicilio') {
             $this->validate([
                 'entregaClienteDireccion' => 'required|string|min:3',
@@ -486,6 +494,10 @@ class OfertaManager extends Component
                 'entregaNuevaDireccion.min'      => 'La dirección debe tener al menos 3 caracteres.',
                 'entregaNuevoCiudad.required'    => 'Ingresá la ciudad.',
             ]);
+        }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            $this->dispatch('app-toast', type: 'error', msg: '¡ Falta Información !');
+            throw $e;
         }
 
         $lista = $this->getPrimaryLista();
@@ -621,8 +633,8 @@ class OfertaManager extends Component
             if ($docs) DB::table('pedidos')->where('id', $pedidoId)->update($docs);
         }
 
-        session()->flash('success', 'Pedido creado exitosamente');
-        $this->redirect(route('vendedor.pedidos'), navigate: false);
+        $this->dispatch('app-toast', type: 'success', msg: '¡ Guardado !');
+        $this->dispatch('app-redirect', url: route('vendedor.pedidos'), delay: 1800);
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

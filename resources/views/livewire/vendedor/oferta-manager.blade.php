@@ -1,6 +1,8 @@
-<div x-data="{ toastShow: false, toastMsg: '', showSearch: false, showProductos: false, ubEntModal: false, ubEntTipo: '', ubEntOpciones: [], ubEntSearch: '' }"
+<div x-data="{ toastShow: false, toastMsg: '', showSearch: false, showProductos: false, ubEntModal: false, ubEntTipo: '', ubEntOpciones: [], ubEntSearch: '', appToastShow: false, appToastMsg: '', appToastType: 'success' }"
      x-effect="document.body.style.overflow = (showSearch || showProductos || ubEntModal) ? 'hidden' : ''; if (!showSearch) $wire.set('searchCliente', '')"
-     x-on:producto-agregado.window="toastMsg = $event.detail.nombre; toastShow = true; setTimeout(() => toastShow = false, 2200)">
+     x-on:producto-agregado.window="toastMsg = $event.detail.nombre; toastShow = true; setTimeout(() => toastShow = false, 2200)"
+     x-on:app-toast.window="appToastMsg=$event.detail.msg; appToastType=$event.detail.type; appToastShow=true; setTimeout(()=>appToastShow=false, 3200)"
+     x-on:app-redirect.window="setTimeout(()=>window.location=$event.detail.url, $event.detail.delay||1800)">
 
 {{-- Toast --}}
 <div x-show="toastShow" x-cloak
@@ -28,6 +30,24 @@
     {{ session('success') }}
 </div>
 @endif
+
+{{-- Toast error / success --}}
+<div x-show="appToastShow" x-cloak
+     x-transition:enter="transition ease-out duration-200"
+     x-transition:enter-start="opacity-0 -translate-y-3 scale-95"
+     x-transition:enter-end="opacity-100 translate-y-0 scale-100"
+     x-transition:leave="transition ease-in duration-150"
+     x-transition:leave-end="opacity-0 -translate-y-3 scale-95"
+     style="position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:9999;border-radius:14px;padding:13px 22px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.18);font-size:15px;font-weight:700;color:#fff;pointer-events:none;white-space:nowrap;"
+     :style="appToastType==='error' ? 'background:linear-gradient(135deg,#ef4444,#dc2626)' : 'background:linear-gradient(135deg,#10b981,#059669)'">
+    <template x-if="appToastType==='error'">
+        <svg style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+    </template>
+    <template x-if="appToastType!=='error'">
+        <svg style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
+    </template>
+    <span x-text="appToastMsg"></span>
+</div>
 
 {{-- ══════════════════════════════════ STEPS: CLIENTE + OFERTA ══════════════ --}}
 @if ($step === 'cliente' || $step === 'oferta')
