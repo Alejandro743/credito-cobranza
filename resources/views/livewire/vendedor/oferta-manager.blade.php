@@ -212,7 +212,19 @@
 
 {{-- ── DOCUMENTACIÓN DEL PLAN ──────────────────────────────────────────────── --}}
 @if ($clienteId && $step === 'oferta')
-<div class="bg-white px-4 py-2">
+<div class="bg-white px-4 py-2"
+     x-data="{
+         up: { ci1:false, ci2:false, d1:false, d2:false, luz:false },
+         err: { ci1:false, ci2:false, d1:false, d2:false, luz:false },
+         doUpload(key, prop, file) {
+             if (!file) return;
+             this.up[key] = true; this.err[key] = false;
+             $wire.upload(prop, file,
+                 () => { this.up[key] = false; },
+                 () => { this.up[key] = false; this.err[key] = true; setTimeout(() => this.err[key] = false, 4000); }
+             );
+         }
+     }">
     <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
         <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
@@ -223,7 +235,9 @@
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
         {{-- 1. Anverso CI --}}
         <label style="cursor:pointer; position:relative; display:block;">
-            <div style="{{ $docAnversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
+            <div style="{{ $docAnversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box; position:relative; overflow:hidden;">
+                <template x-if="up.ci1"><div style="position:absolute;inset:0;background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;border-radius:7px;z-index:2;"><svg style="width:20px;height:20px;animation:spin 1s linear infinite;" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></div></template>
+                <template x-if="err.ci1"><div style="position:absolute;inset:0;background:rgba(254,242,242,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;z-index:2;gap:2px;"><svg style="width:16px;height:16px;" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span style="font-size:9px;color:#ef4444;font-weight:600;">Error</span></div></template>
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAnversoCi ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docAnversoCi)
                     <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -234,11 +248,13 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docAnversoCi ? '#0F6E56' : '#534AB7' }};">Anverso CI</span>
                 <span style="font-size:10px; color:{{ $docAnversoCi ? '#0F6E56' : '#AFA9EC' }};">{{ $docAnversoCi ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" wire:model="docAnversoCi" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+            <input type="file" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" x-on:change="doUpload('ci1','docAnversoCi',$event.target.files[0])">
         </label>
         {{-- 2. Reverso CI --}}
         <label style="cursor:pointer; position:relative; display:block;">
-            <div style="{{ $docReversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
+            <div style="{{ $docReversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box; position:relative; overflow:hidden;">
+                <template x-if="up.ci2"><div style="position:absolute;inset:0;background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;border-radius:7px;z-index:2;"><svg style="width:20px;height:20px;animation:spin 1s linear infinite;" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></div></template>
+                <template x-if="err.ci2"><div style="position:absolute;inset:0;background:rgba(254,242,242,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;z-index:2;gap:2px;"><svg style="width:16px;height:16px;" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span style="font-size:9px;color:#ef4444;font-weight:600;">Error</span></div></template>
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docReversoCi ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docReversoCi)
                     <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -249,11 +265,13 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docReversoCi ? '#0F6E56' : '#534AB7' }};">Reverso CI</span>
                 <span style="font-size:10px; color:{{ $docReversoCi ? '#0F6E56' : '#AFA9EC' }};">{{ $docReversoCi ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" wire:model="docReversoCi" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+            <input type="file" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" x-on:change="doUpload('ci2','docReversoCi',$event.target.files[0])">
         </label>
         {{-- 3. Anverso Documento --}}
         <label style="cursor:pointer; position:relative; display:block;">
-            <div style="{{ $docAnversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
+            <div style="{{ $docAnversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box; position:relative; overflow:hidden;">
+                <template x-if="up.d1"><div style="position:absolute;inset:0;background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;border-radius:7px;z-index:2;"><svg style="width:20px;height:20px;animation:spin 1s linear infinite;" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></div></template>
+                <template x-if="err.d1"><div style="position:absolute;inset:0;background:rgba(254,242,242,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;z-index:2;gap:2px;"><svg style="width:16px;height:16px;" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span style="font-size:9px;color:#ef4444;font-weight:600;">Error</span></div></template>
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAnversoDoc ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docAnversoDoc)
                     <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -264,11 +282,13 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docAnversoDoc ? '#0F6E56' : '#534AB7' }};">Anverso Doc</span>
                 <span style="font-size:10px; color:{{ $docAnversoDoc ? '#0F6E56' : '#AFA9EC' }};">{{ $docAnversoDoc ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" wire:model="docAnversoDoc" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+            <input type="file" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" x-on:change="doUpload('d1','docAnversoDoc',$event.target.files[0])">
         </label>
         {{-- 4. Reverso Documento --}}
         <label style="cursor:pointer; position:relative; display:block;">
-            <div style="{{ $docReversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
+            <div style="{{ $docReversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box; position:relative; overflow:hidden;">
+                <template x-if="up.d2"><div style="position:absolute;inset:0;background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;border-radius:7px;z-index:2;"><svg style="width:20px;height:20px;animation:spin 1s linear infinite;" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></div></template>
+                <template x-if="err.d2"><div style="position:absolute;inset:0;background:rgba(254,242,242,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;z-index:2;gap:2px;"><svg style="width:16px;height:16px;" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span style="font-size:9px;color:#ef4444;font-weight:600;">Error</span></div></template>
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docReversoDoc ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docReversoDoc)
                     <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -279,11 +299,13 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docReversoDoc ? '#0F6E56' : '#534AB7' }};">Reverso Doc</span>
                 <span style="font-size:10px; color:{{ $docReversoDoc ? '#0F6E56' : '#AFA9EC' }};">{{ $docReversoDoc ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" wire:model="docReversoDoc" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+            <input type="file" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" x-on:change="doUpload('d2','docReversoDoc',$event.target.files[0])">
         </label>
         {{-- 5. Aviso Luz --}}
         <label style="cursor:pointer; position:relative; display:block;">
-            <div style="{{ $docAvisoLuz ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
+            <div style="{{ $docAvisoLuz ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box; position:relative; overflow:hidden;">
+                <template x-if="up.luz"><div style="position:absolute;inset:0;background:rgba(255,255,255,0.85);display:flex;align-items:center;justify-content:center;border-radius:7px;z-index:2;"><svg style="width:20px;height:20px;animation:spin 1s linear infinite;" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg></div></template>
+                <template x-if="err.luz"><div style="position:absolute;inset:0;background:rgba(254,242,242,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:7px;z-index:2;gap:2px;"><svg style="width:16px;height:16px;" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg><span style="font-size:9px;color:#ef4444;font-weight:600;">Error</span></div></template>
                 <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAvisoLuz ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
                     @if($docAvisoLuz)
                     <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
@@ -294,7 +316,7 @@
                 <span style="font-size:11px; font-weight:600; line-height:1.2; color:{{ $docAvisoLuz ? '#0F6E56' : '#534AB7' }};">Aviso Luz</span>
                 <span style="font-size:10px; color:{{ $docAvisoLuz ? '#0F6E56' : '#AFA9EC' }};">{{ $docAvisoLuz ? 'OK' : 'JPG/PDF' }}</span>
             </div>
-            <input type="file" wire:model="docAvisoLuz" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;">
+            <input type="file" accept="image/*,application/pdf" style="position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;cursor:pointer;" x-on:change="doUpload('luz','docAvisoLuz',$event.target.files[0])">
         </label>
     </div>
 </div>
