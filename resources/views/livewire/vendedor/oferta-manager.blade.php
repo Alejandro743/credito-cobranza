@@ -113,7 +113,7 @@
              style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:10px; cursor:pointer; transition:background 0.15s; box-shadow:0 2px 8px rgba(123,111,232,0.08); {{ $clienteId ? 'display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 16px; text-align:center;' : 'display:flex; align-items:center; gap:12px; padding:0 16px;' }}"
              @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">
             @if ($clienteId)
-            <span style="font-size:10px; font-weight:800; color:#f97316; letter-spacing:0.06em; display:block; margin-bottom:3px;">← Seleccionar Cliente →</span>
+            <span style="font-size:10px; font-weight:800; color:#f97316; letter-spacing:0.06em; display:block; margin-bottom:3px;">Seleccionar Cliente</span>
             <span style="font-size:19px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;">{{ $clienteNombre }}</span>
             <span style="font-size:13px; font-weight:700; color:#7B6FE8; display:block;">CI: {{ $clienteCI }}</span>
             @elseif ($sinListasActivas)
@@ -170,7 +170,7 @@
         <div @click="showSearch = true"
              style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:8px; cursor:pointer; box-shadow:0 2px 8px rgba(123,111,232,0.08); {{ $clienteId ? 'display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px 10px; text-align:center;' : 'display:flex; align-items:center; gap:8px; padding:6px 10px;' }}">
             @if ($clienteId)
-            <span style="font-size:10px; font-weight:800; color:#f97316; letter-spacing:0.06em; display:block; margin-bottom:2px;">← Seleccionar Cliente →</span>
+            <span style="font-size:10px; font-weight:800; color:#f97316; letter-spacing:0.06em; display:block; margin-bottom:2px;">Seleccionar Cliente</span>
             <span style="font-size:17px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%;">{{ $clienteNombre }}</span>
             <span style="font-size:12px; font-weight:700; color:#7B6FE8; display:block;">CI: {{ $clienteCI }}</span>
             @elseif ($sinListasActivas)
@@ -588,8 +588,8 @@
     {{-- Botón Seleccionar Artículos --}}
     <button @click="showProductos = true"
             style="width:100%; padding:11px 20px; background:#6B7280; color:#fff; font-size:14px; font-weight:800; border-radius:10px; border:1.5px solid #6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px; -webkit-appearance:none; appearance:none; margin-bottom:{{ !empty($carrito) ? '14px' : '0' }};">
-        <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
         </svg>
         Ir a Seleccionar Artículos
     </button>
@@ -605,8 +605,8 @@
                     <span style="font-size:10px; font-weight:800; color:#fff; line-height:1;">{{ $item['cantidad'] }}</span>
                 </div>
                 <div style="flex:1; min-width:0;">
-                    <span style="font-size:16px; font-weight:900; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $item['code'] ?? '' }}</span>
-                    <span style="font-size:13px; font-weight:400; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
+                    <span style="font-size:16px; font-weight:400; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $item['code'] ?? '' }}</span>
+                    <span style="font-size:13px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
                 </div>
                 <button wire:click="quitar({{ $item['product_id'] }})"
                         style="width:28px; height:28px; border-radius:50%; background:#FEF2F2; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
@@ -826,11 +826,11 @@
                             @if ($qty > 0)
                             <span style="flex-shrink:0; width:20px; height:20px; border-radius:50%; background:#f97316; color:#fff; font-size:10px; font-weight:800; display:inline-flex; align-items:center; justify-content:center;">{{ $qty }}</span>
                             @endif
-                            <span style="font-size:15px; font-weight:800; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; letter-spacing:0.01em; flex:1; min-width:0;">{{ $p['nombre'] }}</span>
+                            <span style="font-size:15px; font-weight:900; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; letter-spacing:0.01em; flex:1; min-width:0;">{{ $p['nombre'] }}</span>
                         </div>
                         {{-- Fila código + Precio/Pts a la derecha --}}
                         <div style="display:flex; align-items:baseline; justify-content:space-between; gap:6px; margin-top:3px;">
-                            <span style="font-size:15px; font-weight:900; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.06em; flex-shrink:0;">{{ $p['code'] ?? '' }}</span>
+                            <span style="font-size:15px; font-weight:400; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.06em; flex-shrink:0;">{{ $p['code'] ?? '' }}</span>
                             <div style="display:flex; align-items:baseline; gap:8px; flex-shrink:0;">
                                 <div style="display:flex; align-items:baseline; gap:3px;">
                                     <span style="font-size:9px; font-weight:800; color:#9B93E0;">Precio Bs</span>
@@ -848,8 +848,8 @@
                 {{-- CUERPO ESCRITORIO --}}
                 <div class="card-body-desk" style="padding:10px 12px 8px; display:flex; flex-direction:column; gap:6px; flex:1;">
                     <div style="background:#F8F7FF; border-radius:8px; padding:8px 10px; display:flex; flex-direction:column; gap:4px;">
-                        <span style="font-size:11px; font-weight:700; color:#534AB7;">{{ $p['code'] ?? '' }}</span>
-                        <span style="font-size:11px; font-weight:700; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ $p['nombre'] }}">{{ $p['nombre'] }}</span>
+                        <span style="font-size:11px; font-weight:400; color:#534AB7;">{{ $p['code'] ?? '' }}</span>
+                        <span style="font-size:11px; font-weight:800; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ $p['nombre'] }}">{{ $p['nombre'] }}</span>
                         <div style="display:flex; justify-content:space-between; align-items:baseline; gap:6px;">
                             <span style="font-size:10px; font-weight:500; color:#534AB7;">Precio Bs</span>
                             <span style="font-size:14px; font-weight:500; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
@@ -1549,8 +1549,8 @@
                             @endif
                         </div>
                         <div style="flex:1; min-width:0;">
-                            <span style="font-size:16px; font-weight:900; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p['code'] ?? '' }}</span>
-                            <span style="font-size:13px; font-weight:400; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ ucwords(strtolower($p['nombre'])) }}">{{ ucwords(strtolower($p['nombre'])) }}</span>
+                            <span style="font-size:16px; font-weight:400; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p['code'] ?? '' }}</span>
+                            <span style="font-size:13px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ ucwords(strtolower($p['nombre'])) }}">{{ ucwords(strtolower($p['nombre'])) }}</span>
                         </div>
                     </div>
 
@@ -1594,11 +1594,13 @@
         {{-- PIE MODAL: cerrar --}}
         <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1.5px solid #EDE9FE;">
             <button @click="showProductos = false"
-                    style="width:100%; padding:13px; background:{{ $cantidad > 0 ? '#7B6FE8' : '#9CA3AF' }}; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.04em; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                    style="width:100%; padding:13px; background:#6B7280; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:8px;">
                 @if ($cantidad > 0)
-                    «&nbsp; Confirmar &mdash; {{ $cantidad }} Un.
+                    <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    Confirmar &mdash; {{ $cantidad }} Un.
                 @else
-                    «&nbsp; Regresar
+                    <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                    Regresar
                 @endif
             </button>
         </div>
