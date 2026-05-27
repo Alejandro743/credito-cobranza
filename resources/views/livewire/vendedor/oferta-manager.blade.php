@@ -110,7 +110,7 @@
     <div class="flex gap-3 items-stretch" style="min-height:52px;">
         {{-- CLIENTE --}}
         <div @click="showSearch = true"
-             style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:10px; cursor:pointer; transition:background 0.15s; box-shadow:0 2px 8px rgba(123,111,232,0.08); {{ $clienteId ? 'display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 16px; text-align:center;' : 'display:flex; align-items:center; gap:12px; padding:0 16px;' }}"
+             style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:10px; cursor:pointer; transition:background 0.15s; box-shadow:0 2px 8px rgba(123,111,232,0.08); {{ $sinListasActivas ? 'display:flex; align-items:center; gap:12px; padding:0 16px;' : 'display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px 16px; text-align:center;' }}"
              @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">
             @if ($clienteId)
             <div style="display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:3px;">
@@ -130,12 +130,10 @@
                 </div>
             </div>
             @else
-            <div style="width:34px; height:34px; border-radius:10px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg width="14" height="14" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <div style="width:44px; height:44px; border-radius:12px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-bottom:4px;">
+                <svg width="20" height="20" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </div>
-            <div style="min-width:0; flex:1;">
-                <span style="font-size:20px; font-weight:800; color:#7B6FE8; display:block;">Seleccionar Cliente</span>
-            </div>
+            <span style="font-size:22px; font-weight:900; color:#7B6FE8; display:block; letter-spacing:0.01em;">Seleccionar Cliente</span>
             @endif
         </div>
         {{-- CARRITO --}}
@@ -171,7 +169,7 @@
     <div class="flex gap-1.5 items-stretch" style="min-height:44px;">
         {{-- CLIENTE --}}
         <div @click="showSearch = true"
-             style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:8px; cursor:pointer; box-shadow:0 2px 8px rgba(123,111,232,0.08); {{ $clienteId ? 'display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px 10px; text-align:center;' : 'display:flex; align-items:center; gap:8px; padding:6px 10px;' }}">
+             style="flex:1; min-width:0; background:#fff; border:1px solid #EDE9FE; border-radius:8px; cursor:pointer; box-shadow:0 2px 8px rgba(123,111,232,0.08); {{ $sinListasActivas ? 'display:flex; align-items:center; gap:8px; padding:6px 10px;' : 'display:flex; flex-direction:column; align-items:center; justify-content:center; padding:8px 10px; text-align:center;' }}">
             @if ($clienteId)
             <div style="display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:2px;">
                 <svg width="11" height="11" fill="none" stroke="#f97316" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -185,10 +183,10 @@
             </div>
             <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
             @else
-            <div style="width:28px; height:28px; border-radius:8px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg width="13" height="13" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+            <div style="width:36px; height:36px; border-radius:10px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-bottom:3px;">
+                <svg width="17" height="17" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
             </div>
-            <span style="font-size:18px; font-weight:800; color:#7B6FE8; display:block;">Seleccionar Cliente</span>
+            <span style="font-size:20px; font-weight:900; color:#7B6FE8; display:block;">Seleccionar Cliente</span>
             @endif
         </div>
         {{-- CARRITO --}}
@@ -731,7 +729,7 @@
                             @click="ubEntModal=true; ubEntTipo='ciudad'; ubEntOpciones=@js($ciudadesAll->pluck('nombre')->toArray()); ubEntSearch=''"
                             style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevoCiudad ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:#fff; cursor:pointer; box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
                         <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoCiudad ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                        <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoCiudad ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $entregaNuevoCiudad ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoCiudad ? ucwords(strtolower($entregaNuevoCiudad)) : 'Seleccionar ciudad' }}</span>
+                        <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoCiudad ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevoCiudad ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoCiudad ? ucwords(strtolower($entregaNuevoCiudad)) : 'Seleccionar ciudad' }}</span>
                         <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                     </button>
                     @error('entregaNuevoCiudad')<p style="font-size:10px; color:#ef4444; margin-top:2px;">{{ $message }}</p>@enderror
@@ -742,7 +740,7 @@
                             @if($entregaNuevoCiudad) @click="ubEntModal=true; ubEntTipo='provincia'; ubEntOpciones=@js($entregaProvincias->pluck('nombre')->toArray()); ubEntSearch=''" @endif
                             style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevaProvincia ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:{{ $entregaNuevoCiudad ? '#fff' : '#F8F7FF' }}; {{ $entregaNuevoCiudad ? 'cursor:pointer;' : 'cursor:not-allowed;' }} box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
                         <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevaProvincia ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-                        <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevaProvincia ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $entregaNuevaProvincia ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevaProvincia ? ucwords(strtolower($entregaNuevaProvincia)) : 'Seleccionar provincia' }}</span>
+                        <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevaProvincia ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevaProvincia ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevaProvincia ? ucwords(strtolower($entregaNuevaProvincia)) : 'Seleccionar provincia' }}</span>
                         <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                     </button>
                 </div>
@@ -752,7 +750,7 @@
                             @if($entregaNuevaProvincia) @click="ubEntModal=true; ubEntTipo='municipio'; ubEntOpciones=@js($entregaMunicipios->pluck('nombre')->toArray()); ubEntSearch=''" @endif
                             style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevoMunicipio ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:{{ $entregaNuevaProvincia ? '#fff' : '#F8F7FF' }}; {{ $entregaNuevaProvincia ? 'cursor:pointer;' : 'cursor:not-allowed;' }} box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
                         <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoMunicipio ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                        <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoMunicipio ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $entregaNuevoMunicipio ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoMunicipio ? ucwords(strtolower($entregaNuevoMunicipio)) : 'Seleccionar municipio' }}</span>
+                        <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoMunicipio ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevoMunicipio ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoMunicipio ? ucwords(strtolower($entregaNuevoMunicipio)) : 'Seleccionar municipio' }}</span>
                         <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                     </button>
                 </div>
@@ -1314,7 +1312,7 @@
                         @click="ubEntModal=true; ubEntTipo='ciudad'; ubEntOpciones=@js($ciudadesAll->pluck('nombre')->toArray()); ubEntSearch=''"
                         style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevoCiudad ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:#fff; cursor:pointer; box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
                     <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoCiudad ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoCiudad ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $entregaNuevoCiudad ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoCiudad ? ucwords(strtolower($entregaNuevoCiudad)) : 'Seleccionar ciudad' }}</span>
+                    <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoCiudad ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevoCiudad ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoCiudad ? ucwords(strtolower($entregaNuevoCiudad)) : 'Seleccionar ciudad' }}</span>
                     <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                 </button>
                 @error('entregaNuevoCiudad')<p style="font-size:10px; color:#ef4444; margin-top:2px;">{{ $message }}</p>@enderror
@@ -1325,7 +1323,7 @@
                         @if($entregaNuevoCiudad) @click="ubEntModal=true; ubEntTipo='provincia'; ubEntOpciones=@js($entregaProvincias->pluck('nombre')->toArray()); ubEntSearch=''" @endif
                         style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevaProvincia ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:{{ $entregaNuevoCiudad ? '#fff' : '#F8F7FF' }}; {{ $entregaNuevoCiudad ? 'cursor:pointer;' : 'cursor:not-allowed;' }} box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
                     <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevaProvincia ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
-                    <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevaProvincia ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $entregaNuevaProvincia ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevaProvincia ? ucwords(strtolower($entregaNuevaProvincia)) : 'Seleccionar provincia' }}</span>
+                    <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevaProvincia ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevaProvincia ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevaProvincia ? ucwords(strtolower($entregaNuevaProvincia)) : 'Seleccionar provincia' }}</span>
                     <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                 </button>
             </div>
@@ -1335,7 +1333,7 @@
                         @if($entregaNuevaProvincia) @click="ubEntModal=true; ubEntTipo='municipio'; ubEntOpciones=@js($entregaMunicipios->pluck('nombre')->toArray()); ubEntSearch=''" @endif
                         style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevoMunicipio ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:{{ $entregaNuevaProvincia ? '#fff' : '#F8F7FF' }}; {{ $entregaNuevaProvincia ? 'cursor:pointer;' : 'cursor:not-allowed;' }} box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
                     <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoMunicipio ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
-                    <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoMunicipio ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $entregaNuevoMunicipio ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoMunicipio ? ucwords(strtolower($entregaNuevoMunicipio)) : 'Seleccionar municipio' }}</span>
+                    <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoMunicipio ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevoMunicipio ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoMunicipio ? ucwords(strtolower($entregaNuevoMunicipio)) : 'Seleccionar municipio' }}</span>
                     <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                 </button>
             </div>
