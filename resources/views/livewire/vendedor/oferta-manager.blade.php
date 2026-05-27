@@ -1743,9 +1743,9 @@
                 <button wire:click="seleccionarCliente({{ $c['id'] }}, {{ $c['user_id'] }}, '{{ addslashes($c['nombre']) }}', '{{ addslashes($c['ci']) }}')"
                         @click="showSearch = false"
                         class="w-full flex items-center gap-3 text-left"
-                        style="padding:9px 11px; background:#fff; border-radius:11px; border:1px solid #D1D5DB; cursor:pointer; transition:all 0.12s;"
-                        onmouseover="this.style.background='#F9FAFB'; this.style.borderColor='#9CA3AF'; this.querySelector('.nombre-text').style.color='#3C3489';"
-                        onmouseout="this.style.background='#fff'; this.style.borderColor='#D1D5DB'; this.querySelector('.nombre-text').style.color='#534AB7';">
+                        style="padding:9px 11px; background:#fff; border-radius:11px; border:1px solid #E5E7EB; cursor:pointer; transition:all 0.12s;"
+                        onmouseover="this.style.background='#F9FAFB'; this.style.borderColor='#D1D5DB'; this.querySelector('.nombre-text').style.color='#3C3489';"
+                        onmouseout="this.style.background='#fff'; this.style.borderColor='#E5E7EB'; this.querySelector('.nombre-text').style.color='#534AB7';">
                     <div style="width:32px; height:32px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <span style="font-weight:700; font-size:13px; color:#7c3aed;">{{ strtoupper(substr($c['nombre'], 0, 1)) }}</span>
                     </div>
