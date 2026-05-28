@@ -1,3 +1,3 @@
-<x-user-layout :no-padding="true">
+<x-user-layout>
 <livewire:vendedor.pedido-detalle :pedidoId="$id" />
 </x-user-layout>
