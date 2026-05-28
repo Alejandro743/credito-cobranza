@@ -19,14 +19,14 @@
 
     {{-- Cabecera --}}
     <div style="background:#EDE9FE; border:1px solid #C4B5FD; border-radius:14px; padding:16px 18px; margin:0 0 4px; text-align:center;">
-        <p style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#534AB7; margin:0 0 4px;">
-            Nro. {{ $p->numero }}
-        </p>
-        <h1 style="font-size:20px; font-weight:800; color:#6B7280; letter-spacing:-0.3px; margin:0 0 4px;">
+        <h1 style="font-size:20px; font-weight:800; color:#6B7280; letter-spacing:-0.3px; margin:0 0 14px;">
             SOLICITUD DE CRÉDITO
         </h1>
-        <span style="font-size:11px; font-weight:500; color:#AFA9EC;">
-            Estado: <span style="font-family:monospace; font-weight:700; color:{{ $estadoConfig['color'] }};">{{ $p->estado_badge['label'] }}</span>
+        <p style="font-size:15px; font-weight:700; color:#534AB7; letter-spacing:0.02em; margin:0 0 2px;">
+            Nro. {{ $p->numero }}
+        </p>
+        <span style="font-size:12px; font-weight:700; color:{{ $estadoConfig['color'] }};">
+            {{ $p->estado_badge['label'] }}
         </span>
     </div>
 
