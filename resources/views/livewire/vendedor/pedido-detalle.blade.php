@@ -19,13 +19,13 @@
 
     {{-- Cabecera --}}
     <div style="background:#EDE9FE; border:1px solid #C4B5FD; border-radius:14px; padding:16px 18px; margin:0 0 4px; text-align:center;">
-        <h1 style="font-size:20px; font-weight:800; color:#6B7280; letter-spacing:-0.3px; margin:0 0 14px;">
+        <h1 style="font-size:20px; font-weight:800; color:#534AB7; letter-spacing:-0.3px; margin:0 0 14px;">
             SOLICITUD DE CRÉDITO
         </h1>
-        <p style="font-size:15px; font-weight:700; color:#534AB7; letter-spacing:0.02em; margin:0 0 2px;">
+        <p style="font-size:15px; font-weight:700; color:#534AB7; letter-spacing:0.02em; margin:0 0 8px;">
             Nro. {{ $p->numero }}
         </p>
-        <span style="font-size:14px; font-weight:800; color:{{ $estadoConfig['color'] }}; letter-spacing:0.04em; text-transform:uppercase;">
+        <span style="display:inline-block; font-size:13px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:{{ $estadoConfig['color'] }}; background:{{ $estadoConfig['bg'] }}; border:1.5px solid {{ $estadoConfig['border'] }}; border-radius:20px; padding:4px 14px;">
             {{ $p->estado_badge['label'] }}
         </span>
     </div>
@@ -294,8 +294,8 @@
 
     {{-- Botón Regresar sticky --}}
     <style>
-    .regresar-wrap { position:sticky; bottom:60px; z-index:20; margin-top:8px; padding:16px 0 0; background:linear-gradient(to bottom, transparent, #F0F2F5 35%); }
-    @media (min-width:768px) { .regresar-wrap { bottom:0; background:linear-gradient(to bottom, transparent, #F0F2F5 35%); } }
+    .regresar-wrap { position:sticky; bottom:60px; z-index:20; margin-top:8px; padding:20px 0 16px; background:linear-gradient(to bottom, transparent, #F0F2F5 40%); }
+    @media (min-width:768px) { .regresar-wrap { bottom:0; padding:20px 0 8px; } }
     </style>
     <div class="regresar-wrap">
         <a href="{{ route('vendedor.pedidos') }}"
