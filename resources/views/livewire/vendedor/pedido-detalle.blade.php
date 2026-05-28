@@ -15,7 +15,7 @@
     $montoCuota  = ($cuotasNum && $cuotasNum > 0) ? $p->total / $cuotasNum : null;
 @endphp
 
-<div style="max-width:672px; margin:0 auto;">
+<div style="max-width:760px; margin:0 auto;">
 
     {{-- Cabecera --}}
     <div style="background:{{ $estadoConfig['bg'] }}; border:1px solid {{ $estadoConfig['border'] }}; border-radius:14px; padding:16px 18px; margin:0 0 4px; text-align:center;">
