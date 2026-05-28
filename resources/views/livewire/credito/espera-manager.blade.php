@@ -148,16 +148,17 @@
             Volver
         </button>
         <span style="font-size:16px; font-weight:800; color:#4A4A4A; font-family:monospace; letter-spacing:1px;">{{ $p->numero }}</span>
-        <span style="background:#FEF3C7; color:#D97706; font-size:11px; font-weight:600; padding:2px 10px; border-radius:99px; margin-left:auto;">En espera</span>
+        <span style="font-size:11px;color:#CBCBCB;white-space:nowrap;margin-left:auto;">{{ $p->created_at->format('d/m/Y H:i') }}</span>
     </div>
 
     @include('livewire.credito.partials.pedido-detail')
 
-    <div style="margin-top:12px; display:flex; justify-content:flex-end;">
+    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
+        <div style="flex:1;"></div>
         <button wire:click="tomarRevision({{ $p->id }})"
                 wire:confirm="¿Tomás este pedido para revisión? Quedará asignado a vos."
                 class="ds-btn ds-btn-success">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
             </svg>
             Tomar para Revisión
