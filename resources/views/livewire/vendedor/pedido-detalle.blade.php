@@ -309,25 +309,6 @@
             </div>
         </div>
 
-        {{-- ── DIRECCIÓN DE ENTREGA ── --}}
-        @if ($p->entrega_direccion || $p->entrega_ciudad)
-        <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
-            <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Dirección de Entrega</span>
-            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
-        </div>
-        <div style="background:#fff; border-radius:12px; padding:12px 14px; box-shadow:0 2px 8px rgba(123,111,232,0.10); border:0.5px solid #EDE9FE;">
-            @php $partes = array_filter([$p->entrega_ciudad, $p->entrega_provincia, $p->entrega_municipio, $p->entrega_direccion]); @endphp
-            <span style="font-size:13px; font-weight:600; color:#3C3489; display:block;">{{ implode(', ', $partes) ?: '—' }}</span>
-            @if ($p->entrega_referencia)
-            <span style="font-size:11px; color:#AFA9EC;">Ref: {{ $p->entrega_referencia }}</span>
-            @endif
-        </div>
-        @endif
-
         {{-- ── PLAN DE PAGOS ── --}}
         @if ($plan)
         <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
@@ -382,6 +363,42 @@
             @endforeach
         </div>
         @endif
+
+        {{-- ── DIRECCIÓN DE ENTREGA ── --}}
+        <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Dirección de Entrega</span>
+            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+        </div>
+        <div style="background:#fff; border-radius:12px; padding:12px; box-shadow:0 4px 20px rgba(123,111,232,0.10); border:0.5px solid #EDE9FE;">
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+                <div>
+                    <p style="font-size:10px; color:#6B7280; font-weight:700; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Ciudad</p>
+                    <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500;">{{ $p->entrega_ciudad ? ucwords(strtolower($p->entrega_ciudad)) : '—' }}</div>
+                </div>
+                <div>
+                    <p style="font-size:10px; color:#6B7280; font-weight:700; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Provincia</p>
+                    <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500;">{{ $p->entrega_provincia ? ucwords(strtolower($p->entrega_provincia)) : '—' }}</div>
+                </div>
+                <div>
+                    <p style="font-size:10px; color:#6B7280; font-weight:700; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Municipio</p>
+                    <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500;">{{ $p->entrega_municipio ? ucwords(strtolower($p->entrega_municipio)) : '—' }}</div>
+                </div>
+                <div>
+                    <p style="font-size:10px; color:#6B7280; font-weight:700; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Dirección</p>
+                    <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->entrega_direccion ?: '—' }}</div>
+                </div>
+            </div>
+            @if ($p->entrega_referencia)
+            <div>
+                <p style="font-size:10px; color:#6B7280; font-weight:700; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Referencia</p>
+                <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500;">{{ $p->entrega_referencia }}</div>
+            </div>
+            @endif
+        </div>
 
     </div>
 </div>
