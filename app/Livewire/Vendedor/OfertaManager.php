@@ -568,6 +568,7 @@ class OfertaManager extends Component
                 'entrega_municipio'   => $entregaMunicipio ?: null,
                 'entrega_direccion'   => $entregaDireccion ?: null,
                 'entrega_referencia'  => $this->entregaReferencia ?: null,
+                'tipo_entrega'        => $this->tipoEntrega,
                 'total'             => $total,
                 'total_pagar'       => $sim['total_pagar'],
                 'cuota_inicial'     => $sim['cuota_inicial'],

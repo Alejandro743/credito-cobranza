@@ -18,7 +18,7 @@ class Pedido extends Model
         'numero', 'cliente_id', 'vendedor_id', 'financial_matrix_id',
         'estado', 'revisado_por', 'notas', 'total', 'total_pagar', 'cuota_inicial',
         'matriz_snapshot',
-        'entrega_ciudad', 'entrega_provincia', 'entrega_municipio', 'entrega_direccion', 'entrega_referencia',
+        'entrega_ciudad', 'entrega_provincia', 'entrega_municipio', 'entrega_direccion', 'entrega_referencia', 'tipo_entrega',
         'doc_anverso_ci', 'doc_reverso_ci', 'doc_anverso_doc', 'doc_reverso_doc', 'doc_aviso_luz',
     ];
 
