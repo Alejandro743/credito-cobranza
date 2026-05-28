@@ -4,7 +4,7 @@
 @if ($mode === 'detail' && $pedidoDetalle)
 @php $p = $pedidoDetalle; $plan = $p->planPago; $aprobado = $p->estado === 'aprobado'; @endphp
 
-<div style="max-width:1040px; margin:0 auto; padding:0 0 40px;">
+<div wire:key="pm-detail" style="max-width:1040px; margin:0 auto; padding:0 0 40px;">
 
     @php
         $estadoConfig = match($p->estado) {
@@ -461,6 +461,7 @@
 
 {{-- ══════════════════════ LIST ══════════════════════ --}}
 @else
+<div wire:key="pm-list">
 
 @php
 $filtros = [
@@ -660,6 +661,8 @@ $estilosActivos = [
     <div style="padding:10px 16px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $pedidos->links() }}</div>
     @endif
 </div>
+
+</div>{{-- /pm-list --}}
 
 @endif
 </div>
