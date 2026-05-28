@@ -481,7 +481,7 @@ $estilosActivos = [
 @endphp
 
 {{-- Toolbar --}}
-<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
+<div wire:key="pm-toolbar" class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
 
     <div class="relative w-full sm:flex-1" style="min-width:0; max-width:100%;">
         <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -512,7 +512,7 @@ $estilosActivos = [
 </div>
 
 {{-- MOBILE: Cards --}}
-<div class="sm:hidden flex flex-col" style="gap:10px;">
+<div wire:key="pm-mobile" class="sm:hidden flex flex-col" style="gap:10px;">
     @forelse ($pedidos as $p)
     <div wire:key="card-{{ $p->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
@@ -568,7 +568,7 @@ $estilosActivos = [
 </div>
 
 {{-- DESKTOP: Tabla --}}
-<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
+<div wire:key="pm-desktop" class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Mis solicitudes</span>

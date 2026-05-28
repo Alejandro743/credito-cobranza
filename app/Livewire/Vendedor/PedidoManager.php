@@ -17,13 +17,15 @@ class PedidoManager extends Component
     public string $filtroEstado = '';
     public ?int   $viewingId    = null;
 
+    protected function queryString(): array
+    {
+        return [];
+    }
+
     public function mount(): void
     {
         $this->initModuleColor();
     }
-
-    public function updatingSearch(): void { $this->resetPage(); }
-    public function updatedFiltroEstado(): void { $this->resetPage(); }
 
     public function ver(int $id): void
     {
