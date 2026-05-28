@@ -15,7 +15,7 @@
     $montoCuota  = ($cuotasNum && $cuotasNum > 0) ? $p->total / $cuotasNum : null;
 @endphp
 
-<div style="max-width:560px; margin:0 auto; padding-bottom:80px;">
+<div style="max-width:560px; margin:0 auto;">
 
     {{-- Cabecera --}}
     <div style="background:{{ $estadoConfig['bg'] }}; border:1px solid {{ $estadoConfig['border'] }}; border-radius:14px; padding:16px 18px; margin:0 0 4px; text-align:center;">
@@ -293,15 +293,5 @@
     </div>
 </div>
 
-{{-- ── BOTÓN VOLVER FIJO ABAJO ── --}}
-<div style="position:fixed; bottom:0; left:0; right:0; z-index:40; padding:12px 16px; background:linear-gradient(to top, #fff 70%, transparent); pointer-events:none;">
-    <div style="max-width:560px; margin:0 auto; pointer-events:auto;">
-        <a wire:navigate href="{{ route('vendedor.pedidos') }}"
-           style="display:flex; align-items:center; justify-content:center; gap:6px; width:100%; padding:13px; background:#f97316; border-radius:14px; text-decoration:none; box-shadow:0 4px 16px rgba(249,115,22,0.40);">
-            <svg width="16" height="16" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
-            <span style="font-size:14px; font-weight:800; color:#fff; letter-spacing:0.02em;">Volver a Pedidos</span>
-        </a>
-    </div>
-</div>
 
 </div>
