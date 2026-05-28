@@ -297,9 +297,9 @@
     /* mobile: fixed encima del nav, full-width (sin sidebar) */
     .regresar-wrap { position:fixed; bottom:60px; left:0; right:0; z-index:20; padding:0 16px; }
     .pedido-body   { padding-bottom:80px !important; }
-    /* desktop: sticky al fondo del contenido, dentro del formulario */
+    /* desktop: flujo normal, al final del contenido */
     @media (min-width:768px) {
-        .regresar-wrap { position:sticky; bottom:0; left:auto; right:auto; padding:12px 0 4px; background:linear-gradient(to bottom,transparent,#F0F2F5 55%); }
+        .regresar-wrap { position:static; padding:12px 0 4px; }
         .pedido-body   { padding-bottom:16px !important; }
     }
     </style>
