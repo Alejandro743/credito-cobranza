@@ -46,50 +46,53 @@
 
 {{-- Plan de Pagos --}}
 @if ($plan)
-<div style="margin-top:0; margin-bottom:16px;">
+<div style="margin-bottom:16px;">
     <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
-        <span style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:#534AB7;">Plan de Pagos</span>
-        <div style="flex:1; height:1px; background:#9C96E8;"></div>
+        <svg width="13" height="13" fill="none" stroke="#7B6FE8" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 12h6M9 16h4"/>
+        </svg>
+        <span style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Plan de Pagos</span>
+        <div style="flex:1; height:1px; background:#CECBF6;"></div>
         @if ($plan->version > 1)
         <span style="font-size:9px; font-weight:700; background:#FEF3C7; color:#854F0B; border-radius:4px; padding:2px 6px;">Reprogramado v{{ $plan->version }}</span>
         @endif
-        <span style="font-size:10px; font-weight:600; background:#EEEDFE; color:#534AB7; border-radius:99px; padding:2px 8px;">{{ $plan->cantidad_cuotas }} {{ $plan->cantidad_cuotas === 1 ? 'cuota' : 'cuotas' }}</span>
+        <span style="font-size:11px; font-weight:600; color:#9B93E0;">{{ $plan->cantidad_cuotas }} {{ $plan->cantidad_cuotas === 1 ? 'cuota' : 'cuotas' }}</span>
     </div>
 
-    <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden;">
-        <div style="display:grid; padding:8px 12px; background:#F8F7FF; grid-template-columns: 1fr 1fr {{ $aprobado ? '1fr' : '' }} 1fr;">
-            <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Cuota</p>
-            <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Vencimiento</p>
+    <div style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:2px 6px 20px rgba(60,52,137,0.10); margin-bottom:4px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr {{ $aprobado ? '1fr' : '' }} 1fr; padding:8px 12px; background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+            <span style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.06em;">Cuota</span>
+            <span style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.06em;">Vencimiento</span>
             @if ($aprobado)
-            <p style="font-size:10px; font-weight:600; color:#6b7280; text-align:center; margin:0;">Estado</p>
+            <span style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.06em; text-align:center;">Estado</span>
             @endif
-            <p style="font-size:10px; font-weight:600; color:#6b7280; text-align:right; margin:0;">Monto</p>
+            <span style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Monto</span>
         </div>
 
         @foreach ($plan->cuotas as $cuota)
-        <div style="display:grid; align-items:center; padding:8px 12px; {{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }} grid-template-columns: 1fr 1fr {{ $aprobado ? '1fr' : '' }} 1fr;">
-            <div style="display:flex; align-items:center; gap:6px;">
+        <div style="display:grid; grid-template-columns:1fr 1fr {{ $aprobado ? '1fr' : '' }} 1fr; align-items:center; padding:10px 12px; {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }}">
+            <div style="display:flex; align-items:center; gap:8px;">
                 @if ($cuota->numero === 0)
-                <span style="width:22px; height:22px; border-radius:50%; background:#E1F5EE; color:#0F6E56; font-size:9px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">0</span>
-                <span style="font-size:11px; font-weight:500; color:#0F6E56;">Inicial</span>
+                <span style="width:26px; height:26px; border-radius:50%; background:#E1F5EE; color:#0F6E56; font-size:9px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">0</span>
+                <span style="font-size:11px; font-weight:700; color:#0F6E56;">Inicial</span>
                 @else
-                <span style="width:22px; height:22px; border-radius:50%; background:#EEEDFE; color:#534AB7; font-size:10px; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ $cuota->numero }}</span>
-                <span style="font-size:11px; font-weight:500; color:#374151;">Cuota {{ $cuota->numero }}</span>
+                <span style="width:26px; height:26px; border-radius:50%; background:#EEEDFE; color:#534AB7; font-size:10px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0;">{{ $cuota->numero }}</span>
+                <span style="font-size:11px; font-weight:600; color:#3C3489;">Cuota {{ $cuota->numero }}</span>
                 @endif
             </div>
-            <p style="font-size:11px; color:#6b7280; margin:0;">{{ $cuota->fecha_vencimiento ? $cuota->fecha_vencimiento->format('d/m/Y') : '—' }}</p>
+            <span style="font-size:11px; color:#6B7280;">{{ $cuota->fecha_vencimiento ? $cuota->fecha_vencimiento->format('d/m/Y') : '—' }}</span>
             @if ($aprobado)
             @php $cbadge = $cuota->estadoFinancieroBadge; @endphp
             <div style="display:flex; align-items:center; justify-content:center;">
                 <span style="background:{{ $cbadge['bg'] }}; color:{{ $cbadge['cl'] }}; font-size:10px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $cbadge['lb'] }}</span>
             </div>
             @endif
-            <p style="font-size:13px; font-weight:700; color:#7c3aed; text-align:right; margin:0;">Bs {{ number_format($cuota->monto, 2) }}</p>
+            <span style="font-size:14px; font-weight:800; color:#7c3aed; text-align:right;">Bs {{ number_format($cuota->monto, 2) }}</span>
         </div>
         @endforeach
 
-        <div style="display:flex; justify-content:flex-end; padding:8px 12px; border-top:1px solid #CECBF6; background:#F8F7FF;">
-            <p style="font-size:14px; font-weight:800; color:#3C3489; margin:0;">Total: Bs {{ number_format($plan->cuotas->sum('monto'), 2) }}</p>
+        <div style="display:flex; justify-content:flex-end; padding:8px 12px; background:#F8F7FF; border-top:1px solid #EDE9FE;">
+            <span style="font-size:15px; font-weight:800; color:#3C3489;">Total: Bs {{ number_format($plan->cuotas->sum('monto'), 2) }}</span>
         </div>
     </div>
 </div>
