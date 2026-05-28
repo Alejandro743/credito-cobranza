@@ -294,8 +294,8 @@
 
     {{-- Botón Regresar sticky --}}
     <style>
-    .regresar-wrap { position:sticky; bottom:60px; z-index:20; background:#fff; padding:10px 0 14px; margin-top:8px; }
-    @media (min-width:768px) { .regresar-wrap { bottom:0; } }
+    .regresar-wrap { position:sticky; bottom:60px; z-index:20; margin-top:8px; padding:16px 0 0; background:linear-gradient(to bottom, transparent, #F0F2F5 35%); }
+    @media (min-width:768px) { .regresar-wrap { bottom:0; background:linear-gradient(to bottom, transparent, #F0F2F5 35%); } }
     </style>
     <div class="regresar-wrap">
         <a href="{{ route('vendedor.pedidos') }}"
