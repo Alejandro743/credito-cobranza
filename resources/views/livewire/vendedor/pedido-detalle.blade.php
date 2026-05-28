@@ -296,14 +296,16 @@
 </div>
 
 {{-- Botón fijo Regresar --}}
-<div style="position:fixed; bottom:0; left:0; right:0; z-index:100; background:#fff; padding:10px 16px 18px; border-top:1.5px solid #EDE9FE;">
-    <a href="{{ route('vendedor.pedidos') }}"
-       style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; text-decoration:none; box-sizing:border-box;">
-        <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-        </svg>
-        Regresar
-    </a>
+<div style="position:fixed; bottom:0; left:0; right:0; z-index:100; background:#fff; border-top:1.5px solid #EDE9FE;">
+    <div style="max-width:900px; margin:0 auto; padding:10px 16px 18px;">
+        <a href="{{ route('vendedor.pedidos') }}"
+           style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; text-decoration:none; box-sizing:border-box;">
+            <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+            </svg>
+            Regresar
+        </a>
+    </div>
 </div>
 
 </div>
