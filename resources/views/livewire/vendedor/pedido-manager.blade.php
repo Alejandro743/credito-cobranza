@@ -491,22 +491,12 @@ $estilosActivos = [
                style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
     </div>
 
-    <select id="pm-filter-estado"
+    <select wire:model.live="filtroEstado"
             style="height:36px;padding:0 10px;border-radius:8px;border:1px solid #E5E7EB;background:#fff;color:#6B7280;font-size:12px;font-weight:600;cursor:pointer;outline:none;box-sizing:border-box;">
         @foreach($filtros as $valor => $filtro)
         <option value="{{ $valor }}" @selected($filtroEstado === $valor)>{{ $filtro['label'] }}</option>
         @endforeach
     </select>
-
-    @script
-    <script>
-        document.addEventListener('change', function(e) {
-            if (e.target && e.target.id === 'pm-filter-estado') {
-                $wire.set('filtroEstado', e.target.value);
-            }
-        });
-    </script>
-    @endscript
 
     <a href="{{ route('vendedor.oferta') }}"
        class="w-full sm:w-auto"
