@@ -294,21 +294,17 @@
 
     {{-- Botón Regresar --}}
     <style>
-    /* mobile: fixed encima del nav, full-width (sin sidebar) */
     .regresar-wrap { position:fixed; bottom:60px; left:0; right:0; z-index:20; padding:0 16px; }
     .pedido-body   { padding-bottom:80px !important; }
-    /* desktop: flujo normal, al final del contenido */
     @media (min-width:768px) {
-        .regresar-wrap { position:static; padding:12px 0 4px; }
-        .pedido-body   { padding-bottom:16px !important; }
+        .regresar-wrap { position:sticky; bottom:0; padding:12px 0 4px; background:#F0F2F5; }
+        .pedido-body   { padding-bottom:0 !important; }
     }
     </style>
     <div class="regresar-wrap">
         <a href="{{ route('vendedor.pedidos') }}"
            style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; text-decoration:none; box-sizing:border-box;">
-            <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-            </svg>
+            <span style="font-size:17px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span>
             Regresar
         </a>
     </div>
