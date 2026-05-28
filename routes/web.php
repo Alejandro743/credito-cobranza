@@ -91,7 +91,8 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('vendedor')->name('vend
     Route::get('/dashboard',     fn() => view('modules.vendedor.dashboard'))->name('dashboard');
     Route::get('/clientes',      fn() => view('modules.vendedor.clientes'))->name('clientes');
     Route::get('/oferta',        fn() => view('modules.vendedor.oferta'))->name('oferta');
-    Route::get('/pedidos',       fn() => view('modules.vendedor.pedidos'))->name('pedidos');
+    Route::get('/pedidos',        fn() => view('modules.vendedor.pedidos'))->name('pedidos');
+    Route::get('/pedidos/{id}',   fn($id) => view('modules.vendedor.pedido-detalle', compact('id')))->name('pedido.detalle');
     Route::get('/pagos-saldos',  fn() => view('modules.vendedor.pagos-saldos'))->name('pagos-saldos');
 });
 
