@@ -155,10 +155,10 @@
 @endphp
 
 <style>
-.em-tomar-wrap { position:fixed; bottom:60px; left:0; right:0; z-index:20; padding:0 16px; }
-.em-body       { padding-bottom:80px !important; }
+.em-tomar-wrap { position:fixed; bottom:60px; left:0; right:0; z-index:20; padding:0 16px; display:flex; flex-direction:column; gap:8px; }
+.em-body       { padding-bottom:130px !important; }
 @media (min-width:768px) {
-    .em-tomar-wrap { position:static; padding:12px 0 4px; }
+    .em-tomar-wrap { position:static; padding:12px 0 4px; flex-direction:row; justify-content:flex-end; gap:10px; }
     .em-body       { padding-bottom:16px !important; }
 }
 </style>
@@ -166,11 +166,7 @@
 <div style="max-width:900px; margin:0 auto;">
 
     {{-- Nav --}}
-    <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
-        <button wire:click="backToList" class="ds-btn ds-btn-secondary ds-btn-sm">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
-            Volver
-        </button>
+    <div style="display:flex; align-items:center; margin-bottom:12px;">
         <span style="font-size:11px; color:#CBCBCB; white-space:nowrap; margin-left:auto;">{{ $p->created_at->format('d/m/Y H:i') }}</span>
     </div>
 
@@ -447,8 +443,15 @@
 
     </div>{{-- /em-body --}}
 
-    {{-- Botón Tomar --}}
+    {{-- Botones acción --}}
     <div class="em-tomar-wrap">
+        <button wire:click="backToList"
+                style="display:flex; align-items:center; justify-content:center; gap:7px; width:100%; padding:13px; background:#F4F4F4; color:#6D8196; font-size:14px; font-weight:700; letter-spacing:0.04em; border-radius:12px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/>
+            </svg>
+            Regresar
+        </button>
         <button wire:click="tomarRevision({{ $p->id }})"
                 wire:confirm="¿Tomás este pedido para revisión? Quedará asignado a vos."
                 style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
