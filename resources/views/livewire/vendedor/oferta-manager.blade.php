@@ -114,7 +114,7 @@
 <div style="background:#fff;">
 
 {{-- ── STATS BAR — DESKTOP ──────────────────────────────────────────────── --}}
-<div class="hidden md:block bg-white px-4 pt-2 pb-2.5">
+<div class="hidden md:block bg-white px-4 pt-2 pb-2.5" style="max-width:900px; margin:0 auto;">
     {{-- Label ancho completo --}}
     <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
         <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -173,7 +173,7 @@
 </div>
 
 {{-- ── STATS BAR — MÓVIL ────────────────────────────────────────────────── --}}
-<div class="md:hidden bg-white px-2 pt-2 pb-2">
+<div class="md:hidden bg-white px-2 pt-2 pb-2" style="max-width:900px; margin:0 auto;">
     {{-- Label ancho completo --}}
     <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
         <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
@@ -227,7 +227,7 @@
 
 {{-- ── DOCUMENTACIÓN DEL PLAN ──────────────────────────────────────────────── --}}
 @if ($clienteId && $step === 'oferta')
-<div class="bg-white px-4 py-2"
+<div class="bg-white px-4 py-2" style="max-width:900px; margin:0 auto;"
      x-data="{
          up: { ci1:false, ci2:false, d1:false, d2:false, luz:false },
          err: { ci1:false, ci2:false, d1:false, d2:false, luz:false },
@@ -632,7 +632,7 @@
 @else
 
 {{-- ── ARTÍCULOS SELECCIONADOS + BOTÓN CARRITO ──────────────────────────── --}}
-<div style="padding:16px 16px 24px;">
+<div style="padding:16px 16px 24px; max-width:900px; margin:0 auto;">
 
     {{-- Separador Artículos Seleccionados (siempre visible) --}}
     <div style="display:flex; align-items:center; gap:7px; margin-top:8px; margin-bottom:16px;">
@@ -982,7 +982,7 @@
 {{-- ═════════════════════════════════════════════ STEP: RESUMEN ══════════ --}}
 @if ($step === 'resumen')
 <div style="background:#fff; min-height:100vh;">
-<div class="max-w-2xl mx-auto px-4 pb-10 pt-4">
+<div class="mx-auto px-4 pb-10 pt-4" style="max-width:900px;">
 
     {{-- Header: VERIFICACIÓN --}}
     <div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:14px; padding:16px 18px; margin-bottom:14px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
@@ -1500,6 +1500,7 @@
 
         {{-- TOP BAR --}}
         <div style="flex-shrink:0; background:#fff; border-bottom:1.5px solid #EDE9FE; padding:12px 14px 10px;">
+        <div style="max-width:900px; margin:0 auto;">
             <div style="text-align:center; margin-bottom:10px;">
                 <span style="font-size:16px; font-weight:900; color:#1a1a1a; letter-spacing:0.08em; text-transform:uppercase; display:block;">Seleccionar Artículos</span>
                 <div style="height:2px; background:linear-gradient(to right,#7B6FE8,#C4B5FD); border-radius:1px; margin-top:4px;"></div>
@@ -1601,9 +1602,11 @@
                 </div>
             </div>
         </div>
+        </div>
 
         {{-- LISTA SCROLLABLE --}}
         <div style="flex:1; overflow-y:auto; padding:10px 12px;">
+        <div style="max-width:900px; margin:0 auto;">
             <div style="display:flex; flex-direction:column; gap:8px;">
                 @php
                 $productosModal = $listaLocked
@@ -1666,9 +1669,11 @@
                 @endforelse
             </div>
         </div>
+        </div>
 
         {{-- PIE MODAL: cerrar --}}
         <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1.5px solid #EDE9FE;">
+        <div style="max-width:900px; margin:0 auto;">
             <button @click="showProductos = false"
                     style="width:100%; padding:13px; background:{{ $cantidad > 0 ? '#7B6FE8' : '#6B7280' }}; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:8px;">
                 @if ($cantidad > 0)
@@ -1683,6 +1688,7 @@
                     <span style="text-decoration:underline; text-underline-offset:3px;">Regresar</span>
                 @endif
             </button>
+        </div>
         </div>
 </div>
 @endif
