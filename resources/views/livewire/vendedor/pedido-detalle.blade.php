@@ -293,17 +293,9 @@
         </div>
 
     {{-- Botón Regresar --}}
-    <style>
-    .regresar-wrap { position:fixed; bottom:60px; left:0; right:0; z-index:20; padding:0 16px; }
-    .pedido-body   { padding-bottom:80px !important; }
-    @media (min-width:768px) {
-        .regresar-wrap { position:sticky; bottom:0; padding:12px 0 4px; background:#F0F2F5; }
-        .pedido-body   { padding-bottom:0 !important; }
-    }
-    </style>
-    <div class="regresar-wrap">
+    <div style="margin-top:20px;">
         <a href="{{ route('vendedor.pedidos') }}"
-           style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; text-decoration:none; box-sizing:border-box;">
+           style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; background:#F4F4F4; color:#6D8196; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; text-decoration:none; box-sizing:border-box; border:1.5px solid #CBCBCB;">
             <span style="font-size:17px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span>
             Regresar
         </a>

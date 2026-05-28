@@ -443,6 +443,11 @@
 
     {{-- Botones acción --}}
     <div class="em-tomar-wrap">
+        <button wire:click="backToList"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:14px; background:#F4F4F4; color:#6D8196; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <span style="font-size:17px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span>
+            Regresar
+        </button>
         <button wire:click="tomarRevision({{ $p->id }})"
                 wire:confirm="¿Tomás este pedido para revisión? Quedará asignado a vos."
                 style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
@@ -450,11 +455,6 @@
                 <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
             </svg>
             Para Revisión
-        </button>
-        <button wire:click="backToList"
-                style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:14px; background:#F4F4F4; color:#6D8196; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
-            <span style="font-size:17px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span>
-            Cancelar
         </button>
     </div>
 
