@@ -25,12 +25,12 @@
         <p style="font-size:15px; font-weight:700; color:#534AB7; letter-spacing:0.02em; margin:0 0 8px;">
             Nro. {{ $p->numero }}
         </p>
-        <span style="display:inline-block; font-size:13px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:{{ $estadoConfig['color'] }}; background:{{ $estadoConfig['bg'] }}; border:1.5px solid {{ $estadoConfig['border'] }}; border-radius:20px; padding:4px 14px;">
+        <span style="font-size:14px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:{{ $estadoConfig['color'] }};">
             {{ $p->estado_badge['label'] }}
         </span>
     </div>
 
-    <div style="padding:12px 0 16px;">
+    <div class="pedido-body" style="padding:12px 0 16px;">
 
         {{-- ── DATO CLIENTE ── --}}
         <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
@@ -292,10 +292,16 @@
             <div><p style="font-size:10px; color:#6B7280; font-weight:700; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.05em;">Referencia <span style="color:#9CA3AF; font-weight:400; text-transform:none;">(opcional)</span></p><div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; font-weight:500;">{{ $p->entrega_referencia ?: '—' }}</div></div>
         </div>
 
-    {{-- Botón Regresar sticky --}}
+    {{-- Botón Regresar --}}
     <style>
-    .regresar-wrap { position:sticky; bottom:60px; z-index:20; margin-top:8px; padding:20px 0 16px; background:linear-gradient(to bottom, transparent, #F0F2F5 40%); }
-    @media (min-width:768px) { .regresar-wrap { bottom:0; padding:20px 0 8px; } }
+    /* mobile: fixed encima del nav, full-width (sin sidebar) */
+    .regresar-wrap { position:fixed; bottom:60px; left:0; right:0; z-index:20; padding:0 16px; }
+    .pedido-body   { padding-bottom:80px !important; }
+    /* desktop: sticky al fondo del contenido, dentro del formulario */
+    @media (min-width:768px) {
+        .regresar-wrap { position:sticky; bottom:0; left:auto; right:auto; padding:12px 0 4px; background:linear-gradient(to bottom,transparent,#F0F2F5 55%); }
+        .pedido-body   { padding-bottom:16px !important; }
+    }
     </style>
     <div class="regresar-wrap">
         <a href="{{ route('vendedor.pedidos') }}"
