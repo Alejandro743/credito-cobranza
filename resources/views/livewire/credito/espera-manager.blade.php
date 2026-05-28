@@ -155,10 +155,10 @@
 @endphp
 
 <style>
-.em-tomar-wrap { position:fixed; bottom:60px; left:0; right:0; z-index:20; padding:0 16px; display:flex; flex-direction:column; gap:8px; }
-.em-body       { padding-bottom:130px !important; }
+.em-tomar-wrap { position:fixed; bottom:60px; left:0; right:0; z-index:20; padding:0 16px; display:flex; flex-direction:row; gap:8px; }
+.em-body       { padding-bottom:90px !important; }
 @media (min-width:768px) {
-    .em-tomar-wrap { position:static; padding:12px 0 4px; flex-direction:row; justify-content:flex-end; gap:10px; }
+    .em-tomar-wrap { position:static; padding:12px 0 4px; justify-content:flex-end; }
     .em-body       { padding-bottom:16px !important; }
 }
 </style>
