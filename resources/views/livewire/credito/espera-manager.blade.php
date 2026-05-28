@@ -155,7 +155,10 @@
 @endphp
 
 <style>
-.em-tomar-wrap { display:flex; flex-direction:row; gap:8px; margin-top:16px; justify-content:flex-end; }
+.em-tomar-wrap { display:flex; flex-direction:column; gap:8px; margin-top:16px; }
+@media (min-width:640px) {
+    .em-tomar-wrap { flex-direction:row; justify-content:flex-end; }
+}
 </style>
 
 <div style="max-width:900px; margin:0 auto;">
