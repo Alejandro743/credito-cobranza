@@ -18,17 +18,19 @@
 <div style="max-width:900px; margin:0 auto;">
 
     {{-- Cabecera --}}
-    <div style="background:{{ $estadoConfig['bg'] }}; border:1px solid {{ $estadoConfig['border'] }}; border-radius:14px; padding:16px 18px; margin:0 0 4px; text-align:center;">
-        <h1 style="font-size:22px; font-weight:800; color:#9C96E8; letter-spacing:-0.3px; margin:0 0 4px;">
+    <div style="background:#EDE9FE; border:1px solid #C4B5FD; border-radius:14px; padding:16px 18px; margin:0 0 4px; text-align:center;">
+        <p style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#534AB7; margin:0 0 4px;">
+            Nro. {{ $p->numero }}
+        </p>
+        <h1 style="font-size:20px; font-weight:800; color:#6B7280; letter-spacing:-0.3px; margin:0 0 4px;">
             SOLICITUD DE CRÉDITO
         </h1>
-        <p style="font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:{{ $estadoConfig['color'] }}; margin:0 0 2px;">{{ $p->estado_badge['label'] }}</p>
         <span style="font-size:11px; font-weight:500; color:#AFA9EC;">
-            Nro. Solicitud: <span style="font-family:monospace; font-weight:700; color:#534AB7;">{{ $p->numero }}</span>
+            Estado: <span style="font-family:monospace; font-weight:700; color:{{ $estadoConfig['color'] }};">{{ $p->estado_badge['label'] }}</span>
         </span>
     </div>
 
-    <div style="padding:12px 0 16px;">
+    <div style="padding:12px 0 80px;">
 
         {{-- ── DATO CLIENTE ── --}}
         <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
@@ -293,5 +295,15 @@
     </div>
 </div>
 
+{{-- Botón fijo Regresar --}}
+<div style="position:fixed; bottom:0; left:0; right:0; z-index:100; background:#fff; padding:10px 16px 18px; border-top:1.5px solid #EDE9FE;">
+    <a href="{{ route('vendedor.pedidos') }}"
+       style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; text-decoration:none; box-sizing:border-box;">
+        <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
+        </svg>
+        Regresar
+    </a>
+</div>
 
 </div>
