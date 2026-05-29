@@ -42,6 +42,7 @@ class RevisionManager extends Component
     public function ver(int $id): void
     {
         \Illuminate\Support\Facades\Log::info('RevisionManager::ver called', ['id' => $id]);
+        dd('VER LLAMADO - id: ' . $id);
         $this->viewingId          = $id;
         $this->confirmandoRechazo = false;
         $this->notaRechazo        = '';
