@@ -136,177 +136,197 @@ $badgeEstado = [
                        || $p->planes->count() > 1;
 @endphp
 
-<div style="max-width:680px;margin:0 auto;">
+<style>
+.am-act-wrap { display:flex; flex-direction:column; gap:8px; margin-top:16px; }
+@@media (min-width:640px) { .am-act-wrap { flex-direction:row; } }
+</style>
 
-    <div style="margin-bottom:16px;">
-        <button wire:click="backToList" class="ds-btn ds-btn-secondary ds-btn-sm">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
-            Volver al listado
-        </button>
-    </div>
+<div style="max-width:900px;margin:0 auto;">
 
-    @include('livewire.credito.partials.pedido-detail')
+    @include('livewire.credito.partials.pedido-detail', [
+        'p'        => $p,
+        'plan'     => $plan,
+        'aprobado' => $aprobado,
+        'editable' => false,
+    ])
 
     {{-- ══ ESTADO: CERRADO ══ --}}
     @if ($cerrado)
     @php $cierre = $p->cierre; @endphp
 
-    <div style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;padding:16px;margin-top:16px;">
-        <p style="font-size:10px;font-weight:700;color:#CBCBCB;text-transform:uppercase;letter-spacing:.5px;margin:0 0 12px;">Registro de Cierre</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:12px;">
-            <div>
-                <span class="ds-form-label">Motivo</span>
-                <span style="font-weight:600;color:#4A4A4A;">{{ $cierre?->motivoCierre?->nombre ?? '—' }}</span>
+    <div style="background:#fff; border:1px solid #C4B5FD; border-radius:12px; padding:16px; margin-top:16px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12a2 2 0 002 2h8a2 2 0 002-2L19 8"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#534AB7; letter-spacing:0.05em; white-space:nowrap;">Registro de Cierre</span>
+            <div style="flex:1; height:1.5px; background:#EDE9FE;"></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px;">
+            <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px;">
+                <p style="font-size:9px; font-weight:700; color:#AFA9EC; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 2px;">Motivo</p>
+                <span style="font-weight:600; color:#3C3489;">{{ $cierre?->motivoCierre?->nombre ?? '—' }}</span>
                 @if($cierre?->motivoCierre?->afecta_mora)
-                <span class="ds-badge ds-badge-danger" style="margin-left:6px;">Afecta indicadores</span>
+                <span style="display:inline-block; margin-left:4px; background:#FEF2F2; color:#B91C1C; font-size:9px; font-weight:700; border-radius:4px; padding:1px 6px;">Afecta indicadores</span>
                 @endif
             </div>
-            <div>
-                <span class="ds-form-label">Cerrado por</span>
-                <span style="font-weight:600;color:#4A4A4A;">{{ $cierre?->cerradoPor?->name ?? '—' }}</span>
-                <span style="display:block;font-size:11px;color:#CBCBCB;">{{ $cierre?->created_at?->format('d/m/Y H:i') }}</span>
+            <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px;">
+                <p style="font-size:9px; font-weight:700; color:#AFA9EC; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 2px;">Cerrado por</p>
+                <span style="font-weight:600; color:#3C3489;">{{ $cierre?->cerradoPor?->name ?? '—' }}</span>
+                <span style="display:block; font-size:11px; color:#AFA9EC;">{{ $cierre?->created_at?->format('d/m/Y H:i') }}</span>
             </div>
             @if($cierre?->observacion)
-            <div style="grid-column:1/-1;">
-                <span class="ds-form-label">Observación</span>
-                <span style="color:#4A4A4A;">{{ $cierre->observacion }}</span>
+            <div style="grid-column:span 2; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px;">
+                <p style="font-size:9px; font-weight:700; color:#AFA9EC; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 2px;">Observación</p>
+                <span style="color:#3C3489;">{{ $cierre->observacion }}</span>
             </div>
             @endif
         </div>
     </div>
 
     @if (!$confirmandoReversion)
-    <div style="margin-top:12px;display:flex;justify-content:flex-start;">
-        <button wire:click="$set('confirmandoReversion', true)" class="ds-btn ds-btn-warning ds-btn-sm">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
-            </svg>
-            Revertir cierre
+    <div class="am-act-wrap">
+        <button wire:click="backToList"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:14px; background:#F4F4F4; color:#6D8196; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <span style="font-size:17px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span> Regresar
+        </button>
+        <button wire:click="$set('confirmandoReversion', true)"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#FEF3C7; color:#854F0B; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #FCD34D; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+            Revertir Cierre
         </button>
     </div>
     @else
-    <div class="ds-confirm-panel warning">
-        <p class="ds-confirm-panel-title">Motivo de la reversión</p>
+    <div style="background:#FEF3C7; border:1.5px solid #FCD34D; border-radius:12px; padding:16px; margin-top:16px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#854F0B" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span style="font-size:13px; font-weight:700; color:#854F0B;">Motivo de la reversión</span>
+        </div>
         <textarea wire:model="motivoReversion" rows="3" placeholder="Explicá por qué se revierte el cierre..."
-                  style="width:100%;display:block;"></textarea>
-        @error('motivoReversion')<p class="ds-form-error">{{ $message }}</p>@enderror
-        <div class="ds-confirm-panel-actions">
-            <button wire:click="$set('confirmandoReversion', false)" class="ds-btn ds-btn-secondary ds-btn-sm">Cancelar</button>
-            <button wire:click="revertir" class="ds-btn ds-btn-warning ds-btn-sm">Confirmar Reversión</button>
+                  style="width:100%; display:block; background:#fff; border:1px solid #FCD34D; border-radius:8px; padding:10px 12px; font-size:13px; color:#374151; outline:none; box-sizing:border-box; resize:vertical;"></textarea>
+        @error('motivoReversion')<p style="font-size:11px; color:#B91C1C; margin-top:4px;">{{ $message }}</p>@enderror
+        <div style="display:flex; gap:8px; margin-top:12px;">
+            <button wire:click="$set('confirmandoReversion', false)"
+                    style="flex:1; padding:10px; background:#F4F4F4; color:#6D8196; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">Cancelar</button>
+            <button wire:click="revertir"
+                    style="flex:1; padding:10px; background:#854F0B; color:#fff; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">Confirmar Reversión</button>
         </div>
     </div>
     @endif
 
     {{-- ══ ESTADO: APROBADO / RECHAZADO ══ --}}
     @elseif (!$confirmandoRechazo && !$confirmandoCierre)
-    <div style="display:flex;align-items:center;gap:10px;margin-top:12px;flex-wrap:wrap;">
+    <div class="am-act-wrap">
+        <button wire:click="backToList"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:14px; background:#F4F4F4; color:#6D8196; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <span style="font-size:17px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span> Regresar
+        </button>
 
         @if (!$tieneCuotasPagadas)
         <button wire:click="devolverRevision"
                 wire:confirm="¿Devolvés este pedido a Revisión? La nota de rechazo se eliminará."
-                class="ds-btn ds-btn-secondary ds-btn-sm">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
-            </svg>
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#F4F4F4; color:#6D8196; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
             A Revisión
         </button>
         @endif
 
         @if ($tieneCuotasPagadas && $aprobado)
-        <button wire:click="$set('confirmandoCierre', true)" class="ds-btn ds-btn-secondary ds-btn-sm">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12a2 2 0 002 2h8a2 2 0 002-2L19 8"/>
-            </svg>
+        <button wire:click="$set('confirmandoCierre', true)"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#EDE9FE; color:#534AB7; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #C4B5FD; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12a2 2 0 002 2h8a2 2 0 002-2L19 8"/></svg>
             Cerrar Crédito
         </button>
         @endif
 
-        <div style="flex:1;"></div>
-
         @if (!$tieneCuotasPagadas && $aprobado)
-        <button wire:click="$set('confirmandoRechazo', true)" class="ds-btn ds-btn-danger ds-btn-sm">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-            </svg>
+        <button wire:click="$set('confirmandoRechazo', true)"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#FEF2F2; color:#B91C1C; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #FECACA; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             Rechazar
         </button>
         @elseif ($p->estado === 'rechazado')
         <button wire:click="aprobar"
                 wire:confirm="¿Confirmás la aprobación? La nota de rechazo se eliminará."
-                class="ds-btn ds-btn-success">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
-            </svg>
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#D1FAE5; color:#065F46; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #6EE7B7; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
             Aprobar
         </button>
         @endif
     </div>
 
     @elseif ($confirmandoRechazo)
-    <div class="ds-confirm-panel danger">
-        <p class="ds-confirm-panel-title">Motivo del rechazo</p>
+    <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:12px; padding:16px; margin-top:16px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span style="font-size:13px; font-weight:700; color:#B91C1C;">Motivo del rechazo</span>
+        </div>
         <textarea wire:model="notaRechazo" rows="3" placeholder="Explicá el motivo del rechazo..."
-                  style="width:100%;display:block;"></textarea>
-        @error('notaRechazo')<p class="ds-form-error">{{ $message }}</p>@enderror
-        <div class="ds-confirm-panel-actions">
-            <button wire:click="$set('confirmandoRechazo', false)" class="ds-btn ds-btn-secondary ds-btn-sm">Cancelar</button>
-            <button wire:click="rechazar" class="ds-btn ds-btn-danger ds-btn-sm">Confirmar Rechazo</button>
+                  style="width:100%; display:block; background:#fff; border:1px solid #FECACA; border-radius:8px; padding:10px 12px; font-size:13px; color:#374151; outline:none; box-sizing:border-box; resize:vertical;"></textarea>
+        @error('notaRechazo')<p style="font-size:11px; color:#B91C1C; margin-top:4px;">{{ $message }}</p>@enderror
+        <div style="display:flex; gap:8px; margin-top:12px;">
+            <button wire:click="$set('confirmandoRechazo', false)"
+                    style="flex:1; padding:10px; background:#F4F4F4; color:#6D8196; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">Cancelar</button>
+            <button wire:click="rechazar"
+                    style="flex:1; padding:10px; background:#B91C1C; color:#fff; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">Confirmar Rechazo</button>
         </div>
     </div>
 
     @elseif ($confirmandoCierre)
-    <div class="ds-confirm-panel neutral">
-        <p class="ds-confirm-panel-title" style="color:#4A4A4A;">Cerrar Crédito</p>
-        <div class="ds-form-group">
-            <label class="ds-form-label">Motivo *</label>
-            <select wire:model="motivoCierreId" style="width:100%;">
+    <div style="background:#F8F7FF; border:1.5px solid #C4B5FD; border-radius:12px; padding:16px; margin-top:16px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12a2 2 0 002 2h8a2 2 0 002-2L19 8"/></svg>
+            <span style="font-size:13px; font-weight:700; color:#534AB7;">Cerrar Crédito</span>
+        </div>
+        <div style="margin-bottom:10px;">
+            <p style="font-size:9px; font-weight:700; color:#AFA9EC; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 4px;">Motivo *</p>
+            <select wire:model="motivoCierreId"
+                    style="width:100%; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:10px 12px; font-size:13px; color:#374151; outline:none; box-sizing:border-box;">
                 <option value="">Seleccioná un motivo...</option>
                 @foreach($motivosCierre as $m)
                 <option value="{{ $m->id }}">{{ $m->nombre }}</option>
                 @endforeach
             </select>
-            @error('motivoCierreId')<p class="ds-form-error">{{ $message }}</p>@enderror
+            @error('motivoCierreId')<p style="font-size:11px; color:#B91C1C; margin-top:4px;">{{ $message }}</p>@enderror
         </div>
-        <div class="ds-form-group">
-            <label class="ds-form-label">Observación <span style="font-weight:400;text-transform:none;">(opcional)</span></label>
+        <div style="margin-bottom:10px;">
+            <p style="font-size:9px; font-weight:700; color:#AFA9EC; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 4px;">Observación <span style="font-weight:400;text-transform:none;font-size:10px;">(opcional)</span></p>
             <textarea wire:model="observacionCierre" rows="3" placeholder="Detalle adicional sobre el cierre..."
-                      style="width:100%;display:block;"></textarea>
+                      style="width:100%; display:block; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:10px 12px; font-size:13px; color:#374151; outline:none; box-sizing:border-box; resize:vertical;"></textarea>
         </div>
-        <div class="ds-confirm-panel-actions">
-            <button wire:click="$set('confirmandoCierre', false)" class="ds-btn ds-btn-secondary ds-btn-sm">Cancelar</button>
-            <button wire:click="cerrar" class="ds-btn ds-btn-primary ds-btn-sm">Confirmar Cierre</button>
+        <div style="display:flex; gap:8px; margin-top:12px;">
+            <button wire:click="$set('confirmandoCierre', false)"
+                    style="flex:1; padding:10px; background:#F4F4F4; color:#6D8196; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">Cancelar</button>
+            <button wire:click="cerrar"
+                    style="flex:1; padding:10px; background:#534AB7; color:#fff; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">Confirmar Cierre</button>
         </div>
     </div>
     @endif
 
     {{-- Historial de cierres --}}
     @if($p->cierres->isNotEmpty())
-    <div x-data="{ abierto: false }" style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;overflow:hidden;margin-top:16px;">
+    <div x-data="{ abierto: false }" style="background:#fff; border:1px solid #C4B5FD; border-radius:12px; overflow:hidden; margin-top:16px;">
         <button @click="abierto = !abierto"
-                style="width:100%;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:#F7F7F0;border:none;cursor:pointer;text-align:left;">
-            <div style="display:flex;align-items:center;gap:8px;">
-                <svg style="width:14px;height:14px;color:#6D8196;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                </svg>
-                <span style="font-size:13px;font-weight:700;color:#4A4A4A;">Historial de cierres</span>
-                <span class="ds-badge ds-badge-inactive">{{ $p->cierres->count() }}</span>
+                style="width:100%; padding:12px 16px; display:flex; align-items:center; justify-content:space-between; background:#F8F7FF; border:none; cursor:pointer; text-align:left;">
+            <div style="display:flex; align-items:center; gap:8px;">
+                <svg width="14" height="14" fill="none" stroke="#7B6FE8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span style="font-size:13px; font-weight:700; color:#534AB7;">Historial de cierres</span>
+                <span style="background:#EDE9FE; color:#534AB7; font-size:10px; font-weight:700; border-radius:4px; padding:1px 7px;">{{ $p->cierres->count() }}</span>
             </div>
-            <svg :class="abierto ? 'rotate-180' : ''" class="w-4 h-4 transition-transform" style="color:#CBCBCB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg :class="abierto ? 'rotate-180' : ''" class="w-4 h-4 transition-transform" fill="none" stroke="#AFA9EC" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
             </svg>
         </button>
         <div x-show="abierto" x-collapse>
-            <div style="padding:12px 16px;display:flex;flex-direction:column;gap:10px;">
+            <div style="padding:12px 16px; display:flex; flex-direction:column; gap:10px;">
             @foreach($p->cierres as $histCierre)
             @php $revertido = $histCierre->estaRevertido(); @endphp
 
             @if($revertido)
-            <div style="padding:12px 14px;border-radius:6px;border:1px solid #FCD34D;background:#FFFBEB;">
-                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px;">
-                    <span style="font-size:11px;font-weight:700;color:#B45309;">Reversión de cierre</span>
-                    <span class="ds-badge ds-badge-pending">REVERTIDO</span>
+            <div style="padding:12px 14px; border-radius:8px; border:1px solid #FCD34D; background:#FFFBEB;">
+                <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px;">
+                    <span style="font-size:11px; font-weight:700; color:#B45309;">Reversión de cierre</span>
+                    <span style="background:#FEF3C7; color:#B45309; font-size:9px; font-weight:700; border-radius:4px; padding:2px 7px; border:1px solid #FCD34D;">REVERTIDO</span>
                 </div>
-                <div style="font-size:11px;color:#B45309;">
+                <div style="font-size:11px; color:#B45309;">
                     <strong>Revertido por:</strong> {{ $histCierre->revertidoPor?->name ?? '—' }}<br>
                     <strong>Fecha:</strong> {{ $histCierre->revertido_at->format('d/m/Y H:i') }}<br>
                     <strong>Motivo:</strong> {{ $histCierre->motivo_reversion }}
@@ -314,24 +334,24 @@ $badgeEstado = [
             </div>
             @endif
 
-            <div style="padding:12px 14px;border-radius:6px;border:1px solid #CBCBCB;background:#F7F7F0;">
-                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px;">
+            <div style="padding:12px 14px; border-radius:8px; border:1px solid #EDE9FE; background:#F8F7FF;">
+                <div style="display:flex; align-items:flex-start; justify-content:space-between; gap:8px; margin-bottom:8px;">
                     <div>
-                        <span style="font-size:12px;font-weight:700;color:#4A4A4A;">{{ $histCierre->motivoCierre?->nombre ?? '—' }}</span>
+                        <span style="font-size:12px; font-weight:700; color:#3C3489;">{{ $histCierre->motivoCierre?->nombre ?? '—' }}</span>
                         @if($histCierre->motivoCierre?->afecta_mora)
-                        <span class="ds-badge ds-badge-danger" style="margin-left:6px;">Afecta indicadores</span>
+                        <span style="display:inline-block; margin-left:4px; background:#FEF2F2; color:#B91C1C; font-size:9px; font-weight:700; border-radius:4px; padding:1px 6px;">Afecta indicadores</span>
                         @endif
                     </div>
-                    <span class="ds-badge {{ $revertido ? 'ds-badge-anulado' : 'ds-badge-cerrado' }}">CIERRE{{ $revertido ? ' (anulado)' : '' }}</span>
+                    <span style="background:{{ $revertido ? '#FEF3C7' : '#EDE9FE' }}; color:{{ $revertido ? '#B45309' : '#534AB7' }}; font-size:9px; font-weight:700; border-radius:4px; padding:2px 7px; white-space:nowrap; border:1px solid {{ $revertido ? '#FCD34D' : '#C4B5FD' }};">CIERRE{{ $revertido ? ' (anulado)' : '' }}</span>
                 </div>
-                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px;color:#CBCBCB;">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:11px; color:#AFA9EC;">
                     <div>
-                        <strong style="color:#4A4A4A;">Cerrado por:</strong> {{ $histCierre->cerradoPor?->name ?? '—' }}<br>
-                        <strong style="color:#4A4A4A;">Fecha:</strong> {{ $histCierre->created_at->format('d/m/Y H:i') }}
+                        <strong style="color:#534AB7;">Cerrado por:</strong> {{ $histCierre->cerradoPor?->name ?? '—' }}<br>
+                        <strong style="color:#534AB7;">Fecha:</strong> {{ $histCierre->created_at->format('d/m/Y H:i') }}
                     </div>
                     @if($histCierre->observacion)
                     <div>
-                        <strong style="color:#4A4A4A;">Observación:</strong> {{ $histCierre->observacion }}
+                        <strong style="color:#534AB7;">Observación:</strong> {{ $histCierre->observacion }}
                     </div>
                     @endif
                 </div>
