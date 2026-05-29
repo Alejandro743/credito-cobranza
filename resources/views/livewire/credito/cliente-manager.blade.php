@@ -352,7 +352,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                 <col style="width:90px;">   {{-- Estado --}}
                 <col style="width:110px;">  {{-- Acciones --}}
             </colgroup>
-            <thead>
+            <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                     @foreach(['ID_LN','CI','Nombre','Apellido','Teléfono','Ciudad','Vendedor','Estado','Acciones'] as $col)
                     <th style="padding:10px 16px; text-align:{{ $col === 'Acciones' ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:60px;">
