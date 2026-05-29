@@ -1,3 +1,3 @@
-<x-user-layout :no-header="true" :no-padding="true">
+<x-user-layout>
 <livewire:credito.aprobado-manager />
 </x-user-layout>
