@@ -41,8 +41,6 @@ class RevisionManager extends Component
 
     public function ver(int $id): void
     {
-        \Illuminate\Support\Facades\Log::info('RevisionManager::ver called', ['id' => $id]);
-        dd('VER LLAMADO - id: ' . $id);
         $this->viewingId          = $id;
         $this->confirmandoRechazo = false;
         $this->notaRechazo        = '';
@@ -171,7 +169,6 @@ class RevisionManager extends Component
 
     public function render()
     {
-        \Illuminate\Support\Facades\Log::info('RevisionManager::render START', ['mode' => $this->mode, 'viewingId' => $this->viewingId]);
         $pedidos = Pedido::with(['cliente.usuario', 'vendedor.user'])
             ->where('estado', 'revision')
             ->where('revisado_por', auth()->id())
@@ -194,12 +191,6 @@ class RevisionManager extends Component
         $editProvincias  = $ciudadObj ? Provincia::where('ciudad_id', $ciudadObj->id)->orderBy('nombre')->get() : collect();
         $provObj         = Provincia::where('nombre', $this->editProvincia)->where('ciudad_id', $ciudadObj?->id)->first();
         $editMunicipios  = $provObj ? Municipio::where('provincia_id', $provObj->id)->orderBy('nombre')->get() : collect();
-
-        \Illuminate\Support\Facades\Log::info('RevisionManager::render', [
-            'mode'           => $this->mode,
-            'viewingId'      => $this->viewingId,
-            'pedidoDetalle'  => $pedidoDetalle?->id,
-        ]);
 
         return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios'));
     }
