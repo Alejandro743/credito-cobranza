@@ -3,100 +3,149 @@
 {{-- ══ LIST ══ --}}
 @if ($mode === 'list')
 
-<div class="ds-section-header">
-    <div style="width:38px;height:38px;background:#EDE9FE;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="20" height="20" fill="none" stroke="#8B5CF6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-            <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12a2 2 0 002 2h8a2 2 0 002-2L19 8"/>
+{{-- Toolbar --}}
+<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5 mb-5">
+    <div class="relative w-full sm:flex-1" style="min-width:0; max-width:100%;">
+        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
         </svg>
+        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar cliente o Nº pedido..."
+               style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
     </div>
-    <div style="flex:1;">
-        <h2>Créditos Cerrados</h2>
-        <p>Historial de créditos finalizados</p>
-    </div>
-    <span style="font-size:12px;color:#CBCBCB;white-space:nowrap;">{{ $pedidos->total() }} registro{{ $pedidos->total() !== 1 ? 's' : '' }}</span>
 </div>
 
-<div class="ds-table-card">
-    <div class="ds-table-toolbar">
-        <div style="position:relative;flex:1;max-width:300px;">
-            <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="#CBCBCB" stroke-width="2" stroke-linecap="round">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-            <input wire:model.debounce.300ms="search" type="text" placeholder="Buscar cliente o Nº pedido..."
-                   style="padding-left:32px;width:100%;">
+{{-- MOBILE: Cards --}}
+<div class="sm:hidden flex flex-col" style="gap:10px;">
+    @forelse ($pedidos as $p)
+    <div wire:key="cm-{{ $p->id }}"
+         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
+        <div style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #F3F4F6;">
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8;">{{ strtoupper(substr($p->cliente->nombre_completo, 0, 1)) }}</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+                <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->cliente->nombre_completo }}</p>
+                <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;">{{ $p->numero }}</p>
+            </div>
+            <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0; background:#F4F4F4; color:#4A4A4A; border:1px solid #CBCBCB;">Cerrado</span>
+        </div>
+        <div style="padding:10px 14px; display:flex; align-items:center; gap:8px;">
+            <div style="flex:1;">
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Vendedor</span>
+                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->vendedor?->nombre_completo ?? '—' }}</span>
+            </div>
+            <div style="flex:1;">
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Cerrado el</span>
+                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->cierre?->created_at->format('d/m/Y') ?? $p->updated_at->format('d/m/Y') }}</span>
+            </div>
+            <div style="text-align:right;">
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Total Bs.</span>
+                <span style="font-size:13px; font-weight:700; color:#374151;">{{ number_format($p->total_pagar, 2) }}</span>
+            </div>
+        </div>
+        @if($p->cierre?->motivoCierre)
+        <div style="padding:6px 14px 10px; border-top:1px solid #F3F4F6;">
+            <span style="font-size:11px; color:#9CA3AF; display:block;">Motivo cierre</span>
+            <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->cierre->motivoCierre->nombre }}</span>
+            @if($p->cierre->motivoCierre->afecta_mora)
+            <span style="display:inline-block; margin-left:6px; background:#FEE2E2; color:#DC2626; font-size:9px; font-weight:700; border-radius:4px; padding:1px 6px; border:1px solid #FCA5A5;">Afecta indicadores</span>
+            @endif
+        </div>
+        @endif
+        <div style="padding:10px 14px; border-top:1px solid #F3F4F6;">
+            <button wire:click="ver({{ $p->id }})"
+                    style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; background:#F5F3FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; -webkit-appearance:none; appearance:none;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
+                Ver
+            </button>
         </div>
     </div>
+    @empty
+    <div wire:key="cm-mobile-empty" style="text-align:center; padding:48px 24px;">
+        <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12a2 2 0 002 2h8a2 2 0 002-2L19 8"/>
+        </svg>
+        <p style="font-weight:600; color:#6B7280; font-size:13px;">Sin créditos cerrados</p>
+    </div>
+    @endforelse
+    @if ($pedidos->hasPages())
+    <div style="padding-top:8px;">{{ $pedidos->links() }}</div>
+    @endif
+</div>
 
-    <div style="overflow-x:auto;">
-    <table style="min-width:600px;">
+{{-- DESKTOP: Tabla --}}
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
+
+    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
+        <span style="font-size:13px; font-weight:700; color:#111827;">Créditos Cerrados</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidos->total() }}</span>
+    </div>
+
+    <div style="overflow:auto; flex:1;">
+    <table style="width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
         <thead>
-            <tr>
-                <th class="ds-sticky-col" style="padding:0;height:1px;">
-                    <div style="display:flex;align-items:stretch;height:100%;">
-                        <div style="width:110px;padding:10px 12px;border-right:1px solid #CBCBCB;display:flex;align-items:center;justify-content:center;">Pedido</div>
-                        <div style="flex:1;padding:10px 12px;display:flex;align-items:center;justify-content:center;">Cliente</div>
-                    </div>
-                </th>
-                <th>Motivo Cierre</th>
-                <th>Vendedor</th>
-                <th>Cerrado el</th>
-                <th>Total Bs.</th>
-                <th>Ver</th>
+            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Cod. Pedido</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px;">CI</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px;">Cliente</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Motivo Cierre</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px;">Vendedor</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Cerrado el</th>
+                <th style="padding:10px 14px; text-align:right; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Total Bs.</th>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px;">Acción</th>
             </tr>
         </thead>
         <tbody>
-            @forelse($pedidos as $p)
-            <tr wire:key="cr-{{ $p->id }}">
-                <td data-label="Pedido / Cliente" class="ds-sticky-col" style="height:1px;">
-                    <div style="display:flex;align-items:stretch;height:100%;">
-                        <div style="width:110px;padding:10px 12px;border-right:1px solid #e5e7eb;font-family:monospace;font-size:11px;color:#6D8196;font-weight:700;display:flex;align-items:center;justify-content:center;">{{ $p->numero }}</div>
-                        <div style="flex:1;padding:10px 12px;">
-                            <p style="font-weight:600;font-size:13px;color:#4A4A4A;margin:0;">{{ $p->cliente->nombre_completo }}</p>
-                            @if($p->cliente->ci)<p style="font-size:11px;color:#CBCBCB;margin:0;">CI: {{ $p->cliente->ci }}</p>@endif
-                        </div>
-                    </div>
-                </td>
-                <td data-label="Motivo" style="text-align:center;">
+            @forelse ($pedidos as $p)
+            <tr wire:key="cd-{{ $p->id }}"
+                style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
+                @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                <td style="padding:10px 14px; font-family:monospace; font-size:12px; font-weight:700; color:#111827; white-space:nowrap;">{{ $p->numero }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->cliente->ci ?: '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ $p->cliente->nombre_completo }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#374151; white-space:nowrap;">
                     @if($p->cierre?->motivoCierre)
-                    <span style="font-size:12px;font-weight:600;color:#4A4A4A;">{{ $p->cierre->motivoCierre->nombre }}</span>
-                    @if($p->cierre->motivoCierre->afecta_mora)
-                    <span class="ds-badge ds-badge-danger" style="display:block;margin-top:3px;">Afecta indicadores</span>
-                    @endif
+                        {{ $p->cierre->motivoCierre->nombre }}
+                        @if($p->cierre->motivoCierre->afecta_mora)
+                        <span style="display:inline-block; margin-left:4px; background:#FEE2E2; color:#DC2626; font-size:9px; font-weight:700; border-radius:4px; padding:1px 5px; border:1px solid #FCA5A5; vertical-align:middle;">Afecta</span>
+                        @endif
                     @else
-                    <span style="color:#CBCBCB;font-size:11px;">—</span>
+                        <span style="color:#D1D5DB;">—</span>
                     @endif
                 </td>
-                <td data-label="Vendedor" style="text-align:center;">{{ $p->vendedor?->nombre_completo ?? '—' }}</td>
-                <td data-label="Cerrado el" style="text-align:center;font-size:11px;color:#CBCBCB;">{{ $p->cierre?->created_at->format('d/m/Y') ?? $p->updated_at->format('d/m/Y') }}</td>
-                <td data-label="Total Bs." style="text-align:center;font-weight:600;color:#4A4A4A;">{{ number_format($p->total_pagar, 2) }}</td>
-                <td data-label="" style="text-align:center;">
-                    <button wire:click="ver({{ $p->id }})" class="ds-btn ds-btn-ghost ds-btn-sm">
+                <td style="padding:10px 14px; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $p->vendedor?->nombre_completo ?? '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->cierre?->created_at->format('d/m/Y') ?? $p->updated_at->format('d/m/Y') }}</td>
+                <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:700; color:#111827; white-space:nowrap;">{{ number_format($p->total_pagar, 2) }}</td>
+                <td style="padding:10px 14px; text-align:center;">
+                    <button wire:click="ver({{ $p->id }})"
+                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;"
+                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'"
+                            title="Ver">
                         <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
-                        Ver
                     </button>
                 </td>
             </tr>
             @empty
-            <tr>
-                <td colspan="6">
-                    <div class="ds-empty">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12a2 2 0 002 2h8a2 2 0 002-2L19 8"/>
-                        </svg>
-                        <p>Sin créditos cerrados</p>
-                    </div>
+            <tr wire:key="cd-empty">
+                <td colspan="8" style="padding:64px 24px; text-align:center;">
+                    <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12a2 2 0 002 2h8a2 2 0 002-2L19 8"/>
+                    </svg>
+                    <p style="font-weight:600; color:#6B7280; font-size:13px; margin-bottom:4px;">Sin créditos cerrados</p>
                 </td>
             </tr>
             @endforelse
         </tbody>
     </table>
     </div>
-
-    @if($pedidos->hasPages())
-    <div style="padding:10px 16px;border-top:1px solid #CBCBCB;">{{ $pedidos->links() }}</div>
+    @if ($pedidos->hasPages())
+    <div style="padding:10px 16px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $pedidos->links() }}</div>
     @endif
 </div>
 
