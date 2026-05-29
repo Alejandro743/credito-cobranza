@@ -41,6 +41,7 @@ class RevisionManager extends Component
 
     public function ver(int $id): void
     {
+        \Illuminate\Support\Facades\Log::info('RevisionManager::ver called', ['id' => $id]);
         $this->viewingId          = $id;
         $this->confirmandoRechazo = false;
         $this->notaRechazo        = '';
@@ -169,6 +170,7 @@ class RevisionManager extends Component
 
     public function render()
     {
+        \Illuminate\Support\Facades\Log::info('RevisionManager::render START', ['mode' => $this->mode, 'viewingId' => $this->viewingId]);
         $pedidos = Pedido::with(['cliente.usuario', 'vendedor.user'])
             ->where('estado', 'revision')
             ->where('revisado_por', auth()->id())
