@@ -524,6 +524,7 @@ main .border-lavanda-200 { border-color: #CBCBCB !important; }
 ──────────────────────────────────────────────────────────────*/
 main tbody td,
 main tbody th { color: #4A4A4A !important; }
+main tbody td.col-row-num { color: #7B6FE8 !important; background: #F9F8FF !important; }
 
 /* Fix specificity: any Tailwind text color inside thead → lila */
 main thead th,
