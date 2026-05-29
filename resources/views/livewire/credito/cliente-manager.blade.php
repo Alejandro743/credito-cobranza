@@ -486,7 +486,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
 
-                    <td style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; white-space:nowrap;">{{ $clientes->firstItem() + $loop->index }}</td>
+                    <td style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; white-space:nowrap; background:#F9F8FF;">{{ $clientes->firstItem() + $loop->index }}</td>
                     <td style="padding:10px 16px; overflow:hidden;">
                         <span style="font-size:11px; font-family:monospace; font-weight:700; color:#7B6FE8; white-space:nowrap;">{{ $c->id_ln ?? '—' }}</span>
                     </td>
