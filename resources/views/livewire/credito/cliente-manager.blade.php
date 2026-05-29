@@ -321,7 +321,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
 </div>
 
 {{-- ══ DESKTOP: Tabla ══ --}}
-<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     {{-- Barra --}}
     <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
@@ -336,7 +336,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
         </button>
     </div>
 
-    <div style="overflow-x:auto;">
+    <div style="overflow:auto; flex:1;">
         @if ($clientes->isEmpty() && !$showAddForm)
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay clientes registrados.</p>
         @else
@@ -540,7 +540,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
     </div>
 
     @if ($clientes->hasPages())
-    <div style="padding:10px 18px; border-top:1px solid #F3F4F6;">{{ $clientes->links() }}</div>
+    <div style="padding:10px 18px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $clientes->links() }}</div>
     @endif
 </div>
 
