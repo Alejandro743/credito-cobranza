@@ -453,5 +453,9 @@
 
 </div>
 
+@else
+<div style="padding:20px;background:#fee2e2;border:2px solid #dc2626;border-radius:8px;font-family:monospace;font-size:13px;">
+  DEBUG — mode: <strong>{{ $mode }}</strong> / viewingId: <strong>{{ $viewingId ?? 'null' }}</strong> / pedidoDetalle: <strong>{{ isset($pedidoDetalle) ? ($pedidoDetalle ? $pedidoDetalle->id : 'IS NULL') : 'NOT PASSED' }}</strong>
+</div>
 @endif
 </div>

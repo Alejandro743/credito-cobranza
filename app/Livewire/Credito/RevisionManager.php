@@ -192,6 +192,12 @@ class RevisionManager extends Component
         $provObj         = Provincia::where('nombre', $this->editProvincia)->where('ciudad_id', $ciudadObj?->id)->first();
         $editMunicipios  = $provObj ? Municipio::where('provincia_id', $provObj->id)->orderBy('nombre')->get() : collect();
 
+        \Illuminate\Support\Facades\Log::info('RevisionManager::render', [
+            'mode'           => $this->mode,
+            'viewingId'      => $this->viewingId,
+            'pedidoDetalle'  => $pedidoDetalle?->id,
+        ]);
+
         return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios'));
     }
 }
