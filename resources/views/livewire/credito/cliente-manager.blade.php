@@ -342,6 +342,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
         @else
         <table style="table-layout:fixed; width:100%; min-width:900px; border-collapse:collapse; font-size:13px;">
             <colgroup>
+                <col style="width:44px;">   {{-- # --}}
                 <col style="width:90px;">   {{-- ID_LN --}}
                 <col style="width:110px;">  {{-- CI --}}
                 <col style="width:150px;">  {{-- Nombre --}}
@@ -354,6 +355,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
             </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
                     @foreach(['ID_LN','CI','Nombre','Apellido','Teléfono','Ciudad','Vendedor','Estado','Acciones'] as $col)
                     <th style="padding:10px 16px; text-align:{{ $col === 'Acciones' ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:60px;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">{{ $col }}</span>
@@ -373,7 +375,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                 @if ($editingId === $c->id)
                 @php $iE = 'width:100%; height:32px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; color:#374151;'; @endphp
                 <tr wire:key="edit-{{ $c->id }}">
-                    <td colspan="9" style="padding:0; background:#F8F7FF; border-bottom:2px solid #EDE9FE;">
+                    <td colspan="10" style="padding:0; background:#F8F7FF; border-bottom:2px solid #EDE9FE;">
                         <div style="padding:14px 20px; display:flex; flex-direction:column; gap:10px;">
 
                             <div style="display:grid; grid-template-columns:repeat(6,1fr); gap:10px;">
@@ -484,6 +486,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
 
+                    <td style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; white-space:nowrap;">{{ $clientes->firstItem() + $loop->index }}</td>
                     <td style="padding:10px 16px; overflow:hidden;">
                         <span style="font-size:11px; font-family:monospace; font-weight:700; color:#7B6FE8; white-space:nowrap;">{{ $c->id_ln ?? '—' }}</span>
                     </td>
