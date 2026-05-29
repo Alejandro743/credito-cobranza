@@ -108,44 +108,45 @@
     $plan   = $p->planes->where('id', $cierre?->plan_pago_id)->first() ?? $p->planes->last();
 @endphp
 
-<div style="max-width:680px;margin:0 auto;">
+<style>
+.cm-act-wrap { display:flex; flex-direction:column; gap:8px; margin-top:16px; }
+@@media (min-width:640px) { .cm-act-wrap { flex-direction:row; } }
+</style>
 
-    <div style="margin-bottom:16px;display:flex;align-items:center;gap:10px;">
-        <button wire:click="backToList" class="ds-btn ds-btn-secondary ds-btn-sm">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
-            Volver
-        </button>
-        <div style="flex:1;">
-            <p style="font-size:16px;font-weight:700;color:#4A4A4A;margin:0;">{{ $p->cliente->nombre_completo }}</p>
-            <p style="font-size:11px;color:#CBCBCB;margin:0;font-family:monospace;">{{ $p->numero }}</p>
-        </div>
-        <span class="ds-badge ds-badge-cerrado">CERRADO</span>
-    </div>
+<div style="max-width:900px; margin:0 auto;">
 
-    {{-- Card de cierre --}}
+    @include('livewire.credito.partials.pedido-detail', [
+        'p'        => $p,
+        'plan'     => $plan,
+        'aprobado' => false,
+        'editable' => false,
+    ])
+
+    {{-- Registro de Cierre --}}
     @if($cierre)
-    <div style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;padding:16px;margin-bottom:14px;">
-        <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#CBCBCB;margin:0 0 12px;">Registro de Cierre</p>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;font-size:12px;">
-            <div>
-                <span class="ds-form-label">Motivo</span>
-                <span style="font-weight:600;color:#4A4A4A;">{{ $cierre->motivoCierre?->nombre ?? '—' }}</span>
+    <div style="background:#fff; border:1px solid #C4B5FD; border-radius:12px; padding:16px; margin-top:16px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8l1 12a2 2 0 002 2h8a2 2 0 002-2L19 8"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#534AB7; letter-spacing:0.05em; white-space:nowrap;">Registro de Cierre</span>
+            <div style="flex:1; height:1.5px; background:#EDE9FE;"></div>
+        </div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; font-size:12px;">
+            <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px;">
+                <p style="font-size:9px; font-weight:700; color:#AFA9EC; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 2px;">Motivo</p>
+                <span style="font-weight:600; color:#3C3489;">{{ $cierre->motivoCierre?->nombre ?? '—' }}</span>
                 @if($cierre->motivoCierre?->afecta_mora)
-                <span class="ds-badge ds-badge-danger" style="margin-left:4px;">Afecta indicadores</span>
+                <span style="display:inline-block; margin-left:4px; background:#FEF2F2; color:#B91C1C; font-size:9px; font-weight:700; border-radius:4px; padding:1px 6px;">Afecta indicadores</span>
                 @endif
             </div>
-            <div>
-                <span class="ds-form-label">Cerrado por</span>
-                <span style="font-weight:600;color:#4A4A4A;">{{ $cierre->cerradoPor?->name ?? '—' }}</span>
-            </div>
-            <div>
-                <span class="ds-form-label">Fecha de cierre</span>
-                <span style="font-weight:600;color:#4A4A4A;">{{ $cierre->created_at->format('d/m/Y H:i') }}</span>
+            <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px;">
+                <p style="font-size:9px; font-weight:700; color:#AFA9EC; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 2px;">Cerrado por</p>
+                <span style="font-weight:600; color:#3C3489;">{{ $cierre->cerradoPor?->name ?? '—' }}</span>
+                <span style="display:block; font-size:11px; color:#AFA9EC;">{{ $cierre->created_at->format('d/m/Y H:i') }}</span>
             </div>
             @if($cierre->observacion)
-            <div style="grid-column:span 2;">
-                <span class="ds-form-label">Observación</span>
-                <span style="color:#4A4A4A;">{{ $cierre->observacion }}</span>
+            <div style="grid-column:span 2; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 10px;">
+                <p style="font-size:9px; font-weight:700; color:#AFA9EC; text-transform:uppercase; letter-spacing:0.05em; margin:0 0 2px;">Observación</p>
+                <span style="color:#3C3489;">{{ $cierre->observacion }}</span>
             </div>
             @endif
         </div>
@@ -162,48 +163,47 @@
         $montoPagado    = $cuotasReg->where('estado', 'pagado')->sum('monto');
         $montoPendiente = $cuotasReg->whereIn('estado', ['pendiente', 'vencido'])->sum('monto');
     @endphp
-    <div style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;padding:16px;margin-bottom:14px;">
-        <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#CBCBCB;margin:0 0 12px;">Plan de Pagos — V{{ $plan->version }}</p>
-        <div class="ds-stats-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:0;">
-            <div class="ds-stat-card" style="flex-direction:column;align-items:center;text-align:center;padding:12px 8px;gap:4px;">
-                <div class="ds-stat-value" style="color:#10B981;">{{ $pagadas }}</div>
-                <div class="ds-stat-label">Pagadas</div>
-            </div>
-            <div class="ds-stat-card" style="flex-direction:column;align-items:center;text-align:center;padding:12px 8px;gap:4px;">
-                <div class="ds-stat-value" style="color:#DC2626;">{{ $pendientes }}</div>
-                <div class="ds-stat-label">Pendientes</div>
-            </div>
-            <div class="ds-stat-card" style="flex-direction:column;align-items:center;text-align:center;padding:12px 8px;gap:4px;">
-                <div class="ds-stat-value" style="font-size:16px;color:#10B981;">{{ number_format($montoPagado, 2) }}</div>
-                <div class="ds-stat-label">Bs. Cobrado</div>
-            </div>
-            <div class="ds-stat-card" style="flex-direction:column;align-items:center;text-align:center;padding:12px 8px;gap:4px;">
-                <div class="ds-stat-value" style="font-size:16px;color:#DC2626;">{{ number_format($montoPendiente, 2) }}</div>
-                <div class="ds-stat-label">Bs. Pendiente</div>
-            </div>
+    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin-top:12px;">
+        <div style="background:#F0FDF4; border:1px solid #86EFAC; border-radius:10px; padding:12px; text-align:center;">
+            <p style="font-size:9px; font-weight:700; color:#15803D; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 4px;">Cuotas Pagadas</p>
+            <span style="font-size:22px; font-weight:900; color:#15803D;">{{ $pagadas }}</span>
+            <p style="font-size:10px; color:#15803D; margin:2px 0 0;">Bs. {{ number_format($montoPagado, 2) }}</p>
+        </div>
+        <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:10px; padding:12px; text-align:center;">
+            <p style="font-size:9px; font-weight:700; color:#B91C1C; text-transform:uppercase; letter-spacing:0.06em; margin:0 0 4px;">Cuotas Pendientes</p>
+            <span style="font-size:22px; font-weight:900; color:#B91C1C;">{{ $pendientes }}</span>
+            <p style="font-size:10px; color:#B91C1C; margin:2px 0 0;">Bs. {{ number_format($montoPendiente, 2) }}</p>
         </div>
     </div>
     @endif
 
-    {{-- Acción: revertir --}}
+    {{-- Botones --}}
     @if(!$confirmandoReversion)
-    <div style="margin-top:8px;">
-        <button wire:click="$set('confirmandoReversion', true)" class="ds-btn ds-btn-warning ds-btn-sm">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/>
-            </svg>
+    <div class="cm-act-wrap">
+        <button wire:click="backToList"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:14px; background:#F4F4F4; color:#6D8196; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <span style="font-size:17px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span> Regresar
+        </button>
+        <button wire:click="$set('confirmandoReversion', true)"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#FEF3C7; color:#854F0B; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #FCD34D; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
             Revertir Cierre
         </button>
     </div>
     @else
-    <div class="ds-confirm-panel warning">
-        <p class="ds-confirm-panel-title">Motivo de la reversión</p>
+    <div style="background:#FEF3C7; border:1.5px solid #FCD34D; border-radius:12px; padding:16px; margin-top:16px;">
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#854F0B" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span style="font-size:13px; font-weight:700; color:#854F0B;">Motivo de la reversión</span>
+        </div>
         <textarea wire:model="motivoReversion" rows="3" placeholder="Explicá por qué se revierte el cierre..."
-                  style="width:100%;display:block;"></textarea>
-        @error('motivoReversion')<p class="ds-form-error">{{ $message }}</p>@enderror
-        <div class="ds-confirm-panel-actions">
-            <button wire:click="$set('confirmandoReversion', false)" class="ds-btn ds-btn-secondary ds-btn-sm">Cancelar</button>
-            <button wire:click="revertir" class="ds-btn ds-btn-warning ds-btn-sm">Confirmar Reversión</button>
+                  style="width:100%; display:block; background:#fff; border:1px solid #FCD34D; border-radius:8px; padding:10px 12px; font-size:13px; color:#374151; outline:none; box-sizing:border-box; resize:vertical;"></textarea>
+        @error('motivoReversion')<p style="font-size:11px; color:#B91C1C; margin-top:4px;">{{ $message }}</p>@enderror
+        <div style="display:flex; gap:8px; margin-top:12px;">
+            <button wire:click="$set('confirmandoReversion', false)"
+                    style="flex:1; padding:10px; background:#F4F4F4; color:#6D8196; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">Cancelar</button>
+            <button wire:click="revertir"
+                    style="flex:1; padding:10px; background:#854F0B; color:#fff; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">Confirmar Reversión</button>
         </div>
     </div>
     @endif
