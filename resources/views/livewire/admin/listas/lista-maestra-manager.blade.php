@@ -146,15 +146,16 @@
 </div>
 
 {{-- Tabla de productos (desktop) --}}
-<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 1px 4px rgba(0,0,0,.04); overflow:hidden;">
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 1px 4px rgba(0,0,0,.04); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
     {{-- Barra header --}}
-    <div style="padding:10px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F3F4F6;">
+    <div style="padding:10px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Ítems del catálogo</span>
-        <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $products->count() }}</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $products->count() }}</span>
     </div>
-    <div style="overflow-x:auto;">
+    <div style="overflow:auto; flex:1;">
         <table style="width:100%; border-collapse:collapse;">
             <colgroup>
+                <col style="width:44px;">
                 <col style="width:90px;">
                 <col>
                 <col style="width:100px;">
@@ -168,9 +169,10 @@
                 <col style="width:105px;">
                 <col style="width:135px;">
             </colgroup>
-            <thead>
+            <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                     @php $thStyle = 'font-size:11px; font-weight:700; color:#7B6FE8; text-align:center; padding:10px 12px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none;'; @endphp
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
                     <th style="{{ $thStyle }}">Código</th>
                     <th style="{{ $thStyle }} text-align:left;">Producto</th>
                     <th style="{{ $thStyle }}">Precio Base</th>
@@ -205,7 +207,7 @@
                         get final() { return (this.precio + this.monto).toFixed(2); }
                     }"
                     style="background:#F8F7FF; border-left:3px solid #7c3aed;">
-                    <td colspan="12" style="padding:0; background:#F8F7FF; border-left:3px solid #7B6FE8;">
+                    <td colspan="13" style="padding:0; background:#F8F7FF; border-left:3px solid #7B6FE8;">
                         <div style="padding:12px 16px; display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px;">
                             @php $eLabel = 'display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:5px;'; @endphp
 
@@ -324,6 +326,7 @@
                 {{-- QUICK-ADD INLINE --}}
                 <tr wire:key="qa-{{ $p->id }}" style="background:#F0FDFA; border-left:3px solid #0E7490;">
                     @php $tdC = 'padding:8px 10px; text-align:center;'; @endphp
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
                     <td style="{{ $tdC }} font-size:12px; font-family:monospace; color:#6B7280;">{{ $p->code }}</td>
                     <td style="padding:8px 14px; font-size:13px; color:#374151; font-weight:500;">{{ $p->name }}</td>
                     <td style="{{ $tdC }}">
@@ -365,6 +368,7 @@
                 @endphp
                 <tr wire:key="prod-{{ $p->id }}" style="{{ $trStyle }}"
                     @mouseenter="$el.style.background='#FAFAFA'" @mouseleave="$el.style.background=''">
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
                     <td style="{{ $tdBase }} font-family:monospace; font-size:12px; color:#6B7280;">{{ $p->code }}</td>
                     <td style="{{ $tdBase }} text-align:left; padding-left:14px; overflow:hidden; text-overflow:ellipsis; max-width:0;">{{ $p->name }}</td>
                     <td style="{{ $tdBase }}">
