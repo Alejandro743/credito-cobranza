@@ -5,6 +5,7 @@ namespace App\Livewire\Credito;
 use App\Models\MotivoCierre;
 use App\Models\PedidoCierre;
 use App\Models\Pedido;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -28,8 +29,22 @@ class AprobadoManager extends Component
     public bool   $confirmandoReversion = false;
     public string $motivoReversion      = '';
 
+    public string $sortBy  = '';
+    public string $sortDir = 'asc';
+
     public function updatingSearch(): void      { $this->resetPage(); }
     public function updatingFiltroEstado(): void { $this->resetPage(); }
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     public function ver(int $id): void
     {
@@ -156,7 +171,11 @@ class AprobadoManager extends Component
             ->when($this->search, fn($q) => $q->whereHas('cliente.usuario', fn($c) =>
                 $c->where('name', 'like', "%{$this->search}%")
             )->orWhere('pedidos.numero', 'like', "%{$this->search}%"))
-            ->orderByDesc('pedidos.updated_at')
+            ->when($this->sortBy === 'cliente',  fn($q) => $q->orderBy(DB::table('users')->join('clientes','clientes.usuario_id','=','users.id')->whereColumn('clientes.id','pedidos.cliente_id')->select('users.name'), $this->sortDir))
+            ->when($this->sortBy === 'vendedor', fn($q) => $q->orderBy(DB::table('users')->join('vendedores','vendedores.user_id','=','users.id')->whereColumn('vendedores.id','pedidos.vendedor_id')->select('users.name'), $this->sortDir))
+            ->when($this->sortBy === 'ci',       fn($q) => $q->orderBy(DB::table('clientes')->whereColumn('clientes.id','pedidos.cliente_id')->select('ci'), $this->sortDir))
+            ->when(in_array($this->sortBy, ['numero','fecha','total','estado']), fn($q) => $q->orderBy(match($this->sortBy) { 'numero'=>'pedidos.numero', 'fecha'=>'pedidos.updated_at', 'total'=>'pedidos.total_pagar', 'estado'=>'pedidos.estado' }, $this->sortDir))
+            ->when(!$this->sortBy, fn($q) => $q->orderByDesc('pedidos.updated_at'))
             ->paginate(15);
 
         $pedidoDetalle = null;

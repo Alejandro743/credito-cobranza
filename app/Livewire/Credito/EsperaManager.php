@@ -3,6 +3,7 @@
 namespace App\Livewire\Credito;
 
 use App\Models\Pedido;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -10,11 +11,24 @@ class EsperaManager extends Component
 {
     use WithPagination;
 
-    public string $mode    = 'list';
-    public string $search  = '';
+    public string $mode      = 'list';
+    public string $search    = '';
     public ?int   $viewingId = null;
+    public string $sortBy    = '';
+    public string $sortDir   = 'asc';
 
     public function updatingSearch(): void { $this->resetPage(); }
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     public function ver(int $id): void
     {
@@ -46,7 +60,11 @@ class EsperaManager extends Component
             ->when($this->search, fn($q) => $q->whereHas('cliente.usuario', fn($c) =>
                 $c->where('name', 'like', "%{$this->search}%")
             )->orWhere('numero', 'like', "%{$this->search}%"))
-            ->orderByDesc('created_at')
+            ->when($this->sortBy === 'cliente',  fn($q) => $q->orderBy(DB::table('users')->join('clientes','clientes.usuario_id','=','users.id')->whereColumn('clientes.id','pedidos.cliente_id')->select('users.name'), $this->sortDir))
+            ->when($this->sortBy === 'vendedor', fn($q) => $q->orderBy(DB::table('users')->join('vendedores','vendedores.user_id','=','users.id')->whereColumn('vendedores.id','pedidos.vendedor_id')->select('users.name'), $this->sortDir))
+            ->when($this->sortBy === 'ci',       fn($q) => $q->orderBy(DB::table('clientes')->whereColumn('clientes.id','pedidos.cliente_id')->select('ci'), $this->sortDir))
+            ->when(in_array($this->sortBy, ['numero','fecha','total']), fn($q) => $q->orderBy(match($this->sortBy) { 'numero'=>'pedidos.numero', 'fecha'=>'pedidos.created_at', 'total'=>'pedidos.total_pagar' }, $this->sortDir))
+            ->when(!$this->sortBy, fn($q) => $q->orderByDesc('created_at'))
             ->paginate(15);
 
         $pedidoDetalle = null;
