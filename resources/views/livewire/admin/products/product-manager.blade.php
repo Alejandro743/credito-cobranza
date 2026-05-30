@@ -125,7 +125,7 @@
 @endif
 
 {{-- ══ DESKTOP: Tabla ══ --}}
-<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     {{-- Barra --}}
     <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
@@ -152,58 +152,50 @@
         </div>
     </div>
 
-    <div style="overflow-x:auto;">
+    <div style="overflow:auto; flex:1;">
         @if ($products->isEmpty())
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay productos registrados.</p>
         @else
+        @php
+        $sortCols = ['Código'=>'code','Nombre'=>'name','Unidad'=>'unidad_id','Categoría'=>'categoria_id','Estado'=>'active'];
+        @endphp
         <table style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <colgroup>
+                <col style="width:44px;">
                 <col style="width:60px;">
                 <col style="width:110px;">
                 <col style="width:200px;">
                 <col style="width:110px;">
                 <col style="width:140px;">
                 <col style="width:90px;">
-                <col style="width:150px;">
+                <col style="width:130px;">
             </colgroup>
-            <thead>
+            <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
                     <th style="padding:10px 12px; text-align:center;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Img</span>
                     </th>
-                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:80px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Código</span>
+                    @foreach($sortCols as $label => $key)
+                    @php $isActive = $sortBy === $key; @endphp
+                    <th wire:click="toggleSort('{{ $key }}')"
+                        style="padding:10px 14px; text-align:{{ in_array($label, ['Estado']) ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:70px; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                            {{ $label }}
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        @if($label !== 'Estado')
                         <div x-data="colResize()" @mousedown="start($event)"
                              style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
                              @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                        @endif
                     </th>
-                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:100px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Nombre</span>
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:70px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Unidad</span>
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:90px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Categoría</span>
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-                    <th style="padding:10px 16px; text-align:center; position:relative; user-select:none; overflow:hidden; min-width:70px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</span>
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-                    <th style="padding:10px 16px; text-align:center;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</span>
-                    </th>
+                    @endforeach
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -212,6 +204,7 @@
                 {{-- Fila edición inline --}}
                 @if ($editingId === $p->id)
                 <tr wire:key="edit-{{ $p->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $products->firstItem() + $loop->index }}</td>
                     <td style="padding:7px 12px; text-align:center;">
                         @if($p->foto_url)
                         <img src="{{ $p->foto_url }}" alt="{{ $p->name }}"
@@ -275,9 +268,10 @@
                 {{-- Fila normal --}}
                 @else
                 <tr wire:key="p-{{ $p->id }}"
-                    style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
+                    style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
 
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $products->firstItem() + $loop->index }}</td>
                     <td style="padding:8px 12px; text-align:center;">
                         @if($p->foto_url)
                         <img src="{{ $p->foto_url }}" alt="{{ $p->name }}"
@@ -289,24 +283,24 @@
                         </div>
                     </td>
 
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->code }}</span>
+                    <td style="padding:10px 14px; overflow:hidden;">
+                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->code }}</span>
                     </td>
 
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->name }}</span>
+                    <td style="padding:10px 14px; overflow:hidden;">
+                        <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($p->name)) }}</span>
                     </td>
 
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->unidad?->abreviatura ?? $p->unidad?->name ?? '—' }}</span>
+                    <td style="padding:10px 14px; overflow:hidden;">
+                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->unidad?->abreviatura ?? $p->unidad?->name ?? '—' }}</span>
                     </td>
 
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:13px; color:#374151; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->categoria?->name ?? '—' }}</span>
+                    <td style="padding:10px 14px; overflow:hidden;">
+                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($p->categoria?->name ?? '—')) }}</span>
                     </td>
 
-                    <td style="padding:10px 16px; text-align:center;">
-                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; white-space:nowrap;
+                    <td style="padding:10px 14px; text-align:center;">
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
                                      background:{{ $p->active ? '#D1FAE5' : '#F3F4F6' }};
                                      color:{{ $p->active ? '#059669' : '#9CA3AF' }};">
                             {{ $p->active ? 'Activo' : 'Inactivo' }}
