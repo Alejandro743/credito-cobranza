@@ -167,72 +167,147 @@
     </button>
 </div>
 
-{{-- Tabla --}}
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="overflow-x-auto">
-    <table class="w-full text-sm">
-        <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-            <tr>
-                <th class="text-left px-4 py-3 font-semibold">Vendedor</th>
-                <th class="text-left px-4 py-3 font-semibold hidden sm:table-cell">Grupo</th>
-                <th class="text-left px-4 py-3 font-semibold hidden md:table-cell">Usuario</th>
-                <th class="text-center px-4 py-3 font-semibold">Estado</th>
-                <th class="text-right px-4 py-3 font-semibold">Acciones</th>
+{{-- Tabla desktop --}}
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
+
+    <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:13px; font-weight:700; color:#111827;">Vendedores registrados</span>
+            <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $vendedores->total() }}</span>
+        </div>
+        <button type="button" wire:click="$refresh"
+                style="height:30px; padding:0 10px; border:1px solid #E5E7EB; border-radius:7px; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500; box-sizing:border-box;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Actualizar
+        </button>
+    </div>
+
+    <div style="overflow:auto; flex:1;">
+    @php $sortCols = ['Vendedor'=>'apellido','Grupo'=>'grupo_id','Usuario'=>'user_id','Estado'=>'activo']; @endphp
+    <table style="table-layout:fixed; width:100%; min-width:600px; border-collapse:collapse; font-size:13px;">
+        <colgroup>
+            <col style="width:44px;">
+            <col style="width:240px;">
+            <col style="width:150px;">
+            <col style="width:160px;">
+            <col style="width:90px;">
+            <col style="width:90px;">
+        </colgroup>
+        <thead style="position:sticky; top:0; z-index:10;">
+            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                @foreach($sortCols as $label => $key)
+                @php $isActive = $sortBy === $key; @endphp
+                <th wire:click="toggleSort('{{ $key }}')"
+                    style="padding:10px 14px; text-align:{{ $label==='Estado' ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:70px; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                    <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                        {{ $label }}
+                        @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                        @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                        @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                        @endif
+                    </span>
+                </th>
+                @endforeach
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
             </tr>
         </thead>
-        <tbody class="divide-y divide-gray-50">
+        <tbody>
             @forelse ($vendedores as $v)
-            <tr class="hover:bg-melocoton-50/20 transition-colors" wire:key="v-{{ $v->id }}">
-                <td data-label="Vendedor" class="px-4 py-3.5">
-                    <div class="flex items-center gap-2.5">
-                        <div class="w-8 h-8 rounded-full bg-melocoton-100 flex items-center justify-center text-melocoton-700 font-bold text-xs flex-shrink-0">
-                            {{ strtoupper(substr($v->nombre, 0, 1) . substr($v->apellido, 0, 1)) }}
+            <tr wire:key="v-{{ $v->id }}"
+                style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
+                @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+
+                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $vendedores->firstItem() + $loop->index }}</td>
+
+                <td style="padding:10px 14px; overflow:hidden;">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <span style="font-size:12px; font-weight:700; color:#7B6FE8;">{{ strtoupper(substr($v->nombre, 0, 1) . substr($v->apellido, 0, 1)) }}</span>
                         </div>
-                        <div>
-                            <p class="font-medium text-gray-800">{{ $v->nombre_completo }}</p>
-                            @if ($v->email) <p class="text-xs text-gray-400">{{ $v->email }}</p> @endif
+                        <div style="min-width:0;">
+                            <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($v->nombre_completo)) }}</span>
+                            @if($v->email) <span style="font-size:12px; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $v->email }}</span> @endif
                         </div>
                     </div>
                 </td>
-                <td data-label="Grupo" class="px-4 py-3.5 hidden sm:table-cell">
-                    @if ($v->grupo)
-                        <span class="inline-flex items-center px-2.5 py-1 rounded-lg bg-melocoton-50 text-melocoton-700 text-xs font-medium">
-                            {{ $v->grupo->name }}
-                        </span>
+
+                <td style="padding:10px 14px; overflow:hidden;">
+                    @if($v->grupo)
+                    <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($v->grupo->name)) }}</span>
                     @else
-                        <span class="text-gray-300 text-xs">—</span>
+                    <span style="font-size:13px; color:#D1D5DB;">—</span>
                     @endif
                 </td>
-                <td data-label="Usuario" class="px-4 py-3.5 hidden md:table-cell text-xs text-gray-500">
-                    {{ $v->user?->name ?? '—' }}
+
+                <td style="padding:10px 14px; overflow:hidden;">
+                    <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $v->user?->name ? ucwords(strtolower($v->user->name)) : '—' }}</span>
                 </td>
-                <td data-label="Estado" class="px-4 py-3.5 text-center">
-                    <button wire:click="toggleActivo({{ $v->id }})"
-                            class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold transition-colors
-                                   {{ $v->activo ? 'bg-mint-100 text-mint-700 hover:bg-mint-200' : 'bg-red-100 text-red-600 hover:bg-red-200' }}">
+
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
+                                 background:{{ $v->activo ? '#D1FAE5' : '#F3F4F6' }};
+                                 color:{{ $v->activo ? '#059669' : '#9CA3AF' }};">
                         {{ $v->activo ? 'Activo' : 'Inactivo' }}
-                    </button>
+                    </span>
                 </td>
-                <td data-label="" class="px-4 py-3.5 text-right">
-                    <button wire:click="edit({{ $v->id }})"
-                            class="p-1.5 rounded-lg hover:bg-celeste-50 text-celeste-500 transition-colors">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    </button>
+
+                <td style="padding:10px 16px; text-align:center;">
+                    <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
+                        <button wire:click="edit({{ $v->id }})" title="Editar"
+                                style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </button>
+                    </div>
                 </td>
             </tr>
             @empty
             <tr>
-                <td colspan="5" class="px-4 py-12 text-center text-gray-400">
-                    <svg class="w-10 h-10 mx-auto mb-3 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/></svg>
-                    No hay vendedores registrados
-                </td>
+                <td colspan="6" style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay vendedores registrados.</td>
             </tr>
             @endforelse
         </tbody>
     </table>
     </div>
+
     @if ($vendedores->hasPages())
-    <div class="px-4 py-3 border-t border-gray-100">{{ $vendedores->links() }}</div>
+    <div style="padding:10px 18px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $vendedores->links() }}</div>
+    @endif
+</div>
+
+{{-- Mobile cards (unchanged) --}}
+<div class="sm:hidden">
+    @forelse ($vendedores as $v)
+    <div wire:key="mv-{{ $v->id }}" class="bg-white rounded-2xl border border-gray-100 mb-3 shadow-sm overflow-hidden">
+        <div style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #F3F4F6;">
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8;">{{ strtoupper(substr($v->nombre, 0, 1) . substr($v->apellido, 0, 1)) }}</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+                <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $v->nombre_completo }}</p>
+                @if($v->email)<p style="font-size:12px; color:#6B7280; margin:2px 0 0;">{{ $v->email }}</p>@endif
+            </div>
+            <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0;
+                         background:{{ $v->activo ? '#D1FAE5' : '#F3F4F6' }};
+                         color:{{ $v->activo ? '#059669' : '#9CA3AF' }};">
+                {{ $v->activo ? 'Activo' : 'Inactivo' }}
+            </span>
+        </div>
+        <div style="padding:10px 14px; display:flex; gap:7px;">
+            <button wire:click="edit({{ $v->id }})"
+                    style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Editar
+            </button>
+        </div>
+    </div>
+    @empty
+    <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">No hay vendedores registrados.</p>
+    @endforelse
+    @if ($vendedores->hasPages())
+    <div style="padding-top:8px;">{{ $vendedores->links() }}</div>
     @endif
 </div>
 @endif

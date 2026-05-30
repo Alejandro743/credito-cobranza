@@ -18,8 +18,21 @@ class VendedorManager extends Component
     public string $search       = '';
     public string $filtroGrupo  = '';
     public string $filtroActivo = '';
+    public string $sortBy       = 'apellido';
+    public string $sortDir      = 'asc';
 
     public string $mode = 'list';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     public bool   $editing   = false;
     public ?int   $editingId = null;
@@ -193,7 +206,7 @@ class VendedorManager extends Component
             ))
             ->when($this->filtroGrupo,  fn($q) => $q->where('grupo_id', $this->filtroGrupo))
             ->when($this->filtroActivo !== '', fn($q) => $q->where('activo', $this->filtroActivo === '1'))
-            ->orderBy('apellido')->orderBy('nombre')
+            ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(10);
 
         $grupos = Group::where('active', true)
