@@ -354,40 +354,42 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                 <col style="width:110px;">  {{-- Acciones --}}
             </colgroup>
             @php
-            $sortableMap = ['ID_LN'=>'id_ln','CI'=>'ci','Apellido'=>'apellido','Teléfono'=>'telefono','Ciudad'=>'ciudad','Estado'=>'active'];
-            $sortIndex   = collect($sorts)->pluck('dir','col');
-            $sortOrder   = collect($sorts)->pluck('col')->flip();
+            $sortableMap = [
+                'ID_LN'    => 'id_ln',
+                'CI'       => 'ci',
+                'Nombre'   => 'nombre',
+                'Apellido' => 'apellido',
+                'Teléfono' => 'telefono',
+                'Ciudad'   => 'ciudad',
+                'Vendedor' => 'vendedor',
+                'Estado'   => 'active',
+            ];
             @endphp
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">
-                        @if(count($sorts))
-                        <button wire:click="clearSorts" title="Quitar ordenación"
-                                style="background:none;border:none;cursor:pointer;color:#C4B5FD;font-size:10px;padding:0;line-height:1;"
-                                @mouseenter="$el.style.color='#DC2626'" @mouseleave="$el.style.color='#C4B5FD'">✕</button>
-                        @else
-                        #
-                        @endif
-                    </th>
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
                     @foreach(['ID_LN','CI','Nombre','Apellido','Teléfono','Ciudad','Vendedor','Estado','Acciones'] as $col)
                     @php
-                        $isSortable = isset($sortableMap[$col]);
-                        $dbCol      = $sortableMap[$col] ?? null;
-                        $activeDir  = $isSortable ? ($sortIndex[$dbCol] ?? null) : null;
-                        $priority   = $isSortable && $dbCol ? ($sortOrder[$dbCol] ?? null) : null;
+                        $isSortable = isset($sortableMap[$col]) && $col !== 'Acciones';
+                        $key        = $sortableMap[$col] ?? null;
+                        $isActive   = $isSortable && $sortBy === $key;
                     @endphp
-                    <th wire:click="{{ $isSortable ? 'toggleSort(\''.$col.'\')' : '' }}"
-                        style="padding:10px 16px; text-align:{{ $col === 'Acciones' ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:60px; {{ $isSortable ? 'cursor:pointer;' : '' }}{{ $activeDir ? 'background:#F0EEFE;' : '' }}"
-                        @if($isSortable) @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $activeDir ? '#F0EEFE' : '' }}'" @endif>
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:4px;">
+                    <th wire:click="{{ $isSortable ? 'toggleSort(\''.$key.'\')' : '' }}"
+                        style="padding:10px 16px; text-align:{{ $col === 'Acciones' ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:60px;
+                               {{ $isSortable ? 'cursor:pointer;' : '' }}
+                               {{ $isActive   ? 'background:#EDE9FE;' : '' }}"
+                        @if($isSortable)
+                            @mouseenter="$el.style.background='#EDE9FE'"
+                            @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'"
+                        @endif>
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
                             {{ $col }}
-                            @if($activeDir)
-                                <span style="font-size:10px; line-height:1;">{{ $activeDir === 'asc' ? '↑' : '↓' }}</span>
-                                @if(count($sorts) > 1)
-                                <span style="font-size:9px; background:#EDE9FE; color:#7B6FE8; border-radius:4px; padding:1px 4px; font-weight:800;">{{ $priority + 1 }}</span>
-                                @endif
+                            @if($isActive && $sortDir === 'asc')
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive && $sortDir === 'desc')
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
                             @elseif($isSortable)
-                                <span style="font-size:10px; line-height:1; color:#D1D5DB;">⇅</span>
+                                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#D1D5DB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
                         @if($col !== 'Acciones')

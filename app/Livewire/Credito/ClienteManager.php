@@ -24,39 +24,18 @@ class ClienteManager extends Component
     public string $filterCiudad = '';
     public string $filterActivo = '';
 
-    // ── Ordenación multi-columna ──────────────────────────────────────────────
-    public array $sorts = [];  // [['col'=>'ciudad','dir'=>'asc'], ...]
-
-    private array $sortableMap = [
-        'ID_LN'    => 'id_ln',
-        'CI'       => 'ci',
-        'Apellido' => 'apellido',
-        'Teléfono' => 'telefono',
-        'Ciudad'   => 'ciudad',
-        'Estado'   => 'active',
-    ];
+    // ── Ordenación ────────────────────────────────────────────────────────────
+    public string $sortBy  = '';
+    public string $sortDir = 'asc';
 
     public function toggleSort(string $col): void
     {
-        if (!isset($this->sortableMap[$col])) return;
-
-        $field = $this->sortableMap[$col];
-        $idx   = collect($this->sorts)->search(fn($s) => $s['col'] === $field);
-
-        if ($idx === false) {
-            $this->sorts[] = ['col' => $field, 'dir' => 'asc'];
-        } elseif ($this->sorts[$idx]['dir'] === 'asc') {
-            $this->sorts[$idx]['dir'] = 'desc';
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
         } else {
-            array_splice($this->sorts, $idx, 1);
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
         }
-
-        $this->resetPage();
-    }
-
-    public function clearSorts(): void
-    {
-        $this->sorts = [];
         $this->resetPage();
     }
 
@@ -269,11 +248,10 @@ class ClienteManager extends Component
                   ->orWhereHas('usuario', fn($u) => $u->where('name', 'like', "%{$this->search}%")))
             ->when($this->filterCiudad, fn($q) => $q->where('ciudad', $this->filterCiudad))
             ->when($this->filterActivo !== '', fn($q) => $q->where('active', (bool) $this->filterActivo))
-            ->when($this->sorts, function ($q) {
-                foreach ($this->sorts as $s) {
-                    $q->orderBy($s['col'], $s['dir']);
-                }
-            }, fn($q) => $q->orderByDesc('active')->orderBy('apellido'))
+            ->when($this->sortBy === 'nombre',   fn($q) => $q->orderBy(User::select('name')->whereColumn('id', 'clientes.usuario_id'), $this->sortDir))
+            ->when($this->sortBy === 'vendedor',  fn($q) => $q->orderBy(User::select('name')->whereColumn('id', 'clientes.vendedor_id'), $this->sortDir))
+            ->when($this->sortBy && !in_array($this->sortBy, ['nombre','vendedor']), fn($q) => $q->orderBy($this->sortBy, $this->sortDir))
+            ->when(!$this->sortBy, fn($q) => $q->orderByDesc('active')->orderBy('apellido'))
             ->paginate(20);
 
         $ciudades  = Cliente::select('ciudad')->distinct()->orderBy('ciudad')->pluck('ciudad');
