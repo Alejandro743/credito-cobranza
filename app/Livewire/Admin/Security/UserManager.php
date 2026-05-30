@@ -19,6 +19,19 @@ class UserManager extends Component
     public string $filterTipo   = '';
     public string $filterRole   = '';
     public string $filterStatus = '';
+    public string $sortBy       = 'name';
+    public string $sortDir      = 'asc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     // ── Inline add ────────────────────────────────────────────────────────────
     public bool   $showAddForm = false;
@@ -210,7 +223,7 @@ class UserManager extends Component
             ->when($this->filterTipo,   fn($q) => $q->where('tipo', $this->filterTipo))
             ->when($this->filterRole,   fn($q) => $q->whereHas('roles', fn($r) => $r->where('name', $this->filterRole)))
             ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
-            ->orderBy('name')
+            ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(20);
 
         $roles = Role::orderBy('name')->get();

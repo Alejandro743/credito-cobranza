@@ -315,7 +315,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
 </div>
 
 {{-- ══ DESKTOP: Tabla ══ --}}
-<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     {{-- Barra --}}
     <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
@@ -342,54 +342,53 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
         </div>
     </div>
 
-    <div style="overflow-x:auto;">
+    <div style="overflow:auto; flex:1;">
         @if ($users->isEmpty())
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay usuarios registrados.</p>
         @else
+        @php $sortCols = ['Usuario'=>'name','Email'=>'email','Tipo'=>'tipo','Rol'=>'rol','Estado'=>'active']; @endphp
         <table class="um-table" style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <colgroup>
-                <col style="width:180px;">  {{-- nombre --}}
-                <col style="width:180px;">  {{-- email --}}
-                <col style="width:110px;">  {{-- tipo --}}
-                <col style="width:100px;">  {{-- rol --}}
-                <col style="width:95px;">   {{-- estado --}}
-                <col style="width:95px;">   {{-- acciones --}}
+                <col style="width:44px;">
+                <col style="width:180px;">
+                <col style="width:180px;">
+                <col style="width:110px;">
+                <col style="width:100px;">
+                <col style="width:95px;">
+                <col style="width:95px;">
             </colgroup>
-            <thead>
+            <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:100px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Nombre Completo</span>
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                    @foreach($sortCols as $label => $key)
+                    @php $isActive = $sortBy === $key; $canSort = $key !== 'rol'; @endphp
+                    @if($canSort)
+                    <th wire:click="toggleSort('{{ $key }}')"
+                        style="padding:10px 14px; text-align:{{ $label==='Estado' ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:70px; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                            {{ $label }}
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        @if(!in_array($label, ['Estado']))
+                        <div x-data="colResize()" @mousedown="start($event)"
+                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                        @endif
+                    </th>
+                    @else
+                    <th style="padding:10px 14px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:70px;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">{{ $label }}</span>
                         <div x-data="colResize()" @mousedown="start($event)"
                              style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
                              @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
                     </th>
-                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:100px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Usuario</span>
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:70px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Tipo</span>
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:70px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Rol</span>
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:70px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</span>
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-                    <th style="padding:10px 16px; text-align:center;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</span>
-                    </th>
+                    @endif
+                    @endforeach
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -399,6 +398,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                 {{-- Fila edición inline --}}
                 @if ($editingId === $user->id)
                 <tr wire:key="edit-{{ $user->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $users->firstItem() + $loop->index }}</td>
                     <td style="padding:7px 10px; text-align:left;">
                         <input wire:model="editName" type="text" placeholder="Nombre completo"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
@@ -454,24 +454,26 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
 
-                    <td style="padding:10px 16px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $user->name }}</span>
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $users->firstItem() + $loop->index }}</td>
+
+                    <td style="padding:10px 14px; overflow:hidden; text-align:left;">
+                        <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($user->name)) }}</span>
                     </td>
 
-                    <td style="padding:10px 16px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $user->email }}</span>
+                    <td style="padding:10px 14px; overflow:hidden; text-align:left;">
+                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $user->email }}</span>
                     </td>
 
-                    <td style="padding:10px 16px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucfirst($user->tipo ?? 'administrativo') }}</span>
+                    <td style="padding:10px 14px; overflow:hidden; text-align:left;">
+                        <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucfirst($user->tipo ?? 'administrativo') }}</span>
                     </td>
 
-                    <td style="padding:10px 16px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; text-transform:capitalize;">{{ $roleName }}</span>
+                    <td style="padding:10px 14px; overflow:hidden; text-align:left;">
+                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; text-transform:capitalize;">{{ $roleName }}</span>
                     </td>
 
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; white-space:nowrap;
+                    <td style="padding:10px 14px; text-align:center;">
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
                                      background:{{ $user->active ? '#D1FAE5' : '#F3F4F6' }};
                                      color:{{ $user->active ? '#059669' : '#9CA3AF' }};">
                             {{ $user->active ? 'Activo' : 'Inactivo' }}
@@ -506,7 +508,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
     </div>
 
     @if ($users->hasPages())
-    <div style="padding:10px 18px; border-top:1px solid #F3F4F6;">{{ $users->links() }}</div>
+    <div style="padding:10px 18px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $users->links() }}</div>
     @endif
 </div>
 
