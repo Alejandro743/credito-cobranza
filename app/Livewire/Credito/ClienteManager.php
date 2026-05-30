@@ -20,9 +20,45 @@ class ClienteManager extends Component
     use WithPagination, HasModuleColor;
 
     // ── Filtros ───────────────────────────────────────────────────────────────
-    public string $search      = '';
+    public string $search       = '';
     public string $filterCiudad = '';
     public string $filterActivo = '';
+
+    // ── Ordenación multi-columna ──────────────────────────────────────────────
+    public array $sorts = [];  // [['col'=>'ciudad','dir'=>'asc'], ...]
+
+    private array $sortableMap = [
+        'ID_LN'    => 'id_ln',
+        'CI'       => 'ci',
+        'Apellido' => 'apellido',
+        'Teléfono' => 'telefono',
+        'Ciudad'   => 'ciudad',
+        'Estado'   => 'active',
+    ];
+
+    public function toggleSort(string $col): void
+    {
+        if (!isset($this->sortableMap[$col])) return;
+
+        $field = $this->sortableMap[$col];
+        $idx   = collect($this->sorts)->search(fn($s) => $s['col'] === $field);
+
+        if ($idx === false) {
+            $this->sorts[] = ['col' => $field, 'dir' => 'asc'];
+        } elseif ($this->sorts[$idx]['dir'] === 'asc') {
+            $this->sorts[$idx]['dir'] = 'desc';
+        } else {
+            array_splice($this->sorts, $idx, 1);
+        }
+
+        $this->resetPage();
+    }
+
+    public function clearSorts(): void
+    {
+        $this->sorts = [];
+        $this->resetPage();
+    }
 
     // ── Inline add ────────────────────────────────────────────────────────────
     public bool   $showAddForm   = false;
@@ -233,8 +269,11 @@ class ClienteManager extends Component
                   ->orWhereHas('usuario', fn($u) => $u->where('name', 'like', "%{$this->search}%")))
             ->when($this->filterCiudad, fn($q) => $q->where('ciudad', $this->filterCiudad))
             ->when($this->filterActivo !== '', fn($q) => $q->where('active', (bool) $this->filterActivo))
-            ->orderByDesc('active')
-            ->orderBy('apellido')
+            ->when($this->sorts, function ($q) {
+                foreach ($this->sorts as $s) {
+                    $q->orderBy($s['col'], $s['dir']);
+                }
+            }, fn($q) => $q->orderByDesc('active')->orderBy('apellido'))
             ->paginate(20);
 
         $ciudades  = Cliente::select('ciudad')->distinct()->orderBy('ciudad')->pluck('ciudad');
