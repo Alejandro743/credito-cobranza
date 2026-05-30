@@ -1201,10 +1201,10 @@
 
                     <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $maestras->firstItem() + $loop->index }}</td>
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->code ?? '—' }}</span>
+                        <span style="font-size:12px; font-family:monospace; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->code ?? '—' }}</span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($m->name)) }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($m->name)) }}</span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden;">
                         <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle?->code ?? '—' }}</span>
