@@ -18,6 +18,20 @@ class ListaDerivadaManager extends Component
     public string $mode   = 'list';   // list | form | items | grupos
     public string $search = '';
 
+    public string $sortBy  = 'created_at';
+    public string $sortDir = 'desc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
+
     public bool  $editing   = false;
     public ?int  $editingId = null;
     public ?int  $viewingId = null;
@@ -174,9 +188,11 @@ class ListaDerivadaManager extends Component
 
     public function render()
     {
+        $allowed = ['name', 'estado', 'created_at'];
+        $col = in_array($this->sortBy, $allowed) ? $this->sortBy : 'created_at';
         $derivadas = ListaDerivada::with('listaMaestra')
             ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
-            ->orderByDesc('created_at')
+            ->orderBy($col, $this->sortDir)
             ->paginate(15);
 
         $stats = [

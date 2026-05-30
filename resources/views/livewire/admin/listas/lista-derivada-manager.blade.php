@@ -107,48 +107,64 @@
         </div>
     </div>
 
-    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-5 py-3 border-b border-gray-100">
-            <span class="text-sm font-semibold text-gray-700">Productos ({{ $items->count() }})</span>
+    <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 280px);">
+        <div style="padding:10px 18px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:13px; font-weight:700; color:#111827;">Productos</span>
+            <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $items->count() }}</span>
         </div>
         @if ($items->isEmpty())
-            <div class="py-12 text-center text-gray-400 text-sm">Sin productos. Agrega el primero.</div>
+            <div style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">Sin productos. Agrega el primero.</div>
         @else
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm">
-                <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                    <tr>
-                        <th class="px-4 py-3 text-left">Producto</th>
-                        <th class="px-4 py-3 text-right">Precio Base</th>
-                        <th class="px-4 py-3 text-right">Descuento</th>
-                        <th class="px-4 py-3 text-right">Precio Final</th>
-                        <th class="px-4 py-3 text-right">Stock Asignado</th>
-                        <th class="px-4 py-3 text-center">Estado</th>
-                        <th class="px-4 py-3 text-center">Acciones</th>
+        <div style="overflow:auto; flex:1;">
+            <table style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
+                <colgroup>
+                    <col style="width:44px;">
+                    <col style="width:220px;">
+                    <col style="width:110px;">
+                    <col style="width:110px;">
+                    <col style="width:110px;">
+                    <col style="width:120px;">
+                    <col style="width:90px;">
+                    <col style="width:80px;">
+                </colgroup>
+                <thead style="position:sticky; top:0; z-index:10;">
+                    <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                        <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                        <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Producto</th>
+                        <th style="padding:10px 14px; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Precio Base</th>
+                        <th style="padding:10px 14px; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Descuento</th>
+                        <th style="padding:10px 14px; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Precio Final</th>
+                        <th style="padding:10px 14px; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stock Asignado</th>
+                        <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</th>
+                        <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-50">
+                <tbody>
                     @foreach ($items as $item)
-                    <tr class="hover:bg-gray-50 transition-colors {{ !$item->active ? 'opacity-50' : '' }}">
-                        <td data-label="Producto" class="px-4 py-3 font-medium text-gray-800">
-                            {{ $item->maestraItem->product->name ?? '—' }}
+                    <tr wire:key="item-{{ $item->id }}" style="border-bottom:1px solid #F3F4F6; transition:background .1s; {{ !$item->active ? 'opacity:.55;' : '' }}"
+                        @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                        <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
+                        <td style="padding:10px 14px; overflow:hidden;">
+                            <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($item->maestraItem->product->name ?? '—')) }}</span>
                         </td>
-                        <td data-label="Precio Base" class="px-4 py-3 text-right text-gray-600">S/ {{ number_format($item->maestraItem->precio_base ?? 0, 2) }}</td>
-                        <td data-label="Descuento" class="px-4 py-3 text-right text-melocoton-600">S/ {{ number_format($item->descuento, 2) }}</td>
-                        <td data-label="Precio Final" class="px-4 py-3 text-right font-semibold text-mint-700">S/ {{ number_format($item->precio_final, 2) }}</td>
-                        <td data-label="Stock Asig." class="px-4 py-3 text-right text-gray-600">{{ number_format($item->stock_asignado, 2) }}</td>
-                        <td data-label="Estado" class="px-4 py-3 text-center">
+                        <td style="padding:10px 14px; text-align:right; font-size:13px; color:#6B7280; white-space:nowrap;">S/ {{ number_format($item->maestraItem->precio_base ?? 0, 2) }}</td>
+                        <td style="padding:10px 14px; text-align:right; font-size:13px; color:#F59E0B; white-space:nowrap;">S/ {{ number_format($item->descuento, 2) }}</td>
+                        <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:700; color:#059669; white-space:nowrap;">S/ {{ number_format($item->precio_final, 2) }}</td>
+                        <td style="padding:10px 14px; text-align:right; font-size:13px; color:#6B7280; white-space:nowrap;">{{ number_format($item->stock_asignado, 2) }}</td>
+                        <td style="padding:10px 14px; text-align:center;">
                             <button wire:click="toggleItemActive({{ $item->id }})"
-                                    class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium transition-colors
-                                        {{ $item->active ? 'bg-mint-100 text-mint-700 hover:bg-mint-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
+                                    style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; border:none; cursor:pointer; white-space:nowrap;
+                                        background:{{ $item->active ? '#D1FAE5' : '#F3F4F6' }};
+                                        color:{{ $item->active ? '#059669' : '#9CA3AF' }};">
                                 {{ $item->active ? 'Activo' : 'Inactivo' }}
                             </button>
                         </td>
-                        <td data-label="" class="px-4 py-3 text-center">
+                        <td style="padding:10px 14px; text-align:center;">
                             <button wire:click="removeItem({{ $item->id }})"
                                     wire:confirm="¿Eliminar este producto de la lista?"
-                                    class="text-red-400 hover:text-red-600 transition-colors p-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #FEE2E2; background:#FFF1F1; color:#EF4444; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#FEE2E2'" @mouseleave="$el.style.background='#FFF1F1'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                             </button>
                         </td>
                     </tr>
@@ -231,46 +247,82 @@
     </button>
 </div>
 
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 220px);">
     @if ($derivadas->isEmpty())
-        <div class="py-16 text-center text-gray-400 text-sm">No hay listas derivadas.</div>
+        <div style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay listas derivadas.</div>
     @else
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                <tr>
-                    <th class="px-5 py-3 text-left">Nombre</th>
-                    <th class="px-5 py-3 text-left">Lista Maestra</th>
-                    <th class="px-5 py-3 text-center">Estado</th>
-                    <th class="px-5 py-3 text-center">Creada</th>
-                    <th class="px-5 py-3 text-center">Acciones</th>
+    @php
+    $sortColsDerivadas = ['Nombre'=>'name','Lista Maestra'=>null,'Estado'=>'estado','Creada'=>'created_at'];
+    @endphp
+    <div style="overflow:auto; flex:1;">
+        <table style="table-layout:fixed; width:100%; min-width:620px; border-collapse:collapse; font-size:13px;">
+            <colgroup>
+                <col style="width:44px;">
+                <col style="width:220px;">
+                <col style="width:200px;">
+                <col style="width:100px;">
+                <col style="width:110px;">
+                <col style="width:130px;">
+            </colgroup>
+            <thead style="position:sticky; top:0; z-index:10;">
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                    @foreach($sortColsDerivadas as $label => $key)
+                    @if($key)
+                    @php $isActive = $sortBy === $key; @endphp
+                    <th wire:click="toggleSort('{{ $key }}')"
+                        style="padding:10px 14px; text-align:{{ in_array($label,['Estado','Creada']) ? 'center' : 'left' }}; user-select:none; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                            {{ $label }}
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                    </th>
+                    @else
+                    <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">{{ $label }}</th>
+                    @endif
+                    @endforeach
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-50">
+            <tbody>
                 @foreach ($derivadas as $d)
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td data-label="Nombre" class="px-5 py-3 font-medium text-gray-800">{{ $d->name }}</td>
-                    <td data-label="Lista Maestra" class="px-5 py-3 text-gray-600">{{ $d->listaMaestra->name ?? '—' }}</td>
-                    <td data-label="Estado" class="px-5 py-3 text-center">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                            {{ $d->estado === 'activa' ? 'bg-mint-100 text-mint-700' : ($d->estado === 'cerrada' ? 'bg-gray-100 text-gray-600' : 'bg-melocoton-100 text-melocoton-700') }}">
+                <tr wire:key="d-{{ $d->id }}" style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
+                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $derivadas->firstItem() + $loop->index }}</td>
+                    <td style="padding:10px 14px; overflow:hidden;">
+                        <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($d->name)) }}</span>
+                    </td>
+                    <td style="padding:10px 14px; overflow:hidden;">
+                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $d->listaMaestra->name ?? '—' }}</span>
+                    </td>
+                    <td style="padding:10px 14px; text-align:center;">
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
+                            background:{{ $d->estado === 'activa' ? '#D1FAE5' : '#F3F4F6' }};
+                            color:{{ $d->estado === 'activa' ? '#059669' : '#9CA3AF' }};">
                             {{ ucfirst($d->estado) }}
                         </span>
                     </td>
-                    <td data-label="Creada" class="px-5 py-3 text-center text-gray-500">{{ $d->created_at->format('d/m/Y') }}</td>
-                    <td data-label="" class="px-5 py-3">
-                        <div class="flex items-center justify-center gap-2">
+                    <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280;">{{ $d->created_at->format('d/m/Y') }}</td>
+                    <td style="padding:10px 14px; text-align:center;">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
                             <button wire:click="viewItems({{ $d->id }})" title="Productos"
-                                    class="text-celeste-500 hover:text-celeste-700 transition-colors p-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #BFDBFE; background:#EFF6FF; color:#3B82F6; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#DBEAFE'" @mouseleave="$el.style.background='#EFF6FF'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
                             </button>
                             <button wire:click="viewGrupos({{ $d->id }})" title="Grupos"
-                                    class="text-mint-600 hover:text-mint-800 transition-colors p-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #A7F3D0; background:#ECFDF5; color:#059669; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#D1FAE5'" @mouseleave="$el.style.background='#ECFDF5'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             </button>
                             <button wire:click="edit({{ $d->id }})" title="Editar"
-                                    class="text-lavanda-500 hover:text-lavanda-700 transition-colors p-1">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                             </button>
                         </div>
                     </td>
@@ -279,9 +331,9 @@
             </tbody>
         </table>
     </div>
-    <div class="px-5 py-3 border-t border-gray-100">
-        {{ $derivadas->links() }}
-    </div>
+    @if ($derivadas->hasPages())
+    <div style="padding:10px 18px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $derivadas->links() }}</div>
+    @endif
     @endif
 </div>
 @endif
