@@ -19,6 +19,8 @@ class ProductManager extends Component
     public string $search            = '';
     public string $filterStatus      = '';
     public string $filterCategoriaId = '';
+    public string $sortBy            = 'code';
+    public string $sortDir           = 'asc';
 
     // Formulario de agregar (inline arriba de tabla)
     public bool   $showAddForm    = false;
@@ -45,6 +47,17 @@ class ProductManager extends Component
     }
 
     public function updatingSearch(): void { $this->resetPage(); }
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     // ── Agregar ───────────────────────────────────────────────────────────────
 
@@ -205,14 +218,18 @@ class ProductManager extends Component
                   ->orWhere('code', 'like', "%{$this->search}%"))
             ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
             ->when($this->filterCategoriaId, fn($q) => $q->where('categoria_id', $this->filterCategoriaId))
-            ->orderByDesc('active')
-            ->orderByDesc('code')
+            ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(20);
 
         $categorias = Categoria::where('active', true)->orderBy('name')->get();
         $unidades   = Unidad::where('active', true)->orderBy('name')->get();
 
-        return view('livewire.admin.products.product-manager',
-            compact('products', 'categorias', 'unidades'));
+        return view('livewire.admin.products.product-manager', [
+            'products'   => $products,
+            'categorias' => $categorias,
+            'unidades'   => $unidades,
+            'sortBy'     => $this->sortBy,
+            'sortDir'    => $this->sortDir,
+        ]);
     }
 }
