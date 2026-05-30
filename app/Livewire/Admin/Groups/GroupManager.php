@@ -18,6 +18,19 @@ class GroupManager extends Component
     public string $search      = '';
     public string $filterType  = '';
     public string $filterStatus = '';
+    public string $sortBy      = 'name';
+    public string $sortDir     = 'asc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     // Inline add form (en list mode)
     public bool   $showAddForm    = false;
@@ -231,7 +244,7 @@ class GroupManager extends Component
             ->when($this->search,       fn($q) => $q->where('name', 'like', "%{$this->search}%"))
             ->when($this->filterType,   fn($q) => $q->where('type', $this->filterType))
             ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
-            ->orderBy('name')
+            ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(15);
 
         // ── Detail mode ──────────────────────────────────────────────────────

@@ -340,122 +340,162 @@
 </div>
 @endif
 
-{{-- Tabla --}}
-<div class="hidden sm:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                <tr>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nombre</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Tipo</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Descripción</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Estado</th>
-                    <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50">
-                @forelse ($groups as $g)
+{{-- Tabla desktop --}}
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
-                @if ($editingId === $g->id)
-                {{-- FILA EN EDICIÓN --}}
-                <tr wire:key="g-edit-{{ $g->id }}" class="bg-lavanda-50 border-l-2 border-lavanda-400">
-                    <td class="px-4 py-2">
-                        <input wire:model="editName" type="text" placeholder="Nombre *"
-                               class="w-full border border-lavanda-300 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-lavanda-500 focus:ring-2 focus:ring-lavanda-100 bg-white">
-                        @error('editName') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
-                    </td>
-                    <td class="px-4 py-2">
-                        <select wire:model="editType"
-                                class="w-full border border-lavanda-300 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-lavanda-500 bg-white">
-                            <option value="clientes">Clientes</option>
-                            <option value="vendedores">Vendedores</option>
-                        </select>
-                    </td>
-                    <td class="px-4 py-2 hidden md:table-cell">
-                        <input wire:model="editDescription" type="text" placeholder="Descripción"
-                               class="w-full border border-lavanda-300 rounded-lg px-2.5 py-1.5 text-sm focus:outline-none focus:border-lavanda-500 bg-white">
-                    </td>
-                    <td class="px-4 py-2 text-center">
-                        <label class="inline-flex items-center gap-1.5 cursor-pointer">
-                            <input type="checkbox" wire:model="editActive" class="w-4 h-4 rounded text-lavanda-500">
-                            <span class="text-xs text-gray-600">{{ $editActive ? 'Activo' : 'Inactivo' }}</span>
-                        </label>
-                    </td>
-                    <td class="px-4 py-2 text-right">
-                        <div class="flex items-center justify-end gap-1">
-                            <button wire:click="saveEdit" title="Guardar"
-                                    class="p-1.5 rounded-lg bg-mint-100 text-mint-700 hover:bg-mint-200 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                            </button>
-                            <button wire:click="cancelEdit" title="Cancelar"
-                                    class="p-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-
-                @else
-                {{-- FILA EN LECTURA --}}
-                <tr wire:key="g-{{ $g->id }}" class="hover:bg-gray-50 transition-colors {{ !$g->active ? 'opacity-60' : '' }}">
-                    <td data-label="Nombre" class="px-4 py-3">
-                        <div class="font-medium text-gray-800">{{ $g->name }}</div>
-                        <div class="text-xs text-gray-400 mt-0.5">
-                            {{ $g->users_count + $g->miembros_manual_count }} miembros · {{ $g->listas_count }} listas
-                        </div>
-                    </td>
-                    <td data-label="Tipo" class="px-4 py-3 text-center">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
-                            {{ $g->type === 'clientes' ? 'bg-celeste-100 text-celeste-700' : 'bg-melocoton-100 text-melocoton-700' }}">
-                            {{ $g->type === 'clientes' ? 'Clientes' : 'Vendedores' }}
-                        </span>
-                    </td>
-                    <td data-label="Descripción" class="px-4 py-3 text-gray-500 text-xs hidden md:table-cell">
-                        {{ $g->description ? \Illuminate\Support\Str::limit($g->description, 60) : '—' }}
-                    </td>
-                    <td data-label="Estado" class="px-4 py-3 text-center">
-                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold
-                            {{ $g->active ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-500' }}">
-                            {{ $g->active ? 'Activo' : 'Inactivo' }}
-                        </span>
-                    </td>
-                    <td data-label="" class="px-4 py-3">
-                        <div class="flex items-center justify-end gap-1">
-                            <button wire:click="viewDetail({{ $g->id }})" title="Ver detalle"
-                                    class="p-1.5 rounded-lg text-gray-400 hover:text-celeste-600 hover:bg-celeste-50 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                            </button>
-                            <button wire:click="startEdit({{ $g->id }})" title="Editar"
-                                    class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                            </button>
-                            <button wire:click="toggleActive({{ $g->id }})"
-                                    title="{{ $g->active ? 'Desactivar' : 'Activar' }}"
-                                    class="p-1.5 rounded-lg transition-colors
-                                    {{ $g->active ? 'text-gray-400 hover:text-melocoton-600 hover:bg-melocoton-50' : 'text-gray-400 hover:text-mint-600 hover:bg-mint-50' }}">
-                                @if ($g->active)
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
-                                @else
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                @endif
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                @endif
-
-                @empty
-                <tr>
-                    <td colspan="5" class="px-5 py-14 text-center text-gray-400 text-sm">
-                        No hay grupos registrados.
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+    <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
+        <div style="display:flex; align-items:center; gap:8px;">
+            <span style="font-size:13px; font-weight:700; color:#111827;">Grupos registrados</span>
+            <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $groups->total() }}</span>
+        </div>
+        <button type="button" wire:click="$refresh"
+                style="height:30px; padding:0 10px; border:1px solid #E5E7EB; border-radius:7px; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500; box-sizing:border-box;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            Actualizar
+        </button>
     </div>
+
+    <div style="overflow:auto; flex:1;">
+    @php $sortCols = ['Nombre'=>'name','Tipo'=>'type','Descripción'=>'description','Estado'=>'active']; @endphp
+    <table style="table-layout:fixed; width:100%; min-width:600px; border-collapse:collapse; font-size:13px;">
+        <colgroup>
+            <col style="width:44px;">
+            <col style="width:220px;">
+            <col style="width:110px;">
+            <col>
+            <col style="width:90px;">
+            <col style="width:130px;">
+        </colgroup>
+        <thead style="position:sticky; top:0; z-index:10;">
+            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                @foreach($sortCols as $label => $key)
+                @php $isActive = $sortBy === $key; @endphp
+                <th wire:click="toggleSort('{{ $key }}')"
+                    style="padding:10px 14px; text-align:{{ in_array($label,['Tipo','Estado']) ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:70px; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                    <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                        {{ $label }}
+                        @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                        @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                        @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                        @endif
+                    </span>
+                    @if(in_array($label, ['Nombre','Descripción']))
+                    <div x-data="colResize()" @mousedown="start($event)"
+                         style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                         @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    @endif
+                </th>
+                @endforeach
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($groups as $g)
+
+            @if ($editingId === $g->id)
+            {{-- FILA EN EDICIÓN --}}
+            <tr wire:key="g-edit-{{ $g->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $groups->firstItem() + $loop->index }}</td>
+                <td style="padding:7px 10px;">
+                    <input wire:model="editName" type="text" placeholder="Nombre *"
+                           style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
+                    @error('editName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                </td>
+                <td style="padding:7px 10px;">
+                    <select wire:model="editType"
+                            style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                        <option value="clientes">Clientes</option>
+                        <option value="vendedores">Vendedores</option>
+                    </select>
+                </td>
+                <td style="padding:7px 10px;">
+                    <input wire:model="editDescription" type="text" placeholder="Descripción"
+                           style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
+                </td>
+                <td style="padding:7px 10px; text-align:center;">
+                    <select wire:model="editActive"
+                            style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                        <option value="1">Activo</option>
+                        <option value="0">Inactivo</option>
+                    </select>
+                </td>
+                <td style="padding:7px 10px; text-align:center;">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                        <button wire:click="saveEdit"
+                                style="height:30px; padding:0 10px; background:#7B6FE8; color:#fff; border:none; border-radius:7px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
+                            Guardar
+                        </button>
+                        <button wire:click="cancelEdit"
+                                style="height:30px; padding:0 8px; background:#F3F4F6; color:#6B7280; border:none; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
+                            Cancelar
+                        </button>
+                    </div>
+                </td>
+            </tr>
+
+            @else
+            {{-- FILA NORMAL --}}
+            <tr wire:key="g-{{ $g->id }}"
+                style="border-bottom:1px solid #F9FAFB; transition:background .1s; {{ !$g->active ? 'opacity:.6;' : '' }}"
+                @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+
+                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $groups->firstItem() + $loop->index }}</td>
+
+                <td style="padding:10px 14px; overflow:hidden;">
+                    <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($g->name)) }}</span>
+                    <span style="font-size:11px; color:#9CA3AF; display:block; margin-top:1px;">{{ $g->users_count + $g->miembros_manual_count }} miembros · {{ $g->listas_count }} listas</span>
+                </td>
+
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
+                                 background:{{ $g->type === 'clientes' ? 'rgba(59,130,246,.12)' : 'rgba(249,115,22,.12)' }};
+                                 color:{{ $g->type === 'clientes' ? '#2563EB' : '#EA580C' }};">
+                        {{ $g->type === 'clientes' ? 'Clientes' : 'Vendedores' }}
+                    </span>
+                </td>
+
+                <td style="padding:10px 14px; overflow:hidden;">
+                    <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $g->description ? \Illuminate\Support\Str::limit($g->description, 60) : '—' }}</span>
+                </td>
+
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
+                                 background:{{ $g->active ? '#D1FAE5' : '#F3F4F6' }};
+                                 color:{{ $g->active ? '#059669' : '#9CA3AF' }};">
+                        {{ $g->active ? 'Activo' : 'Inactivo' }}
+                    </span>
+                </td>
+
+                <td style="padding:10px 16px; text-align:center;">
+                    <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
+                        <button wire:click="viewDetail({{ $g->id }})" title="Ver detalle"
+                                style="width:28px; height:28px; border-radius:7px; border:1px solid #BFDBFE; background:#EFF6FF; color:#2563EB; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                @mouseenter="$el.style.background='#DBEAFE'" @mouseleave="$el.style.background='#EFF6FF'">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </button>
+                        <button wire:click="startEdit({{ $g->id }})" title="Editar"
+                                style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            @endif
+
+            @empty
+            <tr>
+                <td colspan="6" style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay grupos registrados.</td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
+    </div>
+
     @if ($groups->hasPages())
-    <div class="px-5 py-3 border-t border-gray-100">{{ $groups->links() }}</div>
+    <div style="padding:10px 18px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $groups->links() }}</div>
     @endif
 </div>
 
@@ -540,5 +580,34 @@
 </div>
 
 @endif
+
+<script>
+if (!window.colResize) {
+    window.colResize = function () {
+        return {
+            start(e) {
+                e.preventDefault();
+                const th = this.$el.closest('th');
+                const table = th.closest('table');
+                const idx = Array.from(th.closest('tr').querySelectorAll('th')).indexOf(th);
+                const col = table.querySelectorAll('colgroup col')[idx];
+                const startX = e.clientX;
+                const startW = col ? (parseFloat(col.style.width) || th.getBoundingClientRect().width)
+                                   : th.getBoundingClientRect().width;
+                const onMove = mv => {
+                    const w = Math.max(60, startW + mv.clientX - startX);
+                    if (col) col.style.width = w + 'px';
+                };
+                const onUp = () => {
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onUp);
+                };
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseup', onUp);
+            }
+        };
+    };
+}
+</script>
 
 </div>
