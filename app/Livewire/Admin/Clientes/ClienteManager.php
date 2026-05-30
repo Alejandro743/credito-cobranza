@@ -24,6 +24,21 @@ class ClienteManager extends Component
     public string $filterCiudad = '';
     public string $filterActivo = '';
 
+    // ── Sort ──────────────────────────────────────────────────────────────────
+    public string $sortBy  = 'active';
+    public string $sortDir = 'desc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
+
     // ── Inline add ────────────────────────────────────────────────────────────
     public bool   $showAddForm   = false;
     public string $newCi         = '';
@@ -288,8 +303,10 @@ class ClienteManager extends Component
             })
             ->when($this->filterCiudad, fn($q) => $q->where('ciudad', $this->filterCiudad))
             ->when($this->filterActivo !== '', fn($q) => $q->where('active', (bool)$this->filterActivo))
-            ->orderByDesc('active')
-            ->orderBy('apellido')
+            ->orderBy(
+                in_array($this->sortBy, ['id_ln','ci','ciudad','active']) ? $this->sortBy : 'active',
+                $this->sortDir
+            )
             ->paginate(20);
 
         $ciudades  = Cliente::select('ciudad')->distinct()->orderBy('ciudad')->pluck('ciudad');
