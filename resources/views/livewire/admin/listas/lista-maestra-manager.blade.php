@@ -370,7 +370,7 @@
                     @mouseenter="$el.style.background='#FAFAFA'" @mouseleave="$el.style.background=''">
                     <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
                     <td style="{{ $tdBase }} font-family:monospace; font-size:12px; color:#6B7280;">{{ $p->code }}</td>
-                    <td style="{{ $tdBase }} text-align:left; padding-left:14px; overflow:hidden; text-overflow:ellipsis; max-width:0;">{{ $p->name }}</td>
+                    <td style="{{ $tdBase }} text-align:left; padding-left:14px; overflow:hidden; text-overflow:ellipsis; max-width:0;">{{ ucwords(strtolower($p->name)) }}</td>
                     <td style="{{ $tdBase }}">
                         @if ($inLista) Bs {{ number_format($item->precio_base, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
@@ -393,7 +393,7 @@
                     </td>
                     <td style="{{ $tdBase }}">
                         @if ($inLista && $item->tipo_incremento)
-                        <span style="padding:2px 8px; border-radius:99px; font-size:11px; font-weight:600; background:#EDE9FE; color:#7B6FE8;">
+                        <span style="padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">
                             {{ $item->tipo_incremento === 'porcentaje' ? '%' : 'Bs' }}
                         </span>
                         @else <span style="color:#D1D5DB;">—</span> @endif
@@ -411,13 +411,13 @@
                     </td>
                     <td style="padding:10px 12px; text-align:center;">
                         @if ($inLista)
-                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600;
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700;
                                      background:{{ $item->active ? '#D1FAE5' : '#F3F4F6' }};
                                      color:{{ $item->active ? '#059669' : '#9CA3AF' }};">
                             {{ $item->active ? 'Activo' : 'Inactivo' }}
                         </span>
                         @else
-                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#F3F4F6; color:#9CA3AF;">Sin agregar</span>
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#F3F4F6; color:#9CA3AF;">Sin agregar</span>
                         @endif
                     </td>
                     <td style="padding:10px 12px; text-align:center;">
