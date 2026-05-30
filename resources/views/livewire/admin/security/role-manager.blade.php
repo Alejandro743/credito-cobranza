@@ -321,7 +321,7 @@
 </div>
 
 {{-- ══ DESKTOP: Tabla ══ --}}
-<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     {{-- Barra --}}
     <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
@@ -338,40 +338,42 @@
         </div>
     </div>
 
-    <div style="overflow-x:auto;">
+    <div style="overflow:auto; flex:1;">
         @if ($roles->isEmpty())
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay roles registrados.</p>
         @else
+        @php $sortCols = ['Nombre'=>'name','Usuarios'=>'users_count','Estado'=>'activo']; @endphp
         <table style="table-layout:fixed; width:100%; min-width:500px; border-collapse:collapse; font-size:13px;">
             <colgroup>
+                <col style="width:44px;">
                 <col style="width:200px;">
                 <col style="width:100px;">
                 <col style="width:120px;">
                 <col style="width:210px;">
             </colgroup>
-            <thead>
+            <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 16px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:120px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Rol</span>
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                    @foreach($sortCols as $label => $key)
+                    @php $isActive = $sortBy === $key; @endphp
+                    <th wire:click="toggleSort('{{ $key }}')"
+                        style="padding:10px 14px; text-align:{{ in_array($label, ['Usuarios','Estado']) ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:70px; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                            {{ $label }}
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        @if($label === 'Nombre')
                         <div x-data="colResize()" @mousedown="start($event)"
                              style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
                              @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                        @endif
                     </th>
-                    <th style="padding:10px 16px; text-align:center; position:relative; user-select:none; overflow:hidden; min-width:70px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Usuarios</span>
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-                    <th style="padding:10px 16px; text-align:center; position:relative; user-select:none; overflow:hidden; min-width:80px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</span>
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-                    <th style="padding:10px 16px; text-align:center;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</span>
-                    </th>
+                    @endforeach
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -380,6 +382,7 @@
                 {{-- Fila edición inline --}}
                 @if ($editingId === $role->id)
                 <tr wire:key="edit-{{ $role->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $roles->firstItem() + $loop->index }}</td>
                     <td style="padding:7px 10px; text-align:left;">
                         @if ($role->name === 'admin')
                             <span style="font-size:13px; font-weight:600; color:#6B7280; text-transform:capitalize;">admin</span>
@@ -421,28 +424,30 @@
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
 
-                    <td style="padding:10px 16px; overflow:hidden; text-align:left;">
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $roles->firstItem() + $loop->index }}</td>
+
+                    <td style="padding:10px 14px; overflow:hidden; text-align:left;">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <div style="width:28px; height:28px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                                 <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
                                 </svg>
                             </div>
-                            <span style="font-size:13px; font-weight:500; color:#374151; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $role->name }}</span>
+                            <span style="font-size:13px; font-weight:500; color:#111827; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $role->name }}</span>
                         </div>
                     </td>
 
-                    <td style="padding:10px 16px; text-align:center;">
+                    <td style="padding:10px 14px; text-align:center;">
                         <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:24px; border-radius:99px; background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600;">{{ $role->users_count }}</span>
                     </td>
 
-                    <td style="padding:10px 16px; text-align:center;">
+                    <td style="padding:10px 14px; text-align:center;">
                         @if ($role->name === 'admin')
-                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#EDE9FE; color:#7B6FE8;">Siempre activo</span>
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">Siempre activo</span>
                         @elseif ($role->activo ?? true)
-                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#D1FAE5; color:#059669;">Activo</span>
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#D1FAE5; color:#059669;">Activo</span>
                         @else
-                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#FEE2E2; color:#EF4444;">Inactivo</span>
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#FEE2E2; color:#EF4444;">Inactivo</span>
                         @endif
                     </td>
 
@@ -477,7 +482,7 @@
                 @endif
 
                 @empty
-                <tr><td colspan="4" style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay roles registrados.</td></tr>
+                <tr><td colspan="5" style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay roles registrados.</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -485,7 +490,7 @@
     </div>
 
     @if ($roles->hasPages())
-    <div style="padding:10px 18px; border-top:1px solid #F3F4F6;">{{ $roles->links() }}</div>
+    <div style="padding:10px 18px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $roles->links() }}</div>
     @endif
 </div>
 

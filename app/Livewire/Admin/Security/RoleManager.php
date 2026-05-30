@@ -15,6 +15,19 @@ class RoleManager extends Component
 
     public string $mode   = 'list';   // list | permissions
     public string $search = '';
+    public string $sortBy  = 'name';
+    public string $sortDir = 'asc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     // Inline add
     public bool   $showAddForm  = false;
@@ -241,7 +254,7 @@ class RoleManager extends Component
     {
         $roles = Role::withCount('users')
             ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
-            ->orderBy('name')
+            ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(20);
 
         $modulosArbol = Modulo::with([
