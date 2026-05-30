@@ -27,6 +27,19 @@ class ListaMaestraManager extends Component
     public string $search        = '';
     public string $filterCycleId = '';
     public string $filterStatus  = '';
+    public string $sortBy        = 'code';
+    public string $sortDir       = 'asc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     // ── Inline add ────────────────────────────────────────────────────────────
     public bool   $showAddForm          = false;
@@ -732,7 +745,7 @@ class ListaMaestraManager extends Component
                   ->orWhere('code', 'like', "%{$this->search}%"))
             ->when($this->filterCycleId, fn($q) => $q->where('cycle_id', $this->filterCycleId))
             ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
-            ->orderByDesc('created_at')
+            ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(15);
 
         // Items mode
