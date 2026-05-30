@@ -115,7 +115,8 @@ $badgeEstado = [
 
     <div style="overflow:auto; flex:1;">
     @php
-    $sortColsA = ['Cod. Pedido'=>'numero','CI'=>'ci','Cliente'=>'cliente','Estado'=>'estado','Vendedor'=>'vendedor','Fecha'=>'fecha','Total Bs.'=>'total'];
+    $sortColsA = ['Cod. Pedido'=>'numero','CI'=>'ci','Cliente'=>'cliente','Vendedor'=>'vendedor','Fecha'=>'fecha','Estado'=>'estado','Total Bs.'=>'total'];
+    $colorEstado = ['aprobado'=>'#059669','rechazado'=>'#DC2626','cerrado'=>'#6B7280'];
     $noSortA   = ['Pagado Bs.','Saldo Bs.','Acción'];
     @endphp
     <table style="width:100%; min-width:920px; border-collapse:collapse; font-size:13px;">
@@ -156,11 +157,9 @@ $badgeEstado = [
                 <td style="padding:10px 14px; font-family:monospace; font-size:12px; font-weight:700; color:#111827; white-space:nowrap;">{{ $p->numero }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->cliente->ci ?: '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</td>
-                <td style="padding:10px 14px; text-align:center;">
-                    <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; {{ $estiloEstado }}">{{ ucfirst($p->estado) }}</span>
-                </td>
                 <td style="padding:10px 14px; font-size:13px; color:#6B7280; white-space:nowrap;">{{ ucwords(strtolower($p->vendedor->user->name ?? '—')) }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->updated_at->format('d/m/Y') }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:600; white-space:nowrap; color:{{ $colorEstado[$p->estado] ?? '#6B7280' }};">{{ ucfirst($p->estado) }}</td>
                 <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:700; color:#111827; white-space:nowrap;">
                     @if ($p->total_pagar > 0)
                         {{ number_format($p->total_pagar, 2) }}
