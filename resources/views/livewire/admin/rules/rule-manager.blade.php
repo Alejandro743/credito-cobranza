@@ -109,57 +109,75 @@
     </button>
 </div>
 
-<div class="hidden sm:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    @if ($rules->isEmpty())
-        <div class="py-16 text-center text-gray-400 text-sm">No hay reglas registradas.</div>
-    @else
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                <tr>
-                    <th class="px-5 py-3 text-left">Nombre</th>
-                    <th class="px-5 py-3 text-left">Tipo</th>
-                    <th class="px-5 py-3 text-center">Prioridad</th>
-                    <th class="px-5 py-3 text-center">Grupos</th>
-                    <th class="px-5 py-3 text-center">Estado</th>
-                    <th class="px-5 py-3 text-center">Acciones</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50">
-                @foreach ($rules as $r)
-                <tr wire:key="r-{{ $r->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td data-label="Nombre" class="px-5 py-3 font-medium text-gray-800">{{ $r->name }}</td>
-                    <td data-label="Tipo" class="px-5 py-3">
-                        <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium
-                            @switch($r->type)
-                                @case('segmento') bg-lavanda-100 text-lavanda-700 @break
-                                @case('geografica') bg-celeste-100 text-celeste-700 @break
-                                @case('comercial') bg-mint-100 text-mint-700 @break
-                                @default bg-melocoton-100 text-melocoton-700
-                            @endswitch">
-                            {{ ucfirst($r->type) }}
-                        </span>
-                    </td>
-                    <td data-label="Prioridad" class="px-5 py-3 text-center text-gray-600">{{ $r->priority }}</td>
-                    <td data-label="Grupos" class="px-5 py-3 text-center text-gray-600">{{ $r->groups_count }}</td>
-                    <td data-label="Estado" class="px-5 py-3 text-center">
-                        <button wire:click="toggleActive({{ $r->id }})"
-                                class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors
-                                    {{ $r->active ? 'bg-mint-100 text-mint-700 hover:bg-mint-200' : 'bg-gray-100 text-gray-500 hover:bg-gray-200' }}">
-                            {{ $r->active ? 'Activa' : 'Inactiva' }}
-                        </button>
-                    </td>
-                    <td data-label="" class="px-5 py-3 text-center">
-                        <button wire:click="edit({{ $r->id }})" class="text-lavanda-500 hover:text-lavanda-700 transition-colors p-1">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </button>
-                    </td>
-                </tr>
+@php
+$sortColsR = ['Nombre'=>'name','Tipo'=>'type','Prioridad'=>'priority','Grupos'=>'groups_count'];
+@endphp
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
+    <div style="overflow:auto; flex:1;">
+    <table style="width:100%; min-width:600px; border-collapse:collapse; font-size:13px;">
+        <thead style="position:sticky; top:0; z-index:10;">
+            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                @foreach($sortColsR as $label => $key)
+                @php $isActive = $sortBy === $key; @endphp
+                <th wire:click="toggleSort('{{ $key }}')"
+                    style="padding:10px 14px; text-align:{{ in_array($label,['Prioridad','Grupos']) ? 'center' : 'left' }}; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; cursor:pointer; user-select:none; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                    <span style="display:inline-flex; align-items:center; gap:5px;">{{ $label }}
+                        @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                        @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                        @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                        @endif
+                    </span>
+                </th>
                 @endforeach
-            </tbody>
-        </table>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</th>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse ($rules as $r)
+            <tr wire:key="r-{{ $r->id }}"
+                style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
+                @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $rules->firstItem() + $loop->index }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($r->name)) }}</td>
+                <td style="padding:10px 14px;">
+                    @php
+                    $tipoStyle = match($r->type) {
+                        'segmento'     => 'background:#EDE9FE;color:#7B6FE8;',
+                        'geografica'   => 'background:#E0F2FE;color:#0369A1;',
+                        'comercial'    => 'background:#D1FAE5;color:#059669;',
+                        default        => 'background:#FEF3C7;color:#B45309;',
+                    };
+                    @endphp
+                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; {{ $tipoStyle }}">{{ ucfirst($r->type) }}</span>
+                </td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280;">{{ $r->priority }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280;">{{ $r->groups_count }}</td>
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700;
+                                 background:{{ $r->active ? '#D1FAE5' : '#F3F4F6' }};
+                                 color:{{ $r->active ? '#059669' : '#9CA3AF' }};">
+                        {{ $r->active ? 'Activa' : 'Inactiva' }}
+                    </span>
+                </td>
+                <td style="padding:10px 14px; text-align:center;">
+                    <button wire:click="edit({{ $r->id }})"
+                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;"
+                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'" title="Editar">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </button>
+                </td>
+            </tr>
+            @empty
+            <tr><td colspan="7" style="padding:64px 24px; text-align:center; color:#9CA3AF; font-size:13px;">No hay reglas registradas.</td></tr>
+            @endforelse
+        </tbody>
+    </table>
     </div>
-    <div class="px-5 py-3 border-t border-gray-100">{{ $rules->links() }}</div>
+    @if($rules->hasPages())
+    <div style="padding:10px 16px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $rules->links() }}</div>
     @endif
 </div>
 

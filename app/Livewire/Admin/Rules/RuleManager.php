@@ -12,9 +12,22 @@ class RuleManager extends Component
 {
     use WithPagination, HasModuleColor;
 
-    public string $mode   = 'list';
-    public string $search = '';
+    public string $mode       = 'list';
+    public string $search     = '';
     public string $filterType = '';
+    public string $sortBy     = 'priority';
+    public string $sortDir    = 'desc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     public bool  $editing   = false;
     public ?int  $editingId = null;
@@ -102,7 +115,7 @@ class RuleManager extends Component
         $rules = Rule::withCount('groups')
             ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
             ->when($this->filterType, fn($q) => $q->where('type', $this->filterType))
-            ->orderBy('priority', 'desc')->orderBy('name')
+            ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(15);
 
         $groups = Group::where('active', true)->orderBy('name')->get();
