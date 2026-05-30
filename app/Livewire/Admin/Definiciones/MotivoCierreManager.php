@@ -14,6 +14,19 @@ class MotivoCierreManager extends Component
     public int    $afectaMora = 0;
     public int    $activo     = 1;
 
+    public string $sortBy  = 'nombre';
+    public string $sortDir = 'asc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+    }
+
     public function create(): void
     {
         $this->resetForm();
@@ -85,7 +98,7 @@ class MotivoCierreManager extends Component
     public function render()
     {
         return view('livewire.admin.definiciones.motivo-cierre-manager', [
-            'registros' => MotivoCierre::orderByDesc('activo')->orderBy('nombre')->get(),
+            'registros' => MotivoCierre::orderBy($this->sortBy, $this->sortDir)->get(),
         ]);
     }
 }

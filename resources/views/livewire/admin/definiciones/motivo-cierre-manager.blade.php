@@ -95,21 +95,41 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
 @endphp
 
 {{-- ══════ TABLA ESCRITORIO ══════ --}}
-<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Motivos de Cierre</span>
         <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $registros->count() }}</span>
     </div>
 
-    <div style="overflow-x:auto;">
-    <table style="width:100%; border-collapse:collapse; min-width:480px;">
-        <thead>
-            <tr style="background:#F8F7FF;">
-                <th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Descripción</th>
-                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:160px;">Afecta indicadores</th>
-                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:110px;">Estado</th>
-                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:160px;">Acciones</th>
+    <div style="overflow:auto; flex:1;">
+    @php $sortCols = ['Descripción'=>'nombre','Afecta indicadores'=>'afecta_mora','Estado'=>'activo']; @endphp
+    <table style="table-layout:fixed; width:100%; border-collapse:collapse; min-width:480px;">
+        <colgroup>
+            <col style="width:44px;">
+            <col>
+            <col style="width:160px;">
+            <col style="width:110px;">
+            <col style="width:160px;">
+        </colgroup>
+        <thead style="position:sticky; top:0; z-index:10;">
+            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                @foreach($sortCols as $label => $key)
+                @php $isActive = $sortBy === $key; @endphp
+                <th wire:click="toggleSort('{{ $key }}')"
+                    style="padding:10px 14px; text-align:{{ in_array($label,['Afecta indicadores','Estado']) ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:70px; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                    <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                        {{ $label }}
+                        @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                        @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                        @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                        @endif
+                    </span>
+                </th>
+                @endforeach
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -118,24 +138,25 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
         @if($r->id === $editId)
         {{-- ── FILA EDICIÓN INLINE ── --}}
         <tr wire:key="mc-edit-{{ $r->id }}" style="background:#FAFAFE; border-bottom:1px solid #EDE9FE;">
-            <td style="padding:10px 16px;">
+            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
+            <td style="padding:10px 14px;">
                 <input wire:model="nombre" type="text"
                        style="width:100%; {{ $iRow }}">
                 @error('nombre')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
             </td>
-            <td style="padding:10px 16px; text-align:center;">
+            <td style="padding:10px 14px; text-align:center;">
                 <select wire:model="afectaMora" style="{{ $iRow }} width:100%; cursor:pointer;">
                     <option value="0">No afecta</option>
                     <option value="1">Sí afecta</option>
                 </select>
             </td>
-            <td style="padding:10px 16px; text-align:center;">
+            <td style="padding:10px 14px; text-align:center;">
                 <select wire:model="activo" style="{{ $iRow }} width:100%; cursor:pointer;">
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
                 </select>
             </td>
-            <td style="padding:10px 16px;">
+            <td style="padding:10px 14px;">
                 <div style="display:flex; gap:6px; justify-content:center;">
                     <button wire:click="save" wire:loading.attr="disabled"
                             style="height:34px; padding:0 16px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
@@ -156,22 +177,23 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
         {{-- ── FILA NORMAL ── --}}
         <tr wire:key="mc-{{ $r->id }}" style="border-bottom:1px solid #F9FAFB;"
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-            <td style="padding:11px 16px; font-size:13px; font-weight:600; color:#111827;">{{ $r->nombre }}</td>
-            <td style="padding:11px 16px; text-align:center;">
+            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
+            <td style="padding:11px 14px; font-size:13px; font-weight:500; color:#111827;">{{ ucwords(strtolower($r->nombre)) }}</td>
+            <td style="padding:11px 14px; text-align:center;">
                 @if($r->afecta_mora)
-                <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#FEE2E2; color:#DC2626;">Sí afecta</span>
+                <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px; background:#FEE2E2; color:#DC2626;">Sí afecta</span>
                 @else
-                <span style="font-size:11px; font-weight:600; padding:3px 10px; border-radius:99px; background:#F3F4F6; color:#9CA3AF;">No afecta</span>
+                <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px; background:#F3F4F6; color:#9CA3AF;">No afecta</span>
                 @endif
             </td>
-            <td style="padding:11px 16px; text-align:center;">
-                <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px;
+            <td style="padding:11px 14px; text-align:center;">
+                <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px;
                              background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
                              color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
                     {{ $r->activo ? 'Activo' : 'Inactivo' }}
                 </span>
             </td>
-            <td style="padding:11px 16px; text-align:center;">
+            <td style="padding:11px 14px; text-align:center;">
                 <div style="display:flex; gap:6px; justify-content:center;">
                     <button wire:click="edit({{ $r->id }})" title="Editar"
                             style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
@@ -184,7 +206,7 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
         @endif
 
         @empty
-        <tr><td colspan="4" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">Sin motivos configurados. Creá el primero.</td></tr>
+        <tr><td colspan="5" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">Sin motivos configurados. Creá el primero.</td></tr>
         @endforelse
         </tbody>
     </table>
