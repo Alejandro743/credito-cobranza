@@ -159,7 +159,17 @@ $badgeEstado = [
                 <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#6B7280; white-space:nowrap;">{{ ucwords(strtolower($p->vendedor->user->name ?? '—')) }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->updated_at->format('d/m/Y') }}</td>
-                <td style="padding:10px 14px; font-size:13px; font-weight:600; white-space:nowrap; color:{{ $colorEstado[$p->estado] ?? '#6B7280' }};">{{ ucfirst($p->estado) }}</td>
+                <td style="padding:10px 14px; white-space:nowrap;">
+                    @php
+                    $badgeStyle = match($p->estado) {
+                        'aprobado'  => 'background:#D1FAE5; color:#059669;',
+                        'rechazado' => 'background:#FEE2E2; color:#DC2626;',
+                        'cerrado'   => 'background:#F3F4F6; color:#6B7280;',
+                        default     => 'background:#F3F4F6; color:#6B7280;',
+                    };
+                    @endphp
+                    <span style="display:inline-block; padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; {{ $badgeStyle }}">{{ ucfirst($p->estado) }}</span>
+                </td>
                 <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:700; color:#111827; white-space:nowrap;">
                     @if ($p->total_pagar > 0)
                         {{ number_format($p->total_pagar, 2) }}
