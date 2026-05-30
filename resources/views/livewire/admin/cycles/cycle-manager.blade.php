@@ -169,23 +169,35 @@
 $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;';
 @endphp
 
-<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+@php
+$sortColsC = ['Código'=>'code','Descripción'=>'name','Inicio'=>'start_date','Fin'=>'end_date','Estado'=>'status'];
+@endphp
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
-    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6;">
+    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Ciclos Comerciales</span>
-        <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $cycles->total() }}</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $cycles->total() }}</span>
     </div>
 
-    <div style="overflow-x:auto;">
+    <div style="overflow:auto; flex:1;">
     <table style="width:100%; border-collapse:collapse; min-width:640px;">
-        <thead>
-            <tr style="background:#F8F7FF;">
-                <th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:120px;">Código</th>
-                <th style="padding:10px 16px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Descripción</th>
-                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:110px;">Inicio</th>
-                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:110px;">Fin</th>
-                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:120px;">Estado</th>
-                <th style="padding:10px 16px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; width:160px;">Acciones</th>
+        <thead style="position:sticky; top:0; z-index:10;">
+            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                @foreach($sortColsC as $label => $key)
+                @php $isActive = $sortBy === $key; @endphp
+                <th wire:click="toggleSort('{{ $key }}')"
+                    style="padding:10px 14px; text-align:{{ in_array($label,['Inicio','Fin','Estado']) ? 'center' : 'left' }}; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; cursor:pointer; user-select:none; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                    <span style="display:inline-flex; align-items:center; gap:5px;">{{ $label }}
+                        @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                        @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                        @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                        @endif
+                    </span>
+                </th>
+                @endforeach
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -194,6 +206,7 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
         @if($editingId === $cycle->id)
         {{-- ── FILA EDICIÓN INLINE ── --}}
         <tr wire:key="edit-{{ $cycle->id }}" style="background:#FAFAFE; border-bottom:1px solid #EDE9FE;">
+            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $cycles->firstItem() + $loop->index }}</td>
             <td style="padding:10px 16px;">
                 <input wire:model="editCode" type="text" maxlength="30"
                        style="width:100%; {{ $iRow }} text-transform:uppercase;">
@@ -238,18 +251,19 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
 
         @else
         {{-- ── FILA NORMAL ── --}}
-        <tr wire:key="c-{{ $cycle->id }}" style="border-bottom:1px solid #F9FAFB;"
+        <tr wire:key="c-{{ $cycle->id }}" style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-            <td style="padding:11px 16px; font-size:13px; font-weight:700; color:#7B6FE8; font-family:monospace;">{{ $cycle->code }}</td>
-            <td style="padding:11px 16px; font-size:13px; font-weight:600; color:#111827;">{{ $cycle->name }}</td>
-            <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $cycle->start_date->format('d/m/Y') }}</td>
-            <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $cycle->end_date->format('d/m/Y') }}</td>
-            <td style="padding:11px 16px; text-align:center;">
-                @if($cycle->status === 'abierto')
-                <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#D1FAE5; color:#059669;">Abierto</span>
-                @else
-                <span style="font-size:11px; font-weight:600; padding:3px 10px; border-radius:99px; background:#F3F4F6; color:#9CA3AF;">Cerrado</span>
-                @endif
+            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $cycles->firstItem() + $loop->index }}</td>
+            <td style="padding:10px 14px; font-size:12px; font-weight:700; color:#111827; font-family:monospace; white-space:nowrap;">{{ $cycle->code }}</td>
+            <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827;">{{ ucwords(strtolower($cycle->name)) }}</td>
+            <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $cycle->start_date->format('d/m/Y') }}</td>
+            <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $cycle->end_date->format('d/m/Y') }}</td>
+            <td style="padding:10px 14px; text-align:center;">
+                <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700;
+                             background:{{ $cycle->status === 'abierto' ? '#D1FAE5' : '#F3F4F6' }};
+                             color:{{ $cycle->status === 'abierto' ? '#059669' : '#9CA3AF' }};">
+                    {{ ucfirst($cycle->status) }}
+                </span>
             </td>
             <td style="padding:11px 16px; text-align:center;">
                 <div style="display:flex; gap:6px; justify-content:center;">
@@ -264,16 +278,14 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
         @endif
 
         @empty
-        <tr><td colspan="6" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">No hay ciclos registrados.</td></tr>
+        <tr><td colspan="7" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">No hay ciclos registrados.</td></tr>
         @endforelse
         </tbody>
     </table>
     </div>
 
     @if($cycles->hasPages())
-    <div style="padding:12px 18px; border-top:1px solid #F3F4F6;">
-        {{ $cycles->links() }}
-    </div>
+    <div style="padding:10px 16px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $cycles->links() }}</div>
     @endif
 </div>
 

@@ -15,6 +15,19 @@ class CycleManager extends Component
 
     public string $search       = '';
     public string $filterStatus = '';
+    public string $sortBy       = 'code';
+    public string $sortDir      = 'asc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     // Inline add
     public bool   $showAddForm  = false;
@@ -211,7 +224,7 @@ class CycleManager extends Component
                         $q->where('code', 'like', "%{$this->search}%")
                           ->orWhere('name', 'like', "%{$this->search}%"))
                     ->when($this->filterStatus, fn($q) => $q->where('status', $this->filterStatus))
-                    ->orderBy('code')
+                    ->orderBy($this->sortBy, $this->sortDir)
                     ->paginate(15);
 
         return view('livewire.admin.cycles.cycle-manager', compact('cycles'));
