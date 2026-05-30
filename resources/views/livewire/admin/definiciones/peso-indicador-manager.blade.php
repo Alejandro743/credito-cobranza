@@ -45,58 +45,58 @@
     @else
 
     {{-- DESKTOP --}}
-    <div class="hidden sm:block" style="overflow-x:auto;">
+    <div class="hidden sm:block" style="overflow:auto; max-height:calc(100vh - 260px);">
         <table style="width:100%; border-collapse:collapse; min-width:860px;">
-            <thead>
-                <tr>
-                    <th style="padding:10px 16px; text-align:left;">Nombre</th>
-                    <th style="padding:10px 16px; text-align:center;">Vigencia desde</th>
-                    <th style="padding:10px 16px; text-align:center;">Vigencia hasta</th>
-                    <th style="padding:10px 16px; text-align:center;">Vigente</th>
-                    <th style="padding:10px 16px; text-align:center;">Punt%</th>
-                    <th style="padding:10px 16px; text-align:center;">Mora%</th>
-                    <th style="padding:10px 16px; text-align:center;">Riesgo%</th>
-                    <th style="padding:10px 16px; text-align:center;">Recup%</th>
-                    <th style="padding:10px 16px; text-align:center;">Reprog%</th>
-                    <th style="padding:10px 16px; text-align:center;">Estado</th>
-                    <th style="padding:10px 16px; text-align:center;">Acciones</th>
+            <thead style="position:sticky; top:0; z-index:10;">
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                    <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Nombre</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Vigencia desde</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Vigencia hasta</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Vigente</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Punt%</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Mora%</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Riesgo%</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Recup%</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Reprog%</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
             @foreach($registros as $r)
             @php $esVigente = \App\Models\PesoIndicador::vigente()?->id === $r->id; @endphp
-            <tr wire:key="pi-{{ $r->id }}" style="border-bottom:1px solid #F9FAFB; {{ $esVigente ? 'background:#FAFAFE;' : '' }}"
+            <tr wire:key="pi-{{ $r->id }}" style="border-bottom:1px solid #F3F4F6; {{ $esVigente ? 'background:#FAFAFE;' : '' }}"
                 @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background='{{ $esVigente ? '#FAFAFE' : '' }}'">
-                <td style="padding:11px 16px; font-size:13px; font-weight:600; color:#111827;">{{ $r->nombre }}</td>
-                <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
-                <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
-                <td style="padding:11px 16px; text-align:center;">
+                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($r->nombre)) }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
+                <td style="padding:10px 14px; text-align:center;">
                     @if($esVigente)
-                    <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#EDE9FE; color:#7B6FE8;">Sí</span>
+                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">Sí</span>
                     @else
                     <span style="font-size:13px; color:#9CA3AF;">—</span>
                     @endif
                 </td>
-                <td style="padding:11px 16px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#374151;">{{ $r->peso_puntualidad }}%</td>
-                <td style="padding:11px 16px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#374151;">{{ $r->peso_mora }}%</td>
-                <td style="padding:11px 16px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#374151;">{{ $r->peso_riesgo }}%</td>
-                <td style="padding:11px 16px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#374151;">{{ $r->peso_recuperacion }}%</td>
-                <td style="padding:11px 16px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#374151;">{{ $r->peso_reprogramacion }}%</td>
-                <td style="padding:11px 16px; text-align:center;">
-                    <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600;
+                <td style="padding:10px 14px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#111827;">{{ $r->peso_puntualidad }}%</td>
+                <td style="padding:10px 14px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#111827;">{{ $r->peso_mora }}%</td>
+                <td style="padding:10px 14px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#111827;">{{ $r->peso_riesgo }}%</td>
+                <td style="padding:10px 14px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#111827;">{{ $r->peso_recuperacion }}%</td>
+                <td style="padding:10px 14px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#111827;">{{ $r->peso_reprogramacion }}%</td>
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700;
                                  background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
                                  color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
                         {{ $r->activo ? 'Activo' : 'Inactivo' }}
                     </span>
                 </td>
-                <td style="padding:11px 16px; text-align:center;">
-                    <div style="display:flex; justify-content:center;">
-                        <button wire:click="edit({{ $r->id }})" title="Editar"
-                                style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </button>
-                    </div>
+                <td style="padding:10px 14px; text-align:center;">
+                    <button wire:click="edit({{ $r->id }})" title="Editar"
+                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;"
+                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </button>
                 </td>
             </tr>
             @endforeach
