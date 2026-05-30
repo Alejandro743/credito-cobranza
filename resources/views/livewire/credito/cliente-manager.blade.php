@@ -521,10 +521,10 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
 
                     <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $clientes->firstItem() + $loop->index }}</td>
                     <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:11px; font-family:monospace; font-weight:700; color:#7B6FE8; white-space:nowrap;">{{ $c->id_ln ?? '—' }}</span>
+                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#7B6FE8; white-space:nowrap;">{{ $c->id_ln ?? '—' }}</span>
                     </td>
                     <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; font-family:monospace; color:#374151; white-space:nowrap;">{{ $c->ci }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap;">{{ $c->ci }}</span>
                     </td>
                     <td style="padding:10px 16px; overflow:hidden;">
                         <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($c->usuario->name ?? '—')) }}</span>
@@ -533,13 +533,13 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                         <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($c->apellido ?? '—')) }}</span>
                     </td>
                     <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; color:#6B7280; white-space:nowrap;">{{ $c->telefono }}</span>
+                        <span style="font-size:13px; color:#6B7280; white-space:nowrap;">{{ $c->telefono }}</span>
                     </td>
                     <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; color:#6B7280; white-space:nowrap;">{{ ucwords(strtolower($c->ciudad)) }}</span>
+                        <span style="font-size:13px; color:#6B7280; white-space:nowrap;">{{ ucwords(strtolower($c->ciudad)) }}</span>
                     </td>
                     <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($c->vendedorUsuario->name ?? '—')) }}</span>
+                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($c->vendedorUsuario->name ?? '—')) }}</span>
                     </td>
                     <td style="padding:10px 16px; overflow:hidden;">
                         <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; white-space:nowrap;
