@@ -94,7 +94,7 @@
 @endif
 
 {{-- Tabla --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column;">
 
     {{-- Barra tabla --}}
     <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
@@ -109,16 +109,40 @@
     @else
 
     {{-- DESKTOP --}}
-    <div class="hidden sm:block" style="overflow-x:auto;">
-        <table class="corr-table" style="width:100%; border-collapse:collapse; font-size:13px;">
-            <thead>
+    <div class="hidden sm:block" style="display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
+    <div style="overflow:auto; flex:1;">
+        @if ($correlativos->isNotEmpty())
+        @php
+        $sortCols = ['Prefijo'=>'prefijo','Descripción'=>'descripcion','Sig. Número'=>'siguiente_numero','Longitud'=>'longitud','Estado'=>'activo'];
+        @endphp
+        <table style="table-layout:fixed; width:100%; min-width:680px; border-collapse:collapse; font-size:13px;">
+            <colgroup>
+                <col style="width:44px;">
+                <col style="width:180px;">
+                <col style="width:240px;">
+                <col style="width:120px;">
+                <col style="width:100px;">
+                <col style="width:100px;">
+                <col style="width:110px;">
+            </colgroup>
+            <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 16px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; text-align:left;">Prefijo</th>
-                    <th style="padding:10px 16px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; text-align:left;">Descripción</th>
-                    <th style="padding:10px 16px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; text-align:center;">Sig. Número</th>
-                    <th style="padding:10px 16px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; text-align:center;">Longitud</th>
-                    <th style="padding:10px 16px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; text-align:center;">Estado</th>
-                    <th style="padding:10px 16px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; text-align:center;">Acciones</th>
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                    @foreach($sortCols as $label => $key)
+                    @php $isActive = $sortBy === $key; @endphp
+                    <th wire:click="toggleSort('{{ $key }}')"
+                        style="padding:10px 14px; text-align:{{ in_array($label,['Sig. Número','Longitud','Estado']) ? 'center' : 'left' }}; user-select:none; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                            {{ $label }}
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                    </th>
+                    @endforeach
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -127,15 +151,16 @@
                 @if ($editingId === $c->id)
                 @php $eS = 'height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;'; @endphp
                 <tr wire:key="edit-{{ $c->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; border-left:3px solid #7B6FE8;">
-                    <td colspan="6" style="padding:14px 18px;">
-                        <div style="display:flex; gap:10px; align-items:flex-end; overflow-x:auto;">
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $correlativos->firstItem() + $loop->index }}</td>
+                    <td colspan="6" style="padding:10px 14px;">
+                        <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
                             <div style="width:100px;">
                                 <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Prefijo *</label>
                                 <input wire:model="editPrefijo" type="text" maxlength="10"
                                        style="{{ $eS }} width:100%; font-family:monospace; font-weight:700; text-transform:uppercase; letter-spacing:1px;">
                                 @error('editPrefijo') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                             </div>
-                            <div style="flex:1; min-width:180px;">
+                            <div style="flex:1; min-width:160px;">
                                 <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Descripción</label>
                                 <input wire:model="editDescripcion" type="text" maxlength="200"
                                        style="{{ $eS }} width:100%;">
@@ -176,28 +201,31 @@
                     </td>
                 </tr>
                 @else
-                <tr wire:key="row-{{ $c->id }}" style="border-bottom:1px solid #F9FAFB;"
+                <tr wire:key="row-{{ $c->id }}" style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-                    <td style="padding:11px 16px;">
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $correlativos->firstItem() + $loop->index }}</td>
+                    <td style="padding:10px 14px; overflow:hidden;">
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="font-family:monospace; font-size:13px; font-weight:700; color:#111827; letter-spacing:.5px;">{{ $c->prefijo }}</span>
+                            <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $c->prefijo }}</span>
                             <span style="font-size:11px; color:#9CA3AF;">→</span>
-                            <span style="font-family:monospace; font-size:12px; color:#7B6FE8; font-weight:600; background:#F0EEFF; padding:2px 7px; border-radius:6px;">
+                            <span style="font-family:monospace; font-size:12px; color:#7B6FE8; font-weight:600; background:#F0EEFF; padding:2px 7px; border-radius:6px; white-space:nowrap;">
                                 {{ $c->prefijo }}{{ str_pad($c->siguiente_numero, $c->longitud, '0', STR_PAD_LEFT) }}
                             </span>
                         </div>
                     </td>
-                    <td style="padding:11px 16px; font-size:13px; color:#6B7280;">{{ $c->descripcion ?? '—' }}</td>
-                    <td style="padding:11px 16px; text-align:center; font-family:monospace; font-size:13px; font-weight:600; color:#374151;">{{ $c->siguiente_numero }}</td>
-                    <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $c->longitud }}</td>
-                    <td style="padding:11px 16px; text-align:center;">
-                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600;
+                    <td style="padding:10px 14px; overflow:hidden;">
+                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->descripcion ? ucwords(strtolower($c->descripcion)) : '—' }}</span>
+                    </td>
+                    <td style="padding:10px 14px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#111827;">{{ $c->siguiente_numero }}</td>
+                    <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280;">{{ $c->longitud }}</td>
+                    <td style="padding:10px 14px; text-align:center;">
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
                                      background:{{ $c->activo ? '#D1FAE5' : '#F3F4F6' }};
                                      color:{{ $c->activo ? '#059669' : '#9CA3AF' }};">
                             {{ $c->activo ? 'Activo' : 'Inactivo' }}
                         </span>
                     </td>
-                    <td style="padding:11px 16px; text-align:center;">
+                    <td style="padding:10px 16px; text-align:center;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
                             <button wire:click="startEdit({{ $c->id }})" title="Editar"
                                     style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
@@ -212,6 +240,7 @@
                 @endforeach
             </tbody>
         </table>
+        @endif
     </div>
 
     {{-- MOBILE --}}
@@ -318,8 +347,9 @@
     </div>
 
     @if ($correlativos->hasPages())
-    <div style="padding:10px 18px; border-top:1px solid #F3F4F6;">{{ $correlativos->links() }}</div>
+    <div style="padding:10px 18px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $correlativos->links() }}</div>
     @endif
+    </div>{{-- end desktop block --}}
     @endif
 </div>
 

@@ -28,6 +28,21 @@ class CorrelativoManager extends Component
     public string $editDescripcion    = '';
     public bool   $editActivo         = true;
 
+    // ── Sort ──────────────────────────────────────────────────────────────────
+    public string $sortBy  = 'id';
+    public string $sortDir = 'asc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
 
     public function mount(): void
@@ -165,7 +180,9 @@ class CorrelativoManager extends Component
 
     public function render()
     {
-        $correlativos = ConfiguracionCorrelativo::orderBy('id')->paginate(20);
+        $allowed = ['prefijo', 'descripcion', 'siguiente_numero', 'longitud', 'activo'];
+        $col = in_array($this->sortBy, $allowed) ? $this->sortBy : 'id';
+        $correlativos = ConfiguracionCorrelativo::orderBy($col, $this->sortDir)->paginate(20);
         return view('livewire.admin.definiciones.correlativo-manager', compact('correlativos'));
     }
 }
