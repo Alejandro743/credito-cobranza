@@ -14,9 +14,22 @@ class ReprogramacionHistorial extends Component
 {
     use WithPagination;
 
-    public string $mode   = 'list';
-    public string $search = '';
-    public string $filtro = 'todos'; // todos | activo | inactivo
+    public string $mode    = 'list';
+    public string $search  = '';
+    public string $filtro  = 'todos';
+    public string $sortBy  = '';
+    public string $sortDir = 'asc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     public ?int $reprogramacionId = null;
 
@@ -170,7 +183,10 @@ class ReprogramacionHistorial extends Component
             )
             ->when($this->filtro === 'activo',   fn($q) => $q->whereHas('planNuevo', fn($p) => $p->where('estado', 'activo')))
             ->when($this->filtro === 'inactivo', fn($q) => $q->whereHas('planNuevo', fn($p) => $p->where('estado', 'inactivo')))
-            ->orderByDesc('created_at')
+            ->when($this->sortBy === 'fecha',  fn($q) => $q->orderBy('created_at', $this->sortDir))
+            ->when($this->sortBy === 'saldo',  fn($q) => $q->orderBy('saldo_reprogramado', $this->sortDir))
+            ->when($this->sortBy === 'numero', fn($q) => $q->orderBy('numero', $this->sortDir))
+            ->when(!$this->sortBy,             fn($q) => $q->orderByDesc('created_at'))
             ->paginate(15);
         }
 

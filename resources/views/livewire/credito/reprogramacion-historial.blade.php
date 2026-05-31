@@ -3,116 +3,168 @@
 {{-- ══ LIST ══ --}}
 @if($mode === 'list')
 
-<div class="ds-section-header">
-    <div style="width:38px;height:38px;background:#E8F0F7;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
-        <svg width="20" height="20" fill="none" stroke="#6D8196" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+{{-- Toolbar --}}
+<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5 mb-5">
+    <div class="relative w-full sm:flex-1" style="min-width:0; max-width:100%;">
+        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
         </svg>
+        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Código, CI, cliente o pedido..."
+               style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
     </div>
-    <div style="flex:1;">
-        <h2>Historial de Reprogramaciones</h2>
-        <p>Planes de pago reprogramados</p>
+    <div style="display:flex; gap:6px; flex-wrap:wrap;">
+        @foreach(['todos'=>'Todos','activo'=>'Plan activo','inactivo'=>'Plan inactivo'] as $val => $lbl)
+        <button wire:click="$set('filtro','{{ $val }}')"
+                style="padding:5px 12px; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap; border-radius:7px; -webkit-appearance:none; appearance:none;
+                       border:1.5px solid {{ $filtro===$val ? '#C4B5FD' : '#E5E7EB' }};
+                       background:{{ $filtro===$val ? '#EDE9FE' : 'transparent' }};
+                       color:{{ $filtro===$val ? '#7B6FE8' : '#9CA3AF' }};">
+            {{ $lbl }}
+        </button>
+        @endforeach
     </div>
+    <a href="{{ route('credito.reprogramacion.nueva') }}"
+       style="height:36px; padding:0 18px; display:flex; align-items:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; text-decoration:none;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Nueva Reprogramación
+    </a>
 </div>
 
-<div class="ds-table-card">
-    <div class="ds-table-toolbar">
-        <div style="position:relative;flex:1;max-width:280px;">
-            <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="#CBCBCB" stroke-width="2" stroke-linecap="round">
-                <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-            </svg>
-            <input wire:model.live.debounce.300ms="search" type="text" placeholder="Código, CI, cliente o pedido..."
-                   style="padding-left:32px;width:100%;">
+{{-- MOBILE: Cards --}}
+<div class="sm:hidden flex flex-col" style="gap:10px;">
+    @forelse($reprogramaciones as $rp)
+    @php $esActivo = $rp->planNuevo?->estado === 'activo'; @endphp
+    <div wire:key="rp-mob-{{ $rp->id }}"
+         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
+        <div style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #F3F4F6;">
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8;">{{ strtoupper(substr($rp->pedido->cliente->nombre_completo, 0, 1)) }}</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+                <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($rp->pedido->cliente->nombre_completo)) }}</p>
+                <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;">{{ $rp->numero }}</p>
+            </div>
+            <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; flex-shrink:0;
+                         background:{{ $esActivo ? '#D1FAE5' : '#F3F4F6' }};
+                         color:{{ $esActivo ? '#059669' : '#9CA3AF' }};">{{ $esActivo ? 'Activo' : 'Inactivo' }}</span>
         </div>
-
-        <div style="display:flex;gap:6px;">
-            <button wire:click="$set('filtro','todos')" class="ds-btn ds-btn-sm" style="{{ $filtro==='todos' ? 'background:#6D8196;color:#fff;' : 'background:#FFFFE3;color:#6D8196;border:1.5px solid #CBCBCB;' }}">Todos</button>
-            <button wire:click="$set('filtro','activo')" class="ds-btn ds-btn-sm" style="{{ $filtro==='activo' ? 'background:#6D8196;color:#fff;' : 'background:#FFFFE3;color:#6D8196;border:1.5px solid #CBCBCB;' }}">Plan activo</button>
-            <button wire:click="$set('filtro','inactivo')" class="ds-btn ds-btn-sm" style="{{ $filtro==='inactivo' ? 'background:#FCA5A5;color:#991B1B;' : 'background:#FFFFE3;color:#6D8196;border:1.5px solid #CBCBCB;' }}">Plan inactivo</button>
+        <div style="padding:10px 14px; display:flex; gap:8px;">
+            <div style="flex:1;">
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Pedido</span>
+                <span style="font-size:12px; font-weight:600; color:#374151; font-family:monospace;">{{ $rp->pedido->numero }}</span>
+            </div>
+            <div style="flex:1;">
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Fecha</span>
+                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $rp->created_at->format('d/m/Y') }}</span>
+            </div>
+            <div style="text-align:right;">
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Saldo reprog.</span>
+                <span style="font-size:13px; font-weight:700; color:#DC2626;">Bs. {{ number_format($rp->saldo_reprogramado, 2) }}</span>
+            </div>
         </div>
-
-        <div style="margin-left:auto;">
-            <a href="{{ route('credito.reprogramacion.nueva') }}" class="ds-btn ds-btn-primary ds-btn-sm">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                </svg>
-                Nueva Reprogramación
-            </a>
+        <div style="padding:10px 14px; border-top:1px solid #F3F4F6;">
+            <button wire:click="verDetalle({{ $rp->id }})"
+                    style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; background:#F5F3FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; -webkit-appearance:none; appearance:none;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                Ver
+            </button>
         </div>
     </div>
+    @empty
+    <div style="text-align:center; padding:48px 24px;">
+        <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <p style="font-weight:600; color:#6B7280; font-size:13px;">Sin reprogramaciones registradas</p>
+    </div>
+    @endforelse
+    @if($reprogramaciones->hasPages())
+    <div style="padding-top:8px;">{{ $reprogramaciones->links() }}</div>
+    @endif
+</div>
 
-    <div style="overflow-x:auto;">
-    <table style="min-width:700px;">
-        <thead>
-            <tr>
-                <th class="ds-sticky-col" style="padding:0;height:1px;">
-                    <div style="display:flex;align-items:stretch;height:100%;">
-                        <div style="width:130px;padding:10px 12px;border-right:1px solid #CBCBCB;display:flex;align-items:center;justify-content:center;">Código</div>
-                        <div style="flex:1;padding:10px 12px;display:flex;align-items:center;justify-content:center;">Cliente</div>
-                    </div>
+{{-- DESKTOP: Tabla --}}
+@php
+$sortColsRH = ['Código'=>'numero','Cliente'=>null,'Pedido'=>null,'Versión'=>null,'Fecha'=>'fecha','Saldo reprog.'=>'saldo','Plan'=>null];
+@endphp
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
+
+    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
+        <span style="font-size:13px; font-weight:700; color:#111827;">Historial de Reprogramaciones</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $reprogramaciones->total() }}</span>
+    </div>
+
+    <div style="overflow:auto; flex:1;">
+    <table style="width:100%; min-width:780px; border-collapse:collapse; font-size:13px;">
+        <thead style="position:sticky; top:0; z-index:10;">
+            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                @foreach($sortColsRH as $label => $key)
+                @php $isActive = $key && $sortBy === $key; @endphp
+                <th @if($key) wire:click="toggleSort('{{ $key }}')" @endif
+                    style="padding:10px 14px; text-align:{{ in_array($label,['Versión','Fecha','Saldo reprog.','Plan','Ver']) ? 'center' : 'left' }}; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; {{ $key ? 'cursor:pointer; user-select:none;' : '' }} {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    @if($key) @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'" @endif>
+                    <span style="display:inline-flex; align-items:center; gap:5px;">{{ $label }}
+                        @if($key)
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        @endif
+                    </span>
                 </th>
-                <th>Pedido</th>
-                <th style="text-align:center;">Versión</th>
-                <th style="text-align:center;">Fecha</th>
-                <th style="text-align:center;">Saldo reprog.</th>
-                <th style="text-align:center;">Plan</th>
-                <th>Ver</th>
+                @endforeach
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acción</th>
             </tr>
         </thead>
         <tbody>
             @forelse($reprogramaciones as $rp)
             @php $esActivo = $rp->planNuevo?->estado === 'activo'; @endphp
-            <tr wire:key="rp-{{ $rp->id }}">
-                <td data-label="Código / Cliente" class="ds-sticky-col" style="height:1px;">
-                    <div style="display:flex;align-items:stretch;height:100%;">
-                        <div style="width:130px;padding:10px 12px;border-right:1px solid #e5e7eb;font-family:monospace;font-size:11px;color:#6D8196;font-weight:700;display:flex;align-items:center;justify-content:center;">{{ $rp->numero }}</div>
-                        <div style="flex:1;padding:10px 12px;">
-                            <p style="font-weight:600;font-size:13px;color:#4A4A4A;margin:0;">{{ $rp->pedido->cliente->nombre_completo }}</p>
-                            @if($rp->pedido->cliente->ci)<p style="font-size:11px;color:#CBCBCB;margin:0;">CI: {{ $rp->pedido->cliente->ci }}</p>@endif
-                        </div>
+            <tr wire:key="rp-{{ $rp->id }}"
+                style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
+                @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $reprogramaciones->firstItem() + $loop->index }}</td>
+                <td style="padding:10px 14px; font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $rp->numero }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">
+                    {{ ucwords(strtolower($rp->pedido->cliente->nombre_completo)) }}
+                    @if($rp->pedido->cliente->ci)<span style="display:block; font-size:11px; color:#9CA3AF;">CI: {{ $rp->pedido->cliente->ci }}</span>@endif
+                </td>
+                <td style="padding:10px 14px; text-align:center; font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $rp->pedido->numero }}</td>
+                <td style="padding:10px 14px; text-align:center;">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
+                        <span style="padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700; background:#F3F4F6; color:#6B7280;">v{{ $rp->version_anterior }}</span>
+                        <svg width="11" height="11" fill="none" stroke="#D1D5DB" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+                        <span style="padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">v{{ $rp->version_nueva }}</span>
                     </div>
                 </td>
-                <td data-label="Pedido" style="text-align:center;font-family:monospace;font-size:11px;font-weight:600;">{{ $rp->pedido->numero }}</td>
-                <td data-label="Versión" style="text-align:center;">
-                    <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
-                        <span class="ds-badge ds-badge-cerrado">v{{ $rp->version_anterior }}</span>
-                        <svg width="11" height="11" fill="none" stroke="#CBCBCB" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        <span class="ds-badge ds-badge-aprobado">v{{ $rp->version_nueva }}</span>
-                    </div>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $rp->created_at->format('d/m/Y') }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; font-weight:700; color:#DC2626; white-space:nowrap; font-family:monospace;">Bs. {{ number_format($rp->saldo_reprogramado, 2) }}</td>
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700;
+                                 background:{{ $esActivo ? '#D1FAE5' : '#F3F4F6' }};
+                                 color:{{ $esActivo ? '#059669' : '#9CA3AF' }};">
+                        {{ $esActivo ? 'Activo' : 'Inactivo' }}
+                    </span>
                 </td>
-                <td data-label="Fecha" style="text-align:center;color:#CBCBCB;font-size:11px;">{{ $rp->created_at->format('d/m/Y') }}</td>
-                <td data-label="Saldo" style="text-align:center;font-family:monospace;font-weight:700;color:#DC2626;font-size:12px;">Bs. {{ number_format($rp->saldo_reprogramado, 2) }}</td>
-                <td data-label="Plan" style="text-align:center;">
-                    <span class="ds-badge {{ $esActivo ? 'ds-badge-aprobado' : 'ds-badge-cerrado' }}">{{ $esActivo ? 'Activo' : 'Inactivo' }}</span>
-                </td>
-                <td data-label="" style="text-align:center;">
-                    <button wire:click="verDetalle({{ $rp->id }})" class="ds-btn ds-btn-ghost ds-btn-sm">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                        Ver
+                <td style="padding:10px 14px; text-align:center;">
+                    <button wire:click="verDetalle({{ $rp->id }})"
+                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;"
+                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'" title="Ver">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                     </button>
                 </td>
             </tr>
             @empty
-            <tr>
-                <td colspan="7">
-                    <div class="ds-empty">
-                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                        </svg>
-                        <p>Sin reprogramaciones registradas</p>
-                    </div>
+            <tr wire:key="rp-empty">
+                <td colspan="9" style="padding:64px 24px; text-align:center;">
+                    <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <p style="font-weight:600; color:#6B7280; font-size:13px;">Sin reprogramaciones registradas</p>
                 </td>
             </tr>
             @endforelse
         </tbody>
     </table>
     </div>
-
     @if($reprogramaciones->hasPages())
-    <div style="padding:10px 16px;border-top:1px solid #CBCBCB;">{{ $reprogramaciones->links() }}</div>
+    <div style="padding:10px 16px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $reprogramaciones->links() }}</div>
     @endif
 </div>
 
