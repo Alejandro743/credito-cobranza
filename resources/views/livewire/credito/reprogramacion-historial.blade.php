@@ -83,7 +83,7 @@
 
 {{-- DESKTOP: Tabla --}}
 @php
-$sortColsRH = ['Código'=>'numero','Cliente'=>null,'Pedido'=>null,'Versión'=>null,'Fecha'=>'fecha','Saldo reprog.'=>'saldo','Plan'=>null];
+$sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Versión'=>null,'Fecha'=>'fecha','Saldo reprog.'=>'saldo','Plan'=>null];
 @endphp
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
@@ -123,10 +123,8 @@ $sortColsRH = ['Código'=>'numero','Cliente'=>null,'Pedido'=>null,'Versión'=>nu
                 @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
                 <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $reprogramaciones->firstItem() + $loop->index }}</td>
                 <td style="padding:10px 14px; font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $rp->numero }}</td>
-                <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">
-                    {{ ucwords(strtolower($rp->pedido->cliente->nombre_completo)) }}
-                    @if($rp->pedido->cliente->ci)<span style="display:block; font-size:11px; color:#9CA3AF;">CI: {{ $rp->pedido->cliente->ci }}</span>@endif
-                </td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $rp->pedido->cliente->ci ?: '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($rp->pedido->cliente->nombre_completo)) }}</td>
                 <td style="padding:10px 14px; text-align:center; font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $rp->pedido->numero }}</td>
                 <td style="padding:10px 14px; text-align:center;">
                     <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
@@ -154,7 +152,7 @@ $sortColsRH = ['Código'=>'numero','Cliente'=>null,'Pedido'=>null,'Versión'=>nu
             </tr>
             @empty
             <tr wire:key="rp-empty">
-                <td colspan="9" style="padding:64px 24px; text-align:center;">
+                <td colspan="10" style="padding:64px 24px; text-align:center;">
                     <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                     <p style="font-weight:600; color:#6B7280; font-size:13px;">Sin reprogramaciones registradas</p>
                 </td>
