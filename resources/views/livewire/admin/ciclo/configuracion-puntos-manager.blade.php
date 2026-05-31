@@ -163,22 +163,36 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
 @endif
 
 {{-- Tabla escritorio --}}
-<div class="hidden sm:block" style="background:#fff;border-radius:16px;border:1px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;">
+@php
+$sortColsP = ['Ciclo'=>'code','Valor / Pto'=>'valor_punto','Estado'=>'active'];
+@endphp
+<div class="hidden sm:block" style="background:#fff;border-radius:16px;border:1px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;display:flex;flex-direction:column;max-height:calc(100vh - 180px);">
 
-    <div style="padding:10px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #F3F4F6;">
+    <div style="padding:10px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #F3F4F6;flex-shrink:0;">
         <span style="font-size:13px;font-weight:700;color:#111827;">Configuración de Puntos</span>
-        <span style="background:#F3F4F6;color:#6B7280;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;">{{ $puntos->total() }}</span>
+        <span style="background:#EDE9FE;color:#7B6FE8;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;">{{ $puntos->total() }}</span>
     </div>
 
-    <div style="overflow-x:auto;">
+    <div style="overflow:auto;flex:1;">
         <table style="width:100%;border-collapse:collapse;min-width:640px;">
-            <thead>
-                <tr style="background:#F8F7FF;">
-                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;width:150px;">Ciclo</th>
-                    <th style="padding:10px 16px;text-align:center;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;width:120px;">Valor / Pto</th>
-                    <th style="padding:10px 16px;text-align:left;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;">Descripción</th>
-                    <th style="padding:10px 16px;text-align:center;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;width:100px;">Estado</th>
-                    <th style="padding:10px 16px;text-align:center;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;width:160px;">Acciones</th>
+            <thead style="position:sticky;top:0;z-index:10;">
+                <tr style="background:#F9F8FF;border-bottom:2px solid #EDE9FE;">
+                    <th style="padding:10px 8px;text-align:center;font-size:11px;font-weight:700;color:#C4B5FD;text-transform:uppercase;letter-spacing:.5px;">#</th>
+                    @foreach($sortColsP as $label => $key)
+                    @php $isActive = $sortBy === $key; @endphp
+                    <th wire:click="toggleSort('{{ $key }}')"
+                        style="padding:10px 14px;text-align:{{ $label === 'Ciclo' ? 'left' : 'center' }};font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;cursor:pointer;user-select:none;{{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="display:inline-flex;align-items:center;gap:5px;">{{ $label }}
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                    </th>
+                    @endforeach
+                    <th style="padding:10px 14px;text-align:left;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;">Descripción</th>
+                    <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -186,6 +200,7 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 @if($editingId === $punto->id)
                 {{-- Fila edición inline --}}
                 <tr wire:key="edit-{{ $punto->id }}" style="background:#FAFAFE;border-bottom:1px solid #EDE9FE;">
+                    <td class="col-row-num" style="padding:10px 8px;text-align:center;font-size:11px;font-weight:700;white-space:nowrap;">{{ $puntos->firstItem() + $loop->index }}</td>
                     <td style="padding:10px 16px;">
                         <select wire:model="editCycleId" style="width:100%;{{ $iRow }} cursor:pointer;">
                             <option value="{{ $punto->cycle->id }}">{{ $punto->cycle->code }}</option>
@@ -231,42 +246,41 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 </tr>
                 @else
                 {{-- Fila normal --}}
-                <tr wire:key="p-{{ $punto->id }}" style="border-bottom:1px solid #F9FAFB;"
+                <tr wire:key="p-{{ $punto->id }}" style="border-bottom:1px solid #F3F4F6;transition:background .1s;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-                    <td style="padding:11px 16px;">
-                        <span style="font-family:monospace;font-size:13px;font-weight:700;color:#7B6FE8;">{{ $punto->cycle->code }}</span>
+                    <td class="col-row-num" style="padding:10px 8px;text-align:center;font-size:11px;font-weight:700;white-space:nowrap;">{{ $puntos->firstItem() + $loop->index }}</td>
+                    <td style="padding:10px 14px;">
+                        <span style="font-family:monospace;font-size:12px;font-weight:700;color:#111827;">{{ $punto->cycle->code }}</span>
                     </td>
-                    <td style="padding:11px 16px;text-align:center;">
+                    <td style="padding:10px 14px;text-align:center;">
                         <span style="font-size:13px;font-weight:700;color:#7B6FE8;">Bs {{ number_format((float)$punto->valor_punto, 2) }}</span>
                         <span style="font-size:11px;color:#9CA3AF;"> / pto</span>
                     </td>
-                    <td style="padding:11px 16px;font-size:13px;color:#6B7280;">
-                        {{ $punto->description ?? '—' }}
+                    <td style="padding:10px 14px;text-align:center;">
+                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;
+                                     background:{{ $punto->active ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $punto->active ? '#059669' : '#9CA3AF' }};">
+                            {{ $punto->active ? 'Activo' : 'Inactivo' }}
+                        </span>
                     </td>
-                    <td style="padding:11px 16px;text-align:center;">
-                        @if($punto->active)
-                        <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#D1FAE5;color:#059669;">Activo</span>
-                        @else
-                        <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#F3F4F6;color:#9CA3AF;">Inactivo</span>
-                        @endif
-                    </td>
-                    <td style="padding:11px 16px;text-align:center;">
+                    <td style="padding:10px 14px;font-size:13px;color:#6B7280;">{{ $punto->description ?? '—' }}</td>
+                    <td style="padding:10px 14px;text-align:center;">
                         <button wire:click="startEdit({{ $punto->id }})" title="Editar"
-                                style="width:28px;height:28px;border-radius:7px;border:1px solid #EDE9FE;background:#F8F7FF;color:#7B6FE8;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;"
-                                @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                                style="width:28px;height:28px;border-radius:7px;border:1px solid #EDE9FE;background:#F5F3FF;color:#7B6FE8;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto;-webkit-appearance:none;appearance:none;"
+                                @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'">
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                         </button>
                     </td>
                 </tr>
                 @endif
                 @empty
-                <tr><td colspan="5" style="padding:48px;text-align:center;color:#9CA3AF;font-size:13px;">No hay configuraciones de puntos registradas.</td></tr>
+                <tr><td colspan="6" style="padding:48px;text-align:center;color:#9CA3AF;font-size:13px;">No hay configuraciones de puntos registradas.</td></tr>
                 @endforelse
             </tbody>
         </table>
     </div>
     @if($puntos->hasPages())
-    <div style="padding:12px 18px;border-top:1px solid #F3F4F6;">{{ $puntos->links() }}</div>
+    <div style="padding:10px 16px;border-top:1px solid #F3F4F6;flex-shrink:0;">{{ $puntos->links() }}</div>
     @endif
 </div>
 

@@ -15,6 +15,19 @@ class ConfiguracionPuntosManager extends Component
 
     public string $search       = '';
     public string $filterStatus = '';
+    public string $sortBy       = 'code';
+    public string $sortDir      = 'asc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
 
     // Inline add
     public bool   $showAddForm     = false;
@@ -139,7 +152,10 @@ class ConfiguracionPuntosManager extends Component
                       ->orWhere('code', 'like', "%{$this->search}%")))
             ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
             ->join('commercial_cycles', 'commercial_cycles.id', '=', 'configuracion_puntos.cycle_id')
-            ->orderBy('commercial_cycles.code')
+            ->when($this->sortBy === 'code',        fn($q) => $q->orderBy('commercial_cycles.code', $this->sortDir))
+            ->when($this->sortBy === 'valor_punto', fn($q) => $q->orderBy('configuracion_puntos.valor_punto', $this->sortDir))
+            ->when($this->sortBy === 'active',      fn($q) => $q->orderBy('configuracion_puntos.active', $this->sortDir))
+            ->when(!$this->sortBy,                  fn($q) => $q->orderBy('commercial_cycles.code'))
             ->select('configuracion_puntos.*')
             ->paginate(15);
 
