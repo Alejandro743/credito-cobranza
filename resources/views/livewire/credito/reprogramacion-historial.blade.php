@@ -179,167 +179,196 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
     $pendiente  = $cuotas->where('estado','!=','pagado')->sum('monto');
     $esActivo   = $planNuevo?->estado === 'activo';
 @endphp
-<div style="max-width:680px;margin:0 auto;padding-bottom:40px;">
 
-    <div style="margin-bottom:16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
-        <button wire:click="volver" class="ds-btn ds-btn-secondary ds-btn-sm">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
-            Historial
-        </button>
-        <div style="display:flex;gap:8px;align-items:center;">
-            @if($esActivo)
-            <button wire:click="editarPlan" class="ds-btn ds-btn-ghost ds-btn-sm">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                </svg>
-                Editar plan
-            </button>
-            @endif
-            <a href="{{ route('credito.reprogramacion.nueva') }}" class="ds-btn ds-btn-primary ds-btn-sm">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                </svg>
-                Nueva Reprogramación
-            </a>
-        </div>
+<style>
+.rp-det-btns { display:flex; flex-direction:column; gap:8px; margin-top:20px; }
+@media (min-width:640px) { .rp-det-btns { flex-direction:row; justify-content:flex-end; } }
+</style>
+
+<div style="max-width:900px; margin:0 auto;">
+
+    {{-- Timestamp --}}
+    <div style="display:flex; align-items:center; justify-content:flex-end; margin-bottom:12px;">
+        <span style="font-size:11px; color:#CBCBCB; white-space:nowrap;">{{ $rp->created_at->format('d/m/Y H:i') }}</span>
     </div>
 
-    {{-- Header --}}
-    <div style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;overflow:hidden;margin-bottom:14px;">
-        <div style="padding:14px 18px;border-bottom:1px solid #CBCBCB;">
-            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-                <div>
-                    <p style="font-family:monospace;font-size:13px;font-weight:800;color:#6D8196;margin:0;">{{ $rp->numero }}</p>
-                    <p style="font-size:15px;font-weight:700;color:#4A4A4A;margin:2px 0 0;">{{ $p->cliente->nombre_completo }}</p>
-                    <p style="font-size:11px;color:#CBCBCB;margin:0;">CI: {{ $p->cliente->ci ?? '—' }} · Pedido: <span style="font-family:monospace;font-weight:600;">{{ $p->numero }}</span></p>
+    {{-- Cabecera lila --}}
+    <div style="background:#EDE9FE; border:1px solid #C4B5FD; border-radius:14px; padding:16px 18px; margin:0 0 4px; text-align:center;">
+        <h1 style="font-size:20px; font-weight:800; color:#534AB7; letter-spacing:-0.3px; margin:0 0 10px;">
+            REPROGRAMACIÓN DE CRÉDITO
+        </h1>
+        <p style="font-size:15px; font-weight:700; color:#534AB7; font-family:monospace; margin:0 0 8px;">
+            {{ $rp->numero }}
+        </p>
+        <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:8px;">
+            <span class="ds-badge ds-badge-cerrado">v{{ $rp->version_anterior }}</span>
+            <svg width="11" height="11" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
+            <span class="ds-badge ds-badge-aprobado">v{{ $rp->version_nueva }}</span>
+        </div>
+        <span style="font-size:14px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:{{ $esActivo ? '#15803D' : '#6b7280' }};">
+            {{ $esActivo ? 'ACTIVO' : 'INACTIVO' }}
+        </span>
+    </div>
+
+    <div style="padding:12px 0 16px;">
+
+        {{-- Separador Cliente --}}
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em;">Cliente</span>
+            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+        </div>
+
+        <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:14px 16px; text-align:center; box-shadow:0 2px 8px rgba(123,111,232,0.08);">
+            <span style="font-size:19px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</span>
+            <span style="font-size:13px; font-weight:700; color:#7B6FE8; display:block; margin-top:2px;">CI: {{ $p->cliente->ci ?: '—' }}</span>
+            <span style="font-size:11px; color:#CBCBCB; display:block; margin-top:4px;">Pedido: <span style="font-family:monospace; font-weight:600;">{{ $p->numero }}</span> · {{ $rp->creadoPor->name ?? '—' }}</span>
+        </div>
+
+        <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; padding:10px 12px; margin-top:8px;">
+            <span style="font-size:9px; font-weight:500; color:#534AB7; display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.04em;">Motivo</span>
+            <span style="font-size:13px; color:#3C3489; display:block; line-height:1.5;">{{ $rp->motivo }}</span>
+        </div>
+
+        {{-- ── Separador Resumen ── --}}
+        <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Resumen</span>
+            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+        </div>
+
+        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.18), 0 1px 4px rgba(123,111,232,0.10);">
+            <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#DC2626 100%);"></div>
+            <div style="padding:14px;">
+                <div style="margin-bottom:8px; text-align:center;">
+                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Saldo Reprogramado Bs.</span>
+                    <span style="font-size:26px; font-weight:900; color:#DC2626; line-height:1; display:block; font-family:monospace;">{{ number_format($rp->saldo_reprogramado, 2) }}</span>
                 </div>
-                <div style="text-align:right;">
-                    <div style="display:flex;align-items:center;gap:5px;justify-content:flex-end;margin-bottom:4px;">
-                        <span class="ds-badge ds-badge-cerrado">v{{ $rp->version_anterior }}</span>
-                        <svg width="11" height="11" fill="none" stroke="#CBCBCB" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-                        <span class="ds-badge ds-badge-aprobado">v{{ $rp->version_nueva }}</span>
-                        <span class="ds-badge {{ $esActivo ? 'ds-badge-aprobado' : 'ds-badge-cerrado' }}">{{ $esActivo ? 'Activo' : 'Inactivo' }}</span>
+                <div style="height:1px; background:#EDE9FE; margin-bottom:8px;"></div>
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); text-align:center;">
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Plan</span>
+                        <span style="font-size:13px; font-weight:900; color:#111827; line-height:1.1; font-family:monospace;">{{ number_format($planNuevo?->total_pagar ?? 0, 2) }}</span>
                     </div>
-                    <p style="font-size:11px;color:#CBCBCB;margin:0;">{{ $rp->created_at->format('d/m/Y H:i') }} · {{ $rp->creadoPor->name ?? '—' }}</p>
+                    <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pagado</span>
+                        <span style="font-size:13px; font-weight:900; color:#059669; line-height:1.1; font-family:monospace;">{{ number_format($pagado, 2) }}</span>
+                    </div>
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pendiente</span>
+                        <span style="font-size:13px; font-weight:900; color:#DC2626; line-height:1.1; font-family:monospace;">{{ number_format($pendiente, 2) }}</span>
+                    </div>
                 </div>
             </div>
         </div>
-        <div style="padding:12px 18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;">
-            <div style="flex:1;">
-                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#CBCBCB;margin:0 0 3px;">Motivo</p>
-                <p style="font-size:12px;color:#4A4A4A;margin:0;line-height:1.5;">{{ $rp->motivo }}</p>
-            </div>
-            <div style="text-align:right;flex-shrink:0;">
-                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:#CBCBCB;margin:0 0 3px;">Saldo reprog.</p>
-                <p style="font-size:14px;font-weight:800;color:#DC2626;font-family:monospace;margin:0;">Bs. {{ number_format($rp->saldo_reprogramado, 2) }}</p>
-            </div>
-        </div>
-    </div>
 
-    {{-- Resumen --}}
-    <div class="ds-stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px;">
-        <div class="ds-stat-card" style="flex-direction:column;align-items:center;text-align:center;padding:12px 8px;gap:4px;">
-            <div class="ds-stat-value" style="font-size:15px;">Bs. {{ number_format($planNuevo?->total_pagar ?? 0, 2) }}</div>
-            <div class="ds-stat-label">Total plan</div>
+        {{-- ── Separador Plan de Pagos ── --}}
+        <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Plan de Pagos</span>
+            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+            <span style="font-size:10px; font-weight:700; background:#EEEDFE; color:#534AB7; border-radius:99px; padding:2px 8px;">
+                v{{ $rp->version_nueva }}{{ $planNuevo ? ' · '.$planNuevo->cantidad_cuotas.' cuotas' : '' }}{{ $planNuevo?->matriz_nombre ? ' · '.$planNuevo->matriz_nombre : '' }}
+            </span>
         </div>
-        <div class="ds-stat-card" style="flex-direction:column;align-items:center;text-align:center;padding:12px 8px;gap:4px;">
-            <div class="ds-stat-value" style="font-size:15px;color:#059669;">Bs. {{ number_format($pagado, 2) }}</div>
-            <div class="ds-stat-label">Pagado</div>
-        </div>
-        <div class="ds-stat-card" style="flex-direction:column;align-items:center;text-align:center;padding:12px 8px;gap:4px;">
-            <div class="ds-stat-value" style="font-size:15px;color:#DC2626;">Bs. {{ number_format($pendiente, 2) }}</div>
-            <div class="ds-stat-label">Pendiente</div>
-        </div>
-    </div>
 
-    {{-- Plan anterior (collapsible) --}}
-    @if($planViejo && $cuotasViej->isNotEmpty())
-    <div x-data="{ abierto: false }" style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;overflow:hidden;margin-bottom:14px;">
-        <button @click="abierto = !abierto"
-                style="width:100%;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;background:#F7F7F0;border:none;cursor:pointer;text-align:left;">
-            <div style="display:flex;align-items:center;gap:8px;">
-                <span style="font-size:13px;font-weight:700;color:#CBCBCB;">Plan anterior · v{{ $rp->version_anterior }}</span>
-                <span class="ds-badge ds-badge-cerrado">REEMPLAZADO</span>
+        {{-- Tabla cuotas nuevas --}}
+        <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden;">
+            <div style="background:#F8F7FF; display:grid; padding:8px 12px; grid-template-columns:36px 1fr 1fr 1fr 88px; gap:4px;">
+                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">#</p>
+                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:right;">Monto</p>
+                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Vencimiento</p>
+                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Fecha pago</p>
+                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Estado</p>
             </div>
-            <svg :class="abierto ? 'rotate-180' : ''" class="w-4 h-4 transition-transform" style="color:#CBCBCB;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-            </svg>
-        </button>
-        <div x-show="abierto" x-collapse>
-            <div style="overflow-x:auto;">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="text-align:center;width:50px;">#</th>
-                        <th style="text-align:right;">Monto</th>
-                        <th style="text-align:center;">Vencimiento</th>
-                        <th style="text-align:center;width:110px;">Estado</th>
-                    </tr>
-                </thead>
-                <tbody>
+            @forelse($cuotas as $c)
+            @php $badge = $c->estadoFinancieroBadge; @endphp
+            <div style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }} display:grid; align-items:center; padding:8px 12px; grid-template-columns:36px 1fr 1fr 1fr 88px; gap:4px;">
+                <span style="font-size:11px; color:#374151;">{{ $c->numero }}</span>
+                <span style="font-size:13px; font-weight:700; color:#7c3aed; text-align:right; font-family:monospace;">{{ number_format($c->monto, 2) }}</span>
+                <span style="font-size:11px; color:#6b7280; text-align:center;">{{ $c->fecha_vencimiento ? $c->fecha_vencimiento->format('d/m/Y') : '—' }}</span>
+                <span style="font-size:11px; text-align:center; font-weight:{{ $c->fecha_pago ? '600' : '400' }}; color:{{ $c->fecha_pago ? '#059669' : '#D1D5DB' }};">{{ $c->fecha_pago ? $c->fecha_pago->format('d/m/Y') : '—' }}</span>
+                <span style="display:flex; justify-content:center;">
+                    <span class="ds-badge" style="background:{{ $badge['bg'] }};color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span>
+                </span>
+            </div>
+            @empty
+            <div style="padding:32px 12px; text-align:center;">
+                <p style="font-size:13px; color:#9CA3AF; margin:0;">Sin cuotas</p>
+            </div>
+            @endforelse
+            <div style="background:#F8F7FF; border-top:1px solid #EDE9FE; padding:8px 12px; display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:10px; color:#9CA3AF;">{{ $cuotas->where('estado','pagado')->count() }} pagadas · {{ $cuotas->where('estado','!=','pagado')->count() }} pendientes</span>
+                <span style="font-size:11px; font-weight:700; color:#6D8196; font-family:monospace;">Bs. {{ number_format($planNuevo?->total_pagar ?? 0, 2) }}</span>
+            </div>
+        </div>
+
+        {{-- Acordeón plan anterior --}}
+        @if($planViejo && $cuotasViej->isNotEmpty())
+        <div x-data="{ abierto: false }" style="margin-top:14px; border:1px solid #E5E7EB; border-radius:10px; overflow:hidden;">
+            <button @click="abierto = !abierto"
+                    style="width:100%; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; background:#F9F8FF; border:none; cursor:pointer; text-align:left;">
+                <div style="display:flex; align-items:center; gap:8px;">
+                    <span style="font-size:12px; font-weight:700; color:#9CA3AF;">Plan anterior · v{{ $rp->version_anterior }}</span>
+                    <span class="ds-badge ds-badge-cerrado">REEMPLAZADO</span>
+                </div>
+                <svg :class="abierto ? 'rotate-180' : ''" class="transition-transform" style="color:#CBCBCB; width:16px; height:16px; flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                </svg>
+            </button>
+            <div x-show="abierto" x-collapse>
+                <div style="border-top:1px solid #E5E7EB;">
+                    <div style="background:#F8F7FF; display:grid; padding:8px 12px; grid-template-columns:36px 1fr 1fr 88px; gap:4px;">
+                        <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">#</p>
+                        <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:right;">Monto</p>
+                        <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Vencimiento</p>
+                        <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Estado</p>
+                    </div>
                     @foreach($cuotasViej as $c)
                     @php $badge = $c->estadoFinancieroBadge; @endphp
-                    <tr style="{{ $c->estado==='pagado' ? 'opacity:0.55;' : '' }}">
-                        <td style="text-align:center;font-weight:700;">{{ $c->numero }}</td>
-                        <td style="text-align:right;font-family:monospace;font-weight:700;">Bs. {{ number_format($c->monto, 2) }}</td>
-                        <td style="text-align:center;color:#CBCBCB;">{{ $c->fecha_vencimiento ? \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') : '—' }}</td>
-                        <td style="text-align:center;"><span class="ds-badge" style="background:{{ $badge['bg'] }};color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span></td>
-                    </tr>
+                    <div style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }} display:grid; align-items:center; padding:8px 12px; grid-template-columns:36px 1fr 1fr 88px; gap:4px;">
+                        <span style="font-size:11px; color:#374151;">{{ $c->numero }}</span>
+                        <span style="font-size:12px; color:#9CA3AF; text-align:right; font-family:monospace;">{{ number_format($c->monto, 2) }}</span>
+                        <span style="font-size:11px; color:#6b7280; text-align:center;">{{ $c->fecha_vencimiento ? \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') : '—' }}</span>
+                        <span style="display:flex; justify-content:center;">
+                            <span class="ds-badge" style="background:{{ $badge['bg'] }};color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span>
+                        </span>
+                    </div>
                     @endforeach
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="2" style="text-align:right;">Total: <span style="font-family:monospace;">Bs. {{ number_format($planViejo->total_pagar, 2) }}</span></td>
-                        <td colspan="2" style="text-align:center;">{{ $cuotasViej->where('estado','pagado')->count() }} pagadas · {{ $cuotasViej->where('estado','!=','pagado')->count() }} reemplazadas</td>
-                    </tr>
-                </tfoot>
-            </table>
+                    <div style="background:#F8F7FF; border-top:1px solid #EDE9FE; padding:8px 12px; display:flex; align-items:center; justify-content:space-between;">
+                        <span style="font-size:10px; color:#9CA3AF;">{{ $cuotasViej->where('estado','pagado')->count() }} pagadas · {{ $cuotasViej->where('estado','!=','pagado')->count() }} reemplazadas</span>
+                        <span style="font-size:11px; font-weight:700; color:#9CA3AF; font-family:monospace;">Bs. {{ number_format($planViejo->total_pagar, 2) }}</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    @endif
+        @endif
 
-    {{-- Plan de pago --}}
-    <div style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;overflow:hidden;">
-        <div style="padding:12px 16px;border-bottom:1px solid #CBCBCB;display:flex;align-items:center;gap:8px;">
-            <p style="font-size:13px;font-weight:700;color:#4A4A4A;margin:0;">Plan de pago · v{{ $rp->version_nueva }}</p>
-            <span style="font-size:11px;color:#CBCBCB;">{{ $planNuevo?->matriz_nombre }}</span>
-            @if($planNuevo)
-            @php $efBadge = $planNuevo->estadoFinancieroBadge; @endphp
-            <span class="ds-badge" style="background:{{ $efBadge['bg'] }};color:{{ $efBadge['cl'] }};">{{ $efBadge['lb'] }}</span>
-            @endif
-        </div>
-        <div style="overflow-x:auto;">
-        <table>
-            <thead>
-                <tr>
-                    <th style="text-align:center;width:50px;">#</th>
-                    <th style="text-align:right;">Monto</th>
-                    <th style="text-align:center;">Vencimiento</th>
-                    <th style="text-align:center;width:110px;">Estado</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($cuotas as $c)
-                @php $badge = $c->estadoFinancieroBadge; @endphp
-                <tr style="{{ $c->estado==='pagado' ? 'opacity:0.55;' : '' }}">
-                    <td style="text-align:center;font-weight:700;">{{ $c->numero }}</td>
-                    <td style="text-align:right;font-family:monospace;font-weight:700;">Bs. {{ number_format($c->monto, 2) }}</td>
-                    <td style="text-align:center;color:#CBCBCB;">{{ $c->fecha_vencimiento ? \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') : '—' }}</td>
-                    <td style="text-align:center;"><span class="ds-badge" style="background:{{ $badge['bg'] }};color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span></td>
-                </tr>
-                @empty
-                <tr><td colspan="4"><div class="ds-empty"><p>Sin cuotas</p></div></td></tr>
-                @endforelse
-            </tbody>
-            <tfoot>
-                <tr>
-                    <td colspan="2" style="text-align:right;">Total: <span style="font-family:monospace;color:#6D8196;">Bs. {{ number_format($planNuevo?->total_pagar ?? 0, 2) }}</span></td>
-                    <td colspan="2" style="text-align:center;">{{ $cuotas->where('estado','pagado')->count() }} pagadas · {{ $cuotas->where('estado','!=','pagado')->count() }} pendientes</td>
-                </tr>
-            </tfoot>
-        </table>
-        </div>
+    </div>{{-- /body --}}
+
+    {{-- Botones grandes al pie --}}
+    <div class="rp-det-btns">
+        <button wire:click="volver"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:14px; background:#F4F4F4; color:#6D8196; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <span style="font-size:17px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span>
+            Historial
+        </button>
+        @if($esActivo)
+        <button wire:click="editarPlan"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+            </svg>
+            Editar Plan
+        </button>
+        @endif
+        <a href="{{ route('credito.reprogramacion.nueva') }}"
+           style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#EDE9FE; color:#534AB7; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #C4B5FD; text-decoration:none; cursor:pointer;">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+            </svg>
+            Nueva Reprogramación
+        </a>
     </div>
 
 </div>
