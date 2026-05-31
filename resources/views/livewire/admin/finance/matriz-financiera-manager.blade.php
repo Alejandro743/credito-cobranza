@@ -256,86 +256,96 @@
 @endif
 
 {{-- Tabla --}}
-<div class="hidden sm:block bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                <tr>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Ciclo</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Código</th>
-                    <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Descripción</th>
-                    <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Estado</th>
-                    <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+@php $sortColsM = ['Ciclo'=>'cycle_id','Código'=>'code','Descripción'=>'description','Estado'=>'active']; @endphp
+<div class="hidden sm:block" style="background:#fff;border-radius:16px;border:1px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;display:flex;flex-direction:column;max-height:calc(100vh - 180px);">
+    <div style="overflow:auto;flex:1;">
+        <table style="width:100%;border-collapse:collapse;min-width:600px;">
+            <thead style="position:sticky;top:0;z-index:10;">
+                <tr style="background:#F9F8FF;border-bottom:2px solid #EDE9FE;">
+                    <th style="padding:10px 8px;text-align:center;font-size:11px;font-weight:700;color:#C4B5FD;text-transform:uppercase;letter-spacing:.5px;">#</th>
+                    @foreach($sortColsM as $label => $key)
+                    @php $isActive = $sortBy === $key; @endphp
+                    <th wire:click="toggleSort('{{ $key }}')"
+                        style="padding:10px 14px;text-align:{{ $label==='Estado' ? 'center' : 'left' }};font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap;cursor:pointer;user-select:none;{{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="display:inline-flex;align-items:center;gap:5px;">{{ $label }}
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                    </th>
+                    @endforeach
+                    <th style="padding:10px 14px;text-align:center;font-size:11px;font-weight:700;color:#7B6FE8;text-transform:uppercase;letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-50">
+            <tbody>
                 @forelse ($matrices as $m)
                 @if ($editingId === $m->id)
+                @php $iE = 'width:100%;height:30px;border:1px solid #EDE9FE;border-radius:7px;padding:0 8px;font-size:12px;outline:none;box-sizing:border-box;background:#fff;color:#374151;'; @endphp
                 {{-- EDICIÓN INLINE --}}
-                <tr wire:key="edit-{{ $m->id }}" class="bg-lavanda-50 border-l-2 border-lavanda-400">
-                    <td class="px-3 py-2">
-                        <select wire:model="editCycleId" class="w-full border border-lavanda-200 bg-white rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-lavanda-400">
+                <tr wire:key="edit-{{ $m->id }}" style="background:#F8F7FF;border-bottom:1px solid #EDE9FE;border-left:3px solid #7B6FE8;">
+                    <td class="col-row-num" style="padding:10px 8px;text-align:center;font-size:11px;font-weight:700;white-space:nowrap;">{{ $matrices->firstItem() + $loop->index }}</td>
+                    <td style="padding:7px 10px;">
+                        <select wire:model="editCycleId" style="{{ $iE }} cursor:pointer;">
                             <option value="">—</option>
                             @foreach ($cycles as $c)
                                 <option value="{{ $c->id }}">{{ $c->code }}</option>
                             @endforeach
                         </select>
                     </td>
-                    <td class="px-3 py-2">
-                        <input wire:model="editCode" type="text" maxlength="30"
-                               class="w-24 border border-lavanda-200 bg-white rounded-lg px-2 py-1.5 text-xs font-mono focus:outline-none focus:border-lavanda-400">
-                        @error('editCode') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
+                    <td style="padding:7px 10px;">
+                        <input wire:model="editCode" type="text" maxlength="30" style="{{ $iE }} font-family:monospace;text-transform:uppercase;">
+                        @error('editCode') <p style="font-size:10px;color:#EF4444;margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td class="px-3 py-2">
-                        <input wire:model="editDescription" type="text" placeholder="Descripción..."
-                               class="w-full border border-lavanda-200 bg-white rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-lavanda-400">
+                    <td style="padding:7px 10px;">
+                        <input wire:model="editDescription" type="text" placeholder="Descripción..." style="{{ $iE }}">
                     </td>
-                    <td class="px-3 py-2 text-center">
-                        <input type="checkbox" wire:model="editActive" class="w-4 h-4 mx-auto block rounded border-gray-300 text-lavanda-500 cursor-pointer">
+                    <td style="padding:7px 10px;text-align:center;">
+                        <input type="checkbox" wire:model="editActive" style="width:16px;height:16px;cursor:pointer;accent-color:#7B6FE8;">
                     </td>
-                    <td class="px-3 py-2 text-right">
-                        <div class="flex items-center justify-end gap-1">
-                            <button wire:click="saveEdit" class="p-1.5 rounded-lg bg-mint-100 text-mint-700 hover:bg-mint-200 transition-colors" title="Guardar">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                            </button>
-                            <button wire:click="cancelEdit" class="p-1.5 rounded-lg bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors" title="Cancelar">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                            </button>
+                    <td style="padding:7px 10px;text-align:center;">
+                        <div style="display:flex;align-items:center;justify-content:center;gap:4px;">
+                            <button wire:click="saveEdit" title="Guardar" style="height:28px;padding:0 10px;border-radius:7px;border:none;background:#7B6FE8;color:#fff;font-size:12px;font-weight:700;cursor:pointer;" @mouseenter="$el.style.opacity='.85'" @mouseleave="$el.style.opacity='1'">✓</button>
+                            <button wire:click="cancelEdit" title="Cancelar" style="height:28px;padding:0 8px;border-radius:7px;border:1px solid #E5E7EB;background:#F3F4F6;color:#6B7280;font-size:12px;cursor:pointer;" @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">✕</button>
                         </div>
                     </td>
                 </tr>
 
                 @else
                 {{-- FILA NORMAL --}}
-                <tr wire:key="m-{{ $m->id }}" class="hover:bg-gray-50 transition-colors">
-                    <td data-label="Ciclo" class="px-4 py-3 font-mono text-xs text-gray-600">
-                        {{ $m->cycle?->code ?? '—' }}
-                    </td>
-                    <td data-label="Código" class="px-4 py-3 font-mono text-xs text-lavanda-700 font-semibold">{{ $m->code }}</td>
-                    <td data-label="Descripción" class="px-4 py-3 text-sm text-gray-700">
-                        {{ $m->description ? Str::limit($m->description, 60) : '—' }}
-                    </td>
-                    <td data-label="Estado" class="px-4 py-3 text-center">
-                        <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold {{ $m->active ? 'bg-mint-100 text-mint-700' : 'bg-red-100 text-red-600' }}">
+                <tr wire:key="m-{{ $m->id }}" style="border-bottom:1px solid #F3F4F6;transition:background .1s;"
+                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                    <td class="col-row-num" style="padding:10px 8px;text-align:center;font-size:11px;font-weight:700;white-space:nowrap;">{{ $matrices->firstItem() + $loop->index }}</td>
+                    <td style="padding:10px 14px;font-size:12px;font-family:monospace;color:#6B7280;white-space:nowrap;">{{ $m->cycle?->code ?? '—' }}</td>
+                    <td style="padding:10px 14px;font-size:12px;font-family:monospace;font-weight:700;color:#111827;white-space:nowrap;">{{ $m->code }}</td>
+                    <td style="padding:10px 14px;font-size:13px;color:#6B7280;">{{ $m->description ? Str::limit($m->description, 60) : '—' }}</td>
+                    <td style="padding:10px 14px;text-align:center;">
+                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;
+                                     background:{{ $m->active ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $m->active ? '#059669' : '#9CA3AF' }};">
                             {{ $m->active ? 'Activa' : 'Inactiva' }}
                         </span>
                     </td>
-                    <td data-label="" class="px-4 py-3 text-right">
-                        <div class="flex items-center justify-end gap-1">
+                    <td style="padding:10px 14px;text-align:center;">
+                        <div style="display:inline-flex;align-items:center;justify-content:center;gap:4px;">
                             <button wire:click="startEdit({{ $m->id }})" title="Editar"
-                                    class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                                    style="width:28px;height:28px;border-radius:7px;border:1px solid #EDE9FE;background:#F5F3FF;color:#7B6FE8;cursor:pointer;display:flex;align-items:center;justify-content:center;"
+                                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                             </button>
                             <button wire:click="openConfig({{ $m->id }})" title="Configuración"
-                                    class="p-1.5 rounded-lg text-gray-400 hover:text-celeste-600 hover:bg-celeste-50 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065zM15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    style="width:28px;height:28px;border-radius:7px;border:1px solid #BAE6FD;background:#F0F9FF;color:#0369A1;cursor:pointer;display:flex;align-items:center;justify-content:center;"
+                                    @mouseenter="$el.style.background='#E0F2FE'" @mouseleave="$el.style.background='#F0F9FF'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065zM15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                             </button>
                             <button wire:click="toggleActive({{ $m->id }})" title="{{ $m->active ? 'Desactivar' : 'Activar' }}"
-                                    class="p-1.5 rounded-lg transition-colors {{ $m->active ? 'text-gray-400 hover:text-red-500 hover:bg-red-50' : 'text-gray-400 hover:text-mint-600 hover:bg-mint-50' }}">
+                                    style="width:28px;height:28px;border-radius:7px;border:1px solid {{ $m->active ? '#FECACA' : '#BBF7D0' }};background:{{ $m->active ? '#FEF2F2' : '#F0FDF4' }};color:{{ $m->active ? '#DC2626' : '#059669' }};cursor:pointer;display:flex;align-items:center;justify-content:center;"
+                                    @mouseenter="$el.style.opacity='.75'" @mouseleave="$el.style.opacity='1'">
                                 @if ($m->active)
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/></svg>
                                 @else
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 @endif
                             </button>
                         </div>
@@ -343,13 +353,13 @@
                 </tr>
                 @endif
                 @empty
-                <tr><td colspan="5" class="px-5 py-14 text-center text-gray-400 text-sm">No hay matrices registradas.</td></tr>
+                <tr><td colspan="6" style="padding:48px;text-align:center;color:#9CA3AF;font-size:13px;">No hay matrices registradas.</td></tr>
                 @endforelse
             </tbody>
         </table>
     </div>
     @if ($matrices->hasPages())
-    <div class="px-5 py-3 border-t border-gray-100">{{ $matrices->links() }}</div>
+    <div style="padding:10px 16px;border-top:1px solid #F3F4F6;flex-shrink:0;">{{ $matrices->links() }}</div>
     @endif
 </div>
 
