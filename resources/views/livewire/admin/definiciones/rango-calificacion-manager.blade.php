@@ -32,12 +32,12 @@
 </div>
 
 {{-- Card tabla --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     {{-- Barra --}}
-    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6;">
+    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Configuraciones de Rangos</span>
-        <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $registros->count() }}</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $registros->count() }}</span>
     </div>
 
     @if($registros->isEmpty())
@@ -45,64 +45,83 @@
     @else
 
     {{-- DESKTOP --}}
-    <div class="hidden sm:block" style="overflow-x:auto;">
+    @php
+    $sortColsR = [
+        'Nombre'         => 'nombre',
+        'Vigencia desde' => 'fecha_inicio',
+        'Vigencia hasta' => 'fecha_fin',
+        'Vigente'        => null,
+        'A (desde)'      => 'min_a',
+        'B (desde)'      => 'min_b',
+        'C (desde)'      => 'min_c',
+        'D (desde)'      => 'min_d',
+        'Estado'         => 'activo',
+    ];
+    @endphp
+    <div class="hidden sm:block" style="overflow:auto; flex:1;">
         <table style="width:100%; border-collapse:collapse; min-width:720px;">
-            <thead>
-                <tr>
-                    <th style="padding:10px 16px; text-align:left;">Nombre</th>
-                    <th style="padding:10px 16px; text-align:center;">Vigencia desde</th>
-                    <th style="padding:10px 16px; text-align:center;">Vigencia hasta</th>
-                    <th style="padding:10px 16px; text-align:center;">Vigente</th>
-                    <th style="padding:10px 16px; text-align:center;">A (desde)</th>
-                    <th style="padding:10px 16px; text-align:center;">B (desde)</th>
-                    <th style="padding:10px 16px; text-align:center;">C (desde)</th>
-                    <th style="padding:10px 16px; text-align:center;">D (desde)</th>
-                    <th style="padding:10px 16px; text-align:center;">Estado</th>
-                    <th style="padding:10px 16px; text-align:center;">Acciones</th>
+            <thead style="position:sticky; top:0; z-index:10;">
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                    @foreach($sortColsR as $label => $key)
+                    @php $isActive = $key && $sortBy === $key; @endphp
+                    <th @if($key) wire:click="toggleSort('{{ $key }}')" @endif
+                        style="padding:10px 14px; text-align:{{ $label === 'Nombre' ? 'left' : 'center' }}; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; {{ $key ? 'cursor:pointer; user-select:none;' : '' }} {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @if($key) @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'" @endif>
+                        <span style="display:inline-flex; align-items:center; gap:5px;">{{ $label }}
+                            @if($key)
+                                @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                                @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                                @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                                @endif
+                            @endif
+                        </span>
+                    </th>
+                    @endforeach
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
             @foreach($registros as $r)
             @php $esVigente = \App\Models\RangoCalificacion::vigente()?->id === $r->id; @endphp
-            <tr wire:key="rc-{{ $r->id }}" style="border-bottom:1px solid #F9FAFB; {{ $esVigente ? 'background:#FAFAFE;' : '' }}"
+            <tr wire:key="rc-{{ $r->id }}" style="border-bottom:1px solid #F3F4F6; {{ $esVigente ? 'background:#FAFAFE;' : '' }}"
                 @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background='{{ $esVigente ? '#FAFAFE' : '' }}'">
-                <td style="padding:11px 16px; font-size:13px; font-weight:600; color:#111827;">{{ $r->nombre }}</td>
-                <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
-                <td style="padding:11px 16px; text-align:center; font-size:13px; color:#6B7280;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
-                <td style="padding:11px 16px; text-align:center;">
+                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($r->nombre)) }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
+                <td style="padding:10px 14px; text-align:center;">
                     @if($esVigente)
-                    <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; background:#EDE9FE; color:#7B6FE8;">Sí</span>
+                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">Sí</span>
                     @else
                     <span style="font-size:13px; color:#9CA3AF;">—</span>
                     @endif
                 </td>
-                <td style="padding:11px 16px; text-align:center;">
-                    <span style="font-size:13px; font-weight:700; padding:3px 10px; border-radius:99px; background:#D1FAE5; color:#059669;">≥ {{ $r->min_a }}</span>
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px; background:#D1FAE5; color:#059669;">≥ {{ $r->min_a }}</span>
                 </td>
-                <td style="padding:11px 16px; text-align:center;">
-                    <span style="font-size:13px; font-weight:700; padding:3px 10px; border-radius:99px; background:#CFFAFE; color:#0E7490;">≥ {{ $r->min_b }}</span>
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px; background:#CFFAFE; color:#0E7490;">≥ {{ $r->min_b }}</span>
                 </td>
-                <td style="padding:11px 16px; text-align:center;">
-                    <span style="font-size:13px; font-weight:700; padding:3px 10px; border-radius:99px; background:#FEF3C7; color:#B45309;">≥ {{ $r->min_c }}</span>
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px; background:#FEF3C7; color:#B45309;">≥ {{ $r->min_c }}</span>
                 </td>
-                <td style="padding:11px 16px; text-align:center;">
-                    <span style="font-size:13px; font-weight:700; padding:3px 10px; border-radius:99px; background:#FFEDD5; color:#C2410C;">≥ {{ $r->min_d }}</span>
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px; background:#FFEDD5; color:#C2410C;">≥ {{ $r->min_d }}</span>
                 </td>
-                <td style="padding:11px 16px; text-align:center;">
-                    <span style="padding:3px 10px; border-radius:99px; font-size:13px; font-weight:600;
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700;
                                  background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
                                  color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
                         {{ $r->activo ? 'Activo' : 'Inactivo' }}
                     </span>
                 </td>
-                <td style="padding:11px 16px; text-align:center;">
-                    <div style="display:flex; justify-content:center;">
-                        <button wire:click="edit({{ $r->id }})" title="Editar"
-                                style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        </button>
-                    </div>
+                <td style="padding:10px 14px; text-align:center;">
+                    <button wire:click="edit({{ $r->id }})" title="Editar"
+                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;"
+                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                    </button>
                 </td>
             </tr>
             @endforeach

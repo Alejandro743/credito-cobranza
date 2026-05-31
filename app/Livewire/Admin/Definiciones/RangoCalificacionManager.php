@@ -7,7 +7,19 @@ use Livewire\Component;
 
 class RangoCalificacionManager extends Component
 {
-    public string $mode = 'list';
+    public string $mode    = 'list';
+    public string $sortBy  = '';
+    public string $sortDir = 'asc';
+
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+    }
 
     public ?int   $editId      = null;
     public string $nombre      = '';
@@ -138,12 +150,20 @@ class RangoCalificacionManager extends Component
     {
         $vigenteId = RangoCalificacion::vigente()?->id;
         $registros = RangoCalificacion::orderByDesc('fecha_inicio')->get()
-            ->sortByDesc(function ($r) use ($vigenteId) {
-                if ($r->id === $vigenteId) return 2;
-                if ($r->activo)            return 1;
-                return 0;
-            })->values();
+            ->when($this->sortBy, fn($c) => $this->sortDir === 'asc'
+                ? $c->sortBy($this->sortBy)
+                : $c->sortByDesc($this->sortBy),
+                fn($c) => $c->sortByDesc(function ($r) use ($vigenteId) {
+                    if ($r->id === $vigenteId) return 2;
+                    if ($r->activo)            return 1;
+                    return 0;
+                })
+            )->values();
 
-        return view('livewire.admin.definiciones.rango-calificacion-manager', compact('registros'));
+        return view('livewire.admin.definiciones.rango-calificacion-manager', [
+            'registros' => $registros,
+            'sortBy'    => $this->sortBy,
+            'sortDir'   => $this->sortDir,
+        ]);
     }
 }
