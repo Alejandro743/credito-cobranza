@@ -315,57 +315,77 @@
 {{-- ══ HIST: LIST ══ --}}
 @elseif($mode === 'hist_list')
 
-<div class="ds-section-header">
-    <button wire:click="backHome" class="ds-btn ds-btn-secondary ds-btn-sm">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
-        Inicio
-    </button>
-    <div style="flex:1;">
-        <h2>Historial de Reprogramaciones</h2>
-        <p>Pedidos con planes reprogramados</p>
-    </div>
-</div>
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
-<div class="ds-table-card">
-    <div class="ds-table-toolbar">
-        <div style="position:relative;flex:1;max-width:300px;">
-            <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="#CBCBCB" stroke-width="2" stroke-linecap="round">
+    {{-- Header --}}
+    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
+        <button wire:click="backHome"
+                style="display:flex; align-items:center; gap:5px; padding:5px 10px; background:#F4F4F4; color:#6D8196; font-size:12px; font-weight:600; border:1px solid #CBCBCB; border-radius:7px; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+            Inicio
+        </button>
+        <span style="font-size:13px; font-weight:700; color:#111827;">Historial de Reprogramaciones</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidosHist->total() }}</span>
+        <div style="margin-left:auto; position:relative;">
+            <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:#9CA3AF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
-            <input wire:model.live.debounce.400ms="searchHist" type="text" placeholder="CI, nombre o Nº pedido..." style="padding-left:32px;width:100%;">
+            <input wire:model.live.debounce.400ms="searchHist" type="text" placeholder="CI, nombre o Nº pedido..."
+                   style="padding-left:32px; height:36px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; width:260px; background:#fff;">
         </div>
     </div>
 
-    @if($pedidosHist->isEmpty())
-    <div class="ds-empty">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <p>Sin reprogramaciones registradas</p>
-    </div>
-    @else
-    <div style="padding:12px 16px;display:flex;flex-direction:column;gap:8px;">
-        @foreach($pedidosHist as $p)
-        @php $totalPlanes = $p->planes->count(); @endphp
-        <div wire:click="verHistorialPedido({{ $p->id }})"
-             style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:12px;"
-             onmouseover="this.style.borderColor='#6D8196'"
-             onmouseout="this.style.borderColor='#CBCBCB'">
-            <div>
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
-                    <span style="font-family:monospace;font-size:11px;color:#6D8196;font-weight:700;">{{ $p->numero }}</span>
-                    <span class="ds-badge ds-badge-pending">{{ $totalPlanes - 1 }} reprog.</span>
-                </div>
-                <p style="font-size:14px;font-weight:700;color:#4A4A4A;margin:0 0 2px;">{{ $p->cliente->nombre_completo }}</p>
-                <p style="font-size:11px;color:#CBCBCB;margin:0;">CI: {{ $p->cliente->ci ?? '—' }}</p>
-            </div>
-            <svg width="16" height="16" fill="none" stroke="#CBCBCB" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7"/>
-            </svg>
-        </div>
-        @endforeach
+    <div style="overflow:auto; flex:1;">
+    <table style="width:100%; min-width:600px; border-collapse:collapse; font-size:13px;">
+        <thead style="position:sticky; top:0; z-index:10;">
+            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Código</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">CI</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Cliente</th>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Reprog.</th>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($pedidosHist as $p)
+            @php $totalPlanes = $p->planes->count(); @endphp
+            <tr wire:key="hist-{{ $p->id }}"
+                style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
+                @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                <td style="padding:10px 8px; text-align:center; font-size:11px; white-space:nowrap;">{{ $pedidosHist->firstItem() + $loop->index }}</td>
+                <td style="padding:10px 14px; font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $p->numero }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->cliente->ci ?: '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</td>
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">{{ $totalPlanes - 1 }}</span>
+                </td>
+                <td style="padding:10px 14px; text-align:center;">
+                    <button wire:click="verHistorialPedido({{ $p->id }})"
+                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;"
+                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'" title="Ver historial">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="6" style="padding:64px 24px; text-align:center;">
+                    <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <p style="font-weight:600; color:#6B7280; font-size:13px;">Sin reprogramaciones registradas</p>
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
     </div>
     @if($pedidosHist->hasPages())
-    <div style="padding:10px 16px;border-top:1px solid #CBCBCB;">{{ $pedidosHist->links() }}</div>
-    @endif
+    <div style="padding:10px 16px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $pedidosHist->links() }}</div>
     @endif
 </div>
 
