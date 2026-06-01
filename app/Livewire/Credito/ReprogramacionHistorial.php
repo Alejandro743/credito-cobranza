@@ -17,8 +17,9 @@ class ReprogramacionHistorial extends Component
     public string $mode    = 'list';
     public string $search  = '';
     public string $filtro  = 'todos';
-    public string $sortBy  = '';
-    public string $sortDir = 'asc';
+    public string $sortBy   = '';
+    public string $sortDir  = 'asc';
+    public string $successMsg = '';
 
     public function toggleSort(string $col): void
     {
@@ -161,8 +162,21 @@ class ReprogramacionHistorial extends Component
             ]);
         });
 
-        $this->cuotasEditadas = [];
-        $this->mode = 'detalle';
+        // Recargar cuotas desde DB para reflejar el estado guardado
+        $rp   = Reprogramacion::with('planNuevo.cuotas')->find($this->reprogramacionId);
+        $plan = $rp?->planNuevo;
+        $this->cuotasEditadas = $plan
+            ? $plan->cuotas->where('numero', '>', 0)->sortBy('numero')->values()
+                ->map(fn($c) => [
+                    'id'     => $c->id,
+                    'numero' => $c->numero,
+                    'monto'  => number_format((float) $c->monto, 2, '.', ''),
+                    'fecha'  => $c->fecha_vencimiento?->format('Y-m-d') ?? '',
+                    'pagado' => $c->estado === 'pagado',
+                ])->toArray()
+            : [];
+
+        $this->successMsg = 'Plan guardado correctamente.';
     }
 
     public function render()
