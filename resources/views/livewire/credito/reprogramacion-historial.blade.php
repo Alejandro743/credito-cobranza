@@ -237,8 +237,8 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
 
         {{-- Tabla cuotas nuevas --}}
         <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden;">
-            <div style="background:#F8F7FF; display:grid; padding:8px 12px; grid-template-columns:36px 1fr 1fr 1fr 88px; gap:4px;">
-                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">#</p>
+            <div style="background:#F8F7FF; display:grid; padding:8px 12px; grid-template-columns:76px 1fr 1fr 1fr 88px; gap:4px;">
+                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Cuota</p>
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:right;">Monto</p>
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Vencimiento</p>
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Fecha pago</p>
@@ -246,8 +246,8 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
             </div>
             @forelse($cuotas as $c)
             @php $badge = $c->estadoFinancieroBadge; @endphp
-            <div style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }} display:grid; align-items:center; padding:8px 12px; grid-template-columns:36px 1fr 1fr 1fr 88px; gap:4px;">
-                <span style="font-size:11px; color:#374151;">{{ $c->numero }}</span>
+            <div style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }} display:grid; align-items:center; padding:8px 12px; grid-template-columns:76px 1fr 1fr 1fr 88px; gap:4px;">
+                <span style="font-size:11px; color:#374151; font-weight:600;">Cuota {{ $c->numero }}</span>
                 <span style="font-size:13px; font-weight:700; color:#7c3aed; text-align:right; font-family:monospace;">{{ number_format($c->monto, 2) }}</span>
                 <span style="font-size:11px; color:#6b7280; text-align:center;">{{ $c->fecha_vencimiento ? $c->fecha_vencimiento->format('d/m/Y') : '—' }}</span>
                 <span style="font-size:11px; text-align:center; font-weight:{{ $c->fecha_pago ? '600' : '400' }}; color:{{ $c->fecha_pago ? '#059669' : '#D1D5DB' }};">{{ $c->fecha_pago ? $c->fecha_pago->format('d/m/Y') : '—' }}</span>
@@ -260,10 +260,6 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
                 <p style="font-size:13px; color:#9CA3AF; margin:0;">Sin cuotas</p>
             </div>
             @endforelse
-            <div style="background:#F8F7FF; border-top:1px solid #EDE9FE; padding:8px 12px; display:flex; align-items:center; justify-content:space-between;">
-                <span style="font-size:10px; color:#9CA3AF;">{{ $cuotas->where('estado','pagado')->count() }} pagadas · {{ $cuotas->where('estado','!=','pagado')->count() }} pendientes</span>
-                <span style="font-size:11px; font-weight:700; color:#6D8196; font-family:monospace;">Bs. {{ number_format($planNuevo?->total_pagar ?? 0, 2) }}</span>
-            </div>
         </div>
 
         {{-- Acordeón plan anterior --}}
@@ -322,7 +318,7 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
                     <span style="font-size:26px; font-weight:900; color:#DC2626; line-height:1; display:block; font-family:monospace;">{{ number_format($rp->saldo_reprogramado, 2) }}</span>
                 </div>
                 <div style="height:1px; background:#EDE9FE; margin-bottom:8px;"></div>
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); text-align:center;">
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); text-align:center; margin-bottom:10px;">
                     <div style="padding:0 6px;">
                         <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Plan</span>
                         <span style="font-size:13px; font-weight:900; color:#111827; line-height:1.1; font-family:monospace;">{{ number_format($planNuevo?->total_pagar ?? 0, 2) }}</span>
@@ -334,6 +330,21 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
                     <div style="padding:0 6px;">
                         <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pendiente</span>
                         <span style="font-size:13px; font-weight:900; color:#DC2626; line-height:1.1; font-family:monospace;">{{ number_format($pendiente, 2) }}</span>
+                    </div>
+                </div>
+                <div style="height:1px; background:#EDE9FE; margin-bottom:8px;"></div>
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); text-align:center;">
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Cuotas</span>
+                        <span style="font-size:13px; font-weight:900; color:#111827; line-height:1.1;">{{ $cuotas->count() }}</span>
+                    </div>
+                    <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pagadas</span>
+                        <span style="font-size:13px; font-weight:900; color:#059669; line-height:1.1;">{{ $cuotas->where('estado','pagado')->count() }}</span>
+                    </div>
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pendientes</span>
+                        <span style="font-size:13px; font-weight:900; color:#DC2626; line-height:1.1;">{{ $cuotas->where('estado','!=','pagado')->count() }}</span>
                     </div>
                 </div>
             </div>
