@@ -237,7 +237,7 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
 
         {{-- Tabla cuotas nuevas --}}
         <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden;">
-            <div style="background:#F8F7FF; display:grid; padding:8px 12px; grid-template-columns:repeat(6,1fr); gap:12px;">
+            <div style="background:#F8F7FF; display:grid; padding:8px 12px; grid-template-columns:auto auto 1fr 1fr 1fr 1fr; gap:12px;">
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">#</p>
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Cuotas</p>
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:right;">Monto</p>
@@ -247,7 +247,7 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
             </div>
             @forelse($cuotas as $c)
             @php $badge = $c->estadoFinancieroBadge; @endphp
-            <div style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }} display:grid; align-items:center; padding:8px 12px; grid-template-columns:repeat(6,1fr); gap:12px;">
+            <div style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }} display:grid; align-items:center; padding:8px 12px; grid-template-columns:auto auto 1fr 1fr 1fr 1fr; gap:12px;">
                 <span style="font-size:11px; color:#374151;">{{ $c->numero }}</span>
                 <span style="font-size:11px; color:#6b7280; font-weight:600;">Cuota {{ $c->numero }}</span>
                 <span style="font-size:13px; font-weight:700; color:#7c3aed; text-align:right; font-family:monospace;">{{ number_format($c->monto, 2) }}</span>
