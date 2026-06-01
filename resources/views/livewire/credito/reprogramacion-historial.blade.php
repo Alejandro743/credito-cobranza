@@ -237,29 +237,35 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
 
         {{-- Tabla cuotas nuevas --}}
         <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden;">
-            <div style="background:#F8F7FF; display:grid; padding:8px 12px; grid-template-columns:auto auto 1fr 1fr 1fr 1fr; gap:12px; justify-items:center;">
-                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">#</p>
-                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Cuotas</p>
-                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Monto</p>
-                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Vencimiento</p>
-                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Fecha pago</p>
-                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Estado</p>
-            </div>
-            @forelse($cuotas as $c)
-            @php $badge = $c->estadoFinancieroBadge; @endphp
-            <div style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }} display:grid; align-items:center; justify-items:center; padding:8px 12px; grid-template-columns:auto auto 1fr 1fr 1fr 1fr; gap:12px;">
-                <span style="font-size:11px; color:#374151;">{{ $c->numero }}</span>
-                <span style="font-size:11px; color:#6b7280; font-weight:600;">Cuota {{ $c->numero }}</span>
-                <span style="font-size:13px; font-weight:700; color:#7c3aed; font-family:monospace;">{{ number_format($c->monto, 2) }}</span>
-                <span style="font-size:11px; color:#6b7280;">{{ $c->fecha_vencimiento ? $c->fecha_vencimiento->format('d/m/Y') : '—' }}</span>
-                <span style="font-size:11px; font-weight:{{ $c->fecha_pago ? '600' : '400' }}; color:{{ $c->fecha_pago ? '#059669' : '#D1D5DB' }};">{{ $c->fecha_pago ? $c->fecha_pago->format('d/m/Y') : '—' }}</span>
-                <span class="ds-badge" style="background:{{ $badge['bg'] }};color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span>
-            </div>
-            @empty
-            <div style="padding:32px 12px; text-align:center;">
-                <p style="font-size:13px; color:#9CA3AF; margin:0;">Sin cuotas</p>
-            </div>
-            @endforelse
+            <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#F8F7FF;">
+                        <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">#</th>
+                        <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Cuotas</th>
+                        <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Monto</th>
+                        <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Vencimiento</th>
+                        <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Fecha pago</th>
+                        <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($cuotas as $c)
+                    @php $badge = $c->estadoFinancieroBadge; @endphp
+                    <tr style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }}">
+                        <td style="padding:8px 12px; font-size:11px; color:#374151; text-align:center;">{{ $c->numero }}</td>
+                        <td style="padding:8px 12px; font-size:11px; color:#6b7280; font-weight:600; text-align:center;">Cuota {{ $c->numero }}</td>
+                        <td style="padding:8px 12px; font-size:13px; font-weight:700; color:#7c3aed; font-family:monospace; text-align:center;">{{ number_format($c->monto, 2) }}</td>
+                        <td style="padding:8px 12px; font-size:11px; color:#6b7280; text-align:center;">{{ $c->fecha_vencimiento ? $c->fecha_vencimiento->format('d/m/Y') : '—' }}</td>
+                        <td style="padding:8px 12px; font-size:11px; text-align:center; font-weight:{{ $c->fecha_pago ? '600' : '400' }}; color:{{ $c->fecha_pago ? '#059669' : '#D1D5DB' }};">{{ $c->fecha_pago ? $c->fecha_pago->format('d/m/Y') : '—' }}</td>
+                        <td style="padding:8px 12px; text-align:center;">
+                            <span class="ds-badge" style="background:{{ $badge['bg'] }};color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr><td colspan="6" style="padding:32px 12px; text-align:center; font-size:13px; color:#9CA3AF;">Sin cuotas</td></tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
 
         {{-- Acordeón plan anterior --}}
@@ -277,25 +283,33 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
             </button>
             <div x-show="abierto" x-collapse>
                 <div style="border-top:1px solid #E5E7EB;">
-                    <div style="background:#F8F7FF; display:grid; padding:8px 12px; grid-template-columns:auto auto 1fr 1fr 1fr 1fr; gap:12px; justify-items:center;">
-                        <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">#</p>
-                        <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Cuotas</p>
-                        <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Monto</p>
-                        <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Vencimiento</p>
-                        <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Fecha pago</p>
-                        <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Estado</p>
-                    </div>
-                    @foreach($cuotasViej as $c)
-                    @php $badge = $c->estadoFinancieroBadge; @endphp
-                    <div style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }} display:grid; align-items:center; justify-items:center; padding:8px 12px; grid-template-columns:auto auto 1fr 1fr 1fr 1fr; gap:12px;">
-                        <span style="font-size:11px; color:#374151;">{{ $c->numero }}</span>
-                        <span style="font-size:11px; color:#6b7280; font-weight:600;">Cuota {{ $c->numero }}</span>
-                        <span style="font-size:13px; font-weight:700; color:#9CA3AF; font-family:monospace;">{{ number_format($c->monto, 2) }}</span>
-                        <span style="font-size:11px; color:#6b7280;">{{ $c->fecha_vencimiento ? \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') : '—' }}</span>
-                        <span style="font-size:11px; font-weight:{{ $c->fecha_pago ? '600' : '400' }}; color:{{ $c->fecha_pago ? '#059669' : '#D1D5DB' }};">{{ $c->fecha_pago ? $c->fecha_pago->format('d/m/Y') : '—' }}</span>
-                        <span class="ds-badge" style="background:{{ $badge['bg'] }};color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span>
-                    </div>
-                    @endforeach
+                    <table style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr style="background:#F8F7FF;">
+                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">#</th>
+                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Cuotas</th>
+                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Monto</th>
+                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Vencimiento</th>
+                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Fecha pago</th>
+                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        @foreach($cuotasViej as $c)
+                        @php $badge = $c->estadoFinancieroBadge; @endphp
+                        <tr style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }}">
+                            <td style="padding:8px 12px; font-size:11px; color:#374151; text-align:center;">{{ $c->numero }}</td>
+                            <td style="padding:8px 12px; font-size:11px; color:#6b7280; font-weight:600; text-align:center;">Cuota {{ $c->numero }}</td>
+                            <td style="padding:8px 12px; font-size:13px; font-weight:700; color:#9CA3AF; font-family:monospace; text-align:center;">{{ number_format($c->monto, 2) }}</td>
+                            <td style="padding:8px 12px; font-size:11px; color:#6b7280; text-align:center;">{{ $c->fecha_vencimiento ? \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') : '—' }}</td>
+                            <td style="padding:8px 12px; font-size:11px; text-align:center; font-weight:{{ $c->fecha_pago ? '600' : '400' }}; color:{{ $c->fecha_pago ? '#059669' : '#D1D5DB' }};">{{ $c->fecha_pago ? $c->fecha_pago->format('d/m/Y') : '—' }}</td>
+                            <td style="padding:8px 12px; text-align:center;">
+                                <span class="ds-badge" style="background:{{ $badge['bg'] }};color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span>
+                            </td>
+                        </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
                     <div style="background:#F8F7FF; border-top:1px solid #EDE9FE; padding:8px 12px; display:flex; align-items:center; justify-content:space-between;">
                         <span style="font-size:10px; color:#9CA3AF;">{{ $cuotasViej->where('estado','pagado')->count() }} pagadas · {{ $cuotasViej->where('estado','!=','pagado')->count() }} reemplazadas</span>
                         <span style="font-size:11px; font-weight:700; color:#9CA3AF; font-family:monospace;">Bs. {{ number_format($planViejo->total_pagar, 2) }}</span>
