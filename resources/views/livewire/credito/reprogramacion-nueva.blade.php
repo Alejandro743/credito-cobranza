@@ -1,5 +1,10 @@
 <div>
 
+<style>
+.nr-btns, .rp-det-btns { display:flex; flex-direction:column; gap:8px; margin-top:20px; }
+@media (min-width:640px) { .nr-btns, .rp-det-btns { flex-direction:row; } }
+</style>
+
 {{-- ══ BUSCAR ══ --}}
 @if($mode === 'buscar')
 
@@ -273,11 +278,6 @@
     $plan      = $p->planPago;
     $pendiente = round((float)($plan?->cuotas->where('estado','!=','pagado')->where('numero','>',0)->sum('monto') ?? 0), 2);
 @endphp
-
-<style>
-.nr-btns { display:flex; flex-direction:column; gap:8px; margin-top:20px; }
-@media (min-width:640px) { .nr-btns { flex-direction:row; } }
-</style>
 
 <div style="max-width:900px; margin:0 auto;">
 
