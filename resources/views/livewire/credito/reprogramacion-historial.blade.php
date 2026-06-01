@@ -309,11 +309,25 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
                         </tr>
                         @endforeach
                         </tbody>
+                        <tfoot>
+                            <tr style="background:#F5F3FF; border-top:1.5px solid #EDE9FE;">
+                                <td colspan="2" style="padding:8px 12px; font-size:10px; font-weight:700; color:#7B6FE8; text-align:center; text-transform:uppercase; letter-spacing:.4px;">Total</td>
+                                <td style="padding:8px 12px; font-size:12px; font-weight:800; color:#7B6FE8; font-family:monospace; text-align:center;">Bs. {{ number_format($planViejo->total_pagar, 2) }}</td>
+                                <td style="padding:8px 12px; font-size:10px; font-weight:700; color:#7B6FE8; text-align:center;">
+                                    <span style="display:block; font-size:9px; text-transform:uppercase; letter-spacing:.4px; margin-bottom:1px;">Saldo reprog.</span>
+                                    <span style="font-size:12px; font-family:monospace;">Bs. {{ number_format($rp->saldo_reprogramado, 2) }}</span>
+                                </td>
+                                <td style="padding:8px 12px; font-size:10px; font-weight:700; color:#7B6FE8; text-align:center;">
+                                    <span style="display:block; font-size:9px; text-transform:uppercase; letter-spacing:.4px; margin-bottom:1px;">Total cuotas</span>
+                                    <span style="font-size:13px; font-weight:900;">{{ $cuotasViej->count() }}</span>
+                                </td>
+                                <td style="padding:8px 12px; font-size:10px; font-weight:700; color:#7B6FE8; text-align:center;">
+                                    <span style="display:block; font-size:9px; text-transform:uppercase; letter-spacing:.4px; margin-bottom:1px;">Reemplazadas</span>
+                                    <span style="font-size:13px; font-weight:900;">{{ $cuotasViej->where('estado','!=','pagado')->count() }}</span>
+                                </td>
+                            </tr>
+                        </tfoot>
                     </table>
-                    <div style="background:#F8F7FF; border-top:1px solid #EDE9FE; padding:8px 12px; display:flex; align-items:center; justify-content:space-between;">
-                        <span style="font-size:10px; color:#9CA3AF;">{{ $cuotasViej->where('estado','pagado')->count() }} pagadas · {{ $cuotasViej->where('estado','!=','pagado')->count() }} reemplazadas</span>
-                        <span style="font-size:11px; font-weight:700; color:#9CA3AF; font-family:monospace;">Bs. {{ number_format($planViejo->total_pagar, 2) }}</span>
-                    </div>
                 </div>
             </div>
         </div>
