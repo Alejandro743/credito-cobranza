@@ -155,34 +155,37 @@
         </div>
     </div>
 
-    <div class="ds-table-card" style="margin-bottom:14px;">
-        <div style="padding:11px 16px;border-bottom:1px solid #CBCBCB;display:flex;align-items:center;gap:8px;">
-            <span style="font-size:13px;font-weight:700;color:#4A4A4A;">Plan Activo</span>
-            @if($plan)<span class="ds-badge ds-badge-active">v{{ $plan->version }}</span>@endif
-            <span style="font-size:11px;color:#CBCBCB;margin-left:auto;">{{ $plan?->matriz_nombre }}</span>
+    <div style="background:#fff;border:0.5px solid #CECBF6;border-radius:10px;overflow:hidden;margin-bottom:14px;">
+        <div style="padding:10px 14px;border-bottom:1px solid #EDE9FE;display:flex;align-items:center;justify-content:space-between;background:#F8F7FF;">
+            <span style="font-size:12px;font-weight:700;color:#534AB7;">Plan Activo @if($plan) · v{{ $plan->version }} @endif</span>
+            <span style="font-size:11px;color:#CBCBCB;">{{ $plan?->matriz_nombre }}</span>
         </div>
         <div style="overflow-x:auto;">
-        <table>
-            <thead><tr>
-                <th style="width:44px;text-align:center;">#</th>
-                <th style="text-align:right;">Monto</th>
-                <th style="text-align:center;">Vencimiento</th>
-                <th style="text-align:center;">Estado</th>
-            </tr></thead>
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:#F8F7FF;">
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">#</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Cuotas</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Monto</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Vencimiento</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Estado</th>
+                </tr>
+            </thead>
             <tbody>
                 @forelse($cuotas->where('numero','>',0)->sortBy('numero') as $c)
                 @php
                     $badgeCls = match($c->estado) { 'pagado' => 'ds-badge-aprobado', 'vencido' => 'ds-badge-danger', default => 'ds-badge-pending' };
                     $lb       = match($c->estado) { 'pagado' => 'Pagado', 'vencido' => 'Vencido', default => 'Pendiente' };
                 @endphp
-                <tr style="{{ $c->estado==='pagado' ? 'opacity:0.55;' : '' }}">
-                    <td style="text-align:center;font-weight:700;">{{ $c->numero }}</td>
-                    <td style="text-align:right;font-family:monospace;font-weight:700;">Bs. {{ number_format($c->monto,2) }}</td>
-                    <td style="text-align:center;">{{ $c->fecha_vencimiento ? \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') : '—' }}</td>
-                    <td style="text-align:center;"><span class="ds-badge {{ $badgeCls }}">{{ $lb }}</span></td>
+                <tr style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.55;' : '' }}">
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;">{{ $c->numero }}</td>
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;color:#6b7280;font-weight:600;">Cuota {{ $c->numero }}</td>
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;font-family:monospace;font-weight:700;color:#7c3aed;">Bs. {{ number_format($c->monto,2) }}</td>
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;color:#6b7280;">{{ $c->fecha_vencimiento ? \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') : '—' }}</td>
+                    <td style="padding:8px 12px;text-align:center;"><span class="ds-badge {{ $badgeCls }}">{{ $lb }}</span></td>
                 </tr>
                 @empty
-                <tr><td colspan="4"><div class="ds-empty"><p>Sin cuotas</p></div></td></tr>
+                <tr><td colspan="5"><div class="ds-empty"><p>Sin cuotas</p></div></td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -227,38 +230,42 @@
         </div>
     </div>
 
-    <div class="ds-table-card" style="margin-bottom:14px;">
-        <div style="padding:11px 16px;border-bottom:1px solid #CBCBCB;display:flex;align-items:center;justify-content:space-between;">
-            <span style="font-size:13px;font-weight:700;color:#4A4A4A;">Cuotas del nuevo plan</span>
-            <button wire:click="agregarCuota" class="ds-btn ds-btn-ghost ds-btn-sm">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+    <div style="background:#fff;border:0.5px solid #CECBF6;border-radius:10px;overflow:hidden;margin-bottom:14px;">
+        <div style="padding:10px 14px;border-bottom:1px solid #EDE9FE;display:flex;align-items:center;justify-content:space-between;background:#F8F7FF;">
+            <span style="font-size:12px;font-weight:700;color:#534AB7;">Cuotas del nuevo plan</span>
+            <button wire:click="agregarCuota" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:#EDE9FE;color:#534AB7;font-size:12px;font-weight:700;border:1px solid #C4B5FD;border-radius:8px;cursor:pointer;-webkit-appearance:none;appearance:none;">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                 Agregar cuota
             </button>
         </div>
         <div style="overflow-x:auto;">
-        <table>
-            <thead><tr>
-                <th style="width:40px;text-align:center;">#</th>
-                <th>Monto (Bs.)</th>
-                <th>Fecha vencimiento</th>
-                <th style="width:36px;"></th>
-            </tr></thead>
+        <table style="width:100%;border-collapse:collapse;">
+            <thead>
+                <tr style="background:#F8F7FF;">
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">#</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Cuotas</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Monto (Bs.)</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Fecha vencimiento</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Acción</th>
+                </tr>
+            </thead>
             <tbody>
                 @foreach($nuevasCuotas as $i => $cuota)
-                <tr wire:key="nc-{{ $i }}">
-                    <td style="text-align:center;font-weight:700;color:#CBCBCB;">{{ $cuota['numero'] }}</td>
-                    <td>
-                        <input wire:model="nuevasCuotas.{{ $i }}.monto" type="number" step="0.01" min="0.01" style="width:100%;font-family:monospace;"/>
+                <tr wire:key="nc-{{ $i }}" style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}">
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;color:#6b7280;font-weight:600;">{{ $cuota['numero'] }}</td>
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;color:#6b7280;font-weight:600;">Cuota {{ $cuota['numero'] }}</td>
+                    <td style="padding:8px 12px;text-align:center;">
+                        <input wire:model="nuevasCuotas.{{ $i }}.monto" type="number" step="0.01" min="0.01" style="width:90%;padding:4px 8px;border:1px solid #C4B5FD;border-radius:6px;font-size:12px;text-align:center;outline:none;background:#fff;"/>
                         @error("nuevasCuotas.{$i}.monto")<p class="ds-form-error">{{ $message }}</p>@enderror
                     </td>
-                    <td>
-                        <input wire:model="nuevasCuotas.{{ $i }}.fecha" type="date" style="width:100%;"/>
+                    <td style="padding:8px 12px;text-align:center;">
+                        <input wire:model="nuevasCuotas.{{ $i }}.fecha" type="date" style="width:90%;padding:4px 8px;border:1px solid #C4B5FD;border-radius:6px;font-size:12px;outline:none;background:#fff;"/>
                         @error("nuevasCuotas.{$i}.fecha")<p class="ds-form-error">{{ $message }}</p>@enderror
                     </td>
-                    <td style="text-align:center;">
+                    <td style="padding:8px 12px;text-align:center;">
                         @if(count($nuevasCuotas) > 1)
-                        <button wire:click="quitarCuota({{ $i }})" class="ds-btn ds-btn-danger ds-btn-sm" style="padding:3px 6px;">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        <button wire:click="quitarCuota({{ $i }})" style="width:28px;height:28px;border-radius:7px;border:1px solid #FECACA;background:#FEF2F2;color:#DC2626;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto;-webkit-appearance:none;appearance:none;">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
                         @endif
                     </td>
@@ -266,19 +273,22 @@
                 @endforeach
             </tbody>
             <tfoot>
-                <tr style="background:#FFFFE3;border-top:2px solid #CBCBCB;">
-                    <td colspan="2" style="padding:10px 12px;font-size:12px;font-weight:700;color:#4A4A4A;">
-                        Total nuevo plan:
-                        <span style="font-size:14px;color:#6D8196;font-family:monospace;margin-left:6px;">Bs. {{ number_format($totalNuevo, 2) }}</span>
-                    </td>
-                    <td colspan="2" style="padding:10px 12px;text-align:right;">
-                        @if(abs($diff) < 0.01)
-                            <span style="font-size:11px;color:#10B981;font-weight:600;">✓ Cuadra exacto</span>
-                        @elseif($diff > 0)
-                            <span style="font-size:11px;color:#B45309;font-weight:600;">+Bs. {{ number_format($diff,2) }} sobre saldo</span>
-                        @else
-                            <span style="font-size:11px;color:#DC2626;font-weight:600;">−Bs. {{ number_format(abs($diff),2) }} bajo saldo</span>
-                        @endif
+                <tr style="background:#F5F3FF;border-top:1.5px solid #EDE9FE;">
+                    <td colspan="5" style="padding:10px 16px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:12px;font-weight:700;color:#534AB7;">Total nuevo plan:
+                                <span style="font-size:14px;font-family:monospace;color:#111827;margin-left:6px;">Bs. {{ number_format($totalNuevo, 2) }}</span>
+                            </span>
+                            <span>
+                                @if(abs($diff) < 0.01)
+                                    <span style="font-size:11px;color:#10B981;font-weight:600;">✓ Cuadra exacto</span>
+                                @elseif($diff > 0)
+                                    <span style="font-size:11px;color:#B45309;font-weight:600;">+Bs. {{ number_format($diff,2) }} sobre saldo</span>
+                                @else
+                                    <span style="font-size:11px;color:#DC2626;font-weight:600;">−Bs. {{ number_format(abs($diff),2) }} bajo saldo</span>
+                                @endif
+                            </span>
+                        </div>
                     </td>
                 </tr>
             </tfoot>
@@ -474,73 +484,95 @@
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
 
         {{-- Plan anterior --}}
-        <div style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;overflow:hidden;opacity:0.85;">
-            <div style="padding:10px 14px;background:#F4F4F4;border-bottom:1px solid #CBCBCB;display:flex;align-items:center;gap:6px;">
-                <span style="font-size:12px;font-weight:700;color:#4A4A4A;">Plan anterior</span>
+        <div style="background:#fff;border:0.5px solid #CECBF6;border-radius:10px;overflow:hidden;opacity:0.85;">
+            <div style="padding:10px 14px;background:#F8F7FF;border-bottom:1px solid #EDE9FE;display:flex;align-items:center;gap:6px;">
+                <span style="font-size:12px;font-weight:700;color:#534AB7;">Plan anterior</span>
                 <span class="ds-badge ds-badge-inactive">v{{ $rp->version_anterior }}</span>
             </div>
-            <div style="padding:4px 0;">
             @if($planViejo)
                 @php $cuotasViejas = $planViejo->cuotas->where('numero','>',0)->sortBy('numero'); @endphp
-                @foreach($cuotasViejas as $c)
-                @php
-                    $bCls = match($c->estado) { 'pagado' => 'ds-badge-aprobado', 'vencido' => 'ds-badge-danger', default => 'ds-badge-pending' };
-                    $bLb  = match($c->estado) { 'pagado' => 'Pagado', 'vencido' => 'Vencido', default => 'Pend.' };
-                @endphp
-                <div style="padding:6px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F4F4F4;{{ $c->estado==='pagado' ? 'opacity:0.5;' : '' }}">
-                    <div style="display:flex;align-items:center;gap:6px;">
-                        <span style="font-size:11px;font-weight:700;color:#6D8196;width:16px;">{{ $c->numero }}</span>
-                        <span class="ds-badge {{ $bCls }}" style="font-size:9px;">{{ $bLb }}</span>
-                    </div>
-                    <span style="font-size:11px;font-family:monospace;font-weight:700;color:#4A4A4A;">Bs. {{ number_format($c->monto,2) }}</span>
-                </div>
-                @endforeach
-                <div style="padding:8px 14px;border-top:1px solid #CBCBCB;">
-                    <span style="font-size:11px;color:#CBCBCB;">{{ $cuotasViejas->where('estado','pagado')->count() }} pag. · {{ $cuotasViejas->where('estado','!=','pagado')->count() }} pend.</span>
-                </div>
+                <table style="width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:#F8F7FF;">
+                            <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">#</th>
+                            <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Monto</th>
+                            <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($cuotasViejas as $c)
+                        @php
+                            $bCls = match($c->estado) { 'pagado' => 'ds-badge-aprobado', 'vencido' => 'ds-badge-danger', default => 'ds-badge-pending' };
+                            $bLb  = match($c->estado) { 'pagado' => 'Pagado', 'vencido' => 'Vencido', default => 'Pend.' };
+                        @endphp
+                        <tr style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.5;' : '' }}">
+                            <td style="padding:8px 12px;font-size:13px;text-align:center;font-weight:600;color:#6b7280;">{{ $c->numero }}</td>
+                            <td style="padding:8px 12px;font-size:13px;text-align:center;font-family:monospace;font-weight:700;color:#7c3aed;">Bs. {{ number_format($c->monto,2) }}</td>
+                            <td style="padding:8px 12px;text-align:center;"><span class="ds-badge {{ $bCls }}" style="font-size:9px;">{{ $bLb }}</span></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr style="background:#F5F3FF;border-top:1.5px solid #EDE9FE;">
+                            <td colspan="3" style="padding:8px 12px;font-size:11px;color:#6b7280;text-align:center;">
+                                {{ $cuotasViejas->where('estado','pagado')->count() }} pag. · {{ $cuotasViejas->where('estado','!=','pagado')->count() }} pend.
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
             @else
                 <p style="padding:20px;text-align:center;font-size:12px;color:#CBCBCB;">Sin datos</p>
             @endif
-            </div>
         </div>
 
         {{-- Plan nuevo --}}
-        <div style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;overflow:hidden;">
-            <div style="padding:10px 14px;background:#FFFFE3;border-bottom:1px solid #CBCBCB;display:flex;align-items:center;gap:6px;">
-                <span style="font-size:12px;font-weight:700;color:#4A4A4A;">Plan nuevo</span>
+        @php $esActivo = $planNuevo?->estado === 'activo'; @endphp
+        <div style="background:#fff;border:0.5px solid #CECBF6;border-radius:10px;overflow:hidden;">
+            <div style="padding:10px 14px;background:#F8F7FF;border-bottom:1px solid #EDE9FE;display:flex;align-items:center;gap:6px;">
+                <span style="font-size:12px;font-weight:700;color:#534AB7;">Plan nuevo</span>
                 <span class="ds-badge ds-badge-active">v{{ $rp->version_nueva }}</span>
-                @php $esActivo = $planNuevo?->estado === 'activo'; @endphp
                 <span class="ds-badge {{ $esActivo ? 'ds-badge-aprobado' : 'ds-badge-inactive' }}" style="margin-left:auto;">{{ $esActivo ? 'Activo' : 'Inactivo' }}</span>
             </div>
-            <div style="padding:4px 0;">
             @if($planNuevo)
                 @php $cuotasNuevas = $planNuevo->cuotas->where('numero','>',0)->sortBy('numero'); @endphp
-                @foreach($cuotasNuevas as $c)
-                @php
-                    $bCls = match($c->estado) { 'pagado' => 'ds-badge-aprobado', 'vencido' => 'ds-badge-danger', default => 'ds-badge-pending' };
-                    $bLb  = match($c->estado) { 'pagado' => 'Pagado', 'vencido' => 'Vencido', default => 'Pend.' };
-                @endphp
-                <div style="padding:6px 14px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #F4F4F4;{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }}">
-                    <div style="display:flex;align-items:center;gap:6px;">
-                        <span style="font-size:11px;font-weight:700;color:#6D8196;width:16px;">{{ $c->numero }}</span>
-                        <span class="ds-badge {{ $bCls }}" style="font-size:9px;">{{ $bLb }}</span>
-                    </div>
-                    <div style="text-align:right;">
-                        <span style="font-size:11px;font-family:monospace;font-weight:700;color:#4A4A4A;">Bs. {{ number_format($c->monto,2) }}</span>
-                        @if($c->fecha_vencimiento)
-                        <p style="font-size:9px;color:#CBCBCB;margin:0;">{{ \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') }}</p>
-                        @endif
-                    </div>
-                </div>
-                @endforeach
-                <div style="padding:8px 14px;border-top:1px solid #CBCBCB;display:flex;justify-content:space-between;align-items:center;">
-                    <span style="font-size:11px;color:#CBCBCB;">{{ $cuotasNuevas->where('estado','pagado')->count() }} pag. · {{ $cuotasNuevas->where('estado','!=','pagado')->count() }} pend.</span>
-                    <span style="font-size:11px;font-weight:700;color:#4A4A4A;font-family:monospace;">Bs. {{ number_format($planNuevo->total_pagar,2) }}</span>
-                </div>
+                <table style="width:100%;border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:#F8F7FF;">
+                            <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">#</th>
+                            <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Monto</th>
+                            <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Estado</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($cuotasNuevas as $c)
+                        @php
+                            $bCls = match($c->estado) { 'pagado' => 'ds-badge-aprobado', 'vencido' => 'ds-badge-danger', default => 'ds-badge-pending' };
+                            $bLb  = match($c->estado) { 'pagado' => 'Pagado', 'vencido' => 'Vencido', default => 'Pend.' };
+                        @endphp
+                        <tr style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }}">
+                            <td style="padding:8px 12px;font-size:13px;text-align:center;font-weight:600;color:#6b7280;">{{ $c->numero }}</td>
+                            <td style="padding:8px 12px;text-align:center;">
+                                <span style="font-size:13px;font-family:monospace;font-weight:700;color:#7c3aed;">Bs. {{ number_format($c->monto,2) }}</span>
+                                @if($c->fecha_vencimiento)
+                                <p style="font-size:9px;color:#CBCBCB;margin:2px 0 0;">{{ \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') }}</p>
+                                @endif
+                            </td>
+                            <td style="padding:8px 12px;text-align:center;"><span class="ds-badge {{ $bCls }}" style="font-size:9px;">{{ $bLb }}</span></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr style="background:#F5F3FF;border-top:1.5px solid #EDE9FE;">
+                            <td colspan="3" style="padding:8px 12px;text-align:center;">
+                                <span style="font-size:11px;color:#6b7280;">{{ $cuotasNuevas->where('estado','pagado')->count() }} pag. · {{ $cuotasNuevas->where('estado','!=','pagado')->count() }} pend.</span>
+                                <span style="font-size:11px;font-weight:700;color:#534AB7;font-family:monospace;margin-left:8px;">Bs. {{ number_format($planNuevo->total_pagar,2) }}</span>
+                            </td>
+                        </tr>
+                    </tfoot>
+                </table>
             @else
                 <p style="padding:20px;text-align:center;font-size:12px;color:#CBCBCB;">Sin datos</p>
             @endif
-            </div>
         </div>
 
     </div>

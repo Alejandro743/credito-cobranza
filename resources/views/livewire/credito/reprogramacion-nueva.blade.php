@@ -134,19 +134,20 @@
         </div>
     </div>
 
-    <div style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;overflow:hidden;margin-bottom:14px;">
-        <div style="padding:12px 16px;border-bottom:1px solid #CBCBCB;display:flex;align-items:center;justify-content:space-between;">
-            <p style="font-size:13px;font-weight:700;color:#4A4A4A;margin:0;">Plan Activo — v{{ $plan?->version ?? 1 }}</p>
+    <div style="background:#fff;border:0.5px solid #CECBF6;border-radius:10px;overflow:hidden;margin-bottom:14px;">
+        <div style="padding:10px 14px;border-bottom:1px solid #EDE9FE;display:flex;align-items:center;justify-content:space-between;background:#F8F7FF;">
+            <p style="font-size:12px;font-weight:700;color:#534AB7;margin:0;">Plan Activo — v{{ $plan?->version ?? 1 }}</p>
             <span style="font-size:11px;color:#CBCBCB;">{{ $plan?->matriz_nombre }}</span>
         </div>
         <div style="overflow-x:auto;">
-        <table>
+        <table style="width:100%;border-collapse:collapse;">
             <thead>
-                <tr>
-                    <th style="width:44px;text-align:center;">#</th>
-                    <th style="text-align:right;">Monto</th>
-                    <th style="text-align:center;">Vencimiento</th>
-                    <th style="text-align:center;">Estado</th>
+                <tr style="background:#F8F7FF;">
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">#</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Cuotas</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Monto</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Vencimiento</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Estado</th>
                 </tr>
             </thead>
             <tbody>
@@ -154,14 +155,15 @@
                 @php
                     $badge = $c->estadoFinancieroBadge;
                 @endphp
-                <tr style="{{ $c->estado==='pagado' ? 'opacity:0.5;' : '' }}">
-                    <td style="text-align:center;font-weight:700;">{{ $c->numero }}</td>
-                    <td style="text-align:right;font-family:monospace;font-weight:700;">Bs. {{ number_format($c->monto, 2) }}</td>
-                    <td style="text-align:center;color:#CBCBCB;">{{ $c->fecha_vencimiento ? \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') : '—' }}</td>
-                    <td style="text-align:center;"><span class="ds-badge" style="background:{{ $badge['bg'] }};color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span></td>
+                <tr style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.5;' : '' }}">
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;">{{ $c->numero }}</td>
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;color:#6b7280;font-weight:600;">Cuota {{ $c->numero }}</td>
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;font-family:monospace;font-weight:700;color:#7c3aed;">Bs. {{ number_format($c->monto, 2) }}</td>
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;color:#6b7280;">{{ $c->fecha_vencimiento ? \Carbon\Carbon::parse($c->fecha_vencimiento)->format('d/m/Y') : '—' }}</td>
+                    <td style="padding:8px 12px;text-align:center;"><span class="ds-badge" style="background:{{ $badge['bg'] }};color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span></td>
                 </tr>
                 @empty
-                <tr><td colspan="4"><div class="ds-empty"><p>Sin cuotas</p></div></td></tr>
+                <tr><td colspan="5"><div class="ds-empty"><p>Sin cuotas</p></div></td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -233,7 +235,7 @@
     </div>
 
     {{-- Cuotas editables con cuadre Alpine en tiempo real --}}
-    <div style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;overflow:hidden;margin-bottom:14px;"
+    <div style="background:#fff;border:0.5px solid #CECBF6;border-radius:10px;overflow:hidden;margin-bottom:14px;"
          x-data="{
             saldo: {{ $pendiente }},
             recalc() {
@@ -255,44 +257,44 @@
             }
          }"
          x-init="recalc()">
-        <div style="padding:12px 16px;border-bottom:1px solid #CBCBCB;display:flex;align-items:center;justify-content:space-between;">
-            <p style="font-size:13px;font-weight:700;color:#4A4A4A;margin:0;">Cuotas del nuevo plan</p>
-            <button wire:click="agregarCuota" @click="$nextTick(()=>recalc())" class="ds-btn ds-btn-secondary ds-btn-sm">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+        <div style="padding:10px 14px;border-bottom:1px solid #EDE9FE;display:flex;align-items:center;justify-content:space-between;background:#F8F7FF;">
+            <span style="font-size:12px;font-weight:700;color:#534AB7;">Cuotas del nuevo plan</span>
+            <button wire:click="agregarCuota" @click="$nextTick(()=>recalc())" style="display:flex;align-items:center;gap:5px;padding:5px 12px;background:#EDE9FE;color:#534AB7;font-size:12px;font-weight:700;border:1px solid #C4B5FD;border-radius:8px;cursor:pointer;-webkit-appearance:none;appearance:none;">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
                 </svg>
                 Agregar cuota
             </button>
         </div>
         <div style="overflow-x:auto;">
-        <table>
+        <table style="width:100%;border-collapse:collapse;">
             <thead>
-                <tr>
-                    <th style="text-align:center;width:40px;">#</th>
-                    <th>Monto (Bs.)</th>
-                    <th>Fecha vencimiento</th>
-                    <th style="width:36px;"></th>
+                <tr style="background:#F8F7FF;">
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">#</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Cuotas</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Monto (Bs.)</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Fecha vencimiento</th>
+                    <th style="padding:8px 12px;font-size:10px;font-weight:600;color:#6b7280;text-align:center;">Acción</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($nuevasCuotas as $i => $cuota)
-                <tr wire:key="nc-{{ $i }}">
-                    <td style="text-align:center;font-weight:700;color:#CBCBCB;">{{ $cuota['numero'] }}</td>
-                    <td>
+                <tr wire:key="nc-{{ $i }}" style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}">
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;color:#6b7280;font-weight:600;">{{ $cuota['numero'] }}</td>
+                    <td style="padding:8px 12px;font-size:13px;text-align:center;color:#6b7280;font-weight:600;">Cuota {{ $cuota['numero'] }}</td>
+                    <td style="padding:8px 12px;text-align:center;">
                         <input wire:model="nuevasCuotas.{{ $i }}.monto" type="number" step="0.01" min="0.01"
-                               class="monto-cuota" @input="recalc()" style="width:100%;">
+                               class="monto-cuota" @input="recalc()" style="width:90%;padding:4px 8px;border:1px solid #C4B5FD;border-radius:6px;font-size:12px;text-align:center;outline:none;background:#fff;">
                         @error("nuevasCuotas.{$i}.monto")<p class="ds-form-error">{{ $message }}</p>@enderror
                     </td>
-                    <td>
-                        <input wire:model="nuevasCuotas.{{ $i }}.fecha" type="date" style="width:100%;">
+                    <td style="padding:8px 12px;text-align:center;">
+                        <input wire:model="nuevasCuotas.{{ $i }}.fecha" type="date" style="width:90%;padding:4px 8px;border:1px solid #C4B5FD;border-radius:6px;font-size:12px;outline:none;background:#fff;">
                         @error("nuevasCuotas.{$i}.fecha")<p class="ds-form-error">{{ $message }}</p>@enderror
                     </td>
-                    <td style="text-align:center;">
+                    <td style="padding:8px 12px;text-align:center;">
                         @if(count($nuevasCuotas) > 1)
-                        <button wire:click="quitarCuota({{ $i }})" @click="$nextTick(()=>recalc())" class="ds-btn ds-btn-danger ds-btn-sm" style="padding:4px 6px;">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
+                        <button wire:click="quitarCuota({{ $i }})" @click="$nextTick(()=>recalc())" style="width:28px;height:28px;border-radius:7px;border:1px solid #FECACA;background:#FEF2F2;color:#DC2626;cursor:pointer;display:flex;align-items:center;justify-content:center;margin:0 auto;-webkit-appearance:none;appearance:none;">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
                         @endif
                     </td>
@@ -300,12 +302,12 @@
                 @endforeach
             </tbody>
             <tfoot>
-                <tr>
-                    <td colspan="2">
-                        Total: <span x-ref="totalDisplay" style="font-family:monospace;font-weight:700;color:#4A4A4A;margin-left:6px;"></span>
-                    </td>
-                    <td colspan="2" style="text-align:right;">
-                        <span x-ref="diffDisplay" style="font-size:11px;font-weight:700;"></span>
+                <tr style="background:#F5F3FF;border-top:1.5px solid #EDE9FE;">
+                    <td colspan="5" style="padding:10px 16px;">
+                        <div style="display:flex;justify-content:space-between;align-items:center;">
+                            <span style="font-size:12px;font-weight:700;color:#534AB7;">Total: <span x-ref="totalDisplay" style="font-family:monospace;font-weight:700;color:#111827;margin-left:6px;"></span></span>
+                            <span x-ref="diffDisplay" style="font-size:11px;font-weight:700;"></span>
+                        </div>
                     </td>
                 </tr>
             </tfoot>
