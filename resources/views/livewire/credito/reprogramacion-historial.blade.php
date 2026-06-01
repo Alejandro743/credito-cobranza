@@ -239,7 +239,7 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
         <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden;">
             <div style="background:#F8F7FF; display:grid; padding:8px 12px; grid-template-columns:30px 70px 1fr 1fr 1fr 88px; gap:4px;">
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">#</p>
-                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;"></p>
+                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Cuotas</p>
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:right;">Monto</p>
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Vencimiento</p>
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Fecha pago</p>
