@@ -141,7 +141,7 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
             <tr wire:key="rp-{{ $rp->id }}"
                 style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
                 @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; white-space:nowrap;">{{ $reprogramaciones->firstItem() + $loop->index }}</td>
+                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; white-space:nowrap; background:#F9F8FF; color:#C4B5FD; font-weight:700;">{{ $reprogramaciones->firstItem() + $loop->index }}</td>
                 <td style="padding:10px 14px; font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $rp->numero }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $rp->pedido->cliente->ci ?: '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($rp->pedido->cliente->nombre_completo)) }}</td>

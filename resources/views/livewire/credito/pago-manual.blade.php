@@ -137,7 +137,7 @@
             <tr wire:key="ped-{{ $ped->id }}"
                 style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
                 @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-                <td style="padding:10px 8px; text-align:center; font-size:11px; white-space:nowrap;">{{ $loop->iteration }}</td>
+                <td style="padding:10px 8px; text-align:center; font-size:11px; white-space:nowrap; background:#F9F8FF; color:#C4B5FD; font-weight:700;">{{ $loop->iteration }}</td>
                 <td style="padding:10px 14px; font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $ped->numero }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $ped->cliente->ci ?: '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($ped->cliente->nombre_completo)) }}</td>
