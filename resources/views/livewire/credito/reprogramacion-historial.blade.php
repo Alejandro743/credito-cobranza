@@ -5,6 +5,21 @@
 @media (min-width:640px) { .rp-det-btns { flex-direction:row; } }
 </style>
 
+{{-- Toast global --}}
+<div x-data="{ show: false, message: '' }"
+     @rp-toast.window="message = $event.detail.message; show = true; setTimeout(() => show = false, 3500)"
+     x-show="show"
+     x-transition:enter="transition ease-out duration-200"
+     x-transition:enter-start="opacity-0 -translate-y-2"
+     x-transition:enter-end="opacity-100 translate-y-0"
+     x-transition:leave="transition ease-in duration-200"
+     x-transition:leave-start="opacity-100"
+     x-transition:leave-end="opacity-0"
+     style="display:none; position:fixed; top:20px; right:20px; z-index:9999; padding:12px 18px; background:#F0FDF4; border:1px solid #86EFAC; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); display:flex; align-items:center; gap:10px; min-width:260px;">
+    <svg width="18" height="18" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+    <span x-text="message" style="font-size:13px; font-weight:700; color:#166534;"></span>
+</div>
+
 {{-- ══ LIST ══ --}}
 @if($mode === 'list')
 
@@ -593,17 +608,6 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
         </div>{{-- /x-data --}}
 
     </div>{{-- /body --}}
-
-    {{-- Toast éxito --}}
-    @if($successMsg)
-    <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-         style="margin-top:16px; padding:12px 16px; background:#F0FDF4; border:1px solid #86EFAC; border-radius:10px; display:flex; align-items:center; gap:10px;">
-        <svg width="18" height="18" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-        <span style="font-size:13px; font-weight:700; color:#166534;">{{ $successMsg }}</span>
-    </div>
-    @endif
 
     {{-- Botones grandes al pie --}}
     <div class="rp-det-btns">

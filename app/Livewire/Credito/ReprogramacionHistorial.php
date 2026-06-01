@@ -19,7 +19,6 @@ class ReprogramacionHistorial extends Component
     public string $filtro  = 'todos';
     public string $sortBy   = '';
     public string $sortDir  = 'asc';
-    public string $successMsg = '';
 
     public function toggleSort(string $col): void
     {
@@ -176,7 +175,7 @@ class ReprogramacionHistorial extends Component
                 ])->toArray()
             : [];
 
-        $this->successMsg = 'Plan guardado correctamente.';
+        $this->dispatch('rp-toast', message: 'Plan guardado correctamente.');
     }
 
     public function render()
