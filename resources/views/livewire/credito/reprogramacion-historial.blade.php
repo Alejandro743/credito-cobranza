@@ -15,7 +15,7 @@
      x-transition:leave="transition ease-in duration-200"
      x-transition:leave-start="opacity-100"
      x-transition:leave-end="opacity-0"
-     style="display:none; position:fixed; top:20px; right:20px; z-index:9999; padding:12px 18px; background:#F0FDF4; border:1px solid #86EFAC; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); display:flex; align-items:center; gap:10px; min-width:260px;">
+     style="position:fixed; top:20px; right:20px; z-index:9999; padding:12px 18px; background:#F0FDF4; border:1px solid #86EFAC; border-radius:10px; box-shadow:0 4px 12px rgba(0,0,0,0.1); display:flex; align-items:center; gap:10px; min-width:260px;">
     <svg width="18" height="18" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
     <span x-text="message" style="font-size:13px; font-weight:700; color:#166534;"></span>
 </div>
