@@ -214,7 +214,7 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
         </div>
 
-        <div style="background:#F3F4F6; border:1px solid #E5E7EB; border-radius:10px; padding:14px 16px;">
+        <div style="background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:14px 16px;">
             <p style="font-size:13px; color:#374151; margin:0 0 6px;">
                 <span style="font-weight:700; color:#6B7280;">Cliente:</span>
                 {{ $p->cliente->ci ?: '—' }} - {{ ucwords(strtolower($p->cliente->nombre_completo)) }}
