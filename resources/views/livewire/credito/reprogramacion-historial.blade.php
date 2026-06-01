@@ -269,7 +269,7 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
         @if($planViejo && $cuotasViej->isNotEmpty())
         <div x-data="{ abierto: false }" style="margin-top:14px; border:1px solid #E5E7EB; border-radius:10px; overflow:hidden;">
             <button @click="abierto = !abierto"
-                    style="width:100%; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; background:#F9F8FF; border:none; cursor:pointer; text-align:left;">
+                    style="width:100%; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; background:#FFF7ED; border:none; cursor:pointer; text-align:left;">
                 <div style="display:flex; align-items:center; gap:8px;">
                     <span style="font-size:12px; font-weight:700; color:#9CA3AF;">Plan anterior · v{{ $rp->version_anterior }}</span>
                     <span class="ds-badge ds-badge-cerrado">REEMPLAZADO</span>
