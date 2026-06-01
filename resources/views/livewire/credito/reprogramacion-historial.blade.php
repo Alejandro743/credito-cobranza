@@ -1,5 +1,10 @@
 <div>
 
+<style>
+.rp-det-btns { display:flex; flex-direction:column; gap:8px; margin-top:20px; }
+@media (min-width:640px) { .rp-det-btns { flex-direction:row; } }
+</style>
+
 {{-- ══ LIST ══ --}}
 @if($mode === 'list')
 
@@ -179,11 +184,6 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
     $pendiente  = $cuotas->where('estado','!=','pagado')->sum('monto');
     $esActivo   = $planNuevo?->estado === 'activo';
 @endphp
-
-<style>
-.rp-det-btns { display:flex; flex-direction:column; gap:8px; margin-top:20px; }
-@media (min-width:640px) { .rp-det-btns { flex-direction:row; justify-content:flex-end; } }
-</style>
 
 <div style="max-width:900px; margin:0 auto;">
 
