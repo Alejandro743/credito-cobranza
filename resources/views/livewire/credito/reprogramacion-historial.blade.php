@@ -198,13 +198,8 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
             REPROGRAMACIÓN DE CRÉDITO
         </h1>
         <p style="font-size:15px; font-weight:700; color:#534AB7; font-family:monospace; margin:0 0 8px;">
-            {{ $rp->numero }}
+            {{ $rp->numero }} - {{ $p->numero }}
         </p>
-        <div style="display:flex; align-items:center; justify-content:center; gap:6px; margin-bottom:8px;">
-            <span class="ds-badge ds-badge-cerrado">v{{ $rp->version_anterior }}</span>
-            <svg width="11" height="11" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"/></svg>
-            <span class="ds-badge ds-badge-aprobado">v{{ $rp->version_nueva }}</span>
-        </div>
         <span style="font-size:14px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:{{ $esActivo ? '#15803D' : '#6b7280' }};">
             {{ $esActivo ? 'ACTIVO' : 'INACTIVO' }}
         </span>
@@ -212,54 +207,22 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
 
     <div style="padding:12px 0 16px;">
 
-        {{-- Separador Cliente --}}
+        {{-- Separador Datos del Cliente --}}
         <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
             <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em;">Cliente</span>
+            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em;">Datos del Cliente</span>
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
         </div>
 
-        <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:14px 16px; text-align:center; box-shadow:0 2px 8px rgba(123,111,232,0.08);">
-            <span style="font-size:19px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</span>
-            <span style="font-size:13px; font-weight:700; color:#7B6FE8; display:block; margin-top:2px;">CI: {{ $p->cliente->ci ?: '—' }}</span>
-            <span style="font-size:11px; color:#CBCBCB; display:block; margin-top:4px;">Pedido: <span style="font-family:monospace; font-weight:600;">{{ $p->numero }}</span> · {{ $rp->creadoPor->name ?? '—' }}</span>
-        </div>
-
-        <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; padding:10px 12px; margin-top:8px;">
-            <span style="font-size:9px; font-weight:500; color:#534AB7; display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.04em;">Motivo</span>
-            <span style="font-size:13px; color:#3C3489; display:block; line-height:1.5;">{{ $rp->motivo }}</span>
-        </div>
-
-        {{-- ── Separador Resumen ── --}}
-        <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
-            <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Resumen</span>
-            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
-        </div>
-
-        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.18), 0 1px 4px rgba(123,111,232,0.10);">
-            <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#DC2626 100%);"></div>
-            <div style="padding:14px;">
-                <div style="margin-bottom:8px; text-align:center;">
-                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Saldo Reprogramado Bs.</span>
-                    <span style="font-size:26px; font-weight:900; color:#DC2626; line-height:1; display:block; font-family:monospace;">{{ number_format($rp->saldo_reprogramado, 2) }}</span>
-                </div>
-                <div style="height:1px; background:#EDE9FE; margin-bottom:8px;"></div>
-                <div style="display:grid; grid-template-columns:repeat(3,1fr); text-align:center;">
-                    <div style="padding:0 6px;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Plan</span>
-                        <span style="font-size:13px; font-weight:900; color:#111827; line-height:1.1; font-family:monospace;">{{ number_format($planNuevo?->total_pagar ?? 0, 2) }}</span>
-                    </div>
-                    <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pagado</span>
-                        <span style="font-size:13px; font-weight:900; color:#059669; line-height:1.1; font-family:monospace;">{{ number_format($pagado, 2) }}</span>
-                    </div>
-                    <div style="padding:0 6px;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pendiente</span>
-                        <span style="font-size:13px; font-weight:900; color:#DC2626; line-height:1.1; font-family:monospace;">{{ number_format($pendiente, 2) }}</span>
-                    </div>
-                </div>
-            </div>
+        <div style="background:#F3F4F6; border:1px solid #E5E7EB; border-radius:10px; padding:14px 16px;">
+            <p style="font-size:13px; color:#374151; margin:0 0 6px;">
+                <span style="font-weight:700; color:#6B7280;">Cliente:</span>
+                {{ $p->cliente->ci ?: '—' }} - {{ ucwords(strtolower($p->cliente->nombre_completo)) }}
+            </p>
+            <p style="font-size:13px; color:#374151; margin:0;">
+                <span style="font-weight:700; color:#6B7280;">Vendedor:</span>
+                {{ ucwords(strtolower($p->vendedor->user->name ?? '—')) }}
+            </p>
         </div>
 
         {{-- ── Separador Plan de Pagos ── --}}
@@ -343,6 +306,43 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
             </div>
         </div>
         @endif
+
+        {{-- ── Separador Resumen ── --}}
+        <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Resumen</span>
+            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+        </div>
+
+        <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; padding:10px 12px; margin-bottom:12px;">
+            <span style="font-size:9px; font-weight:500; color:#534AB7; display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.04em;">Motivo</span>
+            <span style="font-size:13px; color:#3C3489; display:block; line-height:1.5;">{{ $rp->motivo }}</span>
+        </div>
+
+        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.18), 0 1px 4px rgba(123,111,232,0.10);">
+            <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#DC2626 100%);"></div>
+            <div style="padding:14px;">
+                <div style="margin-bottom:8px; text-align:center;">
+                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Saldo Reprogramado Bs.</span>
+                    <span style="font-size:26px; font-weight:900; color:#DC2626; line-height:1; display:block; font-family:monospace;">{{ number_format($rp->saldo_reprogramado, 2) }}</span>
+                </div>
+                <div style="height:1px; background:#EDE9FE; margin-bottom:8px;"></div>
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); text-align:center;">
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Plan</span>
+                        <span style="font-size:13px; font-weight:900; color:#111827; line-height:1.1; font-family:monospace;">{{ number_format($planNuevo?->total_pagar ?? 0, 2) }}</span>
+                    </div>
+                    <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pagado</span>
+                        <span style="font-size:13px; font-weight:900; color:#059669; line-height:1.1; font-family:monospace;">{{ number_format($pagado, 2) }}</span>
+                    </div>
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pendiente</span>
+                        <span style="font-size:13px; font-weight:900; color:#DC2626; line-height:1.1; font-family:monospace;">{{ number_format($pendiente, 2) }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>{{-- /body --}}
 
