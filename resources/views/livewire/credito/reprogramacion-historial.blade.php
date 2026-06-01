@@ -238,9 +238,9 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
         {{-- Tabla cuotas nuevas --}}
         <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden;">
             <div style="background:#F8F7FF; display:grid; padding:8px 12px; grid-template-columns:auto auto 1fr 1fr 1fr 1fr; gap:12px;">
-                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">#</p>
-                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0;">Cuotas</p>
-                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:right;">Monto</p>
+                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">#</p>
+                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Cuotas</p>
+                <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Monto</p>
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Vencimiento</p>
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Fecha pago</p>
                 <p style="font-size:10px; font-weight:600; color:#6b7280; margin:0; text-align:center;">Estado</p>
@@ -248,11 +248,11 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
             @forelse($cuotas as $c)
             @php $badge = $c->estadoFinancieroBadge; @endphp
             <div style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $c->estado==='pagado' ? 'opacity:0.6;' : '' }} display:grid; align-items:center; padding:8px 12px; grid-template-columns:auto auto 1fr 1fr 1fr 1fr; gap:12px;">
-                <span style="font-size:11px; color:#374151;">{{ $c->numero }}</span>
-                <span style="font-size:11px; color:#6b7280; font-weight:600;">Cuota {{ $c->numero }}</span>
-                <span style="font-size:13px; font-weight:700; color:#7c3aed; text-align:right; font-family:monospace;">{{ number_format($c->monto, 2) }}</span>
-                <span style="font-size:11px; color:#6b7280; text-align:center;">{{ $c->fecha_vencimiento ? $c->fecha_vencimiento->format('d/m/Y') : '—' }}</span>
-                <span style="font-size:11px; text-align:center; font-weight:{{ $c->fecha_pago ? '600' : '400' }}; color:{{ $c->fecha_pago ? '#059669' : '#D1D5DB' }};">{{ $c->fecha_pago ? $c->fecha_pago->format('d/m/Y') : '—' }}</span>
+                <span style="font-size:11px; color:#374151; text-align:center; display:block;">{{ $c->numero }}</span>
+                <span style="font-size:11px; color:#6b7280; font-weight:600; text-align:center; display:block;">Cuota {{ $c->numero }}</span>
+                <span style="font-size:13px; font-weight:700; color:#7c3aed; text-align:center; font-family:monospace; display:block;">{{ number_format($c->monto, 2) }}</span>
+                <span style="font-size:11px; color:#6b7280; text-align:center; display:block;">{{ $c->fecha_vencimiento ? $c->fecha_vencimiento->format('d/m/Y') : '—' }}</span>
+                <span style="font-size:11px; text-align:center; display:block; font-weight:{{ $c->fecha_pago ? '600' : '400' }}; color:{{ $c->fecha_pago ? '#059669' : '#D1D5DB' }};">{{ $c->fecha_pago ? $c->fecha_pago->format('d/m/Y') : '—' }}</span>
                 <span style="display:flex; justify-content:center;">
                     <span class="ds-badge" style="background:{{ $badge['bg'] }};color:{{ $badge['cl'] }};">{{ $badge['lb'] }}</span>
                 </span>
