@@ -216,16 +216,6 @@
                     <tr><td colspan="5" style="padding:32px; text-align:center; color:#9CA3AF; font-size:13px;">Sin cuotas</td></tr>
                     @endforelse
                 </tbody>
-                <tfoot>
-                    <tr style="background:#F5F3FF; border-top:1.5px solid #EDE9FE;">
-                        <td colspan="5" style="padding:10px 16px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <span style="font-size:10px; color:#9CA3AF;">{{ $cuotas->where('numero','>',0)->where('estado','pagado')->count() }} pagadas · {{ $nPend }} pendientes</span>
-                                <span style="font-size:12px; font-weight:700; color:#7B6FE8; font-family:monospace;">Total: Bs. {{ number_format($cuotas->where('numero','>',0)->sum('monto'), 2) }}</span>
-                            </div>
-                        </td>
-                    </tr>
-                </tfoot>
             </table>
         </div>
 
@@ -238,18 +228,35 @@
 
         <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.18);">
             <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#DC2626 100%);"></div>
-            <div style="padding:14px; display:grid; grid-template-columns:repeat(3,1fr); text-align:center;">
-                <div style="padding:0 6px;">
-                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Plan</span>
-                    <span style="font-size:13px; font-weight:900; color:#111827; font-family:monospace;">{{ number_format($cuotas->where('numero','>',0)->sum('monto'), 2) }}</span>
+            <div style="padding:14px;">
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); text-align:center; margin-bottom:10px;">
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Plan</span>
+                        <span style="font-size:13px; font-weight:900; color:#111827; font-family:monospace;">{{ number_format($cuotas->where('numero','>',0)->sum('monto'), 2) }}</span>
+                    </div>
+                    <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pagado</span>
+                        <span style="font-size:13px; font-weight:900; color:#059669; font-family:monospace;">{{ number_format($pagadas, 2) }}</span>
+                    </div>
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pendiente</span>
+                        <span style="font-size:13px; font-weight:900; color:#DC2626; font-family:monospace;">{{ number_format($pendiente, 2) }}</span>
+                    </div>
                 </div>
-                <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
-                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pagado</span>
-                    <span style="font-size:13px; font-weight:900; color:#059669; font-family:monospace;">{{ number_format($pagadas, 2) }}</span>
-                </div>
-                <div style="padding:0 6px;">
-                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Pendiente</span>
-                    <span style="font-size:13px; font-weight:900; color:#DC2626; font-family:monospace;">{{ number_format($pendiente, 2) }}</span>
+                <div style="height:1px; background:#EDE9FE; margin-bottom:10px;"></div>
+                <div style="display:grid; grid-template-columns:repeat(3,1fr); text-align:center;">
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Cuotas</span>
+                        <span style="font-size:13px; font-weight:900; color:#111827;">{{ $cuotas->where('numero','>',0)->count() }}</span>
+                    </div>
+                    <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Cuotas Pagadas</span>
+                        <span style="font-size:13px; font-weight:900; color:#111827;">{{ $cuotas->where('numero','>',0)->where('estado','pagado')->count() }}</span>
+                    </div>
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Cuotas Pendientes</span>
+                        <span style="font-size:13px; font-weight:900; color:#111827;">{{ $nPend }}</span>
+                    </div>
                 </div>
             </div>
         </div>
