@@ -524,7 +524,7 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
                             <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Monto (Bs.)</th>
                             <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Fecha vencimiento</th>
                             <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Estado</th>
-                            <th style="padding:8px 12px; width:36px;"></th>
+                            <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Acción</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -537,7 +537,7 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
                                 <span style="font-family:monospace; font-weight:700; color:#374151;">{{ number_format((float)$ce['monto'], 2) }}</span>
                                 @else
                                 <input wire:model="cuotasEditadas.{{ $i }}.monto" type="number" step="0.01" min="0.01"
-                                       class="monto-edit" style="width:90%; padding:4px 8px; border:1px solid #C4B5FD; border-radius:6px; font-size:12px; text-align:center; outline:none;">
+                                       class="monto-edit" style="width:90%; padding:4px 8px; border:1px solid #C4B5FD; border-radius:6px; font-size:12px; text-align:center; outline:none; background:#fff;">
                                 @error("cuotasEditadas.{$i}.monto")<p class="ds-form-error">{{ $message }}</p>@enderror
                                 @endif
                             </td>
@@ -546,18 +546,22 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
                                 <span style="font-size:11px; color:#6b7280;">{{ $ce['fecha'] ? \Carbon\Carbon::parse($ce['fecha'])->format('d/m/Y') : '—' }}</span>
                                 @else
                                 <input wire:model="cuotasEditadas.{{ $i }}.fecha" type="date"
-                                       style="width:90%; padding:4px 8px; border:1px solid #C4B5FD; border-radius:6px; font-size:12px; outline:none;">
+                                       style="width:90%; padding:4px 8px; border:1px solid #C4B5FD; border-radius:6px; font-size:12px; outline:none; background:#fff;">
                                 @error("cuotasEditadas.{$i}.fecha")<p class="ds-form-error">{{ $message }}</p>@enderror
                                 @endif
                             </td>
                             <td style="padding:8px 12px; text-align:center;">
-                                <span class="ds-badge {{ $ce['pagado'] ? 'ds-badge-aprobado' : 'ds-badge-pending' }}">{{ $ce['pagado'] ? 'Pagado' : 'Pendiente' }}</span>
+                                @if($ce['pagado'])
+                                <span style="padding:3px 10px; border-radius:6px; font-size:11px; font-weight:700; background:#D1FAE5; color:#059669;">Pagado</span>
+                                @else
+                                <span style="padding:3px 10px; border-radius:6px; font-size:11px; font-weight:700; background:#FEE2E2; color:#DC2626;">Pendiente</span>
+                                @endif
                             </td>
                             <td style="padding:8px 12px; text-align:center;">
                                 @if(!$ce['pagado'])
                                 <button wire:click="quitarCuotaEdicion({{ $i }})"
-                                        style="width:24px; height:24px; border-radius:6px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;">
-                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                        style="width:28px; height:28px; border-radius:7px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;">
+                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 </button>
                                 @endif
                             </td>
