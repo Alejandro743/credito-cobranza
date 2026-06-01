@@ -14,7 +14,60 @@
     </div>
 </div>
 
-{{-- Card tabla --}}
+{{-- MOBILE: Cards --}}
+<div class="sm:hidden flex flex-col" style="gap:10px;">
+    @forelse($resultados as $p)
+    @php
+        $plan      = $p->planPago;
+        $pendiente = $plan?->cuotas->where('estado','!=','pagado')->where('numero','>',0)->sum('monto') ?? 0;
+        $nPend     = $plan?->cuotas->where('estado','!=','pagado')->where('numero','>',0)->count() ?? 0;
+    @endphp
+    <div wire:key="res-mob-{{ $p->id }}"
+         style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
+        <div style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #F3F4F6;">
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8;">{{ strtoupper(substr($p->cliente->nombre_completo, 0, 1)) }}</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+                <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</p>
+                <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;">{{ $p->numero }}</p>
+            </div>
+            <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">v{{ $plan?->version ?? 1 }}</span>
+        </div>
+        <div style="padding:10px 14px; display:flex; gap:8px;">
+            <div style="flex:1;">
+                <span style="font-size:11px; color:#9CA3AF; display:block;">CI</span>
+                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->cliente->ci ?: '—' }}</span>
+            </div>
+            <div style="flex:1;">
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Cuotas pend.</span>
+                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $nPend }}</span>
+            </div>
+            <div style="text-align:right;">
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Saldo pend.</span>
+                <span style="font-size:13px; font-weight:700; color:#DC2626;">Bs. {{ number_format($pendiente, 2) }}</span>
+            </div>
+        </div>
+        <div style="padding:10px 14px; border-top:1px solid #F3F4F6;">
+            <button wire:click="seleccionarPedido({{ $p->id }})"
+                    style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; background:#F5F3FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; -webkit-appearance:none; appearance:none;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                Seleccionar
+            </button>
+        </div>
+    </div>
+    @empty
+    <div style="text-align:center; padding:48px 24px;">
+        <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        <p style="font-weight:600; color:#6B7280; font-size:13px;">No hay pedidos aprobados con saldo pendiente.</p>
+    </div>
+    @endforelse
+</div>
+
+{{-- DESKTOP: Tabla --}}
+@php
+    $sortColsNR = ['Código'=>null,'CI'=>null,'Cliente'=>null,'Versión'=>null,'Total Plan'=>null,'Pagado'=>null,'Saldo Pend.'=>null,'Cuotas Pend.'=>null];
+@endphp
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
@@ -23,18 +76,13 @@
     </div>
 
     <div style="overflow:auto; flex:1;">
-    <table style="width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
+    <table style="width:100%; min-width:780px; border-collapse:collapse; font-size:13px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                 <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
-                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Código</th>
-                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">CI</th>
-                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Cliente</th>
-                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Versión</th>
-                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Total Plan</th>
-                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Pagado</th>
-                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Saldo Pend.</th>
-                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Cuotas Pend.</th>
+                @foreach($sortColsNR as $label => $key)
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">{{ $label }}</th>
+                @endforeach
                 <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acción</th>
             </tr>
         </thead>
@@ -77,13 +125,15 @@
                     <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
-                    <p style="font-weight:600; color:#6B7280; font-size:13px;">{{ strlen(trim($search)) >= 2 ? 'Sin resultados para esa búsqueda.' : 'No hay pedidos aprobados con saldo pendiente.' }}</p>
+                    <p style="font-weight:600; color:#6B7280; font-size:13px;">No hay pedidos aprobados con saldo pendiente.</p>
                 </td>
             </tr>
             @endforelse
         </tbody>
     </table>
     </div>
+    @if($resultados->count() === 0)
+    @endif
 </div>
 
 {{-- ══ PREVIEW ══ --}}
