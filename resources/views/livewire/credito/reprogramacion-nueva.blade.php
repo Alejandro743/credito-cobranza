@@ -159,10 +159,10 @@
         <h1 style="font-size:20px; font-weight:800; color:#534AB7; letter-spacing:-0.3px; margin:0 0 10px;">
             VISTA PREVIA DEL PLAN
         </h1>
-        <p style="font-size:15px; font-weight:700; color:#534AB7; font-family:monospace; margin:0 0 8px;">
-            {{ $p->numero }}
-        </p>
-        <span style="padding:2px 10px; border-radius:6px; font-size:13px; font-weight:800; background:#fff; color:#7B6FE8;">v{{ $plan?->version ?? 1 }}</span>
+        <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:4px;">
+            <p style="font-size:15px; font-weight:700; color:#534AB7; font-family:monospace; margin:0;">{{ $p->numero }}</p>
+            <span style="padding:2px 10px; border-radius:6px; font-size:13px; font-weight:800; background:#fff; color:#7B6FE8;">v{{ $plan?->version ?? 1 }}</span>
+        </div>
     </div>
 
     <div style="padding:12px 0 16px;">
@@ -189,7 +189,6 @@
             <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
             <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Plan de Pagos Activo</span>
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
-            @if($plan)<span style="font-size:10px; font-weight:700; background:#EEEDFE; color:#534AB7; border-radius:99px; padding:2px 8px;">v{{ $plan->version }} · {{ $plan->cantidad_cuotas }} cuotas{{ $plan->matriz_nombre ? ' · '.$plan->matriz_nombre : '' }}</span>@endif
         </div>
 
         <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden;">
