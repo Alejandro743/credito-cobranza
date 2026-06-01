@@ -314,12 +314,7 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
         </div>
 
-        <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; padding:10px 12px; margin-bottom:12px;">
-            <span style="font-size:9px; font-weight:500; color:#534AB7; display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.04em;">Motivo</span>
-            <span style="font-size:13px; color:#3C3489; display:block; line-height:1.5;">{{ $rp->motivo }}</span>
-        </div>
-
-        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.18), 0 1px 4px rgba(123,111,232,0.10);">
+        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.18), 0 1px 4px rgba(123,111,232,0.10); margin-bottom:12px;">
             <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#DC2626 100%);"></div>
             <div style="padding:14px;">
                 <div style="margin-bottom:8px; text-align:center;">
@@ -342,6 +337,11 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
                     </div>
                 </div>
             </div>
+        </div>
+
+        <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; padding:10px 12px;">
+            <span style="font-size:9px; font-weight:500; color:#534AB7; display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.04em;">Motivo</span>
+            <span style="font-size:13px; color:#3C3489; display:block; line-height:1.5;">{{ $rp->motivo }}</span>
         </div>
 
     </div>{{-- /body --}}
