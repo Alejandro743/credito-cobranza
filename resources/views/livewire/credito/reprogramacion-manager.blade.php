@@ -48,71 +48,88 @@
 {{-- ══ NUEVA: BUSCAR ══ --}}
 @elseif($mode === 'nueva_buscar')
 
-<div class="ds-section-header">
-    <button wire:click="backHome" class="ds-btn ds-btn-secondary ds-btn-sm">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
-        Inicio
-    </button>
-    <div style="flex:1;">
-        <h2>Nueva Reprogramación</h2>
-        <p>Buscá el pedido a reprogramar</p>
-    </div>
-</div>
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
-<div class="ds-table-card">
-    <div class="ds-table-toolbar">
-        <div style="position:relative;flex:1;max-width:340px;">
-            <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;" viewBox="0 0 24 24" fill="none" stroke="#CBCBCB" stroke-width="2" stroke-linecap="round">
+    {{-- Header --}}
+    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
+        <button wire:click="backHome"
+                style="display:flex; align-items:center; gap:5px; padding:5px 10px; background:#F4F4F4; color:#6D8196; font-size:12px; font-weight:600; border:1px solid #CBCBCB; border-radius:7px; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+            Inicio
+        </button>
+        <span style="font-size:13px; font-weight:700; color:#111827;">Nueva Reprogramación</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $resultados->count() }}</span>
+        <div style="margin-left:auto; position:relative;">
+            <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);width:13px;height:13px;color:#9CA3AF;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
                 <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
             </svg>
-            <input wire:model.live.debounce.400ms="search" type="text" placeholder="CI, nombre o Nº pedido..." style="padding-left:32px;width:100%;">
+            <input wire:model.live.debounce.400ms="search" type="text" placeholder="CI, nombre o Nº pedido..."
+                   style="padding-left:32px; height:36px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; width:260px; background:#fff;">
         </div>
     </div>
 
-    @if(strlen(trim($search)) >= 2)
-        @if($resultados->isEmpty())
-        <div class="ds-empty">
-            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <p>Sin resultados para esa búsqueda</p>
-        </div>
-        @else
-        <div style="padding:12px 16px;display:flex;flex-direction:column;gap:8px;">
-            @foreach($resultados as $p)
+    <div style="overflow:auto; flex:1;">
+    <table style="width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
+        <thead style="position:sticky; top:0; z-index:10;">
+            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Código</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">CI</th>
+                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Cliente</th>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Versión</th>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Total Plan</th>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Pagado</th>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Saldo Pend.</th>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Cuotas Pend.</th>
+                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acción</th>
+            </tr>
+        </thead>
+        <tbody>
+            @forelse($resultados as $p)
             @php
                 $plan      = $p->planPago;
                 $pagadas   = $plan?->cuotas->where('estado','pagado')->where('numero','>',0)->sum('monto') ?? 0;
                 $pendiente = $plan?->cuotas->where('estado','!=','pagado')->where('numero','>',0)->sum('monto') ?? 0;
                 $nPend     = $plan?->cuotas->where('estado','!=','pagado')->where('numero','>',0)->count() ?? 0;
             @endphp
-            <div wire:click="seleccionarPedido({{ $p->id }})"
-                 style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;padding:14px 16px;cursor:pointer;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;"
-                 onmouseover="this.style.borderColor='#6D8196'"
-                 onmouseout="this.style.borderColor='#CBCBCB'">
-                <div style="flex:1;min-width:0;">
-                    <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                        <span style="font-family:monospace;font-size:11px;color:#6D8196;font-weight:700;">{{ $p->numero }}</span>
-                        @if($plan)<span class="ds-badge ds-badge-active">v{{ $plan->version }}</span>@endif
-                    </div>
-                    <p style="font-size:14px;font-weight:700;color:#4A4A4A;margin:0 0 2px;">{{ $p->cliente->nombre_completo }}</p>
-                    <p style="font-size:11px;color:#CBCBCB;margin:0;">CI: {{ $p->cliente->ci ?? '—' }}</p>
-                </div>
-                <div style="text-align:right;flex-shrink:0;">
-                    <p style="font-size:10px;color:#CBCBCB;margin:0 0 2px;">Saldo pendiente</p>
-                    <p style="font-size:16px;font-weight:800;color:#DC2626;margin:0;font-family:monospace;">Bs. {{ number_format($pendiente, 2) }}</p>
-                    <p style="font-size:10px;color:#CBCBCB;margin:2px 0 0;">{{ $nPend }} cuota{{ $nPend !== 1 ? 's' : '' }} pend.</p>
-                </div>
-            </div>
-            @endforeach
-        </div>
-        @endif
-    @elseif(strlen(trim($search)) > 0)
-        <p style="font-size:11px;color:#CBCBCB;margin:8px 16px;">Ingresá al menos 2 caracteres.</p>
-    @else
-    <div class="ds-empty">
-        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35" stroke-linecap="round"/></svg>
-        <p>Escribí CI, nombre o número de pedido para buscar</p>
+            <tr wire:key="nb-{{ $p->id }}"
+                style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
+                @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                <td style="padding:10px 8px; text-align:center; font-size:11px; white-space:nowrap;">{{ $loop->iteration }}</td>
+                <td style="padding:10px 14px; font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $p->numero }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->cliente->ci ?: '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</td>
+                <td style="padding:10px 14px; text-align:center;">
+                    <span style="padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">v{{ $plan?->version ?? 1 }}</span>
+                </td>
+                <td style="padding:10px 14px; text-align:center; font-size:12px; font-family:monospace; color:#111827;">{{ number_format($plan?->total_pagar ?? 0, 2) }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:12px; font-family:monospace; color:#059669;">{{ number_format($pagadas, 2) }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:12px; font-family:monospace; font-weight:700; color:#DC2626;">{{ number_format($pendiente, 2) }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827;">{{ $nPend }}</td>
+                <td style="padding:10px 14px; text-align:center;">
+                    <button wire:click="seleccionarPedido({{ $p->id }})"
+                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;"
+                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'" title="Seleccionar">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </button>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="10" style="padding:64px 24px; text-align:center;">
+                    <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    <p style="font-weight:600; color:#6B7280; font-size:13px;">No hay pedidos aprobados con saldo pendiente.</p>
+                </td>
+            </tr>
+            @endforelse
+        </tbody>
+    </table>
     </div>
-    @endif
 </div>
 
 {{-- ══ NUEVA: PREVIEW ══ --}}
