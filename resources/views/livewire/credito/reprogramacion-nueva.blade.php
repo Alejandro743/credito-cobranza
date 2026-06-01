@@ -191,7 +191,7 @@
             <table style="width:100%; border-collapse:collapse;">
                 <thead>
                     <tr style="background:#F8F7FF;">
-                        <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">#</th>
+                        <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#C4B5FD; text-align:center;">#</th>
                         <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Cuotas</th>
                         <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Monto</th>
                         <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Vencimiento</th>
@@ -386,7 +386,7 @@
             <table style="width:100%; border-collapse:collapse;">
                 <thead>
                     <tr style="background:#F8F7FF;">
-                        <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">#</th>
+                        <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#C4B5FD; text-align:center;">#</th>
                         <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Cuotas</th>
                         <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Monto (Bs.)</th>
                         <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Fecha vencimiento</th>
