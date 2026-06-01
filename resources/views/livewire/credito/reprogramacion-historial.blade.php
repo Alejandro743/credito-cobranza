@@ -425,146 +425,181 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
     $pendActual  = $planNuevo?->cuotas->where('numero','>',0)->where('estado','!=','pagado')->sum('monto') ?? 0;
     $totalEditado = round(collect($cuotasEditadas)->filter(fn($c) => !($c['pagado'] ?? false))->sum(fn($c) => (float)$c['monto']), 2);
     $difEditado   = round($totalEditado - $pendActual, 2);
+    $esActivo     = $planNuevo?->estado === 'activo';
 @endphp
-<div style="max-width:680px;margin:0 auto;padding-bottom:60px;">
 
-    <div style="margin-bottom:16px;display:flex;align-items:center;gap:10px;">
-        <button wire:click="volver" class="ds-btn ds-btn-secondary ds-btn-sm">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
-            Ver detalle
+<div style="max-width:900px; margin:0 auto;">
+
+    {{-- Timestamp --}}
+    <div style="display:flex; align-items:center; justify-content:flex-end; margin-bottom:12px;">
+        <span style="font-size:11px; color:#CBCBCB; white-space:nowrap;">{{ $rp->created_at->format('d/m/Y H:i') }}</span>
+    </div>
+
+    {{-- Cabecera lila --}}
+    <div style="background:#EDE9FE; border:1px solid #C4B5FD; border-radius:14px; padding:16px 18px; margin:0 0 4px; text-align:center;">
+        <h1 style="font-size:20px; font-weight:800; color:#534AB7; letter-spacing:-0.3px; margin:0 0 10px;">
+            EDITAR PLAN DE PAGOS
+        </h1>
+        <p style="font-size:15px; font-weight:700; color:#534AB7; font-family:monospace; margin:0 0 8px;">
+            {{ $rp->numero }} - {{ $p->numero }}
+        </p>
+        <span style="font-size:14px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:{{ $esActivo ? '#15803D' : '#6b7280' }};">
+            {{ $esActivo ? 'ACTIVO' : 'INACTIVO' }}
+        </span>
+    </div>
+
+    <div style="padding:12px 0 16px;">
+
+        {{-- Separador Datos del Cliente --}}
+        <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em;">Datos del Cliente</span>
+            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+        </div>
+        <div style="background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:14px 16px;">
+            <p style="font-size:13px; color:#374151; margin:0 0 6px;">
+                <span style="font-weight:700; color:#6B7280;">Cliente:</span>
+                {{ $p->cliente->ci ?: '—' }} - {{ ucwords(strtolower($p->cliente->nombre_completo)) }}
+            </p>
+            <p style="font-size:13px; color:#374151; margin:0;">
+                <span style="font-weight:700; color:#6B7280;">Vendedor:</span>
+                {{ ucwords(strtolower($p->vendedor->user->name ?? '—')) }}
+            </p>
+        </div>
+
+        {{-- Separador Editar Cuotas --}}
+        <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
+            <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Editar Cuotas</span>
+            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+        </div>
+
+        {{-- Tabla editable con cuadre Alpine --}}
+        <div x-data="{
+                saldo: {{ $pendActual }},
+                total: {{ $totalEditado }},
+                diff:  {{ $difEditado }},
+                get diffLabel() {
+                    if (Math.abs(this.diff) < 0.01) return '✓ Cuadra exacto';
+                    return (this.diff > 0 ? '+' : '−') + 'Bs. ' + Math.abs(this.diff).toFixed(2);
+                },
+                get diffColor() {
+                    if (Math.abs(this.diff) < 0.01) return '#059669';
+                    return this.diff > 0 ? '#B45309' : '#DC2626';
+                },
+                get diffBg() {
+                    if (Math.abs(this.diff) < 0.01) return '#F0FDF4';
+                    return this.diff > 0 ? '#FFFBEB' : '#FFF0F0';
+                },
+                get diffBorder() {
+                    if (Math.abs(this.diff) < 0.01) return '#6ee7b7';
+                    return this.diff > 0 ? '#FCD34D' : '#FCA5A5';
+                },
+                recalc() {
+                    let inputs = this.$el.querySelectorAll('.monto-edit');
+                    let raw = Array.from(inputs).reduce((s, el) => s + (parseFloat(el.value) || 0), 0);
+                    this.total = Math.round(raw * 100) / 100;
+                    this.diff  = Math.round((this.total - this.saldo) * 100) / 100;
+                }
+             }"
+             x-init="
+                $el.addEventListener('input', (e) => { if (e.target.classList.contains('monto-edit')) recalc(); });
+                $wire.$watch('cuotasEditadas', () => $nextTick(() => recalc()));
+             ">
+
+            <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden; margin-bottom:14px;">
+                <div style="padding:10px 14px; border-bottom:1px solid #EDE9FE; display:flex; align-items:center; justify-content:space-between; background:#F8F7FF;">
+                    <span style="font-size:12px; font-weight:700; color:#534AB7;">Cuotas · v{{ $rp->version_nueva }}</span>
+                    <button wire:click="agregarCuotaEdicion"
+                            style="display:flex; align-items:center; gap:5px; padding:5px 12px; background:#EDE9FE; color:#534AB7; font-size:12px; font-weight:700; border:1px solid #C4B5FD; border-radius:8px; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                        Agregar cuota
+                    </button>
+                </div>
+                <table style="width:100%; border-collapse:collapse;">
+                    <thead>
+                        <tr style="background:#F8F7FF;">
+                            <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">#</th>
+                            <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Cuotas</th>
+                            <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Monto (Bs.)</th>
+                            <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Fecha vencimiento</th>
+                            <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Estado</th>
+                            <th style="padding:8px 12px; width:36px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($cuotasEditadas as $i => $ce)
+                        <tr wire:key="ce-{{ $i }}" style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $ce['pagado'] ? 'opacity:0.5;background:#f9fafb;' : '' }}">
+                            <td style="padding:8px 12px; font-size:11px; color:#374151; text-align:center;">{{ $ce['numero'] }}</td>
+                            <td style="padding:8px 12px; font-size:11px; color:#6b7280; font-weight:600; text-align:center;">Cuota {{ $ce['numero'] }}</td>
+                            <td style="padding:8px 12px; text-align:center;">
+                                @if($ce['pagado'])
+                                <span style="font-family:monospace; font-weight:700; color:#374151;">{{ number_format((float)$ce['monto'], 2) }}</span>
+                                @else
+                                <input wire:model="cuotasEditadas.{{ $i }}.monto" type="number" step="0.01" min="0.01"
+                                       class="monto-edit" style="width:90%; padding:4px 8px; border:1px solid #C4B5FD; border-radius:6px; font-size:12px; text-align:center; outline:none;">
+                                @error("cuotasEditadas.{$i}.monto")<p class="ds-form-error">{{ $message }}</p>@enderror
+                                @endif
+                            </td>
+                            <td style="padding:8px 12px; text-align:center;">
+                                @if($ce['pagado'])
+                                <span style="font-size:11px; color:#6b7280;">{{ $ce['fecha'] ? \Carbon\Carbon::parse($ce['fecha'])->format('d/m/Y') : '—' }}</span>
+                                @else
+                                <input wire:model="cuotasEditadas.{{ $i }}.fecha" type="date"
+                                       style="width:90%; padding:4px 8px; border:1px solid #C4B5FD; border-radius:6px; font-size:12px; outline:none;">
+                                @error("cuotasEditadas.{$i}.fecha")<p class="ds-form-error">{{ $message }}</p>@enderror
+                                @endif
+                            </td>
+                            <td style="padding:8px 12px; text-align:center;">
+                                <span class="ds-badge {{ $ce['pagado'] ? 'ds-badge-aprobado' : 'ds-badge-pending' }}">{{ $ce['pagado'] ? 'Pagado' : 'Pendiente' }}</span>
+                            </td>
+                            <td style="padding:8px 12px; text-align:center;">
+                                @if(!$ce['pagado'])
+                                <button wire:click="quitarCuotaEdicion({{ $i }})"
+                                        style="width:24px; height:24px; border-radius:6px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                </button>
+                                @endif
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+            {{-- Resumen real-time --}}
+            <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.18);">
+                <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#DC2626 100%);"></div>
+                <div style="padding:14px; display:grid; grid-template-columns:repeat(3,1fr); text-align:center;">
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Saldo a cubrir</span>
+                        <span style="font-size:13px; font-weight:900; color:#DC2626; font-family:monospace;">Bs. {{ number_format($pendActual, 2) }}</span>
+                    </div>
+                    <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total cuotas</span>
+                        <p x-text="'Bs. ' + total.toFixed(2)" style="font-size:13px; font-weight:900; color:#111827; font-family:monospace; margin:0;"></p>
+                    </div>
+                    <div style="padding:0 6px;">
+                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Diferencia</span>
+                        <p x-text="diffLabel" :style="'font-size:13px; font-weight:900; font-family:monospace; margin:0; color:' + diffColor"></p>
+                    </div>
+                </div>
+            </div>
+
+        </div>{{-- /x-data --}}
+
+    </div>{{-- /body --}}
+
+    {{-- Botones grandes al pie --}}
+    <div class="rp-det-btns">
+        <button wire:click="volver"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:14px; background:#F4F4F4; color:#6D8196; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <span style="font-size:17px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span>
+            Cancelar
         </button>
-        <div style="flex:1;">
-            <p style="font-size:16px;font-weight:700;color:#4A4A4A;margin:0;">{{ $p->cliente->nombre_completo }}</p>
-            <p style="font-size:11px;color:#CBCBCB;margin:0;font-family:monospace;">{{ $rp->numero }} — Editar cuotas del plan</p>
-        </div>
-    </div>
-
-    <div style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;padding:14px 18px;margin-bottom:14px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
-            <div>
-                <span class="ds-form-label">Saldo pendiente actual</span>
-                <p style="font-size:18px;font-weight:800;color:#DC2626;margin:0;font-family:monospace;">Bs. {{ number_format($pendActual, 2) }}</p>
-            </div>
-            <div style="text-align:right;">
-                <span class="ds-form-label">Pagado</span>
-                <p style="font-size:14px;font-weight:700;color:#059669;margin:0;font-family:monospace;">Bs. {{ number_format($pagado, 2) }}</p>
-            </div>
-        </div>
-    </div>
-
-    {{-- Tabla editable con cuadre Alpine --}}
-    <div style="background:#fff;border:1px solid #CBCBCB;border-radius:8px;overflow:hidden;margin-bottom:14px;"
-         x-data="{
-            saldo: {{ $pendActual }},
-            total: {{ $totalEditado }},
-            diff:  {{ $difEditado }},
-            get diffLabel() {
-                if (Math.abs(this.diff) < 0.01) return '✓ Cuadra exacto';
-                return (this.diff > 0 ? '+' : '−') + 'Bs. ' + Math.abs(this.diff).toFixed(2);
-            },
-            get diffColor() {
-                if (Math.abs(this.diff) < 0.01) return '#059669';
-                return this.diff > 0 ? '#B45309' : '#DC2626';
-            },
-            get diffBg() {
-                if (Math.abs(this.diff) < 0.01) return '#F0FDF4';
-                return this.diff > 0 ? '#FFFBEB' : '#FFF0F0';
-            },
-            get diffBorder() {
-                if (Math.abs(this.diff) < 0.01) return '#6ee7b7';
-                return this.diff > 0 ? '#FCD34D' : '#FCA5A5';
-            },
-            recalc() {
-                let inputs = this.$el.querySelectorAll('.monto-edit');
-                let raw = Array.from(inputs).reduce((s, el) => s + (parseFloat(el.value) || 0), 0);
-                this.total = Math.round(raw * 100) / 100;
-                this.diff  = Math.round((this.total - this.saldo) * 100) / 100;
-            }
-         }"
-         x-init="
-            $el.addEventListener('input', (e) => { if (e.target.classList.contains('monto-edit')) recalc(); });
-            $wire.$watch('cuotasEditadas', () => $nextTick(() => recalc()));
-         ">
-        <div style="padding:12px 16px;border-bottom:1px solid #CBCBCB;display:flex;align-items:center;justify-content:space-between;">
-            <p style="font-size:13px;font-weight:700;color:#4A4A4A;margin:0;">Cuotas · v{{ $rp->version_nueva }}</p>
-            <button wire:click="agregarCuotaEdicion" class="ds-btn ds-btn-secondary ds-btn-sm">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-                </svg>
-                Agregar cuota
-            </button>
-        </div>
-        <div style="overflow-x:auto;">
-        <table>
-            <thead>
-                <tr>
-                    <th style="text-align:center;width:40px;">#</th>
-                    <th>Monto (Bs.)</th>
-                    <th>Fecha vencimiento</th>
-                    <th style="text-align:center;width:90px;">Estado</th>
-                    <th style="width:36px;"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($cuotasEditadas as $i => $ce)
-                <tr wire:key="ce-{{ $i }}" style="{{ $ce['pagado'] ? 'opacity:0.5;background:#f9fafb;' : '' }}">
-                    <td style="text-align:center;font-weight:700;color:#CBCBCB;">{{ $ce['numero'] }}</td>
-                    <td>
-                        @if($ce['pagado'])
-                        <span style="font-family:monospace;font-weight:700;color:#4A4A4A;">Bs. {{ number_format((float)$ce['monto'], 2) }}</span>
-                        @else
-                        <input wire:model="cuotasEditadas.{{ $i }}.monto" type="number" step="0.01" min="0.01"
-                               class="monto-edit" style="width:100%;">
-                        @error("cuotasEditadas.{$i}.monto")<p class="ds-form-error">{{ $message }}</p>@enderror
-                        @endif
-                    </td>
-                    <td>
-                        @if($ce['pagado'])
-                        <span style="color:#CBCBCB;">{{ $ce['fecha'] ? \Carbon\Carbon::parse($ce['fecha'])->format('d/m/Y') : '—' }}</span>
-                        @else
-                        <input wire:model="cuotasEditadas.{{ $i }}.fecha" type="date" style="width:100%;">
-                        @error("cuotasEditadas.{$i}.fecha")<p class="ds-form-error">{{ $message }}</p>@enderror
-                        @endif
-                    </td>
-                    <td style="text-align:center;">
-                        <span class="ds-badge {{ $ce['pagado'] ? 'ds-badge-aprobado' : 'ds-badge-pending' }}">{{ $ce['pagado'] ? 'Pagado' : 'Pendiente' }}</span>
-                    </td>
-                    <td style="text-align:center;">
-                        @if(!$ce['pagado'])
-                        <button wire:click="quitarCuotaEdicion({{ $i }})" class="ds-btn ds-btn-danger ds-btn-sm" style="padding:4px 6px;">
-                            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
-                            </svg>
-                        </button>
-                        @endif
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
-        </div>
-
-        {{-- Resumen en tiempo real --}}
-        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:1px;background:#CBCBCB;border-top:2px solid #CBCBCB;">
-            <div style="padding:12px 16px;background:#F7F7F0;text-align:center;">
-                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#CBCBCB;margin:0 0 4px;">Saldo a cubrir</p>
-                <p style="font-size:16px;font-weight:800;color:#4A4A4A;font-family:monospace;margin:0;">Bs. {{ number_format($pendActual, 2) }}</p>
-            </div>
-            <div style="padding:12px 16px;background:#F7F7F0;text-align:center;">
-                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#CBCBCB;margin:0 0 4px;">Total cuotas</p>
-                <p x-text="'Bs. ' + total.toFixed(2)" style="font-size:16px;font-weight:800;color:#6D8196;font-family:monospace;margin:0;"></p>
-            </div>
-            <div :style="'padding:12px 16px;text-align:center;border:1.5px solid ' + diffBorder + ';background:' + diffBg + ';'">
-                <p style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:#CBCBCB;margin:0 0 4px;">Diferencia</p>
-                <p x-text="diffLabel" :style="'font-size:16px;font-weight:800;font-family:monospace;margin:0;color:' + diffColor"></p>
-            </div>
-        </div>
-    </div>
-
-    <div style="display:flex;gap:10px;justify-content:flex-end;">
-        <button wire:click="volver" class="ds-btn ds-btn-secondary">Cancelar</button>
-        <button wire:click="guardarEdicion" wire:loading.attr="disabled" class="ds-btn ds-btn-primary">
-            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <button wire:click="guardarEdicion" wire:loading.attr="disabled"
+                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
             </svg>
             <span wire:loading.remove wire:target="guardarEdicion">Guardar cambios</span>
