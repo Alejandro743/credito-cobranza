@@ -43,11 +43,6 @@
         </button>
         @endforeach
     </div>
-    <a href="{{ route('credito.reprogramacion.nueva') }}"
-       style="height:36px; padding:0 18px; display:flex; align-items:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; text-decoration:none;">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        Nueva Reprogramación
-    </a>
 </div>
 
 {{-- MOBILE: Cards --}}
@@ -419,13 +414,6 @@ $sortColsRH = ['Código'=>'numero','CI'=>null,'Cliente'=>null,'Pedido'=>null,'Ve
             Editar Plan
         </button>
         @endif
-        <a href="{{ route('credito.reprogramacion.nueva') }}"
-           style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#EDE9FE; color:#534AB7; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #C4B5FD; text-decoration:none; cursor:pointer;">
-            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-            </svg>
-            Nueva Reprogramación
-        </a>
     </div>
 
 </div>
