@@ -327,21 +327,6 @@
         </div>
         @endif
 
-        @if($confirmandoAnulacion)
-        <div style="background:#FFF0F0; border:1px solid #FCA5A5; border-radius:10px; padding:14px 18px; margin-top:14px;">
-            <p style="font-size:13px; font-weight:700; color:#DC2626; margin:0 0 6px;">Confirmar anulación</p>
-            <p style="font-size:12px; color:#6b7280; margin:0 0 12px;">Esta acción revertirá las cuotas a estado pendiente.</p>
-            <div style="display:flex; gap:8px;">
-                <button wire:click="$set('confirmandoAnulacion', false)"
-                        style="flex:1; padding:10px; background:#F4F4F4; color:#6D8196; font-size:13px; font-weight:700; border-radius:8px; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">Cancelar</button>
-                <button wire:click="confirmarAnulacion" wire:loading.attr="disabled"
-                        style="flex:1; padding:10px; background:#DC2626; color:#fff; font-size:13px; font-weight:700; border-radius:8px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
-                    <span wire:loading.remove wire:target="confirmarAnulacion">Sí, anular</span>
-                    <span wire:loading wire:target="confirmarAnulacion">Anulando...</span>
-                </button>
-            </div>
-        </div>
-        @endif
 
     </div>{{-- /body --}}
 
