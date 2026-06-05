@@ -280,7 +280,13 @@
     @endif
 
     {{-- Dirección de Entrega --}}
-    <div x-data="{ modalDir: false, tipo: '{{ $editTipoEntrega }}', ubDir: false, ubDirTipo: '', ubDirOpciones: [], ubDirSearch: '' }" @direccion-guardada.window="modalDir = false">
+    <div x-data="{ modalDir: false, tipo: '{{ $editTipoEntrega }}', ubDir: false, ubDirTipo: '', ubDirOpciones: [], ubDirSearch: '' }"
+         @direccion-guardada.window="modalDir = false"
+         @ub-dir-sel.window="
+             if($event.detail.tipo==='ciudad') $wire.set('editCiudad', $event.detail.valor);
+             else if($event.detail.tipo==='provincia') $wire.set('editProvincia', $event.detail.valor);
+             else $wire.set('editMunicipio', $event.detail.valor);
+         ">
         <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
             <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Dirección de Entrega</span>
@@ -425,7 +431,7 @@
                 {{-- Footer --}}
                 <div style="padding:12px 18px 16px; border-top:1px solid #F0EEFF; display:flex; gap:8px; flex-shrink:0;">
                     <button type="button" @click="modalDir = false" style="flex:1; padding:11px; background:#F4F4F4; color:#6D8196; font-size:13px; font-weight:700; border-radius:10px; border:1.5px solid #E5E7EB; cursor:pointer; -webkit-appearance:none; appearance:none;">Cancelar</button>
-                    <button wire:click="guardarDireccion" wire:loading.attr="disabled" style="flex:2; padding:11px; background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); color:#fff; font-size:13px; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow:0 4px 18px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none;"><span wire:loading.remove wire:target="guardarDireccion">Guardar</span><span wire:loading wire:target="guardarDireccion">Guardando...</span></button>
+                    <button wire:click="guardarDireccion" wire:loading.attr="disabled" style="flex:2; padding:11px; background:linear-gradient(135deg,#f97316 0%,#ea6000 100%); color:#fff; font-size:13px; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow:0 4px 18px rgba(249,115,22,0.35); -webkit-appearance:none; appearance:none;"><span wire:loading.remove wire:target="guardarDireccion">Guardar</span><span wire:loading wire:target="guardarDireccion">Guardando...</span></button>
                 </div>
             </div>
         </div>
@@ -454,12 +460,7 @@
                 <div style="overflow-y:auto; flex:1; min-height:0; padding:4px 0;">
                     <template x-for="op in ubDirOpciones.filter(o => o.toLowerCase().includes(ubDirSearch.toLowerCase()))" :key="op">
                         <button type="button"
-                                @click="
-                                    if(ubDirTipo==='ciudad') $wire.set('editCiudad', op);
-                                    else if(ubDirTipo==='provincia') $wire.set('editProvincia', op);
-                                    else $wire.set('editMunicipio', op);
-                                    ubDir=false; ubDirSearch='';
-                                "
+                                @click="$dispatch('ub-dir-sel', { tipo: ubDirTipo, valor: op }); ubDir=false; ubDirSearch=''"
                                 x-text="op.toLowerCase().replace(/\b\w/g, l => l.toUpperCase())"
                                 style="width:100%; text-align:left; padding:9px 16px; font-size:13px; color:#3C3489; background:transparent; border:none; cursor:pointer; transition:background 0.1s;"
                                 onmouseover="this.style.background='#F5F3FF'" onmouseout="this.style.background='transparent'">
