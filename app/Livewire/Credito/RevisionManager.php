@@ -225,13 +225,16 @@ class RevisionManager extends Component
                 $precioFinal = (float) $item->precio_final;
                 if (!isset($disponibles[$pid]) || $precioFinal < $disponibles[$pid]['precio']) {
                     $disponibles[$pid] = [
-                        'item_id'    => $item->id,
-                        'product_id' => $item->product_id,
-                        'nombre'     => $item->product->name,
-                        'codigo'     => $item->product->code ?? '',
-                        'precio'     => $precioFinal,
-                        'puntos'     => (int) $item->puntos,
-                        'stock'      => (float) $item->stock_actual,
+                        'item_id'     => $item->id,
+                        'product_id'  => $item->product_id,
+                        'nombre'      => $item->product->name,
+                        'codigo'      => $item->product->code ?? '',
+                        'precio'      => $precioFinal,
+                        'puntos'      => (int) $item->puntos,
+                        'stock'       => (float) $item->stock_actual,
+                        'lista_id'    => (string) $lista->id,
+                        'lista_nombre'=> $lista->name,
+                        'lista_code'  => $lista->code ?? '',
                     ];
                 }
             }
@@ -501,6 +504,13 @@ class RevisionManager extends Component
         $articulosDisponibles = collect($this->articulosDisponibles)
             ->filter(fn($p) => !in_array($p['product_id'], $idsEnEdit))
             ->when($q, fn($c) => $c->filter(fn($p) => str_contains(strtolower($p['nombre']), $q) || str_contains(strtolower($p['codigo']), $q)))
+            ->groupBy('lista_id')
+            ->map(fn($items, $listaId) => [
+                'lista_id'    => $listaId,
+                'lista_nombre'=> $items->first()['lista_nombre'],
+                'lista_code'  => $items->first()['lista_code'],
+                'productos'   => $items->values()->toArray(),
+            ])
             ->values()
             ->toArray();
 

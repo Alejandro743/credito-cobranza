@@ -320,22 +320,38 @@
                     </div>
                     @if(empty($articulosDisponibles) && $searchProductoEdit)
                     <p style="text-align:center; font-size:12px; color:#9CA3AF; padding:12px 0 4px;">Sin resultados.</p>
+                    @elseif(empty($articulosDisponibles))
+                    <p style="text-align:center; font-size:12px; color:#9CA3AF; padding:12px 0 4px;">Todos los productos ya están en el pedido.</p>
                     @else
-                    <div style="display:flex; flex-direction:column; gap:6px; max-height:220px; overflow-y:auto;">
-                        @foreach($articulosDisponibles as $prod)
-                        <div style="display:flex; align-items:center; gap:10px; background:#fff; border:1px solid #F0EEFF; border-radius:10px; padding:9px 12px;">
-                            <div style="flex:1; min-width:0;">
-                                <p style="font-size:13px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($prod['nombre'])) }}</p>
-                                <p style="font-size:10px; color:#9CA3AF; margin:2px 0 0;">
-                                    @if($prod['codigo'])<span style="font-family:monospace;">{{ $prod['codigo'] }}</span> ·@endif
-                                    Bs. {{ number_format($prod['precio'], 2) }}
-                                    · Stock: {{ number_format($prod['stock'], 0) }}
-                                </p>
+                    <div style="display:flex; flex-direction:column; gap:10px; max-height:260px; overflow-y:auto;">
+                        @foreach($articulosDisponibles as $grupo)
+                        <div>
+                            {{-- Header lista --}}
+                            <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
+                                <span style="font-size:10px; font-weight:700; color:#7B6FE8; background:#EDE9FE; border-radius:6px; padding:2px 8px; white-space:nowrap;">{{ $grupo['lista_nombre'] }}</span>
+                                @if($grupo['lista_code'])
+                                <span style="font-size:9px; color:#9CA3AF; font-family:monospace;">{{ $grupo['lista_code'] }}</span>
+                                @endif
+                                <div style="flex:1; height:1px; background:#EDE9FE;"></div>
                             </div>
-                            <button wire:click="agregarArticuloEdit({{ $prod['product_id'] }})"
-                                    style="width:30px; height:30px; border-radius:8px; border:1.5px solid #86EFAC; background:#F0FDF4; color:#15803D; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                            </button>
+                            {{-- Productos de esta lista --}}
+                            <div style="display:flex; flex-direction:column; gap:5px;">
+                                @foreach($grupo['productos'] as $prod)
+                                <div style="display:flex; align-items:center; gap:10px; background:#fff; border:1px solid #F0EEFF; border-radius:10px; padding:9px 12px;">
+                                    <div style="flex:1; min-width:0;">
+                                        <p style="font-size:13px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($prod['nombre'])) }}</p>
+                                        <p style="font-size:10px; color:#9CA3AF; margin:2px 0 0;">
+                                            @if($prod['codigo'])<span style="font-family:monospace;">{{ $prod['codigo'] }}</span> ·@endif
+                                            Bs. {{ number_format($prod['precio'], 2) }} · Stock: {{ number_format($prod['stock'], 0) }}
+                                        </p>
+                                    </div>
+                                    <button wire:click="agregarArticuloEdit({{ $prod['product_id'] }})"
+                                            style="width:30px; height:30px; border-radius:8px; border:1.5px solid #86EFAC; background:#F0FDF4; color:#15803D; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
+                                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                                    </button>
+                                </div>
+                                @endforeach
+                            </div>
                         </div>
                         @endforeach
                     </div>
