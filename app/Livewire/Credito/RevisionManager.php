@@ -103,8 +103,10 @@ class RevisionManager extends Component
         $this->$prop = null;
     }
 
-    public function guardarDireccion(): void
+    public function guardarDireccion(string $tipoEntrega = ''): void
     {
+        if ($tipoEntrega) $this->editTipoEntrega = $tipoEntrega;
+
         $pedido = Pedido::with('cliente')
             ->where('id', $this->viewingId)
             ->where('estado', 'revision')
