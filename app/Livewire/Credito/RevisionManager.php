@@ -38,6 +38,10 @@ class RevisionManager extends Component
     public string $editDireccion   = '';
     public string $editReferencia  = '';
 
+    // Editar artículos
+    public bool  $editandoArticulos = false;
+    public array $articulosEdit     = [];
+
     public function updatingSearch(): void { $this->resetPage(); }
 
     public function updatedEditCiudad(): void   { $this->editProvincia = ''; $this->editMunicipio = ''; }
@@ -64,6 +68,8 @@ class RevisionManager extends Component
         $this->docAnversoDoc      = null;
         $this->docReversoDoc      = null;
         $this->docAvisoLuz        = null;
+        $this->editandoArticulos  = false;
+        $this->articulosEdit      = [];
 
         $pedido = Pedido::find($id);
         $this->editTipoEntrega = $pedido?->tipo_entrega     ?? 'domicilio';
@@ -156,6 +162,143 @@ class RevisionManager extends Component
         $this->dispatch('direccion-guardada');
     }
 
+    public function abrirEditarArticulos(): void
+    {
+        $pedido = Pedido::with(['items.product', 'items.listaMaestraItem'])->find($this->viewingId);
+        if (!$pedido) return;
+
+        $this->articulosEdit = $pedido->items->map(fn($item) => [
+            'item_id'               => $item->id,
+            'lista_maestra_item_id' => $item->lista_maestra_item_id,
+            'nombre'                => $item->product?->name ?? '—',
+            'codigo'                => $item->product?->code ?? '',
+            'cantidad'              => (int) $item->cantidad,
+            'cantidad_original'     => (int) $item->cantidad,
+            'precio_unitario'       => (float) $item->precio_unitario,
+            'puntos'                => (int) $item->puntos,
+            'subtotal'              => round((float) $item->precio_unitario * (int) $item->cantidad, 2),
+            'stock_disponible'      => (float) ($item->listaMaestraItem?->stock_actual ?? 999),
+        ])->values()->toArray();
+
+        $this->editandoArticulos = true;
+        $this->dispatch('art-modal-open');
+    }
+
+    public function updatedArticulosEdit($value, $key): void
+    {
+        if (!str_ends_with($key, '.cantidad')) return;
+
+        $index    = (int) explode('.', $key)[0];
+        $cantidad = max(1, (int) $value);
+
+        $this->articulosEdit[$index]['cantidad'] = $cantidad;
+        $this->articulosEdit[$index]['subtotal']  = round(
+            (float) $this->articulosEdit[$index]['precio_unitario'] * $cantidad,
+            2
+        );
+    }
+
+    public function quitarArticuloEdit(int $index): void
+    {
+        if (count($this->articulosEdit) <= 1) return;
+        array_splice($this->articulosEdit, $index, 1);
+    }
+
+    public function guardarArticulos(): void
+    {
+        if (empty($this->articulosEdit)) {
+            session()->flash('error', 'Debe haber al menos un artículo.');
+            return;
+        }
+
+        foreach ($this->articulosEdit as $art) {
+            if ((int) $art['cantidad'] < 1) {
+                session()->flash('error', 'Todas las cantidades deben ser al menos 1.');
+                return;
+            }
+        }
+
+        DB::transaction(function () {
+            $pedido = Pedido::with(['items.listaMaestraItem', 'planPago.cuotas'])
+                ->find($this->viewingId);
+
+            if (!$pedido || $pedido->estado !== 'revision') return;
+
+            $nuevosItems = collect($this->articulosEdit)->keyBy('item_id');
+
+            foreach ($pedido->items as $item) {
+                if (!$nuevosItems->has($item->id)) {
+                    if ($item->listaMaestraItem) {
+                        $lmi = $item->listaMaestraItem;
+                        $lmi->stock_consumido = max(0, $lmi->stock_consumido - $item->cantidad);
+                        $lmi->stock_actual    = $lmi->stock_actual + $item->cantidad;
+                        $lmi->save();
+                    }
+                    $item->delete();
+                } else {
+                    $nuevo = $nuevosItems->get($item->id);
+                    $diff  = (int) $nuevo['cantidad'] - (int) $nuevo['cantidad_original'];
+                    if ($diff !== 0 && $item->listaMaestraItem) {
+                        $lmi = $item->listaMaestraItem;
+                        $lmi->stock_consumido = max(0, $lmi->stock_consumido + $diff);
+                        $lmi->stock_actual    = max(0, $lmi->stock_actual - $diff);
+                        $lmi->save();
+                    }
+                    $item->update([
+                        'cantidad' => (int) $nuevo['cantidad'],
+                        'subtotal' => round((float) $item->precio_unitario * (int) $nuevo['cantidad'], 2),
+                    ]);
+                }
+            }
+
+            $pedido->refresh();
+            $nuevoTotal = round($pedido->items->sum('subtotal'), 2);
+            $pedido->update(['total' => $nuevoTotal, 'total_pagar' => $nuevoTotal]);
+
+            $plan = $pedido->planPago;
+            if ($plan) {
+                $cuotaInicial  = $plan->cuotas->firstWhere('numero', 0);
+                $montoInicial  = $cuotaInicial ? (float) $cuotaInicial->monto : 0.0;
+                $saldo         = max(0, $nuevoTotal - $montoInicial);
+                $cuotasReg     = $plan->cuotas->where('numero', '>', 0)->sortBy('numero')->values();
+                $cantCuotas    = $cuotasReg->count();
+
+                if ($cantCuotas > 0) {
+                    $montoCuota  = $cantCuotas > 0 ? floor(($saldo / $cantCuotas) * 100) / 100 : 0;
+                    $redondeo    = round($saldo - ($montoCuota * $cantCuotas), 2);
+
+                    foreach ($cuotasReg as $i => $cuota) {
+                        $monto = $montoCuota + ($i === $cantCuotas - 1 ? $redondeo : 0);
+                        $cuota->update(['monto' => round($monto, 2)]);
+                    }
+
+                    $plan->update([
+                        'saldo_financiar' => $saldo,
+                        'monto_cuota'     => $montoCuota,
+                        'total_pagar'     => $nuevoTotal,
+                        'cantidad_cuotas' => $cantCuotas,
+                    ]);
+                } else {
+                    $plan->update([
+                        'saldo_financiar' => $saldo,
+                        'total_pagar'     => $nuevoTotal,
+                    ]);
+                }
+            }
+        });
+
+        $this->editandoArticulos = false;
+        $this->articulosEdit     = [];
+        session()->flash('success', 'Artículos actualizados correctamente.');
+    }
+
+    public function cerrarEditarArticulos(): void
+    {
+        $this->editandoArticulos = false;
+        $this->articulosEdit     = [];
+        $this->dispatch('art-modal-close');
+    }
+
     public function devolverEspera(): void
     {
         Pedido::where('id', $this->viewingId)
@@ -210,6 +353,8 @@ class RevisionManager extends Component
         $this->editMunicipio      = '';
         $this->editDireccion      = '';
         $this->editReferencia     = '';
+        $this->editandoArticulos  = false;
+        $this->articulosEdit      = [];
         $this->mode               = 'list';
     }
 
@@ -243,7 +388,8 @@ class RevisionManager extends Component
         $editMunicipios  = $provObj ? Municipio::where('provincia_id', $provObj->id)->orderBy('nombre')->get() : collect();
 
         $editTipoEntrega = $this->editTipoEntrega;
+        $articulosEdit   = $this->articulosEdit;
 
-        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega'));
+        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit'));
     }
 }

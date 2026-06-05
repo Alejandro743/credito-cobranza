@@ -169,6 +169,7 @@
         'ciudadesAll'     => $ciudadesAll,
         'editProvincias'  => $editProvincias,
         'editMunicipios'  => $editMunicipios,
+        'articulosEdit'   => $articulosEdit,
     ])
 
     {{-- Botones acción --}}

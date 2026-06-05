@@ -38,6 +38,7 @@
     ];
     $editable        = $editable        ?? false;
     $editTipoEntrega = $editTipoEntrega ?? 'domicilio';
+    $articulosEdit   = $articulosEdit   ?? [];
 @endphp
 
 {{-- Fecha --}}
@@ -187,6 +188,13 @@
         <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
         <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Artículos Seleccionados</span>
         <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+        @if($editable)
+        <button wire:click="abrirEditarArticulos"
+                style="display:flex; align-items:center; gap:4px; padding:4px 10px; background:#F5F3FF; color:#7B6FE8; font-size:11px; font-weight:700; border-radius:6px; border:1px solid #EDE9FE; cursor:pointer; -webkit-appearance:none; appearance:none;">
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+            Editar
+        </button>
+        @endif
     </div>
     <div style="display:flex; flex-direction:column; gap:8px;">
         @foreach ($p->items as $item)
@@ -211,6 +219,103 @@
         </div>
         @endforeach
     </div>
+
+    @if($editable)
+    <div x-data="{ modalArt: false }"
+         @art-modal-open.window="modalArt = true"
+         @art-modal-close.window="modalArt = false">
+
+        <div x-show="modalArt"
+             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+             x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+             class="fixed inset-0 z-50 flex items-center justify-center p-4"
+             style="background:rgba(20,10,40,0.4); backdrop-filter:blur(2px);"
+             @click.self="$wire.call('cerrarEditarArticulos')">
+            <div x-show="modalArt"
+                 x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+                 style="background:#fff; border-radius:20px; width:100%; max-width:560px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
+
+                {{-- Header --}}
+                <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
+                    <div style="display:flex; align-items:center; gap:9px;">
+                        <div style="width:30px; height:30px; border-radius:50%; background:#FFF7ED; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg width="14" height="14" fill="none" stroke="#F97316" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        </div>
+                        <p style="font-size:17px; font-weight:700; color:#3C3489; margin:0; letter-spacing:-0.2px;">Artículos del Pedido</p>
+                    </div>
+                    <button type="button" wire:click="cerrarEditarArticulos"
+                            style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="10" height="10" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+
+                {{-- Body --}}
+                <div style="overflow-y:auto; flex:1; min-height:0; padding:14px 18px 8px;">
+                    <div style="background:#FAFAFE; border-radius:14px; padding:14px 16px; border:1px solid #F0EEFF;">
+                        <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">
+                            <div style="width:5px; height:5px; border-radius:50%; background:#FBD0A4; flex-shrink:0;"></div>
+                            <span style="font-size:9px; font-weight:700; color:#6B65B0; text-transform:uppercase; letter-spacing:.12em;">Modificar cantidades</span>
+                        </div>
+                        @foreach($articulosEdit as $i => $art)
+                        <div wire:key="art-edit-{{ $i }}" style="{{ !$loop->last ? 'border-bottom:1px solid #F0EEFF; margin-bottom:10px; padding-bottom:10px;' : '' }} display:flex; align-items:center; gap:10px;">
+                            <div style="flex:1; min-width:0;">
+                                <p style="font-size:13px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($art['nombre'])) }}</p>
+                                @if($art['codigo'])
+                                <p style="font-size:10px; color:#9CA3AF; font-family:monospace; margin:2px 0 0;">{{ $art['codigo'] }}</p>
+                                @endif
+                                <p style="font-size:11px; color:#6B7280; margin:3px 0 0;">
+                                    Bs. {{ number_format($art['precio_unitario'], 2) }} c/u
+                                    · <span style="color:#7c3aed; font-weight:700;">Bs. {{ number_format($art['subtotal'], 2) }}</span>
+                                </p>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
+                                <div style="display:flex; flex-direction:column; align-items:center; gap:2px;">
+                                    <label style="font-size:9px; color:#9CA3AF; font-weight:600; text-transform:uppercase;">Cant.</label>
+                                    <input wire:model.live="articulosEdit.{{ $i }}.cantidad"
+                                           type="number" min="1" step="1"
+                                           style="width:64px; padding:6px 8px; border:1.5px solid #C4B5FD; border-radius:8px; font-size:13px; font-weight:700; text-align:center; outline:none; color:#3C3489; background:#fff; box-sizing:border-box;">
+                                </div>
+                                @if(count($articulosEdit) > 1)
+                                <button wire:click="quitarArticuloEdit({{ $i }})"
+                                        style="width:28px; height:28px; border-radius:7px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
+                                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                                @else
+                                <div style="width:28px;"></div>
+                                @endif
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+
+                    {{-- Resumen totales --}}
+                    <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:14px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.12); margin-top:12px;">
+                        <div style="height:4px; background:linear-gradient(90deg,#f97316 0%,#7B6FE8 100%);"></div>
+                        <div style="padding:12px 14px; display:grid; grid-template-columns:1fr 1fr; gap:10px; text-align:center;">
+                            <div>
+                                <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:.07em; display:block; margin-bottom:2px;">Total anterior</span>
+                                <span style="font-size:14px; font-weight:900; color:#6B7280; font-family:monospace;">Bs. {{ number_format($p->total, 2) }}</span>
+                            </div>
+                            <div>
+                                <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:.07em; display:block; margin-bottom:2px;">Nuevo total</span>
+                                <span style="font-size:14px; font-weight:900; color:#f97316; font-family:monospace;">Bs. {{ number_format(collect($articulosEdit)->sum('subtotal'), 2) }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- Footer --}}
+                <div style="padding:12px 18px 16px; border-top:1px solid #F0EEFF; display:flex; gap:8px; flex-shrink:0;">
+                    <button type="button" wire:click="cerrarEditarArticulos" style="flex:1; padding:11px; background:#F4F4F4; color:#6D8196; font-size:13px; font-weight:700; border-radius:10px; border:1.5px solid #E5E7EB; cursor:pointer; -webkit-appearance:none; appearance:none;">Cancelar</button>
+                    <button type="button" wire:click="guardarArticulos" wire:loading.attr="disabled" wire:target="guardarArticulos" style="flex:2; padding:11px; background:linear-gradient(135deg,#f97316 0%,#ea6000 100%); color:#fff; font-size:13px; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow:0 4px 18px rgba(249,115,22,0.35); -webkit-appearance:none; appearance:none;">
+                        <span wire:loading.remove wire:target="guardarArticulos">Guardar cambios</span>
+                        <span wire:loading wire:target="guardarArticulos">Guardando...</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endif
 
     {{-- Resumen --}}
     <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
