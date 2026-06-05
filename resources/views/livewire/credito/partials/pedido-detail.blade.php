@@ -281,7 +281,9 @@
 
     {{-- Dirección de Entrega --}}
     <div x-data="{ modalDir: false, tipo: '{{ $editTipoEntrega }}', ubDir: false, ubDirTipo: '', ubDirOpciones: [], ubDirSearch: '' }"
+         x-init="$watch('modalDir', v => { if (!v) $wire.call('resetDireccionEdit'); })"
          @direccion-guardada.window="modalDir = false"
+         @reset-dir.window="tipo = $event.detail.tipo"
          @ub-dir-sel.window="
              if($event.detail.tipo==='ciudad') $wire.set('editCiudad', $event.detail.valor);
              else if($event.detail.tipo==='provincia') $wire.set('editProvincia', $event.detail.valor);

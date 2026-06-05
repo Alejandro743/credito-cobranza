@@ -103,6 +103,19 @@ class RevisionManager extends Component
         $this->$prop = null;
     }
 
+    public function resetDireccionEdit(): void
+    {
+        if (!$this->viewingId) return;
+        $pedido = Pedido::find($this->viewingId);
+        $this->editTipoEntrega = $pedido?->tipo_entrega      ?? 'domicilio';
+        $this->editCiudad      = $pedido?->entrega_ciudad    ?? '';
+        $this->editProvincia   = $pedido?->entrega_provincia ?? '';
+        $this->editMunicipio   = $pedido?->entrega_municipio ?? '';
+        $this->editDireccion   = $pedido?->entrega_direccion ?? '';
+        $this->editReferencia  = $pedido?->entrega_referencia ?? '';
+        $this->dispatch('reset-dir', tipo: $this->editTipoEntrega);
+    }
+
     public function guardarDireccion(string $tipoEntrega = ''): void
     {
         if ($tipoEntrega) $this->editTipoEntrega = $tipoEntrega;
