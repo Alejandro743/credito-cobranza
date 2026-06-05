@@ -315,8 +315,9 @@
         @if ($editable)
         <style>
         .rdir-label { font-size:10px; font-weight:700; color:#6B65B0; text-transform:uppercase; letter-spacing:.05em; display:block; margin-bottom:5px; }
-        .rdir-input { width:100%; padding:10px 12px; border:1.5px solid #EDE9FE; border-radius:10px; font-size:13px; color:#3C3489; background:#FAFAFE; outline:none; box-sizing:border-box; -webkit-appearance:none; appearance:none; transition:border-color 0.15s; }
-        .rdir-input:focus { border-color:#C4B5FD; background:#fff; }
+        .rdir-input { width:100%; padding:10px 12px; border:1.5px solid #EDE9FE; border-radius:10px; font-size:13px; color:#3C3489; background:#fff; outline:none; box-sizing:border-box; -webkit-appearance:none; appearance:none; transition:border-color 0.15s; display:block; }
+        .rdir-input:focus { border-color:#C4B5FD; }
+        .rdir-readonly { width:100%; padding:10px 12px; border:1.5px solid #EDE9FE; border-radius:10px; font-size:13px; color:#3C3489; background:#F8F7FF; box-sizing:border-box; display:block; }
         </style>
 
         {{-- Modal principal --}}
@@ -362,18 +363,43 @@
                         </button>
                     </div>
 
-                    {{-- Domicilio: solo lectura --}}
+                    {{-- Domicilio: mismo layout que Nuevo lugar, solo lectura --}}
                     <div x-show="tipo==='domicilio'" style="background:#FAFAFE; border-radius:14px; padding:14px 16px; border:1px solid #F0EEFF; margin-bottom:4px;">
                         <div style="display:flex; align-items:center; gap:6px; margin-bottom:12px;">
                             <div style="width:5px; height:5px; border-radius:50%; background:#C4B5FD; flex-shrink:0;"></div>
                             <span style="font-size:9px; font-weight:700; color:#6B65B0; text-transform:uppercase; letter-spacing:.12em;">Dirección registrada del cliente</span>
                         </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px;">
-                            <div><p style="font-size:9px; color:#AFA9EC; font-weight:700; margin-bottom:3px; text-transform:uppercase; margin-top:0;">Ciudad</p><p style="font-size:12px; font-weight:700; color:#3C3489; margin:0;">{{ $p->cliente->ciudad ?: '—' }}</p></div>
-                            <div><p style="font-size:9px; color:#AFA9EC; font-weight:700; margin-bottom:3px; text-transform:uppercase; margin-top:0;">Provincia</p><p style="font-size:12px; font-weight:700; color:#3C3489; margin:0;">{{ $p->cliente->provincia ?: '—' }}</p></div>
-                            <div><p style="font-size:9px; color:#AFA9EC; font-weight:700; margin-bottom:3px; text-transform:uppercase; margin-top:0;">Municipio</p><p style="font-size:12px; font-weight:700; color:#3C3489; margin:0;">{{ $p->cliente->municipio ?: '—' }}</p></div>
+                        <div style="display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:10px;">
+                            <div style="grid-column:span 2;">
+                                <label class="rdir-label">Ciudad</label>
+                                <div class="rdir-readonly" style="display:flex; align-items:center; gap:8px;">
+                                    <svg width="13" height="13" fill="none" stroke="{{ $p->cliente->ciudad ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                                    <span style="font-size:13px; color:{{ $p->cliente->ciudad ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $p->cliente->ciudad ? '500' : '400' }};">{{ $p->cliente->ciudad ? ucwords(strtolower($p->cliente->ciudad)) : '—' }}</span>
+                                </div>
+                            </div>
+                            <div style="grid-column:span 2;">
+                                <label class="rdir-label">Provincia</label>
+                                <div class="rdir-readonly" style="display:flex; align-items:center; gap:8px;">
+                                    <svg width="13" height="13" fill="none" stroke="{{ $p->cliente->provincia ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                                    <span style="font-size:13px; color:{{ $p->cliente->provincia ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $p->cliente->provincia ? '500' : '400' }};">{{ $p->cliente->provincia ? ucwords(strtolower($p->cliente->provincia)) : '—' }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="rdir-label">Municipio</label>
+                                <div class="rdir-readonly" style="display:flex; align-items:center; gap:8px;">
+                                    <svg width="13" height="13" fill="none" stroke="{{ $p->cliente->municipio ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                                    <span style="font-size:13px; color:{{ $p->cliente->municipio ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $p->cliente->municipio ? '500' : '400' }};">{{ $p->cliente->municipio ? ucwords(strtolower($p->cliente->municipio)) : '—' }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <label class="rdir-label">Dirección</label>
+                                <div class="rdir-readonly">{{ $p->cliente->direccion ?: '—' }}</div>
+                            </div>
+                            <div style="grid-column:span 2;">
+                                <label class="rdir-label">Referencia <span style="color:#D1D5DB; font-weight:400; text-transform:none; letter-spacing:0;">· opcional</span></label>
+                                <div class="rdir-readonly">—</div>
+                            </div>
                         </div>
-                        <div><p style="font-size:9px; color:#AFA9EC; font-weight:700; margin-bottom:3px; text-transform:uppercase; margin-top:0;">Dirección</p><p style="font-size:12px; font-weight:700; color:#3C3489; margin:0;">{{ $p->cliente->direccion ?: '—' }}</p></div>
                     </div>
 
                     {{-- Nuevo lugar: editable --}}
