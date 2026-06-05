@@ -436,17 +436,26 @@
                     </tr>
                     @endforeach
                 </tbody>
-                <tfoot>
-                    <tr style="background:#F5F3FF; border-top:1.5px solid #EDE9FE;">
-                        <td colspan="5" style="padding:10px 16px;">
-                            <div style="display:flex; justify-content:space-between; align-items:center;">
-                                <span style="font-size:12px; font-weight:700; color:#534AB7;">Total: <span x-ref="totalDisplay" style="font-family:monospace; color:#111827; margin-left:4px;"></span></span>
-                                <span x-ref="diffDisplay" style="font-size:11px; font-weight:700;"></span>
-                            </div>
-                        </td>
-                    </tr>
-                </tfoot>
             </table>
+        </div>
+
+        {{-- Card resumen real-time --}}
+        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.18); margin-bottom:14px;">
+            <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#DC2626 100%);"></div>
+            <div style="padding:14px; display:grid; grid-template-columns:repeat(3,1fr); text-align:center;">
+                <div style="padding:0 6px;">
+                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Saldo a cubrir</span>
+                    <span style="font-size:13px; font-weight:900; color:#DC2626; font-family:monospace;">Bs. {{ number_format($pendiente, 2) }}</span>
+                </div>
+                <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
+                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total cuotas</span>
+                    <p x-ref="totalDisplay" style="font-size:13px; font-weight:900; color:#111827; font-family:monospace; margin:0;"></p>
+                </div>
+                <div style="padding:0 6px;">
+                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Diferencia</span>
+                    <p x-ref="diffDisplay" style="font-size:13px; font-weight:900; font-family:monospace; margin:0;"></p>
+                </div>
+            </div>
         </div>
 
         {{-- Separador Motivo --}}
