@@ -170,7 +170,7 @@
         'editProvincias'  => $editProvincias,
         'editMunicipios'  => $editMunicipios,
         'articulosEdit'        => $articulosEdit,
-        'articulosDisponibles' => $articulosDisponibles,
+        'articulosAgrupados'   => $articulosAgrupados,
         'searchProductoEdit'   => $searchProductoEdit,
     ])
 

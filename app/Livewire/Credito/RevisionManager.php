@@ -501,7 +501,7 @@ class RevisionManager extends Component
 
         $idsEnEdit = collect($articulosEdit)->pluck('product_id')->filter()->toArray();
         $q = strtolower(trim($searchProductoEdit));
-        $articulosDisponibles = collect($this->articulosDisponibles)
+        $articulosAgrupados = collect($this->articulosDisponibles)
             ->filter(fn($p) => !in_array($p['product_id'], $idsEnEdit))
             ->when($q, fn($c) => $c->filter(fn($p) => str_contains(strtolower($p['nombre']), $q) || str_contains(strtolower($p['codigo']), $q)))
             ->groupBy('lista_id')
@@ -514,6 +514,6 @@ class RevisionManager extends Component
             ->values()
             ->toArray();
 
-        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit', 'articulosDisponibles', 'searchProductoEdit'));
+        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit', 'articulosAgrupados', 'searchProductoEdit'));
     }
 }

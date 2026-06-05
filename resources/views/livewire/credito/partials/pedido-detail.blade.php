@@ -39,7 +39,7 @@
     $editable        = $editable        ?? false;
     $editTipoEntrega = $editTipoEntrega ?? 'domicilio';
     $articulosEdit        = $articulosEdit        ?? [];
-    $articulosDisponibles = $articulosDisponibles ?? [];
+    $articulosAgrupados   = $articulosAgrupados   ?? [];
     $searchProductoEdit   = $searchProductoEdit   ?? '';
 @endphp
 
@@ -307,7 +307,7 @@
                 </div>
 
                 {{-- Agregar productos --}}
-                @if(!empty($articulosDisponibles) || $searchProductoEdit)
+                @if(!empty($articulosAgrupados) || $searchProductoEdit)
                 <div style="margin-top:12px; background:#FAFAFE; border-radius:14px; padding:14px 16px; border:1px solid #F0EEFF;">
                     <div style="display:flex; align-items:center; gap:6px; margin-bottom:10px;">
                         <div style="width:5px; height:5px; border-radius:50%; background:#86EFAC; flex-shrink:0;"></div>
@@ -318,13 +318,13 @@
                         <input wire:model.live.debounce.250ms="searchProductoEdit" type="text" placeholder="Buscar producto..."
                                style="width:100%; padding:8px 10px 8px 30px; border:1.5px solid #EDE9FE; border-radius:10px; font-size:12px; color:#3C3489; background:#fff; outline:none; box-sizing:border-box;">
                     </div>
-                    @if(empty($articulosDisponibles) && $searchProductoEdit)
+                    @if(empty($articulosAgrupados) && $searchProductoEdit)
                     <p style="text-align:center; font-size:12px; color:#9CA3AF; padding:12px 0 4px;">Sin resultados.</p>
-                    @elseif(empty($articulosDisponibles))
+                    @elseif(empty($articulosAgrupados))
                     <p style="text-align:center; font-size:12px; color:#9CA3AF; padding:12px 0 4px;">Todos los productos ya están en el pedido.</p>
                     @else
                     <div style="display:flex; flex-direction:column; gap:10px; max-height:260px; overflow-y:auto;">
-                        @foreach($articulosDisponibles as $grupo)
+                        @foreach($articulosAgrupados as $grupo)
                         <div>
                             {{-- Header lista --}}
                             <div style="display:flex; align-items:center; gap:6px; margin-bottom:6px;">
