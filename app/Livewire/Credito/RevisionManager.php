@@ -3,8 +3,11 @@
 namespace App\Livewire\Credito;
 
 use App\Models\Ciudad;
+use App\Models\ListaAcceso;
+use App\Models\ListaMaestra;
 use App\Models\Municipio;
 use App\Models\Pedido;
+use App\Models\PedidoItem;
 use App\Models\Provincia;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
@@ -39,8 +42,10 @@ class RevisionManager extends Component
     public string $editReferencia  = '';
 
     // Editar artículos
-    public bool  $editandoArticulos = false;
-    public array $articulosEdit     = [];
+    public bool   $editandoArticulos    = false;
+    public array  $articulosEdit        = [];
+    public array  $articulosDisponibles = [];
+    public string $searchProductoEdit   = '';
 
     public function updatingSearch(): void { $this->resetPage(); }
 
@@ -68,8 +73,10 @@ class RevisionManager extends Component
         $this->docAnversoDoc      = null;
         $this->docReversoDoc      = null;
         $this->docAvisoLuz        = null;
-        $this->editandoArticulos  = false;
-        $this->articulosEdit      = [];
+        $this->editandoArticulos    = false;
+        $this->articulosEdit        = [];
+        $this->articulosDisponibles = [];
+        $this->searchProductoEdit   = '';
 
         $pedido = Pedido::find($id);
         $this->editTipoEntrega = $pedido?->tipo_entrega     ?? 'domicilio';
@@ -164,12 +171,13 @@ class RevisionManager extends Component
 
     public function abrirEditarArticulos(): void
     {
-        $pedido = Pedido::with(['items.product', 'items.listaMaestraItem'])->find($this->viewingId);
+        $pedido = Pedido::with(['items.product', 'items.listaMaestraItem', 'vendedor.user', 'cliente.usuario'])->find($this->viewingId);
         if (!$pedido) return;
 
         $this->articulosEdit = $pedido->items->map(fn($item) => [
             'item_id'               => $item->id,
             'lista_maestra_item_id' => $item->lista_maestra_item_id,
+            'product_id'            => $item->product_id,
             'nombre'                => $item->product?->name ?? '—',
             'codigo'                => $item->product?->code ?? '',
             'cantidad'              => (int) $item->cantidad,
@@ -180,8 +188,79 @@ class RevisionManager extends Component
             'stock_disponible'      => (float) ($item->listaMaestraItem?->stock_actual ?? 999),
         ])->values()->toArray();
 
-        $this->editandoArticulos = true;
+        $this->articulosDisponibles = $this->cargarArticulosDisponibles($pedido);
+        $this->searchProductoEdit   = '';
+        $this->editandoArticulos    = true;
         $this->dispatch('art-modal-open');
+    }
+
+    private function cargarArticulosDisponibles(Pedido $pedido): array
+    {
+        $vendedorUserId = $pedido->vendedor?->user_id;
+        $clienteUserId  = $pedido->cliente?->usuario_id;
+
+        $todasIds = ListaMaestra::where('active', true)->pluck('id');
+        if ($todasIds->isEmpty()) return [];
+
+        $listasConVendedores      = ListaAcceso::where('tipo', 'vendedor')->whereIn('lista_maestra_id', $todasIds)->pluck('lista_maestra_id')->unique();
+        $listasVendedorExplicito  = ListaAcceso::where('tipo', 'vendedor')->whereIn('lista_maestra_id', $todasIds)->where('user_id', $vendedorUserId)->pluck('lista_maestra_id');
+        $accesoVendedor           = $listasVendedorExplicito->merge($todasIds->diff($listasConVendedores))->unique();
+
+        $listasConClientes        = ListaAcceso::where('tipo', 'cliente')->whereIn('lista_maestra_id', $todasIds)->pluck('lista_maestra_id')->unique();
+        $listasClienteExplicito   = ListaAcceso::where('tipo', 'cliente')->whereIn('lista_maestra_id', $todasIds)->where('user_id', $clienteUserId)->pluck('lista_maestra_id');
+        $accesoCliente            = $listasClienteExplicito->merge($todasIds->diff($listasConClientes))->unique();
+
+        $comunes = $accesoVendedor->intersect($accesoCliente);
+        if ($comunes->isEmpty()) return [];
+
+        $listas = ListaMaestra::whereIn('id', $comunes)->where('active', true)
+            ->with(['items' => fn($q) => $q->where('active', true)->where('stock_actual', '>', 0)->with(['product' => fn($p) => $p->where('active', true)])])
+            ->get();
+
+        $disponibles = [];
+        foreach ($listas as $lista) {
+            foreach ($lista->items as $item) {
+                if (!$item->product) continue;
+                $pid = (string) $item->product_id;
+                $precioFinal = (float) $item->precio_final;
+                if (!isset($disponibles[$pid]) || $precioFinal < $disponibles[$pid]['precio']) {
+                    $disponibles[$pid] = [
+                        'item_id'    => $item->id,
+                        'product_id' => $item->product_id,
+                        'nombre'     => $item->product->name,
+                        'codigo'     => $item->product->code ?? '',
+                        'precio'     => $precioFinal,
+                        'puntos'     => (int) $item->puntos,
+                        'stock'      => (float) $item->stock_actual,
+                    ];
+                }
+            }
+        }
+
+        return array_values($disponibles);
+    }
+
+    public function agregarArticuloEdit(int $productId): void
+    {
+        $prod = collect($this->articulosDisponibles)->firstWhere('product_id', $productId);
+        if (!$prod) return;
+
+        $yaExiste = collect($this->articulosEdit)->contains('product_id', $productId);
+        if ($yaExiste) return;
+
+        $this->articulosEdit[] = [
+            'item_id'               => null,
+            'lista_maestra_item_id' => $prod['item_id'],
+            'product_id'            => $prod['product_id'],
+            'nombre'                => $prod['nombre'],
+            'codigo'                => $prod['codigo'],
+            'cantidad'              => 1,
+            'cantidad_original'     => 0,
+            'precio_unitario'       => $prod['precio'],
+            'puntos'                => $prod['puntos'],
+            'subtotal'              => $prod['precio'],
+            'stock_disponible'      => $prod['stock'],
+        ];
     }
 
     public function updatedArticulosEdit($value, $key): void
@@ -251,6 +330,26 @@ class RevisionManager extends Component
                 }
             }
 
+            // Nuevos items (cantidad_original = 0)
+            foreach ($this->articulosEdit as $art) {
+                if ($art['item_id'] !== null || (int) $art['cantidad_original'] !== 0) continue;
+                $lmiModel = \App\Models\ListaMaestraItem::find($art['lista_maestra_item_id']);
+                if ($lmiModel) {
+                    $lmiModel->stock_consumido = $lmiModel->stock_consumido + (int) $art['cantidad'];
+                    $lmiModel->stock_actual    = max(0, $lmiModel->stock_actual - (int) $art['cantidad']);
+                    $lmiModel->save();
+                }
+                PedidoItem::create([
+                    'pedido_id'             => $pedido->id,
+                    'lista_maestra_item_id' => $art['lista_maestra_item_id'],
+                    'product_id'            => $art['product_id'],
+                    'cantidad'              => (int) $art['cantidad'],
+                    'precio_unitario'       => (float) $art['precio_unitario'],
+                    'puntos'                => (int) $art['puntos'],
+                    'subtotal'              => round((float) $art['precio_unitario'] * (int) $art['cantidad'], 2),
+                ]);
+            }
+
             $pedido->refresh();
             $nuevoTotal = round($pedido->items->sum('subtotal'), 2);
             $pedido->update(['total' => $nuevoTotal, 'total_pagar' => $nuevoTotal]);
@@ -287,15 +386,19 @@ class RevisionManager extends Component
             }
         });
 
-        $this->editandoArticulos = false;
-        $this->articulosEdit     = [];
+        $this->editandoArticulos    = false;
+        $this->articulosEdit        = [];
+        $this->articulosDisponibles = [];
+        $this->searchProductoEdit   = '';
         session()->flash('success', 'Artículos actualizados correctamente.');
     }
 
     public function cerrarEditarArticulos(): void
     {
-        $this->editandoArticulos = false;
-        $this->articulosEdit     = [];
+        $this->editandoArticulos    = false;
+        $this->articulosEdit        = [];
+        $this->articulosDisponibles = [];
+        $this->searchProductoEdit   = '';
         $this->dispatch('art-modal-close');
     }
 
@@ -353,8 +456,10 @@ class RevisionManager extends Component
         $this->editMunicipio      = '';
         $this->editDireccion      = '';
         $this->editReferencia     = '';
-        $this->editandoArticulos  = false;
-        $this->articulosEdit      = [];
+        $this->editandoArticulos    = false;
+        $this->articulosEdit        = [];
+        $this->articulosDisponibles = [];
+        $this->searchProductoEdit   = '';
         $this->mode               = 'list';
     }
 
@@ -387,9 +492,18 @@ class RevisionManager extends Component
         $provObj         = Provincia::where('nombre', $this->editProvincia)->where('ciudad_id', $ciudadObj?->id)->first();
         $editMunicipios  = $provObj ? Municipio::where('provincia_id', $provObj->id)->orderBy('nombre')->get() : collect();
 
-        $editTipoEntrega = $this->editTipoEntrega;
-        $articulosEdit   = $this->articulosEdit;
+        $editTipoEntrega      = $this->editTipoEntrega;
+        $articulosEdit        = $this->articulosEdit;
+        $searchProductoEdit   = $this->searchProductoEdit;
 
-        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit'));
+        $idsEnEdit = collect($articulosEdit)->pluck('product_id')->filter()->toArray();
+        $q = strtolower(trim($searchProductoEdit));
+        $articulosDisponibles = collect($this->articulosDisponibles)
+            ->filter(fn($p) => !in_array($p['product_id'], $idsEnEdit))
+            ->when($q, fn($c) => $c->filter(fn($p) => str_contains(strtolower($p['nombre']), $q) || str_contains(strtolower($p['codigo']), $q)))
+            ->values()
+            ->toArray();
+
+        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit', 'articulosDisponibles', 'searchProductoEdit'));
     }
 }

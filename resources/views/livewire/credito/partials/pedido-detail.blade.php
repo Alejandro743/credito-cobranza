@@ -38,7 +38,9 @@
     ];
     $editable        = $editable        ?? false;
     $editTipoEntrega = $editTipoEntrega ?? 'domicilio';
-    $articulosEdit   = $articulosEdit   ?? [];
+    $articulosEdit        = $articulosEdit        ?? [];
+    $articulosDisponibles = $articulosDisponibles ?? [];
+    $searchProductoEdit   = $searchProductoEdit   ?? '';
 @endphp
 
 {{-- Fecha --}}
@@ -303,6 +305,43 @@
                         </div>
                     </div>
                 </div>
+
+                {{-- Agregar productos --}}
+                @if(!empty($articulosDisponibles) || $searchProductoEdit)
+                <div style="margin-top:12px; background:#FAFAFE; border-radius:14px; padding:14px 16px; border:1px solid #F0EEFF;">
+                    <div style="display:flex; align-items:center; gap:6px; margin-bottom:10px;">
+                        <div style="width:5px; height:5px; border-radius:50%; background:#86EFAC; flex-shrink:0;"></div>
+                        <span style="font-size:9px; font-weight:700; color:#6B65B0; text-transform:uppercase; letter-spacing:.12em;">Agregar producto</span>
+                    </div>
+                    <div style="position:relative; margin-bottom:10px;">
+                        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; color:#C4B5FD;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
+                        <input wire:model.live.debounce.250ms="searchProductoEdit" type="text" placeholder="Buscar producto..."
+                               style="width:100%; padding:8px 10px 8px 30px; border:1.5px solid #EDE9FE; border-radius:10px; font-size:12px; color:#3C3489; background:#fff; outline:none; box-sizing:border-box;">
+                    </div>
+                    @if(empty($articulosDisponibles) && $searchProductoEdit)
+                    <p style="text-align:center; font-size:12px; color:#9CA3AF; padding:12px 0 4px;">Sin resultados.</p>
+                    @else
+                    <div style="display:flex; flex-direction:column; gap:6px; max-height:220px; overflow-y:auto;">
+                        @foreach($articulosDisponibles as $prod)
+                        <div style="display:flex; align-items:center; gap:10px; background:#fff; border:1px solid #F0EEFF; border-radius:10px; padding:9px 12px;">
+                            <div style="flex:1; min-width:0;">
+                                <p style="font-size:13px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($prod['nombre'])) }}</p>
+                                <p style="font-size:10px; color:#9CA3AF; margin:2px 0 0;">
+                                    @if($prod['codigo'])<span style="font-family:monospace;">{{ $prod['codigo'] }}</span> ·@endif
+                                    Bs. {{ number_format($prod['precio'], 2) }}
+                                    · Stock: {{ number_format($prod['stock'], 0) }}
+                                </p>
+                            </div>
+                            <button wire:click="agregarArticuloEdit({{ $prod['product_id'] }})"
+                                    style="width:30px; height:30px; border-radius:8px; border:1.5px solid #86EFAC; background:#F0FDF4; color:#15803D; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                            </button>
+                        </div>
+                        @endforeach
+                    </div>
+                    @endif
+                </div>
+                @endif
 
                 {{-- Footer --}}
                 <div style="padding:12px 18px 16px; border-top:1px solid #F0EEFF; display:flex; gap:8px; flex-shrink:0;">
