@@ -31,11 +31,12 @@ class RevisionManager extends Component
     public $docAvisoLuz   = null;
 
     // Dirección de entrega
-    public string $editCiudad    = '';
-    public string $editProvincia = '';
-    public string $editMunicipio = '';
-    public string $editDireccion = '';
-    public string $editReferencia = '';
+    public string $editTipoEntrega = 'domicilio';
+    public string $editCiudad      = '';
+    public string $editProvincia   = '';
+    public string $editMunicipio   = '';
+    public string $editDireccion   = '';
+    public string $editReferencia  = '';
 
     public function updatingSearch(): void { $this->resetPage(); }
 
@@ -65,11 +66,12 @@ class RevisionManager extends Component
         $this->docAvisoLuz        = null;
 
         $pedido = Pedido::find($id);
-        $this->editCiudad    = $pedido?->entrega_ciudad    ?? '';
-        $this->editProvincia = $pedido?->entrega_provincia ?? '';
-        $this->editMunicipio = $pedido?->entrega_municipio ?? '';
-        $this->editDireccion = $pedido?->entrega_direccion ?? '';
-        $this->editReferencia= $pedido?->entrega_referencia ?? '';
+        $this->editTipoEntrega = $pedido?->tipo_entrega     ?? 'domicilio';
+        $this->editCiudad      = $pedido?->entrega_ciudad    ?? '';
+        $this->editProvincia   = $pedido?->entrega_provincia ?? '';
+        $this->editMunicipio   = $pedido?->entrega_municipio ?? '';
+        $this->editDireccion   = $pedido?->entrega_direccion ?? '';
+        $this->editReferencia  = $pedido?->entrega_referencia ?? '';
 
         $this->mode = 'detail';
     }
@@ -103,24 +105,38 @@ class RevisionManager extends Component
 
     public function guardarDireccion(): void
     {
-        $this->validate([
-            'editDireccion' => 'required|string|max:500',
-            'editCiudad'    => 'nullable|string|max:150',
-            'editProvincia' => 'nullable|string|max:150',
-            'editMunicipio' => 'nullable|string|max:150',
-            'editReferencia'=> 'nullable|string|max:500',
-        ]);
-
-        Pedido::where('id', $this->viewingId)
+        $pedido = Pedido::with('cliente')
+            ->where('id', $this->viewingId)
             ->where('estado', 'revision')
-            ->firstOrFail()
-            ->update([
+            ->firstOrFail();
+
+        if ($this->editTipoEntrega === 'domicilio') {
+            $pedido->update([
+                'tipo_entrega'      => 'domicilio',
+                'entrega_ciudad'    => $pedido->cliente->ciudad,
+                'entrega_provincia' => $pedido->cliente->provincia,
+                'entrega_municipio' => $pedido->cliente->municipio,
+                'entrega_direccion' => $pedido->cliente->direccion ?? '',
+                'entrega_referencia'=> null,
+            ]);
+        } else {
+            $this->validate([
+                'editDireccion' => 'required|string|max:500',
+                'editCiudad'    => 'nullable|string|max:150',
+                'editProvincia' => 'nullable|string|max:150',
+                'editMunicipio' => 'nullable|string|max:150',
+                'editReferencia'=> 'nullable|string|max:500',
+            ]);
+
+            $pedido->update([
+                'tipo_entrega'      => 'nuevo',
                 'entrega_ciudad'    => trim($this->editCiudad)    ?: null,
                 'entrega_provincia' => trim($this->editProvincia) ?: null,
                 'entrega_municipio' => trim($this->editMunicipio) ?: null,
                 'entrega_direccion' => trim($this->editDireccion),
                 'entrega_referencia'=> trim($this->editReferencia) ?: null,
             ]);
+        }
 
         $this->dispatch('direccion-guardada');
     }
@@ -173,6 +189,7 @@ class RevisionManager extends Component
         $this->docAnversoDoc      = null;
         $this->docReversoDoc      = null;
         $this->docAvisoLuz        = null;
+        $this->editTipoEntrega    = 'domicilio';
         $this->editCiudad         = '';
         $this->editProvincia      = '';
         $this->editMunicipio      = '';
@@ -210,6 +227,8 @@ class RevisionManager extends Component
         $provObj         = Provincia::where('nombre', $this->editProvincia)->where('ciudad_id', $ciudadObj?->id)->first();
         $editMunicipios  = $provObj ? Municipio::where('provincia_id', $provObj->id)->orderBy('nombre')->get() : collect();
 
-        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios'));
+        $editTipoEntrega = $this->editTipoEntrega;
+
+        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega'));
     }
 }

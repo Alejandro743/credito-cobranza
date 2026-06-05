@@ -36,7 +36,8 @@
         'doc_reverso_doc' => 'docReversoDoc',
         'doc_aviso_luz'   => 'docAvisoLuz',
     ];
-    $editable = $editable ?? false;
+    $editable        = $editable        ?? false;
+    $editTipoEntrega = $editTipoEntrega ?? 'domicilio';
 @endphp
 
 {{-- Fecha --}}
@@ -279,7 +280,7 @@
     @endif
 
     {{-- Dirección de Entrega --}}
-    <div x-data="{ modalDir: false }" @direccion-guardada.window="modalDir = false">
+    <div x-data="{ modalDir: false, tipo: '{{ $editTipoEntrega }}' }" @direccion-guardada.window="modalDir = false">
         <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
             <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Dirección de Entrega</span>
@@ -316,18 +317,52 @@
                  style="background:#EEEDF7; border-radius:18px; width:100%; max-width:440px; overflow:hidden; position:relative; max-height:90vh; overflow-y:auto;">
                 <button @click="modalDir = false" style="position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:8px; background:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.1);"><svg width="12" height="12" fill="none" stroke="#6b7280" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
                 <div style="padding:20px 18px 18px;">
-                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;"><span style="font-size:13px; font-weight:700; color:#534AB7;">Dirección de Entrega</span><div style="flex:1; height:1px; background:#CECBF6;"></div></div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
-                        <div><p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Ciudad *</p><select wire:model.live="editCiudad" style="width:100%; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"><option value="">-- Seleccionar --</option>@foreach($ciudadesAll as $c)<option value="{{ $c->nombre }}">{{ $c->nombre }}</option>@endforeach</select>@error('editCiudad')<p style="font-size:9px; color:#DC2626; margin-top:2px;">{{ $message }}</p>@enderror</div>
-                        <div><p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Provincia</p><select wire:model.live="editProvincia" style="width:100%; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;" @disabled(!$editCiudad)><option value="">-- Seleccionar --</option>@foreach($editProvincias as $prov)<option value="{{ $prov->nombre }}">{{ $prov->nombre }}</option>@endforeach</select></div>
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px;"><span style="font-size:13px; font-weight:700; color:#534AB7;">Dirección de Entrega</span><div style="flex:1; height:1px; background:#CECBF6;"></div></div>
+
+                    {{-- Toggle Domicilio / Nuevo lugar --}}
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:16px;">
+                        <button type="button"
+                                @click="tipo='domicilio'; $wire.set('editTipoEntrega','domicilio')"
+                                :style="tipo==='domicilio' ? 'background:#7B6FE8;color:#fff;border-color:#7B6FE8;' : 'background:#F9FAFB;color:#6B7280;border-color:#E5E7EB;'"
+                                style="padding:10px 6px; border-radius:8px; border:1.5px solid; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; -webkit-appearance:none; appearance:none;">
+                            🏠 Domicilio
+                        </button>
+                        <button type="button"
+                                @click="tipo='nuevo'; $wire.set('editTipoEntrega','nuevo')"
+                                :style="tipo==='nuevo' ? 'background:#7B6FE8;color:#fff;border-color:#7B6FE8;' : 'background:#F9FAFB;color:#6B7280;border-color:#E5E7EB;'"
+                                style="padding:10px 6px; border-radius:8px; border:1.5px solid; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; -webkit-appearance:none; appearance:none;">
+                            📍 Nuevo lugar
+                        </button>
                     </div>
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
-                        <div><p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Municipio</p><select wire:model.live="editMunicipio" style="width:100%; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;" @disabled(!$editProvincia)><option value="">-- Seleccionar --</option>@foreach($editMunicipios as $mun)<option value="{{ $mun->nombre }}">{{ $mun->nombre }}</option>@endforeach</select></div>
-                        <div><p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Dirección *</p><input wire:model="editDireccion" type="text" placeholder="Calle y número" style="width:100%; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;">@error('editDireccion')<p style="font-size:9px; color:#DC2626; margin-top:2px;">{{ $message }}</p>@enderror</div>
+
+                    {{-- Domicilio: dirección del cliente (solo lectura) --}}
+                    <div x-show="tipo==='domicilio'" style="margin-bottom:16px;">
+                        <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:10px; padding:12px 14px;">
+                            <p style="font-size:9px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:10px;">Dirección registrada del cliente</p>
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:10px;">
+                                <div><p style="font-size:9px; color:#AFA9EC; font-weight:700; margin-bottom:3px; text-transform:uppercase;">Ciudad</p><p style="font-size:12px; font-weight:700; color:#3C3489;">{{ $p->cliente->ciudad ?: '—' }}</p></div>
+                                <div><p style="font-size:9px; color:#AFA9EC; font-weight:700; margin-bottom:3px; text-transform:uppercase;">Provincia</p><p style="font-size:12px; font-weight:700; color:#3C3489;">{{ $p->cliente->provincia ?: '—' }}</p></div>
+                                <div><p style="font-size:9px; color:#AFA9EC; font-weight:700; margin-bottom:3px; text-transform:uppercase;">Municipio</p><p style="font-size:12px; font-weight:700; color:#3C3489;">{{ $p->cliente->municipio ?: '—' }}</p></div>
+                            </div>
+                            <div><p style="font-size:9px; color:#AFA9EC; font-weight:700; margin-bottom:3px; text-transform:uppercase;">Dirección</p><p style="font-size:12px; font-weight:700; color:#3C3489;">{{ $p->cliente->direccion ?: '—' }}</p></div>
+                        </div>
                     </div>
-                    <div style="margin-bottom:16px;"><p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Referencia <span style="font-weight:400; text-transform:none;">(opcional)</span></p><input wire:model="editReferencia" type="text" placeholder="Portón azul, frente al parque..." style="width:100%; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"></div>
+
+                    {{-- Nuevo lugar: campos editables --}}
+                    <div x-show="tipo==='nuevo'">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                            <div><p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Ciudad *</p><select wire:model.live="editCiudad" style="width:100%; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"><option value="">-- Seleccionar --</option>@foreach($ciudadesAll as $c)<option value="{{ $c->nombre }}">{{ $c->nombre }}</option>@endforeach</select>@error('editCiudad')<p style="font-size:9px; color:#DC2626; margin-top:2px;">{{ $message }}</p>@enderror</div>
+                            <div><p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Provincia</p><select wire:model.live="editProvincia" style="width:100%; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;" @disabled(!$editCiudad)><option value="">-- Seleccionar --</option>@foreach($editProvincias as $prov)<option value="{{ $prov->nombre }}">{{ $prov->nombre }}</option>@endforeach</select></div>
+                        </div>
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                            <div><p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Municipio</p><select wire:model.live="editMunicipio" style="width:100%; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;" @disabled(!$editProvincia)><option value="">-- Seleccionar --</option>@foreach($editMunicipios as $mun)<option value="{{ $mun->nombre }}">{{ $mun->nombre }}</option>@endforeach</select></div>
+                            <div><p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Dirección *</p><input wire:model="editDireccion" type="text" placeholder="Calle y número" style="width:100%; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;">@error('editDireccion')<p style="font-size:9px; color:#DC2626; margin-top:2px;">{{ $message }}</p>@enderror</div>
+                        </div>
+                        <div style="margin-bottom:16px;"><p style="font-size:10px; font-weight:700; color:#534AB7; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:4px;">Referencia <span style="font-weight:400; text-transform:none;">(opcional)</span></p><input wire:model="editReferencia" type="text" placeholder="Portón azul, frente al parque..." style="width:100%; background:#fff; border:1px solid #C4B5FD; border-radius:8px; padding:8px 10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"></div>
+                    </div>
+
                     <div style="display:flex; gap:8px;">
-                        <button @click="modalDir = false" style="flex:1; padding:10px; background:#F4F4F4; color:#6D8196; font-size:13px; font-weight:700; border-radius:8px; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">Cancelar</button>
+                        <button type="button" @click="modalDir = false" style="flex:1; padding:10px; background:#F4F4F4; color:#6D8196; font-size:13px; font-weight:700; border-radius:8px; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">Cancelar</button>
                         <button wire:click="guardarDireccion" wire:loading.attr="disabled" style="flex:1; padding:10px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; border-radius:8px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;"><span wire:loading.remove wire:target="guardarDireccion">Guardar</span><span wire:loading wire:target="guardarDireccion">Guardando...</span></button>
                     </div>
                 </div>

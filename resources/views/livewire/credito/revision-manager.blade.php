@@ -161,13 +161,14 @@
 <div style="max-width:900px; margin:0 auto;">
 
     @include('livewire.credito.partials.pedido-detail', [
-        'p'              => $pedidoDetalle,
-        'plan'           => $pedidoDetalle->planPago,
-        'aprobado'       => false,
-        'editable'       => true,
-        'ciudadesAll'    => $ciudadesAll,
-        'editProvincias' => $editProvincias,
-        'editMunicipios' => $editMunicipios,
+        'p'               => $pedidoDetalle,
+        'plan'            => $pedidoDetalle->planPago,
+        'aprobado'        => false,
+        'editable'        => true,
+        'editTipoEntrega' => $editTipoEntrega,
+        'ciudadesAll'     => $ciudadesAll,
+        'editProvincias'  => $editProvincias,
+        'editMunicipios'  => $editMunicipios,
     ])
 
     {{-- Botones acción --}}
