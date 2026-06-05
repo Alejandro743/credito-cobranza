@@ -368,9 +368,8 @@
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
         </div>
 
-        {{-- Tabla cuotas con Alpine --}}
-        <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden; margin-bottom:14px;"
-             x-data="{
+        {{-- Tabla cuotas + card resumen (mismo scope Alpine) --}}
+        <div x-data="{
                 saldo: {{ $pendiente }},
                 recalc() {
                     let inputs = this.$el.querySelectorAll('.monto-cuota');
@@ -391,6 +390,7 @@
                 }
              }"
              x-init="recalc()">
+        <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden; margin-bottom:14px;">
             <div style="padding:10px 14px; border-bottom:1px solid #EDE9FE; display:flex; align-items:center; justify-content:space-between; background:#F8F7FF;">
                 <span style="font-size:12px; font-weight:700; color:#534AB7;">Cuotas del nuevo plan</span>
                 <button wire:click="agregarCuota" @click="$nextTick(()=>recalc())"
@@ -437,7 +437,7 @@
                     @endforeach
                 </tbody>
             </table>
-        </div>
+        </div>{{-- /tabla --}}
 
         {{-- Card resumen real-time --}}
         <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.18); margin-bottom:14px;">
@@ -457,6 +457,8 @@
                 </div>
             </div>
         </div>
+
+        </div>{{-- /x-data wrapper --}}
 
         {{-- Separador Motivo --}}
         <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
