@@ -371,12 +371,12 @@
         {{-- Tabla cuotas + card resumen (mismo scope Alpine) --}}
         <div x-data="{
                 saldo: {{ $pendiente }},
-                recalc() {
-                    let inputs = this.$el.querySelectorAll('.monto-cuota');
+                recalc(root, refs) {
+                    let inputs = root.querySelectorAll('.monto-cuota');
                     let total = Array.from(inputs).reduce((s, el) => s + (parseFloat(el.value) || 0), 0);
-                    this.$refs.totalDisplay.textContent = 'Bs. ' + total.toFixed(2);
+                    refs.totalDisplay.textContent = 'Bs. ' + total.toFixed(2);
                     let diff = Math.round((total - this.saldo) * 100) / 100;
-                    let el = this.$refs.diffDisplay;
+                    let el = refs.diffDisplay;
                     if (Math.abs(diff) < 0.01) {
                         el.textContent = '✓ Cuadra exacto';
                         el.style.color = '#059669';
@@ -389,11 +389,15 @@
                     }
                 }
              }"
-             x-init="recalc()">
+             x-init="
+                $el.addEventListener('input', (e) => { if (e.target.classList.contains('monto-cuota')) recalc($el, $refs); });
+                $wire.$watch('nuevasCuotas', () => $nextTick(() => recalc($el, $refs)));
+                $nextTick(() => recalc($el, $refs));
+             ">
         <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden; margin-bottom:14px;">
             <div style="padding:10px 14px; border-bottom:1px solid #EDE9FE; display:flex; align-items:center; justify-content:space-between; background:#F8F7FF;">
                 <span style="font-size:12px; font-weight:700; color:#534AB7;">Cuotas del nuevo plan</span>
-                <button wire:click="agregarCuota" @click="$nextTick(()=>recalc())"
+                <button wire:click="agregarCuota" @click="$nextTick(()=>recalc($el,$refs))"
                         style="display:flex; align-items:center; gap:5px; padding:5px 12px; background:#EDE9FE; color:#534AB7; font-size:12px; font-weight:700; border:1px solid #C4B5FD; border-radius:8px; cursor:pointer; -webkit-appearance:none; appearance:none;">
                     <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     Agregar cuota
@@ -416,7 +420,7 @@
                         <td style="padding:8px 12px; font-size:11px; text-align:center; color:#6b7280; font-weight:600;">Cuota {{ $cuota['numero'] }}</td>
                         <td style="padding:8px 12px; text-align:center;">
                             <input wire:model="nuevasCuotas.{{ $i }}.monto" type="number" step="0.01" min="0.01"
-                                   class="monto-cuota" @input="recalc()"
+                                   class="monto-cuota"
                                    style="width:90%; padding:4px 8px; border:1px solid #C4B5FD; border-radius:6px; font-size:12px; text-align:center; outline:none; background:#fff;">
                             @error("nuevasCuotas.{$i}.monto")<p class="ds-form-error">{{ $message }}</p>@enderror
                         </td>
@@ -427,7 +431,7 @@
                         </td>
                         <td style="padding:8px 12px; text-align:center;">
                             @if(count($nuevasCuotas) > 1)
-                            <button wire:click="quitarCuota({{ $i }})" @click="$nextTick(()=>recalc())"
+                            <button wire:click="quitarCuota({{ $i }})" @click="$nextTick(()=>recalc($el,$refs))"
                                     style="width:28px; height:28px; border-radius:7px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                             </button>
