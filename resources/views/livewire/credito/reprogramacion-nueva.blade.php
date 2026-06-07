@@ -472,19 +472,6 @@
             <span style="font-size:17px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span>
             Volver
         </button>
-        @if($nPend > 0)
-        <button wire:click="irForm"
-                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
-            <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-            </svg>
-            Nueva Reprogramación
-        </button>
-        @else
-        <div style="flex:1; padding:14px; background:#FFF7ED; border:1.5px solid #FCD34D; border-radius:12px; text-align:center; font-size:13px; font-weight:600; color:#B45309;">
-            Todas las cuotas están pagadas — sin saldo a reprogramar.
-        </div>
-        @endif
     </div>
 
 </div>
