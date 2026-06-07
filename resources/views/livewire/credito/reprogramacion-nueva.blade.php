@@ -231,22 +231,22 @@
                         @foreach($cuotasEditadas as $i => $ce)
                         <div wire:key="ce-{{ $i }}"
                              style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $ce['pagado'] ? 'opacity:0.5;background:#f9fafb;' : '' }} padding:10px 12px;">
-                            {{-- Fila 1: número + badge + trash --}}
+                            {{-- Fila 1: descripción + estado + trash --}}
                             <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;">
-                                <div style="display:flex; align-items:center; gap:7px;">
-                                    <span style="width:22px; height:22px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#7B6FE8; flex-shrink:0;">{{ $ce['numero'] }}</span>
+                                <span style="font-size:12px; font-weight:700; color:#534AB7;">Cuota {{ $ce['numero'] }}</span>
+                                <div style="display:flex; align-items:center; gap:6px;">
                                     @if($ce['pagado'])
                                     <span style="padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:#D1FAE5; color:#059669;">Pagado</span>
                                     @else
                                     <span style="padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:#FEE2E2; color:#DC2626;">Pendiente</span>
                                     @endif
+                                    @if(!$ce['pagado'])
+                                    <button wire:click="quitarCuotaEdicion({{ $i }})"
+                                            style="width:26px; height:26px; border-radius:6px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                    @endif
                                 </div>
-                                @if(!$ce['pagado'])
-                                <button wire:click="quitarCuotaEdicion({{ $i }})"
-                                        style="width:26px; height:26px; border-radius:6px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;">
-                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                </button>
-                                @endif
                             </div>
                             {{-- Fila 2: monto + fecha --}}
                             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
