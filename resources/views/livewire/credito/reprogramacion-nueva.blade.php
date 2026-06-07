@@ -558,35 +558,37 @@
         </div>
 
         {{-- Tabla cuotas + card resumen (mismo scope Alpine) --}}
+        @php
+            $totalNuevoForm = round(collect($nuevasCuotas)->sum(fn($c) => (float) $c['monto']), 2);
+            $difNuevoForm   = round($totalNuevoForm - $pendiente, 2);
+        @endphp
         <div x-data="{
                 saldo: {{ $pendiente }},
-                recalc(root, refs) {
-                    let inputs = root.querySelectorAll('.monto-cuota');
-                    let total = Array.from(inputs).reduce((s, el) => s + (parseFloat(el.value) || 0), 0);
-                    refs.totalDisplay.textContent = 'Bs. ' + total.toFixed(2);
-                    let diff = Math.round((total - this.saldo) * 100) / 100;
-                    let el = refs.diffDisplay;
-                    if (Math.abs(diff) < 0.01) {
-                        el.textContent = '✓ Cuadra exacto';
-                        el.style.color = '#059669';
-                    } else if (diff > 0) {
-                        el.textContent = '+Bs. ' + diff.toFixed(2) + ' sobre saldo';
-                        el.style.color = '#B45309';
-                    } else {
-                        el.textContent = '−Bs. ' + Math.abs(diff).toFixed(2) + ' bajo saldo';
-                        el.style.color = '#DC2626';
-                    }
+                total: {{ $totalNuevoForm }},
+                diff:  {{ $difNuevoForm }},
+                get diffLabel() {
+                    if (Math.abs(this.diff) < 0.01) return '✓ Cuadra exacto';
+                    return (this.diff > 0 ? '+' : '−') + 'Bs. ' + Math.abs(this.diff).toFixed(2);
+                },
+                get diffColor() {
+                    if (Math.abs(this.diff) < 0.01) return '#059669';
+                    return this.diff > 0 ? '#B45309' : '#DC2626';
+                },
+                recalc() {
+                    let inputs = this.$el.querySelectorAll('.monto-cuota');
+                    let raw = Array.from(inputs).reduce((s, el) => s + (parseFloat(el.value) || 0), 0);
+                    this.total = Math.round(raw * 100) / 100;
+                    this.diff  = Math.round((this.total - this.saldo) * 100) / 100;
                 }
              }"
              x-init="
-                $el.addEventListener('input', (e) => { if (e.target.classList.contains('monto-cuota')) recalc($el, $refs); });
-                $wire.$watch('nuevasCuotas', () => $nextTick(() => recalc($el, $refs)));
-                $nextTick(() => recalc($el, $refs));
+                $el.addEventListener('input', (e) => { if (e.target.classList.contains('monto-cuota')) recalc(); });
+                $wire.$watch('nuevasCuotas', () => $nextTick(() => recalc()));
              ">
         <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden; margin-bottom:14px;">
             <div style="padding:10px 14px; border-bottom:1px solid #EDE9FE; display:flex; align-items:center; justify-content:space-between; background:#F8F7FF;">
                 <span style="font-size:12px; font-weight:700; color:#534AB7;">Cuotas del nuevo plan</span>
-                <button wire:click="agregarCuota" @click="$nextTick(()=>recalc($el,$refs))"
+                <button wire:click="agregarCuota"
                         style="display:flex; align-items:center; gap:5px; padding:5px 12px; background:#EDE9FE; color:#534AB7; font-size:12px; font-weight:700; border:1px solid #C4B5FD; border-radius:8px; cursor:pointer; -webkit-appearance:none; appearance:none;">
                     <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     Agregar cuota
@@ -620,7 +622,7 @@
                         </td>
                         <td style="padding:8px 12px; text-align:center;">
                             @if(count($nuevasCuotas) > 1)
-                            <button wire:click="quitarCuota({{ $i }})" @click="$nextTick(()=>recalc($el,$refs))"
+                            <button wire:click="quitarCuota({{ $i }})"
                                     style="width:28px; height:28px; border-radius:7px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                             </button>
@@ -642,11 +644,11 @@
                 </div>
                 <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
                     <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total cuotas</span>
-                    <p x-ref="totalDisplay" style="font-size:13px; font-weight:900; color:#111827; font-family:monospace; margin:0;"></p>
+                    <p x-text="'Bs. ' + total.toFixed(2)" style="font-size:13px; font-weight:900; color:#111827; font-family:monospace; margin:0;"></p>
                 </div>
                 <div style="padding:0 6px;">
                     <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Diferencia</span>
-                    <p x-ref="diffDisplay" style="font-size:13px; font-weight:900; font-family:monospace; margin:0;"></p>
+                    <p x-text="diffLabel" :style="'font-size:13px; font-weight:900; font-family:monospace; margin:0; color:' + diffColor"></p>
                 </div>
             </div>
         </div>
