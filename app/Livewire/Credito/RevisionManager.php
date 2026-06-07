@@ -243,13 +243,19 @@ class RevisionManager extends Component
         return array_values($disponibles);
     }
 
-    public function agregarArticuloEdit(int $productId): void
+    public function agregarOActualizarEdit(int $productId, int $cantidad = 1): void
     {
+        $cantidad = max(1, $cantidad);
         $prod = collect($this->articulosDisponibles)->firstWhere('product_id', $productId);
         if (!$prod) return;
 
-        $yaExiste = collect($this->articulosEdit)->contains('product_id', $productId);
-        if ($yaExiste) return;
+        foreach ($this->articulosEdit as $i => $a) {
+            if ($a['product_id'] == $productId) {
+                $this->articulosEdit[$i]['cantidad'] = $cantidad;
+                $this->articulosEdit[$i]['subtotal']  = round((float) $a['precio_unitario'] * $cantidad, 2);
+                return;
+            }
+        }
 
         $this->articulosEdit[] = [
             'item_id'               => null,
@@ -257,13 +263,29 @@ class RevisionManager extends Component
             'product_id'            => $prod['product_id'],
             'nombre'                => $prod['nombre'],
             'codigo'                => $prod['codigo'],
-            'cantidad'              => 1,
+            'cantidad'              => $cantidad,
             'cantidad_original'     => 0,
             'precio_unitario'       => $prod['precio'],
             'puntos'                => $prod['puntos'],
-            'subtotal'              => $prod['precio'],
+            'subtotal'              => round($prod['precio'] * $cantidad, 2),
             'stock_disponible'      => $prod['stock'],
         ];
+    }
+
+    public function quitarPorProductoEdit(int $productId): void
+    {
+        if (count($this->articulosEdit) <= 1) return;
+        foreach ($this->articulosEdit as $i => $a) {
+            if ($a['product_id'] == $productId) {
+                array_splice($this->articulosEdit, $i, 1);
+                return;
+            }
+        }
+    }
+
+    public function agregarArticuloEdit(int $productId): void
+    {
+        $this->agregarOActualizarEdit($productId, 1);
     }
 
     public function updatedArticulosEdit($value, $key): void
@@ -514,6 +536,18 @@ class RevisionManager extends Component
             ->values()
             ->toArray();
 
-        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit', 'articulosAgrupados', 'searchProductoEdit'));
+        $articulosTodos = collect($this->articulosDisponibles)
+            ->when($q, fn($c) => $c->filter(fn($p) => str_contains(strtolower($p['nombre']), $q) || str_contains(strtolower($p['codigo']), $q)))
+            ->groupBy('lista_id')
+            ->map(fn($items, $listaId) => [
+                'lista_id'    => $listaId,
+                'lista_nombre'=> $items->first()['lista_nombre'],
+                'lista_code'  => $items->first()['lista_code'],
+                'productos'   => $items->values()->toArray(),
+            ])
+            ->values()
+            ->toArray();
+
+        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit', 'articulosAgrupados', 'articulosTodos', 'searchProductoEdit'));
     }
 }

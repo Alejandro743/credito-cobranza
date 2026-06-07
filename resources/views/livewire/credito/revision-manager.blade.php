@@ -171,6 +171,7 @@
         'editMunicipios'  => $editMunicipios,
         'articulosEdit'        => $articulosEdit,
         'articulosAgrupados'   => $articulosAgrupados,
+        'articulosTodos'       => $articulosTodos,
         'searchProductoEdit'   => $searchProductoEdit,
     ])
 
