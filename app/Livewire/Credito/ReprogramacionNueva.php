@@ -318,6 +318,7 @@ class ReprogramacionNueva extends Component
         }
 
         // Datos para el modal editar plan
+        $pedEdit       = null;
         $planEditando  = null;
         $pendActual    = 0;
         $totalEditado  = 0;
@@ -332,6 +333,6 @@ class ReprogramacionNueva extends Component
 
         $cuotasEditadas = $this->cuotasEditadas;
 
-        return view('livewire.credito.reprogramacion-nueva', compact('resultados', 'pedidoDetalle', 'planEditando', 'pendActual', 'totalEditado', 'difEditado', 'cuotasEditadas'));
+        return view('livewire.credito.reprogramacion-nueva', compact('resultados', 'pedidoDetalle', 'pedEdit', 'planEditando', 'pendActual', 'totalEditado', 'difEditado', 'cuotasEditadas'));
     }
 }
