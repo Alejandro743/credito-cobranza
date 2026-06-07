@@ -283,6 +283,13 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas','Est
             <td style="padding:11px 14px; text-align:center; font-size:13px; font-weight:700; color:#374151;">
                 {{ $r->cantidad_cuotas === 1 ? 'Contado' : $r->cantidad_cuotas }}
             </td>
+            <td style="padding:11px 14px; text-align:center;">
+                <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px;
+                             background:{{ $r->active ? '#D1FAE5' : '#F3F4F6' }};
+                             color:{{ $r->active ? '#059669' : '#9CA3AF' }};">
+                    {{ $r->active ? 'Activo' : 'Inactivo' }}
+                </span>
+            </td>
             <td style="padding:11px 14px; font-size:12px; color:#374151;">
                 @if($r->usa_cuota_inicial)
                 <span style="display:inline-flex; align-items:center; gap:5px;">
@@ -302,13 +309,6 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas','Est
                 @else
                 <span style="color:#D1D5DB; font-size:12px;">—</span>
                 @endif
-            </td>
-            <td style="padding:11px 14px; text-align:center;">
-                <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px;
-                             background:{{ $r->active ? '#D1FAE5' : '#F3F4F6' }};
-                             color:{{ $r->active ? '#059669' : '#9CA3AF' }};">
-                    {{ $r->active ? 'Activo' : 'Inactivo' }}
-                </span>
             </td>
             <td style="padding:11px 14px; text-align:center;">
                 <button wire:click="edit({{ $r->id }})" title="Editar"
