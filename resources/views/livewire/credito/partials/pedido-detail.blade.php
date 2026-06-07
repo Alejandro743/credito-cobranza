@@ -225,6 +225,10 @@
 
     @if($editable)
     <style>
+    .modal-art-panel {
+        overflow: hidden;
+        min-height: 0;
+    }
     @media (min-width: 768px) {
         .modal-art-outer {
             background: rgba(20,10,40,0.45) !important;
@@ -237,7 +241,6 @@
             max-height: 85vh;
             border-radius: 10px;
             box-shadow: 0 24px 60px rgba(60,52,137,0.22), 0 0 0 1px rgba(196,181,253,0.15);
-            overflow: hidden;
             flex: none;
             max-width: 900px;
             width: 100%;
