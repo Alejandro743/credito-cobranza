@@ -415,6 +415,7 @@ class RevisionManager extends Component
         $this->articulosEdit        = [];
         $this->articulosDisponibles = [];
         $this->searchProductoEdit   = '';
+        $this->dispatch('art-modal-close');
         session()->flash('success', 'Artículos actualizados correctamente.');
     }
 
