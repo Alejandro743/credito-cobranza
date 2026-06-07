@@ -176,8 +176,9 @@ class ReprogramacionNueva extends Component
 
     public function volver(): void
     {
-        if ($this->mode === 'form')    { $this->mode = 'preview'; return; }
-        if ($this->mode === 'preview') { $this->pedidoId = null; $this->mode = 'buscar'; return; }
+        if ($this->mode === 'editar_plan') { $this->cerrarEditarPlan(); return; }
+        if ($this->mode === 'form')        { $this->mode = 'preview'; return; }
+        if ($this->mode === 'preview')     { $this->pedidoId = null; $this->mode = 'buscar'; return; }
     }
 
     // ── Editar plan directo ──────────────────────────────────────────────────
@@ -202,14 +203,14 @@ class ReprogramacionNueva extends Component
             ->toArray();
 
         $this->editandoPlanPedidoId = $pedidoId;
-        $this->dispatch('plan-edit-open');
+        $this->mode = 'editar_plan';
     }
 
     public function cerrarEditarPlan(): void
     {
         $this->editandoPlanPedidoId = null;
         $this->cuotasEditadas       = [];
-        $this->dispatch('plan-edit-close');
+        $this->mode                 = 'buscar';
     }
 
     public function agregarCuotaEdicion(): void
@@ -289,8 +290,8 @@ class ReprogramacionNueva extends Component
             ]);
         });
 
+        session()->flash('success', 'Plan de pagos actualizado correctamente.');
         $this->cerrarEditarPlan();
-        $this->dispatch('plan-edit-saved');
     }
 
     public function render()

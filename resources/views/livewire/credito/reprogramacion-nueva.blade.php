@@ -149,24 +149,13 @@
     </div>
 </div>
 
-{{-- ══ MODAL EDITAR PLAN ══ --}}
-<div x-data="{ open: false }"
-     @plan-edit-open.window="open = true"
-     @plan-edit-close.window="open = false"
-     @plan-edit-saved.window="open = false"
-     style="display:contents;">
-    <div x-show="open"
-         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-         class="fixed inset-0 z-50 flex items-center justify-center p-4"
-         style="background:rgba(20,10,40,0.45); backdrop-filter:blur(2px); padding-bottom:72px;"
-         @click.self="$wire.call('cerrarEditarPlan')">
-        <div x-show="open"
-             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-             style="background:#fff; border-radius:20px; width:100%; max-width:600px; height:calc(100vh - 104px); max-height:600px; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
+{{-- ══ EDITAR PLAN ══ --}}
+@elseif($mode === 'editar_plan' && $planEditando)
+<div style="max-width:600px; margin:0 auto;">
+    <div style="background:#fff; border-radius:20px; box-shadow:0 4px 24px rgba(60,52,137,0.12), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
 
             {{-- Header --}}
-            <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #F0EEFF;">
                 <div style="display:flex; align-items:center; gap:9px;">
                     <div style="width:30px; height:30px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
@@ -184,8 +173,8 @@
                 </button>
             </div>
 
-            {{-- Body scrollable --}}
-            <div style="overflow-y:auto; flex:1; min-height:0; padding:16px 20px 8px;">
+            {{-- Body --}}
+            <div style="padding:16px 20px 8px;">
             @if($planEditando)
             @php
                 $pendActualModal = $pendActual;
@@ -300,7 +289,7 @@
             </div>{{-- /body --}}
 
             {{-- Footer --}}
-            <div style="padding:12px 20px 16px; border-top:1px solid #F0EEFF; display:flex; gap:8px; flex-shrink:0;">
+            <div style="padding:12px 20px 16px; border-top:1px solid #F0EEFF; display:flex; gap:8px;">
                 <button type="button" wire:click="cerrarEditarPlan"
                         style="flex:1; padding:11px; background:#F4F4F4; color:#6D8196; font-size:13px; font-weight:700; border-radius:10px; border:1.5px solid #E5E7EB; cursor:pointer; -webkit-appearance:none; appearance:none;">
                     Cancelar
@@ -311,7 +300,6 @@
                     <span wire:loading wire:target="guardarEdicionPlan">Guardando...</span>
                 </button>
             </div>
-        </div>
     </div>
 </div>
 
