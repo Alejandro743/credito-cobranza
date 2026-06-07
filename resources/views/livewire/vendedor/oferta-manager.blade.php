@@ -1477,7 +1477,7 @@
     }
     .modal-productos-panel {
         max-height: 85vh;
-        border-radius: 20px;
+        border-radius: 0;
         box-shadow: 0 24px 60px rgba(60,52,137,0.22), 0 0 0 1px rgba(196,181,253,0.15);
         overflow: hidden;
         flex: none;
