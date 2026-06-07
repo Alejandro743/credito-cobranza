@@ -203,6 +203,7 @@ class ReprogramacionNueva extends Component
             ->toArray();
 
         $this->editandoPlanPedidoId = $pedidoId;
+        $this->resetErrorBag();
         $this->mode = 'editar_plan';
     }
 
@@ -210,6 +211,7 @@ class ReprogramacionNueva extends Component
     {
         $this->editandoPlanPedidoId = null;
         $this->cuotasEditadas       = [];
+        $this->resetErrorBag();
         $this->mode                 = 'buscar';
     }
 

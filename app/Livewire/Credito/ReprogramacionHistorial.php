@@ -50,6 +50,7 @@ class ReprogramacionHistorial extends Component
     {
         if ($this->mode === 'editar') {
             $this->cuotasEditadas = [];
+            $this->resetErrorBag();
             $this->mode = 'detalle';
             return;
         }
