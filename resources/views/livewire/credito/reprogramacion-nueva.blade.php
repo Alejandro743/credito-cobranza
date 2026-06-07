@@ -63,6 +63,10 @@
                     style="width:34px; height:34px; flex-shrink:0; border:1px solid #D1FAE5; border-radius:8px; background:#F0FDF4; color:#15803D; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;">
                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
             </button>
+            <button wire:click="irFormDirecto({{ $p->id }})" title="Nueva Reprogramación"
+                    style="width:34px; height:34px; flex-shrink:0; border:1px solid #C4B5FD; border-radius:8px; background:#EDE9FE; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+            </button>
         </div>
     </div>
     @empty
@@ -130,6 +134,11 @@
                                 style="width:28px; height:28px; border-radius:7px; border:1px solid #D1FAE5; background:#F0FDF4; color:#15803D; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;"
                                 @mouseenter="$el.style.background='#D1FAE5'" @mouseleave="$el.style.background='#F0FDF4'" title="Editar Plan">
                             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </button>
+                        <button wire:click="irFormDirecto({{ $p->id }})"
+                                style="width:28px; height:28px; border-radius:7px; border:1px solid #C4B5FD; background:#EDE9FE; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;"
+                                @mouseenter="$el.style.background='#DDD6FE'" @mouseleave="$el.style.background='#EDE9FE'" title="Nueva Reprogramación">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                         </button>
                     </div>
                 </td>
@@ -656,6 +665,12 @@
         </div>
 
         </div>{{-- /x-data wrapper --}}
+
+        @error('nuevasCuotas')
+        <div style="margin-bottom:14px; padding:10px 14px; background:#FEF2F2; border:1px solid #FECACA; border-radius:10px; font-size:13px; font-weight:600; color:#DC2626;">
+            {{ $message }}
+        </div>
+        @enderror
 
         {{-- Separador Motivo --}}
         <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">

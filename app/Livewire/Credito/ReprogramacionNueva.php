@@ -34,6 +34,13 @@ class ReprogramacionNueva extends Component
         $this->mode     = 'preview';
     }
 
+    public function irFormDirecto(int $id): void
+    {
+        $this->pedidoId = $id;
+        $this->resetErrorBag();
+        $this->irForm();
+    }
+
     public function irForm(): void
     {
         $pedido = Pedido::with('planPago.cuotas')->findOrFail($this->pedidoId);
@@ -120,6 +127,14 @@ class ReprogramacionNueva extends Component
         $pedido    = Pedido::with('planPago.cuotas')->where('estado', 'aprobado')->findOrFail($this->pedidoId);
         $planViejo = $pedido->planPago;
         if (!$planViejo) return;
+
+        $totalNuevo = round(collect($this->nuevasCuotas)->sum(fn($c) => (float) $c['monto']), 2);
+        $saldoPend  = round((float) $planViejo->cuotas->where('estado', '!=', 'pagado')->where('numero', '>', 0)->sum('monto'), 2);
+
+        if (abs($totalNuevo - $saldoPend) >= 0.01) {
+            $this->addError('nuevasCuotas', "El total ingresado (Bs. {$totalNuevo}) debe ser exactamente igual al saldo pendiente (Bs. {$saldoPend}).");
+            return;
+        }
 
         DB::transaction(function () use ($pedido, $planViejo) {
             $planViejo->update(['estado' => 'inactivo']);
