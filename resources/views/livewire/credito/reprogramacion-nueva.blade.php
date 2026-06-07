@@ -53,11 +53,16 @@
                 <span style="font-size:13px; font-weight:700; color:#DC2626;">Bs. {{ number_format($pendiente, 2) }}</span>
             </div>
         </div>
-        <div style="padding:10px 14px; border-top:1px solid #F3F4F6;">
+        <div style="padding:10px 14px; border-top:1px solid #F3F4F6; display:flex; gap:8px;">
             <button wire:click="seleccionarPedido({{ $p->id }})"
-                    style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; background:#F5F3FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; -webkit-appearance:none; appearance:none;">
+                    style="flex:1; height:34px; border:1px solid #EDE9FE; border-radius:8px; background:#F5F3FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; -webkit-appearance:none; appearance:none;">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                 Seleccionar
+            </button>
+            <button wire:click="abrirEditarPlan({{ $p->id }})"
+                    style="flex:1; height:34px; border:1px solid #D1FAE5; border-radius:8px; background:#F0FDF4; color:#15803D; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; -webkit-appearance:none; appearance:none;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                Editar Plan
             </button>
         </div>
     </div>
@@ -116,14 +121,18 @@
                 <td style="padding:10px 14px; text-align:center; font-size:12px; font-family:monospace; font-weight:700; color:#DC2626;">{{ number_format($pendiente, 2) }}</td>
                 <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827;">{{ $nPend }}</td>
                 <td style="padding:10px 14px; text-align:center;">
-                    <button wire:click="seleccionarPedido({{ $p->id }})"
-                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;"
-                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'" title="Seleccionar">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    </button>
+                    <div style="display:flex; align-items:center; justify-content:center; gap:5px;">
+                        <button wire:click="seleccionarPedido({{ $p->id }})"
+                                style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;"
+                                @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'" title="Seleccionar">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        </button>
+                        <button wire:click="abrirEditarPlan({{ $p->id }})"
+                                style="width:28px; height:28px; border-radius:7px; border:1px solid #D1FAE5; background:#F0FDF4; color:#15803D; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;"
+                                @mouseenter="$el.style.background='#D1FAE5'" @mouseleave="$el.style.background='#F0FDF4'" title="Editar Plan">
+                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+                        </button>
+                    </div>
                 </td>
             </tr>
             @empty
@@ -138,6 +147,175 @@
             @endforelse
         </tbody>
     </table>
+    </div>
+</div>
+
+{{-- ══ MODAL EDITAR PLAN ══ --}}
+<div x-data="{ open: false }"
+     @plan-edit-open.window="open = true"
+     @plan-edit-close.window="open = false"
+     @plan-edit-saved.window="open = false">
+    <div x-show="open"
+         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+         x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+         class="fixed inset-0 z-50 flex items-center justify-center p-4"
+         style="background:rgba(20,10,40,0.45); backdrop-filter:blur(2px);"
+         @click.self="$wire.call('cerrarEditarPlan')">
+        <div x-show="open"
+             x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
+             style="background:#fff; border-radius:20px; width:100%; max-width:600px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
+
+            {{-- Header --}}
+            <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
+                <div style="display:flex; align-items:center; gap:9px;">
+                    <div style="width:30px; height:30px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                    </div>
+                    <div>
+                        <p style="font-size:16px; font-weight:700; color:#3C3489; margin:0; letter-spacing:-0.2px;">Editar Plan de Pagos</p>
+                        @if($planEditando)
+                        <p style="font-size:11px; color:#9CA3AF; margin:0; font-family:monospace;">{{ $planEditando->pedido?->numero }}</p>
+                        @endif
+                    </div>
+                </div>
+                <button type="button" wire:click="cerrarEditarPlan"
+                        style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="10" height="10" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+
+            {{-- Body scrollable --}}
+            <div style="overflow-y:auto; flex:1; min-height:0; padding:16px 20px 8px;">
+            @if($planEditando)
+            @php
+                $pendActualModal = $pendActual;
+                $totalEditadoModal = $totalEditado;
+                $difEditadoModal = $difEditado;
+            @endphp
+
+            {{-- Tabla cuotas + resumen Alpine --}}
+            <div x-data="{
+                    saldo: {{ $pendActualModal }},
+                    total: {{ $totalEditadoModal }},
+                    diff:  {{ $difEditadoModal }},
+                    get diffLabel() {
+                        if (Math.abs(this.diff) < 0.01) return '✓ Cuadra exacto';
+                        return (this.diff > 0 ? '+' : '−') + 'Bs. ' + Math.abs(this.diff).toFixed(2);
+                    },
+                    get diffColor() {
+                        if (Math.abs(this.diff) < 0.01) return '#059669';
+                        return this.diff > 0 ? '#B45309' : '#DC2626';
+                    },
+                    recalc(root) {
+                        let inputs = root.querySelectorAll('.monto-edit');
+                        let raw = Array.from(inputs).reduce((s, el) => s + (parseFloat(el.value) || 0), 0);
+                        this.total = Math.round(raw * 100) / 100;
+                        this.diff  = Math.round((this.total - this.saldo) * 100) / 100;
+                    }
+                 }"
+                 x-init="
+                    $el.addEventListener('input', (e) => { if (e.target.classList.contains('monto-edit')) recalc($el); });
+                    $wire.$watch('cuotasEditadas', () => $nextTick(() => recalc($el)));
+                 ">
+
+                <div style="background:#fff; border:0.5px solid #CECBF6; border-radius:10px; overflow:hidden; margin-bottom:14px;">
+                    <div style="padding:10px 14px; border-bottom:1px solid #EDE9FE; display:flex; align-items:center; justify-content:space-between; background:#F8F7FF;">
+                        <span style="font-size:12px; font-weight:700; color:#534AB7;">Cuotas · v{{ $planEditando->version }}</span>
+                        <button wire:click="agregarCuotaEdicion"
+                                style="display:flex; align-items:center; gap:5px; padding:5px 12px; background:#EDE9FE; color:#534AB7; font-size:12px; font-weight:700; border:1px solid #C4B5FD; border-radius:8px; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                            Agregar cuota
+                        </button>
+                    </div>
+                    <table style="width:100%; border-collapse:collapse;">
+                        <thead>
+                            <tr style="background:#F8F7FF;">
+                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">#</th>
+                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Monto (Bs.)</th>
+                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Vencimiento</th>
+                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Estado</th>
+                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($cuotasEditadas as $i => $ce)
+                            <tr wire:key="ce-{{ $i }}" style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $ce['pagado'] ? 'opacity:0.5;background:#f9fafb;' : '' }}">
+                                <td style="padding:8px 10px; font-size:11px; color:#374151; text-align:center;">{{ $ce['numero'] }}</td>
+                                <td style="padding:8px 10px; text-align:center;">
+                                    @if($ce['pagado'])
+                                    <span style="font-family:monospace; font-weight:700; color:#374151;">{{ number_format((float)$ce['monto'], 2) }}</span>
+                                    @else
+                                    <input wire:model="cuotasEditadas.{{ $i }}.monto" type="number" step="0.01" min="0.01"
+                                           class="monto-edit" style="width:90%; padding:4px 8px; border:1px solid #C4B5FD; border-radius:6px; font-size:12px; text-align:center; outline:none; background:#fff;">
+                                    @error("cuotasEditadas.{$i}.monto")<p style="font-size:9px; color:#DC2626; margin:2px 0 0;">{{ $message }}</p>@enderror
+                                    @endif
+                                </td>
+                                <td style="padding:8px 10px; text-align:center;">
+                                    @if($ce['pagado'])
+                                    <span style="font-size:11px; color:#6b7280;">{{ $ce['fecha'] ? \Carbon\Carbon::parse($ce['fecha'])->format('d/m/Y') : '—' }}</span>
+                                    @else
+                                    <input wire:model="cuotasEditadas.{{ $i }}.fecha" type="date"
+                                           style="width:95%; padding:4px 8px; border:1px solid #C4B5FD; border-radius:6px; font-size:12px; outline:none; background:#fff;">
+                                    @error("cuotasEditadas.{$i}.fecha")<p style="font-size:9px; color:#DC2626; margin:2px 0 0;">{{ $message }}</p>@enderror
+                                    @endif
+                                </td>
+                                <td style="padding:8px 10px; text-align:center;">
+                                    @if($ce['pagado'])
+                                    <span style="padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:#D1FAE5; color:#059669;">Pagado</span>
+                                    @else
+                                    <span style="padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:#FEE2E2; color:#DC2626;">Pendiente</span>
+                                    @endif
+                                </td>
+                                <td style="padding:8px 10px; text-align:center;">
+                                    @if(!$ce['pagado'])
+                                    <button wire:click="quitarCuotaEdicion({{ $i }})"
+                                            style="width:26px; height:26px; border-radius:6px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;">
+                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                    </button>
+                                    @endif
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+
+                {{-- Resumen real-time --}}
+                <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:14px; overflow:hidden; box-shadow:0 4px 16px rgba(123,111,232,0.14);">
+                    <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#DC2626 100%);"></div>
+                    <div style="padding:12px 14px; display:grid; grid-template-columns:repeat(3,1fr); text-align:center;">
+                        <div style="padding:0 6px;">
+                            <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Saldo a cubrir</span>
+                            <span style="font-size:13px; font-weight:900; color:#DC2626; font-family:monospace;">Bs. {{ number_format($pendActualModal, 2) }}</span>
+                        </div>
+                        <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
+                            <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total cuotas</span>
+                            <p x-text="'Bs. ' + total.toFixed(2)" style="font-size:13px; font-weight:900; color:#111827; font-family:monospace; margin:0;"></p>
+                        </div>
+                        <div style="padding:0 6px;">
+                            <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Diferencia</span>
+                            <p x-text="diffLabel" :style="'font-size:13px; font-weight:900; font-family:monospace; margin:0; color:' + diffColor"></p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>{{-- /x-data --}}
+            @endif
+            </div>{{-- /body --}}
+
+            {{-- Footer --}}
+            <div style="padding:12px 20px 16px; border-top:1px solid #F0EEFF; display:flex; gap:8px; flex-shrink:0;">
+                <button type="button" wire:click="cerrarEditarPlan"
+                        style="flex:1; padding:11px; background:#F4F4F4; color:#6D8196; font-size:13px; font-weight:700; border-radius:10px; border:1.5px solid #E5E7EB; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                    Cancelar
+                </button>
+                <button type="button" wire:click="guardarEdicionPlan" wire:loading.attr="disabled" wire:target="guardarEdicionPlan"
+                        style="flex:2; padding:11px; background:linear-gradient(135deg,#f97316 0%,#ea6000 100%); color:#fff; font-size:13px; font-weight:800; border-radius:10px; border:none; cursor:pointer; box-shadow:0 4px 18px rgba(249,115,22,0.35); -webkit-appearance:none; appearance:none;">
+                    <span wire:loading.remove wire:target="guardarEdicionPlan">Guardar cambios</span>
+                    <span wire:loading wire:target="guardarEdicionPlan">Guardando...</span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
 

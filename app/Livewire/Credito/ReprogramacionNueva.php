@@ -18,6 +18,10 @@ class ReprogramacionNueva extends Component
 
     public ?int   $pedidoId       = null;
     public array  $nuevasCuotas   = [];
+
+    // Editar plan directo desde la grilla
+    public ?int   $editandoPlanPedidoId = null;
+    public array  $cuotasEditadas       = [];
     public string $motivo         = '';
 
     // Configurador del plan
@@ -176,6 +180,119 @@ class ReprogramacionNueva extends Component
         if ($this->mode === 'preview') { $this->pedidoId = null; $this->mode = 'buscar'; return; }
     }
 
+    // ── Editar plan directo ──────────────────────────────────────────────────
+
+    public function abrirEditarPlan(int $pedidoId): void
+    {
+        $pedido = Pedido::with('planPago.cuotas')->find($pedidoId);
+        $plan   = $pedido?->planPago;
+        if (!$plan) return;
+
+        $this->cuotasEditadas = $plan->cuotas
+            ->where('numero', '>', 0)
+            ->sortBy('numero')
+            ->values()
+            ->map(fn($c) => [
+                'id'     => $c->id,
+                'numero' => $c->numero,
+                'monto'  => number_format((float) $c->monto, 2, '.', ''),
+                'fecha'  => $c->fecha_vencimiento?->format('Y-m-d') ?? '',
+                'pagado' => $c->estado === 'pagado',
+            ])
+            ->toArray();
+
+        $this->editandoPlanPedidoId = $pedidoId;
+        $this->dispatch('plan-edit-open');
+    }
+
+    public function cerrarEditarPlan(): void
+    {
+        $this->editandoPlanPedidoId = null;
+        $this->cuotasEditadas       = [];
+        $this->dispatch('plan-edit-close');
+    }
+
+    public function agregarCuotaEdicion(): void
+    {
+        $last      = !empty($this->cuotasEditadas) ? end($this->cuotasEditadas) : null;
+        $nextFecha = $last
+            ? Carbon::parse($last['fecha'])->addDays(30)->format('Y-m-d')
+            : Carbon::today()->addDays(30)->format('Y-m-d');
+
+        $this->cuotasEditadas[] = [
+            'id'     => null,
+            'numero' => count($this->cuotasEditadas) + 1,
+            'monto'  => '0.00',
+            'fecha'  => $nextFecha,
+            'pagado' => false,
+        ];
+    }
+
+    public function quitarCuotaEdicion(int $index): void
+    {
+        if ($this->cuotasEditadas[$index]['pagado'] ?? false) return;
+        array_splice($this->cuotasEditadas, $index, 1);
+        foreach ($this->cuotasEditadas as $i => &$c) {
+            $c['numero'] = $i + 1;
+        }
+    }
+
+    public function guardarEdicionPlan(): void
+    {
+        $rules = [];
+        foreach ($this->cuotasEditadas as $i => $c) {
+            if ($c['pagado'] ?? false) continue;
+            $rules["cuotasEditadas.{$i}.monto"] = 'required|numeric|min:0.01';
+            $rules["cuotasEditadas.{$i}.fecha"]  = 'required|date';
+        }
+        $this->validate($rules);
+
+        $pedido = Pedido::with('planPago.cuotas')->find($this->editandoPlanPedidoId);
+        $plan   = $pedido?->planPago;
+        if (!$plan) return;
+
+        DB::transaction(function () use ($plan) {
+            $idsNuevos = collect($this->cuotasEditadas)
+                ->filter(fn($c) => !($c['pagado'] ?? false) && $c['id'])
+                ->pluck('id');
+
+            $plan->cuotas()
+                ->where('estado', '!=', 'pagado')
+                ->where('numero', '>', 0)
+                ->whereNotIn('id', $idsNuevos)
+                ->delete();
+
+            foreach ($this->cuotasEditadas as $c) {
+                if ($c['pagado'] ?? false) continue;
+                if ($c['id']) {
+                    Cuota::where('id', $c['id'])->update([
+                        'numero'            => $c['numero'],
+                        'monto'             => (float) $c['monto'],
+                        'fecha_vencimiento' => $c['fecha'],
+                    ]);
+                } else {
+                    Cuota::create([
+                        'plan_pago_id'      => $plan->id,
+                        'numero'            => $c['numero'],
+                        'monto'             => (float) $c['monto'],
+                        'estado'            => 'pendiente',
+                        'fecha_vencimiento' => $c['fecha'],
+                    ]);
+                }
+            }
+
+            $nuevoTotal = $plan->cuotas()->where('numero', '>', 0)->sum('monto');
+            $plan->update([
+                'total_pagar'     => round((float) $nuevoTotal, 2),
+                'saldo_financiar' => round((float) $nuevoTotal, 2),
+                'cantidad_cuotas' => $plan->cuotas()->where('numero', '>', 0)->count(),
+            ]);
+        });
+
+        $this->cerrarEditarPlan();
+        $this->dispatch('plan-edit-saved');
+    }
+
     public function render()
     {
         $query = Pedido::with(['cliente.usuario', 'vendedor.user', 'planPago.cuotas'])
@@ -199,6 +316,21 @@ class ReprogramacionNueva extends Component
                 ->find($this->pedidoId);
         }
 
-        return view('livewire.credito.reprogramacion-nueva', compact('resultados', 'pedidoDetalle'));
+        // Datos para el modal editar plan
+        $planEditando  = null;
+        $pendActual    = 0;
+        $totalEditado  = 0;
+        $difEditado    = 0;
+        if ($this->editandoPlanPedidoId) {
+            $pedEdit      = Pedido::with(['cliente', 'vendedor.user', 'planPago.cuotas'])->find($this->editandoPlanPedidoId);
+            $planEditando = $pedEdit?->planPago;
+            $pendActual   = round((float) ($planEditando?->cuotas->where('numero','>',0)->where('estado','!=','pagado')->sum('monto') ?? 0), 2);
+            $totalEditado = round(collect($this->cuotasEditadas)->filter(fn($c) => !($c['pagado'] ?? false))->sum(fn($c) => (float)$c['monto']), 2);
+            $difEditado   = round($totalEditado - $pendActual, 2);
+        }
+
+        $cuotasEditadas = $this->cuotasEditadas;
+
+        return view('livewire.credito.reprogramacion-nueva', compact('resultados', 'pedidoDetalle', 'planEditando', 'pendActual', 'totalEditado', 'difEditado', 'cuotasEditadas'));
     }
 }
