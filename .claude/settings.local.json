@@ -34,7 +34,19 @@
       "PowerShell(Test-NetConnection *)",
       "PowerShell(Get-Process | Where-Object { $_.Name -match \"laragon|apache|httpd|nginx|mysql\" } | Select-Object Name, Id)",
       "PowerShell(Start-Process \"C:\\\\laragon\\\\laragon.exe\" -WindowStyle Normal)",
-      "PowerShell(Start-Sleep 10; Get-Process | Where-Object { $_.Name -match \"laragon|apache|httpd|nginx|mysql|php\" } | Select-Object Name, Id)"
+      "PowerShell(Start-Sleep 10; Get-Process | Where-Object { $_.Name -match \"laragon|apache|httpd|nginx|mysql|php\" } | Select-Object Name, Id)",
+      "Bash(sort -t/ -k1)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(cmd *)",
+      "Bash(powershell *)",
+      "WebFetch(domain:178.156.238.247.nip.io)",
+      "Bash(dir \"C:\\\\laragon\\\\www\\\\credito-cobranza\\\\storage\\\\framework\\\\views\")",
+      "Bash(findstr /i revision)",
+      "Bash(node -e \"const {chromium}=require\\('playwright'\\);\\(async\\(\\)=>{const b=await chromium.launch\\({headless:true}\\);const p=await b.newPage\\(\\);await p.goto\\('http://credito-cobranza.test/login'\\);await p.fill\\('input[name=email]','admin@credito.test'\\);await p.fill\\('input[name=password]','password'\\);await p.click\\('button[type=submit]'\\);await p.waitForURL\\('**/dashboard',{timeout:8000}\\);await p.goto\\('http://credito-cobranza.test/admin/credito/clientes'\\);await p.waitForTimeout\\(2000\\);await p.screenshot\\({path:'C:/Users/Usuario/grilla-screenshot.png',fullPage:false}\\);await b.close\\(\\);console.log\\('OK'\\);}\\)\\(\\)\")",
+      "Bash(where node *)",
+      "Bash(where node.exe)"
     ]
   }
 }

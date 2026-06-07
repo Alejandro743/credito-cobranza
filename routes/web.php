@@ -54,10 +54,11 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('admin')->name('admin.'
 
     // Definiciones
     Route::prefix('definiciones')->name('definiciones.')->group(function () {
-        Route::get('/correlativo',        fn() => view('admin.definiciones.correlativo.index'))->name('correlativo');
-        Route::get('/peso-indicadores',   fn() => view('admin.definiciones.peso-indicadores.index'))->name('peso-indicadores');
-        Route::get('/rango-calificacion', fn() => view('admin.definiciones.rango-calificacion.index'))->name('rango-calificacion');
-        Route::get('/motivo-cierre',      fn() => view('admin.definiciones.motivo-cierre.index'))->name('motivo-cierre');
+        Route::get('/correlativo',          fn() => view('admin.definiciones.correlativo.index'))->name('correlativo');
+        Route::get('/matrices-financieras', fn() => view('admin.definiciones.matrices-financieras.index'))->name('matrices-financieras');
+        Route::get('/peso-indicadores',     fn() => view('admin.definiciones.peso-indicadores.index'))->name('peso-indicadores');
+        Route::get('/rango-calificacion',   fn() => view('admin.definiciones.rango-calificacion.index'))->name('rango-calificacion');
+        Route::get('/motivo-cierre',        fn() => view('admin.definiciones.motivo-cierre.index'))->name('motivo-cierre');
     });
 
     // Clientes (admin)

@@ -61,10 +61,11 @@ class ModulosSubmodulosSeeder extends Seeder
                         'name' => 'Definiciones', 'slug' => 'definiciones',
                         'route_name' => null, 'sort_order' => 3,
                         'children' => [
-                            ['name' => 'Correlativo',           'slug' => 'def-correlativo',        'route_name' => 'admin.definiciones.correlativo',        'sort_order' => 1],
-                            ['name' => 'Pesos de Indicadores',  'slug' => 'def-peso-indicadores',   'route_name' => 'admin.definiciones.peso-indicadores',   'sort_order' => 2],
-                            ['name' => 'Rangos de Calificación','slug' => 'def-rango-calificacion', 'route_name' => 'admin.definiciones.rango-calificacion', 'sort_order' => 3],
-                            ['name' => 'Motivos de Cierre',     'slug' => 'def-motivo-cierre',      'route_name' => 'admin.definiciones.motivo-cierre',      'sort_order' => 4],
+                            ['name' => 'Correlativo',            'slug' => 'def-correlativo',          'route_name' => 'admin.definiciones.correlativo',          'sort_order' => 1],
+                            ['name' => 'Matrices Financieras',   'slug' => 'def-matrices-financieras','route_name' => 'admin.definiciones.matrices-financieras', 'sort_order' => 2],
+                            ['name' => 'Pesos de Indicadores',   'slug' => 'def-peso-indicadores',    'route_name' => 'admin.definiciones.peso-indicadores',     'sort_order' => 3],
+                            ['name' => 'Rangos de Calificación', 'slug' => 'def-rango-calificacion',  'route_name' => 'admin.definiciones.rango-calificacion',   'sort_order' => 4],
+                            ['name' => 'Motivos de Cierre',      'slug' => 'def-motivo-cierre',       'route_name' => 'admin.definiciones.motivo-cierre',        'sort_order' => 5],
                         ],
                     ],
                     // Grupo: Configuración del Ciclo
