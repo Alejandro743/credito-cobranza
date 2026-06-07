@@ -9,14 +9,13 @@
 </div>
 @endif
 
-{{-- ══════ PANEL NUEVO / EDITAR ══════ --}}
-@if($showForm || $editId)
-@php $isEdit = (bool) $editId; @endphp
+{{-- ══════ PANEL NUEVA MATRIZ ══════ --}}
+@if($showForm)
 <div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px; overflow:hidden;">
     <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
         <span style="font-size:14px; font-weight:800; color:#7B6FE8; display:flex; align-items:center; gap:7px;">
             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 11h.01M12 11h.01M15 11h.01M4 19h16a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
-            {{ $isEdit ? 'Editar Matriz' : 'Nueva Matriz Financiera' }}
+            Nueva Matriz Financiera
         </span>
         <button wire:click="cancelar"
                 style="width:30px; height:30px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;"
@@ -27,7 +26,7 @@
     <div style="padding:16px 20px;">
         @php $iS = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;'; @endphp
 
-        {{-- Fila 1: Código + Nombre + Estado --}}
+        {{-- Fila 1: Código + Nombre + Cuotas + Estado --}}
         <div style="display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
             <div style="min-width:100px; max-width:140px;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Código *</label>
@@ -191,11 +190,86 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas','Est
         @forelse($registros as $r)
 
         @if($r->id === $editId)
-        {{-- ── FILA EDICIÓN (remite al panel superior) ── --}}
-        <tr wire:key="mf-edit-{{ $r->id }}" style="background:#FEFCFF; border-bottom:2px solid #EDE9FE;">
-            <td colspan="8" style="padding:10px 14px; font-size:12px; color:#7B6FE8; font-weight:600; text-align:center;">
-                ↑ Editando esta fila arriba
-                <button wire:click="cancelar" style="margin-left:12px; font-size:11px; color:#9CA3AF; background:none; border:none; cursor:pointer; text-decoration:underline;">Cancelar</button>
+        {{-- ── FILA EDICIÓN INLINE ── --}}
+        <tr wire:key="mf-edit-{{ $r->id }}" style="background:#FAFAFE; border-bottom:1px solid #EDE9FE;">
+            <td colspan="8" style="padding:14px 18px;">
+
+                {{-- Fila superior: Código + Nombre + Cuotas + Estado + Descripción --}}
+                <div style="display:flex; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+                    <div style="min-width:100px; max-width:130px;">
+                        <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;">Código *</label>
+                        <input wire:model="code" type="text" maxlength="30" style="width:100%; {{ $iRow }}">
+                        @error('code')<p style="font-size:10px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+                    </div>
+                    <div style="flex:1; min-width:160px;">
+                        <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;">Nombre *</label>
+                        <input wire:model="name" type="text" style="width:100%; {{ $iRow }}">
+                        @error('name')<p style="font-size:10px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+                    </div>
+                    <div style="min-width:140px; flex:1;">
+                        <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;">Descripción</label>
+                        <input wire:model="description" type="text" style="width:100%; {{ $iRow }}">
+                    </div>
+                    <div style="min-width:80px;">
+                        <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;">Cuotas *</label>
+                        <input wire:model="cantidadCuotas" type="number" min="1" max="120" style="width:100%; {{ $iRow }}">
+                        @error('cantidadCuotas')<p style="font-size:10px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+                    </div>
+                    <div style="min-width:90px;">
+                        <label style="display:block; font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;">Estado</label>
+                        <select wire:model="active" style="{{ $iRow }} width:100%; cursor:pointer;">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                </div>
+
+                {{-- Fila inferior: Cuota inicial + Incremento --}}
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
+                    <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap;">
+                            <input wire:model.live="usaCuotaInicial" type="checkbox" style="width:14px; height:14px; accent-color:#7B6FE8; cursor:pointer;">
+                            <span style="font-size:12px; font-weight:700; color:#374151;">Cuota inicial</span>
+                        </label>
+                        @if($usaCuotaInicial)
+                        <select wire:model="tipoCuotaInicial" style="{{ $iRow }} min-width:130px; cursor:pointer;">
+                            <option value="porcentaje">Porcentaje (%)</option>
+                            <option value="monto_fijo">Monto fijo (Bs.)</option>
+                        </select>
+                        <input wire:model="valorCuotaInicial" type="number" min="0" step="0.01" placeholder="Valor" style="{{ $iRow }} width:100px;">
+                        @error('valorCuotaInicial')<p style="font-size:10px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+                        @endif
+                    </div>
+                    <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:8px 12px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                        <label style="display:flex; align-items:center; gap:6px; cursor:pointer; white-space:nowrap;">
+                            <input wire:model.live="usaIncremento" type="checkbox" style="width:14px; height:14px; accent-color:#7B6FE8; cursor:pointer;">
+                            <span style="font-size:12px; font-weight:700; color:#374151;">Incremento</span>
+                        </label>
+                        @if($usaIncremento)
+                        <select wire:model="tipoIncremento" style="{{ $iRow }} min-width:130px; cursor:pointer;">
+                            <option value="porcentaje">Porcentaje (%)</option>
+                            <option value="monto_fijo">Monto fijo (Bs.)</option>
+                        </select>
+                        <input wire:model="valorIncremento" type="number" min="0" step="0.01" placeholder="Valor" style="{{ $iRow }} width:100px;">
+                        @error('valorIncremento')<p style="font-size:10px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+                        @endif
+                    </div>
+                </div>
+
+                {{-- Botones --}}
+                <div style="display:flex; gap:6px;">
+                    <button wire:click="save" wire:loading.attr="disabled"
+                            style="height:34px; padding:0 20px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                            @mouseenter="$el.style.opacity='.85'" @mouseleave="$el.style.opacity='1'">
+                        <span wire:loading.remove wire:target="save">Guardar</span>
+                        <span wire:loading wire:target="save">...</span>
+                    </button>
+                    <button wire:click="cancelar"
+                            style="height:34px; padding:0 16px; border-radius:7px; border:1px solid #E5E7EB; background:#F3F4F6; color:#6B7280; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                            @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                        Cancelar
+                    </button>
+                </div>
             </td>
         </tr>
 
@@ -261,13 +335,97 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas','Est
     @endif
 
     @foreach($registros as $r)
+
     @if($r->id === $editId)
+    {{-- CARD EDICIÓN MOBILE --}}
     <div wire:key="mf-edit-mobile-{{ $r->id }}"
-         style="background:#FEFCFF; border-radius:14px; border:1px solid #EDE9FE; margin-bottom:10px; padding:12px 14px; text-align:center; font-size:12px; color:#7B6FE8; font-weight:600;">
-        ↑ Editando arriba
-        <button wire:click="cancelar" style="margin-left:8px; font-size:11px; color:#9CA3AF; background:none; border:none; cursor:pointer; text-decoration:underline;">Cancelar</button>
+         style="background:#FAFAFE; border-radius:14px; border:1px solid #EDE9FE; margin-bottom:10px; padding:14px 16px; box-shadow:0 1px 4px rgba(123,111,232,.1);">
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;">Código *</label>
+                <input wire:model="code" type="text" maxlength="30" style="width:100%; {{ $iRow }}">
+                @error('code')<p style="font-size:10px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+            </div>
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;">Cuotas *</label>
+                <input wire:model="cantidadCuotas" type="number" min="1" max="120" style="width:100%; {{ $iRow }}">
+                @error('cantidadCuotas')<p style="font-size:10px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+            </div>
+        </div>
+
+        <div style="margin-bottom:10px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;">Nombre *</label>
+            <input wire:model="name" type="text" style="width:100%; {{ $iRow }}">
+            @error('name')<p style="font-size:10px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+        </div>
+
+        <div style="margin-bottom:10px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;">Descripción</label>
+            <input wire:model="description" type="text" style="width:100%; {{ $iRow }}">
+        </div>
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;">Estado</label>
+                <select wire:model="active" style="width:100%; {{ $iRow }} cursor:pointer;">
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select>
+            </div>
+        </div>
+
+        {{-- Cuota inicial --}}
+        <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:10px 12px; margin-bottom:8px;">
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin-bottom:{{ $usaCuotaInicial ? '8px' : '0' }};">
+                <input wire:model.live="usaCuotaInicial" type="checkbox" style="width:14px; height:14px; accent-color:#7B6FE8; cursor:pointer;">
+                <span style="font-size:12px; font-weight:700; color:#374151;">Cuota inicial</span>
+            </label>
+            @if($usaCuotaInicial)
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <select wire:model="tipoCuotaInicial" style="width:100%; {{ $iRow }} cursor:pointer;">
+                    <option value="porcentaje">% Porcentaje</option>
+                    <option value="monto_fijo">Bs. Fijo</option>
+                </select>
+                <input wire:model="valorCuotaInicial" type="number" min="0" step="0.01" placeholder="Valor" style="width:100%; {{ $iRow }}">
+            </div>
+            @error('valorCuotaInicial')<p style="font-size:10px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+            @endif
+        </div>
+
+        {{-- Incremento --}}
+        <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; padding:10px 12px; margin-bottom:12px;">
+            <label style="display:flex; align-items:center; gap:6px; cursor:pointer; margin-bottom:{{ $usaIncremento ? '8px' : '0' }};">
+                <input wire:model.live="usaIncremento" type="checkbox" style="width:14px; height:14px; accent-color:#7B6FE8; cursor:pointer;">
+                <span style="font-size:12px; font-weight:700; color:#374151;">Incremento</span>
+            </label>
+            @if($usaIncremento)
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                <select wire:model="tipoIncremento" style="width:100%; {{ $iRow }} cursor:pointer;">
+                    <option value="porcentaje">% Porcentaje</option>
+                    <option value="monto_fijo">Bs. Fijo</option>
+                </select>
+                <input wire:model="valorIncremento" type="number" min="0" step="0.01" placeholder="Valor" style="width:100%; {{ $iRow }}">
+            </div>
+            @error('valorIncremento')<p style="font-size:10px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+            @endif
+        </div>
+
+        <div style="display:flex; gap:8px;">
+            <button wire:click="save" wire:loading.attr="disabled"
+                    style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                <span wire:loading.remove wire:target="save">Guardar</span>
+                <span wire:loading wire:target="save">Guardando...</span>
+            </button>
+            <button wire:click="cancelar"
+                    style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                Cancelar
+            </button>
+        </div>
     </div>
+
     @else
+    {{-- CARD NORMAL --}}
     <div wire:key="mf-mobile-{{ $r->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; margin-bottom:10px; box-shadow:0 1px 4px rgba(0,0,0,.05); padding:12px 14px;">
 
@@ -301,13 +459,15 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas','Est
             </span>
             @endif
             <button wire:click="edit({{ $r->id }})"
-                    style="margin-left:auto; height:32px; padding:0 14px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;">
+                    style="margin-left:auto; height:32px; padding:0 14px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
             </button>
         </div>
     </div>
     @endif
+
     @endforeach
 </div>
 
