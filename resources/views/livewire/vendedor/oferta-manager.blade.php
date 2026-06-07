@@ -1495,7 +1495,7 @@
      x-transition:enter-end="opacity-100"
      x-transition:leave="transition ease-in duration-150"
      x-transition:leave-end="opacity-0"
-     class="fixed inset-0 flex flex-col"
+     class="fixed inset-0 md:absolute md:inset-0 flex flex-col"
      style="z-index:400; background:#fff;">
 
         {{-- TOP BAR --}}

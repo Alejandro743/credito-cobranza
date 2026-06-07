@@ -188,7 +188,7 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
     @include('partials.sidebar')
 
     {{-- ═══ MAIN ═══ --}}
-    <div class="flex-1 flex flex-col min-w-0 overflow-hidden" style="background:#F0F2F5;">
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden relative" style="background:#F0F2F5;">
 
         {{-- Topbar --}}
         @php
