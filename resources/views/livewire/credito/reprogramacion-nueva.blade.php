@@ -185,7 +185,7 @@
             </div>
 
             {{-- Body scrollable --}}
-            <div style="overflow-y:auto; flex:1; min-height:0; padding:16px 20px 8px;">
+            <div style="overflow-y:auto; flex:1; min-height:0; height:0; padding:16px 20px 8px;">
             @if($planEditando)
             @php
                 $pendActualModal = $pendActual;
