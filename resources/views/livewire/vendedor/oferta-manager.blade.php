@@ -1467,6 +1467,24 @@
 
 {{-- ══ MODAL: BUSCAR CLIENTE ════════════════════════════════════════════════ --}}
 <style>
+@media (min-width: 768px) {
+    .modal-productos-outer {
+        background: rgba(20,10,40,0.45) !important;
+        backdrop-filter: blur(2px);
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+    }
+    .modal-productos-panel {
+        max-height: 85vh;
+        border-radius: 20px;
+        box-shadow: 0 24px 60px rgba(60,52,137,0.22), 0 0 0 1px rgba(196,181,253,0.15);
+        overflow: hidden;
+        flex: none;
+        max-width: 900px;
+        width: 100%;
+    }
+}
 .buscar-sheet {
     width: calc(100% - 32px);
     max-height: 66vh;
@@ -1495,8 +1513,12 @@
      x-transition:enter-end="opacity-100"
      x-transition:leave="transition ease-in duration-150"
      x-transition:leave-end="opacity-0"
-     class="fixed inset-0 md:absolute md:inset-0 flex flex-col"
+     class="fixed inset-0 md:absolute md:inset-0 flex flex-col modal-productos-outer"
      style="z-index:400; background:#fff;">
+
+    {{-- Panel centrado (desktop: dialog card; mobile: full screen) --}}
+    <div class="flex flex-col flex-1 w-full modal-productos-panel"
+         style="background:#fff;">
 
         {{-- TOP BAR --}}
         <div style="flex-shrink:0; background:#fff; border-bottom:1.5px solid #EDE9FE; padding:12px 14px 10px;">
@@ -1690,6 +1712,7 @@
             </button>
         </div>
         </div>
+    </div>{{-- /modal-productos-panel --}}
 </div>
 @endif
 
