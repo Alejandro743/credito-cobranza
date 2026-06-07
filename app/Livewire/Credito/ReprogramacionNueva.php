@@ -13,7 +13,8 @@ use Livewire\Component;
 class ReprogramacionNueva extends Component
 {
     // Modos: buscar | preview | form
-    public string $mode   = 'buscar';
+    public string $mode        = 'buscar';
+    public string $origenForm  = 'preview'; // 'preview' | 'buscar'
     public string $search = '';
 
     public ?int   $pedidoId       = null;
@@ -36,9 +37,11 @@ class ReprogramacionNueva extends Component
 
     public function irFormDirecto(int $id): void
     {
-        $this->pedidoId = $id;
+        $this->pedidoId   = $id;
+        $this->origenForm = 'buscar';
         $this->resetErrorBag();
         $this->irForm();
+        $this->origenForm = 'buscar'; // irForm lo pisa, lo restauro
     }
 
     public function irForm(): void
@@ -55,6 +58,7 @@ class ReprogramacionNueva extends Component
         $this->nuevasCuotas   = [];
         $this->motivo         = '';
         $this->mode           = 'form';
+        $this->origenForm     = 'preview';
 
         $this->generarPlan();
     }
@@ -192,7 +196,7 @@ class ReprogramacionNueva extends Component
     public function volver(): void
     {
         if ($this->mode === 'editar_plan') { $this->cerrarEditarPlan(); return; }
-        if ($this->mode === 'form')        { $this->mode = 'preview'; return; }
+        if ($this->mode === 'form')        { $this->pedidoId = null; $this->mode = $this->origenForm === 'buscar' ? 'buscar' : 'preview'; return; }
         if ($this->mode === 'preview')     { $this->pedidoId = null; $this->mode = 'buscar'; return; }
     }
 
