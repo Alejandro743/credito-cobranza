@@ -227,57 +227,53 @@
                             Agregar cuota
                         </button>
                     </div>
-                    <table style="width:100%; border-collapse:collapse;">
-                        <thead>
-                            <tr style="background:#F8F7FF;">
-                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">#</th>
-                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Monto (Bs.)</th>
-                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Vencimiento</th>
-                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;">Estado</th>
-                                <th style="padding:8px 12px; font-size:10px; font-weight:600; color:#6b7280; text-align:center;"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($cuotasEditadas as $i => $ce)
-                            <tr wire:key="ce-{{ $i }}" style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $ce['pagado'] ? 'opacity:0.5;background:#f9fafb;' : '' }}">
-                                <td style="padding:8px 10px; font-size:11px; color:#374151; text-align:center;">{{ $ce['numero'] }}</td>
-                                <td style="padding:8px 10px; text-align:center;">
-                                    @if($ce['pagado'])
-                                    <span style="font-family:monospace; font-weight:700; color:#374151;">{{ number_format((float)$ce['monto'], 2) }}</span>
-                                    @else
-                                    <input wire:model="cuotasEditadas.{{ $i }}.monto" type="number" step="0.01" min="0.01"
-                                           class="monto-edit" style="width:90%; padding:4px 8px; border:1px solid #C4B5FD; border-radius:6px; font-size:12px; text-align:center; outline:none; background:#fff;">
-                                    @error("cuotasEditadas.{$i}.monto")<p style="font-size:9px; color:#DC2626; margin:2px 0 0;">{{ $message }}</p>@enderror
-                                    @endif
-                                </td>
-                                <td style="padding:8px 10px; text-align:center;">
-                                    @if($ce['pagado'])
-                                    <span style="font-size:11px; color:#6b7280;">{{ $ce['fecha'] ? \Carbon\Carbon::parse($ce['fecha'])->format('d/m/Y') : '—' }}</span>
-                                    @else
-                                    <input wire:model="cuotasEditadas.{{ $i }}.fecha" type="date"
-                                           style="width:95%; padding:4px 8px; border:1px solid #C4B5FD; border-radius:6px; font-size:12px; outline:none; background:#fff;">
-                                    @error("cuotasEditadas.{$i}.fecha")<p style="font-size:9px; color:#DC2626; margin:2px 0 0;">{{ $message }}</p>@enderror
-                                    @endif
-                                </td>
-                                <td style="padding:8px 10px; text-align:center;">
+                    <div>
+                        @foreach($cuotasEditadas as $i => $ce)
+                        <div wire:key="ce-{{ $i }}"
+                             style="{{ !$loop->last ? 'border-bottom:0.5px solid #e5e7eb;' : '' }}{{ $ce['pagado'] ? 'opacity:0.5;background:#f9fafb;' : '' }} padding:10px 12px;">
+                            {{-- Fila 1: número + badge + trash --}}
+                            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:7px;">
+                                <div style="display:flex; align-items:center; gap:7px;">
+                                    <span style="width:22px; height:22px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; font-size:10px; font-weight:700; color:#7B6FE8; flex-shrink:0;">{{ $ce['numero'] }}</span>
                                     @if($ce['pagado'])
                                     <span style="padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:#D1FAE5; color:#059669;">Pagado</span>
                                     @else
                                     <span style="padding:2px 8px; border-radius:6px; font-size:10px; font-weight:700; background:#FEE2E2; color:#DC2626;">Pendiente</span>
                                     @endif
-                                </td>
-                                <td style="padding:8px 10px; text-align:center;">
-                                    @if(!$ce['pagado'])
-                                    <button wire:click="quitarCuotaEdicion({{ $i }})"
-                                            style="width:26px; height:26px; border-radius:6px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;">
-                                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                    </button>
+                                </div>
+                                @if(!$ce['pagado'])
+                                <button wire:click="quitarCuotaEdicion({{ $i }})"
+                                        style="width:26px; height:26px; border-radius:6px; border:1px solid #FECACA; background:#FEF2F2; color:#DC2626; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;">
+                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                </button>
+                                @endif
+                            </div>
+                            {{-- Fila 2: monto + fecha --}}
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
+                                <div>
+                                    <p style="font-size:9px; color:#9CA3AF; font-weight:700; text-transform:uppercase; margin:0 0 3px;">Monto Bs.</p>
+                                    @if($ce['pagado'])
+                                    <span style="font-family:monospace; font-weight:700; color:#374151; font-size:13px;">{{ number_format((float)$ce['monto'], 2) }}</span>
+                                    @else
+                                    <input wire:model="cuotasEditadas.{{ $i }}.monto" type="number" step="0.01" min="0.01"
+                                           class="monto-edit" style="width:100%; padding:6px 8px; border:1px solid #C4B5FD; border-radius:8px; font-size:13px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
+                                    @error("cuotasEditadas.{$i}.monto")<p style="font-size:9px; color:#DC2626; margin:2px 0 0;">{{ $message }}</p>@enderror
                                     @endif
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                                </div>
+                                <div>
+                                    <p style="font-size:9px; color:#9CA3AF; font-weight:700; text-transform:uppercase; margin:0 0 3px;">Vencimiento</p>
+                                    @if($ce['pagado'])
+                                    <span style="font-size:12px; color:#6b7280;">{{ $ce['fecha'] ? \Carbon\Carbon::parse($ce['fecha'])->format('d/m/Y') : '—' }}</span>
+                                    @else
+                                    <input wire:model="cuotasEditadas.{{ $i }}.fecha" type="date"
+                                           style="width:100%; padding:6px 8px; border:1px solid #C4B5FD; border-radius:8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                                    @error("cuotasEditadas.{$i}.fecha")<p style="font-size:9px; color:#DC2626; margin:2px 0 0;">{{ $message }}</p>@enderror
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
 
                 {{-- Resumen real-time --}}
