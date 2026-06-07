@@ -163,7 +163,7 @@
          @click.self="$wire.call('cerrarEditarPlan')">
         <div x-show="open"
              x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-             style="background:#fff; border-radius:20px; width:100%; max-width:600px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
+             style="background:#fff; border-radius:20px; width:100%; max-width:600px; height:calc(100vh - 104px); max-height:600px; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
 
             {{-- Header --}}
             <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
@@ -185,7 +185,7 @@
             </div>
 
             {{-- Body scrollable --}}
-            <div style="overflow-y:auto; padding:16px 20px 8px; max-height:calc(90vh - 200px);">
+            <div style="overflow-y:auto; flex:1; min-height:0; padding:16px 20px 8px;">
             @if($planEditando)
             @php
                 $pendActualModal = $pendActual;
