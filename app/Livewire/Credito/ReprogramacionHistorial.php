@@ -120,6 +120,16 @@ class ReprogramacionHistorial extends Component
         $plan = $rp?->planNuevo;
         if (!$plan) return;
 
+        $totalNuevo = round(collect($this->cuotasEditadas)
+            ->filter(fn($c) => !($c['pagado'] ?? false))
+            ->sum(fn($c) => (float) $c['monto']), 2);
+        $saldoPend  = round((float) $plan->cuotas->where('estado', '!=', 'pagado')->where('numero', '>', 0)->sum('monto'), 2);
+
+        if (abs($totalNuevo - $saldoPend) >= 0.01) {
+            $this->addError('cuotasEditadas', "El total ingresado (Bs. {$totalNuevo}) debe ser exactamente igual al saldo pendiente (Bs. {$saldoPend}).");
+            return;
+        }
+
         DB::transaction(function () use ($plan) {
             $idsNuevos = collect($this->cuotasEditadas)
                 ->filter(fn($c) => !($c['pagado'] ?? false) && $c['id'])

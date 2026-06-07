@@ -586,6 +586,12 @@ $sortColsRH = ['Pedido'=>null,'Código'=>'numero','CI'=>null,'Cliente'=>null,'Ve
 
         </div>{{-- /x-data --}}
 
+        @error('cuotasEditadas')
+        <div style="margin-top:10px; padding:10px 14px; background:#FEF2F2; border:1px solid #FECACA; border-radius:10px; font-size:13px; font-weight:600; color:#DC2626;">
+            {{ $message }}
+        </div>
+        @enderror
+
     </div>{{-- /body --}}
 
     {{-- Botones grandes al pie --}}
