@@ -223,6 +223,27 @@
     </div>
 
     @if($editable)
+    <style>
+    @media (min-width: 768px) {
+        .modal-art-outer {
+            background: rgba(20,10,40,0.45) !important;
+            backdrop-filter: blur(2px);
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+        }
+        .modal-art-panel {
+            max-height: 85vh;
+            border-radius: 10px;
+            box-shadow: 0 24px 60px rgba(60,52,137,0.22), 0 0 0 1px rgba(196,181,253,0.15);
+            overflow: hidden;
+            flex: none;
+            max-width: 900px;
+            width: 100%;
+        }
+    }
+    </style>
+
     <div x-data="{ modalArt: false }"
          @art-modal-open.window="modalArt = true"
          @art-modal-close.window="modalArt = false">
@@ -230,12 +251,13 @@
         <div x-show="modalArt"
              x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
              x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-             class="fixed inset-0 z-50 flex items-center justify-center p-4"
-             style="background:rgba(20,10,40,0.4); backdrop-filter:blur(2px);"
+             class="fixed inset-0 md:absolute md:inset-0 flex flex-col modal-art-outer"
+             style="z-index:400; background:#fff;"
              @click.self="$wire.call('cerrarEditarArticulos')">
             <div x-show="modalArt"
                  x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
-                 style="background:#fff; border-radius:20px; width:100%; max-width:560px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
+                 class="flex flex-col flex-1 w-full modal-art-panel"
+                 style="background:#fff;">
 
                 {{-- Header --}}
                 <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
