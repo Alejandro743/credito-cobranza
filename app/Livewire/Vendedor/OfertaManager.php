@@ -353,27 +353,24 @@ class OfertaManager extends Component
         foreach ($listas as $lista) {
             foreach ($lista->items as $item) {
                 if (!$item->product) continue;
-                $pid         = (string)$item->product_id;
-                $precioFinal = (float)$item->precio_final;
-                if (!isset($oferta[$pid]) || $precioFinal < $oferta[$pid]['precio']) {
-                    $oferta[$pid] = [
-                        'item_id'           => $item->id,
-                        'product_id'        => $item->product_id,
-                        'code'              => $item->product->code ?? '',
-                        'nombre'            => $item->product->name,
-                        'image'             => $item->product->foto_url ?? ($item->product->image ? Storage::url($item->product->image) : null),
-                        'precio_base'       => (float)$item->precio_base,
-                        'tipo_incremento'   => $item->tipo_incremento,
-                        'factor_incremento' => (float)$item->factor_incremento,
-                        'monto_incremento'  => (float)$item->monto_incremento,
-                        'precio'            => $precioFinal,
-                        'puntos'            => (int)$item->puntos,
-                        'stock'             => (float)$item->stock_actual,
-                        'lista_id'          => (string)$lista->id,
-                        'lista_nombre'      => $lista->name,
-                        'lista_code'        => $lista->code,
-                    ];
-                }
+                $key = (string)$item->id;
+                $oferta[$key] = [
+                    'item_id'           => $item->id,
+                    'product_id'        => $item->product_id,
+                    'code'              => $item->product->code ?? '',
+                    'nombre'            => $item->product->name,
+                    'image'             => $item->product->foto_url ?? ($item->product->image ? Storage::url($item->product->image) : null),
+                    'precio_base'       => (float)$item->precio_base,
+                    'tipo_incremento'   => $item->tipo_incremento,
+                    'factor_incremento' => (float)$item->factor_incremento,
+                    'monto_incremento'  => (float)$item->monto_incremento,
+                    'precio'            => (float)$item->precio_final,
+                    'puntos'            => (int)$item->puntos,
+                    'stock'             => (float)$item->stock_actual,
+                    'lista_id'          => (string)$lista->id,
+                    'lista_nombre'      => $lista->name,
+                    'lista_code'        => $lista->code,
+                ];
             }
         }
 
@@ -383,41 +380,41 @@ class OfertaManager extends Component
 
     // ── Carrito ───────────────────────────────────────────────────────────────
 
-    public function agregar(int $productId, int $qty = 1): void
+    public function agregar(int $itemId, int $qty = 1): void
     {
-        $pid = (string)$productId;
-        if (!isset($this->oferta[$pid])) return;
+        $key = (string)$itemId;
+        if (!isset($this->oferta[$key])) return;
 
         // Bloquear lista: solo se puede agregar de la misma lista del primer ítem
         if (!empty($this->carrito)) {
             $listaLocked = collect($this->carrito)->first()['lista_id'] ?? null;
-            if ($listaLocked && $this->oferta[$pid]['lista_id'] !== $listaLocked) return;
+            if ($listaLocked && $this->oferta[$key]['lista_id'] !== $listaLocked) return;
         }
 
-        $existing = $this->carrito[$pid]['cantidad'] ?? 0;
-        $newQty   = min($existing + max(1, $qty), (int)$this->oferta[$pid]['stock']);
-        $this->carrito[$pid] = array_merge($this->oferta[$pid], ['cantidad' => $newQty]);
-        $this->dispatch('producto-agregado', nombre: $this->oferta[$pid]['nombre']);
+        $existing = $this->carrito[$key]['cantidad'] ?? 0;
+        $newQty   = min($existing + max(1, $qty), (int)$this->oferta[$key]['stock']);
+        $this->carrito[$key] = array_merge($this->oferta[$key], ['cantidad' => $newQty]);
+        $this->dispatch('producto-agregado', nombre: $this->oferta[$key]['nombre']);
     }
 
-    public function incrementar(int $productId): void
+    public function incrementar(int $itemId): void
     {
-        $pid = (string)$productId;
-        if (isset($this->carrito[$pid]) &&
-            $this->carrito[$pid]['cantidad'] < ($this->oferta[$pid]['stock'] ?? PHP_INT_MAX)) {
-            $this->carrito[$pid]['cantidad']++;
+        $key = (string)$itemId;
+        if (isset($this->carrito[$key]) &&
+            $this->carrito[$key]['cantidad'] < ($this->oferta[$key]['stock'] ?? PHP_INT_MAX)) {
+            $this->carrito[$key]['cantidad']++;
         }
     }
 
-    public function decrementar(int $productId): void
+    public function decrementar(int $itemId): void
     {
-        $pid = (string)$productId;
-        if (!isset($this->carrito[$pid])) return;
-        if ($this->carrito[$pid]['cantidad'] <= 1) unset($this->carrito[$pid]);
-        else $this->carrito[$pid]['cantidad']--;
+        $key = (string)$itemId;
+        if (!isset($this->carrito[$key])) return;
+        if ($this->carrito[$key]['cantidad'] <= 1) unset($this->carrito[$key]);
+        else $this->carrito[$key]['cantidad']--;
     }
 
-    public function quitar(int $productId): void { unset($this->carrito[(string)$productId]); }
+    public function quitar(int $itemId): void { unset($this->carrito[(string)$itemId]); }
 
     public function vaciar(): void
     {

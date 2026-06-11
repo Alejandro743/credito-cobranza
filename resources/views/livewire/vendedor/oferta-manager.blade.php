@@ -666,7 +666,7 @@
                     <span style="font-size:16px; font-weight:800; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
                     <span style="font-size:13px; font-weight:400; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $item['code'] ?? '' }}</span>
                 </div>
-                <button wire:click="quitar({{ $item['product_id'] }})"
+                <button wire:click="quitar({{ $item['item_id'] }})"
                         style="width:28px; height:28px; border-radius:50%; background:#FEF2F2; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
                     <svg width="13" height="13" fill="none" stroke="#ef4444" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                 </button>
@@ -1055,7 +1055,7 @@
                 <span style="font-size:10px; font-weight:400; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:1px 7px;">+{{ $item['puntos'] * $item['cantidad'] }} pts</span>
                 @endif
             </div>
-            <button wire:click="quitar({{ $item['product_id'] }})"
+            <button wire:click="quitar({{ $item['item_id'] }})"
                     style="width:36px; height:36px; flex-shrink:0; display:flex; align-items:center; justify-content:center; background:#FEF2F2; border-radius:10px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; clip-path:inset(0 round 10px);">
                 <svg width="17" height="17" fill="none" stroke="#ef4444" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             </button>
@@ -1091,7 +1091,7 @@
                     <span style="font-size:11px; color:#B0A8E0; display:block; margin-top:2px;">Bs {{ number_format($item['precio'], 2) }} c/u</span>
                 </div>
                 {{-- Botón eliminar --}}
-                <button wire:click="quitar({{ $item['product_id'] }})"
+                <button wire:click="quitar({{ $item['item_id'] }})"
                         style="width:32px; height:32px; flex-shrink:0; align-self:flex-start; display:flex; align-items:center; justify-content:center; background:#FEF2F2; border-radius:9px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; clip-path:inset(0 round 9px);">
                     <svg width="15" height="15" fill="none" stroke="#ef4444" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                 </button>
@@ -1531,7 +1531,6 @@
                 <div style="height:2px; background:linear-gradient(to right,#7B6FE8,#C4B5FD); border-radius:1px; margin-top:4px;"></div>
             </div>
 
-            {{-- Dropdown lista + Buscador en misma fila --}}
             @php
             $mColors = [
                 ['bg'=>'#FFF7ED','iconBg'=>'#F97316','selBorder'=>'#F97316','selCard'=>'#FFF7ED','text'=>'#C2410C'],
@@ -1546,85 +1545,94 @@
                 '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>',
             ];
             $listaLocked = !empty($carrito) ? (collect($carrito)->first()['lista_id'] ?? null) : null;
-            $mSelAll  = !$listaLocked && $filterLista === '';
+            $mSelAll   = !$listaLocked && $filterLista === '';
             $mActiveId = $listaLocked ?? ($filterLista !== '' ? $filterLista : null);
-            $mLabel   = $mActiveId ? ucwords(strtolower($listasInfo[(string)$mActiveId]['nombre'] ?? 'Todos')) : 'Todos';
-            $mIdx     = $mActiveId ? array_search((string)$mActiveId, array_keys($listasInfo)) : -1;
-            $mCol     = ($mActiveId && $mIdx !== false) ? $mColors[$mIdx % count($mColors)] : null;
+            $mLabel    = $mActiveId ? ucwords(strtolower($listasInfo[(string)$mActiveId]['nombre'] ?? '')) : 'Seleccionar Oferta Comercial';
+            $mIdx      = $mActiveId ? array_search((string)$mActiveId, array_keys($listasInfo)) : -1;
+            $mCol      = ($mActiveId && $mIdx !== false) ? $mColors[$mIdx % count($mColors)] : null;
             @endphp
-            <div style="display:flex; align-items:center; gap:8px;" x-data="{ promoOpen: false }">
+            <div style="display:flex; flex-direction:column; gap:8px;" x-data="{ promoOpen: false }">
 
-                {{-- Botón dropdown lista --}}
-                <div style="position:relative; flex-shrink:0;">
-                    <button @click="{{ $listaLocked ? '' : 'promoOpen = !promoOpen' }}"
-                            style="display:flex; align-items:center; gap:6px; padding:8px 10px; border-radius:10px;
-                                   border:1.5px solid {{ $listaLocked ? '#D1D5DB' : ($mSelAll ? '#E5E7EB' : ($mCol['selBorder'] ?? '#7B6FE8')) }};
-                                   background:{{ $listaLocked ? '#F9FAFB' : ($mSelAll ? '#fff' : ($mCol['selCard'] ?? '#EEEDFE')) }};
-                                   cursor:{{ $listaLocked ? 'default' : 'pointer' }}; -webkit-appearance:none; appearance:none;">
-                        <div style="width:22px; height:22px; border-radius:6px; background:{{ $listaLocked ? '#E5E7EB' : ($mSelAll ? '#F3F4F6' : ($mCol['iconBg'] ?? '#7B6FE8')) }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                            @if ($listaLocked)
-                            <svg width="11" height="11" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
-                            @elseif ($mSelAll)
-                            <svg width="11" height="11" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-                            @else
-                            <svg width="11" height="11" fill="none" stroke="#fff" viewBox="0 0 24 24">{!! $mIcons[$mIdx % count($mIcons)] !!}</svg>
+                {{-- Fila 1: Oferta Comercial --}}
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="hidden md:block" style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap; min-width:148px;">Oferta Comercial:</span>
+
+                    {{-- Botón dropdown lista --}}
+                    <div style="position:relative; flex:1;">
+                        <button @click="{{ $listaLocked ? '' : 'promoOpen = !promoOpen' }}"
+                                style="width:100%; display:flex; align-items:center; gap:6px; padding:8px 10px; border-radius:10px;
+                                       border:1.5px solid {{ $listaLocked ? '#D1D5DB' : ($mSelAll ? '#E5E7EB' : ($mCol['selBorder'] ?? '#7B6FE8')) }};
+                                       background:{{ $listaLocked ? '#F9FAFB' : ($mSelAll ? '#fff' : ($mCol['selCard'] ?? '#EEEDFE')) }};
+                                       cursor:{{ $listaLocked ? 'default' : 'pointer' }}; -webkit-appearance:none; appearance:none;">
+                            <div style="width:22px; height:22px; border-radius:6px; background:{{ $listaLocked ? '#E5E7EB' : ($mSelAll ? '#F3F4F6' : ($mCol['iconBg'] ?? '#7B6FE8')) }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                @if ($listaLocked)
+                                <svg width="11" height="11" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                                @elseif ($mSelAll)
+                                <svg width="11" height="11" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                                @else
+                                <svg width="11" height="11" fill="none" stroke="#fff" viewBox="0 0 24 24">{!! $mIcons[$mIdx % count($mIcons)] !!}</svg>
+                                @endif
+                            </div>
+                            <span style="font-size:12px; font-weight:700; color:{{ $listaLocked ? '#6B7280' : ($mSelAll ? '#9CA3AF' : ($mCol['text'] ?? '#534AB7')) }}; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left;">{{ $mLabel }}</span>
+                            @if (!$listaLocked)
+                            <svg width="10" height="10" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                            </svg>
                             @endif
+                        </button>
+
+                        {{-- Panel dropdown --}}
+                        <div x-show="promoOpen" x-cloak @click.away="promoOpen = false"
+                             style="position:absolute; top:calc(100% + 4px); left:0; right:0; background:#fff;
+                                    border-radius:12px; box-shadow:0 8px 24px rgba(60,52,137,0.18);
+                                    border:1px solid #EDE9FE; z-index:500; overflow:hidden;">
+
+                            <button wire:click="$set('filterLista', '')" @click="promoOpen = false"
+                                    style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
+                                           background:{{ $mSelAll ? '#FFF7ED' : '#fff' }}; border:none; cursor:pointer;
+                                           border-bottom:1px solid #F3F4F6; -webkit-appearance:none; appearance:none;">
+                                <div style="width:28px; height:28px; border-radius:8px; background:{{ $mSelAll ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                    <svg width="13" height="13" fill="none" stroke="{{ $mSelAll ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                                </div>
+                                <span style="font-size:13px; font-weight:700; color:{{ $mSelAll ? '#C2410C' : '#374151' }};">Todos</span>
+                            </button>
+
+                            @foreach ($listasInfo as $lid => $info)
+                            @php
+                                $mCi  = $loop->index % count($mColors);
+                                $mC   = $mColors[$mCi];
+                                $mS   = $filterLista === (string)$lid;
+                                $mIco = $mIcons[$mCi];
+                            @endphp
+                            <button wire:click="$set('filterLista', '{{ $lid }}')" @click="promoOpen = false"
+                                    style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
+                                           background:{{ $mS ? $mC['selCard'] : '#fff' }}; border:none; cursor:pointer;
+                                           {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }} -webkit-appearance:none; appearance:none;">
+                                <div style="width:28px; height:28px; border-radius:8px; background:{{ $mS ? $mC['iconBg'] : $mC['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                    <svg width="13" height="13" fill="none" stroke="{{ $mS ? '#fff' : $mC['iconBg'] }}" viewBox="0 0 24 24">{!! $mIco !!}</svg>
+                                </div>
+                                <span style="font-size:13px; font-weight:700; color:{{ $mS ? $mC['text'] : '#374151' }}; white-space:nowrap;">{{ ucwords(strtolower($info['nombre'])) }}</span>
+                            </button>
+                            @endforeach
                         </div>
-                        <span style="font-size:12px; font-weight:700; color:{{ $listaLocked ? '#6B7280' : ($mSelAll ? '#374151' : ($mCol['text'] ?? '#534AB7')) }}; white-space:nowrap; max-width:100px; overflow:hidden; text-overflow:ellipsis;">{{ $mLabel }}</span>
-                        @if (!$listaLocked)
-                        <svg width="10" height="10" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" style="flex-shrink:0;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                        @endif
-                    </button>
-
-                    {{-- Panel dropdown --}}
-                    <div x-show="promoOpen" x-cloak @click.away="promoOpen = false"
-                         style="position:absolute; top:calc(100% + 4px); left:0; background:#fff;
-                                border-radius:12px; box-shadow:0 8px 24px rgba(60,52,137,0.18);
-                                border:1px solid #EDE9FE; z-index:500; min-width:220px; overflow:hidden;">
-
-                        <button wire:click="$set('filterLista', '')" @click="promoOpen = false"
-                                style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
-                                       background:{{ $mSelAll ? '#FFF7ED' : '#fff' }}; border:none; cursor:pointer;
-                                       border-bottom:1px solid #F3F4F6; -webkit-appearance:none; appearance:none;">
-                            <div style="width:28px; height:28px; border-radius:8px; background:{{ $mSelAll ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <svg width="13" height="13" fill="none" stroke="{{ $mSelAll ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-                            </div>
-                            <span style="font-size:13px; font-weight:700; color:{{ $mSelAll ? '#C2410C' : '#374151' }};">Todos</span>
-                        </button>
-
-                        @foreach ($listasInfo as $lid => $info)
-                        @php
-                            $mCi  = $loop->index % count($mColors);
-                            $mC   = $mColors[$mCi];
-                            $mS   = $filterLista === (string)$lid;
-                            $mIco = $mIcons[$mCi];
-                        @endphp
-                        <button wire:click="$set('filterLista', '{{ $lid }}')" @click="promoOpen = false"
-                                style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
-                                       background:{{ $mS ? $mC['selCard'] : '#fff' }}; border:none; cursor:pointer;
-                                       {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }} -webkit-appearance:none; appearance:none;">
-                            <div style="width:28px; height:28px; border-radius:8px; background:{{ $mS ? $mC['iconBg'] : $mC['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <svg width="13" height="13" fill="none" stroke="{{ $mS ? '#fff' : $mC['iconBg'] }}" viewBox="0 0 24 24">{!! $mIco !!}</svg>
-                            </div>
-                            <span style="font-size:13px; font-weight:700; color:{{ $mS ? $mC['text'] : '#374151' }}; white-space:nowrap;">{{ ucwords(strtolower($info['nombre'])) }}</span>
-                        </button>
-                        @endforeach
                     </div>
                 </div>
 
-                {{-- Buscador --}}
-                <div style="position:relative; flex:1;">
-                    <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; pointer-events:none;" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                    </svg>
-                    <input wire:model.live.debounce.300ms="searchProducto" type="text"
-                           placeholder="Buscar producto..."
-                           style="width:100%; padding:8px 10px 8px 28px; background:#F8F7FF; border:2px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"
-                           onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
-                           onblur="this.style.borderColor='#C4B5FD'; this.style.background='#F8F7FF';">
+                {{-- Fila 2: Buscar Productos --}}
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span class="hidden md:block" style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap; min-width:148px;">Buscar Productos:</span>
+                    <div style="position:relative; flex:1;">
+                        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; pointer-events:none;" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        <input wire:model.live.debounce.300ms="searchProducto" type="text"
+                               placeholder="Buscar producto..."
+                               style="width:100%; padding:8px 10px 8px 28px; background:#F8F7FF; border:2px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"
+                               onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
+                               onblur="this.style.borderColor='#C4B5FD'; this.style.background='#F8F7FF';">
+                    </div>
                 </div>
+
             </div>
         </div>
         </div>
@@ -1639,10 +1647,10 @@
                     : collect($ofertaPorLista)->flatten(1);
                 @endphp
                 @forelse ($productosModal as $p)
-                @php $pid2=(string)$p['product_id']; $qty2=isset($carrito[$pid2])?$carrito[$pid2]['cantidad']:0; @endphp
+                @php $iid2=(string)$p['item_id']; $qty2=isset($carrito[$iid2])?$carrito[$iid2]['cantidad']:0; @endphp
                 <div x-data="{ n: 0, maxStock: @js((int)$p['stock']) }"
                      x-on:carrito-vaciado.window="n = 0"
-                     wire:key="mod-{{ $pid2 }}"
+                     wire:key="mod-{{ $iid2 }}"
                      style="background:#fff; border:1.5px solid #D1D5DB; border-radius:12px; padding:20px 12px; box-shadow:0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.10), 0 24px 40px rgba(0,0,0,0.06);">
 
                     {{-- Fila 1: indicador circular + código arriba, descripción abajo --}}
@@ -1672,14 +1680,14 @@
 
                     {{-- Pie --}}
                     <div style="display:flex; align-items:center; gap:6px;">
-                        <div style="flex:1;"></div>
-                        <button @click="if(n===0) n=1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n=0)"
+                        <span style="font-size:13px; font-weight:700; color:#374151; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ ucwords(strtolower($p['lista_nombre'])) }}</span>
+                        <button @click="if(n===0) n=1; $wire.agregar({{ $p['item_id'] }}, n).then(() => n=0)"
                                 style="background:#fff; color:#f97316; border:1.5px solid #f97316; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px; flex-shrink:0;">
                             <svg style="width:14px; height:14px; flex-shrink:0;" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
                             Agregar
                         </button>
                         @if ($qty2 > 0)
-                        <button wire:click="quitar({{ $p['product_id'] }})"
+                        <button wire:click="quitar({{ $p['item_id'] }})"
                                 style="width:30px; height:30px; border-radius:50%; background:#ef4444; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none; box-shadow:0 2px 8px rgba(239,68,68,0.40);">
                             <svg style="width:13px; height:13px;" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
