@@ -1530,9 +1530,13 @@
         {{-- TOP BAR --}}
         <div style="flex-shrink:0; background:#fff; border-bottom:1.5px solid #EDE9FE; padding:12px 14px 10px;">
         <div style="max-width:900px; margin:0 auto;">
-            <div style="text-align:center; margin-bottom:10px;">
+            <div style="position:relative; text-align:center; margin-bottom:10px;">
                 <span style="font-size:16px; font-weight:900; color:#1a1a1a; letter-spacing:0.08em; text-transform:uppercase; display:block;">Seleccionar Artículos</span>
                 <div style="height:2px; background:linear-gradient(to right,#7B6FE8,#C4B5FD); border-radius:1px; margin-top:4px;"></div>
+                <button @click="showProductos = false"
+                        style="position:absolute; top:0; right:0; width:28px; height:28px; border-radius:50%; background:#F3F4F6; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;">
+                    <svg width="14" height="14" fill="none" stroke="#6B7280" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
             </div>
 
             @php
