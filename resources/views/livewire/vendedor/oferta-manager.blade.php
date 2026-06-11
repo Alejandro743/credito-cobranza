@@ -1666,23 +1666,20 @@
                         </div>
                     </div>
 
-                    {{-- Fila 2: Precio / Puntos / Total / Lista --}}
+                    {{-- Fila 2: Precio Bs Un / Total Bs Total Puntos --}}
                     <div style="margin-bottom:8px; background:#F8F7FF; border-radius:8px; padding:8px 10px;">
                         <div style="display:flex; align-items:center; gap:14px; margin-bottom:4px;">
                             <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Precio Bs Un: <span style="color:#7c3aed; font-size:14px; font-weight:400;">{{ number_format($p['precio'], 2) }}</span></span>
                             <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Puntos: <span style="color:#111827; font-size:14px; font-weight:400;">{{ $p['puntos'] }}</span></span>
                         </div>
-                        <div style="display:flex; align-items:center; gap:14px; margin-bottom:4px;">
+                        <div style="display:flex; align-items:center; gap:14px;">
                             <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Bs: <span style="color:#3C3489; font-size:14px; font-weight:400;">{{ number_format($p['precio'] * $qty2, 2) }}</span></span>
                             <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Puntos: <span style="color:#111827; font-size:14px; font-weight:400;">+{{ $p['puntos'] * $qty2 }}</span></span>
-                        </div>
-                        <div style="overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">
-                            <span style="font-size:13px; font-weight:700; color:#6B7280;">{{ ucwords(strtolower($p['lista_nombre'])) }}</span>
                         </div>
                     </div>
 
                     {{-- Pie --}}
-                    <div style="display:flex; align-items:center; justify-content:flex-end; gap:6px;">
+                    <div style="display:flex; align-items:center; gap:6px; padding-left:10px;">
                         <button @click="if(n===0) n=1; $wire.agregar({{ $p['item_id'] }}, n).then(() => n=0)"
                                 style="background:#fff; color:#f97316; border:1.5px solid #f97316; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px; flex-shrink:0;">
                             <svg style="width:14px; height:14px; flex-shrink:0;" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
