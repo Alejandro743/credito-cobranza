@@ -370,6 +370,7 @@ class OfertaManager extends Component
                     'lista_id'          => (string)$lista->id,
                     'lista_nombre'      => $lista->name,
                     'lista_code'        => $lista->code,
+                    'cantidad_cuotas'   => (int)$lista->cantidad_cuotas,
                 ];
             }
         }
@@ -385,10 +386,10 @@ class OfertaManager extends Component
         $key = (string)$itemId;
         if (!isset($this->oferta[$key])) return;
 
-        // Bloquear lista: solo se puede agregar de la misma lista del primer ítem
+        // Bloquear cuotas: solo se puede agregar de listas con la misma cantidad_cuotas
         if (!empty($this->carrito)) {
-            $listaLocked = collect($this->carrito)->first()['lista_id'] ?? null;
-            if ($listaLocked && $this->oferta[$key]['lista_id'] !== $listaLocked) return;
+            $cuotasLocked = collect($this->carrito)->first()['cantidad_cuotas'] ?? null;
+            if ($cuotasLocked !== null && $this->oferta[$key]['cantidad_cuotas'] !== $cuotasLocked) return;
         }
 
         $existing = $this->carrito[$key]['cantidad'] ?? 0;
@@ -739,6 +740,12 @@ class OfertaManager extends Component
         }
         if ($this->filterLista) {
             $filtrada = $filtrada->filter(fn($p) => $p['lista_id'] == $this->filterLista);
+        }
+        if (!empty($this->carrito)) {
+            $cuotasLocked = collect($this->carrito)->first()['cantidad_cuotas'] ?? null;
+            if ($cuotasLocked !== null) {
+                $filtrada = $filtrada->filter(fn($p) => $p['cantidad_cuotas'] == $cuotasLocked);
+            }
         }
 
         $ciudadesAll       = Ciudad::orderBy('nombre')->get();
