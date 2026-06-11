@@ -1555,7 +1555,7 @@
 
                 {{-- Fila 1: Oferta Comercial --}}
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="hidden md:block" style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap; min-width:148px;">Oferta Comercial:</span>
+                    <span class="hidden md:block" style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Oferta Comercial:</span>
 
                     {{-- Botón dropdown lista --}}
                     <div style="position:relative; flex:1;">
@@ -1620,7 +1620,7 @@
 
                 {{-- Fila 2: Buscar Productos --}}
                 <div style="display:flex; align-items:center; gap:10px;">
-                    <span class="hidden md:block" style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap; min-width:148px;">Buscar Productos:</span>
+                    <span class="hidden md:block" style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Buscar Productos:</span>
                     <div style="position:relative; flex:1;">
                         <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; pointer-events:none;" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
