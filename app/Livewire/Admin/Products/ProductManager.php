@@ -29,8 +29,9 @@ class ProductManager extends Component
     public ?int   $newUnidadId    = null;
     public ?int   $newCategoriaId = null;
     public bool   $newActive      = true;
-    public string $newCicloId    = '';
-    public        $newImage      = null;
+    public string $newCicloId      = '';
+    public string $newStockInicial = '';
+    public        $newImage        = null;
 
     // Edición inline en fila
     public ?int   $editingId       = null;
@@ -40,6 +41,7 @@ class ProductManager extends Component
     public ?int   $editCategoriaId = null;
     public bool   $editActive      = true;
     public string $editCicloId     = '';
+    public string $editStockInicial = '';
     public        $editImage       = null;
     public string $editCurrentImage = '';
 
@@ -71,8 +73,9 @@ class ProductManager extends Component
         $this->newUnidadId    = null;
         $this->newCategoriaId = null;
         $this->newActive      = true;
-        $this->newCicloId     = (string)(\App\Models\CommercialCycle::vigente()?->id ?? '');
-        $this->newImage       = null;
+        $this->newCicloId      = (string)(\App\Models\CommercialCycle::vigente()?->id ?? '');
+        $this->newStockInicial = '';
+        $this->newImage        = null;
         $this->cancelEdit();
     }
 
@@ -115,12 +118,14 @@ class ProductManager extends Component
         ]);
 
         if ($this->newCicloId) {
-            $product->ciclos()->syncWithoutDetaching([(int)$this->newCicloId => ['stock_total' => 0]]);
+            $stock = is_numeric($this->newStockInicial) ? (float)$this->newStockInicial : 0;
+            $product->ciclos()->syncWithoutDetaching([(int)$this->newCicloId => ['stock_total' => $stock]]);
         }
 
-        $this->showAddForm = false;
-        $this->newImage    = null;
-        $this->newCicloId  = '';
+        $this->showAddForm     = false;
+        $this->newImage        = null;
+        $this->newCicloId      = '';
+        $this->newStockInicial = '';
         session()->flash('success', 'Producto agregado.');
     }
 
@@ -138,6 +143,7 @@ class ProductManager extends Component
         $this->editCurrentImage = $p->image ?? '';
         $this->editImage        = null;
         $this->editCicloId      = (string)($p->ciclos->first()?->id ?? '');
+        $this->editStockInicial = (string)($p->ciclos->first()?->pivot->stock_total ?? '');
         $this->showAddForm      = false;
         $this->resetValidation();
     }
@@ -188,7 +194,8 @@ class ProductManager extends Component
         ]);
 
         if ($this->editCicloId) {
-            $p->ciclos()->sync([(int)$this->editCicloId => ['stock_total' => $p->ciclos->firstWhere('id', (int)$this->editCicloId)?->pivot->stock_total ?? 0]]);
+            $stock = is_numeric($this->editStockInicial) ? (float)$this->editStockInicial : 0;
+            $p->ciclos()->sync([(int)$this->editCicloId => ['stock_total' => $stock]]);
         } else {
             $p->ciclos()->detach();
         }
@@ -197,6 +204,7 @@ class ProductManager extends Component
         $this->editImage        = null;
         $this->editCurrentImage = '';
         $this->editCicloId      = '';
+        $this->editStockInicial = '';
         session()->flash('success', 'Producto actualizado.');
     }
 

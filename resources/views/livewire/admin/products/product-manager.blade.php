@@ -104,6 +104,11 @@
                     @endforeach
                 </select>
             </div>
+            <div style="min-width:90px;">
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Stock Inicial</label>
+                <input wire:model="newStockInicial" type="number" min="0" step="1" placeholder="0"
+                       style="width:100%; {{ $iS }}">
+            </div>
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
                 <div style="display:flex; gap:8px;">
@@ -172,8 +177,9 @@
             <colgroup>
                 <col style="width:44px;">
                 <col style="width:60px;">
-                <col style="width:120px;">
-                <col style="width:130px;">
+                <col style="width:110px;">
+                <col style="width:80px;">
+                <col style="width:110px;">
                 <col style="min-width:100px;">
                 <col style="width:100px;">
                 <col style="width:130px;">
@@ -188,6 +194,9 @@
                     </th>
                     <th style="padding:10px 14px; text-align:left;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Ciclo</span>
+                    </th>
+                    <th style="padding:10px 8px; text-align:right;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stock</span>
                     </th>
                     @foreach($sortCols as $label => $key)
                     @php $isActive = $sortBy === $key; @endphp
@@ -237,6 +246,10 @@
                                 <option value="{{ $c->id }}">{{ $c->code }}</option>
                             @endforeach
                         </select>
+                    </td>
+                    <td style="padding:7px 4px;">
+                        <input wire:model="editStockInicial" type="number" min="0" step="1" placeholder="0"
+                               style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; text-align:right;">
                     </td>
                     <td style="padding:7px 10px;">
                         <input wire:model="editCode" type="text"
@@ -305,10 +318,17 @@
                         </div>
                     </td>
 
-                    @php $cicloDelProducto = $cicloVigente ? $p->ciclos->firstWhere('id', $cicloVigente->id) : null; @endphp
-                    <td style="padding:10px 14px; overflow:hidden;">
+                    @php $cicloDelProducto = $p->ciclos->first(); @endphp
+                    <td style="padding:10px 10px; overflow:hidden;">
                         @if($cicloDelProducto)
                         <span style="font-size:11px; font-weight:700; color:#7c3aed; background:#EDE9FE; padding:2px 8px; border-radius:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cicloDelProducto->code }}</span>
+                        @else
+                        <span style="font-size:12px; color:#D1D5DB;">—</span>
+                        @endif
+                    </td>
+                    <td style="padding:10px 8px; text-align:right; overflow:hidden;">
+                        @if($cicloDelProducto)
+                        <span style="font-size:13px; font-weight:700; color:#111827;">{{ number_format($cicloDelProducto->pivot->stock_total, 0) }}</span>
                         @else
                         <span style="font-size:12px; color:#D1D5DB;">—</span>
                         @endif
