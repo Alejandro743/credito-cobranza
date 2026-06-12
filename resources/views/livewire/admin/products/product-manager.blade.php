@@ -173,8 +173,8 @@
                 <col style="width:44px;">
                 <col style="width:60px;">
                 <col style="width:120px;">
-                <col style="width:100px;">
-                <col style="min-width:120px;">
+                <col style="width:130px;">
+                <col style="min-width:100px;">
                 <col style="width:100px;">
                 <col style="width:130px;">
                 <col style="width:130px;">
