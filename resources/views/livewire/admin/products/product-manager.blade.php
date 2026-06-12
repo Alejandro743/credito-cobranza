@@ -172,14 +172,13 @@
             <colgroup>
                 <col style="width:44px;">
                 <col style="width:60px;">
+                <col style="width:120px;">
+                <col style="width:100px;">
+                <col>
+                <col style="width:100px;">
                 <col style="width:130px;">
-                <col style="width:110px;">
-                <col style="width:200px;">
-                <col style="width:110px;">
-                <col style="width:140px;">
-                <col style="width:110px;">
                 <col style="width:90px;">
-                <col style="width:130px;">
+                <col style="width:140px;">
             </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
