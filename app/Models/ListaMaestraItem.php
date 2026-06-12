@@ -13,7 +13,7 @@ class ListaMaestraItem extends Model
     protected $fillable = [
         'lista_maestra_id', 'product_id',
         'precio_base', 'puntos',
-        'stock_inicial', 'stock_consumido', 'stock_actual',
+        'stock_inicial', 'stock_consumido', 'stock_comprometido', 'stock_actual',
         'descuento', 'active',
         'tipo_incremento', 'factor_incremento', 'monto_incremento',
     ];
@@ -21,13 +21,19 @@ class ListaMaestraItem extends Model
     protected $casts = [
         'precio_base'       => 'decimal:2',
         'stock_inicial'     => 'decimal:2',
-        'stock_consumido'   => 'decimal:2',
-        'stock_actual'      => 'decimal:2',
+        'stock_consumido'    => 'decimal:2',
+        'stock_comprometido' => 'decimal:2',
+        'stock_actual'       => 'decimal:2',
         'descuento'         => 'decimal:2',
         'factor_incremento' => 'decimal:2',
         'monto_incremento'  => 'decimal:2',
         'active'            => 'boolean',
     ];
+
+    public function stockDisponible(): float
+    {
+        return max(0, (float)$this->stock_actual - (float)$this->stock_comprometido);
+    }
 
     public function getPrecioFinalAttribute(): float
     {

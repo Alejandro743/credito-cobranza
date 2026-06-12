@@ -341,7 +341,7 @@ class OfertaManager extends Component
             ->where('active', true)
             ->with(['items' => fn($q) => $q
                 ->where('active', true)
-                ->where('stock_actual', '>', 0)
+                ->whereRaw('stock_actual - stock_comprometido > 0')
                 ->with(['product' => fn($p) => $p->where('active', true)])
             ])->get();
 
@@ -366,7 +366,7 @@ class OfertaManager extends Component
                     'monto_incremento'  => (float)$item->monto_incremento,
                     'precio'            => (float)$item->precio_final,
                     'puntos'            => (int)$item->puntos,
-                    'stock'             => (float)$item->stock_actual,
+                    'stock'             => $item->stockDisponible(),
                     'lista_id'          => (string)$lista->id,
                     'lista_nombre'      => $lista->name,
                     'lista_code'        => $lista->code,
@@ -589,8 +589,7 @@ class OfertaManager extends Component
             foreach ($this->carrito as $item) {
                 $lmi = ListaMaestraItem::find($item['item_id']);
                 if ($lmi) {
-                    $lmi->stock_consumido = (float)$lmi->stock_consumido + $item['cantidad'];
-                    $lmi->stock_actual    = max(0, (float)$lmi->stock_actual - $item['cantidad']);
+                    $lmi->stock_comprometido = (float)$lmi->stock_comprometido + $item['cantidad'];
                     $lmi->save();
                 }
             }

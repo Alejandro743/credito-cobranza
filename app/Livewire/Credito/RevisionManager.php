@@ -334,8 +334,7 @@ class RevisionManager extends Component
                 if (!$nuevosItems->has($item->id)) {
                     if ($item->listaMaestraItem) {
                         $lmi = $item->listaMaestraItem;
-                        $lmi->stock_consumido = max(0, $lmi->stock_consumido - $item->cantidad);
-                        $lmi->stock_actual    = $lmi->stock_actual + $item->cantidad;
+                        $lmi->stock_comprometido = max(0, (float)$lmi->stock_comprometido - $item->cantidad);
                         $lmi->save();
                     }
                     $item->delete();
@@ -344,8 +343,7 @@ class RevisionManager extends Component
                     $diff  = (int) $nuevo['cantidad'] - (int) $nuevo['cantidad_original'];
                     if ($diff !== 0 && $item->listaMaestraItem) {
                         $lmi = $item->listaMaestraItem;
-                        $lmi->stock_consumido = max(0, $lmi->stock_consumido + $diff);
-                        $lmi->stock_actual    = max(0, $lmi->stock_actual - $diff);
+                        $lmi->stock_comprometido = max(0, (float)$lmi->stock_comprometido + $diff);
                         $lmi->save();
                     }
                     $item->update([
@@ -360,8 +358,7 @@ class RevisionManager extends Component
                 if ($art['item_id'] !== null || (int) $art['cantidad_original'] !== 0) continue;
                 $lmiModel = \App\Models\ListaMaestraItem::find($art['lista_maestra_item_id']);
                 if ($lmiModel) {
-                    $lmiModel->stock_consumido = $lmiModel->stock_consumido + (int) $art['cantidad'];
-                    $lmiModel->stock_actual    = max(0, $lmiModel->stock_actual - (int) $art['cantidad']);
+                    $lmiModel->stock_comprometido = (float)$lmiModel->stock_comprometido + (int) $art['cantidad'];
                     $lmiModel->save();
                 }
                 PedidoItem::create([
@@ -441,10 +438,23 @@ class RevisionManager extends Component
 
     public function aprobar(): void
     {
-        Pedido::where('id', $this->viewingId)
+        $pedido = Pedido::where('id', $this->viewingId)
             ->where('estado', 'revision')
-            ->firstOrFail()
-            ->update(['estado' => 'aprobado', 'notas' => null]);
+            ->with('items')
+            ->firstOrFail();
+
+        DB::transaction(function () use ($pedido) {
+            foreach ($pedido->items as $item) {
+                $lmi = \App\Models\ListaMaestraItem::find($item->lista_maestra_item_id);
+                if ($lmi) {
+                    $lmi->stock_comprometido = max(0, (float)$lmi->stock_comprometido - $item->cantidad);
+                    $lmi->stock_actual       = max(0, (float)$lmi->stock_actual - $item->cantidad);
+                    $lmi->stock_consumido    = (float)$lmi->stock_consumido + $item->cantidad;
+                    $lmi->save();
+                }
+            }
+            $pedido->update(['estado' => 'aprobado', 'notas' => null]);
+        });
 
         session()->flash('success', 'Pedido aprobado correctamente.');
         $this->backToList();
@@ -457,10 +467,21 @@ class RevisionManager extends Component
             'notaRechazo.min'      => 'El motivo debe tener al menos 5 caracteres.',
         ]);
 
-        Pedido::where('id', $this->viewingId)
+        $pedido = Pedido::where('id', $this->viewingId)
             ->where('estado', 'revision')
-            ->firstOrFail()
-            ->update(['estado' => 'rechazado', 'notas' => $this->notaRechazo]);
+            ->with('items')
+            ->firstOrFail();
+
+        DB::transaction(function () use ($pedido) {
+            foreach ($pedido->items as $item) {
+                $lmi = \App\Models\ListaMaestraItem::find($item->lista_maestra_item_id);
+                if ($lmi) {
+                    $lmi->stock_comprometido = max(0, (float)$lmi->stock_comprometido - $item->cantidad);
+                    $lmi->save();
+                }
+            }
+            $pedido->update(['estado' => 'rechazado', 'notas' => $this->notaRechazo]);
+        });
 
         session()->flash('success', 'Pedido rechazado.');
         $this->backToList();
