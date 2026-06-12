@@ -95,16 +95,15 @@
                     @endforeach
                 </select>
             </div>
-            @if($cicloVigente)
-            <div style="display:flex; align-items:center;">
-                <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
-                <label style="display:flex; align-items:center; gap:7px; cursor:pointer; margin-top:18px;">
-                    <input wire:model="newAsignarCiclo" type="checkbox"
-                           style="width:15px; height:15px; accent-color:#7B6FE8; cursor:pointer;">
-                    <span style="font-size:12px; font-weight:700; color:#7B6FE8; white-space:nowrap;">Ciclo: {{ $cicloVigente->code }}</span>
-                </label>
+            <div style="min-width:130px;">
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Ciclo</label>
+                <select wire:model="newCicloId" style="width:100%; {{ $iS }} cursor:pointer;">
+                    <option value="">— Sin ciclo —</option>
+                    @foreach ($ciclos as $c)
+                        <option value="{{ $c->id }}">{{ $c->code }} — {{ $c->name }}</option>
+                    @endforeach
+                </select>
             </div>
-            @endif
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
                 <div style="display:flex; gap:8px;">
@@ -178,6 +177,7 @@
                 <col style="width:200px;">
                 <col style="width:110px;">
                 <col style="width:140px;">
+                <col style="width:110px;">
                 <col style="width:90px;">
                 <col style="width:130px;">
             </colgroup>
@@ -230,13 +230,14 @@
                         </div>
                         @endif
                     </td>
-                    @php $cicloDelProducto = $cicloVigente ? $p->ciclos->firstWhere('id', $cicloVigente->id) : null; @endphp
-                    <td style="padding:7px 10px; overflow:hidden;">
-                        @if($cicloDelProducto)
-                        <span style="font-size:11px; font-weight:700; color:#7c3aed; background:#EDE9FE; padding:2px 8px; border-radius:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cicloDelProducto->code }}</span>
-                        @else
-                        <span style="font-size:12px; color:#D1D5DB;">—</span>
-                        @endif
+                    <td style="padding:7px 6px;">
+                        <select wire:model="editCicloId"
+                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                            <option value="">— —</option>
+                            @foreach ($ciclos as $c)
+                                <option value="{{ $c->id }}">{{ $c->code }}</option>
+                            @endforeach
+                        </select>
                     </td>
                     <td style="padding:7px 10px;">
                         <input wire:model="editCode" type="text"

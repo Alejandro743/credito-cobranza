@@ -28,9 +28,9 @@ class ProductManager extends Component
     public string $newName        = '';
     public ?int   $newUnidadId    = null;
     public ?int   $newCategoriaId = null;
-    public bool   $newActive          = true;
-    public bool   $newAsignarCiclo   = false;
-    public        $newImage           = null;
+    public bool   $newActive      = true;
+    public string $newCicloId    = '';
+    public        $newImage      = null;
 
     // Edición inline en fila
     public ?int   $editingId       = null;
@@ -39,6 +39,7 @@ class ProductManager extends Component
     public ?int   $editUnidadId    = null;
     public ?int   $editCategoriaId = null;
     public bool   $editActive      = true;
+    public string $editCicloId     = '';
     public        $editImage       = null;
     public string $editCurrentImage = '';
 
@@ -64,14 +65,14 @@ class ProductManager extends Component
 
     public function showAdd(): void
     {
-        $this->showAddForm      = true;
-        $this->newCode          = '';
-        $this->newName          = '';
-        $this->newUnidadId      = null;
-        $this->newCategoriaId   = null;
-        $this->newActive        = true;
-        $this->newAsignarCiclo  = false;
-        $this->newImage         = null;
+        $this->showAddForm    = true;
+        $this->newCode        = '';
+        $this->newName        = '';
+        $this->newUnidadId    = null;
+        $this->newCategoriaId = null;
+        $this->newActive      = true;
+        $this->newCicloId     = (string)(\App\Models\CommercialCycle::vigente()?->id ?? '');
+        $this->newImage       = null;
         $this->cancelEdit();
     }
 
@@ -113,16 +114,13 @@ class ProductManager extends Component
             'image'        => $imagePath,
         ]);
 
-        if ($this->newAsignarCiclo) {
-            $ciclo = \App\Models\CommercialCycle::vigente();
-            if ($ciclo) {
-                $product->ciclos()->syncWithoutDetaching([$ciclo->id => ['stock_total' => 0]]);
-            }
+        if ($this->newCicloId) {
+            $product->ciclos()->syncWithoutDetaching([(int)$this->newCicloId => ['stock_total' => 0]]);
         }
 
-        $this->showAddForm     = false;
-        $this->newImage        = null;
-        $this->newAsignarCiclo = false;
+        $this->showAddForm = false;
+        $this->newImage    = null;
+        $this->newCicloId  = '';
         session()->flash('success', 'Producto agregado.');
     }
 
@@ -130,7 +128,7 @@ class ProductManager extends Component
 
     public function startEdit(int $id): void
     {
-        $p = Product::findOrFail($id);
+        $p = Product::with('ciclos')->findOrFail($id);
         $this->editingId        = $id;
         $this->editCode         = $p->code;
         $this->editName         = $p->name;
@@ -139,6 +137,7 @@ class ProductManager extends Component
         $this->editActive       = $p->active;
         $this->editCurrentImage = $p->image ?? '';
         $this->editImage        = null;
+        $this->editCicloId      = (string)($p->ciclos->first()?->id ?? '');
         $this->showAddForm      = false;
         $this->resetValidation();
     }
@@ -188,9 +187,16 @@ class ProductManager extends Component
             'image'        => $imagePath,
         ]);
 
+        if ($this->editCicloId) {
+            $p->ciclos()->sync([(int)$this->editCicloId => ['stock_total' => $p->ciclos->firstWhere('id', (int)$this->editCicloId)?->pivot->stock_total ?? 0]]);
+        } else {
+            $p->ciclos()->detach();
+        }
+
         $this->editingId        = null;
         $this->editImage        = null;
         $this->editCurrentImage = '';
+        $this->editCicloId      = '';
         session()->flash('success', 'Producto actualizado.');
     }
 
@@ -223,6 +229,7 @@ class ProductManager extends Component
     public function render()
     {
         $cicloVigente = \App\Models\CommercialCycle::vigente();
+        $ciclos       = \App\Models\CommercialCycle::orderByDesc('start_date')->get();
 
         $products = Product::with(['categoria', 'unidad', 'ciclos'])
             ->when($this->search, fn($q) =>
@@ -243,6 +250,7 @@ class ProductManager extends Component
             'sortBy'       => $this->sortBy,
             'sortDir'      => $this->sortDir,
             'cicloVigente' => $cicloVigente,
+            'ciclos'       => $ciclos,
         ]);
     }
 }
