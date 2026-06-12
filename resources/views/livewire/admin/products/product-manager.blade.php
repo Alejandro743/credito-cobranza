@@ -95,6 +95,16 @@
                     @endforeach
                 </select>
             </div>
+            @if($cicloVigente)
+            <div style="display:flex; align-items:center;">
+                <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
+                <label style="display:flex; align-items:center; gap:7px; cursor:pointer; margin-top:18px;">
+                    <input wire:model="newAsignarCiclo" type="checkbox"
+                           style="width:15px; height:15px; accent-color:#7B6FE8; cursor:pointer;">
+                    <span style="font-size:12px; font-weight:700; color:#7B6FE8; white-space:nowrap;">Ciclo: {{ $cicloVigente->code }}</span>
+                </label>
+            </div>
+            @endif
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
                 <div style="display:flex; gap:8px;">

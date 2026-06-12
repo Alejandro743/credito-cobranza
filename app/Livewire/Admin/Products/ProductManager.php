@@ -28,8 +28,9 @@ class ProductManager extends Component
     public string $newName        = '';
     public ?int   $newUnidadId    = null;
     public ?int   $newCategoriaId = null;
-    public bool   $newActive      = true;
-    public        $newImage       = null;
+    public bool   $newActive          = true;
+    public bool   $newAsignarCiclo   = false;
+    public        $newImage           = null;
 
     // Edición inline en fila
     public ?int   $editingId       = null;
@@ -63,13 +64,14 @@ class ProductManager extends Component
 
     public function showAdd(): void
     {
-        $this->showAddForm    = true;
-        $this->newCode        = '';
-        $this->newName        = '';
-        $this->newUnidadId    = null;
-        $this->newCategoriaId = null;
-        $this->newActive      = true;
-        $this->newImage       = null;
+        $this->showAddForm      = true;
+        $this->newCode          = '';
+        $this->newName          = '';
+        $this->newUnidadId      = null;
+        $this->newCategoriaId   = null;
+        $this->newActive        = true;
+        $this->newAsignarCiclo  = false;
+        $this->newImage         = null;
         $this->cancelEdit();
     }
 
@@ -102,7 +104,7 @@ class ProductManager extends Component
             ? $this->newImage->store('productos', 'public')
             : null;
 
-        Product::create([
+        $product = Product::create([
             'code'         => strtoupper(trim($this->newCode)),
             'name'         => $this->newName,
             'unidad_id'    => $this->newUnidadId,
@@ -111,8 +113,16 @@ class ProductManager extends Component
             'image'        => $imagePath,
         ]);
 
-        $this->showAddForm = false;
-        $this->newImage    = null;
+        if ($this->newAsignarCiclo) {
+            $ciclo = \App\Models\CommercialCycle::vigente();
+            if ($ciclo) {
+                $product->ciclos()->syncWithoutDetaching([$ciclo->id => ['stock_total' => 0]]);
+            }
+        }
+
+        $this->showAddForm     = false;
+        $this->newImage        = null;
+        $this->newAsignarCiclo = false;
         session()->flash('success', 'Producto agregado.');
     }
 
