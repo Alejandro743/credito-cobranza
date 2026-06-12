@@ -163,6 +163,7 @@
             <colgroup>
                 <col style="width:44px;">
                 <col style="width:60px;">
+                <col style="width:130px;">
                 <col style="width:110px;">
                 <col style="width:200px;">
                 <col style="width:110px;">
@@ -175,6 +176,9 @@
                     <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
                     <th style="padding:10px 12px; text-align:center;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Img</span>
+                    </th>
+                    <th style="padding:10px 14px; text-align:left;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Ciclo</span>
                     </th>
                     @foreach($sortCols as $label => $key)
                     @php $isActive = $sortBy === $key; @endphp
@@ -214,6 +218,14 @@
                         <div style="width:36px; height:36px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; margin:0 auto;">
                             <svg width="16" height="16" fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         </div>
+                        @endif
+                    </td>
+                    @php $cicloDelProducto = $cicloVigente ? $p->ciclos->firstWhere('id', $cicloVigente->id) : null; @endphp
+                    <td style="padding:7px 10px; overflow:hidden;">
+                        @if($cicloDelProducto)
+                        <span style="font-size:11px; font-weight:700; color:#7c3aed; background:#EDE9FE; padding:2px 8px; border-radius:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cicloDelProducto->code }}</span>
+                        @else
+                        <span style="font-size:12px; color:#D1D5DB;">—</span>
                         @endif
                     </td>
                     <td style="padding:7px 10px;">
@@ -281,6 +293,15 @@
                         <div style="width:38px; height:38px; border-radius:9px; background:#EDE9FE; display:{{ $p->foto_url ? 'none' : 'flex' }}; align-items:center; justify-content:center; margin:0 auto;">
                             <svg width="16" height="16" fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         </div>
+                    </td>
+
+                    @php $cicloDelProducto = $cicloVigente ? $p->ciclos->firstWhere('id', $cicloVigente->id) : null; @endphp
+                    <td style="padding:10px 14px; overflow:hidden;">
+                        @if($cicloDelProducto)
+                        <span style="font-size:11px; font-weight:700; color:#7c3aed; background:#EDE9FE; padding:2px 8px; border-radius:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cicloDelProducto->code }}</span>
+                        @else
+                        <span style="font-size:12px; color:#D1D5DB;">—</span>
+                        @endif
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">

@@ -212,7 +212,9 @@ class ProductManager extends Component
 
     public function render()
     {
-        $products = Product::with(['categoria', 'unidad'])
+        $cicloVigente = \App\Models\CommercialCycle::vigente();
+
+        $products = Product::with(['categoria', 'unidad', 'ciclos'])
             ->when($this->search, fn($q) =>
                 $q->where('name', 'like', "%{$this->search}%")
                   ->orWhere('code', 'like', "%{$this->search}%"))
@@ -225,11 +227,12 @@ class ProductManager extends Component
         $unidades   = Unidad::where('active', true)->orderBy('name')->get();
 
         return view('livewire.admin.products.product-manager', [
-            'products'   => $products,
-            'categorias' => $categorias,
-            'unidades'   => $unidades,
-            'sortBy'     => $this->sortBy,
-            'sortDir'    => $this->sortDir,
+            'products'     => $products,
+            'categorias'   => $categorias,
+            'unidades'     => $unidades,
+            'sortBy'       => $this->sortBy,
+            'sortDir'      => $this->sortDir,
+            'cicloVigente' => $cicloVigente,
         ]);
     }
 }

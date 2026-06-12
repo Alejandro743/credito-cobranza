@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -36,5 +37,12 @@ class CommercialCycle extends Model
     public function listasMaestra(): HasMany
     {
         return $this->hasMany(ListaMaestra::class, 'cycle_id');
+    }
+
+    public function productos(): BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'ciclo_productos')
+                    ->withPivot('stock_total')
+                    ->withTimestamps();
     }
 }
