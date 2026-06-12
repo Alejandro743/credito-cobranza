@@ -229,7 +229,7 @@ class ProductManager extends Component
     public function render()
     {
         $cicloVigente = \App\Models\CommercialCycle::vigente();
-        $ciclos       = \App\Models\CommercialCycle::orderByDesc('start_date')->get();
+        $ciclos       = \App\Models\CommercialCycle::where('status', 'abierto')->orderByDesc('start_date')->get();
 
         $products = Product::with(['categoria', 'unidad', 'ciclos'])
             ->when($this->search, fn($q) =>
