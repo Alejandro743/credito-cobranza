@@ -231,34 +231,23 @@
                             {{-- Precio --}}
                             <div>
                                 <p style="{{ $eLabel }}">Precio (Bs)</p>
-                                <div style="{{ $h }} display:flex; border:1px solid #EDE9FE; border-radius:8px; overflow:hidden; background:#fff;">
-                                    <span style="padding:0 8px; background:#F8F7FF; border-right:1px solid #EDE9FE; font-size:11px; font-weight:700; color:#7B6FE8; display:flex; align-items:center;">Bs</span>
-                                    <input wire:model="editItemPrecio" x-on:input="precio = parseFloat($event.target.value) || 0"
-                                           type="number" step="0.01" min="0" style="width:75px; border:none; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
-                                </div>
+                                <input wire:model="editItemPrecio" x-on:input="precio = parseFloat($event.target.value) || 0"
+                                       type="number" step="0.01" min="0" style="{{ $h }} width:85px; border:1px solid #EDE9FE; border-radius:8px; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                                 @error('editItemPrecio') <p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
                             </div>
 
                             {{-- Puntos --}}
                             <div>
                                 <p style="{{ $eLabel }}">Puntos</p>
-                                <div style="{{ $h }} display:flex; border:1px solid #EDE9FE; border-radius:8px; overflow:hidden; background:#fff;">
-                                    <span style="padding:0 8px; background:#F8F7FF; border-right:1px solid #EDE9FE; font-size:13px; color:#7B6FE8; display:flex; align-items:center;">★</span>
-                                    <input wire:model="editItemPuntos" type="number" min="0"
-                                           style="width:60px; border:none; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
-                                </div>
+                                <input wire:model="editItemPuntos" type="number" min="0"
+                                       style="{{ $h }} width:70px; border:1px solid #EDE9FE; border-radius:8px; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                             </div>
 
                             {{-- Stock Inicial --}}
                             <div>
                                 <p style="{{ $eLabel }}">St. Inicial</p>
-                                <div style="{{ $h }} display:flex; border:1px solid #EDE9FE; border-radius:8px; overflow:hidden; background:#fff;">
-                                    <span style="padding:0 8px; background:#F8F7FF; border-right:1px solid #EDE9FE; display:flex; align-items:center;">
-                                        <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                                    </span>
-                                    <input wire:model="editItemStock" type="number" step="0.01" min="0"
-                                           style="width:70px; border:none; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
-                                </div>
+                                <input wire:model="editItemStock" type="number" step="0.01" min="0"
+                                       style="{{ $h }} width:80px; border:1px solid #EDE9FE; border-radius:8px; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                             </div>
 
                             {{-- Tipo Incremento --}}
@@ -287,7 +276,7 @@
 
                             {{-- P. Final (Alpine live) --}}
                             <div>
-                                <p style="{{ $eLabel }}">P. Final</p>
+                                <p style="{{ $eLabel }}">P. Final (Bs)</p>
                                 <div style="{{ $h }} display:flex; align-items:center; justify-content:center; border:1px solid #EDE9FE; border-radius:8px; padding:0 14px; background:#F8F7FF; min-width:95px;">
                                     <span style="font-size:11px; color:#9CA3AF; margin-right:2px;">Bs</span>
                                     <span x-text="final" style="font-size:13px; font-weight:700; color:#7B6FE8;"></span>
