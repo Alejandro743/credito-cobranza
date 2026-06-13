@@ -8,6 +8,7 @@ use App\Models\ListaMaestra;
 use App\Models\ListaMaestraItem;
 use App\Models\Product;
 use App\Models\Unidad;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use App\Livewire\Concerns\HasModuleColor;
 use Livewire\Component;
@@ -220,17 +221,35 @@ class ListaPreciosManager extends Component
             'quickAddStockInicial' => 'stock inicial',
         ]);
 
-        ListaMaestraItem::create([
-            'lista_maestra_id' => $this->viewingId,
-            'product_id'       => $this->quickAddProductId,
-            'precio_base'      => $this->quickAddPrecio,
-            'puntos'           => (int) $this->quickAddPuntos,
-            'stock_inicial'    => $this->quickAddStockInicial,
-            'stock_consumido'  => 0,
-            'stock_actual'     => $this->quickAddStockInicial,
-            'descuento'        => 0,
-            'active'           => true,
-        ]);
+        $lista     = ListaMaestra::findOrFail($this->viewingId);
+        $productId = $this->quickAddProductId;
+        $cicloId   = $lista->cycle_id;
+        $newStock  = (float) $this->quickAddStockInicial;
+
+        try {
+            DB::transaction(function () use ($productId, $cicloId, $newStock) {
+                $disp = $this->disponibleParaAsignar($productId, $cicloId, null);
+
+                if ($disp !== null && $newStock > $disp + 0.001) {
+                    throw new \RuntimeException('Stock insuficiente. Disponible: ' . number_format(max(0, $disp), 2));
+                }
+
+                ListaMaestraItem::create([
+                    'lista_maestra_id' => $this->viewingId,
+                    'product_id'       => $productId,
+                    'precio_base'      => $this->quickAddPrecio,
+                    'puntos'           => (int) $this->quickAddPuntos,
+                    'stock_inicial'    => $newStock,
+                    'stock_consumido'  => 0,
+                    'stock_actual'     => $newStock,
+                    'descuento'        => 0,
+                    'active'           => true,
+                ]);
+            });
+        } catch (\RuntimeException $e) {
+            $this->addError('quickAddStockInicial', $e->getMessage());
+            return;
+        }
 
         $this->quickAddProductId = null;
         session()->flash('success', 'Producto agregado a la lista.');
@@ -276,17 +295,34 @@ class ListaPreciosManager extends Component
             'editStockInicial' => 'stock inicial',
         ]);
 
-        $item->product->update(['code' => strtoupper(trim($this->editCode))]);
+        $lista     = ListaMaestra::findOrFail($this->viewingId);
+        $cicloId   = $lista->cycle_id;
+        $newStock  = (float) $this->editStockInicial;
+        $itemId    = $item->id;
+        $productId = $item->product_id;
 
-        $nuevoInicial = (float) $this->editStockInicial;
-        $nuevoActual  = $nuevoInicial - (float) $item->stock_consumido;
+        try {
+            DB::transaction(function () use ($item, $productId, $cicloId, $newStock, $itemId) {
+                // disponible = total_ciclo - sum_otras_listas (excluye el ítem actual)
+                $disp = $this->disponibleParaAsignar($productId, $cicloId, $itemId);
 
-        $item->update([
-            'precio_base'   => $this->editPrecio,
-            'puntos'        => (int) $this->editPuntos,
-            'stock_inicial' => $nuevoInicial,
-            'stock_actual'  => max(0, $nuevoActual),
-        ]);
+                if ($disp !== null && $newStock > $disp + 0.001) {
+                    throw new \RuntimeException('Stock insuficiente. Disponible: ' . number_format(max(0, $disp), 2));
+                }
+
+                $item->product->update(['code' => strtoupper(trim($this->editCode))]);
+
+                $item->update([
+                    'precio_base'   => $this->editPrecio,
+                    'puntos'        => (int) $this->editPuntos,
+                    'stock_inicial' => $newStock,
+                    'stock_actual'  => max(0, $newStock - (float) $item->stock_consumido),
+                ]);
+            });
+        } catch (\RuntimeException $e) {
+            $this->addError('editStockInicial', $e->getMessage());
+            return;
+        }
 
         $this->editItemId = null;
         session()->flash('success', 'Ítem actualizado.');
@@ -301,6 +337,43 @@ class ListaPreciosManager extends Component
     {
         $item = ListaMaestraItem::findOrFail($itemId);
         $item->update(['active' => !$item->active]);
+    }
+
+    // ── Stock helper ──────────────────────────────────────────────────────────
+
+    /**
+     * Disponible para asignar a esta lista para el producto dado.
+     * $excludeItemId = id del ListaMaestraItem actual (edición), null para nuevo.
+     * Retorna null si el producto no tiene entrada en ciclo_productos (sin restricción).
+     * Usa lockForUpdate() dentro de una transacción para protección concurrente.
+     */
+    private function disponibleParaAsignar(int $productId, int $cicloId, ?int $excludeItemId): ?float
+    {
+        $cicloRow = DB::table('ciclo_productos')
+            ->where('commercial_cycle_id', $cicloId)
+            ->where('product_id', $productId)
+            ->lockForUpdate()
+            ->first();
+
+        if (!$cicloRow) {
+            return null;
+        }
+
+        $stockTotal = (float) $cicloRow->stock_total;
+
+        $listaIds = ListaMaestra::where('cycle_id', $cicloId)->pluck('id');
+
+        $query = ListaMaestraItem::whereIn('lista_maestra_id', $listaIds)
+            ->where('product_id', $productId)
+            ->lockForUpdate();
+
+        if ($excludeItemId !== null) {
+            $query->where('id', '!=', $excludeItemId);
+        }
+
+        $totalAsignado = (float) $query->sum('stock_inicial');
+
+        return max(0, $stockTotal - $totalAsignado);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -339,6 +412,8 @@ class ListaPreciosManager extends Component
         $itemsMap     = collect();
         $categorias   = collect();
         $unidades     = collect();
+        $stockMap     = collect();
+        $asignadoMap  = collect();
 
         if ($this->viewingId && $this->mode === 'items') {
             $viewingLista = ListaMaestra::with('cycle')->find($this->viewingId);
@@ -363,9 +438,26 @@ class ListaPreciosManager extends Component
 
             $categorias = Categoria::where('active', true)->orderBy('name')->get();
             $unidades   = Unidad::where('active', true)->orderBy('name')->get();
+
+            $cicloId = $viewingLista?->cycle_id;
+            if ($cicloId) {
+                $stockMap = DB::table('ciclo_productos')
+                    ->where('commercial_cycle_id', $cicloId)
+                    ->pluck('stock_total', 'product_id')
+                    ->map(fn($v) => (float) $v);
+
+                $listaIds = ListaMaestra::where('cycle_id', $cicloId)->pluck('id');
+
+                $asignadoMap = ListaMaestraItem::whereIn('lista_maestra_id', $listaIds)
+                    ->selectRaw('product_id, SUM(stock_inicial) as total')
+                    ->groupBy('product_id')
+                    ->pluck('total', 'product_id')
+                    ->map(fn($v) => (float) $v);
+            }
         }
 
         return view('livewire.admin.listas.lista-precios-manager',
-            compact('listas', 'cycles', 'viewingLista', 'products', 'itemsMap', 'categorias', 'unidades'));
+            compact('listas', 'cycles', 'viewingLista', 'products', 'itemsMap',
+                    'categorias', 'unidades', 'stockMap', 'asignadoMap'));
     }
 }

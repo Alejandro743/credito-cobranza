@@ -156,6 +156,7 @@
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase hidden sm:table-cell">Unidad</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Precio</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Puntos</th>
+                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Disp. Maestro</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Stock Ini.</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Consumido</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Stock Act.</th>
@@ -169,6 +170,13 @@
 
                     @if ($inLista && $editItemId === $item->id)
                     {{-- ── FILA EN EDICIÓN ── --}}
+                    @php
+                        $editStTotal  = $stockMap->get($product->id);
+                        $editStAsig   = $asignadoMap->get($product->id, 0);
+                        $editStDisp   = $editStTotal !== null
+                            ? max(0, $editStTotal - $editStAsig + (float)$item->stock_inicial)
+                            : null;
+                    @endphp
                     <tr wire:key="edit-{{ $product->id }}" class="bg-lavanda-50 border-l-2 border-lavanda-400">
                         <td class="px-4 py-2">
                             <input wire:model="editCode" type="text"
@@ -186,9 +194,20 @@
                             <input wire:model="editPuntos" type="number" min="0"
                                    class="w-20 border border-lavanda-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-lavanda-500 bg-white">
                         </td>
+                        <td class="px-4 py-2 hidden lg:table-cell text-right">
+                            @if($editStDisp !== null)
+                                <span class="text-xs font-semibold {{ $editStDisp > 0 ? 'text-mint-700' : 'text-red-500' }}">
+                                    {{ number_format($editStDisp, 0) }}
+                                </span>
+                            @else
+                                <span class="text-xs text-gray-300">—</span>
+                            @endif
+                        </td>
                         <td class="px-4 py-2 hidden lg:table-cell">
                             <input wire:model.live="editStockInicial" type="number" step="0.01" min="0"
+                                   @if($editStDisp !== null) max="{{ $editStDisp }}" @endif
                                    class="w-24 border border-lavanda-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-lavanda-500 bg-white">
+                            @error('editStockInicial') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
                         </td>
                         <td class="px-4 py-2 text-right text-xs text-melocoton-600 hidden lg:table-cell">
                             {{ number_format($item->stock_consumido, 2) }}
@@ -218,6 +237,11 @@
 
                     @elseif (!$inLista && $quickAddProductId === $product->id)
                     {{-- ── FILA QUICK-ADD (producto disponible, agregando) ── --}}
+                    @php
+                        $qaStTotal = $stockMap->get($product->id);
+                        $qaStAsig  = $asignadoMap->get($product->id, 0);
+                        $qaStDisp  = $qaStTotal !== null ? max(0, $qaStTotal - $qaStAsig) : null;
+                    @endphp
                     <tr wire:key="qadd-{{ $product->id }}" class="bg-celeste-50 border-l-2 border-celeste-400">
                         <td class="px-4 py-2 font-mono text-xs text-gray-500">{{ $product->code }}</td>
                         <td class="px-4 py-2 font-medium text-gray-700 text-xs">{{ $product->name }}</td>
@@ -231,9 +255,20 @@
                             <input wire:model="quickAddPuntos" type="number" min="0" placeholder="Pts"
                                    class="w-20 border border-celeste-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-celeste-500 bg-white">
                         </td>
+                        <td class="px-4 py-2 hidden lg:table-cell text-right">
+                            @if($qaStDisp !== null)
+                                <span class="text-xs font-semibold {{ $qaStDisp > 0 ? 'text-mint-700' : 'text-red-500' }}">
+                                    {{ number_format($qaStDisp, 0) }}
+                                </span>
+                            @else
+                                <span class="text-xs text-gray-300">—</span>
+                            @endif
+                        </td>
                         <td class="px-4 py-2 hidden lg:table-cell">
                             <input wire:model.live="quickAddStockInicial" type="number" step="0.01" min="0" placeholder="Stock"
+                                   @if($qaStDisp !== null) max="{{ $qaStDisp }}" @endif
                                    class="w-24 border border-celeste-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-celeste-500 bg-white">
+                            @error('quickAddStockInicial') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
                         </td>
                         <td class="px-4 py-2 text-right text-xs text-gray-300 hidden lg:table-cell">0</td>
                         <td class="px-4 py-2 text-right">
@@ -258,12 +293,28 @@
 
                     @elseif ($inLista)
                     {{-- ── FILA EN LECTURA (ya en lista) ── --}}
+                    @php
+                        $rdStTotal = $stockMap->get($product->id);
+                        $rdStAsig  = $asignadoMap->get($product->id, 0);
+                        $rdStDisp  = $rdStTotal !== null
+                            ? max(0, $rdStTotal - $rdStAsig + (float)$item->stock_inicial)
+                            : null;
+                    @endphp
                     <tr wire:key="inlist-{{ $product->id }}" class="hover:bg-gray-50 transition-colors {{ !$item->active ? 'opacity-60' : '' }}">
                         <td data-label="Código" class="px-4 py-3 font-mono text-xs text-gray-500 font-medium">{{ $product->code }}</td>
                         <td data-label="Producto" class="px-4 py-3 font-medium text-gray-800">{{ $product->name }}</td>
                         <td data-label="Unidad" class="px-4 py-3 text-xs text-gray-500 hidden sm:table-cell">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
                         <td data-label="Precio" class="px-4 py-3 text-right text-gray-700">S/ {{ number_format($item->precio_base, 2) }}</td>
                         <td data-label="Puntos" class="px-4 py-3 text-right text-gray-700 hidden md:table-cell">{{ $item->puntos }}</td>
+                        <td data-label="Disp. Maestro" class="px-4 py-3 text-right hidden lg:table-cell">
+                            @if($rdStDisp !== null)
+                                <span class="font-semibold {{ $rdStDisp > 0 ? 'text-mint-700' : 'text-red-500' }}">
+                                    {{ number_format($rdStDisp, 0) }}
+                                </span>
+                            @else
+                                <span class="text-gray-300">—</span>
+                            @endif
+                        </td>
                         <td data-label="Stock Ini." class="px-4 py-3 text-right text-gray-500 hidden lg:table-cell">{{ number_format($item->stock_inicial, 2) }}</td>
                         <td data-label="Consumido" class="px-4 py-3 text-right text-melocoton-600 hidden lg:table-cell">{{ number_format($item->stock_consumido, 2) }}</td>
                         <td data-label="Stock Act." class="px-4 py-3 text-right">
@@ -296,12 +347,26 @@
 
                     @else
                     {{-- ── FILA DISPONIBLE (no en lista aún) ── --}}
+                    @php
+                        $avStTotal = $stockMap->get($product->id);
+                        $avStAsig  = $asignadoMap->get($product->id, 0);
+                        $avStDisp  = $avStTotal !== null ? max(0, $avStTotal - $avStAsig) : null;
+                    @endphp
                     <tr wire:key="avail-{{ $product->id }}" class="hover:bg-gray-50 transition-colors opacity-70">
                         <td data-label="Código" class="px-4 py-3 font-mono text-xs text-gray-400">{{ $product->code }}</td>
                         <td data-label="Producto" class="px-4 py-3 text-gray-500">{{ $product->name }}</td>
                         <td data-label="Unidad" class="px-4 py-3 text-xs text-gray-400 hidden sm:table-cell">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
                         <td data-label="Precio" class="px-4 py-3 text-right text-gray-300">—</td>
                         <td data-label="Puntos" class="px-4 py-3 text-right text-gray-300 hidden md:table-cell">—</td>
+                        <td data-label="Disp. Maestro" class="px-4 py-3 text-right hidden lg:table-cell">
+                            @if($avStDisp !== null)
+                                <span class="font-semibold {{ $avStDisp > 0 ? 'text-mint-700' : 'text-red-500' }}">
+                                    {{ number_format($avStDisp, 0) }}
+                                </span>
+                            @else
+                                <span class="text-gray-300">—</span>
+                            @endif
+                        </td>
                         <td data-label="Stock Ini." class="px-4 py-3 text-right text-gray-300 hidden lg:table-cell">—</td>
                         <td data-label="Consumido" class="px-4 py-3 text-right text-gray-300 hidden lg:table-cell">—</td>
                         <td data-label="Stock Act." class="px-4 py-3 text-right text-gray-300">—</td>
@@ -320,7 +385,7 @@
 
                     @empty
                     <tr>
-                        <td colspan="10" class="px-5 py-14 text-center text-gray-400 text-sm">
+                        <td colspan="11" class="px-5 py-14 text-center text-gray-400 text-sm">
                             No hay productos en el catálogo.
                         </td>
                     </tr>
