@@ -422,22 +422,40 @@ class ListaMaestraManager extends Component
             'quickAddStock'  => 'stock inicial',
         ]);
 
-        [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista((float) $this->quickAddPrecio);
+        $lista     = ListaMaestra::findOrFail($this->viewingId);
+        $productId = $this->quickAddProductId;
+        $cicloId   = $lista->cycle_id;
+        $newStock  = (float) $this->quickAddStock;
 
-        ListaMaestraItem::create([
-            'lista_maestra_id'  => $this->viewingId,
-            'product_id'        => $this->quickAddProductId,
-            'precio_base'       => $this->quickAddPrecio,
-            'puntos'            => (int) $this->quickAddPuntos,
-            'stock_inicial'     => $this->quickAddStock,
-            'stock_consumido'   => 0,
-            'stock_actual'      => $this->quickAddStock,
-            'descuento'         => 0,
-            'active'            => true,
-            'tipo_incremento'   => $tipoInc,
-            'factor_incremento' => $factorInc,
-            'monto_incremento'  => $montoInc,
-        ]);
+        try {
+            DB::transaction(function () use ($productId, $cicloId, $newStock) {
+                $disp = $this->disponibleParaAsignar($productId, $cicloId, null);
+
+                if ($disp !== null && $newStock > $disp + 0.001) {
+                    throw new \RuntimeException('Stock insuficiente. Disponible: ' . number_format(max(0, $disp), 2));
+                }
+
+                [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista((float) $this->quickAddPrecio);
+
+                ListaMaestraItem::create([
+                    'lista_maestra_id'  => $this->viewingId,
+                    'product_id'        => $productId,
+                    'precio_base'       => $this->quickAddPrecio,
+                    'puntos'            => (int) $this->quickAddPuntos,
+                    'stock_inicial'     => $newStock,
+                    'stock_consumido'   => 0,
+                    'stock_actual'      => $newStock,
+                    'descuento'         => 0,
+                    'active'            => true,
+                    'tipo_incremento'   => $tipoInc,
+                    'factor_incremento' => $factorInc,
+                    'monto_incremento'  => $montoInc,
+                ]);
+            });
+        } catch (\RuntimeException $e) {
+            $this->addError('quickAddStock', $e->getMessage());
+            return;
+        }
 
         $this->quickAddProductId = null;
         session()->flash('success', 'Producto agregado a la lista.');
@@ -488,32 +506,77 @@ class ListaMaestraManager extends Component
             'editItemFactorIncremento' => 'factor incremento',
         ]);
 
-        $item->product->update(['code' => strtoupper(trim($this->editItemCode))]);
-        $nuevoStock  = (float) $this->editItemStock;
-        $nuevoActual = max(0, $nuevoStock - (float) $item->stock_consumido);
-        $precioBase  = (float) $this->editItemPrecio;
-        $tipo        = $this->editItemTipoIncremento ?: null;
-        $factor      = (float) $this->editItemFactorIncremento;
-        $monto       = 0.0;
-        if ($tipo && $factor > 0) {
-            $monto = $tipo === 'porcentaje'
-                ? round($precioBase * $factor / 100, 2)
-                : $factor;
-        }
+        $lista     = ListaMaestra::findOrFail($this->viewingId);
+        $cicloId   = $lista->cycle_id;
+        $newStock  = (float) $this->editItemStock;
+        $itemId    = $item->id;
+        $productId = $item->product_id;
 
-        $item->update([
-            'precio_base'       => $precioBase,
-            'puntos'            => (int) $this->editItemPuntos,
-            'stock_inicial'     => $nuevoStock,
-            'stock_actual'      => $nuevoActual,
-            'active'            => $this->editItemActive,
-            'tipo_incremento'   => $tipo,
-            'factor_incremento' => $factor,
-            'monto_incremento'  => $monto,
-        ]);
+        try {
+            DB::transaction(function () use ($item, $productId, $cicloId, $newStock, $itemId) {
+                $disp = $this->disponibleParaAsignar($productId, $cicloId, $itemId);
+
+                if ($disp !== null && $newStock > $disp + 0.001) {
+                    throw new \RuntimeException('Stock insuficiente. Disponible: ' . number_format(max(0, $disp), 2));
+                }
+
+                $item->product->update(['code' => strtoupper(trim($this->editItemCode))]);
+                $nuevoActual = max(0, $newStock - (float) $item->stock_consumido);
+                $precioBase  = (float) $this->editItemPrecio;
+                $tipo        = $this->editItemTipoIncremento ?: null;
+                $factor      = (float) $this->editItemFactorIncremento;
+                $monto       = 0.0;
+                if ($tipo && $factor > 0) {
+                    $monto = $tipo === 'porcentaje'
+                        ? round($precioBase * $factor / 100, 2)
+                        : $factor;
+                }
+
+                $item->update([
+                    'precio_base'       => $precioBase,
+                    'puntos'            => (int) $this->editItemPuntos,
+                    'stock_inicial'     => $newStock,
+                    'stock_actual'      => $nuevoActual,
+                    'active'            => $this->editItemActive,
+                    'tipo_incremento'   => $tipo,
+                    'factor_incremento' => $factor,
+                    'monto_incremento'  => $monto,
+                ]);
+            });
+        } catch (\RuntimeException $e) {
+            $this->addError('editItemStock', $e->getMessage());
+            return;
+        }
 
         $this->editItemId = null;
         session()->flash('success', 'Ítem actualizado.');
+    }
+
+    // ── Stock helper (concurrencia) ───────────────────────────────────────────
+
+    private function disponibleParaAsignar(int $productId, int $cicloId, ?int $excludeItemId): ?float
+    {
+        $cicloRow = DB::table('ciclo_productos')
+            ->where('commercial_cycle_id', $cicloId)
+            ->where('product_id', $productId)
+            ->lockForUpdate()
+            ->first();
+
+        if (!$cicloRow) {
+            return null;
+        }
+
+        $listaIds = ListaMaestra::where('cycle_id', $cicloId)->pluck('id');
+
+        $query = ListaMaestraItem::whereIn('lista_maestra_id', $listaIds)
+            ->where('product_id', $productId)
+            ->lockForUpdate();
+
+        if ($excludeItemId !== null) {
+            $query->where('id', '!=', $excludeItemId);
+        }
+
+        return max(0, (float) $cicloRow->stock_total - (float) $query->sum('stock_inicial'));
     }
 
     public function toggleItemActive(int $itemId): void
