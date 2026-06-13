@@ -65,6 +65,15 @@
     </div>
     <div style="padding:16px 20px;">
         <div style="display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
+            <div style="min-width:130px;">
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Ciclo</label>
+                <select wire:model="newCicloId" style="width:100%; {{ $iS }} cursor:pointer;">
+                    <option value="">— Sin ciclo —</option>
+                    @foreach ($ciclos as $c)
+                        <option value="{{ $c->id }}">{{ $c->code }} — {{ $c->name }}</option>
+                    @endforeach
+                </select>
+            </div>
             <div style="min-width:100px;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Código *</label>
                 <input wire:model="newCode" type="text" placeholder="Ej. PRD001"
@@ -77,14 +86,10 @@
                        style="width:100%; {{ $iS }}">
                 @error('newName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-            <div style="min-width:130px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Unidad</label>
-                <select wire:model="newUnidadId" style="width:100%; {{ $iS }} cursor:pointer;">
-                    <option value="">— Seleccionar —</option>
-                    @foreach ($unidades as $u)
-                        <option value="{{ $u->id }}">{{ $u->name }}{{ $u->abreviatura ? ' ('.$u->abreviatura.')' : '' }}</option>
-                    @endforeach
-                </select>
+            <div style="width:90px; flex-shrink:0;">
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Stock Inicial</label>
+                <input wire:model="newStockInicial" type="number" min="0" step="1" placeholder="0"
+                       style="width:100%; {{ $iS }} text-align:right;">
             </div>
             <div style="min-width:130px;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Categoría</label>
@@ -96,18 +101,13 @@
                 </select>
             </div>
             <div style="min-width:130px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Ciclo</label>
-                <select wire:model="newCicloId" style="width:100%; {{ $iS }} cursor:pointer;">
-                    <option value="">— Sin ciclo —</option>
-                    @foreach ($ciclos as $c)
-                        <option value="{{ $c->id }}">{{ $c->code }} — {{ $c->name }}</option>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Unidad</label>
+                <select wire:model="newUnidadId" style="width:100%; {{ $iS }} cursor:pointer;">
+                    <option value="">— Seleccionar —</option>
+                    @foreach ($unidades as $u)
+                        <option value="{{ $u->id }}">{{ $u->name }}{{ $u->abreviatura ? ' ('.$u->abreviatura.')' : '' }}</option>
                     @endforeach
                 </select>
-            </div>
-            <div style="width:72px; flex-shrink:0;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Stock</label>
-                <input wire:model="newStockInicial" type="number" min="0" step="1" placeholder="0"
-                       style="width:100%; {{ $iS }} text-align:right;">
             </div>
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
@@ -171,22 +171,23 @@
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay productos registrados.</p>
         @else
         @php
-        $sortCols = ['Código'=>'code','Nombre'=>'name','Unidad'=>'unidad_id','Categoría'=>'categoria_id','Estado'=>'active'];
+        $sortBefore = ['Código'=>'code','Nombre'=>'name'];
+        $sortAfter  = ['Categoría'=>'categoria_id','Unidad'=>'unidad_id','Estado'=>'active'];
         @endphp
         <table style="table-layout:fixed; width:100%; min-width:1380px; border-collapse:collapse; font-size:13px;">
             <colgroup>
-                <col style="width:44px;">
-                <col style="width:56px;">
-                <col style="width:110px;">
-                <col style="width:130px;">
-                <col style="width:130px;">
-                <col style="width:130px;">
-                <col style="width:110px;">
-                <col style="width:190px;">
-                <col style="width:90px;">
-                <col style="width:130px;">
-                <col style="width:110px;">
-                <col style="width:156px;">
+                <col style="width:44px;">   {{-- # --}}
+                <col style="width:56px;">   {{-- img --}}
+                <col style="width:100px;">  {{-- ciclo --}}
+                <col style="width:110px;">  {{-- código --}}
+                <col style="width:190px;">  {{-- nombre --}}
+                <col style="width:120px;">  {{-- stock inicial --}}
+                <col style="width:120px;">  {{-- stock asignado --}}
+                <col style="width:130px;">  {{-- stock disponible --}}
+                <col style="width:130px;">  {{-- categoría --}}
+                <col style="width:90px;">   {{-- unidad --}}
+                <col style="width:100px;">  {{-- estado --}}
+                <col style="width:150px;">  {{-- acciones --}}
             </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
@@ -194,9 +195,26 @@
                     <th style="padding:10px 12px; text-align:center;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Img</span>
                     </th>
-                    <th style="padding:10px 14px; text-align:left;">
+                    <th style="padding:10px 10px; text-align:left;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Ciclo</span>
                     </th>
+                    @foreach($sortBefore as $label => $key)
+                    @php $isActive = $sortBy === $key; @endphp
+                    <th wire:click="toggleSort('{{ $key }}')"
+                        style="padding:10px 14px; text-align:left; position:relative; user-select:none; overflow:hidden; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                            {{ $label }}
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        <div x-data="colResize()" @mousedown="start($event)"
+                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
+                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+                    @endforeach
                     <th style="padding:10px 8px; text-align:center;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stock Inicial</span>
                     </th>
@@ -206,10 +224,10 @@
                     <th style="padding:10px 8px; text-align:center;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stock Disponible</span>
                     </th>
-                    @foreach($sortCols as $label => $key)
+                    @foreach($sortAfter as $label => $key)
                     @php $isActive = $sortBy === $key; @endphp
                     <th wire:click="toggleSort('{{ $key }}')"
-                        style="padding:10px 14px; text-align:{{ in_array($label, ['Estado']) ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:70px; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        style="padding:10px 14px; text-align:{{ $label === 'Estado' ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
                             {{ $label }}
@@ -255,11 +273,6 @@
                             @endforeach
                         </select>
                     </td>
-                    <td style="padding:7px 4px;">
-                        <input wire:model="editStockInicial" type="number" min="0" step="1" placeholder="0"
-                               style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; text-align:right;">
-                    </td>
-                    <td></td><td></td>
                     <td style="padding:7px 10px;">
                         <input wire:model="editCode" type="text"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; font-family:monospace; text-transform:uppercase;">
@@ -270,21 +283,26 @@
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
                         @error('editName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:7px 10px;">
-                        <select wire:model="editUnidadId"
-                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
-                            <option value="">— Unidad —</option>
-                            @foreach ($unidades as $u)
-                                <option value="{{ $u->id }}">{{ $u->abreviatura ?? $u->name }}</option>
-                            @endforeach
-                        </select>
+                    <td style="padding:7px 4px;">
+                        <input wire:model="editStockInicial" type="number" min="0" step="1" placeholder="0"
+                               style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; text-align:right;">
                     </td>
+                    <td></td><td></td>
                     <td style="padding:7px 10px;">
                         <select wire:model="editCategoriaId"
                                 style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
                             <option value="">— Categoría —</option>
                             @foreach ($categorias as $cat)
                                 <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td style="padding:7px 10px;">
+                        <select wire:model="editUnidadId"
+                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
+                            <option value="">— Unidad —</option>
+                            @foreach ($unidades as $u)
+                                <option value="{{ $u->id }}">{{ $u->abreviatura ?? $u->name }}</option>
                             @endforeach
                         </select>
                     </td>
@@ -327,57 +345,58 @@
                         </div>
                     </td>
 
-                    @php $cicloDelProducto = $p->ciclos->first(); @endphp
-                    <td style="padding:10px 10px; overflow:hidden;">
-                        @if($cicloDelProducto)
-                        <span style="font-size:11px; font-weight:700; color:#7c3aed; background:#EDE9FE; padding:2px 8px; border-radius:6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cicloDelProducto->code }}</span>
-                        @else
-                        <span style="font-size:12px; color:#D1D5DB;">—</span>
-                        @endif
-                    </td>
                     @php
+                        $cicloDelProducto = $p->ciclos->first();
                         $stkTotal    = (float)($cicloDelProducto?->pivot->stock_total ?? 0);
                         $stkAsignado = (float)$p->listaMaestraItems->sum('stock_inicial');
                         $stkCompr    = (float)$p->listaMaestraItems->sum('stock_comprometido');
                         $stkConsum   = (float)$p->listaMaestraItems->sum('stock_consumido');
                         $stkDisp     = max(0, $stkTotal - $stkCompr - $stkConsum);
                     @endphp
-                    <td style="padding:10px 8px; text-align:center; overflow:hidden;">
+                    <td style="padding:10px 10px; overflow:hidden;">
                         @if($cicloDelProducto)
-                        <span style="font-size:13px; font-weight:700; color:#111827;">{{ number_format($stkTotal, 0) }}</span>
-                        @else
-                        <span style="font-size:12px; color:#D1D5DB;">—</span>
-                        @endif
-                    </td>
-                    <td style="padding:10px 8px; text-align:center; overflow:hidden;">
-                        @if($cicloDelProducto)
-                        <span style="font-size:13px; font-weight:600; color:#6B7280;">{{ number_format($stkAsignado, 0) }}</span>
-                        @else
-                        <span style="font-size:12px; color:#D1D5DB;">—</span>
-                        @endif
-                    </td>
-                    <td style="padding:10px 8px; text-align:center; overflow:hidden;">
-                        @if($cicloDelProducto)
-                        <span style="font-size:13px; font-weight:700; color:{{ $stkDisp > 0 ? '#059669' : '#EF4444' }};">{{ number_format($stkDisp, 0) }}</span>
+                        <span style="font-size:12px; color:#7c3aed; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cicloDelProducto->code }}</span>
                         @else
                         <span style="font-size:12px; color:#D1D5DB;">—</span>
                         @endif
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->code }}</span>
+                        <span style="font-size:12px; font-family:monospace; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->code }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($p->name)) }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($p->name)) }}</span>
                     </td>
 
-                    <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->unidad?->abreviatura ?? $p->unidad?->name ?? '—' }}</span>
+                    <td style="padding:10px 8px; text-align:center; overflow:hidden;">
+                        @if($cicloDelProducto)
+                        <span style="font-size:13px; color:#374151;">{{ number_format($stkTotal, 0) }}</span>
+                        @else
+                        <span style="font-size:12px; color:#D1D5DB;">—</span>
+                        @endif
+                    </td>
+                    <td style="padding:10px 8px; text-align:center; overflow:hidden;">
+                        @if($cicloDelProducto)
+                        <span style="font-size:13px; color:#6B7280;">{{ number_format($stkAsignado, 0) }}</span>
+                        @else
+                        <span style="font-size:12px; color:#D1D5DB;">—</span>
+                        @endif
+                    </td>
+                    <td style="padding:10px 8px; text-align:center; overflow:hidden;">
+                        @if($cicloDelProducto)
+                        <span style="font-size:13px; color:{{ $stkDisp > 0 ? '#059669' : '#EF4444' }};">{{ number_format($stkDisp, 0) }}</span>
+                        @else
+                        <span style="font-size:12px; color:#D1D5DB;">—</span>
+                        @endif
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
                         <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($p->categoria?->name ?? '—')) }}</span>
+                    </td>
+
+                    <td style="padding:10px 14px; overflow:hidden;">
+                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->unidad?->abreviatura ?? $p->unidad?->name ?? '—' }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">
