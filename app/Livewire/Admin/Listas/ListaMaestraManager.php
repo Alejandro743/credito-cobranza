@@ -830,6 +830,8 @@ class ListaMaestraManager extends Component
 
             $inListaIds = $itemsMap->keys();
 
+            $cicloId = $viewingMaestra?->cycle_id;
+
             $cicloProductoIds = $cicloId
                 ? DB::table('ciclo_productos')
                     ->where('commercial_cycle_id', $cicloId)
@@ -850,7 +852,6 @@ class ListaMaestraManager extends Component
             $categorias = Categoria::where('active', true)->orderBy('name')->get();
             $unidades   = Unidad::where('active', true)->orderBy('name')->get();
 
-            $cicloId = $viewingMaestra?->cycle_id;
             if ($cicloId) {
                 $stockMap = DB::table('ciclo_productos')
                     ->where('commercial_cycle_id', $cicloId)
