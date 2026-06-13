@@ -244,16 +244,19 @@
                                        style="{{ $h }} width:70px; border:1px solid #EDE9FE; border-radius:8px; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                             </div>
 
-                            {{-- Stock Máximo (read-only) --}}
+                            {{-- Stock Máximo (read-only: disponible global) --}}
                             @php
-                                $editStkMax = $stockMap->has($p->id)
-                                    ? max(0, $stockMap->get($p->id) - $asignadoMap->get($p->id, 0) + (float)$item->stock_inicial)
+                                $editStkDisp   = $stockMap->has($p->id)
+                                    ? max(0, $stockMap->get($p->id) - $asignadoMap->get($p->id, 0))
+                                    : null;
+                                $editMaxInput  = $editStkDisp !== null
+                                    ? $editStkDisp + (float)$item->stock_inicial
                                     : null;
                             @endphp
                             <div>
                                 <p style="{{ $eLabel }}">Stock Máx.</p>
-                                <div style="{{ $h }} width:80px; border:1px solid #E5E7EB; border-radius:8px; padding:0 8px; font-size:13px; font-weight:600; text-align:center; background:#F9FAFB; display:flex; align-items:center; justify-content:center; color:{{ $editStkMax === null ? '#D1D5DB' : ($editStkMax > 0 ? '#059669' : '#EF4444') }};">
-                                    {{ $editStkMax !== null ? number_format($editStkMax, 0) : '—' }}
+                                <div style="{{ $h }} width:80px; border:1px solid #E5E7EB; border-radius:8px; padding:0 8px; font-size:13px; font-weight:600; text-align:center; background:#F9FAFB; display:flex; align-items:center; justify-content:center; color:{{ $editStkDisp === null ? '#D1D5DB' : ($editStkDisp > 0 ? '#059669' : '#EF4444') }};">
+                                    {{ $editStkDisp !== null ? number_format($editStkDisp, 0) : '—' }}
                                 </div>
                             </div>
 
@@ -261,7 +264,7 @@
                             <div>
                                 <p style="{{ $eLabel }}">St. Inicial</p>
                                 <input wire:model="editItemStock" type="number" step="0.01" min="0"
-                                       @if($editStkMax !== null) max="{{ $editStkMax }}" @endif
+                                       @if($editMaxInput !== null) max="{{ $editMaxInput }}" @endif
                                        style="{{ $h }} width:80px; border:1px solid #EDE9FE; border-radius:8px; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                             </div>
 
@@ -396,7 +399,7 @@
                     </td>
                     @php
                         $rdStkMax = $stockMap->has($p->id)
-                            ? max(0, $stockMap->get($p->id) - $asignadoMap->get($p->id, 0) + ($inLista ? (float)$item->stock_inicial : 0))
+                            ? max(0, $stockMap->get($p->id) - $asignadoMap->get($p->id, 0))
                             : null;
                     @endphp
                     <td style="{{ $tdBase }}">

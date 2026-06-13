@@ -830,7 +830,14 @@ class ListaMaestraManager extends Component
 
             $inListaIds = $itemsMap->keys();
 
+            $cicloProductoIds = $cicloId
+                ? DB::table('ciclo_productos')
+                    ->where('commercial_cycle_id', $cicloId)
+                    ->pluck('product_id')
+                : collect();
+
             $products = Product::with(['categoria', 'unidad'])
+                ->whereIn('id', $cicloProductoIds)
                 ->when($this->filterCodigo, fn($q) =>
                     $q->where('code', 'like', "%{$this->filterCodigo}%"))
                 ->when($this->filterProducto, fn($q) =>
