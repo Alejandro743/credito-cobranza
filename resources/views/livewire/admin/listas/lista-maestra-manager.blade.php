@@ -264,7 +264,7 @@
                             <div style="position:relative;">
                                 <p style="{{ $eLabel }}">St. Inicial</p>
                                 <input wire:model="editItemStock" type="number" step="0.01"
-                                       oninput="if(parseFloat(this.value)<0)this.value=0"
+                                       onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()" oninput="if(parseFloat(this.value)<0)this.value=0"
                                        @if($editMaxInput !== null) max="{{ $editMaxInput }}" @endif
                                        style="{{ $h }} width:80px; border:1px solid #EDE9FE; border-radius:8px; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                                 @error('editItemStock')
@@ -365,7 +365,7 @@
                     <td style="{{ $tdC }}">
                         <div style="position:relative; display:inline-block;">
                             <input wire:model="quickAddStock" type="number" step="0.01" placeholder="0"
-                                   oninput="if(parseFloat(this.value)<0)this.value=0"
+                                   onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()" oninput="if(parseFloat(this.value)<0)this.value=0"
                                    style="width:68px; border:1px solid #A5F3FC; border-radius:6px; padding:5px 8px; font-size:12px; text-align:center; outline:none; background:#fff;">
                             @error('quickAddStock')
                             <div style="position:absolute; bottom:calc(100% + 7px); left:50%; transform:translateX(-50%); background:#EF4444; color:#fff; font-size:11px; font-weight:600; padding:5px 10px; border-radius:8px; white-space:nowrap; z-index:30; box-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none;">
@@ -544,7 +544,7 @@
             <div style="position:relative;">
                 <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Stock Ini.</label>
                 <input wire:model="editItemStock" type="number" step="0.01"
-                       oninput="if(parseFloat(this.value)<0)this.value=0"
+                       onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()" oninput="if(parseFloat(this.value)<0)this.value=0"
                        style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
                 @error('editItemStock')
                 <div style="position:absolute; bottom:calc(100% + 7px); left:0; background:#EF4444; color:#fff; font-size:11px; font-weight:600; padding:5px 10px; border-radius:8px; white-space:nowrap; z-index:30; box-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none;">
@@ -615,7 +615,7 @@
             <div style="position:relative;">
                 <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Stock</label>
                 <input wire:model="quickAddStock" type="number" step="0.01" placeholder="0"
-                       oninput="if(parseFloat(this.value)<0)this.value=0"
+                       onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()" oninput="if(parseFloat(this.value)<0)this.value=0"
                        style="width:100%; height:34px; border:1px solid #A5F3FC; border-radius:8px; padding:0 8px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
                 @error('quickAddStock')
                 <div style="position:absolute; bottom:calc(100% + 7px); left:0; background:#EF4444; color:#fff; font-size:11px; font-weight:600; padding:5px 10px; border-radius:8px; white-space:nowrap; z-index:30; box-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none;">
