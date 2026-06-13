@@ -266,6 +266,7 @@
                                 <input wire:model="editItemStock" type="number" step="0.01" min="0"
                                        @if($editMaxInput !== null) max="{{ $editMaxInput }}" @endif
                                        style="{{ $h }} width:80px; border:1px solid #EDE9FE; border-radius:8px; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
+                                @error('editItemStock') <p style="font-size:11px; color:#ef4444; margin-top:2px; white-space:nowrap;">{{ $message }}</p> @enderror
                             </div>
 
                             {{-- Tipo Incremento --}}
@@ -359,6 +360,7 @@
                         <input wire:model="quickAddStock" type="number" step="0.01" min="0" placeholder="0"
                                @if($qaStkMax !== null) max="{{ $qaStkMax }}" @endif
                                style="width:68px; border:1px solid #A5F3FC; border-radius:6px; padding:5px 8px; font-size:12px; text-align:center; outline:none; background:#fff;">
+                        @error('quickAddStock') <p style="font-size:10px; color:#ef4444; margin-top:2px; white-space:nowrap;">{{ $message }}</p> @enderror
                     </td>
                     <td colspan="5"></td>
                     <td style="{{ $tdC }}"><span style="font-size:11px; color:#0E7490; font-weight:600;">Agregar</span></td>
@@ -530,6 +532,7 @@
                 <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Stock Ini.</label>
                 <input wire:model="editItemStock" type="number" step="0.01" min="0"
                        style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
+                @error('editItemStock') <p style="font-size:11px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
             <div>
                 <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Estado</label>
@@ -594,6 +597,7 @@
                 <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Stock</label>
                 <input wire:model="quickAddStock" type="number" step="0.01" min="0" placeholder="0"
                        style="width:100%; height:34px; border:1px solid #A5F3FC; border-radius:8px; padding:0 8px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
+                @error('quickAddStock') <p style="font-size:11px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
         </div>
         <div style="display:flex; gap:8px;">
