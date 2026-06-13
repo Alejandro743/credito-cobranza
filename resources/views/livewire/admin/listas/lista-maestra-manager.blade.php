@@ -261,12 +261,18 @@
                             </div>
 
                             {{-- Stock Inicial --}}
-                            <div>
+                            <div style="position:relative;">
                                 <p style="{{ $eLabel }}">St. Inicial</p>
-                                <input wire:model="editItemStock" type="number" step="0.01" min="0"
+                                <input wire:model="editItemStock" type="number" step="0.01"
+                                       oninput="if(parseFloat(this.value)<0)this.value=0"
                                        @if($editMaxInput !== null) max="{{ $editMaxInput }}" @endif
                                        style="{{ $h }} width:80px; border:1px solid #EDE9FE; border-radius:8px; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
-                                @error('editItemStock') <p style="font-size:11px; color:#ef4444; margin-top:2px; white-space:nowrap;">{{ $message }}</p> @enderror
+                                @error('editItemStock')
+                                <div style="position:absolute; bottom:calc(100% + 7px); left:50%; transform:translateX(-50%); background:#EF4444; color:#fff; font-size:11px; font-weight:600; padding:5px 10px; border-radius:8px; white-space:nowrap; z-index:30; box-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none;">
+                                    {{ $message }}
+                                    <span style="position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:#EF4444;"></span>
+                                </div>
+                                @enderror
                             </div>
 
                             {{-- Tipo Incremento --}}
@@ -357,10 +363,17 @@
                         </div>
                     </td>
                     <td style="{{ $tdC }}">
-                        <input wire:model="quickAddStock" type="number" step="0.01" min="0" placeholder="0"
-                               @if($qaStkMax !== null) max="{{ $qaStkMax }}" @endif
-                               style="width:68px; border:1px solid #A5F3FC; border-radius:6px; padding:5px 8px; font-size:12px; text-align:center; outline:none; background:#fff;">
-                        @error('quickAddStock') <p style="font-size:10px; color:#ef4444; margin-top:2px; white-space:nowrap;">{{ $message }}</p> @enderror
+                        <div style="position:relative; display:inline-block;">
+                            <input wire:model="quickAddStock" type="number" step="0.01" placeholder="0"
+                                   oninput="if(parseFloat(this.value)<0)this.value=0"
+                                   style="width:68px; border:1px solid #A5F3FC; border-radius:6px; padding:5px 8px; font-size:12px; text-align:center; outline:none; background:#fff;">
+                            @error('quickAddStock')
+                            <div style="position:absolute; bottom:calc(100% + 7px); left:50%; transform:translateX(-50%); background:#EF4444; color:#fff; font-size:11px; font-weight:600; padding:5px 10px; border-radius:8px; white-space:nowrap; z-index:30; box-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none;">
+                                {{ $message }}
+                                <span style="position:absolute; top:100%; left:50%; transform:translateX(-50%); border:5px solid transparent; border-top-color:#EF4444;"></span>
+                            </div>
+                            @enderror
+                        </div>
                     </td>
                     <td colspan="5"></td>
                     <td style="{{ $tdC }}"><span style="font-size:11px; color:#0E7490; font-weight:600;">Agregar</span></td>
@@ -528,11 +541,17 @@
                 <input wire:model="editItemPuntos" type="number" min="0"
                        style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
             </div>
-            <div>
+            <div style="position:relative;">
                 <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Stock Ini.</label>
-                <input wire:model="editItemStock" type="number" step="0.01" min="0"
+                <input wire:model="editItemStock" type="number" step="0.01"
+                       oninput="if(parseFloat(this.value)<0)this.value=0"
                        style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
-                @error('editItemStock') <p style="font-size:11px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
+                @error('editItemStock')
+                <div style="position:absolute; bottom:calc(100% + 7px); left:0; background:#EF4444; color:#fff; font-size:11px; font-weight:600; padding:5px 10px; border-radius:8px; white-space:nowrap; z-index:30; box-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none;">
+                    {{ $message }}
+                    <span style="position:absolute; top:100%; left:16px; border:5px solid transparent; border-top-color:#EF4444;"></span>
+                </div>
+                @enderror
             </div>
             <div>
                 <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Estado</label>
@@ -593,11 +612,17 @@
                 <input wire:model="quickAddPuntos" type="number" min="0" placeholder="0"
                        style="width:100%; height:34px; border:1px solid #A5F3FC; border-radius:8px; padding:0 8px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
             </div>
-            <div>
+            <div style="position:relative;">
                 <label style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:3px;">Stock</label>
-                <input wire:model="quickAddStock" type="number" step="0.01" min="0" placeholder="0"
+                <input wire:model="quickAddStock" type="number" step="0.01" placeholder="0"
+                       oninput="if(parseFloat(this.value)<0)this.value=0"
                        style="width:100%; height:34px; border:1px solid #A5F3FC; border-radius:8px; padding:0 8px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;">
-                @error('quickAddStock') <p style="font-size:11px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
+                @error('quickAddStock')
+                <div style="position:absolute; bottom:calc(100% + 7px); left:0; background:#EF4444; color:#fff; font-size:11px; font-weight:600; padding:5px 10px; border-radius:8px; white-space:nowrap; z-index:30; box-shadow:0 2px 8px rgba(0,0,0,.18); pointer-events:none;">
+                    {{ $message }}
+                    <span style="position:absolute; top:100%; left:16px; border:5px solid transparent; border-top-color:#EF4444;"></span>
+                </div>
+                @enderror
             </div>
         </div>
         <div style="display:flex; gap:8px;">
