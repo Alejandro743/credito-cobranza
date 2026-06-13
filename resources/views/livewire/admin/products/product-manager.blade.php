@@ -71,7 +71,7 @@
                        style="width:100%; {{ $iS }} font-family:monospace; text-transform:uppercase;">
                 @error('newCode') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-            <div style="flex:2; min-width:180px;">
+            <div style="flex:1; min-width:140px;">
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Nombre *</label>
                 <input wire:model="newName" type="text" placeholder="Nombre del producto"
                        style="width:100%; {{ $iS }}">
@@ -104,10 +104,10 @@
                     @endforeach
                 </select>
             </div>
-            <div style="min-width:90px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Stock Inicial</label>
+            <div style="width:72px; flex-shrink:0;">
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Stock</label>
                 <input wire:model="newStockInicial" type="number" min="0" step="1" placeholder="0"
-                       style="width:100%; {{ $iS }}">
+                       style="width:100%; {{ $iS }} text-align:right;">
             </div>
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
@@ -166,7 +166,7 @@
         </div>
     </div>
 
-    <div style="overflow:auto; flex:1;">
+    <div style="overflow:auto; flex:1; overflow-x:auto;">
         @if ($products->isEmpty())
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay productos registrados.</p>
         @else
@@ -176,15 +176,18 @@
         <table style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <colgroup>
                 <col style="width:44px;">
-                <col style="width:60px;">
+                <col style="width:56px;">
                 <col style="width:110px;">
-                <col style="width:80px;">
+                <col style="width:76px;">
                 <col style="width:110px;">
-                <col style="min-width:100px;">
-                <col style="width:100px;">
+                <col style="min-width:120px;">
+                <col style="width:96px;">
+                <col style="width:120px;">
+                <col style="width:110px;">
+                <col style="width:110px;">
+                <col style="width:110px;">
                 <col style="width:130px;">
-                <col style="width:130px;">
-                <col style="width:175px;">
+                <col style="width:170px;">
             </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
@@ -195,8 +198,14 @@
                     <th style="padding:10px 14px; text-align:left;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Ciclo</span>
                     </th>
-                    <th style="padding:10px 8px; text-align:right;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stock</span>
+                    <th style="padding:10px 8px; text-align:center;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stk. Ini.</span>
+                    </th>
+                    <th style="padding:10px 8px; text-align:center;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Asignado</span>
+                    </th>
+                    <th style="padding:10px 8px; text-align:center;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Disponible</span>
                     </th>
                     @foreach($sortCols as $label => $key)
                     @php $isActive = $sortBy === $key; @endphp
@@ -251,6 +260,7 @@
                         <input wire:model="editStockInicial" type="number" min="0" step="1" placeholder="0"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; text-align:right;">
                     </td>
+                    <td></td><td></td>
                     <td style="padding:7px 10px;">
                         <input wire:model="editCode" type="text"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; font-family:monospace; text-transform:uppercase;">
@@ -326,9 +336,30 @@
                         <span style="font-size:12px; color:#D1D5DB;">—</span>
                         @endif
                     </td>
-                    <td style="padding:10px 8px; text-align:right; overflow:hidden;">
+                    @php
+                        $stkTotal    = (float)($cicloDelProducto?->pivot->stock_total ?? 0);
+                        $stkAsignado = (float)$p->listaMaestraItems->sum('stock_inicial');
+                        $stkCompr    = (float)$p->listaMaestraItems->sum('stock_comprometido');
+                        $stkConsum   = (float)$p->listaMaestraItems->sum('stock_consumido');
+                        $stkDisp     = max(0, $stkTotal - $stkCompr - $stkConsum);
+                    @endphp
+                    <td style="padding:10px 8px; text-align:center; overflow:hidden;">
                         @if($cicloDelProducto)
-                        <span style="font-size:13px; font-weight:700; color:#111827;">{{ number_format($cicloDelProducto->pivot->stock_total, 0) }}</span>
+                        <span style="font-size:13px; font-weight:700; color:#111827;">{{ number_format($stkTotal, 0) }}</span>
+                        @else
+                        <span style="font-size:12px; color:#D1D5DB;">—</span>
+                        @endif
+                    </td>
+                    <td style="padding:10px 8px; text-align:center; overflow:hidden;">
+                        @if($cicloDelProducto)
+                        <span style="font-size:13px; font-weight:600; color:#6B7280;">{{ number_format($stkAsignado, 0) }}</span>
+                        @else
+                        <span style="font-size:12px; color:#D1D5DB;">—</span>
+                        @endif
+                    </td>
+                    <td style="padding:10px 8px; text-align:center; overflow:hidden;">
+                        @if($cicloDelProducto)
+                        <span style="font-size:13px; font-weight:700; color:{{ $stkDisp > 0 ? '#059669' : '#EF4444' }};">{{ number_format($stkDisp, 0) }}</span>
                         @else
                         <span style="font-size:12px; color:#D1D5DB;">—</span>
                         @endif

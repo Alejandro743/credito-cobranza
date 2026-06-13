@@ -239,7 +239,7 @@ class ProductManager extends Component
         $cicloVigente = \App\Models\CommercialCycle::vigente();
         $ciclos       = \App\Models\CommercialCycle::where('status', 'abierto')->orderByDesc('start_date')->get();
 
-        $products = Product::with(['categoria', 'unidad', 'ciclos'])
+        $products = Product::with(['categoria', 'unidad', 'ciclos', 'listaMaestraItems'])
             ->when($this->search, fn($q) =>
                 $q->where('name', 'like', "%{$this->search}%")
                   ->orWhere('code', 'like', "%{$this->search}%"))
