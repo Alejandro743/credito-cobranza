@@ -177,6 +177,7 @@
                     <th style="{{ $thStyle }} text-align:left;">Producto</th>
                     <th style="{{ $thStyle }}">Precio Base</th>
                     <th style="{{ $thStyle }}">Puntos</th>
+                    <th style="{{ $thStyle }}">Stock Máx.</th>
                     <th style="{{ $thStyle }}">St. Ini.</th>
                     <th style="{{ $thStyle }}">Consumido</th>
                     <th style="{{ $thStyle }}">Actual</th>
@@ -207,7 +208,7 @@
                         get final() { return (this.precio + this.monto).toFixed(2); }
                     }"
                     style="background:#F8F7FF; border-left:3px solid #7c3aed;">
-                    <td colspan="13" style="padding:0; background:#F8F7FF; border-left:3px solid #7B6FE8;">
+                    <td colspan="14" style="padding:0; background:#F8F7FF; border-left:3px solid #7B6FE8;">
                         <div style="padding:12px 16px; display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px;">
                             @php $eLabel = 'display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:5px;'; @endphp
 
@@ -243,10 +244,24 @@
                                        style="{{ $h }} width:70px; border:1px solid #EDE9FE; border-radius:8px; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                             </div>
 
+                            {{-- Stock Máximo (read-only) --}}
+                            @php
+                                $editStkMax = $stockMap->has($p->id)
+                                    ? max(0, $stockMap->get($p->id) - $asignadoMap->get($p->id, 0) + (float)$item->stock_inicial)
+                                    : null;
+                            @endphp
+                            <div>
+                                <p style="{{ $eLabel }}">Stock Máx.</p>
+                                <div style="{{ $h }} width:80px; border:1px solid #E5E7EB; border-radius:8px; padding:0 8px; font-size:13px; font-weight:600; text-align:center; background:#F9FAFB; display:flex; align-items:center; justify-content:center; color:{{ $editStkMax === null ? '#D1D5DB' : ($editStkMax > 0 ? '#059669' : '#EF4444') }};">
+                                    {{ $editStkMax !== null ? number_format($editStkMax, 0) : '—' }}
+                                </div>
+                            </div>
+
                             {{-- Stock Inicial --}}
                             <div>
                                 <p style="{{ $eLabel }}">St. Inicial</p>
                                 <input wire:model="editItemStock" type="number" step="0.01" min="0"
+                                       @if($editStkMax !== null) max="{{ $editStkMax }}" @endif
                                        style="{{ $h }} width:80px; border:1px solid #EDE9FE; border-radius:8px; outline:none; padding:0 8px; font-size:13px; color:#374151; background:#fff; text-align:center;">
                             </div>
 
@@ -327,8 +342,19 @@
                         <input wire:model="quickAddPuntos" type="number" min="0" placeholder="0"
                                style="width:60px; border:1px solid #A5F3FC; border-radius:6px; padding:5px 8px; font-size:12px; text-align:center; outline:none; background:#fff;">
                     </td>
+                    @php
+                        $qaStkMax = $stockMap->has($p->id)
+                            ? max(0, $stockMap->get($p->id) - $asignadoMap->get($p->id, 0))
+                            : null;
+                    @endphp
+                    <td style="{{ $tdC }}">
+                        <div style="width:68px; border:1px solid #E5E7EB; border-radius:6px; padding:5px 8px; font-size:12px; font-weight:600; text-align:center; background:#F9FAFB; color:{{ $qaStkMax === null ? '#D1D5DB' : ($qaStkMax > 0 ? '#059669' : '#EF4444') }};">
+                            {{ $qaStkMax !== null ? number_format($qaStkMax, 0) : '—' }}
+                        </div>
+                    </td>
                     <td style="{{ $tdC }}">
                         <input wire:model="quickAddStock" type="number" step="0.01" min="0" placeholder="0"
+                               @if($qaStkMax !== null) max="{{ $qaStkMax }}" @endif
                                style="width:68px; border:1px solid #A5F3FC; border-radius:6px; padding:5px 8px; font-size:12px; text-align:center; outline:none; background:#fff;">
                     </td>
                     <td colspan="5"></td>
@@ -367,6 +393,18 @@
                     <td style="{{ $tdBase }}">
                         @if ($inLista) {{ $item->puntos }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
+                    </td>
+                    @php
+                        $rdStkMax = $stockMap->has($p->id)
+                            ? max(0, $stockMap->get($p->id) - $asignadoMap->get($p->id, 0) + ($inLista ? (float)$item->stock_inicial : 0))
+                            : null;
+                    @endphp
+                    <td style="{{ $tdBase }}">
+                        @if($rdStkMax !== null)
+                            <span style="font-weight:600; color:{{ $rdStkMax > 0 ? '#059669' : '#EF4444' }};">{{ number_format($rdStkMax, 0) }}</span>
+                        @else
+                            <span style="color:#D1D5DB;">—</span>
+                        @endif
                     </td>
                     <td style="{{ $tdBase }}">
                         @if ($inLista) {{ number_format($item->stock_inicial, 2) }}

@@ -754,6 +754,8 @@ class ListaMaestraManager extends Component
         $itemsMap       = collect();
         $categorias     = collect();
         $unidades       = collect();
+        $stockMap       = collect();
+        $asignadoMap    = collect();
 
         if ($this->viewingId && in_array($this->mode, ['items', 'acceso'])) {
             $viewingMaestra = ListaMaestra::with('cycle')->find($this->viewingId);
@@ -777,6 +779,22 @@ class ListaMaestraManager extends Component
 
             $categorias = Categoria::where('active', true)->orderBy('name')->get();
             $unidades   = Unidad::where('active', true)->orderBy('name')->get();
+
+            $cicloId = $viewingMaestra?->cycle_id;
+            if ($cicloId) {
+                $stockMap = DB::table('ciclo_productos')
+                    ->where('commercial_cycle_id', $cicloId)
+                    ->pluck('stock_total', 'product_id')
+                    ->map(fn($v) => (float) $v);
+
+                $listaIds = ListaMaestra::where('cycle_id', $cicloId)->pluck('id');
+
+                $asignadoMap = ListaMaestraItem::whereIn('lista_maestra_id', $listaIds)
+                    ->selectRaw('product_id, SUM(stock_inicial) as total')
+                    ->groupBy('product_id')
+                    ->pluck('total', 'product_id')
+                    ->map(fn($v) => (float) $v);
+            }
         }
 
         // Acceso mode
@@ -799,7 +817,8 @@ class ListaMaestraManager extends Component
 
         return view('livewire.admin.listas.lista-maestra-manager', compact(
             'maestras', 'cycles', 'viewingMaestra', 'products', 'itemsMap',
-            'categorias', 'unidades', 'accesosClientes', 'accesosVendedores'
+            'categorias', 'unidades', 'accesosClientes', 'accesosVendedores',
+            'stockMap', 'asignadoMap'
         ));
     }
 }
