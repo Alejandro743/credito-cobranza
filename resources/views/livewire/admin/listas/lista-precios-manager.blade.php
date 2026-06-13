@@ -156,7 +156,7 @@
                         <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase hidden sm:table-cell">Unidad</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Precio</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Puntos</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Disp. Maestro</th>
+                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Stock Máximo</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Stock Ini.</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Consumido</th>
                         <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Stock Act.</th>
@@ -194,14 +194,10 @@
                             <input wire:model="editPuntos" type="number" min="0"
                                    class="w-20 border border-lavanda-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-lavanda-500 bg-white">
                         </td>
-                        <td class="px-4 py-2 hidden lg:table-cell text-right">
-                            @if($editStDisp !== null)
-                                <span class="text-xs font-semibold {{ $editStDisp > 0 ? 'text-mint-700' : 'text-red-500' }}">
-                                    {{ number_format($editStDisp, 0) }}
-                                </span>
-                            @else
-                                <span class="text-xs text-gray-300">—</span>
-                            @endif
+                        <td class="px-4 py-2 hidden lg:table-cell">
+                            <div class="w-24 border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-right bg-gray-50 font-semibold {{ $editStDisp !== null && $editStDisp > 0 ? 'text-mint-700' : ($editStDisp === 0 ? 'text-red-500' : 'text-gray-300') }}">
+                                {{ $editStDisp !== null ? number_format($editStDisp, 0) : '—' }}
+                            </div>
                         </td>
                         <td class="px-4 py-2 hidden lg:table-cell">
                             <input wire:model.live="editStockInicial" type="number" step="0.01" min="0"
@@ -255,14 +251,10 @@
                             <input wire:model="quickAddPuntos" type="number" min="0" placeholder="Pts"
                                    class="w-20 border border-celeste-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-celeste-500 bg-white">
                         </td>
-                        <td class="px-4 py-2 hidden lg:table-cell text-right">
-                            @if($qaStDisp !== null)
-                                <span class="text-xs font-semibold {{ $qaStDisp > 0 ? 'text-mint-700' : 'text-red-500' }}">
-                                    {{ number_format($qaStDisp, 0) }}
-                                </span>
-                            @else
-                                <span class="text-xs text-gray-300">—</span>
-                            @endif
+                        <td class="px-4 py-2 hidden lg:table-cell">
+                            <div class="w-24 border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-right bg-gray-50 font-semibold {{ $qaStDisp !== null && $qaStDisp > 0 ? 'text-mint-700' : ($qaStDisp === 0 ? 'text-red-500' : 'text-gray-300') }}">
+                                {{ $qaStDisp !== null ? number_format($qaStDisp, 0) : '—' }}
+                            </div>
                         </td>
                         <td class="px-4 py-2 hidden lg:table-cell">
                             <input wire:model.live="quickAddStockInicial" type="number" step="0.01" min="0" placeholder="Stock"
