@@ -173,21 +173,20 @@
         @php
         $sortCols = ['Código'=>'code','Nombre'=>'name','Unidad'=>'unidad_id','Categoría'=>'categoria_id','Estado'=>'active'];
         @endphp
-        <table style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
+        <table style="table-layout:fixed; width:100%; min-width:1380px; border-collapse:collapse; font-size:13px;">
             <colgroup>
                 <col style="width:44px;">
                 <col style="width:56px;">
                 <col style="width:110px;">
-                <col style="width:76px;">
-                <col style="width:110px;">
-                <col style="min-width:120px;">
-                <col style="width:96px;">
-                <col style="width:120px;">
-                <col style="width:110px;">
-                <col style="width:110px;">
-                <col style="width:110px;">
                 <col style="width:130px;">
-                <col style="width:170px;">
+                <col style="width:130px;">
+                <col style="width:130px;">
+                <col style="width:110px;">
+                <col style="width:190px;">
+                <col style="width:90px;">
+                <col style="width:130px;">
+                <col style="width:110px;">
+                <col style="width:156px;">
             </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
@@ -199,13 +198,13 @@
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Ciclo</span>
                     </th>
                     <th style="padding:10px 8px; text-align:center;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stk. Ini.</span>
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stock Inicial</span>
                     </th>
                     <th style="padding:10px 8px; text-align:center;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Asignado</span>
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stock Asignado</span>
                     </th>
                     <th style="padding:10px 8px; text-align:center;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Disponible</span>
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stock Disponible</span>
                     </th>
                     @foreach($sortCols as $label => $key)
                     @php $isActive = $sortBy === $key; @endphp
