@@ -575,7 +575,25 @@
 
 {{-- ══ MODAL: Stock en listas ══ --}}
 @if($stockModalProductId)
-<div style="position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.45);"
+@php
+    $alpineRows  = $stockModalRows->values()->toArray();
+    $alpineEdits = $stockModalRows->mapWithKeys(fn($r) => [$r['item_id'] => (float)$r['stock_ini']])->toArray();
+@endphp
+<div x-data="{
+        rows:  @js($alpineRows),
+        edits: @js($alpineEdits),
+        disp(row) {
+            const same = this.rows.filter(r => r.ciclo_code === row.ciclo_code);
+            const used = same.reduce((s, r) => s + (parseFloat(this.edits[r.item_id]) || 0), 0);
+            return Math.max(0, row.stock_max - used);
+        },
+        maxFor(row) {
+            const others = this.rows.filter(r => r.ciclo_code === row.ciclo_code && r.item_id !== row.item_id);
+            const othersUsed = others.reduce((s, r) => s + (parseFloat(this.edits[r.item_id]) || 0), 0);
+            return Math.max(0, row.stock_max - othersUsed);
+        }
+     }"
+     style="position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.45);"
      @keydown.escape.window="$wire.closeStockModal()">
 
     <div style="background:#fff; border-radius:20px; width:100%; max-width:680px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22);">
@@ -614,23 +632,23 @@
             @else
             <table style="width:100%; border-collapse:collapse; font-size:13px;">
                 <colgroup>
-                    <col style="width:80px;">   {{-- ciclo --}}
-                    <col style="width:auto;">    {{-- lista --}}
-                    <col style="width:90px;">   {{-- total --}}
-                    <col style="width:90px;">   {{-- disponible --}}
-                    <col style="width:110px;">  {{-- asignado editable --}}
+                    <col style="width:80px;">
+                    <col style="width:auto;">
+                    <col style="width:90px;">
+                    <col style="width:100px;">
+                    <col style="width:110px;">
                 </colgroup>
                 <thead>
                     <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                         <th style="padding:9px 10px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Ciclo</th>
                         <th style="padding:9px 10px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Lista</th>
                         <th style="padding:9px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Total ciclo</th>
-                        <th style="padding:9px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Disponible</th>
+                        <th style="padding:9px 10px; text-align:center; font-size:11px; font-weight:700; color:#059669; text-transform:uppercase; letter-spacing:.4px;">Disponible</th>
                         <th style="padding:9px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Asignado</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($stockModalRows as $row)
+                    @foreach($stockModalRows as $idx => $row)
                     <tr style="border-bottom:1px solid #F3F4F6;">
                         <td style="padding:10px 10px;">
                             <span style="font-size:12px; font-weight:700; color:#7C3AED; background:#F0EEFF; padding:2px 8px; border-radius:6px; font-family:monospace;">{{ $row['ciclo_code'] }}</span>
@@ -641,18 +659,19 @@
                         <td style="padding:10px 10px; text-align:center;">
                             <span style="font-size:13px; color:#374151; font-weight:600;">{{ number_format($row['stock_max'], 0) }}</span>
                         </td>
+                        {{-- Disponible reactivo: se recalcula al escribir en cualquier input del mismo ciclo --}}
                         <td style="padding:10px 10px; text-align:center;">
-                            <span style="font-size:13px; font-weight:700; color:{{ $row['stock_disp'] > 0 ? '#059669' : '#EF4444' }};">{{ number_format($row['stock_disp'], 0) }}</span>
+                            <span x-text="disp(rows[{{ $idx }}]).toFixed(0)"
+                                  :style="'font-size:14px; font-weight:700; color:' + (disp(rows[{{ $idx }}]) > 0 ? '#059669' : '#EF4444') + ';'">
+                            </span>
                         </td>
                         <td style="padding:8px 10px; text-align:center;">
-                            <div style="position:relative; display:inline-block;">
-                                <input wire:model="stockEdits.{{ $row['item_id'] }}"
-                                       type="number" step="0.01" placeholder="0"
-                                       max="{{ $row['max_input'] }}"
-                                       onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()"
-                                       oninput="if(parseFloat(this.value)<0)this.value=0"
-                                       style="width:88px; height:32px; border:1px solid #EDE9FE; border-radius:8px; padding:0 8px; font-size:13px; font-weight:600; text-align:center; outline:none; background:#F8F7FF; color:#374151; box-sizing:border-box;">
-                            </div>
+                            <input x-model.number="edits[{{ $row['item_id'] }}]"
+                                   :max="maxFor(rows[{{ $idx }}])"
+                                   type="number" step="0.01" placeholder="0"
+                                   onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()"
+                                   oninput="if(parseFloat(this.value)<0)this.value=0"
+                                   style="width:88px; height:32px; border:1px solid #EDE9FE; border-radius:8px; padding:0 8px; font-size:13px; font-weight:600; text-align:center; outline:none; background:#F8F7FF; color:#374151; box-sizing:border-box;">
                         </td>
                     </tr>
                     @endforeach
@@ -669,7 +688,7 @@
                 Cancelar
             </button>
             @if($stockModalRows->isNotEmpty())
-            <button wire:click="saveStockModal"
+            <button @click="$wire.saveStockModal(edits)"
                     style="height:36px; padding:0 22px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
                     @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
                 Guardar cambios

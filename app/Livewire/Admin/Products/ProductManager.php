@@ -243,10 +243,14 @@ class ProductManager extends Component
         $this->resetValidation();
     }
 
-    public function saveStockModal(): void
+    public function saveStockModal(array $edits = []): void
     {
         $productId = $this->stockModalProductId;
         if (!$productId) return;
+
+        if (!empty($edits)) {
+            $this->stockEdits = $edits;
+        }
 
         try {
             DB::transaction(function () use ($productId) {
