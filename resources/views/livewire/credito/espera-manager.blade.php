@@ -207,7 +207,7 @@
         @php
         $eField = 'background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:9px 12px; font-size:13px; font-weight:600; color:#111827; min-height:38px; display:flex; align-items:center;';
         $eLabel = 'font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#6B7280; margin:0 0 4px 0;';
-        $eCard  = 'border:1px solid #E5E7EB; border-radius:12px; padding:14px 16px; background:#fff;';
+        $eCard  = 'border:1px solid #E5E7EB; border-radius:12px; padding:14px 16px; background:#F8F7FF;';
         $eSec   = 'display:flex; align-items:center; gap:6px; margin-bottom:12px;';
         @endphp
 
@@ -226,10 +226,11 @@
                 <div x-show="modal"
                      x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
                      x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
-                     style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.45);"
+                     class="fixed inset-0 flex items-center justify-center p-4"
+                     style="z-index:9999; background:rgba(0,0,0,.45);"
                      @click.self="modal = false" @keydown.escape.window="modal = false">
 
-                    <div style="background:#fff; border-radius:20px; width:100%; max-width:460px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22);">
+                    <div style="background:#fff; border-radius:14px; width:100%; max-width:460px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22);">
 
                         <div style="padding:16px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:12px; flex-shrink:0;">
                             <div style="width:36px; height:36px; border-radius:10px; background:#FFEDD5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
@@ -237,8 +238,7 @@
                             </div>
                             <p style="font-size:16px; font-weight:800; color:#111827; margin:0; flex:1;">Datos del Cliente</p>
                             <button @click="modal = false"
-                                    style="width:32px; height:32px; border:1px solid #E5E7EB; background:#fff; color:#9CA3AF; border-radius:9px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
-                                    @mouseenter="$el.style.background='#F9FAFB'" @mouseleave="$el.style.background='#fff'">
+                                    style="width:32px; height:32px; background:#EDE9FE; border:none; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#7B6FE8;">
                                 <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                             </button>
                         </div>
