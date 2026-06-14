@@ -512,7 +512,10 @@ class RevisionManager extends Component
 
     public function render()
     {
+        $cicloSub = '(SELECT cc.code FROM pedido_items pi INNER JOIN lista_maestra_items lmi ON lmi.id = pi.lista_maestra_item_id INNER JOIN lista_maestra lm ON lm.id = lmi.lista_maestra_id INNER JOIN commercial_cycles cc ON cc.id = lm.cycle_id WHERE pi.pedido_id = pedidos.id LIMIT 1) as ciclo_code';
+
         $pedidos = Pedido::with(['cliente.usuario', 'vendedor.user'])
+            ->addSelect(DB::raw($cicloSub))
             ->where('estado', 'revision')
             ->where('revisado_por', auth()->id())
             ->when($this->search, fn($q) => $q->whereHas('cliente.usuario', fn($c) =>

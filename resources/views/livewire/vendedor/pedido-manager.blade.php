@@ -52,7 +52,7 @@ $filtros = [
             </div>
             <div style="flex:1; min-width:0;">
                 <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->cliente->nombre_completo }}</p>
-                <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;">{{ $p->numero }}</p>
+                <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;">{{ $p->numero }} @if($p->ciclo_code) <span style="color:#9CA3AF;">· {{ $p->ciclo_code }}</span>@endif</p>
             </div>
             <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0; {{ $p->estado_badge['style'] ?? '' }}">
                 {{ $p->estado_badge['label'] }}
@@ -110,6 +110,7 @@ $filtros = [
         <thead>
             <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                 <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Cod. Pedido</th>
+                <th style="padding:10px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Ciclo</th>
                 <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px;">CI</th>
                 <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px;">Nombre</th>
                 <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#374151; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Fecha Solicitud</th>
@@ -125,6 +126,7 @@ $filtros = [
                 style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
                 @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
                 <td style="padding:10px 14px; font-family:monospace; font-size:12px; font-weight:700; color:#111827; white-space:nowrap;">{{ $p->numero }}</td>
+                <td style="padding:10px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; font-family:monospace; white-space:nowrap; background:#F8F7FF;">{{ $p->ciclo_code ?? '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->cliente->ci ?: '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ $p->cliente->nombre_completo }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->created_at->format('d/m/Y') }}</td>
@@ -161,7 +163,7 @@ $filtros = [
             </tr>
             @empty
             <tr wire:key="pm-desktop-empty">
-                <td colspan="8" style="padding:64px 24px; text-align:center;">
+                <td colspan="9" style="padding:64px 24px; text-align:center;">
                     <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                     </svg>

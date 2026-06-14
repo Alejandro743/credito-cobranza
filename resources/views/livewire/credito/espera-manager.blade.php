@@ -25,7 +25,7 @@
             </div>
             <div style="flex:1; min-width:0;">
                 <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->cliente->nombre_completo }}</p>
-                <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;">{{ $p->numero }}</p>
+                <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;">{{ $p->numero }} @if($p->ciclo_code) <span style="color:#9CA3AF;">· {{ $p->ciclo_code }}</span>@endif</p>
             </div>
             <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0; background:#FEF3C7; color:#D97706;">
                 En espera
@@ -84,6 +84,7 @@
         <thead style="position:sticky; top:0; z-index:10;">
             <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                 <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                <th style="padding:10px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Ciclo</th>
                 @foreach($sortColsE as $label => $key)
                 @php $isActive = $sortBy === $key; @endphp
                 <th wire:click="toggleSort('{{ $key }}')"
@@ -106,6 +107,7 @@
                 style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
                 @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
                 <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $pedidos->firstItem() + $loop->index }}</td>
+                <td style="padding:10px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; font-family:monospace; white-space:nowrap; background:#F8F7FF;">{{ $p->ciclo_code ?? '—' }}</td>
                 <td style="padding:10px 14px; font-family:monospace; font-size:12px; font-weight:700; color:#111827; white-space:nowrap;">{{ $p->numero }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->cliente->ci ?: '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</td>
@@ -131,7 +133,7 @@
             </tr>
             @empty
             <tr wire:key="ed-empty">
-                <td colspan="8" style="padding:64px 24px; text-align:center;">
+                <td colspan="9" style="padding:64px 24px; text-align:center;">
                     <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
