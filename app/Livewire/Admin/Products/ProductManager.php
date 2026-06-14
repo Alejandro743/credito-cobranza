@@ -337,6 +337,21 @@ class ProductManager extends Component
         $categorias = Categoria::where('active', true)->orderBy('name')->get();
         $unidades   = Unidad::where('active', true)->orderBy('name')->get();
 
+        // Stock asignado por producto (solo listas del ciclo del producto)
+        $productIds  = $products->pluck('id');
+        $asignadoMap = DB::table('lista_maestra_items as lmi')
+            ->join('lista_maestra as lm', 'lm.id', '=', 'lmi.lista_maestra_id')
+            ->join('ciclo_productos as cp', function ($join) {
+                $join->on('cp.product_id', '=', 'lmi.product_id')
+                     ->on('cp.commercial_cycle_id', '=', 'lm.cycle_id');
+            })
+            ->whereIn('lmi.product_id', $productIds)
+            ->whereNull('lm.deleted_at')
+            ->selectRaw('lmi.product_id, SUM(lmi.stock_inicial) as total')
+            ->groupBy('lmi.product_id')
+            ->pluck('total', 'product_id')
+            ->map(fn($v) => (float) $v);
+
         // Modal stock en listas
         $stockModalProduct = null;
         $stockModalRows    = collect();
@@ -394,6 +409,7 @@ class ProductManager extends Component
             'ciclos'            => $ciclos,
             'stockModalProduct' => $stockModalProduct,
             'stockModalRows'    => $stockModalRows,
+            'asignadoMap'       => $asignadoMap,
         ]);
     }
 }

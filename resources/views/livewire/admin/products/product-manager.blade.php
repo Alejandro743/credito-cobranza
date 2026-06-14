@@ -348,10 +348,8 @@
                     @php
                         $cicloDelProducto = $p->ciclos->first();
                         $stkTotal    = (float)($cicloDelProducto?->pivot->stock_total ?? 0);
-                        $stkAsignado = (float)$p->listaMaestraItems->sum('stock_inicial');
-                        $stkCompr    = (float)$p->listaMaestraItems->sum('stock_comprometido');
-                        $stkConsum   = (float)$p->listaMaestraItems->sum('stock_consumido');
-                        $stkDisp     = max(0, $stkTotal - $stkCompr - $stkConsum);
+                        $stkAsignado = $asignadoMap->get($p->id, 0);
+                        $stkDisp     = max(0, $stkTotal - $stkAsignado);
                     @endphp
                     <td style="padding:10px 10px; overflow:hidden;">
                         @if($cicloDelProducto)
