@@ -176,14 +176,15 @@
                     <th style="{{ $thStyle }}">Código</th>
                     <th style="{{ $thStyle }} text-align:left;">Producto</th>
                     <th style="{{ $thStyle }}">Precio Base</th>
+                    <th style="{{ $thStyle }}">Precio Final</th>
                     <th style="{{ $thStyle }}">Puntos</th>
                     <th style="{{ $thStyle }}">Stock Máx.</th>
-                    <th style="{{ $thStyle }}">St. Ini.</th>
-                    <th style="{{ $thStyle }}">Consumido</th>
-                    <th style="{{ $thStyle }}">Actual</th>
+                    <th style="{{ $thStyle }}">Stock Inicial</th>
+                    <th style="{{ $thStyle }}">Stock Comprometido</th>
+                    <th style="{{ $thStyle }}">Stock Consumido</th>
+                    <th style="{{ $thStyle }}">Stock Disponible</th>
                     <th style="{{ $thStyle }}">Tipo Inc.</th>
                     <th style="{{ $thStyle }}">Incremento</th>
-                    <th style="{{ $thStyle }}">P. Final</th>
                     <th style="{{ $thStyle }}">Estado</th>
                     <th style="{{ $thStyle }}">Acciones</th>
                 </tr>
@@ -208,7 +209,7 @@
                         get final() { return (this.precio + this.monto).toFixed(2); }
                     }"
                     style="background:#F8F7FF; border-left:3px solid #7c3aed;">
-                    <td colspan="14" style="padding:0; background:#F8F7FF; border-left:3px solid #7B6FE8;">
+                    <td colspan="15" style="padding:0; background:#F8F7FF; border-left:3px solid #7B6FE8;">
                         <div style="padding:12px 16px; display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px;">
                             @php $eLabel = 'display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:5px;'; @endphp
 
@@ -348,6 +349,7 @@
                                style="width:80px; border:1px solid #A5F3FC; border-radius:6px; padding:5px 8px; font-size:12px; text-align:center; outline:none; background:#fff;">
                         @error('quickAddPrecio') <p style="font-size:10px; color:#ef4444; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
+                    <td style="{{ $tdC }}"><span style="color:#D1D5DB;">—</span></td>
                     <td style="{{ $tdC }}">
                         <input wire:model="quickAddPuntos" type="number" min="0" placeholder="0"
                                style="width:60px; border:1px solid #A5F3FC; border-radius:6px; padding:5px 8px; font-size:12px; text-align:center; outline:none; background:#fff;">
@@ -408,6 +410,10 @@
                         @if ($inLista) Bs {{ number_format($item->precio_base, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
+                    <td style="{{ $tdBase }}{{ $inLista ? ' color:#7B6FE8; font-weight:700;' : '' }}">
+                        @if ($inLista) Bs {{ number_format($item->precio_final, 2) }}
+                        @else <span style="color:#D1D5DB;">—</span> @endif
+                    </td>
                     <td style="{{ $tdBase }}">
                         @if ($inLista) {{ $item->puntos }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
@@ -426,6 +432,10 @@
                     </td>
                     <td style="{{ $tdBase }}">
                         @if ($inLista) {{ number_format($item->stock_inicial, 2) }}
+                        @else <span style="color:#D1D5DB;">—</span> @endif
+                    </td>
+                    <td style="{{ $tdBase }}{{ $inLista ? ' color:#F59E0B; font-weight:600;' : '' }}">
+                        @if ($inLista) {{ number_format($item->stock_comprometido, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
                     <td style="{{ $tdBase }}">
@@ -448,10 +458,6 @@
                             {{ $item->tipo_incremento === 'porcentaje'
                                 ? number_format($item->factor_incremento, 2).'%'
                                 : 'Bs '.number_format($item->factor_incremento, 2) }}
-                        @else <span style="color:#D1D5DB;">—</span> @endif
-                    </td>
-                    <td style="{{ $tdBase }}{{ $inLista ? ' color:#7B6FE8; font-weight:700;' : '' }}">
-                        @if ($inLista) Bs {{ number_format($item->precio_final, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
                     <td style="padding:10px 12px; text-align:center;">
@@ -491,7 +497,7 @@
                 </tr>
                 @endif
                 @empty
-                <tr><td colspan="12" style="padding:48px 20px; text-align:center; font-size:13px; color:#9CA3AF;">No hay productos en el catálogo.</td></tr>
+                <tr><td colspan="15" style="padding:48px 20px; text-align:center; font-size:13px; color:#9CA3AF;">No hay productos en el catálogo.</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -650,6 +656,11 @@
             <span style="font-size:12px; font-weight:700; color:#7B6FE8; background:#F0EEFF; border:1px solid #EDE9FE; padding:2px 8px; border-radius:6px; white-space:nowrap; flex-shrink:0;">
                 Bs {{ number_format($item->precio_final, 2) }}
             </span>
+            @if ($item->stock_comprometido > 0)
+            <span style="font-size:11px; font-weight:600; color:#D97706; background:#FFFBEB; border:1px solid #FDE68A; padding:2px 7px; border-radius:6px; white-space:nowrap; flex-shrink:0;">
+                Comp. {{ number_format($item->stock_comprometido, 0) }}
+            </span>
+            @endif
             <span style="margin-left:auto; flex-shrink:0; padding:2px 8px; border-radius:99px; font-size:11px; font-weight:600;
                          background:{{ $item->active ? '#D1FAE5' : '#F3F4F6' }};
                          color:{{ $item->active ? '#059669' : '#9CA3AF' }};">

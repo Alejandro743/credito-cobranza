@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Credito;
 
+use App\Models\ListaMaestraItem;
 use App\Models\MotivoCierre;
 use App\Models\PedidoCierre;
 use App\Models\Pedido;
@@ -74,20 +75,54 @@ class AprobadoManager extends Component
 
     public function devolverRevision(): void
     {
-        $pedido = Pedido::whereIn('estado', ['aprobado', 'rechazado'])
+        $pedido = Pedido::with('items')
+            ->whereIn('estado', ['aprobado', 'rechazado'])
             ->findOrFail($this->viewingId);
 
-        $pedido->update(['estado' => 'revision', 'notas' => null]);
+        DB::transaction(function () use ($pedido) {
+            foreach ($pedido->items as $item) {
+                $lmi = ListaMaestraItem::find($item->lista_maestra_item_id);
+                if (!$lmi) continue;
+
+                if ($pedido->estado === 'aprobado') {
+                    // Revertir aprobación: desconsumir y volver a comprometer
+                    $lmi->stock_consumido    = max(0, (float)$lmi->stock_consumido - $item->cantidad);
+                    $lmi->stock_actual       = (float)$lmi->stock_actual + $item->cantidad;
+                    $lmi->stock_comprometido = (float)$lmi->stock_comprometido + $item->cantidad;
+                } else {
+                    // Revertir rechazo: volver a comprometer
+                    $lmi->stock_comprometido = (float)$lmi->stock_comprometido + $item->cantidad;
+                }
+                $lmi->save();
+            }
+
+            $pedido->update(['estado' => 'revision', 'notas' => null]);
+        });
+
         session()->flash('success', 'Pedido devuelto a Revisión.');
         $this->backToList();
     }
 
     public function aprobar(): void
     {
-        $pedido = Pedido::whereIn('estado', ['aprobado', 'rechazado'])
+        $pedido = Pedido::with('items')
+            ->where('estado', 'rechazado')
             ->findOrFail($this->viewingId);
 
-        $pedido->update(['estado' => 'aprobado', 'notas' => null]);
+        DB::transaction(function () use ($pedido) {
+            foreach ($pedido->items as $item) {
+                $lmi = ListaMaestraItem::find($item->lista_maestra_item_id);
+                if (!$lmi) continue;
+
+                // Rechazo ya liberó el comprometido; aquí consumimos directamente
+                $lmi->stock_actual    = max(0, (float)$lmi->stock_actual - $item->cantidad);
+                $lmi->stock_consumido = (float)$lmi->stock_consumido + $item->cantidad;
+                $lmi->save();
+            }
+
+            $pedido->update(['estado' => 'aprobado', 'notas' => null]);
+        });
+
         session()->flash('success', 'Pedido aprobado.');
         $this->backToList();
     }
@@ -99,10 +134,24 @@ class AprobadoManager extends Component
             'notaRechazo.min'      => 'El motivo debe tener al menos 5 caracteres.',
         ]);
 
-        $pedido = Pedido::whereIn('estado', ['aprobado', 'rechazado'])
+        $pedido = Pedido::with('items')
+            ->where('estado', 'aprobado')
             ->findOrFail($this->viewingId);
 
-        $pedido->update(['estado' => 'rechazado', 'notas' => $this->notaRechazo]);
+        DB::transaction(function () use ($pedido) {
+            foreach ($pedido->items as $item) {
+                $lmi = ListaMaestraItem::find($item->lista_maestra_item_id);
+                if (!$lmi) continue;
+
+                // Revertir aprobación al rechazar
+                $lmi->stock_consumido = max(0, (float)$lmi->stock_consumido - $item->cantidad);
+                $lmi->stock_actual    = (float)$lmi->stock_actual + $item->cantidad;
+                $lmi->save();
+            }
+
+            $pedido->update(['estado' => 'rechazado', 'notas' => $this->notaRechazo]);
+        });
+
         session()->flash('success', 'Pedido rechazado.');
         $this->backToList();
     }
