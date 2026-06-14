@@ -282,7 +282,7 @@ class ProductManager extends Component
                     if ($newStock > $maxInput) {
                         $listaNombre = $item->listaMaestra->name;
                         throw new \RuntimeException(
-                            "Stock insuficiente en "{$listaNombre}": máximo disponible " . number_format($maxInput, 0) . "."
+                            "Stock insuficiente en \"{$listaNombre}\": máximo disponible " . number_format($maxInput, 0) . "."
                         );
                     }
 
