@@ -151,17 +151,19 @@
             <table class="w-full text-sm">
                 <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
                     <tr>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Código</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Producto</th>
-                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase hidden sm:table-cell">Unidad</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Precio</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden md:table-cell">Puntos</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Stock Máximo</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Stock Ini.</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase hidden lg:table-cell">Consumido</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Stock Act.</th>
-                        <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Estado</th>
-                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Código</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Producto</th>
+                        <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Unidad</th>
+                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Precio Base</th>
+                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Precio Final</th>
+                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Puntos</th>
+                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Stock Máximo</th>
+                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Stock Inicial</th>
+                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Stock Comprometido</th>
+                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Stock Consumido</th>
+                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Stock Disponible</th>
+                        <th class="px-4 py-3 text-center text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Estado</th>
+                        <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase whitespace-nowrap">Acciones</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50">
@@ -183,29 +185,35 @@
                                    class="w-24 border border-lavanda-300 rounded-lg px-2 py-1.5 text-xs font-mono uppercase text-center focus:outline-none focus:border-lavanda-500 bg-white">
                             @error('editCode') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
                         </td>
-                        <td class="px-4 py-2 font-medium text-gray-700 text-xs">{{ $product->name }}</td>
-                        <td class="px-4 py-2 text-xs text-gray-400 hidden sm:table-cell">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
+                        <td class="px-4 py-2 font-medium text-gray-700 text-xs whitespace-nowrap">{{ $product->name }}</td>
+                        <td class="px-4 py-2 text-xs text-gray-400 whitespace-nowrap">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
                         <td class="px-4 py-2">
                             <input wire:model="editPrecio" type="number" step="0.01" min="0"
                                    class="w-24 border border-lavanda-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-lavanda-500 bg-white">
                             @error('editPrecio') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
                         </td>
-                        <td class="px-4 py-2 hidden md:table-cell">
+                        <td class="px-4 py-2 text-right text-sm font-semibold text-gray-500">
+                            {{ number_format($item->precio_final, 2) }}
+                        </td>
+                        <td class="px-4 py-2">
                             <input wire:model="editPuntos" type="number" min="0"
                                    class="w-20 border border-lavanda-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-lavanda-500 bg-white">
                         </td>
-                        <td class="px-4 py-2 hidden lg:table-cell">
+                        <td class="px-4 py-2">
                             <div class="w-24 border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-right bg-gray-50 font-semibold {{ $editStDisp !== null && $editStDisp > 0 ? 'text-mint-700' : ($editStDisp === 0 ? 'text-red-500' : 'text-gray-300') }}">
                                 {{ $editStDisp !== null ? number_format($editStDisp, 0) : '—' }}
                             </div>
                         </td>
-                        <td class="px-4 py-2 hidden lg:table-cell">
+                        <td class="px-4 py-2">
                             <input wire:model.live="editStockInicial" type="number" step="0.01" min="0"
                                    @if($editStDisp !== null) max="{{ $editStDisp }}" @endif
                                    class="w-24 border border-lavanda-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-lavanda-500 bg-white">
                             @error('editStockInicial') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
                         </td>
-                        <td class="px-4 py-2 text-right text-xs text-melocoton-600 hidden lg:table-cell">
+                        <td class="px-4 py-2 text-right text-sm text-orange-500">
+                            {{ number_format($item->stock_comprometido, 2) }}
+                        </td>
+                        <td class="px-4 py-2 text-right text-sm text-melocoton-600">
                             {{ number_format($item->stock_consumido, 2) }}
                         </td>
                         <td class="px-4 py-2 text-right">
@@ -239,30 +247,32 @@
                         $qaStDisp  = $qaStTotal !== null ? max(0, $qaStTotal - $qaStAsig) : null;
                     @endphp
                     <tr wire:key="qadd-{{ $product->id }}" class="bg-celeste-50 border-l-2 border-celeste-400">
-                        <td class="px-4 py-2 font-mono text-xs text-gray-500">{{ $product->code }}</td>
-                        <td class="px-4 py-2 font-medium text-gray-700 text-xs">{{ $product->name }}</td>
-                        <td class="px-4 py-2 text-xs text-gray-400 hidden sm:table-cell">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
+                        <td class="px-4 py-2 font-mono text-xs text-gray-500 whitespace-nowrap">{{ $product->code }}</td>
+                        <td class="px-4 py-2 font-medium text-gray-700 text-xs whitespace-nowrap">{{ $product->name }}</td>
+                        <td class="px-4 py-2 text-xs text-gray-400 whitespace-nowrap">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
                         <td class="px-4 py-2">
                             <input wire:model="quickAddPrecio" type="number" step="0.01" min="0" placeholder="Precio"
                                    class="w-24 border border-celeste-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-celeste-500 bg-white">
                             @error('quickAddPrecio') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
                         </td>
-                        <td class="px-4 py-2 hidden md:table-cell">
+                        <td class="px-4 py-2 text-right text-sm text-gray-300">—</td>
+                        <td class="px-4 py-2">
                             <input wire:model="quickAddPuntos" type="number" min="0" placeholder="Pts"
                                    class="w-20 border border-celeste-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-celeste-500 bg-white">
                         </td>
-                        <td class="px-4 py-2 hidden lg:table-cell">
+                        <td class="px-4 py-2">
                             <div class="w-24 border border-gray-200 rounded-lg px-2 py-1.5 text-sm text-right bg-gray-50 font-semibold {{ $qaStDisp !== null && $qaStDisp > 0 ? 'text-mint-700' : ($qaStDisp === 0 ? 'text-red-500' : 'text-gray-300') }}">
                                 {{ $qaStDisp !== null ? number_format($qaStDisp, 0) : '—' }}
                             </div>
                         </td>
-                        <td class="px-4 py-2 hidden lg:table-cell">
+                        <td class="px-4 py-2">
                             <input wire:model.live="quickAddStockInicial" type="number" step="0.01" min="0" placeholder="Stock"
                                    @if($qaStDisp !== null) max="{{ $qaStDisp }}" @endif
                                    class="w-24 border border-celeste-300 rounded-lg px-2 py-1.5 text-sm text-right focus:outline-none focus:border-celeste-500 bg-white">
                             @error('quickAddStockInicial') <p class="text-red-500 text-xs mt-0.5">{{ $message }}</p> @enderror
                         </td>
-                        <td class="px-4 py-2 text-right text-xs text-gray-300 hidden lg:table-cell">0</td>
+                        <td class="px-4 py-2 text-right text-sm text-gray-300">0</td>
+                        <td class="px-4 py-2 text-right text-sm text-gray-300">0</td>
                         <td class="px-4 py-2 text-right">
                             <span class="text-sm font-semibold text-celeste-700">
                                 {{ number_format(max(0, (float)$quickAddStockInicial), 2) }}
@@ -293,12 +303,13 @@
                             : null;
                     @endphp
                     <tr wire:key="inlist-{{ $product->id }}" class="hover:bg-gray-50 transition-colors {{ !$item->active ? 'opacity-60' : '' }}">
-                        <td data-label="Código" class="px-4 py-3 font-mono text-xs text-gray-500 font-medium">{{ $product->code }}</td>
-                        <td data-label="Producto" class="px-4 py-3 font-medium text-gray-800">{{ $product->name }}</td>
-                        <td data-label="Unidad" class="px-4 py-3 text-xs text-gray-500 hidden sm:table-cell">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
-                        <td data-label="Precio" class="px-4 py-3 text-right text-gray-700">S/ {{ number_format($item->precio_base, 2) }}</td>
-                        <td data-label="Puntos" class="px-4 py-3 text-right text-gray-700 hidden md:table-cell">{{ $item->puntos }}</td>
-                        <td data-label="Disp. Maestro" class="px-4 py-3 text-right hidden lg:table-cell">
+                        <td class="px-4 py-3 font-mono text-xs text-gray-500 font-medium whitespace-nowrap">{{ $product->code }}</td>
+                        <td class="px-4 py-3 font-medium text-gray-800 whitespace-nowrap">{{ $product->name }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-500 whitespace-nowrap">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
+                        <td class="px-4 py-3 text-right text-gray-700 whitespace-nowrap">{{ number_format($item->precio_base, 2) }}</td>
+                        <td class="px-4 py-3 text-right font-semibold text-gray-700 whitespace-nowrap">{{ number_format($item->precio_final, 2) }}</td>
+                        <td class="px-4 py-3 text-right text-gray-700">{{ $item->puntos }}</td>
+                        <td class="px-4 py-3 text-right">
                             @if($rdStDisp !== null)
                                 <span class="font-semibold {{ $rdStDisp > 0 ? 'text-mint-700' : 'text-red-500' }}">
                                     {{ number_format($rdStDisp, 0) }}
@@ -307,9 +318,10 @@
                                 <span class="text-gray-300">—</span>
                             @endif
                         </td>
-                        <td data-label="Stock Ini." class="px-4 py-3 text-right text-gray-500 hidden lg:table-cell">{{ number_format($item->stock_inicial, 2) }}</td>
-                        <td data-label="Consumido" class="px-4 py-3 text-right text-melocoton-600 hidden lg:table-cell">{{ number_format($item->stock_consumido, 2) }}</td>
-                        <td data-label="Stock Act." class="px-4 py-3 text-right">
+                        <td class="px-4 py-3 text-right text-gray-500">{{ number_format($item->stock_inicial, 2) }}</td>
+                        <td class="px-4 py-3 text-right text-orange-500 font-semibold">{{ number_format($item->stock_comprometido, 2) }}</td>
+                        <td class="px-4 py-3 text-right text-melocoton-600">{{ number_format($item->stock_consumido, 2) }}</td>
+                        <td class="px-4 py-3 text-right">
                             <span class="font-semibold {{ $item->stock_actual > 0 ? 'text-mint-700' : 'text-melocoton-600' }}">
                                 {{ number_format($item->stock_actual, 2) }}
                             </span>
@@ -345,12 +357,13 @@
                         $avStDisp  = $avStTotal !== null ? max(0, $avStTotal - $avStAsig) : null;
                     @endphp
                     <tr wire:key="avail-{{ $product->id }}" class="hover:bg-gray-50 transition-colors opacity-70">
-                        <td data-label="Código" class="px-4 py-3 font-mono text-xs text-gray-400">{{ $product->code }}</td>
-                        <td data-label="Producto" class="px-4 py-3 text-gray-500">{{ $product->name }}</td>
-                        <td data-label="Unidad" class="px-4 py-3 text-xs text-gray-400 hidden sm:table-cell">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
-                        <td data-label="Precio" class="px-4 py-3 text-right text-gray-300">—</td>
-                        <td data-label="Puntos" class="px-4 py-3 text-right text-gray-300 hidden md:table-cell">—</td>
-                        <td data-label="Disp. Maestro" class="px-4 py-3 text-right hidden lg:table-cell">
+                        <td class="px-4 py-3 font-mono text-xs text-gray-400 whitespace-nowrap">{{ $product->code }}</td>
+                        <td class="px-4 py-3 text-gray-500 whitespace-nowrap">{{ $product->name }}</td>
+                        <td class="px-4 py-3 text-xs text-gray-400 whitespace-nowrap">{{ $product->unidad?->abreviatura ?? $product->unidad?->name ?? '—' }}</td>
+                        <td class="px-4 py-3 text-right text-gray-300">—</td>
+                        <td class="px-4 py-3 text-right text-gray-300">—</td>
+                        <td class="px-4 py-3 text-right text-gray-300">—</td>
+                        <td class="px-4 py-3 text-right">
                             @if($avStDisp !== null)
                                 <span class="font-semibold {{ $avStDisp > 0 ? 'text-mint-700' : 'text-red-500' }}">
                                     {{ number_format($avStDisp, 0) }}
@@ -359,9 +372,10 @@
                                 <span class="text-gray-300">—</span>
                             @endif
                         </td>
-                        <td data-label="Stock Ini." class="px-4 py-3 text-right text-gray-300 hidden lg:table-cell">—</td>
-                        <td data-label="Consumido" class="px-4 py-3 text-right text-gray-300 hidden lg:table-cell">—</td>
-                        <td data-label="Stock Act." class="px-4 py-3 text-right text-gray-300">—</td>
+                        <td class="px-4 py-3 text-right text-gray-300">—</td>
+                        <td class="px-4 py-3 text-right text-gray-300">—</td>
+                        <td class="px-4 py-3 text-right text-gray-300">—</td>
+                        <td class="px-4 py-3 text-right text-gray-300">—</td>
                         <td data-label="Estado" class="px-4 py-3 text-center">
                             <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-400">No en lista</span>
                         </td>
@@ -377,7 +391,7 @@
 
                     @empty
                     <tr>
-                        <td colspan="11" class="px-5 py-14 text-center text-gray-400 text-sm">
+                        <td colspan="13" class="px-5 py-14 text-center text-gray-400 text-sm">
                             No hay productos en el catálogo.
                         </td>
                     </tr>
@@ -509,26 +523,34 @@
                     {{ $item->active ? 'Activo' : 'Inactivo' }}
                 </button>
             </div>
-            <div style="padding:8px 14px; display:flex; gap:16px; border-bottom:1px solid #F3F4F6; flex-wrap:wrap;">
+            <div style="padding:8px 14px; display:flex; gap:14px; border-bottom:1px solid #F3F4F6; flex-wrap:wrap;">
                 <div style="display:flex; flex-direction:column; align-items:center;">
-                    <span style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">Precio</span>
-                    <span style="font-size:14px; font-weight:700; color:#374151;">S/ {{ number_format($item->precio_base, 2) }}</span>
+                    <span style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">Precio Base</span>
+                    <span style="font-size:13px; font-weight:700; color:#374151;">{{ number_format($item->precio_base, 2) }}</span>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <span style="font-size:10px; color:#7B6FE8; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">Precio Final</span>
+                    <span style="font-size:13px; font-weight:700; color:#7B6FE8;">{{ number_format($item->precio_final, 2) }}</span>
                 </div>
                 <div style="display:flex; flex-direction:column; align-items:center;">
                     <span style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">Puntos</span>
-                    <span style="font-size:14px; font-weight:700; color:#374151;">{{ $item->puntos }}</span>
+                    <span style="font-size:13px; font-weight:700; color:#374151;">{{ $item->puntos }}</span>
                 </div>
                 <div style="display:flex; flex-direction:column; align-items:center;">
-                    <span style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">Stock Ini.</span>
-                    <span style="font-size:14px; font-weight:700; color:#374151;">{{ number_format($item->stock_inicial, 2) }}</span>
+                    <span style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">Stock Inicial</span>
+                    <span style="font-size:13px; font-weight:700; color:#374151;">{{ number_format($item->stock_inicial, 2) }}</span>
                 </div>
                 <div style="display:flex; flex-direction:column; align-items:center;">
-                    <span style="font-size:10px; color:#E11D48; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">Consumido</span>
-                    <span style="font-size:14px; font-weight:700; color:#E11D48;">{{ number_format($item->stock_consumido, 2) }}</span>
+                    <span style="font-size:10px; color:#EA580C; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">Comprometido</span>
+                    <span style="font-size:13px; font-weight:700; color:#EA580C;">{{ number_format($item->stock_comprometido, 2) }}</span>
                 </div>
                 <div style="display:flex; flex-direction:column; align-items:center;">
-                    <span style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">Stock Act.</span>
-                    <span style="font-size:14px; font-weight:700; color:{{ $item->stock_actual > 0 ? '#059669' : '#E11D48' }};">{{ number_format($item->stock_actual, 2) }}</span>
+                    <span style="font-size:10px; color:#E11D48; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">Stock Consumido</span>
+                    <span style="font-size:13px; font-weight:700; color:#E11D48;">{{ number_format($item->stock_consumido, 2) }}</span>
+                </div>
+                <div style="display:flex; flex-direction:column; align-items:center;">
+                    <span style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.5px;">Stock Disponible</span>
+                    <span style="font-size:13px; font-weight:700; color:{{ $item->stock_actual > 0 ? '#059669' : '#E11D48' }};">{{ number_format($item->stock_actual, 2) }}</span>
                 </div>
             </div>
             <div style="padding:10px 14px; display:flex; gap:7px;">
