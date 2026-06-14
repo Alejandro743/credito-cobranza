@@ -39,79 +39,86 @@
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
         </div>
 
+        @php
+        $vField = 'background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:9px 12px; font-size:13px; font-weight:600; color:#111827; min-height:38px; display:flex; align-items:center;';
+        $vLabel = 'font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#6B7280; margin:0 0 4px 0;';
+        $vCard  = 'border:1px solid #E5E7EB; border-radius:12px; padding:14px 16px; background:#F8F7FF;';
+        $vSec   = 'display:flex; align-items:center; gap:6px; margin-bottom:12px;';
+        @endphp
+
         <div x-data="{ modal: false }">
-            <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:14px 16px; text-align:center; margin-bottom:4px; cursor:pointer; box-shadow:0 2px 8px rgba(123,111,232,0.08);" @click="modal = true">
+            <div style="background:#fff; border:1px solid #FED7AA; border-radius:10px; padding:14px 16px; text-align:center; margin-bottom:4px; cursor:pointer; box-shadow:0 2px 8px rgba(249,115,22,0.08);"
+                 @click="modal = true">
                 <div style="display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:3px;">
-                    <svg width="11" height="11" fill="none" stroke="#DC2626" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                    <span style="font-size:13px; font-weight:800; color:#DC2626; letter-spacing:0.05em;">Ver Cliente</span>
+                    <svg width="11" height="11" fill="none" stroke="#EA580C" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                    <span style="font-size:13px; font-weight:800; color:#EA580C; letter-spacing:0.05em;">Ver Cliente</span>
                 </div>
-                <span style="font-size:19px; font-weight:800; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->cliente->nombre_completo }}</span>
-                <span style="font-size:13px; font-weight:700; color:#7B6FE8; display:block;">CI: {{ $p->cliente->ci ?: '—' }}</span>
+                <span style="font-size:16px; font-weight:800; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->cliente->nombre_completo }}</span>
+                <span style="font-size:12px; font-weight:600; color:#6B7280; display:block;">CI: {{ $p->cliente->ci ?: '—' }}</span>
             </div>
 
-            {{-- Modal datos cliente --}}
-            <div x-show="modal"
-                 x-transition:enter="transition ease-out duration-200"
-                 x-transition:enter-start="opacity-0"
-                 x-transition:enter-end="opacity-100"
-                 x-transition:leave="transition ease-in duration-150"
-                 x-transition:leave-start="opacity-100"
-                 x-transition:leave-end="opacity-0"
-                 class="fixed inset-0 z-50 flex items-center justify-center p-4"
-                 style="background:rgba(20,10,40,0.4);"
-                 @click.self="modal = false">
+            <template x-teleport="body">
                 <div x-show="modal"
-                     x-transition:enter="transition ease-out duration-200"
-                     x-transition:enter-start="opacity-0 scale-95"
-                     x-transition:enter-end="opacity-100 scale-100"
-                     style="background:#EEEDF7; border-radius:18px; width:100%; max-width:420px; overflow:hidden; position:relative;">
-                    <button @click="modal = false"
-                            style="position:absolute; top:14px; right:14px; width:28px; height:28px; border-radius:8px; background:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; box-shadow:0 1px 4px rgba(0,0,0,0.1);">
-                        <svg width="12" height="12" fill="none" stroke="#6b7280" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                    <div style="padding:20px 18px 18px;">
-                        @php
-                        $iconPersona = 'M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z';
-                        $iconCI      = 'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0';
-                        $iconTel     = 'M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z';
-                        $iconNit     = 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z';
-                        $iconMail    = 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z';
-                        $iconPin     = 'M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z';
-                        $iconMapa    = 'M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7';
-                        $iconEdif    = 'M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4';
-                        $iconCasa    = 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6';
-                        $fs = 'background:#fff; border-radius:10px; padding:8px 10px; display:flex; align-items:center; gap:8px;';
-                        $ib = 'width:32px; height:32px; border-radius:8px; background:#EEEDFE; display:flex; align-items:center; justify-content:center; flex-shrink:0;';
-                        $ibSm = 'width:24px; height:24px; border-radius:6px; background:#EEEDFE; display:flex; align-items:center; justify-content:center; flex-shrink:0;';
-                        $vc = 'font-size:11px; font-weight:700; color:#1E1B5E;';
-                        $lc = 'font-size:8px; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; color:#AFA9EC; margin-bottom:1px;';
-                        @endphp
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                            <span style="font-size:12px; font-weight:700; color:#534AB7; white-space:nowrap;">Datos personales</span>
-                            <div style="flex:1; height:1px; background:#CECBF6;"></div>
+                     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                     class="fixed inset-0 flex items-center justify-center p-4"
+                     style="z-index:9999; background:rgba(0,0,0,.45);"
+                     @click.self="modal = false" @keydown.escape.window="modal = false">
+
+                    <div style="background:#fff; border-radius:8px; width:100%; max-width:460px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22);">
+
+                        <div style="padding:16px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:12px; flex-shrink:0;">
+                            <div style="width:36px; height:36px; border-radius:10px; background:#FFEDD5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="18" height="18" fill="none" stroke="#EA580C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                            </div>
+                            <p style="font-size:16px; font-weight:800; color:#111827; margin:0; flex:1;">Datos del Cliente</p>
+                            <button @click="modal = false"
+                                    style="width:32px; height:32px; background:#EDE9FE; border:none; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#7B6FE8;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
                         </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
-                            <div style="{{ $fs }}"><div style="{{ $ib }}"><svg width="14" height="14" fill="none" stroke="#534AB7" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconPersona }}"/></svg></div><div style="min-width:0;"><p style="{{ $lc }}">Nombre</p><p style="{{ $vc }} word-break:break-word;">{{ $p->cliente->nombre_completo }}</p></div></div>
-                            <div style="{{ $fs }}"><div style="{{ $ib }}"><svg width="14" height="14" fill="none" stroke="#534AB7" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconCI }}"/></svg></div><div><p style="{{ $lc }}">CI</p><p style="{{ $vc }} font-family:monospace;">{{ $p->cliente->ci ?: '—' }}</p></div></div>
+
+                        <div style="overflow:auto; flex:1; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
+                            <div style="{{ $vCard }}">
+                                <div style="{{ $vSec }}">
+                                    <div style="width:8px; height:8px; border-radius:50%; background:#F97316; flex-shrink:0;"></div>
+                                    <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.6px;">Datos Personales</span>
+                                </div>
+                                <div style="margin-bottom:10px;"><p style="{{ $vLabel }}">Nombre</p><div style="{{ $vField }}">{{ $p->cliente->nombre_completo }}</div></div>
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                                    <div><p style="{{ $vLabel }}">CI</p><div style="{{ $vField }} font-family:monospace;">{{ $p->cliente->ci ?: '—' }}</div></div>
+                                    <div><p style="{{ $vLabel }}">Teléfono</p><div style="{{ $vField }}">{{ $p->cliente->telefono ?: '—' }}</div></div>
+                                </div>
+                                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                                    <div><p style="{{ $vLabel }}">NIT</p><div style="{{ $vField }}">{{ $p->cliente->nit ?: '—' }}</div></div>
+                                    <div><p style="{{ $vLabel }}">Correo</p><div style="{{ $vField }} word-break:break-all; align-items:flex-start; padding-top:9px;">{{ $p->cliente->correo ?: '—' }}</div></div>
+                                </div>
+                            </div>
+                            <div style="{{ $vCard }}">
+                                <div style="{{ $vSec }}">
+                                    <div style="width:8px; height:8px; border-radius:50%; background:#F97316; flex-shrink:0;"></div>
+                                    <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.6px;">Dirección</span>
+                                </div>
+                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+                                    <div><p style="{{ $vLabel }}">Ciudad</p><div style="{{ $vField }}">{{ $p->cliente->ciudad ?: '—' }}</div></div>
+                                    <div><p style="{{ $vLabel }}">Provincia</p><div style="{{ $vField }}">{{ $p->cliente->provincia ?: '—' }}</div></div>
+                                    <div><p style="{{ $vLabel }}">Municipio</p><div style="{{ $vField }}">{{ $p->cliente->municipio ?: '—' }}</div></div>
+                                </div>
+                                <div><p style="{{ $vLabel }}">Dirección</p><div style="{{ $vField }}">{{ $p->cliente->direccion ?: '—' }}</div></div>
+                            </div>
                         </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
-                            <div style="{{ $fs }}"><div style="{{ $ib }}"><svg width="14" height="14" fill="none" stroke="#534AB7" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconTel }}"/></svg></div><div><p style="{{ $lc }}">Teléfono</p><p style="{{ $vc }}">{{ $p->cliente->telefono ?: '—' }}</p></div></div>
-                            <div style="{{ $fs }}"><div style="{{ $ib }}"><svg width="14" height="14" fill="none" stroke="#534AB7" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconNit }}"/></svg></div><div><p style="{{ $lc }}">NIT</p><p style="{{ $vc }}">{{ $p->cliente->nit ?: '—' }}</p></div></div>
+
+                        <div style="padding:12px 20px; border-top:1px solid #F3F4F6; flex-shrink:0;">
+                            <button @click="modal = false"
+                                    style="width:100%; padding:10px; background:#F9FAFB; border:1px solid #E5E7EB; border-radius:10px; font-size:13px; font-weight:700; color:#374151; cursor:pointer;"
+                                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
+                                Cerrar
+                            </button>
                         </div>
-                        <div style="{{ $fs }} margin-bottom:16px;"><div style="{{ $ib }}"><svg width="14" height="14" fill="none" stroke="#534AB7" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconMail }}"/></svg></div><div style="min-width:0;"><p style="{{ $lc }}">Correo</p><p style="{{ $vc }} word-break:break-all;">{{ $p->cliente->correo ?: '—' }}</p></div></div>
-                        <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
-                            <span style="font-size:12px; font-weight:700; color:#534AB7; white-space:nowrap;">Datos de dirección</span>
-                            <div style="flex:1; height:1px; background:#CECBF6;"></div>
-                        </div>
-                        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:8px;">
-                            <div style="{{ $fs }}"><div style="{{ $ibSm }}"><svg width="12" height="12" fill="none" stroke="#534AB7" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconPin }}"/></svg></div><div style="min-width:0;"><p style="{{ $lc }}">Ciudad</p><p style="{{ $vc }} word-break:break-word;">{{ strtoupper($p->cliente->ciudad ?: '—') }}</p></div></div>
-                            <div style="{{ $fs }}"><div style="{{ $ibSm }}"><svg width="12" height="12" fill="none" stroke="#534AB7" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconMapa }}"/></svg></div><div style="min-width:0;"><p style="{{ $lc }}">Provincia</p><p style="{{ $vc }} word-break:break-word;">{{ strtoupper($p->cliente->provincia ?: '—') }}</p></div></div>
-                            <div style="{{ $fs }}"><div style="{{ $ibSm }}"><svg width="12" height="12" fill="none" stroke="#534AB7" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconEdif }}"/></svg></div><div style="min-width:0;"><p style="{{ $lc }}">Municipio</p><p style="{{ $vc }} word-break:break-word;">{{ strtoupper($p->cliente->municipio ?: '—') }}</p></div></div>
-                        </div>
-                        <div style="{{ $fs }}"><div style="{{ $ib }}"><svg width="14" height="14" fill="none" stroke="#534AB7" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="{{ $iconCasa }}"/></svg></div><div style="min-width:0;"><p style="{{ $lc }}">Dirección</p><p style="{{ $vc }}">{{ $p->cliente->direccion ?: '—' }}</p></div></div>
+
                     </div>
                 </div>
-            </div>
+            </template>
         </div>
 
         {{-- Motivo de rechazo / Notas --}}
