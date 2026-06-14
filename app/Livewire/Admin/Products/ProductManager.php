@@ -3,8 +3,11 @@
 namespace App\Livewire\Admin\Products;
 
 use App\Models\Categoria;
+use App\Models\ListaMaestra;
+use App\Models\ListaMaestraItem;
 use App\Models\Product;
 use App\Models\Unidad;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
 use App\Livewire\Concerns\HasModuleColor;
@@ -44,6 +47,10 @@ class ProductManager extends Component
     public string $editStockInicial = '';
     public        $editImage       = null;
     public string $editCurrentImage = '';
+
+    // Modal stock en listas
+    public ?int   $stockModalProductId = null;
+    public array  $stockEdits          = [];
 
     public function mount(): void
     {
@@ -216,6 +223,81 @@ class ProductManager extends Component
         $p->update(['active' => !$p->active]);
     }
 
+    // ── Modal: stock en listas ────────────────────────────────────────────────
+
+    public function openStockModal(int $productId): void
+    {
+        $this->stockModalProductId = $productId;
+        $this->stockEdits          = [];
+        $this->resetValidation();
+
+        ListaMaestraItem::where('product_id', $productId)
+            ->get()
+            ->each(fn($item) => $this->stockEdits[$item->id] = (string) $item->stock_inicial);
+    }
+
+    public function closeStockModal(): void
+    {
+        $this->stockModalProductId = null;
+        $this->stockEdits          = [];
+        $this->resetValidation();
+    }
+
+    public function saveStockModal(): void
+    {
+        $productId = $this->stockModalProductId;
+        if (!$productId) return;
+
+        try {
+            DB::transaction(function () use ($productId) {
+                foreach ($this->stockEdits as $rawId => $rawStock) {
+                    $itemId   = (int) $rawId;
+                    $newStock = max(0, (float) $rawStock);
+
+                    $item = ListaMaestraItem::with('listaMaestra')
+                        ->lockForUpdate()
+                        ->findOrFail($itemId);
+
+                    if ($item->product_id !== $productId) continue;
+
+                    $cicloId = $item->listaMaestra->cycle_id;
+
+                    $cicloRow = DB::table('ciclo_productos')
+                        ->where('commercial_cycle_id', $cicloId)
+                        ->where('product_id', $productId)
+                        ->lockForUpdate()
+                        ->first();
+
+                    if (!$cicloRow) continue;
+
+                    $listaIds     = ListaMaestra::where('cycle_id', $cicloId)->pluck('id');
+                    $otroAsignado = (float) ListaMaestraItem::whereIn('lista_maestra_id', $listaIds)
+                        ->where('product_id', $productId)
+                        ->where('id', '!=', $itemId)
+                        ->lockForUpdate()
+                        ->sum('stock_inicial');
+
+                    $maxInput = max(0, (float) $cicloRow->stock_total - $otroAsignado);
+
+                    if ($newStock > $maxInput) {
+                        $listaNombre = $item->listaMaestra->name;
+                        throw new \RuntimeException(
+                            "Stock insuficiente en "{$listaNombre}": máximo disponible " . number_format($maxInput, 0) . "."
+                        );
+                    }
+
+                    $item->update(['stock_inicial' => $newStock]);
+                }
+            });
+        } catch (\RuntimeException $e) {
+            $this->addError('stockModal', $e->getMessage());
+            return;
+        }
+
+        $this->closeStockModal();
+        session()->flash('success', 'Stock actualizado correctamente.');
+    }
+
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private function generarCode(string $name, ?int $ignoreId = null): string
@@ -251,14 +333,63 @@ class ProductManager extends Component
         $categorias = Categoria::where('active', true)->orderBy('name')->get();
         $unidades   = Unidad::where('active', true)->orderBy('name')->get();
 
+        // Modal stock en listas
+        $stockModalProduct = null;
+        $stockModalRows    = collect();
+        if ($this->stockModalProductId) {
+            $stockModalProduct = Product::find($this->stockModalProductId);
+            $pid   = $this->stockModalProductId;
+            $items = ListaMaestraItem::with(['listaMaestra.cycle'])
+                ->where('product_id', $pid)
+                ->get();
+
+            if ($items->isNotEmpty()) {
+                $cicloIds = $items->pluck('listaMaestra.cycle_id')->unique()->filter();
+
+                $stkTotalMap = DB::table('ciclo_productos')
+                    ->where('product_id', $pid)
+                    ->whereIn('commercial_cycle_id', $cicloIds)
+                    ->pluck('stock_total', 'commercial_cycle_id')
+                    ->map(fn($v) => (float)$v);
+
+                $asignadoPerCiclo = [];
+                foreach ($cicloIds as $cid) {
+                    $lIds = ListaMaestra::where('cycle_id', $cid)->pluck('id');
+                    $asignadoPerCiclo[$cid] = (float) ListaMaestraItem::whereIn('lista_maestra_id', $lIds)
+                        ->where('product_id', $pid)
+                        ->sum('stock_inicial');
+                }
+
+                foreach ($items as $item) {
+                    $cid      = $item->listaMaestra->cycle_id;
+                    $total    = $stkTotalMap->get($cid, 0);
+                    $asig     = $asignadoPerCiclo[$cid] ?? 0;
+                    $disp     = max(0, $total - $asig);
+                    $maxInput = max(0, $total - $asig + (float)$item->stock_inicial);
+
+                    $stockModalRows->push([
+                        'item_id'    => $item->id,
+                        'ciclo_code' => $item->listaMaestra->cycle?->code ?? '—',
+                        'lista_name' => $item->listaMaestra->name,
+                        'stock_max'  => $total,
+                        'stock_disp' => $disp,
+                        'max_input'  => $maxInput,
+                        'stock_ini'  => $item->stock_inicial,
+                    ]);
+                }
+            }
+        }
+
         return view('livewire.admin.products.product-manager', [
-            'products'     => $products,
-            'categorias'   => $categorias,
-            'unidades'     => $unidades,
-            'sortBy'       => $this->sortBy,
-            'sortDir'      => $this->sortDir,
-            'cicloVigente' => $cicloVigente,
-            'ciclos'       => $ciclos,
+            'products'          => $products,
+            'categorias'        => $categorias,
+            'unidades'          => $unidades,
+            'sortBy'            => $this->sortBy,
+            'sortDir'           => $this->sortDir,
+            'cicloVigente'      => $cicloVigente,
+            'ciclos'            => $ciclos,
+            'stockModalProduct' => $stockModalProduct,
+            'stockModalRows'    => $stockModalRows,
         ]);
     }
 }

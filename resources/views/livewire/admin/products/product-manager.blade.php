@@ -416,6 +416,13 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                 </svg>
                             </button>
+                            <button wire:click="openStockModal({{ $p->id }})" title="Stock en listas"
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #BAE6FD; background:#F0F9FF; color:#0284C7; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                                    @mouseenter="$el.style.background='#BAE6FD'" @mouseleave="$el.style.background='#F0F9FF'">
+                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 12h6M9 16h4"/>
+                                </svg>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -542,12 +549,17 @@
             @endif
         </div>
 
-        {{-- Botón editar --}}
-        <div style="border-top:1px solid #F3F4F6; padding-top:10px;">
+        {{-- Botones --}}
+        <div style="border-top:1px solid #F3F4F6; padding-top:10px; display:flex; gap:8px;">
             <button wire:click="startEdit({{ $p->id }})"
-                    style="width:100%; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
+                    style="flex:1; height:32px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
+            </button>
+            <button wire:click="openStockModal({{ $p->id }})"
+                    style="flex:1; height:32px; border:1px solid #BAE6FD; border-radius:8px; background:#F0F9FF; color:#0284C7; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 12h6M9 16h4"/></svg>
+                Stock
             </button>
         </div>
     </div>
@@ -560,6 +572,113 @@
     <div style="padding-top:8px;">{{ $products->links() }}</div>
     @endif
 </div>
+
+{{-- ══ MODAL: Stock en listas ══ --}}
+@if($stockModalProductId)
+<div style="position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.45);"
+     @keydown.escape.window="$wire.closeStockModal()">
+
+    <div style="background:#fff; border-radius:20px; width:100%; max-width:680px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22);">
+
+        {{-- Header --}}
+        <div style="padding:16px 20px; border-bottom:1px solid #EDE9FE; display:flex; align-items:center; gap:10px; flex-shrink:0;">
+            <div style="width:36px; height:36px; border-radius:10px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 12h6M9 16h4"/></svg>
+            </div>
+            <div style="flex:1; min-width:0;">
+                <p style="font-size:13px; font-weight:800; color:#7B6FE8; margin:0;">Stock en listas</p>
+                <p style="font-size:12px; color:#9CA3AF; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $stockModalProduct?->name }}</p>
+            </div>
+            <button wire:click="closeStockModal"
+                    style="width:32px; height:32px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; border-radius:9px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        {{-- Error general --}}
+        @error('stockModal')
+        <div style="margin:12px 20px 0; background:#FEF2F2; border:1px solid #FECACA; border-radius:10px; padding:10px 14px; display:flex; align-items:center; gap:8px;">
+            <svg width="14" height="14" fill="none" stroke="#EF4444" stroke-width="2" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+            <span style="font-size:12px; color:#B91C1C; font-weight:600;">{{ $message }}</span>
+        </div>
+        @enderror
+
+        {{-- Body --}}
+        <div style="overflow:auto; flex:1; padding:16px 20px;">
+            @if($stockModalRows->isEmpty())
+            <div style="text-align:center; padding:40px 20px;">
+                <svg width="40" height="40" fill="none" stroke="#D1D5DB" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 10px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <p style="font-size:13px; color:#9CA3AF;">Este producto no está en ninguna lista maestra.</p>
+            </div>
+            @else
+            <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                <colgroup>
+                    <col style="width:80px;">   {{-- ciclo --}}
+                    <col style="width:auto;">    {{-- lista --}}
+                    <col style="width:90px;">   {{-- total --}}
+                    <col style="width:90px;">   {{-- disponible --}}
+                    <col style="width:110px;">  {{-- asignado editable --}}
+                </colgroup>
+                <thead>
+                    <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                        <th style="padding:9px 10px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Ciclo</th>
+                        <th style="padding:9px 10px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Lista</th>
+                        <th style="padding:9px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Total ciclo</th>
+                        <th style="padding:9px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Disponible</th>
+                        <th style="padding:9px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Asignado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($stockModalRows as $row)
+                    <tr style="border-bottom:1px solid #F3F4F6;">
+                        <td style="padding:10px 10px;">
+                            <span style="font-size:12px; font-weight:700; color:#7C3AED; background:#F0EEFF; padding:2px 8px; border-radius:6px; font-family:monospace;">{{ $row['ciclo_code'] }}</span>
+                        </td>
+                        <td style="padding:10px 10px;">
+                            <span style="font-size:13px; color:#111827;">{{ $row['lista_name'] }}</span>
+                        </td>
+                        <td style="padding:10px 10px; text-align:center;">
+                            <span style="font-size:13px; color:#374151; font-weight:600;">{{ number_format($row['stock_max'], 0) }}</span>
+                        </td>
+                        <td style="padding:10px 10px; text-align:center;">
+                            <span style="font-size:13px; font-weight:700; color:{{ $row['stock_disp'] > 0 ? '#059669' : '#EF4444' }};">{{ number_format($row['stock_disp'], 0) }}</span>
+                        </td>
+                        <td style="padding:8px 10px; text-align:center;">
+                            <div style="position:relative; display:inline-block;">
+                                <input wire:model="stockEdits.{{ $row['item_id'] }}"
+                                       type="number" step="0.01" placeholder="0"
+                                       max="{{ $row['max_input'] }}"
+                                       onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()"
+                                       oninput="if(parseFloat(this.value)<0)this.value=0"
+                                       style="width:88px; height:32px; border:1px solid #EDE9FE; border-radius:8px; padding:0 8px; font-size:13px; font-weight:600; text-align:center; outline:none; background:#F8F7FF; color:#374151; box-sizing:border-box;">
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @endif
+        </div>
+
+        {{-- Footer --}}
+        <div style="padding:14px 20px; border-top:1px solid #EDE9FE; display:flex; align-items:center; justify-content:flex-end; gap:8px; flex-shrink:0;">
+            <button wire:click="closeStockModal"
+                    style="height:36px; padding:0 20px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
+                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                Cancelar
+            </button>
+            @if($stockModalRows->isNotEmpty())
+            <button wire:click="saveStockModal"
+                    style="height:36px; padding:0 22px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
+                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                Guardar cambios
+            </button>
+            @endif
+        </div>
+    </div>
+</div>
+@endif
 
 <script>
 window.colResize = function () {
