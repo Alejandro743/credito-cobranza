@@ -78,6 +78,14 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('credito')->name('credi
     Route::get('/cobranza',        fn() => view('modules.credito.cobranza'))->name('cobranza');
     Route::get('/cobranza/bandeja', fn() => view('modules.credito.bandeja-asignacion'))->name('cobranza.bandeja');
     Route::get('/cobranza/mis-casos', fn() => view('modules.credito.cobranza'))->name('cobranza.mis-casos');
+
+    // Definiciones Cobranza
+    Route::get('/cobranza/def/tipos-contacto',  fn() => view('modules.credito.cobranza-def', ['tipo' => 'tipo_contacto',  'titulo' => 'Tipos de Contacto']))->name('cobranza.def.tipos-contacto');
+    Route::get('/cobranza/def/acciones',         fn() => view('modules.credito.cobranza-def', ['tipo' => 'accion',          'titulo' => 'Acciones']))->name('cobranza.def.acciones');
+    Route::get('/cobranza/def/tipos-respuesta',  fn() => view('modules.credito.cobranza-def', ['tipo' => 'tipo_respuesta',  'titulo' => 'Tipos de Respuesta']))->name('cobranza.def.tipos-respuesta');
+    Route::get('/cobranza/def/motivos-cierre',   fn() => view('modules.credito.cobranza-def', ['tipo' => 'motivo_cierre',   'titulo' => 'Motivos de Cierre']))->name('cobranza.def.motivos-cierre');
+    Route::get('/cobranza/def/estados-caso',     fn() => view('modules.credito.cobranza-def', ['tipo' => 'estado_caso',     'titulo' => 'Estados de Caso']))->name('cobranza.def.estados-caso');
+    Route::get('/cobranza/def/estados-actividad',fn() => view('modules.credito.cobranza-def', ['tipo' => 'estado_actividad','titulo' => 'Estados de Actividad']))->name('cobranza.def.estados-actividad');
     Route::get('/reprogramacion/nueva',    fn() => view('modules.credito.reprogramacion-nueva'))->name('reprogramacion.nueva');
     Route::get('/reprogramacion/historial',fn() => view('modules.credito.reprogramacion-historial'))->name('reprogramacion.historial');
     Route::get('/pagos/pasarela',  fn() => view('modules.credito.pagos-pasarela'))->name('pagos-pasarela');

@@ -104,8 +104,20 @@ class ModulosSubmodulosSeeder extends Seeder
                         ],
                     ],
                     [
-                        'name' => 'Reprogramación', 'slug' => 'credito-reprogramacion',
+                        'name' => 'Definiciones', 'slug' => 'cobranza-definiciones',
                         'route_name' => null, 'sort_order' => 3,
+                        'children' => [
+                            ['name' => 'Tipos de Contacto',    'slug' => 'cob-def-tipos-contacto',  'route_name' => 'credito.cobranza.def.tipos-contacto',  'sort_order' => 1],
+                            ['name' => 'Acciones',             'slug' => 'cob-def-acciones',        'route_name' => 'credito.cobranza.def.acciones',        'sort_order' => 2],
+                            ['name' => 'Tipos de Respuesta',   'slug' => 'cob-def-tipos-respuesta', 'route_name' => 'credito.cobranza.def.tipos-respuesta', 'sort_order' => 3],
+                            ['name' => 'Motivos de Cierre',    'slug' => 'cob-def-motivos-cierre',  'route_name' => 'credito.cobranza.def.motivos-cierre',  'sort_order' => 4],
+                            ['name' => 'Estados de Caso',      'slug' => 'cob-def-estados-caso',    'route_name' => 'credito.cobranza.def.estados-caso',    'sort_order' => 5],
+                            ['name' => 'Estados de Actividad', 'slug' => 'cob-def-estados-activ',   'route_name' => 'credito.cobranza.def.estados-actividad','sort_order' => 6],
+                        ],
+                    ],
+                    [
+                        'name' => 'Reprogramación', 'slug' => 'credito-reprogramacion',
+                        'route_name' => null, 'sort_order' => 4,
                         'children' => [
                             ['name' => 'Nueva Reprogramación', 'slug' => 'credito-reprog-nueva',     'route_name' => 'credito.reprogramacion.nueva',     'sort_order' => 1],
                             ['name' => 'Historial',            'slug' => 'credito-reprog-historial',  'route_name' => 'credito.reprogramacion.historial',  'sort_order' => 2],
@@ -113,7 +125,7 @@ class ModulosSubmodulosSeeder extends Seeder
                     ],
                     [
                         'name' => 'Gestión de Pagos', 'slug' => 'credito-pagos',
-                        'route_name' => null, 'sort_order' => 4,
+                        'route_name' => null, 'sort_order' => 5,
                         'children' => [
                             ['name' => 'Pagos por Pasarela', 'slug' => 'credito-pagos-pasarela', 'route_name' => 'credito.pagos-pasarela', 'sort_order' => 1],
                             ['name' => 'Pagos Manuales',     'slug' => 'credito-pagos-manuales', 'route_name' => 'credito.pagos-manuales', 'sort_order' => 2],
@@ -122,7 +134,7 @@ class ModulosSubmodulosSeeder extends Seeder
                     ],
                     [
                         'name' => 'Indicadores', 'slug' => 'credito-indicadores',
-                        'route_name' => null, 'sort_order' => 5,
+                        'route_name' => null, 'sort_order' => 6,
                         'children' => [
                             ['name' => 'Calificación de Cartera',  'slug' => 'credito-indicadores-calificacion',         'route_name' => 'credito.indicadores.calificacion',         'sort_order' => 1],
                             ['name' => 'Calificación de Clientes', 'slug' => 'credito-indicadores-calificacion-clientes', 'route_name' => 'credito.indicadores.calificacion-clientes', 'sort_order' => 2],
