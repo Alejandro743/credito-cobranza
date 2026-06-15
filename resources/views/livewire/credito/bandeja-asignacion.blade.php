@@ -39,7 +39,7 @@
     {{-- Acciones masivas fila 2 --}}
     <div class="flex flex-wrap items-center gap-2">
         <button wire:click="selectAllFiltered"
-                style="height:32px; padding:0 14px; border:1px solid #BFDBFE; border-radius:8px; background:#EFF6FF; color:#2563EB; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px;">
+                style="height:36px; padding:0 16px; border:none; border-radius:9px; background:#2563EB; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
             Seleccionar todos los filtrados
         </button>
@@ -48,7 +48,7 @@
             {{ count($selectedIds) }} seleccionados
         </span>
         <button wire:click="asignarMasivo"
-                style="height:32px; padding:0 14px; border:1px solid #BFDBFE; border-radius:8px; background:#EFF6FF; color:#2563EB; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px;">
+                style="height:36px; padding:0 16px; border:none; border-radius:9px; background:#2563EB; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             Asignar seleccionados
         </button>
@@ -184,7 +184,7 @@
             $dias   = (int)($p->dias_vencimiento ?? 0);
         @endphp
         <tr wire:key="ba-d-{{ $p->id }}"
-            style="background:{{ $isSelected ? '#F0FDF4' : '#fff' }}; transition:background .1s;"
+            style="background:{{ $isSelected ? '#EFF6FF' : '#fff' }}; transition:background .1s;"
             x-data>
             <td class="col-row-num" style="padding:8px 12px; text-align:center; font-size:11px; font-weight:700; color:#9CA3AF; white-space:nowrap; border-bottom:1px solid #F9FAFB; vertical-align:middle;">{{ $pedidos->firstItem() + $loop->index }}</td>
             <td style="{{ $td }} text-align:center;">
