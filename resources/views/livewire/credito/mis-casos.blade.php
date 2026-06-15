@@ -249,13 +249,13 @@
 
 @php
 $mHead = 'padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0; background:#fff;';
-$mBody = 'padding:14px 16px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1; background:#F8F7FF;';
+$mBody = 'padding:14px 16px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1; background:#fff;';
 $mFoot = 'padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0; background:#fff;';
 $card  = 'border:1px solid #EDE9FE; border-radius:10px; padding:14px; background:#fff; display:flex; flex-direction:column; gap:10px;';
 $sTitle= 'font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#7B6FE8; margin:0 0 6px;';
-$lbl   = 'font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#6B7280; display:block; margin-bottom:4px;';
-$inp   = 'width:100%; height:36px; padding:0 10px; border:1.5px solid #E5E7EB; border-radius:8px; font-size:13px; color:#111827; outline:none; background:#fff; box-sizing:border-box;';
-$sel   = 'width:100%; height:36px; padding:0 10px; border:1.5px solid #E5E7EB; border-radius:8px; font-size:13px; color:#111827; outline:none; background:#fff; cursor:pointer; box-sizing:border-box;';
+$lbl   = 'font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:4px;';
+$inp   = 'width:100%; height:36px; padding:0 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:13px; color:#111827; outline:none; background:#F5F3FF; box-sizing:border-box;';
+$sel   = 'width:100%; height:36px; padding:0 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:13px; color:#111827; outline:none; background:#F5F3FF; cursor:pointer; box-sizing:border-box;';
 $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#EDE9FE; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;';
 @endphp
 
@@ -312,7 +312,7 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
                 </div>
                 <div>
                     <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
-                    <textarea wire:model="actObservacion" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                    <textarea wire:model="actObservacion" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;background:#F5F3FF;"></textarea>
                 </div>
             </div>
         </div>
@@ -376,7 +376,7 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
                 </div>
                 <div>
                     <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
-                    <textarea wire:model="actObservacion" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                    <textarea wire:model="actObservacion" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;background:#F5F3FF;"></textarea>
                 </div>
             </div>
             @if ($actEstado === 'cerrada')
@@ -392,7 +392,7 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
                 </div>
                 <div>
                     <label style="{{ $lbl }}">Observación de cierre <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
-                    <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                    <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;background:#F5F3FF;"></textarea>
                 </div>
             </div>
             @endif
@@ -432,7 +432,7 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
                 </div>
                 <div>
                     <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
-                    <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                    <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;background:#F5F3FF;"></textarea>
                 </div>
             </div>
             {{-- Card: Siguiente paso --}}
@@ -479,7 +479,7 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
                 </div>
                 <div>
                     <label style="{{ $lbl }}">Observación</label>
-                    <textarea wire:model="nuevaObs" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:none;font-family:inherit;box-sizing:border-box;"></textarea>
+                    <textarea wire:model="nuevaObs" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:none;font-family:inherit;box-sizing:border-box;background:#F5F3FF;"></textarea>
                 </div>
             </div>
             @endif
@@ -514,7 +514,7 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
                 </div>
                 <div>
                     <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
-                    <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                    <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;background:#F5F3FF;"></textarea>
                 </div>
             </div>
         </div>
@@ -552,7 +552,7 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
                 </div>
                 <div>
                     <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
-                    <textarea wire:model="obsCierreCaso" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                    <textarea wire:model="obsCierreCaso" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;background:#F5F3FF;"></textarea>
                 </div>
             </div>
         </div>
@@ -586,7 +586,7 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
                 </div>
                 <div>
                     <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
-                    <textarea wire:model="obsCancelCaso" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                    <textarea wire:model="obsCancelCaso" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;background:#F5F3FF;"></textarea>
                 </div>
             </div>
         </div>
