@@ -146,7 +146,7 @@
 </div>
 
 {{-- ══ DESKTOP: Tabla ══ --}}
-<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 210px);">
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip; display:flex; flex-direction:column; max-height:calc(100vh - 210px);">
 
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Bandeja de Asignación</span>
@@ -162,7 +162,7 @@
         $td = 'padding:8px 12px; font-size:13px; color:#374151; vertical-align:middle; white-space:nowrap; border-bottom:1px solid #F9FAFB;';
     @endphp
     <table style="width:100%; border-collapse:collapse; min-width:1100px;">
-        <thead>
+        <thead style="position:sticky; top:0; z-index:10;">
             <tr>
                 <th style="{{ $th }} width:36px; text-align:center; color:#C4B5FD;">#</th>
                 <th style="{{ $th }} width:36px; text-align:center;">

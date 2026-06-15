@@ -13,7 +13,7 @@
 @endphp
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; margin-bottom:10px;">
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip; margin-bottom:10px;">
 
     {{-- Header con búsqueda --}}
     <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; flex-wrap:wrap; align-items:center; gap:8px;">
@@ -112,7 +112,7 @@
 </div>
 
 {{-- ══ PANEL INFERIOR: ACTIVIDADES ══ --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip;">
 
     {{-- Header actividades --}}
     <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
