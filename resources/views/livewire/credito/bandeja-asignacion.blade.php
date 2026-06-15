@@ -26,6 +26,9 @@
             <option value="">Todos los estados</option>
             <option value="sin_asignar">Sin asignar</option>
             <option value="asignado">Asignado</option>
+            <option value="en_gestion">En gestión</option>
+            <option value="cerrado">Cerrado</option>
+            <option value="cancelado">Cancelado</option>
         </select>
         <select wire:model.live="filtroResponsable"
                 style="height:36px; padding:0 10px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; background:#fff; color:#374151; cursor:pointer; max-width:180px;">
@@ -67,6 +70,14 @@
         $caso   = $p->cobranzaCaso;
         $estado = $caso?->estado ?? 'sin_asignar';
         $inicial = strtoupper(substr($p->cliente->nombre_completo ?? '?', 0, 1));
+        $badgeMap = [
+            'sin_asignar' => ['#F3F4F6','#6B7280','Sin asignar'],
+            'asignado'    => ['#D1FAE5','#065F46','Asignado'],
+            'en_gestion'  => ['#EFF6FF','#1D4ED8','En gestión'],
+            'cerrado'     => ['#EDE9FE','#5B21B6','Cerrado'],
+            'cancelado'   => ['#FEE2E2','#B91C1C','Cancelado'],
+        ];
+        [$badgeBg, $badgeCol, $badgeLbl] = $badgeMap[$estado] ?? ['#F3F4F6','#6B7280',$estado];
     @endphp
     <div wire:key="ba-m-{{ $p->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
@@ -78,11 +89,7 @@
                 <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->cliente->nombre_completo }}</p>
                 <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;">{{ $p->numero }}@if($p->ciclo_code) <span style="color:#9CA3AF;">· {{ $p->ciclo_code }}</span>@endif</p>
             </div>
-            @if ($estado === 'asignado')
-            <span style="padding:3px 9px; border-radius:99px; font-size:11px; font-weight:600; background:#D1FAE5; color:#065F46; flex-shrink:0;">Asignado</span>
-            @else
-            <span style="padding:3px 9px; border-radius:99px; font-size:11px; font-weight:600; background:#F3F4F6; color:#6B7280; flex-shrink:0;">Sin asignar</span>
-            @endif
+            <span style="padding:3px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $badgeBg }}; color:{{ $badgeCol }}; flex-shrink:0;">{{ $badgeLbl }}</span>
         </div>
         <div style="padding:10px 14px; display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px;">
             <div>
@@ -115,10 +122,11 @@
                 Asignar
             </button>
             @else
-            <button wire:click="abrirAsignar({{ $p->id }})"
-                    style="flex:1; height:34px; border:1px solid #FDE68A; border-radius:8px; background:#FEF3C7; color:#92400E; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                Reasignar
+            <button wire:click="marcarSinAsignar({{ $p->id }})"
+                    wire:confirm="¿Liberar este caso y marcarlo como sin asignar?"
+                    style="flex:1; height:34px; border:1px solid #E5E7EB; border-radius:8px; background:#F9FAFB; color:#374151; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                Liberar
             </button>
             @endif
         </div>
@@ -182,6 +190,8 @@
             $estado = $caso?->estado ?? 'sin_asignar';
             $isSelected = in_array((string)$p->id, $this->selectedIds);
             $dias   = (int)($p->dias_vencimiento ?? 0);
+            $badgeMap = ['sin_asignar'=>['#F3F4F6','#6B7280','Sin asignar'],'asignado'=>['#D1FAE5','#065F46','Asignado'],'en_gestion'=>['#EFF6FF','#1D4ED8','En gestión'],'cerrado'=>['#EDE9FE','#5B21B6','Cerrado'],'cancelado'=>['#FEE2E2','#B91C1C','Cancelado']];
+            [$badgeBg,$badgeCol,$badgeLbl] = $badgeMap[$estado] ?? ['#F3F4F6','#6B7280',$estado];
         @endphp
         <tr wire:key="ba-d-{{ $p->id }}"
             style="background:{{ $isSelected ? '#F5F3FF' : '#fff' }}; transition:background .1s;"
@@ -224,11 +234,7 @@
                 </span>
             </td>
             <td style="{{ $td }}">
-                @if ($estado === 'asignado')
-                <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#D1FAE5; color:#065F46;">Asignado</span>
-                @else
-                <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:#F3F4F6; color:#6B7280;">Sin asignar</span>
-                @endif
+                <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $badgeBg }}; color:{{ $badgeCol }};">{{ $badgeLbl }}</span>
             </td>
             <td style="{{ $td }}">{{ $caso?->responsable?->name ?? '—' }}</td>
             <td style="{{ $td }}">{{ $caso?->fecha_asignacion?->format('d/m/Y H:i') ?? '—' }}</td>
@@ -241,10 +247,11 @@
                     Asignar
                 </button>
                 @else
-                <button wire:click="abrirAsignar({{ $p->id }})"
-                        style="height:28px; padding:0 12px; border:1px solid #FDE68A; border-radius:7px; background:#FEF3C7; color:#92400E; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
-                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                    Reasignar
+                <button wire:click="marcarSinAsignar({{ $p->id }})"
+                        wire:confirm="¿Liberar este caso y marcarlo como sin asignar?"
+                        style="height:28px; padding:0 12px; border:1px solid #E5E7EB; border-radius:7px; background:#F9FAFB; color:#374151; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
+                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Liberar
                 </button>
                 @endif
             </td>

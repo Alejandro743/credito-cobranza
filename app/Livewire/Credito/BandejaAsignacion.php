@@ -83,6 +83,18 @@ class BandejaAsignacion extends Component
         session()->flash('success', $count > 1 ? "{$count} casos asignados correctamente." : 'Caso asignado correctamente.');
     }
 
+    public function marcarSinAsignar(int $pedidoId): void
+    {
+        CobranzaCaso::where('pedido_id', $pedidoId)->update([
+            'estado'                 => 'sin_asignar',
+            'responsable_id'         => null,
+            'asignado_por'           => null,
+            'fecha_asignacion'       => null,
+            'observacion_asignacion' => null,
+        ]);
+        session()->flash('success', 'Caso marcado como sin asignar.');
+    }
+
     public function selectAllFiltered(): void
     {
         $today = now()->toDateString();
@@ -135,8 +147,8 @@ class BandejaAsignacion extends Component
                        ->orWhereHas('cobranzaCaso', fn($c) => $c->where('estado', 'sin_asignar'))
                 )
             )
-            ->when($this->filtroEstado === 'asignado', fn($q) =>
-                $q->whereHas('cobranzaCaso', fn($c) => $c->where('estado', 'asignado'))
+            ->when(in_array($this->filtroEstado, ['asignado', 'en_gestion', 'cerrado', 'cancelado']), fn($q) =>
+                $q->whereHas('cobranzaCaso', fn($c) => $c->where('estado', $this->filtroEstado))
             )
             ->when($this->filtroResponsable, fn($q) =>
                 $q->whereHas('cobranzaCaso', fn($c) => $c->where('responsable_id', $this->filtroResponsable))
@@ -191,8 +203,8 @@ class BandejaAsignacion extends Component
                        ->orWhereHas('cobranzaCaso', fn($c) => $c->where('estado', 'sin_asignar'))
                 )
             )
-            ->when($this->filtroEstado === 'asignado', fn($q) =>
-                $q->whereHas('cobranzaCaso', fn($c) => $c->where('estado', 'asignado'))
+            ->when(in_array($this->filtroEstado, ['asignado', 'en_gestion', 'cerrado', 'cancelado']), fn($q) =>
+                $q->whereHas('cobranzaCaso', fn($c) => $c->where('estado', $this->filtroEstado))
             )
             ->when($this->filtroResponsable, fn($q) =>
                 $q->whereHas('cobranzaCaso', fn($c) => $c->where('responsable_id', $this->filtroResponsable))
