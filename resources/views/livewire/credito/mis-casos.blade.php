@@ -247,59 +247,76 @@
     </div>
 </div>
 
+@php
+$mHead = 'padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0; background:#fff;';
+$mBody = 'padding:14px 16px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1; background:#F8F7FF;';
+$mFoot = 'padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0; background:#fff;';
+$card  = 'border:1px solid #EDE9FE; border-radius:10px; padding:14px; background:#fff; display:flex; flex-direction:column; gap:10px;';
+$sTitle= 'font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#7B6FE8; margin:0 0 6px;';
+$lbl   = 'font-size:11px; font-weight:600; text-transform:uppercase; letter-spacing:.04em; color:#6B7280; display:block; margin-bottom:4px;';
+$inp   = 'width:100%; height:36px; padding:0 10px; border:1.5px solid #E5E7EB; border-radius:8px; font-size:13px; color:#111827; outline:none; background:#fff; box-sizing:border-box;';
+$sel   = 'width:100%; height:36px; padding:0 10px; border:1.5px solid #E5E7EB; border-radius:8px; font-size:13px; color:#111827; outline:none; background:#fff; cursor:pointer; box-sizing:border-box;';
+$xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#EDE9FE; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;';
+@endphp
+
 {{-- ══ MODAL: NUEVA ACTIVIDAD ══ --}}
 <div x-data="{ open: @entangle('showModalNuevaAct') }">
 <template x-teleport="body">
 <div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
-    <div style="background:#fff; border-radius:8px; width:100%; max-width:480px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
-        <div style="padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0;">
-            <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center;">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:480px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
             </div>
             <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">{{ $actOrigenId ? 'Nueva actividad desde #'.$actOrigenId : 'Nueva actividad' }}</p>
-            <button @click="open=false" style="width:28px; height:28px; border-radius:6px; border:none; background:#EDE9FE; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
-        <div style="padding:18px 20px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; flex:1;">
-            @php $lbl='font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6B7280;display:block;margin-bottom:4px;'; $sel='width:100%;height:36px;padding:0 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;color:#111827;outline:none;background:#fff;cursor:pointer;'; @endphp
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                <div>
-                    <label style="{{ $lbl }}">Tipo de contacto <span style="color:#EF4444;">*</span></label>
-                    <select wire:model="tipoContactoId" style="{{ $sel }}">
-                        <option value="0">— Selecciona —</option>
-                        @foreach($tiposContacto as $t)<option value="{{ $t->id }}">{{ $t->nombre }}</option>@endforeach
-                    </select>
-                    @error('tipoContactoId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
-                </div>
-                <div>
-                    <label style="{{ $lbl }}">Acción <span style="color:#EF4444;">*</span></label>
-                    <select wire:model="accionId" style="{{ $sel }}">
-                        <option value="0">— Selecciona —</option>
-                        @foreach($acciones as $a)<option value="{{ $a->id }}">{{ $a->nombre }}</option>@endforeach
-                    </select>
-                    @error('accionId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
-                </div>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                <div>
-                    <label style="{{ $lbl }}">Responsable</label>
-                    <select wire:model="actResponsable" style="{{ $sel }}">
-                        @foreach($usuarios as $u)<option value="{{ $u->id }}">{{ $u->name }}</option>@endforeach
-                    </select>
-                </div>
-                <div>
-                    <label style="{{ $lbl }}">Fecha programada <span style="color:#EF4444;">*</span></label>
-                    <input wire:model="actFechaProg" type="date" style="width:100%;height:36px;padding:0 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;background:#fff;box-sizing:border-box;">
-                    @error('actFechaProg') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+        <div style="{{ $mBody }}">
+            {{-- Card: Tipo de contacto --}}
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Tipo de contacto</p>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div>
+                        <label style="{{ $lbl }}">Tipo <span style="color:#EF4444;">*</span></label>
+                        <select wire:model="tipoContactoId" style="{{ $sel }}">
+                            <option value="0">— Selecciona —</option>
+                            @foreach($tiposContacto as $t)<option value="{{ $t->id }}">{{ $t->nombre }}</option>@endforeach
+                        </select>
+                        @error('tipoContactoId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label style="{{ $lbl }}">Acción <span style="color:#EF4444;">*</span></label>
+                        <select wire:model="accionId" style="{{ $sel }}">
+                            <option value="0">— Selecciona —</option>
+                            @foreach($acciones as $a)<option value="{{ $a->id }}">{{ $a->nombre }}</option>@endforeach
+                        </select>
+                        @error('accionId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                    </div>
                 </div>
             </div>
-            <div>
-                <label style="{{ $lbl }}">Observación</label>
-                <textarea wire:model="actObservacion" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+            {{-- Card: Programación --}}
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Programación</p>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div>
+                        <label style="{{ $lbl }}">Responsable</label>
+                        <select wire:model="actResponsable" style="{{ $sel }}">
+                            @foreach($usuarios as $u)<option value="{{ $u->id }}">{{ $u->name }}</option>@endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label style="{{ $lbl }}">Fecha programada <span style="color:#EF4444;">*</span></label>
+                        <input wire:model="actFechaProg" type="date" style="{{ $inp }}">
+                        @error('actFechaProg') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+                <div>
+                    <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
+                    <textarea wire:model="actObservacion" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                </div>
             </div>
         </div>
-        <div style="padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0;">
+        <div style="{{ $mFoot }}">
             <button @click="open=false" style="height:36px;padding:0 14px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
             <button wire:click="guardarActividad" wire:loading.attr="disabled" style="height:36px;padding:0 18px;border:none;border-radius:8px;background:#7B6FE8;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Guardar</button>
         </div>
@@ -312,56 +329,59 @@
 <div x-data="{ open: @entangle('showModalEditarAct') }">
 <template x-teleport="body">
 <div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
-    <div style="background:#fff; border-radius:8px; width:100%; max-width:480px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
-        <div style="padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0;">
-            <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center;">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:480px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
             </div>
             <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Editar actividad</p>
-            <button @click="open=false" style="width:28px; height:28px; border-radius:6px; border:none; background:#EDE9FE; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
-        <div style="padding:18px 20px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; flex:1;">
-            @php $lbl='font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6B7280;display:block;margin-bottom:4px;'; $sel='width:100%;height:36px;padding:0 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;color:#111827;outline:none;background:#fff;cursor:pointer;'; @endphp
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                <div>
-                    <label style="{{ $lbl }}">Tipo de contacto <span style="color:#EF4444;">*</span></label>
-                    <select wire:model="tipoContactoId" style="{{ $sel }}">
-                        <option value="0">— Selecciona —</option>
-                        @foreach($tiposContacto as $t)<option value="{{ $t->id }}">{{ $t->nombre }}</option>@endforeach
-                    </select>
-                    @error('tipoContactoId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
-                </div>
-                <div>
-                    <label style="{{ $lbl }}">Acción <span style="color:#EF4444;">*</span></label>
-                    <select wire:model="accionId" style="{{ $sel }}">
-                        <option value="0">— Selecciona —</option>
-                        @foreach($acciones as $a)<option value="{{ $a->id }}">{{ $a->nombre }}</option>@endforeach
-                    </select>
-                    @error('accionId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
-                </div>
-            </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                <div>
-                    <label style="{{ $lbl }}">Responsable</label>
-                    <select wire:model="actResponsable" style="{{ $sel }}">
-                        @foreach($usuarios as $u)<option value="{{ $u->id }}">{{ $u->name }}</option>@endforeach
-                    </select>
-                </div>
-                <div>
-                    <label style="{{ $lbl }}">Fecha programada <span style="color:#EF4444;">*</span></label>
-                    <input wire:model="actFechaProg" type="date" style="width:100%;height:36px;padding:0 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;background:#fff;box-sizing:border-box;">
-                    @error('actFechaProg') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+        <div style="{{ $mBody }}">
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Tipo de contacto</p>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div>
+                        <label style="{{ $lbl }}">Tipo <span style="color:#EF4444;">*</span></label>
+                        <select wire:model="tipoContactoId" style="{{ $sel }}">
+                            <option value="0">— Selecciona —</option>
+                            @foreach($tiposContacto as $t)<option value="{{ $t->id }}">{{ $t->nombre }}</option>@endforeach
+                        </select>
+                        @error('tipoContactoId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                    </div>
+                    <div>
+                        <label style="{{ $lbl }}">Acción <span style="color:#EF4444;">*</span></label>
+                        <select wire:model="accionId" style="{{ $sel }}">
+                            <option value="0">— Selecciona —</option>
+                            @foreach($acciones as $a)<option value="{{ $a->id }}">{{ $a->nombre }}</option>@endforeach
+                        </select>
+                        @error('accionId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                    </div>
                 </div>
             </div>
-            <div>
-                <label style="{{ $lbl }}">Observación</label>
-                <textarea wire:model="actObservacion" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Programación</p>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div>
+                        <label style="{{ $lbl }}">Responsable</label>
+                        <select wire:model="actResponsable" style="{{ $sel }}">
+                            @foreach($usuarios as $u)<option value="{{ $u->id }}">{{ $u->name }}</option>@endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label style="{{ $lbl }}">Fecha programada <span style="color:#EF4444;">*</span></label>
+                        <input wire:model="actFechaProg" type="date" style="{{ $inp }}">
+                        @error('actFechaProg') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                    </div>
+                </div>
+                <div>
+                    <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
+                    <textarea wire:model="actObservacion" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                </div>
             </div>
             @if ($actEstado === 'cerrada')
-            <div style="border-top:1px dashed #EDE9FE; padding-top:12px; display:flex; flex-direction:column; gap:12px;">
-                <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#7B6FE8; margin:0;">Datos del cierre</p>
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Cierre</p>
                 <div>
                     <label style="{{ $lbl }}">Tipo de respuesta <span style="color:#EF4444;">*</span></label>
                     <select wire:model="tipoRespuestaId" style="{{ $sel }}">
@@ -371,13 +391,13 @@
                     @error('tipoRespuestaId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
                 </div>
                 <div>
-                    <label style="{{ $lbl }}">Observación de cierre</label>
-                    <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                    <label style="{{ $lbl }}">Observación de cierre <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
+                    <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
                 </div>
             </div>
             @endif
         </div>
-        <div style="padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0;">
+        <div style="{{ $mFoot }}">
             <button @click="open=false" style="height:36px;padding:0 14px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
             <button wire:click="guardarEditarActividad" wire:loading.attr="disabled" style="height:36px;padding:0 18px;border:none;border-radius:8px;background:#7B6FE8;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Guardar</button>
         </div>
@@ -390,53 +410,55 @@
 <div x-data="{ open: @entangle('showModalCerrarAct') }">
 <template x-teleport="body">
 <div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
-    <div style="background:#fff; border-radius:8px; width:100%; max-width:500px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
-        <div style="padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0;">
-            <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center;">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:500px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
             </div>
             <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cerrar actividad</p>
-            <button @click="open=false" style="width:28px;height:28px;border-radius:6px;border:none;background:#EDE9FE;color:#7B6FE8;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
-        <div style="padding:18px 20px; display:flex; flex-direction:column; gap:12px; overflow-y:auto; flex:1;">
-            @php $lbl='font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6B7280;display:block;margin-bottom:4px;'; $sel='width:100%;height:36px;padding:0 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;color:#111827;outline:none;background:#fff;cursor:pointer;'; @endphp
-            <div>
-                <label style="{{ $lbl }}">Tipo de respuesta <span style="color:#EF4444;">*</span></label>
-                <select wire:model="tipoRespuestaId" style="{{ $sel }}">
-                    <option value="0">— Selecciona —</option>
-                    @foreach($tiposRespuesta as $t)<option value="{{ $t->id }}">{{ $t->nombre }}</option>@endforeach
-                </select>
-                @error('tipoRespuestaId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+        <div style="{{ $mBody }}">
+            {{-- Card: Resultado --}}
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Resultado</p>
+                <div>
+                    <label style="{{ $lbl }}">Tipo de respuesta <span style="color:#EF4444;">*</span></label>
+                    <select wire:model="tipoRespuestaId" style="{{ $sel }}">
+                        <option value="0">— Selecciona —</option>
+                        @foreach($tiposRespuesta as $t)<option value="{{ $t->id }}">{{ $t->nombre }}</option>@endforeach
+                    </select>
+                    @error('tipoRespuestaId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                </div>
+                <div>
+                    <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
+                    <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                </div>
             </div>
-            <div>
-                <label style="{{ $lbl }}">Observación de cierre</label>
-                <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
-            </div>
-            {{-- Opciones --}}
-            <div style="border:1px solid #E5E7EB; border-radius:10px; overflow:hidden;">
+            {{-- Card: Siguiente paso --}}
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Siguiente paso</p>
                 @foreach([['solo','Cerrar solo la actividad'],['actividad_y_nueva','Cerrar y crear nueva actividad'],['actividad_y_caso','Cerrar actividad y cerrar el caso']] as [$val,$lbl2])
-                <label style="display:flex; align-items:center; gap:10px; padding:11px 14px; cursor:pointer; border-bottom:{{ $val !== 'actividad_y_caso' ? '1px solid #F3F4F6' : 'none' }}; background:{{ $cerrarOpcion === $val ? '#F5F3FF' : '#fff' }};">
-                    <input type="radio" wire:model.live="cerrarOpcion" value="{{ $val }}" style="accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;">
-                    <span style="font-size:13px; font-weight:{{ $cerrarOpcion === $val ? '700' : '500' }}; color:#111827;">{{ $lbl2 }}</span>
+                <label style="display:flex; align-items:center; gap:10px; padding:10px 12px; cursor:pointer; border-radius:8px; background:{{ $cerrarOpcion === $val ? '#EDE9FE' : '#F9F8FF' }}; border:1.5px solid {{ $cerrarOpcion === $val ? '#C4B5FD' : '#F3F4F6' }}; transition:all .1s;">
+                    <input type="radio" wire:model.live="cerrarOpcion" value="{{ $val }}" style="accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer; flex-shrink:0;">
+                    <span style="font-size:13px; font-weight:{{ $cerrarOpcion === $val ? '700' : '500' }}; color:{{ $cerrarOpcion === $val ? '#5B21B6' : '#374151' }};">{{ $lbl2 }}</span>
                 </label>
                 @endforeach
             </div>
-            {{-- Nueva actividad (si opcion 2) --}}
+            {{-- Card: Nueva actividad (opción 2) --}}
             @if ($cerrarOpcion === 'actividad_y_nueva')
-            <div style="border:1px solid #EDE9FE; border-radius:10px; padding:14px; background:#F8F7FF; display:flex; flex-direction:column; gap:10px;">
-                <p style="font-size:12px; font-weight:700; color:#7B6FE8; margin:0;">Nueva actividad</p>
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Nueva actividad</p>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                     <div>
-                        <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:3px;">Tipo contacto</label>
+                        <label style="{{ $lbl }}">Tipo contacto</label>
                         <select wire:model="nuevaTipoContacto" style="{{ $sel }}">
                             <option value="0">— Selecciona —</option>
                             @foreach($tiposContacto as $t)<option value="{{ $t->id }}">{{ $t->nombre }}</option>@endforeach
                         </select>
                     </div>
                     <div>
-                        <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:3px;">Acción</label>
+                        <label style="{{ $lbl }}">Acción</label>
                         <select wire:model="nuevaAccion" style="{{ $sel }}">
                             <option value="0">— Selecciona —</option>
                             @foreach($acciones as $a)<option value="{{ $a->id }}">{{ $a->nombre }}</option>@endforeach
@@ -445,24 +467,24 @@
                 </div>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                     <div>
-                        <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:3px;">Responsable</label>
+                        <label style="{{ $lbl }}">Responsable</label>
                         <select wire:model="nuevaResponsable" style="{{ $sel }}">
                             @foreach($usuarios as $u)<option value="{{ $u->id }}">{{ $u->name }}</option>@endforeach
                         </select>
                     </div>
                     <div>
-                        <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:3px;">Fecha programada</label>
-                        <input wire:model="nuevaFechaProg" type="date" style="width:100%;height:36px;padding:0 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;background:#fff;box-sizing:border-box;">
+                        <label style="{{ $lbl }}">Fecha programada</label>
+                        <input wire:model="nuevaFechaProg" type="date" style="{{ $inp }}">
                     </div>
                 </div>
                 <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:3px;">Observación</label>
-                    <textarea wire:model="nuevaObs" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:none;font-family:inherit;box-sizing:border-box;"></textarea>
+                    <label style="{{ $lbl }}">Observación</label>
+                    <textarea wire:model="nuevaObs" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:none;font-family:inherit;box-sizing:border-box;"></textarea>
                 </div>
             </div>
             @endif
         </div>
-        <div style="padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0;">
+        <div style="{{ $mFoot }}">
             <button @click="open=false" style="height:36px;padding:0 14px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
             <button wire:click="confirmarCerrarActividad" style="height:36px;padding:0 18px;border:none;border-radius:8px;background:#7B6FE8;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Confirmar</button>
         </div>
@@ -475,28 +497,28 @@
 <div x-data="{ open: @entangle('showModalCancelarAct') }">
 <template x-teleport="body">
 <div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
-    <div style="background:#fff; border-radius:8px; width:100%; max-width:420px; box-shadow:0 24px 64px rgba(0,0,0,.22); display:flex; flex-direction:column;">
-        <div style="padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px;">
-            <div style="width:32px; height:32px; border-radius:8px; background:#FEF2F2; display:flex; align-items:center; justify-content:center;">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:420px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#FEF2F2; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="16" height="16" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </div>
             <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cancelar actividad</p>
-            <button @click="open=false" style="width:28px;height:28px;border-radius:6px;border:none;background:#EDE9FE;color:#7B6FE8;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
-        <div style="padding:18px 20px; display:flex; flex-direction:column; gap:12px;">
-            @php $lbl='font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6B7280;display:block;margin-bottom:4px;'; @endphp
-            <div>
-                <label style="{{ $lbl }}">Motivo</label>
-                <input wire:model="actMotivoCancelac" type="text" placeholder="Motivo de la cancelación..." style="width:100%;height:36px;padding:0 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;background:#fff;box-sizing:border-box;">
-            </div>
-            <div>
-                <label style="{{ $lbl }}">Observación</label>
-                <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+        <div style="{{ $mBody }}">
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Motivo</p>
+                <div>
+                    <label style="{{ $lbl }}">Motivo</label>
+                    <input wire:model="actMotivoCancelac" type="text" placeholder="Describe el motivo..." style="{{ $inp }}">
+                </div>
+                <div>
+                    <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
+                    <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                </div>
             </div>
         </div>
-        <div style="padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px;">
+        <div style="{{ $mFoot }}">
             <button @click="open=false" style="height:36px;padding:0 14px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:13px;font-weight:600;cursor:pointer;">Volver</button>
             <button wire:click="confirmarCancelarActividad" style="height:36px;padding:0 18px;border:none;border-radius:8px;background:#B91C1C;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Cancelar actividad</button>
         </div>
@@ -509,32 +531,32 @@
 <div x-data="{ open: @entangle('showModalCerrarCaso') }">
 <template x-teleport="body">
 <div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
-    <div style="background:#fff; border-radius:8px; width:100%; max-width:440px; box-shadow:0 24px 64px rgba(0,0,0,.22); display:flex; flex-direction:column;">
-        <div style="padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px;">
-            <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center;">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:440px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             </div>
             <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cerrar caso</p>
-            <button @click="open=false" style="width:28px;height:28px;border-radius:6px;border:none;background:#EDE9FE;color:#7B6FE8;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
-        <div style="padding:18px 20px; display:flex; flex-direction:column; gap:12px;">
-            @php $lbl='font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6B7280;display:block;margin-bottom:4px;'; $sel='width:100%;height:36px;padding:0 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;color:#111827;outline:none;background:#fff;cursor:pointer;'; @endphp
-            <div>
-                <label style="{{ $lbl }}">Motivo de cierre <span style="color:#EF4444;">*</span></label>
-                <select wire:model="motivoCierreId" style="{{ $sel }}">
-                    <option value="0">— Selecciona —</option>
-                    @foreach($motivosCierre as $m)<option value="{{ $m->id }}">{{ $m->nombre }}</option>@endforeach
-                </select>
-                @error('motivoCierreId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
-            </div>
-            <div>
-                <label style="{{ $lbl }}">Observación</label>
-                <textarea wire:model="obsCierreCaso" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+        <div style="{{ $mBody }}">
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Cierre del caso</p>
+                <div>
+                    <label style="{{ $lbl }}">Motivo de cierre <span style="color:#EF4444;">*</span></label>
+                    <select wire:model="motivoCierreId" style="{{ $sel }}">
+                        <option value="0">— Selecciona —</option>
+                        @foreach($motivosCierre as $m)<option value="{{ $m->id }}">{{ $m->nombre }}</option>@endforeach
+                    </select>
+                    @error('motivoCierreId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                </div>
+                <div>
+                    <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
+                    <textarea wire:model="obsCierreCaso" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                </div>
             </div>
         </div>
-        <div style="padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px;">
+        <div style="{{ $mFoot }}">
             <button @click="open=false" style="height:36px;padding:0 14px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
             <button wire:click="confirmarCerrarCaso" style="height:36px;padding:0 18px;border:none;border-radius:8px;background:#7B6FE8;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Cerrar caso</button>
         </div>
@@ -547,28 +569,28 @@
 <div x-data="{ open: @entangle('showModalCancelarCaso') }">
 <template x-teleport="body">
 <div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
-    <div style="background:#fff; border-radius:8px; width:100%; max-width:420px; box-shadow:0 24px 64px rgba(0,0,0,.22); display:flex; flex-direction:column;">
-        <div style="padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px;">
-            <div style="width:32px; height:32px; border-radius:8px; background:#FEF2F2; display:flex; align-items:center; justify-content:center;">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:420px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#FEF2F2; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="16" height="16" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </div>
             <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cancelar caso</p>
-            <button @click="open=false" style="width:28px;height:28px;border-radius:6px;border:none;background:#EDE9FE;color:#7B6FE8;cursor:pointer;display:flex;align-items:center;justify-content:center;">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
-        <div style="padding:18px 20px; display:flex; flex-direction:column; gap:12px;">
-            @php $lbl='font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#6B7280;display:block;margin-bottom:4px;'; @endphp
-            <div>
-                <label style="{{ $lbl }}">Motivo</label>
-                <input wire:model="motivoCancelCaso" type="text" placeholder="Motivo de la cancelación..." style="width:100%;height:36px;padding:0 12px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;background:#fff;box-sizing:border-box;">
-            </div>
-            <div>
-                <label style="{{ $lbl }}">Observación</label>
-                <textarea wire:model="obsCancelCaso" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+        <div style="{{ $mBody }}">
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Motivo</p>
+                <div>
+                    <label style="{{ $lbl }}">Motivo</label>
+                    <input wire:model="motivoCancelCaso" type="text" placeholder="Describe el motivo..." style="{{ $inp }}">
+                </div>
+                <div>
+                    <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
+                    <textarea wire:model="obsCancelCaso" rows="2" style="width:100%;padding:8px 10px;border:1.5px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                </div>
             </div>
         </div>
-        <div style="padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px;">
+        <div style="{{ $mFoot }}">
             <button @click="open=false" style="height:36px;padding:0 14px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:13px;font-weight:600;cursor:pointer;">Volver</button>
             <button wire:click="confirmarCancelarCaso" style="height:36px;padding:0 18px;border:none;border-radius:8px;background:#B91C1C;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Cancelar caso</button>
         </div>
