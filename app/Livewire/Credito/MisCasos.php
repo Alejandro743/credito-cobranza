@@ -18,6 +18,7 @@ class MisCasos extends Component
 
     // Modales
     public bool $showModalNuevaAct      = false;
+    public bool $showModalEditarAct     = false;
     public bool $showModalCerrarAct     = false;
     public bool $showModalCancelarAct   = false;
     public bool $showModalCerrarCaso    = false;
@@ -96,6 +97,45 @@ class MisCasos extends Component
         $this->showModalNuevaAct = false;
         $this->resetActForm();
         session()->flash('success', 'Actividad creada correctamente.');
+    }
+
+    // ── Editar actividad ───────────────────────────────────────────
+    public function abrirEditarActividad(int $id): void
+    {
+        $act = CobranzaActividad::findOrFail($id);
+        $this->actividadId    = $id;
+        $this->tipoContactoId = $act->tipo_contacto_id ?? 0;
+        $this->accionId       = $act->accion_id ?? 0;
+        $this->actResponsable = $act->responsable_id ?? auth()->id();
+        $this->actFechaProg   = $act->fecha_programada?->format('Y-m-d') ?? now()->format('Y-m-d');
+        $this->actObservacion = $act->observacion ?? '';
+        $this->resetValidation();
+        $this->showModalEditarAct = true;
+    }
+
+    public function guardarEditarActividad(): void
+    {
+        $this->validate([
+            'tipoContactoId' => 'required|integer|min:1',
+            'accionId'       => 'required|integer|min:1',
+            'actFechaProg'   => 'required|date',
+        ], [
+            'tipoContactoId.min' => 'Selecciona el tipo de contacto.',
+            'accionId.min'       => 'Selecciona la acción.',
+            'actFechaProg.required' => 'La fecha programada es requerida.',
+        ]);
+
+        CobranzaActividad::findOrFail($this->actividadId)->update([
+            'tipo_contacto_id' => $this->tipoContactoId,
+            'accion_id'        => $this->accionId,
+            'responsable_id'   => $this->actResponsable ?: auth()->id(),
+            'fecha_programada' => $this->actFechaProg,
+            'observacion'      => $this->actObservacion ?: null,
+        ]);
+
+        $this->showModalEditarAct = false;
+        $this->resetActForm();
+        session()->flash('success', 'Actividad actualizada.');
     }
 
     // ── Iniciar actividad ──────────────────────────────────────────
