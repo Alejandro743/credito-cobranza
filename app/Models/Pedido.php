@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Relations\HasOne;
+use App\Models\CobranzaCaso;
 
 class Pedido extends Model
 {
@@ -72,6 +73,11 @@ class Pedido extends Model
     public function todasCuotas(): HasManyThrough
     {
         return $this->hasManyThrough(Cuota::class, PlanPago::class);
+    }
+
+    public function cobranzaCaso(): HasOne
+    {
+        return $this->hasOne(CobranzaCaso::class);
     }
 
     /** Todos los cierres del pedido, incluyendo revertidos */

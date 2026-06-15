@@ -95,7 +95,14 @@ class ModulosSubmodulosSeeder extends Seeder
                             ['name' => 'Aprobado / Rechazado / Cerrado', 'slug' => 'credito-aprobado', 'route_name' => 'credito.aprobado', 'sort_order' => 4],
                         ],
                     ],
-                    ['name' => 'Cobranza',       'slug' => 'credito-cobranza',       'route_name' => 'credito.cobranza',       'sort_order' => 2, 'children' => []],
+                    [
+                        'name' => 'Cobranza', 'slug' => 'credito-cobranza',
+                        'route_name' => null, 'sort_order' => 2,
+                        'children' => [
+                            ['name' => 'Bandeja de Asignación', 'slug' => 'cobranza-bandeja',   'route_name' => 'credito.cobranza.bandeja',   'sort_order' => 1],
+                            ['name' => 'Mis Casos',             'slug' => 'cobranza-mis-casos', 'route_name' => 'credito.cobranza.mis-casos', 'sort_order' => 2],
+                        ],
+                    ],
                     [
                         'name' => 'Reprogramación', 'slug' => 'credito-reprogramacion',
                         'route_name' => null, 'sort_order' => 3,

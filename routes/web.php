@@ -76,6 +76,8 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('credito')->name('credi
     Route::get('/aprobado',      fn() => view('modules.credito.aprobado'))->name('aprobado');
     Route::get('/cerrado',       fn() => redirect()->route('credito.aprobado'))->name('cerrado');
     Route::get('/cobranza',        fn() => view('modules.credito.cobranza'))->name('cobranza');
+    Route::get('/cobranza/bandeja', fn() => view('modules.credito.bandeja-asignacion'))->name('cobranza.bandeja');
+    Route::get('/cobranza/mis-casos', fn() => view('modules.credito.cobranza'))->name('cobranza.mis-casos');
     Route::get('/reprogramacion/nueva',    fn() => view('modules.credito.reprogramacion-nueva'))->name('reprogramacion.nueva');
     Route::get('/reprogramacion/historial',fn() => view('modules.credito.reprogramacion-historial'))->name('reprogramacion.historial');
     Route::get('/pagos/pasarela',  fn() => view('modules.credito.pagos-pasarela'))->name('pagos-pasarela');
