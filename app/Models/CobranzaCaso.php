@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class CobranzaCaso extends Model
 {
@@ -38,5 +39,10 @@ class CobranzaCaso extends Model
     public function cerradoPor(): BelongsTo
     {
         return $this->belongsTo(User::class, 'cerrado_por');
+    }
+
+    public function actividades(): HasMany
+    {
+        return $this->hasMany(CobranzaActividad::class, 'caso_id');
     }
 }
