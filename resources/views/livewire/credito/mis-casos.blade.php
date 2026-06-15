@@ -178,9 +178,8 @@
             </td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->actividadOrigen ? '#'.$act->actividadOrigen->id : '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
-                @if (in_array($act->estado, ['abierta', 'en_proceso']))
+                @if ($act->estado === 'abierta')
                 <div style="display:inline-flex; gap:4px;">
-                    @if ($act->estado === 'abierta')
                     <button wire:click="abrirEditarActividad({{ $act->id }})"
                             style="height:24px; padding:0 7px; border:1px solid #E5E7EB; border-radius:5px; background:#F9FAFB; color:#374151; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">
                         Editar
@@ -189,7 +188,17 @@
                             style="height:24px; padding:0 7px; border:1px solid #BFDBFE; border-radius:5px; background:#EFF6FF; color:#1D4ED8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">
                         Iniciar
                     </button>
-                    @endif
+                    <button wire:click="abrirCancelarActividad({{ $act->id }})"
+                            style="height:24px; padding:0 7px; border:1px solid #FEE2E2; border-radius:5px; background:#FEF2F2; color:#B91C1C; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                        Cancelar
+                    </button>
+                </div>
+                @elseif ($act->estado === 'en_proceso')
+                <div style="display:inline-flex; gap:4px;">
+                    <button wire:click="abrirEditarActividad({{ $act->id }})"
+                            style="height:24px; padding:0 7px; border:1px solid #E5E7EB; border-radius:5px; background:#F9FAFB; color:#374151; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                        Editar
+                    </button>
                     <button wire:click="abrirCerrarActividad({{ $act->id }})"
                             style="height:24px; padding:0 7px; border:1px solid #EDE9FE; border-radius:5px; background:#F5F3FF; color:#7B6FE8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">
                         Cerrar
