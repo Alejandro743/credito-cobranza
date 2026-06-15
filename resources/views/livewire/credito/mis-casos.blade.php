@@ -203,6 +203,12 @@
                         Cancelar
                     </button>
                 </div>
+                @elseif ($act->estado === 'cerrada')
+                <button wire:click="reabrirActividad({{ $act->id }})"
+                        wire:confirm="¿Reabrir esta actividad? Se limpiará el cierre registrado."
+                        style="height:24px; padding:0 7px; border:1px solid #FDE68A; border-radius:5px; background:#FFFBEB; color:#92400E; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                    Reabrir
+                </button>
                 @else
                 <span style="font-size:11px; color:#D1D5DB;">—</span>
                 @endif

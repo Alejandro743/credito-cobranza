@@ -202,6 +202,19 @@ class MisCasos extends Component
         session()->flash('success', 'Actividad cerrada.');
     }
 
+    // ── Reabrir actividad ──────────────────────────────────────────
+    public function reabrirActividad(int $id): void
+    {
+        CobranzaActividad::findOrFail($id)->update([
+            'estado'             => 'en_proceso',
+            'fecha_cierre'       => null,
+            'tipo_respuesta_id'  => null,
+            'observacion_cierre' => null,
+            'cerrado_por'        => null,
+        ]);
+        session()->flash('success', 'Actividad reabierta.');
+    }
+
     // ── Cancelar actividad ─────────────────────────────────────────
     public function abrirCancelarActividad(int $id): void
     {
