@@ -78,8 +78,11 @@ class MisCasos extends Component
             'actFechaProg.required' => 'La fecha programada es requerida.',
         ]);
 
+        $siguienteNumero = CobranzaActividad::where('caso_id', $this->selectedCasoId)->max('numero') + 1;
+
         CobranzaActividad::create([
             'caso_id'            => $this->selectedCasoId,
+            'numero'             => $siguienteNumero,
             'actividad_origen_id'=> $this->actOrigenId ?: null,
             'tipo_contacto_id'   => $this->tipoContactoId,
             'accion_id'          => $this->accionId,
@@ -194,8 +197,10 @@ class MisCasos extends Component
         ]);
 
         if ($this->cerrarOpcion === 'actividad_y_nueva') {
+            $siguienteNumero = CobranzaActividad::where('caso_id', $this->selectedCasoId)->max('numero') + 1;
             CobranzaActividad::create([
                 'caso_id'            => $this->selectedCasoId,
+                'numero'             => $siguienteNumero,
                 'actividad_origen_id'=> $act->id,
                 'tipo_contacto_id'   => $this->nuevaTipoContacto ?: null,
                 'accion_id'          => $this->nuevaAccion ?: null,
@@ -333,7 +338,7 @@ class MisCasos extends Component
                     'tipoContacto', 'accion', 'tipoRespuesta',
                     'responsable', 'creadoPor', 'cerradoPor', 'actividadOrigen',
                 ])->where('caso_id', $this->selectedCasoId)
-                  ->orderByDesc('created_at')
+                  ->orderBy('numero')
                   ->get();
             }
         }

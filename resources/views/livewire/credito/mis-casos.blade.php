@@ -62,7 +62,7 @@
             @mouseenter="$el.style.background='{{ $sel ? '#EDE9FE' : '#FAFAFE' }}'"
             @mouseleave="$el.style.background='{{ $sel ? '#F5F3FF' : '#fff' }}'"
             x-data>
-            <td style="{{ $tdC }} text-align:center; font-size:11px; font-weight:700; color:#C4B5FD;">{{ $i + 1 }}</td>
+            <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $act->numero }}</td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8;">{{ $caso->ciclo_code ?? '—' }}</span>
             </td>
@@ -160,7 +160,7 @@
         <tr wire:key="act-{{ $act->id }}"
             style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
-            <td style="{{ $tdC }} text-align:center; font-size:11px; font-weight:700; color:#C4B5FD;">{{ $i + 1 }}</td>
+            <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $act->numero }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->tipoContacto?->nombre ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; font-weight:600;">{{ $act->accion?->nombre ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->fecha_programada?->format('d/m/Y') ?? '—' }}</td>
@@ -176,7 +176,7 @@
                 @endphp
                 <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $stBg }}; color:{{ $stCol }};">{{ $stLbl }}</span>
             </td>
-            <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->actividadOrigen ? '#'.$act->actividadOrigen->id : '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->actividadOrigen ? '#'.$act->actividadOrigen->numero : '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
                 @if ($act->estado === 'abierta')
                 <div style="display:inline-flex; gap:4px;">
