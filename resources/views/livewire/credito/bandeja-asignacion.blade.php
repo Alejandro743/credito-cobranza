@@ -156,10 +156,10 @@
     <table style="width:100%; border-collapse:collapse; min-width:1100px;">
         <thead>
             <tr>
+                <th style="{{ $th }} width:36px; text-align:center; color:#C4B5FD;">#</th>
                 <th style="{{ $th }} width:36px; text-align:center;">
                     <input type="checkbox" disabled style="cursor:default; accent-color:#059669;">
                 </th>
-                <th style="{{ $th }} width:36px; text-align:center; color:#C4B5FD;">#</th>
                 <th style="{{ $th }}">Ciclo</th>
                 <th style="{{ $th }}">Nº Pedido</th>
                 <th style="{{ $th }}">CI</th>
@@ -186,13 +186,13 @@
         <tr wire:key="ba-d-{{ $p->id }}"
             style="background:{{ $isSelected ? '#F0FDF4' : '#fff' }}; transition:background .1s;"
             x-data>
+            <td class="col-row-num" style="padding:8px 12px; text-align:center; font-size:11px; font-weight:700; color:#9CA3AF; white-space:nowrap; border-bottom:1px solid #F9FAFB; vertical-align:middle;">{{ $pedidos->firstItem() + $loop->index }}</td>
             <td style="{{ $td }} text-align:center;">
                 <input type="checkbox"
                        wire:model.live="selectedIds"
                        value="{{ $p->id }}"
                        style="cursor:pointer; accent-color:#059669; width:14px; height:14px;">
             </td>
-            <td class="col-row-num" style="padding:8px 12px; text-align:center; font-size:11px; font-weight:700; color:#9CA3AF; white-space:nowrap; border-bottom:1px solid #F9FAFB; vertical-align:middle;">{{ $pedidos->firstItem() + $loop->index }}</td>
             <td style="{{ $td }}">
                 @if($p->ciclo_code)
                 <span style="font-family:monospace; font-size:12px; font-weight:700; color:#374151;">{{ $p->ciclo_code }}</span>
