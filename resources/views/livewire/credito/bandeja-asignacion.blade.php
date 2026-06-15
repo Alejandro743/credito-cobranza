@@ -39,16 +39,16 @@
     {{-- Acciones masivas fila 2 --}}
     <div class="flex flex-wrap items-center gap-2">
         <button wire:click="selectAllFiltered"
-                style="height:36px; padding:0 16px; border:none; border-radius:9px; background:#2563EB; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                style="height:36px; padding:0 16px; border:none; border-radius:9px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
             Seleccionar todos los filtrados
         </button>
         @if (!empty($selectedIds))
-        <span style="font-size:12px; font-weight:600; color:#065F46; background:#D1FAE5; padding:2px 10px; border-radius:99px;">
+        <span style="font-size:12px; font-weight:600; color:#7B6FE8; background:#EDE9FE; padding:2px 10px; border-radius:99px;">
             {{ count($selectedIds) }} seleccionados
         </span>
         <button wire:click="asignarMasivo"
-                style="height:36px; padding:0 16px; border:none; border-radius:9px; background:#2563EB; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                style="height:36px; padding:0 16px; border:none; border-radius:9px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
             <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             Asignar seleccionados
         </button>
@@ -71,8 +71,8 @@
     <div wire:key="ba-m-{{ $p->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
         <div style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #F3F4F6;">
-            <div style="width:30px; height:30px; border-radius:8px; background:#D1FAE5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <span style="font-size:12px; font-weight:700; color:#065F46;">{{ $inicial }}</span>
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8;">{{ $inicial }}</span>
             </div>
             <div style="flex:1; min-width:0;">
                 <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->cliente->nombre_completo }}</p>
@@ -110,7 +110,7 @@
         <div style="padding:10px 14px; border-top:1px solid #F3F4F6; display:flex; gap:6px;">
             @if ($estado === 'sin_asignar')
             <button wire:click="abrirAsignar({{ $p->id }})"
-                    style="flex:1; height:34px; border:1px solid #A7F3D0; border-radius:8px; background:#ECFDF5; color:#065F46; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+                    style="flex:1; height:34px; border:1px solid #EDE9FE; border-radius:8px; background:#F5F3FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                 Asignar
             </button>
@@ -142,7 +142,7 @@
 
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Bandeja de Asignación</span>
-        <span style="background:#D1FAE5; color:#065F46; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidos->total() }}</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidos->total() }}</span>
         @if (!empty($selectedIds))
         <span style="background:#FEF3C7; color:#92400E; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:4px;">{{ count($selectedIds) }} sel.</span>
         @endif
@@ -158,7 +158,7 @@
             <tr>
                 <th style="{{ $th }} width:36px; text-align:center; color:#C4B5FD;">#</th>
                 <th style="{{ $th }} width:36px; text-align:center;">
-                    <input type="checkbox" disabled style="cursor:default; accent-color:#059669;">
+                    <input type="checkbox" disabled style="cursor:default; accent-color:#7B6FE8;">
                 </th>
                 <th style="{{ $th }}">Ciclo</th>
                 <th style="{{ $th }}">Nº Pedido</th>
@@ -184,14 +184,14 @@
             $dias   = (int)($p->dias_vencimiento ?? 0);
         @endphp
         <tr wire:key="ba-d-{{ $p->id }}"
-            style="background:{{ $isSelected ? '#EFF6FF' : '#fff' }}; transition:background .1s;"
+            style="background:{{ $isSelected ? '#F5F3FF' : '#fff' }}; transition:background .1s;"
             x-data>
             <td class="col-row-num" style="padding:8px 12px; text-align:center; font-size:11px; font-weight:700; color:#9CA3AF; white-space:nowrap; border-bottom:1px solid #F9FAFB; vertical-align:middle;">{{ $pedidos->firstItem() + $loop->index }}</td>
             <td style="{{ $td }} text-align:center;">
                 <input type="checkbox"
                        wire:model.live="selectedIds"
                        value="{{ $p->id }}"
-                       style="cursor:pointer; accent-color:#059669; width:14px; height:14px;">
+                       style="cursor:pointer; accent-color:#7B6FE8; width:14px; height:14px;">
             </td>
             <td style="{{ $td }}">
                 @if($p->ciclo_code)
@@ -236,7 +236,7 @@
             <td style="{{ $td }} text-align:center;">
                 @if ($estado === 'sin_asignar')
                 <button wire:click="abrirAsignar({{ $p->id }})"
-                        style="height:28px; padding:0 12px; border:1px solid #A7F3D0; border-radius:7px; background:#ECFDF5; color:#065F46; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
+                        style="height:28px; padding:0 12px; border:1px solid #EDE9FE; border-radius:7px; background:#F5F3FF; color:#7B6FE8; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
                     <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     Asignar
                 </button>
@@ -282,8 +282,8 @@
             <div style="background:#fff; border-radius:8px; width:100%; max-width:440px; box-shadow:0 24px 64px rgba(0,0,0,.22); display:flex; flex-direction:column;">
                 {{-- Header --}}
                 <div style="padding:16px 20px 14px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0;">
-                    <div style="width:36px; height:36px; border-radius:8px; background:#D1FAE5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="18" height="18" fill="none" stroke="#059669" stroke-width="2" viewBox="0 0 24 24">
+                    <div style="width:36px; height:36px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="18" height="18" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/>
                         </svg>
                     </div>
@@ -339,7 +339,7 @@
                         Cancelar
                     </button>
                     <button wire:click="confirmarAsignacion" wire:loading.attr="disabled"
-                            style="height:36px; padding:0 20px; border:none; border-radius:8px; background:#059669; color:#fff; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
+                            style="height:36px; padding:0 20px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
                         <span wire:loading.remove wire:target="confirmarAsignacion">
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                         </span>
