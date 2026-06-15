@@ -26,6 +26,7 @@ class MisCasos extends Component
 
     // Formulario actividad
     public int    $actividadId        = 0;
+    public string $actEstado          = '';
     public int    $actOrigenId        = 0;
     public int    $tipoContactoId     = 0;
     public int    $accionId           = 0;
@@ -104,34 +105,48 @@ class MisCasos extends Component
     {
         $act = CobranzaActividad::findOrFail($id);
         $this->actividadId    = $id;
+        $this->actEstado      = $act->estado;
         $this->tipoContactoId = $act->tipo_contacto_id ?? 0;
         $this->accionId       = $act->accion_id ?? 0;
         $this->actResponsable = $act->responsable_id ?? auth()->id();
         $this->actFechaProg   = $act->fecha_programada?->format('Y-m-d') ?? now()->format('Y-m-d');
         $this->actObservacion = $act->observacion ?? '';
+        $this->tipoRespuestaId = $act->tipo_respuesta_id ?? 0;
+        $this->actObsCierre   = $act->observacion_cierre ?? '';
         $this->resetValidation();
         $this->showModalEditarAct = true;
     }
 
     public function guardarEditarActividad(): void
     {
-        $this->validate([
+        $rules = [
             'tipoContactoId' => 'required|integer|min:1',
             'accionId'       => 'required|integer|min:1',
             'actFechaProg'   => 'required|date',
-        ], [
-            'tipoContactoId.min' => 'Selecciona el tipo de contacto.',
-            'accionId.min'       => 'Selecciona la acción.',
+        ];
+        if ($this->actEstado === 'cerrada') {
+            $rules['tipoRespuestaId'] = 'required|integer|min:1';
+        }
+        $this->validate($rules, [
+            'tipoContactoId.min'  => 'Selecciona el tipo de contacto.',
+            'accionId.min'        => 'Selecciona la acción.',
             'actFechaProg.required' => 'La fecha programada es requerida.',
+            'tipoRespuestaId.min' => 'Selecciona el tipo de respuesta.',
         ]);
 
-        CobranzaActividad::findOrFail($this->actividadId)->update([
+        $data = [
             'tipo_contacto_id' => $this->tipoContactoId,
             'accion_id'        => $this->accionId,
             'responsable_id'   => $this->actResponsable ?: auth()->id(),
             'fecha_programada' => $this->actFechaProg,
             'observacion'      => $this->actObservacion ?: null,
-        ]);
+        ];
+        if ($this->actEstado === 'cerrada') {
+            $data['tipo_respuesta_id']  = $this->tipoRespuestaId;
+            $data['observacion_cierre'] = $this->actObsCierre ?: null;
+        }
+
+        CobranzaActividad::findOrFail($this->actividadId)->update($data);
 
         $this->showModalEditarAct = false;
         $this->resetActForm();
@@ -200,19 +215,6 @@ class MisCasos extends Component
 
         $this->showModalCerrarAct = false;
         session()->flash('success', 'Actividad cerrada.');
-    }
-
-    // ── Reabrir actividad ──────────────────────────────────────────
-    public function reabrirActividad(int $id): void
-    {
-        CobranzaActividad::findOrFail($id)->update([
-            'estado'             => 'en_proceso',
-            'fecha_cierre'       => null,
-            'tipo_respuesta_id'  => null,
-            'observacion_cierre' => null,
-            'cerrado_por'        => null,
-        ]);
-        session()->flash('success', 'Actividad reabierta.');
     }
 
     // ── Cancelar actividad ─────────────────────────────────────────
@@ -291,7 +293,7 @@ class MisCasos extends Component
     {
         $this->actividadId = $this->actOrigenId = $this->tipoContactoId = 0;
         $this->accionId = $this->tipoRespuestaId = $this->actResponsable = 0;
-        $this->actFechaProg = $this->actObservacion = $this->actObsCierre = $this->actMotivoCancelac = '';
+        $this->actFechaProg = $this->actObservacion = $this->actObsCierre = $this->actMotivoCancelac = $this->actEstado = '';
         $this->cerrarOpcion = 'solo';
         $this->resetValidation();
     }

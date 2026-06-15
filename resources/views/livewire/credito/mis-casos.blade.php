@@ -204,10 +204,9 @@
                     </button>
                 </div>
                 @elseif ($act->estado === 'cerrada')
-                <button wire:click="reabrirActividad({{ $act->id }})"
-                        wire:confirm="¿Reabrir esta actividad? Se limpiará el cierre registrado."
-                        style="height:24px; padding:0 7px; border:1px solid #FDE68A; border-radius:5px; background:#FFFBEB; color:#92400E; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">
-                    Reabrir
+                <button wire:click="abrirEditarActividad({{ $act->id }})"
+                        style="height:24px; padding:0 7px; border:1px solid #E5E7EB; border-radius:5px; background:#F9FAFB; color:#374151; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                    Editar
                 </button>
                 @else
                 <span style="font-size:11px; color:#D1D5DB;">—</span>
@@ -351,6 +350,23 @@
                 <label style="{{ $lbl }}">Observación</label>
                 <textarea wire:model="actObservacion" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
             </div>
+            @if ($actEstado === 'cerrada')
+            <div style="border-top:1px dashed #EDE9FE; padding-top:12px; display:flex; flex-direction:column; gap:12px;">
+                <p style="font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#7B6FE8; margin:0;">Datos del cierre</p>
+                <div>
+                    <label style="{{ $lbl }}">Tipo de respuesta <span style="color:#EF4444;">*</span></label>
+                    <select wire:model="tipoRespuestaId" style="{{ $sel }}">
+                        <option value="0">— Selecciona —</option>
+                        @foreach($tiposRespuesta as $t)<option value="{{ $t->id }}">{{ $t->nombre }}</option>@endforeach
+                    </select>
+                    @error('tipoRespuestaId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                </div>
+                <div>
+                    <label style="{{ $lbl }}">Observación de cierre</label>
+                    <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;"></textarea>
+                </div>
+            </div>
+            @endif
         </div>
         <div style="padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0;">
             <button @click="open=false" style="height:36px;padding:0 14px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
