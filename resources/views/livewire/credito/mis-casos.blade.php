@@ -62,7 +62,7 @@
             @mouseenter="$el.style.background='{{ $sel ? '#EDE9FE' : '#FAFAFE' }}'"
             @mouseleave="$el.style.background='{{ $sel ? '#F5F3FF' : '#fff' }}'"
             x-data>
-            <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $act->numero }}</td>
+            <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $i + 1 }}</td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8;">{{ $caso->ciclo_code ?? '—' }}</span>
             </td>
