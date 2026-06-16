@@ -1,19 +1,4 @@
-<div x-data="{
-    topH: 320, botH: 340, minH: 80,
-    dragging: false, startY: 0, startTop: 0,
-    onDown(e) {
-        this.dragging = true; this.startY = e.clientY; this.startTop = this.topH;
-        document.body.style.userSelect = 'none'; document.body.style.cursor = 'row-resize';
-    },
-    onMove(e) {
-        if (!this.dragging) return;
-        const delta = e.clientY - this.startY;
-        const total = this.startTop + this.botH;
-        this.topH = Math.max(this.minH, Math.min(total - this.minH, this.startTop + delta));
-        this.botH = Math.max(this.minH, total - this.topH);
-    },
-    onUp() { this.dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = ''; }
-}" @mousemove.window="onMove($event)" @mouseup.window="onUp()">
+<div>
 
 @if (session('success'))
 <div style="background:#F0FDF4; color:#15803D; border:1px solid #BBF7D0; border-radius:10px; padding:10px 16px; margin-bottom:12px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px;">
@@ -42,16 +27,35 @@
     </select>
 </div>
 
-{{-- ══ PANEL SUPERIOR: CASOS ══ --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip;">
+{{-- ══ CONTENEDOR SPLIT ══ --}}
+<div x-data="{
+    topH: 0, minH: 100,
+    dragging: false, startY: 0, startTop: 0,
+    init() { this.topH = Math.round(this.$el.offsetHeight * 0.45); },
+    onDown(e) {
+        this.dragging = true; this.startY = e.clientY; this.startTop = this.topH;
+        document.body.style.userSelect = 'none'; document.body.style.cursor = 'row-resize';
+    },
+    onMove(e) {
+        if (!this.dragging) return;
+        const delta = e.clientY - this.startY;
+        this.topH = Math.max(this.minH, Math.min(this.$el.offsetHeight - this.minH - 22, this.startTop + delta));
+    },
+    onUp() { this.dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = ''; }
+}" @mousemove.window="onMove($event)" @mouseup.window="onUp()"
+     style="display:flex; flex-direction:column; height:calc(100vh - 152px);">
 
-    <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px;">
+{{-- ══ PANEL SUPERIOR: CASOS ══ --}}
+<div style="display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip; flex:none;"
+     :style="'height:' + topH + 'px'">
+
+    <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Mis Casos</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $casos->count() }}</span>
     </div>
 
     {{-- Tabla casos --}}
-    <div :style="'overflow:auto; max-height:' + topH + 'px;'">
+    <div style="flex:1; overflow:auto; min-height:0;">
     <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
@@ -142,10 +146,10 @@
 </div>
 
 {{-- ══ PANEL INFERIOR: ACTIVIDADES ══ --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip;">
+<div style="flex:1; min-height:0; display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip;">
 
     {{-- Header actividades --}}
-    <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+    <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex:none;">
         @if ($casoSeleccionado)
         <span style="font-size:13px; font-weight:700; color:#111827;">Actividades</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $actividades instanceof \Illuminate\Pagination\LengthAwarePaginator ? $actividades->total() : $actividades->count() }}</span>
@@ -166,7 +170,7 @@
     </div>
 
     {{-- Tabla actividades --}}
-    <div :style="'overflow:auto; max-height:' + botH + 'px;'">
+    <div style="flex:1; overflow:auto; min-height:0;">
     @if ($casoSeleccionado)
     <table style="width:100%; border-collapse:collapse; min-width:1000px;">
         <thead style="position:sticky; top:0; z-index:10;">
@@ -281,7 +285,9 @@
     </div>
     @endif
     </div>
-</div>
+</div>{{-- fin panel actividades --}}
+
+</div>{{-- fin contenedor split --}}
 
 @php
 $mHead = 'padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0; background:#fff;';
