@@ -29,9 +29,9 @@
 
 {{-- ══ CONTENEDOR SPLIT ══ --}}
 <div x-data="{
-    topH: 0, minH: 100,
+    topH: 280, minH: 100,
     dragging: false, startY: 0, startTop: 0,
-    init() { this.topH = Math.round(this.$el.offsetHeight * 0.45); },
+    init() { this.$nextTick(() => { this.topH = Math.round(this.$el.offsetHeight * 0.45); }); },
     onDown(e) {
         this.dragging = true; this.startY = e.clientY; this.startTop = this.topH;
         document.body.style.userSelect = 'none'; document.body.style.cursor = 'row-resize';
@@ -46,8 +46,8 @@
      style="display:flex; flex-direction:column; height:calc(100vh - 152px);">
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
-<div style="display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:none;"
-     :style="'height:' + topH + 'px'">
+<div style="min-height:0; display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;"
+     :style="'flex: 0 0 ' + topH + 'px'">
 
     <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Mis Casos</span>
