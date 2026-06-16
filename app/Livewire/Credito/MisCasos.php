@@ -261,6 +261,15 @@ class MisCasos extends Component
             'motivoCierreId' => 'required|integer|min:1',
         ], ['motivoCierreId.min' => 'Selecciona un motivo de cierre.']);
 
+        $pendientes = CobranzaActividad::where('caso_id', $this->selectedCasoId)
+            ->whereIn('estado', ['abierta', 'en_proceso'])
+            ->count();
+
+        if ($pendientes > 0) {
+            $this->addError('motivoCierreId', "No se puede cerrar el caso: hay {$pendientes} actividad(es) abierta(s) o en proceso.");
+            return;
+        }
+
         CobranzaCaso::findOrFail($this->selectedCasoId)->update([
             'estado'            => 'cerrado',
             'motivo_cierre'     => CobranzaCatalogo::find($this->motivoCierreId)?->nombre,
