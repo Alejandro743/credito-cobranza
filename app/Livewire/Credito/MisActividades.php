@@ -203,7 +203,7 @@ class MisActividades extends Component
         ->join('cobranza_casos', 'cobranza_casos.id', '=', 'cobranza_actividades.caso_id')
         ->join('pedidos', 'pedidos.id', '=', 'cobranza_casos.pedido_id')
         ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
-        ->join('users', 'users.id', '=', 'clientes.user_id')
+        ->join('users', 'users.id', '=', 'clientes.usuario_id')
         ->select('cobranza_actividades.*')
         ->addSelect(DB::raw("$cicloSub as ciclo_code"))
         ->addSelect(DB::raw('pedidos.numero as pedido_numero'))
