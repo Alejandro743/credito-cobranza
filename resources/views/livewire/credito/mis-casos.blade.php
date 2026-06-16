@@ -156,7 +156,12 @@
         <span style="font-size:13px; color:#374151; margin-left:16px;">
             <strong>{{ $casoSeleccionado->pedido?->numero }}</strong> - <strong>{{ Str::title($casoSeleccionado->pedido?->cliente?->nombre_completo) }}</strong>
         </span>
-        <div style="margin-left:auto;">
+        <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+            <button wire:click="abrirCerrarCaso" @click="$wire.selectedCasoId = {{ $casoSeleccionado->id }}"
+                    style="height:32px; padding:0 14px; background:#EA580C; color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Cerrar caso
+            </button>
             <button wire:click="abrirNuevaActividad(0)"
                     style="height:32px; padding:0 14px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px;">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
