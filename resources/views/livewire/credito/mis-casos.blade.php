@@ -205,10 +205,6 @@
                             style="height:24px; padding:0 7px; border:1px solid #EDE9FE; border-radius:5px; background:#F5F3FF; color:#7B6FE8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">
                         Cerrar
                     </button>
-                    <button wire:click="abrirNuevaActividad({{ $act->id }})"
-                            style="height:24px; padding:0 7px; border:1px solid #D1FAE5; border-radius:5px; background:#ECFDF5; color:#065F46; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">
-                        + Nueva
-                    </button>
                     <button wire:click="abrirCancelarActividad({{ $act->id }})"
                             style="height:24px; padding:0 7px; border:1px solid #FEE2E2; border-radius:5px; background:#FEF2F2; color:#B91C1C; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">
                         Cancelar
