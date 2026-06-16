@@ -82,8 +82,9 @@
             <td style="{{ $tdC }} font-size:12px;">{{ $act->fecha_programada?->format('d/m/Y') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->actividadOrigen ? '#'.$act->actividadOrigen->numero : '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
-                @if ($act->estado === 'abierta')
-                <div style="display:inline-flex; gap:4px;">
+                @php $puedeC = $act->pendientes_caso == 0 && $act->caso_estado !== 'cerrado'; @endphp
+                <div style="display:inline-flex; gap:4px; flex-wrap:wrap; justify-content:center;">
+                    @if ($act->estado === 'abierta')
                     <button wire:click="iniciarActividad({{ $act->id }})"
                             style="height:24px; padding:0 7px; border:none; border-radius:5px; background:#7B6FE8; color:#fff; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:3px;">
                         <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/></svg>
@@ -99,9 +100,7 @@
                         <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                         Cancelar
                     </button>
-                </div>
-                @elseif ($act->estado === 'en_proceso')
-                <div style="display:inline-flex; gap:4px;">
+                    @elseif ($act->estado === 'en_proceso')
                     <button wire:click="abrirCerrarActividad({{ $act->id }})"
                             style="height:24px; padding:0 7px; border:none; border-radius:5px; background:#7B6FE8; color:#fff; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:3px;">
                         <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -117,16 +116,23 @@
                         <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                         Cancelar
                     </button>
+                    @elseif ($act->estado === 'cerrada')
+                    <button wire:click="abrirEditarActividad({{ $act->id }})"
+                            style="height:24px; padding:0 7px; border:1px solid #E5E7EB; border-radius:5px; background:#F9FAFB; color:#374151; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:3px;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                        Editar
+                    </button>
+                    @endif
+                    @if ($puedeC)
+                    <button wire:click="abrirCerrarCaso({{ $act->caso_id }})"
+                            style="height:24px; padding:0 7px; border:none; border-radius:5px; background:#F97316; color:#fff; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:3px;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Cerrar Caso
+                    </button>
+                    @elseif ($act->estado === 'cancelada')
+                    <span style="font-size:11px; color:#D1D5DB;">—</span>
+                    @endif
                 </div>
-                @elseif ($act->estado === 'cerrada')
-                <button wire:click="abrirEditarActividad({{ $act->id }})"
-                        style="height:24px; padding:0 7px; border:1px solid #E5E7EB; border-radius:5px; background:#F9FAFB; color:#374151; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:3px;">
-                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
-                    Editar
-                </button>
-                @else
-                <span style="font-size:11px; color:#D1D5DB;">—</span>
-                @endif
             </td>
         </tr>
         @empty
@@ -316,6 +322,44 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
         <div style="{{ $mFoot }}">
             <button @click="open=false" style="height:36px;padding:0 14px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
             <button wire:click="confirmarCerrarActividad" style="height:36px;padding:0 18px;border:none;border-radius:8px;background:#7B6FE8;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Confirmar</button>
+        </div>
+    </div>
+</div>
+</template>
+</div>
+
+{{-- ══ MODAL: CERRAR CASO ══ --}}
+<div x-data="{ open: @entangle('showModalCerrarCaso') }">
+<template x-teleport="body">
+<div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:440px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#FEF3E8; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#F97316" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cerrar caso</p>
+            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <div style="{{ $mBody }}">
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Cierre del caso</p>
+                <div>
+                    <label style="{{ $lbl }}">Motivo de cierre <span style="color:#EF4444;">*</span></label>
+                    <select wire:model="motivoCierreId" style="{{ $sel }}">
+                        <option value="0">— Selecciona —</option>
+                        @foreach($motivosCierre as $m)<option value="{{ $m->id }}">{{ $m->nombre }}</option>@endforeach
+                    </select>
+                    @error('motivoCierreId') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                </div>
+                <div>
+                    <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
+                    <textarea wire:model="obsCierreCaso" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;background:#F5F3FF;"></textarea>
+                </div>
+            </div>
+        </div>
+        <div style="{{ $mFoot }}">
+            <button @click="open=false" style="height:36px;padding:0 14px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:13px;font-weight:600;cursor:pointer;">Cancelar</button>
+            <button wire:click="confirmarCerrarCaso" style="height:36px;padding:0 18px;border:none;border-radius:8px;background:#F97316;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Cerrar caso</button>
         </div>
     </div>
 </div>

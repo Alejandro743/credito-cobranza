@@ -20,6 +20,11 @@ class MisActividades extends Component
     public bool $showModalEditarAct   = false;
     public bool $showModalCerrarAct   = false;
     public bool $showModalCancelarAct = false;
+    public bool $showModalCerrarCaso  = false;
+
+    public ?int   $selectedCasoId  = null;
+    public int    $motivoCierreId  = 0;
+    public string $obsCierreCaso   = '';
 
     public int    $actividadId       = 0;
     public int    $actCasoId         = 0;
@@ -161,6 +166,43 @@ class MisActividades extends Component
         session()->flash('success', 'Actividad cerrada.');
     }
 
+    public function abrirCerrarCaso(int $casoId): void
+    {
+        $this->selectedCasoId = $casoId;
+        $this->motivoCierreId = 0;
+        $this->obsCierreCaso  = '';
+        $this->resetValidation();
+        $this->showModalCerrarCaso = true;
+    }
+
+    public function confirmarCerrarCaso(): void
+    {
+        $this->validate([
+            'motivoCierreId' => 'required|integer|min:1',
+        ], ['motivoCierreId.min' => 'Selecciona un motivo de cierre.']);
+
+        $pendientes = CobranzaActividad::where('caso_id', $this->selectedCasoId)
+            ->whereIn('estado', ['abierta', 'en_proceso'])
+            ->count();
+
+        if ($pendientes > 0) {
+            $this->addError('motivoCierreId', "No se puede cerrar el caso: hay {$pendientes} actividad(es) abierta(s) o en proceso.");
+            return;
+        }
+
+        CobranzaCaso::findOrFail($this->selectedCasoId)->update([
+            'estado'             => 'cerrado',
+            'motivo_cierre'      => CobranzaCatalogo::find($this->motivoCierreId)?->nombre,
+            'observacion_cierre' => $this->obsCierreCaso ?: null,
+            'fecha_cierre'       => now(),
+            'cerrado_por'        => auth()->id(),
+        ]);
+
+        $this->showModalCerrarCaso = false;
+        $this->selectedCasoId = null;
+        session()->flash('success', 'Caso cerrado correctamente.');
+    }
+
     public function abrirCancelarActividad(int $id): void
     {
         $this->actividadId       = $id;
@@ -209,6 +251,8 @@ class MisActividades extends Component
         ->addSelect(DB::raw('pedidos.numero as pedido_numero'))
         ->addSelect(DB::raw('clientes.ci as cliente_ci'))
         ->addSelect(DB::raw('users.name as cliente_nombre'))
+        ->addSelect(DB::raw('cobranza_casos.estado as caso_estado'))
+        ->addSelect(DB::raw('(SELECT COUNT(*) FROM cobranza_actividades ca2 WHERE ca2.caso_id = cobranza_actividades.caso_id AND ca2.estado IN ("abierta","en_proceso")) as pendientes_caso'))
         ->where('cobranza_actividades.responsable_id', auth()->id())
         ->when($this->filtroEstado, fn($q) => $q->where('cobranza_actividades.estado', $this->filtroEstado))
         ->when($this->search, fn($q) =>
@@ -224,10 +268,11 @@ class MisActividades extends Component
         $tiposContacto  = CobranzaCatalogo::activos('tipo_contacto');
         $acciones       = CobranzaCatalogo::activos('accion');
         $tiposRespuesta = CobranzaCatalogo::activos('tipo_respuesta');
+        $motivosCierre  = CobranzaCatalogo::activos('motivo_cierre');
         $usuarios       = User::where('active', true)->orderBy('name')->get();
 
         return view('livewire.credito.mis-actividades', compact(
-            'actividades', 'tiposContacto', 'acciones', 'tiposRespuesta', 'usuarios'
+            'actividades', 'tiposContacto', 'acciones', 'tiposRespuesta', 'motivosCierre', 'usuarios'
         ));
     }
 }
