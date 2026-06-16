@@ -170,6 +170,7 @@
                 </th>
                 <th style="{{ $th }}">Ciclo</th>
                 <th style="{{ $th }}">Nº Pedido</th>
+                <th style="{{ $th }}">Est. Pedido</th>
                 <th style="{{ $th }}">CI</th>
                 <th style="{{ $th }}">Cliente</th>
                 <th style="{{ $th }}">Cód. Vend.</th>
@@ -212,6 +213,13 @@
             </td>
             <td style="{{ $td }}">
                 <span style="font-family:monospace; font-size:12px; font-weight:700; color:#111827;">{{ $p->numero }}</span>
+            </td>
+            <td style="{{ $td }}">
+                @php
+                    $pEstMap = ['aprobado'=>['#D1FAE5','#065F46','Aprobado'],'en_espera'=>['#FEF3C7','#92400E','En espera'],'revision'=>['#EFF6FF','#1D4ED8','Revisión'],'cerrado'=>['#F3F4F6','#6B7280','Cerrado']];
+                    [$pBg,$pCol,$pLbl] = $pEstMap[$p->estado] ?? ['#F3F4F6','#6B7280',ucfirst($p->estado)];
+                @endphp
+                <span style="padding:2px 8px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $pBg }}; color:{{ $pCol }}; white-space:nowrap;">{{ $pLbl }}</span>
             </td>
             <td style="{{ $td }}">
                 <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->cliente->ci ?? '—' }}</span>
