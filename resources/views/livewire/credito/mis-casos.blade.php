@@ -154,7 +154,7 @@
         <span style="font-size:13px; font-weight:700; color:#111827;">Actividades</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $actividades instanceof \Illuminate\Pagination\LengthAwarePaginator ? $actividades->total() : $actividades->count() }}</span>
         <span style="font-size:13px; color:#374151; margin-left:16px;">
-            {{ $casoSeleccionado->pedido?->numero }} - <strong>{{ Str::title($casoSeleccionado->pedido?->cliente?->nombre_completo) }}</strong>
+            <strong>{{ $casoSeleccionado->pedido?->numero }}</strong> - <strong>{{ Str::title($casoSeleccionado->pedido?->cliente?->nombre_completo) }}</strong>
         </span>
         <div style="margin-left:auto;">
             <button wire:click="abrirNuevaActividad(0)"
