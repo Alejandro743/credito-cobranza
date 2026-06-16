@@ -46,7 +46,7 @@
      style="display:flex; flex-direction:column; height:calc(100vh - 152px);">
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
-<div style="display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip; flex:none;"
+<div style="display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:none;"
      :style="'height:' + topH + 'px'">
 
     <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
@@ -146,7 +146,7 @@
 </div>
 
 {{-- ══ PANEL INFERIOR: ACTIVIDADES ══ --}}
-<div style="flex:1; min-height:0; display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip;">
+<div style="flex:1; min-height:0; display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
 
     {{-- Header actividades --}}
     <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex:none;">
