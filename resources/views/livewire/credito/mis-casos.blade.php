@@ -1,4 +1,19 @@
-<div>
+<div x-data="{
+    topH: 320, botH: 340, minH: 80,
+    dragging: false, startY: 0, startTop: 0,
+    onDown(e) {
+        this.dragging = true; this.startY = e.clientY; this.startTop = this.topH;
+        document.body.style.userSelect = 'none'; document.body.style.cursor = 'row-resize';
+    },
+    onMove(e) {
+        if (!this.dragging) return;
+        const delta = e.clientY - this.startY;
+        const total = this.startTop + this.botH;
+        this.topH = Math.max(this.minH, Math.min(total - this.minH, this.startTop + delta));
+        this.botH = Math.max(this.minH, total - this.topH);
+    },
+    onUp() { this.dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = ''; }
+}" @mousemove.window="onMove($event)" @mouseup.window="onUp()">
 
 @if (session('success'))
 <div style="background:#F0FDF4; color:#15803D; border:1px solid #BBF7D0; border-radius:10px; padding:10px 16px; margin-bottom:12px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px;">
@@ -28,7 +43,7 @@
 </div>
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip; margin-bottom:10px;">
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip;">
 
     <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Mis Casos</span>
@@ -36,7 +51,7 @@
     </div>
 
     {{-- Tabla casos --}}
-    <div style="overflow:auto; max-height:320px;">
+    <div :style="'overflow:auto; height:' + topH + 'px;'">
     <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
@@ -116,6 +131,14 @@
     </div>
 </div>
 
+{{-- ══ DRAG HANDLE ══ --}}
+<div @mousedown="onDown($event)"
+     style="height:12px; cursor:row-resize; display:flex; align-items:center; justify-content:center; margin:4px 0; user-select:none; flex-shrink:0;"
+     title="Arrastrá para redimensionar">
+    <div style="width:48px; height:4px; border-radius:99px; background:#D1D5DB; transition:background .15s;"
+         @mouseenter="$el.style.background='#7B6FE8'" @mouseleave="$el.style.background='#D1D5DB'"></div>
+</div>
+
 {{-- ══ PANEL INFERIOR: ACTIVIDADES ══ --}}
 <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:clip;">
 
@@ -141,7 +164,7 @@
     </div>
 
     {{-- Tabla actividades --}}
-    <div style="overflow:auto; max-height:340px;">
+    <div :style="'overflow:auto; height:' + botH + 'px;'">
     @if ($casoSeleccionado)
     <table style="width:100%; border-collapse:collapse; min-width:1000px;">
         <thead style="position:sticky; top:0; z-index:10;">
