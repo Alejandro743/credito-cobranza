@@ -36,7 +36,7 @@
     </div>
 
     {{-- Tabla casos --}}
-    <div style="overflow-x:auto;">
+    <div style="overflow:auto; max-height:320px;">
     <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
@@ -146,7 +146,7 @@
     </div>
 
     {{-- Tabla actividades --}}
-    <div style="overflow-x:auto;">
+    <div style="overflow:auto; max-height:340px;">
     @if ($casoSeleccionado)
     <table style="width:100%; border-collapse:collapse; min-width:1000px;">
         <thead style="position:sticky; top:0; z-index:10;">
