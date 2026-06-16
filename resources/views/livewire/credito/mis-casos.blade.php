@@ -273,10 +273,22 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
             <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
             </div>
-            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">{{ $actOrigenId ? 'Nueva actividad desde #'.$actOrigenId : 'Nueva actividad' }}</p>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Nueva actividad</p>
             <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
         <div style="{{ $mBody }}">
+            {{-- Card: Origen (solo si ya hay actividades en el caso) --}}
+            @if($actividades->count() > 0)
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Actividad origen</p>
+                <select wire:model="actOrigenId" style="{{ $sel }}">
+                    <option value="0">— Sin origen —</option>
+                    @foreach($actividades as $orig)
+                    <option value="{{ $orig->id }}">#{{ $orig->numero }} · {{ $orig->tipoContacto?->nombre ?? '—' }} · {{ $orig->accion?->nombre ?? '—' }}</option>
+                    @endforeach
+                </select>
+            </div>
+            @endif
             {{-- Card: Tipo de contacto --}}
             <div style="{{ $card }}">
                 <p style="{{ $sTitle }}">■ Tipo de contacto</p>
