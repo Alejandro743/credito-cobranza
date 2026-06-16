@@ -46,16 +46,16 @@
      style="display:flex; flex-direction:column; height:calc(100vh - 152px);">
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
-<div style="min-height:0; display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;"
-     :style="'flex: 0 0 ' + topH + 'px'">
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:none;"
+     :style="'height:' + topH + 'px'">
 
-    <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
+    <div x-ref="casosHeader" style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Mis Casos</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $casos->count() }}</span>
     </div>
 
     {{-- Tabla casos --}}
-    <div style="flex:1; overflow:auto; min-height:0;">
+    <div :style="'overflow:auto; height:' + Math.max(0, topH - ($refs.casosHeader ? $refs.casosHeader.offsetHeight : 44)) + 'px'">
     <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
