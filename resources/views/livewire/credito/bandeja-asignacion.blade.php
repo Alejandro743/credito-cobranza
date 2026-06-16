@@ -123,10 +123,10 @@
             </button>
             @else
             <button wire:click="marcarSinAsignar({{ $p->id }})"
-                    wire:confirm="¿Liberar este caso y marcarlo como sin asignar?"
+                    wire:confirm="¿Desvincular este caso y marcarlo como sin asignar?"
                     style="flex:1; height:34px; border:1px solid #E5E7EB; border-radius:8px; background:#F9FAFB; color:#374151; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                Liberar
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/></svg>
+                Desvincular
             </button>
             @endif
         </div>
@@ -176,10 +176,10 @@
                 <th style="{{ $th }}">Vendedor</th>
                 <th style="{{ $th }} text-align:right;">Días Venc.</th>
                 <th style="{{ $th }} text-align:center;">Cuotas Venc.</th>
-                <th style="{{ $th }}">Estado</th>
                 <th style="{{ $th }}">Responsable</th>
                 <th style="{{ $th }}">Fecha Asig.</th>
                 <th style="{{ $th }}">Asignó</th>
+                <th style="{{ $th }}">Estado</th>
                 <th style="{{ $th }} text-align:center;">Acción</th>
             </tr>
         </thead>
@@ -233,12 +233,12 @@
                     {{ $p->cuotas_vencidas_count ?? 0 }}
                 </span>
             </td>
-            <td style="{{ $td }}">
-                <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $badgeBg }}; color:{{ $badgeCol }};">{{ $badgeLbl }}</span>
-            </td>
             <td style="{{ $td }}">{{ $caso?->responsable?->name ?? '—' }}</td>
             <td style="{{ $td }}">{{ $caso?->fecha_asignacion?->format('d/m/Y H:i') ?? '—' }}</td>
             <td style="{{ $td }}">{{ $caso?->asignadoPor?->name ?? '—' }}</td>
+            <td style="{{ $td }}">
+                <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $badgeBg }}; color:{{ $badgeCol }};">{{ $badgeLbl }}</span>
+            </td>
             <td style="{{ $td }} text-align:center;">
                 @if ($estado === 'sin_asignar')
                 <button wire:click="abrirAsignar({{ $p->id }})"
@@ -248,10 +248,10 @@
                 </button>
                 @else
                 <button wire:click="marcarSinAsignar({{ $p->id }})"
-                        wire:confirm="¿Liberar este caso y marcarlo como sin asignar?"
+                        wire:confirm="¿Desvincular este caso y marcarlo como sin asignar?"
                         style="height:28px; padding:0 12px; border:1px solid #E5E7EB; border-radius:7px; background:#F9FAFB; color:#374151; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
                     <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    Liberar
+                    Desvincular
                 </button>
                 @endif
             </td>
