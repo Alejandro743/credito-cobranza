@@ -89,7 +89,7 @@
             <td style="{{ $tdC }} text-align:center;" wire:click.stop>
                 <div style="display:inline-flex; gap:5px;">
                     <button wire:click="abrirCerrarCaso" @click="$wire.selectedCasoId = {{ $caso->id }}"
-                            style="height:26px; padding:0 8px; border:1px solid #EDE9FE; border-radius:6px; background:#F5F3FF; color:#7B6FE8; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">
+                            style="height:26px; padding:0 8px; border:none; border-radius:6px; background:#7B6FE8; color:#fff; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">
                         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Cerrar caso
                     </button>
