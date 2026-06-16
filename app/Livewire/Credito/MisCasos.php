@@ -8,9 +8,11 @@ use App\Models\CobranzaCatalogo;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 class MisCasos extends Component
 {
+    use WithPagination;
     public ?int $selectedCasoId = null;
 
     public string $searchCasos      = '';
@@ -54,6 +56,7 @@ class MisCasos extends Component
     public function selectCaso(int $id): void
     {
         $this->selectedCasoId = ($this->selectedCasoId === $id) ? null : $id;
+        $this->resetPage('actsPage');
     }
 
     // ── Nueva actividad ────────────────────────────────────────────
@@ -327,19 +330,23 @@ class MisCasos extends Component
             )
             ->when($this->filtroEstadoCaso, fn($q) => $q->where('cobranza_casos.estado', $this->filtroEstadoCaso))
             ->orderByDesc(DB::raw($diasSub))
-            ->get();
+            ->paginate(20, pageName: 'casosPage');
 
         $actividades      = collect();
+        $actividadesAll   = collect();
         $casoSeleccionado = null;
         if ($this->selectedCasoId) {
             $casoSeleccionado = CobranzaCaso::with(['pedido.cliente.usuario', 'pedido.vendedor', 'responsable'])->find($this->selectedCasoId);
             if ($casoSeleccionado) {
+                $actividadesAll = CobranzaActividad::with(['tipoContacto', 'accion'])
+                    ->where('caso_id', $this->selectedCasoId)
+                    ->orderBy('numero')->get();
                 $actividades = CobranzaActividad::with([
                     'tipoContacto', 'accion', 'tipoRespuesta',
                     'responsable', 'creadoPor', 'cerradoPor', 'actividadOrigen',
                 ])->where('caso_id', $this->selectedCasoId)
                   ->orderBy('numero')
-                  ->get();
+                  ->paginate(20, pageName: 'actsPage');
             }
         }
 
@@ -350,7 +357,7 @@ class MisCasos extends Component
         $usuarios       = User::where('active', true)->orderBy('name')->get();
 
         return view('livewire.credito.mis-casos', compact(
-            'casos', 'actividades', 'casoSeleccionado',
+            'casos', 'actividades', 'actividadesAll', 'casoSeleccionado',
             'tiposContacto', 'acciones', 'tiposRespuesta', 'motivosCierre', 'usuarios'
         ));
     }
