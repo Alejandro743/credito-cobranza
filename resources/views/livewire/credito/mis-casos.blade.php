@@ -79,11 +79,7 @@
             $dias = (int)($caso->dias_vencimiento ?? 0);
         @endphp
         <tr wire:key="caso-{{ $caso->id }}"
-            wire:click="selectCaso({{ $caso->id }})"
-            style="background:{{ $sel ? '#F5F3FF' : '#fff' }}; cursor:pointer; transition:background .1s; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}"
-            @mouseenter="$el.style.background='{{ $sel ? '#EDE9FE' : '#FAFAFE' }}'"
-            @mouseleave="$el.style.background='{{ $sel ? '#F5F3FF' : '#fff' }}'"
-            x-data>
+            style="background:{{ $sel ? '#F5F3FF' : '#fff' }}; transition:background .1s; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}">
             <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $i + 1 }}</td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8;">{{ $caso->ciclo_code ?? '—' }}</span>
@@ -108,8 +104,13 @@
             </td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->fecha_asignacion?->format('d/m/Y') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->asignadoPor?->name ?? '—' }}</td>
-            <td style="{{ $tdC }} text-align:center;" wire:click.stop>
+            <td style="{{ $tdC }} text-align:center;">
                 <div style="display:inline-flex; gap:5px;">
+                    <button wire:click="selectCaso({{ $caso->id }})"
+                            style="height:26px; padding:0 8px; border:none; border-radius:6px; background:#7B6FE8; color:#fff; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">
+                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Ver actividades
+                    </button>
                     <button wire:click="abrirCancelarCaso" @click="$wire.selectedCasoId = {{ $caso->id }}"
                             style="height:26px; padding:0 8px; border:1px solid #FEE2E2; border-radius:6px; background:#FEF2F2; color:#B91C1C; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">
                         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -263,11 +264,6 @@
         <tr>
             <td colspan="12" style="padding:40px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
                 Este caso no tiene actividades aún.
-                <button wire:click="abrirNuevaActividad(0)"
-                        style="display:inline-flex; margin-left:8px; height:28px; padding:0 12px; background:#7B6FE8; color:#fff; border:none; border-radius:7px; font-size:12px; font-weight:700; cursor:pointer; align-items:center; gap:4px; vertical-align:middle;">
-                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                    Crear actividad
-                </button>
             </td>
         </tr>
         @endforelse
