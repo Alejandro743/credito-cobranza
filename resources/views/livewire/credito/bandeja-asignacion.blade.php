@@ -117,7 +117,7 @@
         <div style="padding:10px 14px; border-top:1px solid #F3F4F6; display:flex; gap:6px;">
             @if ($estado === 'sin_asignar')
             <button wire:click="abrirAsignar({{ $p->id }})"
-                    style="flex:1; height:34px; border:1px solid #EDE9FE; border-radius:8px; background:#F5F3FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
+                    style="flex:1; height:34px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px;">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                 Asignar
             </button>
@@ -250,7 +250,7 @@
             <td style="{{ $td }} text-align:center;">
                 @if ($estado === 'sin_asignar')
                 <button wire:click="abrirAsignar({{ $p->id }})"
-                        style="height:28px; padding:0 12px; border:1px solid #EDE9FE; border-radius:7px; background:#F5F3FF; color:#7B6FE8; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
+                        style="height:28px; padding:0 12px; border:none; border-radius:7px; background:#7B6FE8; color:#fff; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
                     <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     Asignar
                 </button>
