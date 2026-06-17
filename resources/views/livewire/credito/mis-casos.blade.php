@@ -111,11 +111,6 @@
                         <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
                         Ver actividades
                     </button>
-                    <button wire:click="abrirCancelarCaso" @click="$wire.selectedCasoId = {{ $caso->id }}"
-                            style="height:26px; padding:0 8px; border:1px solid #FEE2E2; border-radius:6px; background:#FEF2F2; color:#B91C1C; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">
-                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                        Cancelar caso
-                    </button>
                 </div>
             </td>
         </tr>
