@@ -131,7 +131,7 @@
 
 {{-- ══ DRAG HANDLE ══ --}}
 <div @mousedown="onDown($event)" wire:ignore
-     style="height:16px; cursor:row-resize; display:flex; align-items:center; justify-content:center; margin:4px 0; user-select:none; background:#F9F8FF; flex-shrink:0; position:relative; z-index:20;">
+     style="height:16px; cursor:row-resize; display:flex; align-items:center; justify-content:center; user-select:none; background:#F9F8FF; flex-shrink:0; position:relative; z-index:20;">
     <div style="width:120px; height:6px; border-radius:99px; background:#C4B5FD; transition:background .15s;"
          @mouseenter="$el.style.background='#7B6FE8'" @mouseleave="$el.style.background='#C4B5FD'"></div>
 </div>
