@@ -84,7 +84,7 @@
             <td style="{{ $tdC }} font-size:12px;">{{ $act->fecha_programada?->format('d/m/Y') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->actividadOrigen ? '#'.$act->actividadOrigen->numero : '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
-                @php $puedeC = $act->pendientes_caso == 0 && $act->caso_estado !== 'cerrado'; @endphp
+                @php $puedeC = $act->pendientes_caso == 0 && !in_array($act->caso_estado, ['cerrado','cancelado']); @endphp
                 <div style="display:inline-flex; gap:4px; flex-wrap:wrap; justify-content:center;">
                     @if ($act->estado === 'abierta')
                     <button wire:click="iniciarActividad({{ $act->id }})"
