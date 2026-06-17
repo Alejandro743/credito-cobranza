@@ -43,7 +43,7 @@
     <table style="width:100%; border-collapse:collapse; min-width:1100px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
-                <th style="{{ $thC }} background:#EDE9FE; color:#C4B5FD; width:36px; text-align:center;">#</th>
+                <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
                 <th style="{{ $thC }}">Ciclo</th>
                 <th style="{{ $thC }}">Nº Pedido</th>
                 <th style="{{ $thC }}">CI</th>

@@ -55,7 +55,7 @@ class MisCasos extends Component
 
     public function selectCaso(int $id): void
     {
-        $this->selectedCasoId = ($this->selectedCasoId === $id) ? null : $id;
+        $this->selectedCasoId = $id;
         $this->resetPage('actsPage');
     }
 
