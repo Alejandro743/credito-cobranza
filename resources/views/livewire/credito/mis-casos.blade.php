@@ -80,7 +80,7 @@
         @endphp
         <tr wire:key="caso-{{ $caso->id }}"
             style="background:{{ $sel ? '#F5F3FF' : '#fff' }}; transition:background .1s; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}">
-            <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $i + 1 }}</td>
+            <td style="{{ $tdC }} background:#EDE9FE; text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $i + 1 }}</td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8;">{{ $caso->ciclo_code ?? '—' }}</span>
             </td>
@@ -130,7 +130,7 @@
 </div>
 
 {{-- ══ DRAG HANDLE ══ --}}
-<div @mousedown="onDown($event)"
+<div @mousedown="onDown($event)" wire:ignore
      style="height:16px; cursor:row-resize; display:flex; align-items:center; justify-content:center; margin:4px 0; user-select:none;">
     <div style="width:120px; height:6px; border-radius:99px; background:#C4B5FD; transition:background .15s;"
          @mouseenter="$el.style.background='#7B6FE8'" @mouseleave="$el.style.background='#C4B5FD'"></div>
@@ -195,7 +195,7 @@
         <tr wire:key="act-{{ $act->id }}"
             style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
-            <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $act->numero }}</td>
+            <td style="{{ $tdC }} background:#EDE9FE; text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $act->numero }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->tipoContacto?->nombre ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; font-weight:600;">{{ $act->accion?->nombre ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->fecha_programada?->format('d/m/Y') ?? '—' }}</td>
