@@ -335,7 +335,6 @@ class MisCasos extends Component
         $casos = CobranzaCaso::with(['pedido.cliente.usuario', 'pedido.vendedor', 'asignadoPor'])
             ->join('pedidos', 'pedidos.id', '=', 'cobranza_casos.pedido_id')
             ->where('cobranza_casos.responsable_id', auth()->id())
-            ->whereIn('cobranza_casos.estado', ['asignado', 'en_gestion'])
             ->select('cobranza_casos.*')
             ->addSelect(DB::raw("$cicloSub as ciclo_code"))
             ->addSelect(DB::raw("$diasSub as dias_vencimiento"))

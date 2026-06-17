@@ -26,6 +26,8 @@
         <option value="">Todos los estados</option>
         <option value="asignado">Asignado</option>
         <option value="en_gestion">En Gestión</option>
+        <option value="cerrado">Cerrado</option>
+        <option value="cancelado">Cancelado</option>
     </select>
 </div>
 
