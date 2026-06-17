@@ -17,19 +17,14 @@ class MisActividades extends Component
     public string $search       = '';
     public string $filtroEstado = '';
 
-    public bool $showModalNuevaAct    = false;
     public bool $showModalEditarAct   = false;
     public bool $showModalCerrarAct   = false;
     public bool $showModalCancelarAct = false;
     public bool $showModalCerrarCaso  = false;
-    public bool $showModalCancelarCaso = false;
 
-    public ?int   $selectedCasoId   = null;
-    public int    $motivoCierreId   = 0;
-    public string $obsCierreCaso    = '';
-    public string $motivoCancelCaso = '';
-    public string $obsCancelCaso    = '';
-    public int    $actOrigenId      = 0;
+    public ?int   $selectedCasoId = null;
+    public int    $motivoCierreId = 0;
+    public string $obsCierreCaso  = '';
 
     public int    $actividadId       = 0;
     public int    $actCasoId         = 0;
@@ -52,89 +47,6 @@ class MisActividades extends Component
 
     public function updatingSearch(): void       { $this->resetPage(); }
     public function updatingFiltroEstado(): void { $this->resetPage(); }
-
-    public function abrirNuevaActividad(int $casoId): void
-    {
-        $this->actCasoId      = $casoId;
-        $this->actOrigenId    = 0;
-        $this->tipoContactoId = 0;
-        $this->accionId       = 0;
-        $this->actResponsable = auth()->id();
-        $this->actFechaProg   = now()->format('Y-m-d');
-        $this->actObservacion = '';
-        $this->resetValidation();
-        $this->showModalNuevaAct = true;
-    }
-
-    public function guardarActividad(): void
-    {
-        $this->validate([
-            'tipoContactoId' => 'required|integer|min:1',
-            'accionId'       => 'required|integer|min:1',
-            'actFechaProg'   => 'required|date',
-        ], [
-            'tipoContactoId.min'    => 'Selecciona el tipo de contacto.',
-            'accionId.min'          => 'Selecciona la acción.',
-            'actFechaProg.required' => 'La fecha programada es requerida.',
-        ]);
-
-        $siguienteNumero = CobranzaActividad::where('caso_id', $this->actCasoId)->max('numero') + 1;
-
-        CobranzaActividad::create([
-            'caso_id'             => $this->actCasoId,
-            'numero'              => $siguienteNumero,
-            'actividad_origen_id' => $this->actOrigenId ?: null,
-            'tipo_contacto_id'    => $this->tipoContactoId,
-            'accion_id'           => $this->accionId,
-            'responsable_id'      => $this->actResponsable ?: auth()->id(),
-            'fecha_programada'    => $this->actFechaProg,
-            'observacion'         => $this->actObservacion ?: null,
-            'estado'              => 'abierta',
-            'created_by'          => auth()->id(),
-        ]);
-
-        $caso = CobranzaCaso::find($this->actCasoId);
-        if ($caso && $caso->estado === 'asignado') {
-            $caso->update(['estado' => 'en_gestion']);
-        }
-
-        $this->showModalNuevaAct = false;
-        $this->resetActForm();
-        session()->flash('success', 'Actividad creada correctamente.');
-    }
-
-    public function abrirCancelarCaso(int $casoId): void
-    {
-        $this->selectedCasoId   = $casoId;
-        $this->motivoCancelCaso = '';
-        $this->obsCancelCaso    = '';
-        $this->resetValidation();
-        $this->showModalCancelarCaso = true;
-    }
-
-    public function confirmarCancelarCaso(): void
-    {
-        CobranzaActividad::where('caso_id', $this->selectedCasoId)
-            ->whereIn('estado', ['abierta', 'en_proceso'])
-            ->update([
-                'estado'             => 'cancelada',
-                'motivo_cancelacion' => 'Caso cancelado',
-                'fecha_cierre'       => now(),
-                'cerrado_por'        => auth()->id(),
-            ]);
-
-        CobranzaCaso::findOrFail($this->selectedCasoId)->update([
-            'estado'             => 'cancelado',
-            'motivo_cierre'      => $this->motivoCancelCaso ?: null,
-            'observacion_cierre' => $this->obsCancelCaso ?: null,
-            'fecha_cierre'       => now(),
-            'cerrado_por'        => auth()->id(),
-        ]);
-
-        $this->showModalCancelarCaso = false;
-        $this->selectedCasoId = null;
-        session()->flash('success', 'Caso cancelado.');
-    }
 
     public function abrirEditarActividad(int $id): void
     {
@@ -314,7 +226,7 @@ class MisActividades extends Component
 
     private function resetActForm(): void
     {
-        $this->actividadId = $this->actCasoId = $this->tipoContactoId = $this->actOrigenId = 0;
+        $this->actividadId = $this->actCasoId = $this->tipoContactoId = 0;
         $this->accionId = $this->tipoRespuestaId = $this->actResponsable = 0;
         $this->actFechaProg = $this->actObservacion = $this->actObsCierre = '';
         $this->actMotivoCancelac = $this->actEstado = '';
@@ -358,12 +270,9 @@ class MisActividades extends Component
         $tiposRespuesta = CobranzaCatalogo::activos('tipo_respuesta');
         $motivosCierre  = CobranzaCatalogo::activos('motivo_cierre');
         $usuarios       = User::where('active', true)->orderBy('name')->get();
-        $actividadesAll = $this->actCasoId
-            ? CobranzaActividad::where('caso_id', $this->actCasoId)->orderBy('numero')->get()
-            : collect();
 
         return view('livewire.credito.mis-actividades', compact(
-            'actividades', 'tiposContacto', 'acciones', 'tiposRespuesta', 'motivosCierre', 'usuarios', 'actividadesAll'
+            'actividades', 'tiposContacto', 'acciones', 'tiposRespuesta', 'motivosCierre', 'usuarios'
         ));
     }
 }
