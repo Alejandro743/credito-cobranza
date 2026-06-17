@@ -100,11 +100,11 @@
                 <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:20px; border-radius:6px; font-size:12px; font-weight:700; background:#FEF2F2; color:#B91C1C;">{{ $caso->cuotas_vencidas_count ?? 0 }}</span>
             </td>
             <td style="{{ $tdC }} text-align:center;">
-                @if ($caso->estado === 'en_gestion')
-                <span style="padding:3px 9px; border-radius:99px; font-size:11px; font-weight:600; background:#EFF6FF; color:#1D4ED8;">En Gestión</span>
-                @else
-                <span style="padding:3px 9px; border-radius:99px; font-size:11px; font-weight:600; background:#D1FAE5; color:#065F46;">Asignado</span>
-                @endif
+                @php
+                    $csMap = ['asignado'=>['#D1FAE5','#065F46','Asignado'],'en_gestion'=>['#EFF6FF','#1D4ED8','En Gestión'],'cerrado'=>['#F0FDF4','#166534','Cerrado'],'cancelado'=>['#FEE2E2','#B91C1C','Cancelado']];
+                    [$csBg,$csCol,$csLbl] = $csMap[$caso->estado] ?? ['#F3F4F6','#6B7280',$caso->estado];
+                @endphp
+                <span style="padding:3px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $csBg }}; color:{{ $csCol }};">{{ $csLbl }}</span>
             </td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->fecha_asignacion?->format('d/m/Y') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->asignadoPor?->name ?? '—' }}</td>
@@ -152,6 +152,7 @@
             <strong>{{ $casoSeleccionado->pedido?->numero }}</strong> - <strong>{{ Str::title($casoSeleccionado->pedido?->cliente?->nombre_completo) }}</strong>
         </span>
         <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
+            @if (in_array($casoSeleccionado->estado, ['asignado','en_gestion']))
             <button wire:click="abrirNuevaActividad(0)"
                     style="height:32px; padding:0 14px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px;">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
@@ -167,6 +168,7 @@
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 Cancelar caso
             </button>
+            @endif
         </div>
         @else
         <span style="font-size:13px; font-weight:700; color:#111827;">Actividades</span>
