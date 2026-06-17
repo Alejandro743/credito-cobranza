@@ -60,12 +60,14 @@ class CobranzaCatalogosSeeder extends Seeder
                 ['codigo' => 'CANCELADA',   'nombre' => 'Cancelada',   'sort_order' => 4],
             ],
             'tipo_cancelacion' => [
-                ['codigo' => 'SIN_RESPUESTA',  'nombre' => 'Sin respuesta del cliente',  'sort_order' => 1],
-                ['codigo' => 'DIR_INCORRECTA', 'nombre' => 'Dirección incorrecta',       'sort_order' => 2],
-                ['codigo' => 'DUPLICADA',      'nombre' => 'Actividad duplicada',        'sort_order' => 3],
-                ['codigo' => 'ERROR_PROG',     'nombre' => 'Error de programación',      'sort_order' => 4],
-                ['codigo' => 'ADMIN',          'nombre' => 'Cancelación administrativa', 'sort_order' => 5],
-                ['codigo' => 'OTRO',           'nombre' => 'Otro',                       'sort_order' => 6],
+                ['codigo' => 'CASO_CANCELADO',   'nombre' => 'Caso cancelado',               'sort_order' => 1],
+                ['codigo' => 'DUPLICADA',        'nombre' => 'Actividad duplicada',           'sort_order' => 2],
+                ['codigo' => 'REPROGRAMADA',     'nombre' => 'Reemplazada por reprogramación','sort_order' => 3],
+                ['codigo' => 'NRO_INCORRECTO',   'nombre' => 'Número de teléfono incorrecto', 'sort_order' => 4],
+                ['codigo' => 'DIR_INCORRECTA',   'nombre' => 'Dirección incorrecta',          'sort_order' => 5],
+                ['codigo' => 'ERROR_ASIGNACION', 'nombre' => 'Error de asignación',           'sort_order' => 6],
+                ['codigo' => 'ADMIN',            'nombre' => 'Cancelación administrativa',    'sort_order' => 7],
+                ['codigo' => 'OTRO',             'nombre' => 'Otro',                          'sort_order' => 8],
             ],
         ];
 
