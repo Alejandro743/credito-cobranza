@@ -193,7 +193,46 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
     @include('partials.sidebar')
 
     {{-- ═══ MAIN ═══ --}}
-    <div class="flex-1 flex flex-col min-w-0 overflow-hidden" style="background:{{ $bgMain }};">
+    <div class="flex-1 flex flex-col min-w-0 overflow-hidden" style="background:{{ $bgMain }};"
+         x-data="{
+             tabs: [],
+             activeUrl: window.location.pathname,
+             init() {
+                 this.tabs = JSON.parse(sessionStorage.getItem('_navtabs') || '[]');
+                 const cur = { url: window.location.pathname, name: @js($pageTitle) };
+                 if (!this.tabs.find(t => t.url === cur.url)) this.tabs.push(cur);
+                 else {
+                     const existing = this.tabs.find(t => t.url === cur.url);
+                     existing.name = cur.name;
+                 }
+                 sessionStorage.setItem('_navtabs', JSON.stringify(this.tabs));
+             },
+             closeTab(url) {
+                 const idx = this.tabs.findIndex(t => t.url === url);
+                 this.tabs.splice(idx, 1);
+                 sessionStorage.setItem('_navtabs', JSON.stringify(this.tabs));
+                 if (url === this.activeUrl) {
+                     window.location.href = this.tabs.length ? this.tabs[Math.max(0, idx-1)].url : @js($dashRoute);
+                 }
+             }
+         }">
+
+        {{-- ═══ TAB BAR ═══ --}}
+        <div class="hidden md:flex" style="background:#fff; border-bottom:1px solid #E5E7EB; padding:0 12px; gap:2px; align-items:flex-end; min-height:38px; overflow-x:auto; flex-shrink:0;">
+            <template x-for="tab in tabs" :key="tab.url">
+                <div @click="window.location.href = tab.url"
+                     :style="tab.url === activeUrl
+                         ? 'background:#fff; color:#7B6FE8; border-color:#E5E7EB; border-bottom-color:#fff;'
+                         : 'background:#F9FAFB; color:#6B7280;'"
+                     style="display:flex; align-items:center; gap:5px; padding:7px 12px 8px; border-radius:8px 8px 0 0; font-size:12px; font-weight:600; cursor:pointer; border:1px solid transparent; border-bottom:none; position:relative; top:1px; white-space:nowrap; flex-shrink:0; user-select:none;">
+                    <span x-text="tab.name"></span>
+                    <span @click.stop="closeTab(tab.url)"
+                          style="width:15px; height:15px; border-radius:3px; display:inline-flex; align-items:center; justify-content:center; font-size:10px; color:#9CA3AF; flex-shrink:0;"
+                          onmouseenter="this.style.background='#FEE2E2'; this.style.color='#B91C1C';"
+                          onmouseleave="this.style.background='transparent'; this.style.color='#9CA3AF';">✕</span>
+                </div>
+            </template>
+        </div>
 
         @unless($noHeader)
         {{-- Topbar --}}
