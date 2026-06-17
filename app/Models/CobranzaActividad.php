@@ -15,7 +15,7 @@ class CobranzaActividad extends Model
         'tipo_contacto_id', 'accion_id', 'tipo_respuesta_id',
         'responsable_id', 'fecha_programada', 'fecha_inicio', 'fecha_cierre',
         'observacion', 'observacion_cierre', 'estado',
-        'created_by', 'cerrado_por', 'motivo_cancelacion',
+        'created_by', 'cerrado_por', 'motivo_cancelacion', 'tipo_cancelacion_id',
     ];
 
     protected $casts = [
@@ -28,7 +28,8 @@ class CobranzaActividad extends Model
     public function actividadOrigen(): BelongsTo { return $this->belongsTo(CobranzaActividad::class, 'actividad_origen_id'); }
     public function tipoContacto(): BelongsTo { return $this->belongsTo(CobranzaCatalogo::class, 'tipo_contacto_id'); }
     public function accion(): BelongsTo      { return $this->belongsTo(CobranzaCatalogo::class, 'accion_id'); }
-    public function tipoRespuesta(): BelongsTo { return $this->belongsTo(CobranzaCatalogo::class, 'tipo_respuesta_id'); }
+    public function tipoRespuesta(): BelongsTo   { return $this->belongsTo(CobranzaCatalogo::class, 'tipo_respuesta_id'); }
+    public function tipoCancelacion(): BelongsTo { return $this->belongsTo(CobranzaCatalogo::class, 'tipo_cancelacion_id'); }
     public function responsable(): BelongsTo { return $this->belongsTo(User::class, 'responsable_id'); }
     public function creadoPor(): BelongsTo   { return $this->belongsTo(User::class, 'created_by'); }
     public function cerradoPor(): BelongsTo  { return $this->belongsTo(User::class, 'cerrado_por'); }

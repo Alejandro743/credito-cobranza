@@ -113,7 +113,8 @@ class ModulosSubmodulosSeeder extends Seeder
                             ['name' => 'Tipos de Respuesta',   'slug' => 'cob-def-tipos-respuesta', 'route_name' => 'credito.cobranza.def.tipos-respuesta', 'sort_order' => 3],
                             ['name' => 'Motivos de Cierre',    'slug' => 'cob-def-motivos-cierre',  'route_name' => 'credito.cobranza.def.motivos-cierre',  'sort_order' => 4],
                             ['name' => 'Estados de Caso',      'slug' => 'cob-def-estados-caso',    'route_name' => 'credito.cobranza.def.estados-caso',    'sort_order' => 5],
-                            ['name' => 'Estados de Actividad', 'slug' => 'cob-def-estados-activ',   'route_name' => 'credito.cobranza.def.estados-actividad','sort_order' => 6],
+                            ['name' => 'Estados de Actividad',  'slug' => 'cob-def-estados-activ',        'route_name' => 'credito.cobranza.def.estados-actividad', 'sort_order' => 6],
+                            ['name' => 'Tipos de Cancelación', 'slug' => 'cob-def-tipos-cancelacion', 'route_name' => 'credito.cobranza.def.tipos-cancelacion',  'sort_order' => 7],
                         ],
                     ],
                     [

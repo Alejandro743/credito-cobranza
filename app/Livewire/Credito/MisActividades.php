@@ -27,17 +27,18 @@ class MisActividades extends Component
     public int    $motivoCierreId = 0;
     public string $obsCierreCaso  = '';
 
-    public int    $actividadId       = 0;
-    public int    $actCasoId         = 0;
-    public string $actEstado         = '';
-    public int    $tipoContactoId    = 0;
-    public int    $accionId          = 0;
-    public int    $tipoRespuestaId   = 0;
-    public int    $actResponsable    = 0;
-    public string $actFechaProg      = '';
-    public string $actObservacion    = '';
-    public string $actObsCierre      = '';
-    public string $actMotivoCancelac = '';
+    public int    $actividadId        = 0;
+    public int    $actCasoId          = 0;
+    public string $actEstado          = '';
+    public int    $tipoContactoId     = 0;
+    public int    $accionId           = 0;
+    public int    $tipoRespuestaId    = 0;
+    public int    $tipoCancelacionId  = 0;
+    public int    $actResponsable     = 0;
+    public string $actFechaProg       = '';
+    public string $actObservacion     = '';
+    public string $actObsCierre       = '';
+    public string $actMotivoCancelac  = '';
 
     public string $cerrarOpcion      = 'solo';
     public int    $nuevaTipoContacto = 0;
@@ -207,20 +208,27 @@ class MisActividades extends Component
 
     public function abrirCancelarActividad(int $id): void
     {
-        $this->actividadId       = $id;
+        $this->actividadId      = $id;
+        $this->tipoCancelacionId = 0;
         $this->actMotivoCancelac = '';
-        $this->actObsCierre      = '';
+        $this->actObsCierre     = '';
+        $this->resetValidation();
         $this->showModalCancelarAct = true;
     }
 
     public function confirmarCancelarActividad(): void
     {
+        $this->validate([
+            'tipoCancelacionId' => 'required|integer|min:1',
+        ], ['tipoCancelacionId.min' => 'Selecciona el tipo de cancelación.']);
+
         CobranzaActividad::findOrFail($this->actividadId)->update([
-            'estado'             => 'cancelada',
-            'motivo_cancelacion' => $this->actMotivoCancelac ?: null,
-            'observacion_cierre' => $this->actObsCierre ?: null,
-            'fecha_cierre'       => now(),
-            'cerrado_por'        => auth()->id(),
+            'estado'              => 'cancelada',
+            'tipo_cancelacion_id' => $this->tipoCancelacionId,
+            'motivo_cancelacion'  => $this->actMotivoCancelac ?: null,
+            'observacion_cierre'  => $this->actObsCierre ?: null,
+            'fecha_cierre'        => now(),
+            'cerrado_por'         => auth()->id(),
         ]);
         $this->showModalCancelarAct = false;
         session()->flash('success', 'Actividad cancelada.');
@@ -268,14 +276,15 @@ class MisActividades extends Component
         ->orderBy('cobranza_actividades.fecha_programada')
         ->paginate(20);
 
-        $tiposContacto  = CobranzaCatalogo::activos('tipo_contacto');
-        $acciones       = CobranzaCatalogo::activos('accion');
-        $tiposRespuesta = CobranzaCatalogo::activos('tipo_respuesta');
-        $motivosCierre  = CobranzaCatalogo::activos('motivo_cierre');
-        $usuarios       = User::where('active', true)->orderBy('name')->get();
+        $tiposContacto    = CobranzaCatalogo::activos('tipo_contacto');
+        $acciones         = CobranzaCatalogo::activos('accion');
+        $tiposRespuesta   = CobranzaCatalogo::activos('tipo_respuesta');
+        $motivosCierre    = CobranzaCatalogo::activos('motivo_cierre');
+        $tiposCancelacion = CobranzaCatalogo::activos('tipo_cancelacion');
+        $usuarios         = User::where('active', true)->orderBy('name')->get();
 
         return view('livewire.credito.mis-actividades', compact(
-            'actividades', 'tiposContacto', 'acciones', 'tiposRespuesta', 'motivosCierre', 'usuarios'
+            'actividades', 'tiposContacto', 'acciones', 'tiposRespuesta', 'motivosCierre', 'tiposCancelacion', 'usuarios'
         ));
     }
 }

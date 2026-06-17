@@ -59,6 +59,14 @@ class CobranzaCatalogosSeeder extends Seeder
                 ['codigo' => 'CERRADA',     'nombre' => 'Cerrada',     'sort_order' => 3],
                 ['codigo' => 'CANCELADA',   'nombre' => 'Cancelada',   'sort_order' => 4],
             ],
+            'tipo_cancelacion' => [
+                ['codigo' => 'SIN_RESPUESTA',  'nombre' => 'Sin respuesta del cliente',  'sort_order' => 1],
+                ['codigo' => 'DIR_INCORRECTA', 'nombre' => 'Dirección incorrecta',       'sort_order' => 2],
+                ['codigo' => 'DUPLICADA',      'nombre' => 'Actividad duplicada',        'sort_order' => 3],
+                ['codigo' => 'ERROR_PROG',     'nombre' => 'Error de programación',      'sort_order' => 4],
+                ['codigo' => 'ADMIN',          'nombre' => 'Cancelación administrativa', 'sort_order' => 5],
+                ['codigo' => 'OTRO',           'nombre' => 'Otro',                       'sort_order' => 6],
+            ],
         ];
 
         foreach ($catalogs as $tipo => $items) {

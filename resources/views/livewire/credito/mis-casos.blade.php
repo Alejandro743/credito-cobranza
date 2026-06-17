@@ -557,12 +557,18 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
         </div>
         <div style="{{ $mBody }}">
             <div style="{{ $card }}">
-                <p style="{{ $sTitle }}">■ Motivo</p>
+                <p style="{{ $sTitle }}">■ Tipo de cancelación</p>
                 <div>
-                    <label style="{{ $lbl }}">Motivo</label>
-                    <input wire:model="actMotivoCancelac" type="text" placeholder="Describe el motivo..." style="{{ $inp }}">
+                    <label style="{{ $lbl }}">Tipo <span style="color:#B91C1C;">*</span></label>
+                    <select wire:model="tipoCancelacionId" style="{{ $inp }} cursor:pointer;">
+                        <option value="0">— Selecciona —</option>
+                        @foreach ($tiposCancelacion as $tc)
+                        <option value="{{ $tc->id }}">{{ $tc->nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('tipoCancelacionId') <p style="color:#B91C1C; font-size:11px; margin:4px 0 0;">{{ $message }}</p> @enderror
                 </div>
-                <div>
+                <div style="margin-top:10px;">
                     <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
                     <textarea wire:model="actObsCierre" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;background:#F5F3FF;"></textarea>
                 </div>
