@@ -293,12 +293,21 @@ class MisCasos extends Component
 
     public function confirmarCancelarCaso(): void
     {
+        CobranzaActividad::where('caso_id', $this->selectedCasoId)
+            ->whereIn('estado', ['abierta', 'en_proceso'])
+            ->update([
+                'estado'             => 'cancelada',
+                'motivo_cancelacion' => 'Caso cancelado',
+                'fecha_cierre'       => now(),
+                'cerrado_por'        => auth()->id(),
+            ]);
+
         CobranzaCaso::findOrFail($this->selectedCasoId)->update([
-            'estado'            => 'cancelado',
-            'motivo_cierre'     => $this->motivoCancelCaso ?: null,
-            'observacion_cierre'=> $this->obsCancelCaso ?: null,
-            'fecha_cierre'      => now(),
-            'cerrado_por'       => auth()->id(),
+            'estado'             => 'cancelado',
+            'motivo_cierre'      => $this->motivoCancelCaso ?: null,
+            'observacion_cierre' => $this->obsCancelCaso ?: null,
+            'fecha_cierre'       => now(),
+            'cerrado_por'        => auth()->id(),
         ]);
 
         $this->showModalCancelarCaso = false;
