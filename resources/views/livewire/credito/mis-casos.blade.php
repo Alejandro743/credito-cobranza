@@ -206,7 +206,7 @@
             <td style="{{ $tdC }} font-size:12px;">{{ $act->responsable?->name ?? '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
                 @php
-                    $stMap = ['abierta'=>['#FEF3C7','#92400E','Abierta'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#F3F4F6','#6B7280','Cancelada']];
+                    $stMap = ['abierta'=>['#E0F2FE','#0369A1','Abierta'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#F3F4F6','#6B7280','Cancelada']];
                     [$stBg,$stCol,$stLbl] = $stMap[$act->estado] ?? ['#F3F4F6','#6B7280',$act->estado];
                 @endphp
                 <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $stBg }}; color:{{ $stCol }};">{{ $stLbl }}</span>
