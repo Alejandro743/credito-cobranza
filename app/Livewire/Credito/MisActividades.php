@@ -16,6 +16,7 @@ class MisActividades extends Component
 
     public string $search       = '';
     public string $filtroEstado = '';
+    public string $filtroCiclo  = '';
 
     public bool $showModalEditarAct   = false;
     public bool $showModalCerrarAct   = false;
@@ -47,6 +48,7 @@ class MisActividades extends Component
 
     public function updatingSearch(): void       { $this->resetPage(); }
     public function updatingFiltroEstado(): void { $this->resetPage(); }
+    public function updatingFiltroCiclo(): void  { $this->resetPage(); }
 
     public function abrirEditarActividad(int $id): void
     {
@@ -255,6 +257,7 @@ class MisActividades extends Component
         ->addSelect(DB::raw('(SELECT COUNT(*) FROM cobranza_actividades ca2 WHERE ca2.caso_id = cobranza_actividades.caso_id AND ca2.estado IN ("abierta","en_proceso")) as pendientes_caso'))
         ->where('cobranza_actividades.responsable_id', auth()->id())
         ->when($this->filtroEstado, fn($q) => $q->where('cobranza_actividades.estado', $this->filtroEstado))
+        ->when($this->filtroCiclo, fn($q) => $q->whereRaw("$cicloSub LIKE ?", ["%{$this->filtroCiclo}%"]))
         ->when($this->search, fn($q) =>
             $q->where(fn($q2) =>
                 $q2->where('pedidos.numero', 'like', "%{$this->search}%")

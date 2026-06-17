@@ -19,6 +19,8 @@
         <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar pedido, CI o cliente..."
                style="width:100%; height:32px; padding:0 10px 0 28px; border:1px solid #E5E7EB; border-radius:8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
     </div>
+    <input wire:model.live.debounce.300ms="filtroCiclo" type="text" placeholder="Filtrar ciclo..."
+           style="height:32px; padding:0 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:12px; outline:none; background:#fff; width:120px;">
     <select wire:model.live="filtroEstado"
             style="height:32px; padding:0 8px; border:1px solid #E5E7EB; border-radius:8px; font-size:12px; outline:none; background:#fff; cursor:pointer;">
         <option value="">Todos los estados</option>

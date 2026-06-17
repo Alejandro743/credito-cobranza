@@ -17,6 +17,7 @@ class MisCasos extends Component
 
     public string $searchCasos      = '';
     public string $filtroEstadoCaso = '';
+    public string $filtroCiclo      = '';
 
     // Modales
     public bool $showModalNuevaAct      = false;
@@ -347,6 +348,7 @@ class MisCasos extends Component
                 )
             )
             ->when($this->filtroEstadoCaso, fn($q) => $q->where('cobranza_casos.estado', $this->filtroEstadoCaso))
+            ->when($this->filtroCiclo, fn($q) => $q->whereRaw("$cicloSub LIKE ?", ["%{$this->filtroCiclo}%"]))
             ->orderByDesc(DB::raw($diasSub))
             ->paginate(20, pageName: 'casosPage');
 
