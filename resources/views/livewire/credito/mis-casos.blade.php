@@ -131,9 +131,9 @@
 
 {{-- ══ DRAG HANDLE ══ --}}
 <div @mousedown="onDown($event)"
-     style="height:14px; cursor:row-resize; display:flex; align-items:center; justify-content:center; margin:4px 0; user-select:none;">
-    <div style="width:48px; height:4px; border-radius:99px; background:#D1D5DB; transition:background .15s;"
-         @mouseenter="$el.style.background='#7B6FE8'" @mouseleave="$el.style.background='#D1D5DB'"></div>
+     style="height:16px; cursor:row-resize; display:flex; align-items:center; justify-content:center; margin:4px 0; user-select:none;">
+    <div style="width:120px; height:6px; border-radius:99px; background:#C4B5FD; transition:background .15s;"
+         @mouseenter="$el.style.background='#7B6FE8'" @mouseleave="$el.style.background='#C4B5FD'"></div>
 </div>
 
 {{-- ══ PANEL INFERIOR: ACTIVIDADES ══ --}}
