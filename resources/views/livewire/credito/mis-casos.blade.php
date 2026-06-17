@@ -80,7 +80,7 @@
         @endphp
         <tr wire:key="caso-{{ $caso->id }}"
             style="background:{{ $sel ? '#F5F3FF' : '#fff' }}; transition:background .1s; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}">
-            <td style="{{ $tdC }} background:#EDE9FE; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8;">{{ $i + 1 }}</td>
+            <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $i + 1 }}</td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8;">{{ $caso->ciclo_code ?? '—' }}</span>
             </td>
@@ -195,7 +195,7 @@
         <tr wire:key="act-{{ $act->id }}"
             style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
-            <td style="{{ $tdC }} background:#EDE9FE; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8;">{{ $act->numero }}</td>
+            <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $act->numero }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->tipoContacto?->nombre ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; font-weight:600;">{{ $act->accion?->nombre ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->fecha_programada?->format('d/m/Y') ?? '—' }}</td>
