@@ -16,18 +16,33 @@
 <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:8px;">
     <div style="flex:1; min-width:180px; position:relative;">
         <svg style="position:absolute; left:9px; top:50%; transform:translateY(-50%); width:13px; height:13px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
-        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar pedido, CI o cliente..."
+        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar CI o cliente..."
                style="width:100%; height:32px; padding:0 10px 0 28px; border:1px solid #E5E7EB; border-radius:8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
     </div>
     <input wire:model.live.debounce.300ms="filtroCiclo" type="text" placeholder="Filtrar ciclo..."
-           style="height:32px; padding:0 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:12px; outline:none; background:#fff; width:120px;">
+           style="height:32px; padding:0 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:12px; outline:none; background:#fff; width:110px;">
+    <select wire:model.live="filtroCasoEstado"
+            style="height:32px; padding:0 8px; border:1px solid #E5E7EB; border-radius:8px; font-size:12px; outline:none; background:#fff; cursor:pointer;">
+        <option value="">Estado del caso</option>
+        <option value="asignado">Asignado</option>
+        <option value="en_gestion">En Gestión</option>
+        <option value="cerrado">Cerrado</option>
+        <option value="cancelado">Cancelado</option>
+    </select>
     <select wire:model.live="filtroEstado"
             style="height:32px; padding:0 8px; border:1px solid #E5E7EB; border-radius:8px; font-size:12px; outline:none; background:#fff; cursor:pointer;">
-        <option value="">Todos los estados</option>
+        <option value="">Estado actividad</option>
         <option value="abierta">Abierta</option>
         <option value="en_proceso">En Proceso</option>
         <option value="cerrada">Cerrada</option>
         <option value="cancelada">Cancelada</option>
+    </select>
+    <select wire:model.live="filtroPedido"
+            style="height:32px; padding:0 8px; border:1px solid #E5E7EB; border-radius:8px; font-size:12px; outline:none; background:#fff; cursor:pointer; max-width:160px;">
+        <option value="">Todos los pedidos</option>
+        @foreach ($pedidosDisponibles as $ped)
+        <option value="{{ $ped->id }}">{{ $ped->numero }}</option>
+        @endforeach
     </select>
 </div>
 

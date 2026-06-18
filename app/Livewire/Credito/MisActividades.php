@@ -14,9 +14,11 @@ class MisActividades extends Component
 {
     use WithPagination;
 
-    public string $search       = '';
-    public string $filtroEstado = '';
-    public string $filtroCiclo  = '';
+    public string $search           = '';
+    public string $filtroEstado     = '';
+    public string $filtroCiclo      = '';
+    public string $filtroCasoEstado = '';
+    public string $filtroPedido     = '';
 
     public bool $showModalEditarAct   = false;
     public bool $showModalCerrarAct   = false;
@@ -47,9 +49,11 @@ class MisActividades extends Component
     public string $nuevaFechaProg    = '';
     public string $nuevaObs          = '';
 
-    public function updatingSearch(): void       { $this->resetPage(); }
-    public function updatingFiltroEstado(): void { $this->resetPage(); }
-    public function updatingFiltroCiclo(): void  { $this->resetPage(); }
+    public function updatingSearch(): void           { $this->resetPage(); }
+    public function updatingFiltroEstado(): void     { $this->resetPage(); }
+    public function updatingFiltroCiclo(): void      { $this->resetPage(); }
+    public function updatingFiltroCasoEstado(): void { $this->filtroPedido = ''; $this->resetPage(); }
+    public function updatingFiltroPedido(): void     { $this->resetPage(); }
 
     public function abrirEditarActividad(int $id): void
     {
@@ -248,33 +252,41 @@ class MisActividades extends Component
     {
         $cicloSub = '(SELECT cc.code FROM pedido_items pi INNER JOIN lista_maestra_items lmi ON lmi.id = pi.lista_maestra_item_id INNER JOIN lista_maestra lm ON lm.id = lmi.lista_maestra_id INNER JOIN commercial_cycles cc ON cc.id = lm.cycle_id WHERE pi.pedido_id = pedidos.id LIMIT 1)';
 
-        $actividades = CobranzaActividad::with([
-            'tipoContacto', 'accion', 'tipoRespuesta', 'responsable', 'actividadOrigen',
-            'caso.pedido.cliente.usuario',
-        ])
-        ->join('cobranza_casos', 'cobranza_casos.id', '=', 'cobranza_actividades.caso_id')
-        ->join('pedidos', 'pedidos.id', '=', 'cobranza_casos.pedido_id')
-        ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
-        ->join('users', 'users.id', '=', 'clientes.usuario_id')
-        ->select('cobranza_actividades.*')
-        ->addSelect(DB::raw("$cicloSub as ciclo_code"))
-        ->addSelect(DB::raw('pedidos.numero as pedido_numero'))
-        ->addSelect(DB::raw('clientes.ci as cliente_ci'))
-        ->addSelect(DB::raw('users.name as cliente_nombre'))
-        ->addSelect(DB::raw('cobranza_casos.estado as caso_estado'))
-        ->addSelect(DB::raw('(SELECT COUNT(*) FROM cobranza_actividades ca2 WHERE ca2.caso_id = cobranza_actividades.caso_id AND ca2.estado IN ("abierta","en_proceso")) as pendientes_caso'))
-        ->where('cobranza_actividades.responsable_id', auth()->id())
-        ->when($this->filtroEstado, fn($q) => $q->where('cobranza_actividades.estado', $this->filtroEstado))
-        ->when($this->filtroCiclo, fn($q) => $q->whereRaw("$cicloSub LIKE ?", ["%{$this->filtroCiclo}%"]))
-        ->when($this->search, fn($q) =>
-            $q->where(fn($q2) =>
-                $q2->where('pedidos.numero', 'like', "%{$this->search}%")
-                   ->orWhere('users.name', 'like', "%{$this->search}%")
-                   ->orWhere('clientes.ci', 'like', "%{$this->search}%")
-            )
-        )
-        ->orderBy('cobranza_actividades.fecha_programada')
-        ->paginate(20);
+        $baseQuery = CobranzaActividad::query()
+            ->join('cobranza_casos', 'cobranza_casos.id', '=', 'cobranza_actividades.caso_id')
+            ->join('pedidos', 'pedidos.id', '=', 'cobranza_casos.pedido_id')
+            ->join('clientes', 'clientes.id', '=', 'pedidos.cliente_id')
+            ->join('users', 'users.id', '=', 'clientes.usuario_id')
+            ->where('cobranza_actividades.responsable_id', auth()->id())
+            ->when($this->filtroEstado,     fn($q) => $q->where('cobranza_actividades.estado', $this->filtroEstado))
+            ->when($this->filtroCiclo,      fn($q) => $q->whereRaw("$cicloSub LIKE ?", ["%{$this->filtroCiclo}%"]))
+            ->when($this->filtroCasoEstado, fn($q) => $q->where('cobranza_casos.estado', $this->filtroCasoEstado))
+            ->when($this->search, fn($q) =>
+                $q->where(fn($q2) =>
+                    $q2->where('users.name', 'like', "%{$this->search}%")
+                       ->orWhere('clientes.ci', 'like', "%{$this->search}%")
+                )
+            );
+
+        // Pedidos disponibles según filtros actuales (sin filtroPedido)
+        $pedidosDisponibles = (clone $baseQuery)
+            ->select('pedidos.id', 'pedidos.numero')
+            ->groupBy('pedidos.id', 'pedidos.numero')
+            ->orderBy('pedidos.numero')
+            ->get();
+
+        $actividades = (clone $baseQuery)
+            ->with(['tipoContacto', 'accion', 'tipoRespuesta', 'responsable', 'actividadOrigen', 'caso.pedido.cliente.usuario'])
+            ->select('cobranza_actividades.*')
+            ->addSelect(DB::raw("$cicloSub as ciclo_code"))
+            ->addSelect(DB::raw('pedidos.numero as pedido_numero'))
+            ->addSelect(DB::raw('clientes.ci as cliente_ci'))
+            ->addSelect(DB::raw('users.name as cliente_nombre'))
+            ->addSelect(DB::raw('cobranza_casos.estado as caso_estado'))
+            ->addSelect(DB::raw('(SELECT COUNT(*) FROM cobranza_actividades ca2 WHERE ca2.caso_id = cobranza_actividades.caso_id AND ca2.estado IN ("abierta","en_proceso")) as pendientes_caso'))
+            ->when($this->filtroPedido, fn($q) => $q->where('pedidos.id', $this->filtroPedido))
+            ->orderBy('cobranza_actividades.fecha_programada')
+            ->paginate(20);
 
         $tiposContacto    = CobranzaCatalogo::activos('tipo_contacto');
         $acciones         = CobranzaCatalogo::activos('accion');
@@ -284,7 +296,8 @@ class MisActividades extends Component
         $usuarios         = User::where('active', true)->orderBy('name')->get();
 
         return view('livewire.credito.mis-actividades', compact(
-            'actividades', 'tiposContacto', 'acciones', 'tiposRespuesta', 'motivosCierre', 'tiposCancelacion', 'usuarios'
+            'actividades', 'pedidosDisponibles',
+            'tiposContacto', 'acciones', 'tiposRespuesta', 'motivosCierre', 'tiposCancelacion', 'usuarios'
         ));
     }
 }
