@@ -104,8 +104,23 @@
             </td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->fecha_asignacion?->format('d/m/Y') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->asignadoPor?->name ?? '—' }}</td>
-            <td style="{{ $tdC }} font-size:12px; color:#374151; max-width:160px; white-space:normal;">{{ $caso->motivo_cierre ?? '—' }}</td>
-            <td style="{{ $tdC }} font-size:12px; color:#6B7280; max-width:200px; white-space:normal;">{{ $caso->observacion_cierre ?? '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px; color:#374151; white-space:nowrap;">
+                @if(in_array($caso->estado, ['cerrado','cancelado'])){{ $caso->motivo_cierre ?? '' }}@endif
+            </td>
+            <td style="{{ $tdC }} font-size:12px; color:#6B7280; white-space:nowrap;">
+                @if(in_array($caso->estado, ['cerrado','cancelado']) && $caso->observacion_cierre)
+                <div x-data="{ open: false }" style="position:relative; display:inline-block;">
+                    <span @click="open=!open" style="cursor:pointer; text-decoration:underline dotted;">
+                        {{ Str::limit($caso->observacion_cierre, 30) }}
+                    </span>
+                    <div x-show="open" @click.outside="open=false" x-transition
+                         style="position:absolute; bottom:calc(100% + 6px); left:0; z-index:50; background:#1F2937; color:#F9FAFB; font-size:12px; padding:8px 12px; border-radius:8px; max-width:280px; white-space:normal; box-shadow:0 4px 16px rgba(0,0,0,.25); line-height:1.5;">
+                        {{ $caso->observacion_cierre }}
+                        <div style="position:absolute; top:100%; left:16px; border:6px solid transparent; border-top-color:#1F2937;"></div>
+                    </div>
+                </div>
+                @endif
+            </td>
             <td style="{{ $tdC }} text-align:center;">
                 <div style="display:inline-flex; gap:5px;">
                     <button wire:click="selectCaso({{ $caso->id }})"
