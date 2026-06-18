@@ -263,8 +263,23 @@
             <td style="{{ $td }}">
                 <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $badgeBg }}; color:{{ $badgeCol }};">{{ $badgeLbl }}</span>
             </td>
-            <td style="{{ $td }} font-size:12px; color:#374151; max-width:160px; white-space:normal;">{{ $caso?->motivo_cierre ?? '—' }}</td>
-            <td style="{{ $td }} font-size:12px; color:#6B7280; max-width:200px; white-space:normal;">{{ $caso?->observacion_cierre ?? '—' }}</td>
+            <td style="{{ $td }} font-size:12px; color:#374151; white-space:nowrap;">{{ $caso?->motivo_cierre ?? '—' }}</td>
+            <td style="{{ $td }} font-size:12px; color:#6B7280; white-space:nowrap;">
+                @if($caso?->observacion_cierre)
+                <div x-data="{ open: false }" style="position:relative; display:inline-block;">
+                    <span @click="open=!open" style="cursor:pointer; text-decoration:underline dotted;">
+                        {{ Str::limit($caso->observacion_cierre, 30) }}
+                    </span>
+                    <div x-show="open" @click.outside="open=false" x-transition
+                         style="position:absolute; bottom:calc(100% + 6px); left:0; z-index:50; background:#1F2937; color:#F9FAFB; font-size:12px; padding:8px 12px; border-radius:8px; max-width:280px; white-space:normal; box-shadow:0 4px 16px rgba(0,0,0,.25); line-height:1.5;">
+                        {{ $caso->observacion_cierre }}
+                        <div style="position:absolute; top:100%; left:16px; border:6px solid transparent; border-top-color:#1F2937;"></div>
+                    </div>
+                </div>
+                @else
+                —
+                @endif
+            </td>
             <td style="{{ $td }} text-align:center;">
                 @if ($estado === 'sin_asignar')
                 <button wire:click="abrirAsignar({{ $p->id }})"
