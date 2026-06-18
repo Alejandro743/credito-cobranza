@@ -230,13 +230,14 @@ class MisActividades extends Component
             'motivoCancelacionId' => 'required|integer|min:1',
         ], ['motivoCancelacionId.min' => 'Selecciona un motivo de cancelación.']);
 
-        CobranzaActividad::where('caso_id', $this->selectedCasoId)
+        $pendientes = CobranzaActividad::where('caso_id', $this->selectedCasoId)
             ->whereIn('estado', ['abierta', 'en_proceso'])
-            ->update([
-                'estado'      => 'cancelada',
-                'fecha_cierre' => now(),
-                'cerrado_por'  => auth()->id(),
-            ]);
+            ->count();
+
+        if ($pendientes > 0) {
+            $this->addError('motivoCancelacionId', "No se puede cancelar: hay {$pendientes} actividad(es) abierta(s) o en proceso.");
+            return;
+        }
 
         CobranzaCaso::findOrFail($this->selectedCasoId)->update([
             'estado'             => 'cancelado',
