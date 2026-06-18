@@ -56,6 +56,7 @@
             <option value="">Todas las acciones</option>
             <option value="iniciar">Iniciar</option>
             <option value="editar">Editar</option>
+            <option value="cerrar">Cerrar</option>
             <option value="cancelar">Cancelar</option>
             <option value="cerrar_caso">Cerrar caso</option>
         </select>

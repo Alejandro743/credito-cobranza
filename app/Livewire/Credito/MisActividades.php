@@ -289,6 +289,7 @@ class MisActividades extends Component
             ->when($this->filtroPedido, fn($q) => $q->where('pedidos.id', $this->filtroPedido))
             ->when($this->filtroAccion === 'iniciar',     fn($q) => $q->where('cobranza_actividades.estado', 'abierta'))
             ->when($this->filtroAccion === 'editar',      fn($q) => $q->whereIn('cobranza_actividades.estado', ['abierta', 'en_proceso']))
+            ->when($this->filtroAccion === 'cerrar',      fn($q) => $q->where('cobranza_actividades.estado', 'en_proceso'))
             ->when($this->filtroAccion === 'cancelar',    fn($q) => $q->whereIn('cobranza_actividades.estado', ['abierta', 'en_proceso']))
             ->when($this->filtroAccion === 'cerrar_caso', fn($q) => $q
                 ->whereNotIn('cobranza_casos.estado', ['cerrado', 'cancelado'])
