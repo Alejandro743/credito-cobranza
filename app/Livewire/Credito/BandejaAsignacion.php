@@ -17,6 +17,7 @@ class BandejaAsignacion extends Component
     public string $filtroCiclo       = '';
     public string $filtroEstado      = '';
     public string $filtroResponsable = '';
+    public string $filtroDias        = '';
 
     public array $selectedIds = [];
 
@@ -30,12 +31,14 @@ class BandejaAsignacion extends Component
         'filtroCiclo'       => ['except' => ''],
         'filtroEstado'      => ['except' => ''],
         'filtroResponsable' => ['except' => ''],
+        'filtroDias'        => ['except' => ''],
     ];
 
     public function updatingSearch(): void            { $this->resetPage(); $this->selectedIds = []; }
     public function updatingFiltroCiclo(): void       { $this->resetPage(); $this->selectedIds = []; }
     public function updatingFiltroEstado(): void      { $this->resetPage(); $this->selectedIds = []; }
     public function updatingFiltroResponsable(): void { $this->resetPage(); $this->selectedIds = []; }
+    public function updatingFiltroDias(): void        { $this->resetPage(); $this->selectedIds = []; }
 
     public function abrirAsignar(int $pedidoId): void
     {
@@ -152,7 +155,21 @@ class BandejaAsignacion extends Component
             )
             ->when($this->filtroResponsable, fn($q) =>
                 $q->whereHas('cobranzaCaso', fn($c) => $c->where('responsable_id', $this->filtroResponsable))
-            );
+            )
+            ->when($this->filtroDias, function ($q) use ($today) {
+                $expr = "COALESCE(DATEDIFF(NOW(), (SELECT MIN(c.fecha_vencimiento) FROM cuotas c INNER JOIN plan_pagos pp ON pp.id = c.plan_pago_id WHERE pp.pedido_id = pedidos.id AND (c.estado = 'vencido' OR (c.estado = 'pendiente' AND c.fecha_vencimiento < '$today')))), 0)";
+                $q->where(fn($q2) =>
+                    $q2->whereDoesntHave('cobranzaCaso')
+                       ->orWhereHas('cobranzaCaso', fn($c) => $c->whereNotIn('estado', ['cerrado', 'cancelado']))
+                );
+                match ($this->filtroDias) {
+                    '1-15'  => $q->whereRaw("$expr BETWEEN 1 AND 15"),
+                    '16-30' => $q->whereRaw("$expr BETWEEN 16 AND 30"),
+                    '31-90' => $q->whereRaw("$expr BETWEEN 31 AND 90"),
+                    '>90'   => $q->whereRaw("$expr > 90"),
+                    default => null,
+                };
+            });
     }
 
     public function render()
@@ -209,6 +226,19 @@ class BandejaAsignacion extends Component
             ->when($this->filtroResponsable, fn($q) =>
                 $q->whereHas('cobranzaCaso', fn($c) => $c->where('responsable_id', $this->filtroResponsable))
             )
+            ->when($this->filtroDias, function ($q) use ($today, $diasSub) {
+                $q->where(fn($q2) =>
+                    $q2->whereDoesntHave('cobranzaCaso')
+                       ->orWhereHas('cobranzaCaso', fn($c) => $c->whereNotIn('estado', ['cerrado', 'cancelado']))
+                );
+                match ($this->filtroDias) {
+                    '1-15'  => $q->whereRaw("($diasSub) BETWEEN 1 AND 15"),
+                    '16-30' => $q->whereRaw("($diasSub) BETWEEN 16 AND 30"),
+                    '31-90' => $q->whereRaw("($diasSub) BETWEEN 31 AND 90"),
+                    '>90'   => $q->whereRaw("($diasSub) > 90"),
+                    default => null,
+                };
+            })
             ->orderByDesc(DB::raw($diasSub))
             ->paginate(20);
 

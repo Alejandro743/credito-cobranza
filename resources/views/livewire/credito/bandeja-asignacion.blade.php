@@ -37,6 +37,14 @@
             <option value="{{ $u->id }}">{{ $u->name }}</option>
             @endforeach
         </select>
+        <select wire:model.live="filtroDias"
+                style="height:36px; padding:0 10px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; background:#fff; color:#374151; cursor:pointer;">
+            <option value="">Todos los días</option>
+            <option value="1-15">1 – 15 días</option>
+            <option value="16-30">16 – 30 días</option>
+            <option value="31-90">31 – 90 días</option>
+            <option value=">90">Mayor a 90 días</option>
+        </select>
     </div>
 
     {{-- Acciones masivas fila 2 --}}
