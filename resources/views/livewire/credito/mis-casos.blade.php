@@ -67,6 +67,8 @@
                 <th style="{{ $thC }} text-align:center;">Estado</th>
                 <th style="{{ $thC }}">Fecha Asig.</th>
                 <th style="{{ $thC }}">Asignó</th>
+                <th style="{{ $thC }}">Motivo Cierre</th>
+                <th style="{{ $thC }}">Obs. Cierre</th>
                 <th style="{{ $thC }} text-align:center;">Acciones</th>
             </tr>
         </thead>
@@ -102,6 +104,8 @@
             </td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->fecha_asignacion?->format('d/m/Y') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->asignadoPor?->name ?? '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px; color:#374151; max-width:160px; white-space:normal;">{{ $caso->motivo_cierre ?? '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px; color:#6B7280; max-width:200px; white-space:normal;">{{ $caso->observacion_cierre ?? '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
                 <div style="display:inline-flex; gap:5px;">
                     <button wire:click="selectCaso({{ $caso->id }})"
@@ -114,7 +118,7 @@
         </tr>
         @empty
         <tr>
-            <td colspan="11" style="padding:40px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
+            <td colspan="13" style="padding:40px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
                 No tienes casos activos asignados.
             </td>
         </tr>
