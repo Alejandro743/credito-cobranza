@@ -84,7 +84,7 @@
         <tr wire:key="act-{{ $act->id }}"
             style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
-            <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $act->numero }}</td>
+            <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ ($actividades->currentPage() - 1) * $actividades->perPage() + $loop->iteration }}</td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8;">{{ $act->ciclo_code ?? '—' }}</span>
             </td>
