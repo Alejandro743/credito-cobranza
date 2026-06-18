@@ -67,8 +67,8 @@
                 <th style="{{ $thC }} text-align:center;">Estado</th>
                 <th style="{{ $thC }}">Fecha Asig.</th>
                 <th style="{{ $thC }}">Asignó</th>
-                <th style="{{ $thC }}">Motivo Cierre</th>
-                <th style="{{ $thC }}">Obs. Cierre</th>
+                <th style="{{ $thC }}">Motivo</th>
+                <th style="{{ $thC }}">Observación</th>
                 <th style="{{ $thC }} text-align:center;">Acciones</th>
             </tr>
         </thead>

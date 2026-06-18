@@ -187,8 +187,8 @@
                 <th style="{{ $th }}">Fecha Asig.</th>
                 <th style="{{ $th }}">Asignó</th>
                 <th style="{{ $th }}">Estado</th>
-                <th style="{{ $th }}">Motivo Cierre</th>
-                <th style="{{ $th }}">Obs. Cierre</th>
+                <th style="{{ $th }}">Motivo</th>
+                <th style="{{ $th }}">Observación</th>
                 <th style="{{ $th }} text-align:center;">Acción</th>
             </tr>
         </thead>
