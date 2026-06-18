@@ -216,7 +216,7 @@
         <tr wire:key="ba-d-{{ $p->id }}"
             style="background:{{ $isSelected ? '#F5F3FF' : '#fff' }}; transition:background .1s;"
             x-data>
-            <td style="padding:8px 16px; text-align:center; white-space:nowrap; border-bottom:1px solid #F9FAFB; border-right:2px solid #E5E7EB; vertical-align:middle; position:sticky; left:0; z-index:2; background:{{ $isSelected ? '#F5F3FF' : '#EDE9FE' }};">
+            <td style="padding:8px 16px; text-align:center; white-space:nowrap; border-bottom:1px solid #C4B5FD; border-right:2px solid #E5E7EB; vertical-align:middle; position:sticky; left:0; z-index:2; background:{{ $isSelected ? '#F5F3FF' : '#EDE9FE' }};">
                 <div style="display:flex; align-items:center; gap:18px; justify-content:center;">
                     <span style="font-size:11px; font-weight:700; color:#9CA3AF;">{{ $pedidos->firstItem() + $loop->index }}</span>
                     <input type="checkbox"
