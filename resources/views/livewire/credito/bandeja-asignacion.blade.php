@@ -187,6 +187,8 @@
                 <th style="{{ $th }}">Fecha Asig.</th>
                 <th style="{{ $th }}">Asignó</th>
                 <th style="{{ $th }}">Estado</th>
+                <th style="{{ $th }}">Motivo Cierre</th>
+                <th style="{{ $th }}">Obs. Cierre</th>
                 <th style="{{ $th }} text-align:center;">Acción</th>
             </tr>
         </thead>
@@ -253,6 +255,8 @@
             <td style="{{ $td }}">
                 <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $badgeBg }}; color:{{ $badgeCol }};">{{ $badgeLbl }}</span>
             </td>
+            <td style="{{ $td }} font-size:12px; color:#374151; max-width:160px; white-space:normal;">{{ $caso?->motivo_cierre ?? '—' }}</td>
+            <td style="{{ $td }} font-size:12px; color:#6B7280; max-width:200px; white-space:normal;">{{ $caso?->observacion_cierre ?? '—' }}</td>
             <td style="{{ $td }} text-align:center;">
                 @if ($estado === 'sin_asignar')
                 <button wire:click="abrirAsignar({{ $p->id }})"
@@ -278,7 +282,7 @@
         </tr>
         @empty
         <tr>
-            <td colspan="15" style="padding:56px 24px; text-align:center;">
+            <td colspan="17" style="padding:56px 24px; text-align:center;">
                 <svg style="width:40px; height:40px; color:#E5E7EB; margin:0 auto 10px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
