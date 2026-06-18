@@ -178,8 +178,8 @@
     <table style="width:100%; border-collapse:collapse; min-width:1100px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
-                <th style="{{ $th }} width:36px; text-align:center; color:#C4B5FD;">#</th>
-                <th style="{{ $th }} width:36px; text-align:center;">
+                <th style="{{ $th }} width:36px; text-align:center; color:#C4B5FD; position:sticky; left:0; z-index:11;">#</th>
+                <th style="{{ $th }} width:36px; text-align:center; position:sticky; left:36px; z-index:11;">
                     <input type="checkbox" disabled style="cursor:default; accent-color:#7B6FE8;">
                 </th>
                 <th style="{{ $th }}">Ciclo</th>
@@ -214,8 +214,8 @@
         <tr wire:key="ba-d-{{ $p->id }}"
             style="background:{{ $isSelected ? '#F5F3FF' : '#fff' }}; transition:background .1s;"
             x-data>
-            <td class="col-row-num" style="padding:8px 12px; text-align:center; font-size:11px; font-weight:700; color:#9CA3AF; white-space:nowrap; border-bottom:1px solid #F9FAFB; vertical-align:middle;">{{ $pedidos->firstItem() + $loop->index }}</td>
-            <td style="{{ $td }} text-align:center;">
+            <td class="col-row-num" style="padding:8px 12px; text-align:center; font-size:11px; font-weight:700; color:#9CA3AF; white-space:nowrap; border-bottom:1px solid #F9FAFB; vertical-align:middle; position:sticky; left:0; z-index:2; background:{{ $isSelected ? '#F5F3FF' : '#fff' }};">{{ $pedidos->firstItem() + $loop->index }}</td>
+            <td style="{{ $td }} text-align:center; position:sticky; left:36px; z-index:2; background:{{ $isSelected ? '#F5F3FF' : '#fff' }};">
                 <input type="checkbox"
                        wire:model.live="selectedIds"
                        value="{{ $p->id }}"
