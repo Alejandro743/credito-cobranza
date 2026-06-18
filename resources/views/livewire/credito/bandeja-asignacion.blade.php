@@ -193,6 +193,7 @@
                 <th style="{{ $th }} text-align:center;">Cuotas Venc.</th>
                 <th style="{{ $th }}">Responsable</th>
                 <th style="{{ $th }}">Fecha Asig.</th>
+                <th style="{{ $th }}">Fecha Cierre/Cancelación</th>
                 <th style="{{ $th }}">Asignó</th>
                 <th style="{{ $th }}">Estado</th>
                 <th style="{{ $th }}">Motivo</th>
@@ -259,6 +260,9 @@
             </td>
             <td style="{{ $td }}">{{ $caso?->responsable?->name ?? '—' }}</td>
             <td style="{{ $td }}">{{ $caso?->fecha_asignacion?->format('d/m/Y H:i') ?? '—' }}</td>
+            <td style="{{ $td }} font-size:12px; color:#6B7280;">
+                @if($caso && in_array($caso->estado, ['cerrado','cancelado'])){{ $caso->fecha_cierre?->format('d/m/Y H:i') ?? '—' }}@endif
+            </td>
             <td style="{{ $td }}">{{ $caso?->asignadoPor?->name ?? '—' }}</td>
             <td style="{{ $td }}">
                 <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $badgeBg }}; color:{{ $badgeCol }};">{{ $badgeLbl }}</span>
@@ -305,7 +309,7 @@
         </tr>
         @empty
         <tr>
-            <td colspan="17" style="padding:56px 24px; text-align:center;">
+            <td colspan="18" style="padding:56px 24px; text-align:center;">
                 <svg style="width:40px; height:40px; color:#E5E7EB; margin:0 auto 10px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
