@@ -287,9 +287,10 @@ class MisActividades extends Component
             ->addSelect(DB::raw('cobranza_casos.estado as caso_estado'))
             ->addSelect(DB::raw('(SELECT COUNT(*) FROM cobranza_actividades ca2 WHERE ca2.caso_id = cobranza_actividades.caso_id AND ca2.estado IN ("abierta","en_proceso")) as pendientes_caso'))
             ->when($this->filtroPedido, fn($q) => $q->where('pedidos.id', $this->filtroPedido))
-            ->when($this->filtroAccion === 'iniciar',      fn($q) => $q->where('cobranza_actividades.estado', 'abierta'))
-            ->when($this->filtroAccion === 'cerrar',       fn($q) => $q->where('cobranza_actividades.estado', 'en_proceso'))
-            ->when($this->filtroAccion === 'cerrar_caso',  fn($q) => $q
+            ->when($this->filtroAccion === 'iniciar',     fn($q) => $q->where('cobranza_actividades.estado', 'abierta'))
+            ->when($this->filtroAccion === 'editar',      fn($q) => $q->whereIn('cobranza_actividades.estado', ['abierta', 'en_proceso']))
+            ->when($this->filtroAccion === 'cancelar',    fn($q) => $q->whereIn('cobranza_actividades.estado', ['abierta', 'en_proceso']))
+            ->when($this->filtroAccion === 'cerrar_caso', fn($q) => $q
                 ->whereNotIn('cobranza_casos.estado', ['cerrado', 'cancelado'])
                 ->havingRaw('pendientes_caso = 0')
             )

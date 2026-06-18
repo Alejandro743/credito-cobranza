@@ -55,7 +55,8 @@
                 style="height:32px; padding:0 8px; border:none; font-size:12px; outline:none; background:transparent; cursor:pointer; color:#065F46; width:100%;">
             <option value="">Todas las acciones</option>
             <option value="iniciar">Iniciar</option>
-            <option value="cerrar">Cerrar</option>
+            <option value="editar">Editar</option>
+            <option value="cancelar">Cancelar</option>
             <option value="cerrar_caso">Cerrar caso</option>
         </select>
     </div>
