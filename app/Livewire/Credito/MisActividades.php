@@ -19,6 +19,7 @@ class MisActividades extends Component
     public string $filtroCiclo      = '';
     public string $filtroCasoEstado = '';
     public string $filtroPedido     = '';
+    public string $filtroAccion     = '';
 
     public bool $showModalEditarAct   = false;
     public bool $showModalCerrarAct   = false;
@@ -54,6 +55,7 @@ class MisActividades extends Component
     public function updatingFiltroCiclo(): void      { $this->resetPage(); }
     public function updatingFiltroCasoEstado(): void { $this->filtroPedido = ''; $this->resetPage(); }
     public function updatingFiltroPedido(): void     { $this->resetPage(); }
+    public function updatingFiltroAccion(): void     { $this->resetPage(); }
 
     public function abrirEditarActividad(int $id): void
     {
@@ -285,6 +287,12 @@ class MisActividades extends Component
             ->addSelect(DB::raw('cobranza_casos.estado as caso_estado'))
             ->addSelect(DB::raw('(SELECT COUNT(*) FROM cobranza_actividades ca2 WHERE ca2.caso_id = cobranza_actividades.caso_id AND ca2.estado IN ("abierta","en_proceso")) as pendientes_caso'))
             ->when($this->filtroPedido, fn($q) => $q->where('pedidos.id', $this->filtroPedido))
+            ->when($this->filtroAccion === 'iniciar',      fn($q) => $q->where('cobranza_actividades.estado', 'abierta'))
+            ->when($this->filtroAccion === 'cerrar',       fn($q) => $q->where('cobranza_actividades.estado', 'en_proceso'))
+            ->when($this->filtroAccion === 'cerrar_caso',  fn($q) => $q
+                ->whereNotIn('cobranza_casos.estado', ['cerrado', 'cancelado'])
+                ->havingRaw('pendientes_caso = 0')
+            )
             ->orderBy('cobranza_actividades.fecha_programada')
             ->paginate(20);
 
