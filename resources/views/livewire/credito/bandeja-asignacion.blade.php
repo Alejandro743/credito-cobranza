@@ -263,9 +263,11 @@
             <td style="{{ $td }}">
                 <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $badgeBg }}; color:{{ $badgeCol }};">{{ $badgeLbl }}</span>
             </td>
-            <td style="{{ $td }} font-size:12px; color:#374151; white-space:nowrap;">{{ $caso?->motivo_cierre ?? '—' }}</td>
+            <td style="{{ $td }} font-size:12px; color:#374151; white-space:nowrap;">
+                @if($caso && in_array($caso->estado, ['cerrado','cancelado'])){{ $caso->motivo_cierre ?? '' }}@endif
+            </td>
             <td style="{{ $td }} font-size:12px; color:#6B7280; white-space:nowrap;">
-                @if($caso?->observacion_cierre)
+                @if($caso && in_array($caso->estado, ['cerrado','cancelado']) && $caso->observacion_cierre)
                 <div x-data="{ open: false }" style="position:relative; display:inline-block;">
                     <span @click="open=!open" style="cursor:pointer; text-decoration:underline dotted;">
                         {{ Str::limit($caso->observacion_cierre, 30) }}
@@ -276,8 +278,6 @@
                         <div style="position:absolute; top:100%; left:16px; border:6px solid transparent; border-top-color:#1F2937;"></div>
                     </div>
                 </div>
-                @else
-                —
                 @endif
             </td>
             <td style="{{ $td }} text-align:center;">
