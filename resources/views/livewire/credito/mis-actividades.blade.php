@@ -163,8 +163,11 @@
                         <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Cerrar Caso
                     </button>
-                    @elseif ($act->estado === 'cancelada')
-                    <span style="font-size:11px; color:#D1D5DB;">—</span>
+                    <button wire:click="abrirCancelarCaso({{ $act->caso_id }})"
+                            style="height:24px; padding:0 7px; border:1px solid #FEE2E2; border-radius:5px; background:#FEF2F2; color:#B91C1C; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:3px;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        Cancelar Caso
+                    </button>
                     @endif
                 </div>
             </td>
@@ -434,6 +437,46 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
         <div style="{{ $mFoot }}">
             <button @click="open=false" style="height:36px;padding:0 14px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:13px;font-weight:600;cursor:pointer;">Volver</button>
             <button wire:click="confirmarCancelarActividad" style="height:36px;padding:0 18px;border:none;border-radius:8px;background:#B91C1C;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Cancelar actividad</button>
+        </div>
+    </div>
+</div>
+</template>
+</div>
+
+{{-- ══ MODAL CANCELAR CASO ══ --}}
+<div x-data="{ open: @entangle('showModalCancelarCaso') }">
+<template x-teleport="body">
+<div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:420px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#FEF2F2; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </div>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cancelar caso</p>
+            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <div style="{{ $mBody }}">
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Motivo de cancelación</p>
+                <div>
+                    <label style="{{ $lbl }}">Motivo <span style="color:#B91C1C;">*</span></label>
+                    <select wire:model="motivoCancelacionId" style="{{ $inp }} cursor:pointer;">
+                        <option value="0">— Selecciona —</option>
+                        @foreach ($motivosCancelacion as $mc)
+                        <option value="{{ $mc->id }}">{{ $mc->nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('motivoCancelacionId') <p style="color:#B91C1C; font-size:11px; margin:4px 0 0;">{{ $message }}</p> @enderror
+                </div>
+                <div style="margin-top:10px;">
+                    <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
+                    <textarea wire:model="obsCancelCaso" rows="2" style="width:100%;padding:8px 10px;border:1px solid #E5E7EB;border-radius:8px;font-size:13px;outline:none;resize:vertical;font-family:inherit;box-sizing:border-box;background:#F5F3FF;"></textarea>
+                </div>
+            </div>
+        </div>
+        <div style="{{ $mFoot }}">
+            <button @click="open=false" style="height:36px;padding:0 14px;border:1px solid #E5E7EB;border-radius:8px;background:#fff;color:#374151;font-size:13px;font-weight:600;cursor:pointer;">Volver</button>
+            <button wire:click="confirmarCancelarCaso" style="height:36px;padding:0 18px;border:none;border-radius:8px;background:#B91C1C;color:#fff;font-size:13px;font-weight:700;cursor:pointer;">Cancelar caso</button>
         </div>
     </div>
 </div>
