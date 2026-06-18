@@ -50,6 +50,15 @@
             @endforeach
         </select>
     </div>
+    <div style="background:#F0FDF4; border:1px solid #E5E7EB; border-radius:8px; display:flex; align-items:center; padding-right:4px;">
+        <select wire:model.live="filtroAccion"
+                style="height:32px; padding:0 8px; border:none; font-size:12px; outline:none; background:transparent; cursor:pointer; color:#065F46; width:100%;">
+            <option value="">Todas las acciones</option>
+            <option value="iniciar">Iniciar</option>
+            <option value="cerrar">Cerrar</option>
+            <option value="cerrar_caso">Cerrar caso</option>
+        </select>
+    </div>
 </div>
 
 {{-- ══ PANEL ACTIVIDADES ══ --}}
