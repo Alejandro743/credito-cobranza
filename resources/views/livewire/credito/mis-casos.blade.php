@@ -145,6 +145,20 @@
         <span style="font-size:13px; color:#374151; margin-left:16px;">
             <strong>{{ $casoSeleccionado->pedido?->numero }}</strong> - <strong>{{ Str::title($casoSeleccionado->pedido?->cliente?->nombre_completo) }}</strong>
         </span>
+        @if (in_array($casoSeleccionado->estado, ['cerrado','cancelado']))
+        <div style="display:flex; align-items:center; gap:16px; flex-wrap:wrap;">
+            @if ($casoSeleccionado->motivo_cierre)
+            <span style="font-size:12px; color:#6B7280;">
+                <span style="font-weight:600; color:#374151;">Motivo:</span> {{ $casoSeleccionado->motivo_cierre }}
+            </span>
+            @endif
+            @if ($casoSeleccionado->observacion_cierre)
+            <span style="font-size:12px; color:#6B7280;">
+                <span style="font-weight:600; color:#374151;">Obs:</span> {{ $casoSeleccionado->observacion_cierre }}
+            </span>
+            @endif
+        </div>
+        @endif
         <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
             @if (in_array($casoSeleccionado->estado, ['asignado','en_gestion']))
             <button wire:click="abrirNuevaActividad(0)"
