@@ -21,7 +21,7 @@
     </div>
     <input wire:model.live.debounce.300ms="filtroCiclo" type="text" placeholder="Filtrar ciclo..."
            style="height:32px; padding:0 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:12px; outline:none; background:#fff; width:110px;">
-    <div style="background:#FFF7ED; border:1px solid #FED7AA; border-radius:8px; display:flex; align-items:center;">
+    <div style="background:#FFF7ED; border:1px solid #E5E7EB; border-radius:8px; display:flex; align-items:center;">
         <select wire:model.live="filtroCasoEstado"
                 style="height:32px; padding:0 8px; border:none; border-radius:8px; font-size:12px; outline:none; background:transparent; cursor:pointer; color:#9A3412;">
             <option value="">Estado del caso</option>
@@ -31,7 +31,7 @@
             <option value="cancelado">Cancelado</option>
         </select>
     </div>
-    <div style="background:#F5F3FF; border:1px solid #DDD6FE; border-radius:8px; display:flex; align-items:center;">
+    <div style="background:#F5F3FF; border:1px solid #E5E7EB; border-radius:8px; display:flex; align-items:center;">
         <select wire:model.live="filtroEstado"
                 style="height:32px; padding:0 8px; border:none; border-radius:8px; font-size:12px; outline:none; background:transparent; cursor:pointer; color:#5B21B6;">
             <option value="">Estado actividad</option>
@@ -41,7 +41,7 @@
             <option value="cancelada">Cancelada</option>
         </select>
     </div>
-    <div style="background:#F0F9FF; border:1px solid #BAE6FD; border-radius:8px; display:flex; align-items:center; max-width:160px;">
+    <div style="background:#F0F9FF; border:1px solid #E5E7EB; border-radius:8px; display:flex; align-items:center; max-width:160px;">
         <select wire:model.live="filtroPedido"
                 style="height:32px; padding:0 8px; border:none; border-radius:8px; font-size:12px; outline:none; background:transparent; cursor:pointer; color:#0C4A6E; max-width:160px;">
             <option value="">Todos los pedidos</option>
