@@ -52,7 +52,7 @@ class MisCasos extends Component
     // Cerrar / cancelar caso
     public int    $motivoCierreId     = 0;
     public string $obsCierreCaso      = '';
-    public string $motivoCancelCaso   = '';
+    public int    $motivoCancelacionId = 0;
     public string $obsCancelCaso      = '';
 
     public function selectCaso(int $id): void
@@ -295,13 +295,18 @@ class MisCasos extends Component
     // ── Cancelar caso ──────────────────────────────────────────────
     public function abrirCancelarCaso(): void
     {
-        $this->motivoCancelCaso = '';
-        $this->obsCancelCaso    = '';
+        $this->motivoCancelacionId = 0;
+        $this->obsCancelCaso       = '';
+        $this->resetValidation();
         $this->showModalCancelarCaso = true;
     }
 
     public function confirmarCancelarCaso(): void
     {
+        $this->validate([
+            'motivoCancelacionId' => 'required|integer|min:1',
+        ], ['motivoCancelacionId.min' => 'Selecciona un motivo de cancelación.']);
+
         CobranzaActividad::where('caso_id', $this->selectedCasoId)
             ->whereIn('estado', ['abierta', 'en_proceso'])
             ->update([
@@ -313,7 +318,7 @@ class MisCasos extends Component
 
         CobranzaCaso::findOrFail($this->selectedCasoId)->update([
             'estado'             => 'cancelado',
-            'motivo_cierre'      => $this->motivoCancelCaso ?: null,
+            'motivo_cierre'      => CobranzaCatalogo::find($this->motivoCancelacionId)?->nombre,
             'observacion_cierre' => $this->obsCancelCaso ?: null,
             'fecha_cierre'       => now(),
             'cerrado_por'        => auth()->id(),
@@ -380,13 +385,14 @@ class MisCasos extends Component
         $tiposContacto    = CobranzaCatalogo::activos('tipo_contacto');
         $acciones         = CobranzaCatalogo::activos('accion');
         $tiposRespuesta   = CobranzaCatalogo::activos('tipo_respuesta');
-        $motivosCierre    = CobranzaCatalogo::activos('motivo_cierre');
-        $tiposCancelacion = CobranzaCatalogo::activos('tipo_cancelacion');
-        $usuarios         = User::where('active', true)->orderBy('name')->get();
+        $motivosCierre       = CobranzaCatalogo::activos('motivo_cierre');
+        $motivosCancelacion  = CobranzaCatalogo::activos('motivo_cancelacion');
+        $tiposCancelacion    = CobranzaCatalogo::activos('tipo_cancelacion');
+        $usuarios            = User::where('active', true)->orderBy('name')->get();
 
         return view('livewire.credito.mis-casos', compact(
             'casos', 'actividades', 'actividadesAll', 'casoSeleccionado',
-            'tiposContacto', 'acciones', 'tiposRespuesta', 'motivosCierre', 'tiposCancelacion', 'usuarios'
+            'tiposContacto', 'acciones', 'tiposRespuesta', 'motivosCierre', 'motivosCancelacion', 'tiposCancelacion', 'usuarios'
         ));
     }
 }

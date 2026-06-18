@@ -59,6 +59,16 @@ class CobranzaCatalogosSeeder extends Seeder
                 ['codigo' => 'CERRADA',     'nombre' => 'Cerrada',     'sort_order' => 3],
                 ['codigo' => 'CANCELADA',   'nombre' => 'Cancelada',   'sort_order' => 4],
             ],
+            'motivo_cancelacion' => [
+                ['codigo' => 'ERROR_ASIG',    'nombre' => 'Error de asignación',          'sort_order' => 1],
+                ['codigo' => 'DUPLICADO',     'nombre' => 'Caso duplicado',               'sort_order' => 2],
+                ['codigo' => 'NO_CORRESPON',  'nombre' => 'Caso no correspondía',         'sort_order' => 3],
+                ['codigo' => 'CLIENTE_PAGO',  'nombre' => 'Cliente pagó antes de gestión','sort_order' => 4],
+                ['codigo' => 'ACUERDO_PREV',  'nombre' => 'Acuerdo previo existente',     'sort_order' => 5],
+                ['codigo' => 'DATOS_INCORR',  'nombre' => 'Datos incorrectos del caso',   'sort_order' => 6],
+                ['codigo' => 'ADMIN',         'nombre' => 'Cancelación administrativa',   'sort_order' => 7],
+                ['codigo' => 'OTRO',          'nombre' => 'Otro',                         'sort_order' => 8],
+            ],
             'tipo_cancelacion' => [
                 ['codigo' => 'CASO_CANCELADO',   'nombre' => 'Caso cancelado',               'sort_order' => 1],
                 ['codigo' => 'DUPLICADA',        'nombre' => 'Actividad duplicada',           'sort_order' => 2],

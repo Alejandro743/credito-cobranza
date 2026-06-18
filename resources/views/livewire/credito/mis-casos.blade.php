@@ -639,10 +639,16 @@ $xBtn  = 'width:28px; height:28px; border-radius:6px; border:none; background:#E
         </div>
         <div style="{{ $mBody }}">
             <div style="{{ $card }}">
-                <p style="{{ $sTitle }}">■ Motivo</p>
+                <p style="{{ $sTitle }}">■ Motivo de cancelación</p>
                 <div>
-                    <label style="{{ $lbl }}">Motivo</label>
-                    <input wire:model="motivoCancelCaso" type="text" placeholder="Describe el motivo..." style="{{ $inp }}">
+                    <label style="{{ $lbl }}">Motivo <span style="color:#B91C1C;">*</span></label>
+                    <select wire:model="motivoCancelacionId" style="{{ $inp }} cursor:pointer;">
+                        <option value="0">— Selecciona —</option>
+                        @foreach ($motivosCancelacion as $mc)
+                        <option value="{{ $mc->id }}">{{ $mc->nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('motivoCancelacionId') <p style="color:#B91C1C; font-size:11px; margin:4px 0 0;">{{ $message }}</p> @enderror
                 </div>
                 <div>
                     <label style="{{ $lbl }}">Observación <span style="font-weight:400; text-transform:none; font-size:10px;">(opcional)</span></label>
