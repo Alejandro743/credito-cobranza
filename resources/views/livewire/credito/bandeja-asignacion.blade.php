@@ -178,9 +178,11 @@
     <table style="width:100%; border-collapse:collapse; min-width:1100px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
-                <th style="{{ $th }} width:36px; text-align:center; color:#C4B5FD; position:sticky; left:0; z-index:11;">#</th>
-                <th style="{{ $th }} width:36px; text-align:center; position:sticky; left:36px; z-index:11;">
-                    <input type="checkbox" disabled style="cursor:default; accent-color:#7B6FE8;">
+                <th style="{{ $th }} width:72px; text-align:center; position:sticky; left:0; z-index:11;">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:8px;">
+                        <span style="color:#C4B5FD;">#</span>
+                        <input type="checkbox" disabled style="cursor:default; accent-color:#7B6FE8;">
+                    </div>
                 </th>
                 <th style="{{ $th }}">Ciclo</th>
                 <th style="{{ $th }}">Nº Pedido</th>
@@ -214,12 +216,14 @@
         <tr wire:key="ba-d-{{ $p->id }}"
             style="background:{{ $isSelected ? '#F5F3FF' : '#fff' }}; transition:background .1s;"
             x-data>
-            <td class="col-row-num" style="padding:8px 12px; text-align:center; font-size:11px; font-weight:700; color:#9CA3AF; white-space:nowrap; border-bottom:1px solid #F9FAFB; vertical-align:middle; position:sticky; left:0; z-index:2; background:{{ $isSelected ? '#F5F3FF' : '#fff' }};">{{ $pedidos->firstItem() + $loop->index }}</td>
-            <td style="{{ $td }} text-align:center; position:sticky; left:36px; z-index:2; background:{{ $isSelected ? '#F5F3FF' : '#fff' }};">
-                <input type="checkbox"
-                       wire:model.live="selectedIds"
-                       value="{{ $p->id }}"
-                       style="cursor:pointer; accent-color:#7B6FE8; width:14px; height:14px;">
+            <td style="padding:8px 12px; text-align:center; white-space:nowrap; border-bottom:1px solid #F9FAFB; vertical-align:middle; position:sticky; left:0; z-index:2; background:{{ $isSelected ? '#F5F3FF' : '#fff' }};">
+                <div style="display:flex; align-items:center; justify-content:center; gap:8px;">
+                    <span style="font-size:11px; font-weight:700; color:#9CA3AF;">{{ $pedidos->firstItem() + $loop->index }}</span>
+                    <input type="checkbox"
+                           wire:model.live="selectedIds"
+                           value="{{ $p->id }}"
+                           style="cursor:pointer; accent-color:#7B6FE8; width:14px; height:14px;">
+                </div>
             </td>
             <td style="{{ $td }}">
                 @if($p->ciclo_code)
@@ -309,7 +313,7 @@
         </tr>
         @empty
         <tr>
-            <td colspan="18" style="padding:56px 24px; text-align:center;">
+            <td colspan="17" style="padding:56px 24px; text-align:center;">
                 <svg style="width:40px; height:40px; color:#E5E7EB; margin:0 auto 10px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
