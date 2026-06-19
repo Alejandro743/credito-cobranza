@@ -53,7 +53,7 @@
     </div>
 
     {{-- Tabla casos --}}
-    <div :style="'overflow:auto; height:' + Math.max(0, topH - ($refs.casosHeader ? $refs.casosHeader.offsetHeight : 44)) + 'px'">
+    <div :style="'overflow-y:scroll; overflow-x:auto; height:' + Math.max(0, topH - ($refs.casosHeader ? $refs.casosHeader.offsetHeight : 44)) + 'px'">
     <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
