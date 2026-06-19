@@ -30,27 +30,25 @@
 
 {{-- ══ CONTENEDOR SPLIT ══ --}}
 <div x-data="{
-    split: 45, minH: 100,
-    dragging: false, startY: 0, startPx: 0,
+    topH: 280, minH: 100,
+    dragging: false, startY: 0, startTop: 0,
+    init() { this.$nextTick(() => { const h = this.$el.offsetHeight; if (h > 0) this.topH = Math.round(h * 0.45); }); },
     onDown(e) {
-        this.dragging = true; this.startY = e.clientY;
-        this.startPx = Math.round(this.$el.offsetHeight * this.split / 100);
+        this.dragging = true; this.startY = e.clientY; this.startTop = this.topH;
         document.body.style.userSelect = 'none'; document.body.style.cursor = 'row-resize';
     },
     onMove(e) {
         if (!this.dragging) return;
         const delta = e.clientY - this.startY;
-        const total = this.$el.offsetHeight;
-        const px = Math.max(this.minH, Math.min(total - this.minH - 16, this.startPx + delta));
-        this.split = Math.round(px / total * 100);
+        this.topH = Math.max(this.minH, Math.min(this.$el.offsetHeight - this.minH - 22, this.startTop + delta));
     },
     onUp() { this.dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = ''; }
 }" @mousemove.window="onMove($event)" @mouseup.window="onUp()"
-     :style="'--sp:' + split + '%'"
+     :style="'--topH:' + topH + 'px'"
      style="flex:1; min-height:0; display:flex; flex-direction:column;">
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:none; display:flex; flex-direction:column; height:var(--sp, 45%)">
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:none; display:flex; flex-direction:column; height:var(--topH, 280px)">
 
     <div x-ref="casosHeader" style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Mis Casos</span>
