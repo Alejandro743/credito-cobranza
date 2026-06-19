@@ -48,13 +48,58 @@ class BandejaAsignacion extends Component
         $this->showModal          = true;
     }
 
-    public function asignarMasivo(): void
+    public function asignarGrupo(string $grupo): void
     {
         if (empty($this->selectedIds)) return;
-        $this->asignarIds         = array_values($this->selectedIds);
+
+        if ($grupo === 'asignar') {
+            // sin_asignar: pedidos sin caso o con caso.estado = 'sin_asignar'
+            $conCasoOtroEstado = CobranzaCaso::whereIn('pedido_id', $this->selectedIds)
+                ->where('estado', '!=', 'sin_asignar')
+                ->pluck('pedido_id')
+                ->map(fn($id) => (string) $id)
+                ->toArray();
+            $ids = array_values(array_diff($this->selectedIds, $conCasoOtroEstado));
+        } elseif ($grupo === 'reasignar') {
+            $ids = CobranzaCaso::whereIn('pedido_id', $this->selectedIds)
+                ->whereIn('estado', ['asignado', 'en_gestion'])
+                ->pluck('pedido_id')
+                ->map(fn($id) => (string) $id)
+                ->toArray();
+        } else {
+            return;
+        }
+
+        if (empty($ids)) return;
+        $this->asignarIds         = $ids;
         $this->asignarResponsable = 0;
         $this->asignarObservacion = '';
         $this->showModal          = true;
+    }
+
+    public function reAbrirMasivo(): void
+    {
+        if (empty($this->selectedIds)) return;
+
+        $pedidoIds = CobranzaCaso::whereIn('pedido_id', $this->selectedIds)
+            ->whereIn('estado', ['cerrado', 'cancelado'])
+            ->pluck('pedido_id');
+
+        $count = $pedidoIds->count();
+        if ($count === 0) return;
+
+        foreach ($pedidoIds as $pedidoId) {
+            CobranzaCaso::where('pedido_id', $pedidoId)->update([
+                'estado'                 => 'sin_asignar',
+                'responsable_id'         => null,
+                'asignado_por'           => null,
+                'fecha_asignacion'       => null,
+                'observacion_asignacion' => null,
+            ]);
+        }
+
+        $this->selectedIds = [];
+        session()->flash('success', "{$count} caso(s) re-abierto(s) correctamente.");
     }
 
     public function confirmarAsignacion(): void
@@ -253,6 +298,23 @@ class BandejaAsignacion extends Component
 
         $usuarios = User::where('active', true)->orderBy('name')->get();
 
-        return view('livewire.credito.bandeja-asignacion', compact('pedidos', 'usuarios'));
+        $selGroups = ['asignar' => 0, 'reasignar' => 0, 'reabrir' => 0];
+        if (!empty($this->selectedIds)) {
+            $casosEstado = CobranzaCaso::whereIn('pedido_id', $this->selectedIds)
+                ->pluck('estado', 'pedido_id')
+                ->mapWithKeys(fn($est, $id) => [(string) $id => $est]);
+            foreach ($this->selectedIds as $id) {
+                $est = $casosEstado->get($id) ?? 'sin_asignar';
+                if ($est === 'sin_asignar') {
+                    $selGroups['asignar']++;
+                } elseif (in_array($est, ['asignado', 'en_gestion'])) {
+                    $selGroups['reasignar']++;
+                } elseif (in_array($est, ['cerrado', 'cancelado'])) {
+                    $selGroups['reabrir']++;
+                }
+            }
+        }
+
+        return view('livewire.credito.bandeja-asignacion', compact('pedidos', 'usuarios', 'selGroups'));
     }
 }

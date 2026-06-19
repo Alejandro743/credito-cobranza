@@ -143,13 +143,30 @@
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Bandeja de Asignación</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidos->total() }}</span>
-        @if (!empty($selectedIds))
-        <button wire:click="asignarMasivo"
-                style="margin-left:auto; height:32px; padding:0 14px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            ({{ count($selectedIds) }}) Asignar Seleccionados
-        </button>
-        @endif
+        <div style="margin-left:auto; display:flex; align-items:center; gap:6px;">
+            @if ($selGroups['asignar'] > 0)
+            <button wire:click="asignarGrupo('asignar')"
+                    style="height:32px; padding:0 14px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                ({{ $selGroups['asignar'] }}) Asignar Seleccionados
+            </button>
+            @endif
+            @if ($selGroups['reasignar'] > 0)
+            <button wire:click="asignarGrupo('reasignar')"
+                    style="height:32px; padding:0 14px; border:none; border-radius:8px; background:#0284C7; color:#fff; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                ({{ $selGroups['reasignar'] }}) Re-Asignar Seleccionados
+            </button>
+            @endif
+            @if ($selGroups['reabrir'] > 0)
+            <button wire:click="reAbrirMasivo"
+                    wire:confirm="¿Re-Abrir los {{ $selGroups['reabrir'] }} caso(s) seleccionados y marcarlos como sin asignar?"
+                    style="height:32px; padding:0 14px; border:none; border-radius:8px; background:#EA580C; color:#fff; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                ({{ $selGroups['reabrir'] }}) Re-Abrir Seleccionados
+            </button>
+            @endif
+        </div>
     </div>
 
     <div style="overflow:auto; flex:1;">
