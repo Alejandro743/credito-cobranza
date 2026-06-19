@@ -7,7 +7,7 @@
 @endphp
 
 {{-- ══ WRAPPER ALTO FIJO ══ --}}
-<div style="display:flex; flex-direction:column; height:calc(100vh - 152px); overflow:hidden;">
+<div style="display:flex; flex-direction:column; height:calc(100vh - 152px);">
 
 {{-- ══ FILTROS CASOS ══ --}}
 <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:8px; flex:none;">
