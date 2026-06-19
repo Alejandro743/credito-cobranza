@@ -1,13 +1,9 @@
-<div>
-
+<div style="height:calc(100vh - 152px); overflow:hidden; padding-bottom:1px; display:flex; flex-direction:column;">
 
 @php
     $thC = 'padding:9px 12px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#F9F8FF; border-bottom:2px solid #EDE9FE;';
     $tdC = 'padding:8px 12px; font-size:13px; color:#374151; vertical-align:middle; white-space:nowrap; border-bottom:1px solid #F9FAFB;';
 @endphp
-
-{{-- ══ WRAPPER ALTO FIJO ══ --}}
-<div style="display:flex; flex-direction:column; height:calc(100vh - 152px);">
 
 {{-- ══ FILTROS CASOS ══ --}}
 <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:8px; flex:none;">
@@ -316,8 +312,6 @@
 </div>{{-- fin panel actividades --}}
 
 </div>{{-- fin contenedor split --}}
-
-</div>{{-- fin wrapper alto fijo --}}
 
 @php
 $mHead = 'padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0; background:#fff;';
