@@ -148,13 +148,9 @@
 
 {{-- ══ DRAG HANDLE ══ --}}
 <div @mousedown="onDown($event)" wire:ignore
-     style="height:18px; cursor:row-resize; display:flex; align-items:center; justify-content:center; user-select:none; background:#F9F8FF; flex-shrink:0; position:relative; z-index:20;">
-    <div x-data="{ hov: false }" @mouseenter="hov=true" @mouseleave="hov=false"
-         style="display:grid; grid-template-columns:repeat(8,6px); grid-template-rows:repeat(2,4px); gap:3px;">
-        @for ($j = 0; $j < 16; $j++)
-        <div :style="'width:4px; height:4px; border-radius:50%; background:' + (hov ? '#7B6FE8' : '#C4B5FD') + '; transition:background .15s;'"></div>
-        @endfor
-    </div>
+     style="height:16px; cursor:row-resize; display:flex; align-items:center; justify-content:center; user-select:none; background:#F9F8FF; flex-shrink:0; position:relative; z-index:20;">
+    <div style="width:120px; height:6px; border-radius:99px; background:#C4B5FD; transition:background .15s;"
+         @mouseenter="$el.style.background='#7B6FE8'" @mouseleave="$el.style.background='#C4B5FD'"></div>
 </div>
 
 {{-- ══ PANEL INFERIOR: ACTIVIDADES ══ --}}
