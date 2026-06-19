@@ -27,25 +27,27 @@
 
 {{-- ══ CONTENEDOR SPLIT ══ --}}
 <div x-data="{
-    topH: 280, minH: 100,
-    dragging: false, startY: 0, startTop: 0,
-    init() { this.$nextTick(() => { this.topH = Math.round(this.$el.offsetHeight * 0.45); }); },
+    split: 45, minH: 100,
+    dragging: false, startY: 0, startPx: 0,
     onDown(e) {
-        this.dragging = true; this.startY = e.clientY; this.startTop = this.topH;
+        this.dragging = true; this.startY = e.clientY;
+        this.startPx = Math.round(this.$el.offsetHeight * this.split / 100);
         document.body.style.userSelect = 'none'; document.body.style.cursor = 'row-resize';
     },
     onMove(e) {
         if (!this.dragging) return;
         const delta = e.clientY - this.startY;
-        this.topH = Math.max(this.minH, Math.min(this.$el.offsetHeight - this.minH - 22, this.startTop + delta));
+        const total = this.$el.offsetHeight;
+        const px = Math.max(this.minH, Math.min(total - this.minH - 16, this.startPx + delta));
+        this.split = Math.round(px / total * 100);
     },
     onUp() { this.dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = ''; }
 }" @mousemove.window="onMove($event)" @mouseup.window="onUp()"
+     :style="'--sp:' + split + '%'"
      style="display:flex; flex-direction:column; height:calc(100vh - 152px);">
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:none; display:flex; flex-direction:column;"
-     :style="'height:' + topH + 'px'">
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:none; display:flex; flex-direction:column; height:var(--sp, 45%)">
 
     <div x-ref="casosHeader" style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Mis Casos</span>
