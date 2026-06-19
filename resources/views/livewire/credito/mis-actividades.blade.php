@@ -97,15 +97,15 @@
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
             <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ ($actividades->currentPage() - 1) * $actividades->perPage() + $loop->iteration }}</td>
             <td style="{{ $tdC }}">
-                <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8;">{{ $act->ciclo_code ?? '—' }}</span>
+                <span style="font-family:monospace; font-size:11px; color:#111827;">{{ $act->ciclo_code ?? '—' }}</span>
             </td>
             <td style="{{ $tdC }}">
-                <span style="font-family:monospace; font-size:12px; font-weight:700; color:#111827;">{{ $act->pedido_numero ?? '—' }}</span>
+                <span style="font-family:monospace; font-size:12px; color:#111827;">{{ $act->pedido_numero ?? '—' }}</span>
             </td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->cliente_ci ?? '—' }}</td>
-            <td style="{{ $tdC }} font-weight:600; color:#111827; max-width:180px; overflow:hidden; text-overflow:ellipsis;">{{ Str::title($act->cliente_nombre ?? '—') }}</td>
+            <td style="{{ $tdC }} color:#111827; max-width:180px; overflow:hidden; text-overflow:ellipsis;">{{ Str::title($act->cliente_nombre ?? '—') }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->tipoContacto?->nombre ?? '—' }}</td>
-            <td style="{{ $tdC }} font-size:12px; font-weight:600;">{{ $act->accion?->nombre ?? '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px;">{{ $act->accion?->nombre ?? '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
                 @php
                     $stMap = ['abierta'=>['#E0F2FE','#0369A1','Abierta'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
@@ -114,7 +114,7 @@
                 <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $stBg }}; color:{{ $stCol }};">{{ $stLbl }}</span>
             </td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->fecha_programada?->format('d/m/Y') ?? '—' }}</td>
-            <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->actividadOrigen ? '#'.$act->actividadOrigen->numero : '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px;">{{ $act->actividadOrigen ? '#'.$act->actividadOrigen->numero : '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
                 @php $puedeC = $act->pendientes_caso == 0 && !in_array($act->caso_estado, ['cerrado','cancelado']); @endphp
                 <div style="display:inline-flex; gap:4px; flex-wrap:nowrap; white-space:nowrap;">
