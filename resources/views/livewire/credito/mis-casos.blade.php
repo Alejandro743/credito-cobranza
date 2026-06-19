@@ -194,6 +194,18 @@
     @if ($casoSeleccionado)
     <table style="width:100%; border-collapse:collapse; min-width:1000px;">
         <thead style="position:sticky; top:0; z-index:10;">
+            @if(in_array($casoSeleccionado->estado, ['cerrado','cancelado']))
+            @php
+                $bannerBg  = $casoSeleccionado->estado === 'cerrado' ? '#D1FAE5' : '#FEE2E2';
+                $bannerCol = $casoSeleccionado->estado === 'cerrado' ? '#065F46'  : '#B91C1C';
+                $bannerLbl = $casoSeleccionado->estado === 'cerrado' ? 'Cerrado'  : 'Cancelado';
+            @endphp
+            <tr>
+                <td colspan="12" style="background:{{ $bannerBg }}; padding:5px 14px; font-size:12px; font-weight:700; color:{{ $bannerCol }}; letter-spacing:.02em; border-bottom:1px solid {{ $bannerCol }}33;">
+                    Caso: {{ $bannerLbl }}
+                </td>
+            </tr>
+            @endif
             <tr>
                 <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
                 <th style="{{ $thC }}">Tipo Contacto</th>

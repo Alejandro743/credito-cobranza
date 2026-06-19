@@ -288,7 +288,6 @@ class MisCasos extends Component
         ]);
 
         $this->showModalCerrarCaso = false;
-        $this->selectedCasoId = null;
         session()->flash('success', 'Caso cerrado correctamente.');
     }
 
@@ -325,7 +324,6 @@ class MisCasos extends Component
         ]);
 
         $this->showModalCancelarCaso = false;
-        $this->selectedCasoId = null;
         session()->flash('success', 'Caso cancelado.');
     }
 
