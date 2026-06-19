@@ -199,7 +199,7 @@
                 <th style="{{ $th }}">Estado</th>
                 <th style="{{ $th }}">Motivo</th>
                 <th style="{{ $th }}">Observación</th>
-                <th style="{{ $th }} text-align:center;">Acción</th>
+                {{-- <th style="{{ $th }} text-align:center;">Acción</th> --}}
             </tr>
         </thead>
         <tbody>
@@ -287,32 +287,11 @@
                 </div>
                 @endif
             </td>
-            <td style="{{ $td }} text-align:center;">
-                @if ($estado === 'sin_asignar')
-                <button wire:click="abrirAsignar({{ $p->id }})"
-                        style="height:28px; padding:0 12px; border:none; border-radius:7px; background:#7B6FE8; color:#fff; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
-                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                    Asignar
-                </button>
-                @elseif (in_array($estado, ['asignado','en_gestion']))
-                <button wire:click="abrirAsignar({{ $p->id }})"
-                        style="height:28px; padding:0 12px; border:none; border-radius:7px; background:#0284C7; color:#fff; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
-                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                    Re-Asignar
-                </button>
-                @else
-                <button wire:click="marcarSinAsignar({{ $p->id }})"
-                        wire:confirm="¿Re-Abrir este caso y marcarlo como sin asignar?"
-                        style="height:28px; padding:0 12px; border:none; border-radius:7px; background:#EA580C; color:#fff; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:4px; white-space:nowrap;">
-                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                    Re-Abrir
-                </button>
-                @endif
-            </td>
+            {{-- Columna Acción oculta; las acciones masivas están en el header --}}
         </tr>
         @empty
         <tr>
-            <td colspan="17" style="padding:56px 24px; text-align:center;">
+            <td colspan="16" style="padding:56px 24px; text-align:center;">
                 <svg style="width:40px; height:40px; color:#E5E7EB; margin:0 auto 10px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                 </svg>
