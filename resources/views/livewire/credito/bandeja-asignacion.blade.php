@@ -47,23 +47,6 @@
         </select>
     </div>
 
-    {{-- Acciones masivas fila 2 --}}
-    <div class="flex flex-wrap items-center gap-2">
-        @if (!empty($selectedIds))
-        <span style="font-size:12px; font-weight:600; color:#7B6FE8; background:#EDE9FE; padding:2px 10px; border-radius:99px;">
-            {{ count($selectedIds) }} seleccionados
-        </span>
-        <button wire:click="asignarMasivo"
-                style="height:36px; padding:0 16px; border:none; border-radius:9px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
-            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-            Asignar seleccionados
-        </button>
-        <button wire:click="clearSelection"
-                style="height:32px; padding:0 10px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#6B7280; font-size:12px; font-weight:600; cursor:pointer;">
-            Limpiar selección
-        </button>
-        @endif
-    </div>
 </div>
 
 {{-- ══ MOBILE: Cards ══ --}}
@@ -161,7 +144,11 @@
         <span style="font-size:13px; font-weight:700; color:#111827;">Bandeja de Asignación</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidos->total() }}</span>
         @if (!empty($selectedIds))
-        <span style="background:#FEF3C7; color:#92400E; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:4px;">{{ count($selectedIds) }} sel.</span>
+        <button wire:click="asignarMasivo"
+                style="margin-left:auto; height:32px; padding:0 14px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            ({{ count($selectedIds) }}) Asignar Seleccionados
+        </button>
         @endif
     </div>
 
