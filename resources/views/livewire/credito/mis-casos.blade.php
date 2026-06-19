@@ -53,9 +53,7 @@
     </div>
 
     {{-- Tabla casos --}}
-    <div @scroll.passive="$el._s = $el.scrollTop"
-         x-init="let el = $el; new MutationObserver(() => requestAnimationFrame(() => { if (el._s) el.scrollTop = el._s; })).observe(el, { childList: true, subtree: true });"
-         :style="'overflow:auto; height:' + Math.max(0, topH - ($refs.casosHeader ? $refs.casosHeader.offsetHeight : 44)) + 'px'">
+    <div :style="'overflow:auto; height:' + Math.max(0, topH - ($refs.casosHeader ? $refs.casosHeader.offsetHeight : 44)) + 'px'">
     <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
