@@ -45,10 +45,10 @@
     onUp() { this.dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = ''; }
 }" @mousemove.window="onMove($event)" @mouseup.window="onUp()"
      :style="'--topH:' + topH + 'px'"
-     style="flex:1; min-height:0; display:flex; flex-direction:column;">
+     style="flex:1; min-height:0; display:grid; grid-template-rows:var(--topH, 280px) 16px 1fr; overflow:hidden;">
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:none; display:flex; flex-direction:column; height:var(--topH, 280px)">
+<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column;">
 
     <div x-ref="casosHeader" style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Mis Casos</span>
@@ -151,13 +151,13 @@
 
 {{-- ══ DRAG HANDLE ══ --}}
 <div @mousedown="onDown($event)" wire:ignore
-     style="height:16px; cursor:row-resize; display:flex; align-items:center; justify-content:center; user-select:none; background:#F9F8FF; flex-shrink:0; position:relative; z-index:20;">
+     style="height:16px; cursor:row-resize; display:flex; align-items:center; justify-content:center; user-select:none; background:#F9F8FF; position:relative; z-index:20;">
     <div style="width:120px; height:6px; border-radius:99px; background:#C4B5FD; transition:background .15s;"
          @mouseenter="$el.style.background='#7B6FE8'" @mouseleave="$el.style.background='#C4B5FD'"></div>
 </div>
 
 {{-- ══ PANEL INFERIOR: ACTIVIDADES ══ --}}
-<div style="flex:1; min-height:0; display:grid; grid-template-rows:auto 1fr; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
+<div style="display:grid; grid-template-rows:auto 1fr; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; min-height:0;">
 
     {{-- Header actividades --}}
     <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex:none;">
