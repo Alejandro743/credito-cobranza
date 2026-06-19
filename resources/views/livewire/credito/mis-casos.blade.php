@@ -56,15 +56,11 @@
 
     {{-- Tabla casos --}}
     <div style="overflow-x:auto; overflow-y:auto; flex:1; min-height:0;">
-    <table style="width:100%; border-collapse:separate; border-spacing:0; min-width:900px;">
+    <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
-                <th style="{{ $thC }} text-align:center; position:sticky; left:0; z-index:11; background:#F9F8FF; border-right:2px solid #EDE9FE; padding:9px 16px;">
-                    <div style="display:flex; align-items:center; gap:16px; justify-content:center;">
-                        <span style="color:#C4B5FD;">#</span>
-                        <span style="color:#7B6FE8;">Ver Act.</span>
-                    </div>
-                </th>
+                <th style="{{ $thC }} text-align:center;">#</th>
+                <th style="{{ $thC }} text-align:center;">Acciones</th>
                 <th style="{{ $thC }}">Ciclo</th>
                 <th style="{{ $thC }}">Nº Pedido</th>
                 <th style="{{ $thC }}">CI</th>
@@ -86,14 +82,12 @@
         @endphp
         <tr wire:key="caso-{{ $caso->id }}"
             style="background:{{ $sel ? '#F5F3FF' : '#fff' }}; transition:background .1s; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}">
-            <td style="padding:8px 16px; text-align:center; white-space:nowrap; border-bottom:1px solid #F9FAFB; border-right:2px solid #EDE9FE; vertical-align:middle; position:sticky; left:0; z-index:2; background:{{ $sel ? '#F5F3FF' : '#F9F8FF' }};">
-                <div style="display:flex; align-items:center; gap:16px; justify-content:center;">
-                    <span style="font-size:11px; color:#9CA3AF;">{{ $i + 1 }}</span>
-                    <input type="radio" name="caso_sel"
-                           wire:click="selectCaso({{ $caso->id }})"
-                           @checked($selectedCasoId === $caso->id)
-                           style="cursor:pointer; accent-color:#7B6FE8; width:14px; height:14px;">
-                </div>
+            <td style="{{ $tdC }} text-align:center; font-size:12px; color:#6B7280;">{{ $i + 1 }}</td>
+            <td style="{{ $tdC }} text-align:center;">
+                <button wire:click="selectCaso({{ $caso->id }})"
+                        style="height:26px; padding:0 10px; border:none; border-radius:6px; background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                    Ver actividades
+                </button>
             </td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:11px; color:#111827;">{{ $caso->ciclo_code ?? '—' }}</span>
@@ -135,11 +129,10 @@
                 </div>
                 @endif
             </td>
-            {{-- Ver actividades reemplazado por radio en col sticky --}}
         </tr>
         @empty
         <tr>
-            <td colspan="12" style="padding:40px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
+            <td colspan="13" style="padding:40px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
                 No tienes casos activos asignados.
             </td>
         </tr>
