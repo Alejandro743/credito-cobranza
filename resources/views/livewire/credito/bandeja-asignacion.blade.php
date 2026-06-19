@@ -163,7 +163,7 @@
                 <th style="{{ $th }} text-align:center; position:sticky; left:0; z-index:11; background:#F9FAFB; border-right:2px solid #E5E7EB; padding:9px 16px;">
                     <div style="display:flex; align-items:center; gap:18px; justify-content:center;">
                         <span style="color:#C4B5FD; font-size:11px; font-weight:700;">#</span>
-                        <input type="checkbox" wire:click="toggleSelectAll" @checked(!empty($selectedIds)) style="cursor:pointer; accent-color:#7B6FE8;">
+                        <input type="checkbox" x-data :checked="$wire.selectedIds.length > 0" @click.prevent="$wire.toggleSelectAll()" style="cursor:pointer; accent-color:#7B6FE8;">
                     </div>
                 </th>
                 <th style="{{ $th }}">Ciclo</th>
