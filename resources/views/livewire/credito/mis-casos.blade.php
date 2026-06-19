@@ -82,18 +82,18 @@
             style="background:{{ $sel ? '#F5F3FF' : '#fff' }}; transition:background .1s; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}">
             <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $i + 1 }}</td>
             <td style="{{ $tdC }}">
-                <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8;">{{ $caso->ciclo_code ?? '—' }}</span>
+                <span style="font-family:monospace; font-size:11px; color:#7B6FE8;">{{ $caso->ciclo_code ?? '—' }}</span>
             </td>
             <td style="{{ $tdC }}">
-                <span style="font-family:monospace; font-size:12px; font-weight:700; color:#111827;">{{ $caso->pedido->numero ?? '—' }}</span>
+                <span style="font-family:monospace; font-size:12px; color:#111827;">{{ $caso->pedido->numero ?? '—' }}</span>
             </td>
             <td style="{{ $tdC }} font-size:12px;">{{ $caso->pedido?->cliente?->ci ?? '—' }}</td>
-            <td style="{{ $tdC }} font-weight:600; color:#111827;">{{ $caso->pedido?->cliente?->nombre_completo ?? '—' }}</td>
+            <td style="{{ $tdC }} color:#111827;">{{ $caso->pedido?->cliente?->nombre_completo ?? '—' }}</td>
             <td style="{{ $tdC }} text-align:right;">
-                <span style="font-weight:700; color:{{ $dias > 30 ? '#B91C1C' : ($dias > 15 ? '#D97706' : '#374151') }};">{{ $dias }}d</span>
+                <span style="color:{{ $dias > 30 ? '#B91C1C' : ($dias > 15 ? '#D97706' : '#374151') }};">{{ $dias }}d</span>
             </td>
             <td style="{{ $tdC }} text-align:center;">
-                <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:20px; border-radius:6px; font-size:12px; font-weight:700; background:#FEF2F2; color:#B91C1C;">{{ $caso->cuotas_vencidas_count ?? 0 }}</span>
+                <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:20px; border-radius:6px; font-size:12px; background:#FEF2F2; color:#B91C1C;">{{ $caso->cuotas_vencidas_count ?? 0 }}</span>
             </td>
             <td style="{{ $tdC }} text-align:center;">
                 @php
@@ -216,7 +216,7 @@
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
             <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $act->numero }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->tipoContacto?->nombre ?? '—' }}</td>
-            <td style="{{ $tdC }} font-size:12px; font-weight:600;">{{ $act->accion?->nombre ?? '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px;">{{ $act->accion?->nombre ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->fecha_programada?->format('d/m/Y') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->fecha_inicio?->format('d/m/Y H:i') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->fecha_cierre?->format('d/m/Y H:i') ?? '—' }}</td>
