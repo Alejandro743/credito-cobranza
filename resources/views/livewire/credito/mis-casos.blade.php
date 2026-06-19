@@ -53,7 +53,10 @@
     </div>
 
     {{-- Tabla casos --}}
-    <div :style="'overflow:auto; height:' + Math.max(0, topH - ($refs.casosHeader ? $refs.casosHeader.offsetHeight : 44)) + 'px'">
+    <div x-data="{ _s: 0 }"
+         @scroll.passive="_s = $el.scrollTop"
+         x-init="Livewire.hook('morph.updated', () => $nextTick(() => $el.scrollTop = _s))"
+         :style="'overflow:auto; height:' + Math.max(0, topH - ($refs.casosHeader ? $refs.casosHeader.offsetHeight : 44)) + 'px'">
     <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
@@ -148,12 +151,11 @@
 
 {{-- ══ DRAG HANDLE ══ --}}
 <div @mousedown="onDown($event)" wire:ignore
-     style="height:18px; cursor:row-resize; display:flex; align-items:center; justify-content:center; user-select:none; background:#F9F8FF; flex-shrink:0; position:relative; z-index:20;"
-     @mouseenter="$el.querySelectorAll('.drag-dot').forEach(d => d.style.background='#7B6FE8')"
-     @mouseleave="$el.querySelectorAll('.drag-dot').forEach(d => d.style.background='#C4B5FD')">
-    <div style="display:grid; grid-template-columns:repeat(8,6px); grid-template-rows:repeat(2,4px); gap:3px;">
-        @for ($i = 0; $i < 16; $i++)
-        <div class="drag-dot" style="width:4px; height:4px; border-radius:50%; background:#C4B5FD; transition:background .15s;"></div>
+     style="height:18px; cursor:row-resize; display:flex; align-items:center; justify-content:center; user-select:none; background:#F9F8FF; flex-shrink:0; position:relative; z-index:20;">
+    <div x-data="{ hov: false }" @mouseenter="hov=true" @mouseleave="hov=false"
+         style="display:grid; grid-template-columns:repeat(8,6px); grid-template-rows:repeat(2,4px); gap:3px;">
+        @for ($j = 0; $j < 16; $j++)
+        <div :style="'width:4px; height:4px; border-radius:50%; background:' + (hov ? '#7B6FE8' : '#C4B5FD') + '; transition:background .15s;'"></div>
         @endfor
     </div>
 </div>
