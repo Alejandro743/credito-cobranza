@@ -112,6 +112,15 @@ class BandejaAsignacion extends Component
         $this->selectedIds = [];
     }
 
+    public function toggleSelectAll(): void
+    {
+        if (!empty($this->selectedIds)) {
+            $this->selectedIds = [];
+        } else {
+            $this->selectAllFiltered();
+        }
+    }
+
     private function buildBaseQuery(string $today)
     {
         return Pedido::select('pedidos.id')

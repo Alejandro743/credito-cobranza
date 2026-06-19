@@ -49,11 +49,6 @@
 
     {{-- Acciones masivas fila 2 --}}
     <div class="flex flex-wrap items-center gap-2">
-        <button wire:click="selectAllFiltered"
-                style="height:36px; padding:0 16px; border:none; border-radius:9px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;">
-            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-            Seleccionar todos los filtrados
-        </button>
         @if (!empty($selectedIds))
         <span style="font-size:12px; font-weight:600; color:#7B6FE8; background:#EDE9FE; padding:2px 10px; border-radius:99px;">
             {{ count($selectedIds) }} seleccionados
@@ -181,7 +176,7 @@
                 <th style="{{ $th }} text-align:center; position:sticky; left:0; z-index:11; background:#F9FAFB; border-right:2px solid #E5E7EB; padding:9px 16px;">
                     <div style="display:flex; align-items:center; gap:18px; justify-content:center;">
                         <span style="color:#C4B5FD; font-size:11px; font-weight:700;">#</span>
-                        <input type="checkbox" disabled style="cursor:default; accent-color:#7B6FE8;">
+                        <input type="checkbox" wire:click="toggleSelectAll" @checked(!empty($selectedIds)) style="cursor:pointer; accent-color:#7B6FE8;">
                     </div>
                 </th>
                 <th style="{{ $th }}">Ciclo</th>
