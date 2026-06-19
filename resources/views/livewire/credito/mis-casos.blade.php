@@ -1,4 +1,4 @@
-<div style="height:calc(100vh - 152px); overflow:hidden; padding-bottom:1px; display:flex; flex-direction:column;">
+<div style="height:calc(100vh - 152px); overflow:clip; padding-bottom:1px; display:flex; flex-direction:column;">
 
 @php
     $thC = 'padding:9px 12px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#F9F8FF; border-bottom:2px solid #EDE9FE;';
