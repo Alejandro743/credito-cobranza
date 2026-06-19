@@ -1,15 +1,13 @@
 <div>
 
+
 @php
     $thC = 'padding:9px 12px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#F9F8FF; border-bottom:2px solid #EDE9FE;';
     $tdC = 'padding:8px 12px; font-size:13px; color:#374151; vertical-align:middle; white-space:nowrap; border-bottom:1px solid #F9FAFB;';
 @endphp
 
-{{-- ══ WRAPPER ALTO FIJO ══ --}}
-<div style="display:flex; flex-direction:column; height:calc(100vh - 152px);">
-
 {{-- ══ FILTROS CASOS ══ --}}
-<div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:8px; flex:none;">
+<div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:8px;">
     <div style="flex:1; min-width:180px; position:relative;">
         <svg style="position:absolute; left:9px; top:50%; transform:translateY(-50%); width:13px; height:13px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
         <input wire:model.live.debounce.300ms="searchCasos" type="text" placeholder="Buscar pedido, CI o cliente..."
@@ -43,7 +41,7 @@
     },
     onUp() { this.dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = ''; }
 }" @mousemove.window="onMove($event)" @mouseup.window="onUp()"
-     style="flex:1; min-height:0; display:flex; flex-direction:column;">
+     style="display:flex; flex-direction:column; height:calc(100vh - 152px);">
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
 <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:none; display:flex; flex-direction:column;"
@@ -59,7 +57,7 @@
     <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
-                <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; text-align:center; width:36px;">#</th>
+                <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
                 <th style="{{ $thC }}">Ciclo</th>
                 <th style="{{ $thC }}">Nº Pedido</th>
                 <th style="{{ $thC }}">CI</th>
@@ -82,9 +80,9 @@
         @endphp
         <tr wire:key="caso-{{ $caso->id }}"
             style="background:{{ $sel ? '#F5F3FF' : '#fff' }}; transition:background .1s; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}">
-            <td style="padding:8px 12px; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8; background:#EDE9FE; border-bottom:1px solid #E9D5FF; vertical-align:middle; white-space:nowrap; width:36px;">{{ $i + 1 }}</td>
+            <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $i + 1 }}</td>
             <td style="{{ $tdC }}">
-                <span style="font-family:monospace; font-size:11px; color:#111827;">{{ $caso->ciclo_code ?? '—' }}</span>
+                <span style="font-family:monospace; font-size:11px; color:#7B6FE8;">{{ $caso->ciclo_code ?? '—' }}</span>
             </td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:12px; color:#111827;">{{ $caso->pedido->numero ?? '—' }}</span>
@@ -124,10 +122,13 @@
                 @endif
             </td>
             <td style="{{ $tdC }} text-align:center;">
-                <button wire:click="selectCaso({{ $caso->id }})"
-                        style="height:26px; padding:0 10px; border:none; border-radius:6px; background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
-                    Ver actividades
-                </button>
+                <div style="display:inline-flex; gap:5px;">
+                    <button wire:click="selectCaso({{ $caso->id }})"
+                            style="height:26px; padding:0 8px; border:none; border-radius:6px; background:#7B6FE8; color:#fff; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">
+                        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Ver actividades
+                    </button>
+                </div>
             </td>
         </tr>
         @empty
@@ -312,8 +313,6 @@
 </div>{{-- fin panel actividades --}}
 
 </div>{{-- fin contenedor split --}}
-
-</div>{{-- fin wrapper alto fijo --}}
 
 @php
 $mHead = 'padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0; background:#fff;';
