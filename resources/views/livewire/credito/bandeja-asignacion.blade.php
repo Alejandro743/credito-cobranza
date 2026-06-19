@@ -88,7 +88,7 @@
             </div>
             <div>
                 <span style="font-size:10px; color:#9CA3AF; display:block; text-transform:uppercase; letter-spacing:.04em;">CI</span>
-                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->cliente->ci ?? '—' }}</span>
+                <span style="font-size:12px; color:#374151;">{{ $p->cliente->ci ?? '—' }}</span>
             </div>
         </div>
         @if ($caso)
@@ -226,13 +226,13 @@
             </td>
             <td style="{{ $td }}">
                 @if($p->ciclo_code)
-                <span style="font-family:monospace; font-size:12px; font-weight:700; color:#374151;">{{ $p->ciclo_code }}</span>
+                <span style="font-family:monospace; font-size:12px; color:#374151;">{{ $p->ciclo_code }}</span>
                 @else
                 <span style="color:#D1D5DB;">—</span>
                 @endif
             </td>
             <td style="{{ $td }}">
-                <span style="font-family:monospace; font-size:12px; font-weight:700; color:#111827;">{{ $p->numero }}</span>
+                <span style="font-family:monospace; font-size:12px; color:#111827;">{{ $p->numero }}</span>
             </td>
             <td style="{{ $td }}">
                 @php
@@ -242,22 +242,22 @@
                 <span style="padding:2px 8px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $pBg }}; color:{{ $pCol }}; white-space:nowrap;">{{ $pLbl }}</span>
             </td>
             <td style="{{ $td }}">
-                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->cliente->ci ?? '—' }}</span>
+                <span style="font-size:12px; color:#374151;">{{ $p->cliente->ci ?? '—' }}</span>
             </td>
             <td style="{{ $td }}">
-                <span style="font-weight:600; color:#111827;">{{ $p->cliente->nombre_completo ?? '—' }}</span>
+                <span style="color:#111827;">{{ $p->cliente->nombre_completo ?? '—' }}</span>
             </td>
             <td style="{{ $td }}">
                 <span style="font-family:monospace; font-size:12px; color:#6B7280;">V-{{ str_pad($p->vendedor?->id ?? 0, 4, '0', STR_PAD_LEFT) }}</span>
             </td>
             <td style="{{ $td }}">{{ $p->vendedor->nombre ?? '' }} {{ $p->vendedor->apellido ?? '' }}</td>
             <td style="{{ $td }} text-align:right;">
-                <span style="font-size:13px; font-weight:700; color:{{ $dias > 30 ? '#B91C1C' : ($dias > 15 ? '#D97706' : '#374151') }};">
+                <span style="font-size:13px; color:{{ $dias > 30 ? '#B91C1C' : ($dias > 15 ? '#D97706' : '#374151') }};">
                     {{ $dias }}d
                 </span>
             </td>
             <td style="{{ $td }} text-align:center;">
-                <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:20px; border-radius:6px; font-size:12px; font-weight:700; background:#FEF2F2; color:#B91C1C;">
+                <span style="display:inline-flex; align-items:center; justify-content:center; width:28px; height:20px; border-radius:6px; font-size:12px; background:#FEF2F2; color:#B91C1C;">
                     {{ $p->cuotas_vencidas_count ?? 0 }}
                 </span>
             </td>
