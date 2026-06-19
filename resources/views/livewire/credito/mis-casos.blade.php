@@ -59,8 +59,7 @@
     <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
-                <th style="{{ $thC }} text-align:center;">#</th>
-                <th style="{{ $thC }} text-align:center;">Acciones</th>
+                <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; text-align:center; width:36px;">#</th>
                 <th style="{{ $thC }}">Ciclo</th>
                 <th style="{{ $thC }}">Nº Pedido</th>
                 <th style="{{ $thC }}">CI</th>
@@ -72,6 +71,7 @@
                 <th style="{{ $thC }}">Asignó</th>
                 <th style="{{ $thC }}">Motivo</th>
                 <th style="{{ $thC }}">Observación</th>
+                <th style="{{ $thC }} text-align:center;">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -82,13 +82,7 @@
         @endphp
         <tr wire:key="caso-{{ $caso->id }}"
             style="background:{{ $sel ? '#F5F3FF' : '#fff' }}; transition:background .1s; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}">
-            <td style="{{ $tdC }} text-align:center; font-size:12px; color:#6B7280;">{{ $i + 1 }}</td>
-            <td style="{{ $tdC }} text-align:center;">
-                <button wire:click="selectCaso({{ $caso->id }})"
-                        style="height:26px; padding:0 10px; border:none; border-radius:6px; background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
-                    Ver actividades
-                </button>
-            </td>
+            <td style="padding:8px 12px; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8; background:#EDE9FE; border-bottom:1px solid #E9D5FF; vertical-align:middle; white-space:nowrap; width:36px;">{{ $i + 1 }}</td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:11px; color:#111827;">{{ $caso->ciclo_code ?? '—' }}</span>
             </td>
@@ -128,6 +122,12 @@
                     </div>
                 </div>
                 @endif
+            </td>
+            <td style="{{ $tdC }} text-align:center;">
+                <button wire:click="selectCaso({{ $caso->id }})"
+                        style="height:26px; padding:0 10px; border:none; border-radius:6px; background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                    Ver actividades
+                </button>
             </td>
         </tr>
         @empty
