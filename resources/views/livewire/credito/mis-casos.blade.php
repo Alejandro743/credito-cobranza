@@ -1,13 +1,15 @@
 <div>
 
-
 @php
     $thC = 'padding:9px 12px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#F9F8FF; border-bottom:2px solid #EDE9FE;';
     $tdC = 'padding:8px 12px; font-size:13px; color:#374151; vertical-align:middle; white-space:nowrap; border-bottom:1px solid #F9FAFB;';
 @endphp
 
+{{-- ══ WRAPPER ALTO FIJO ══ --}}
+<div style="display:flex; flex-direction:column; height:calc(100vh - 152px);">
+
 {{-- ══ FILTROS CASOS ══ --}}
-<div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:8px;">
+<div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px; margin-bottom:8px; flex:none;">
     <div style="flex:1; min-width:180px; position:relative;">
         <svg style="position:absolute; left:9px; top:50%; transform:translateY(-50%); width:13px; height:13px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/></svg>
         <input wire:model.live.debounce.300ms="searchCasos" type="text" placeholder="Buscar pedido, CI o cliente..."
@@ -41,7 +43,7 @@
     },
     onUp() { this.dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = ''; }
 }" @mousemove.window="onMove($event)" @mouseup.window="onUp()"
-     style="display:flex; flex-direction:column; height:calc(100vh - 152px);">
+     style="flex:1; min-height:0; display:flex; flex-direction:column;">
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
 <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:none; display:flex; flex-direction:column;"
@@ -317,6 +319,8 @@
 </div>{{-- fin panel actividades --}}
 
 </div>{{-- fin contenedor split --}}
+
+</div>{{-- fin wrapper alto fijo --}}
 
 @php
 $mHead = 'padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0; background:#fff;';
