@@ -248,7 +248,9 @@
             </td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->actividadOrigen ? '#'.$act->actividadOrigen->numero : '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
-                @if ($act->estado === 'abierta')
+                @if (in_array($casoSeleccionado->estado, ['cerrado','cancelado']))
+                <span style="font-size:11px; color:#D1D5DB;">—</span>
+                @elseif ($act->estado === 'abierta')
                 <div style="display:inline-flex; gap:4px;">
                     <button wire:click="iniciarActividad({{ $act->id }})"
                             style="height:24px; padding:0 7px; border:none; border-radius:5px; background:#7B6FE8; color:#fff; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:3px;">

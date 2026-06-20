@@ -73,6 +73,9 @@ class MisCasos extends Component
 
     public function guardarActividad(): void
     {
+        $caso = CobranzaCaso::find($this->selectedCasoId);
+        if (!$caso || in_array($caso->estado, ['cerrado', 'cancelado'])) return;
+
         $this->validate([
             'tipoContactoId' => 'required|integer|min:1',
             'accionId'       => 'required|integer|min:1',
@@ -127,6 +130,9 @@ class MisCasos extends Component
 
     public function guardarEditarActividad(): void
     {
+        $caso = CobranzaCaso::find($this->selectedCasoId);
+        if (!$caso || in_array($caso->estado, ['cerrado', 'cancelado'])) return;
+
         $rules = [
             'tipoContactoId' => 'required|integer|min:1',
             'accionId'       => 'required|integer|min:1',
@@ -164,6 +170,9 @@ class MisCasos extends Component
     // ── Iniciar actividad ──────────────────────────────────────────
     public function iniciarActividad(int $id): void
     {
+        $caso = CobranzaCaso::find($this->selectedCasoId);
+        if (!$caso || in_array($caso->estado, ['cerrado', 'cancelado'])) return;
+
         CobranzaActividad::findOrFail($id)->update([
             'estado'       => 'en_proceso',
             'fecha_inicio' => now(),
@@ -188,6 +197,9 @@ class MisCasos extends Component
 
     public function confirmarCerrarActividad(): void
     {
+        $caso = CobranzaCaso::find($this->selectedCasoId);
+        if (!$caso || in_array($caso->estado, ['cerrado', 'cancelado'])) return;
+
         $this->validate([
             'tipoRespuestaId' => 'required|integer|min:1',
         ], ['tipoRespuestaId.min' => 'Selecciona el tipo de respuesta.']);
@@ -240,6 +252,9 @@ class MisCasos extends Component
 
     public function confirmarCancelarActividad(): void
     {
+        $caso = CobranzaCaso::find($this->selectedCasoId);
+        if (!$caso || in_array($caso->estado, ['cerrado', 'cancelado'])) return;
+
         $this->validate([
             'tipoCancelacionId' => 'required|integer|min:1',
         ], ['tipoCancelacionId.min' => 'Selecciona el tipo de cancelación.']);
