@@ -64,7 +64,7 @@
                 <th style="{{ $thC }}">Nº Pedido</th>
                 <th style="{{ $thC }}">CI</th>
                 <th style="{{ $thC }}">Cliente</th>
-                <th style="{{ $thC }}">Usuario Vend.</th>
+                <th style="{{ $thC }}">Cod Vendedor</th>
                 <th style="{{ $thC }}">Nombre Vendedor</th>
                 <th style="{{ $thC }} text-align:right;">Días Venc.</th>
                 <th style="{{ $thC }} text-align:center;">Cuotas</th>
