@@ -59,7 +59,7 @@
     <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
-                <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
+                <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:50px; text-align:center; position:sticky; left:0; z-index:11;">#</th>
                 <th style="{{ $thC }}">Ciclo</th>
                 <th style="{{ $thC }}">Nº Pedido</th>
                 <th style="{{ $thC }}">CI</th>
@@ -85,7 +85,7 @@
         @endphp
         <tr wire:key="caso-{{ $caso->id }}"
             style="background:{{ $sel ? '#F5F3FF' : '#fff' }}; transition:background .1s; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}">
-            <td class="col-row-num" style="{{ $tdC }} text-align:center;">
+            <td class="col-row-num" style="{{ $tdC }} text-align:center; position:sticky; left:0; background:{{ $sel ? '#F5F3FF' : '#fff' }}; z-index:2;">
                 <div style="display:inline-flex; align-items:center; gap:6px;">
                     <span style="font-size:12px; font-weight:700; color:#374151;">{{ $i + 1 }}</span>
                     <input type="checkbox"
