@@ -73,6 +73,7 @@
                 <th style="{{ $thC }}">Asignó</th>
                 <th style="{{ $thC }}">Fecha Asig.</th>
                 <th style="{{ $thC }}">Fecha Cierre/Cancel.</th>
+                <th style="{{ $thC }} text-align:center;">Días Gestión</th>
                 <th style="{{ $thC }} text-align:center;">Estado</th>
                 <th style="{{ $thC }}">Motivo</th>
                 <th style="{{ $thC }}">Observación</th>
@@ -114,6 +115,13 @@
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->asignadoPor?->name ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->fecha_asignacion?->format('d/m/Y') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ in_array($caso->estado, ['cerrado','cancelado']) ? ($caso->fecha_cierre?->format('d/m/Y') ?? '—') : '—' }}</td>
+            <td style="{{ $tdC }} text-align:center; font-size:12px;">
+                @if(in_array($caso->estado, ['cerrado','cancelado']) && $caso->fecha_asignacion && $caso->fecha_cierre)
+                    <span style="font-weight:600; color:#374151;">{{ $caso->fecha_asignacion->diffInDays($caso->fecha_cierre) }}d</span>
+                @else
+                    <span style="color:#D1D5DB;">—</span>
+                @endif
+            </td>
             <td style="{{ $tdC }} text-align:center;">
                 @php
                     $csMap = ['asignado'=>['#D1FAE5','#065F46','Asignado'],'en_gestion'=>['#EFF6FF','#1D4ED8','En Gestión'],'cerrado'=>['#F0FDF4','#166534','Cerrado'],'cancelado'=>['#FEE2E2','#B91C1C','Cancelado']];
@@ -141,7 +149,7 @@
         </tr>
         @empty
         <tr>
-            <td colspan="15" style="padding:40px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
+            <td colspan="16" style="padding:40px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
                 No tienes casos activos asignados.
             </td>
         </tr>
