@@ -86,7 +86,7 @@
         <tr wire:key="caso-{{ $caso->id }}"
             style="background:{{ $sel ? '#F5F3FF' : '#fff' }}; transition:background .1s; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}">
             <td class="col-row-num" style="{{ $tdC }} text-align:center;">
-                <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
+                <div style="display:inline-flex; align-items:center; gap:6px;">
                     <span style="font-size:12px; font-weight:700; color:#374151;">{{ $i + 1 }}</span>
                     <input type="checkbox"
                            {{ $selectedCasoId === $caso->id ? 'checked' : '' }}
