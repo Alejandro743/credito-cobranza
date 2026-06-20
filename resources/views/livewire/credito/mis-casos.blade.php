@@ -41,11 +41,11 @@
     },
     onUp() { this.dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = ''; }
 }" @mousemove.window="onMove($event)" @mouseup.window="onUp()"
-     :style="'--topH:' + topH + 'px'"
-     style="flex:1; min-height:0; position:relative;">
+     style="flex:1; min-height:0; display:flex; flex-direction:column;">
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
-<div style="position:absolute; top:0; left:0; right:0; height:var(--topH, 280px); overflow:hidden; display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06);">
+<div :style="'height:' + topH + 'px'"
+     style="flex:none; overflow:hidden; display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06);">
 
     <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Mis Casos</span>
@@ -145,13 +145,13 @@
 
 {{-- ══ DRAG HANDLE ══ --}}
 <div wire:ignore @mousedown="onDown($event)"
-     style="position:absolute; left:0; right:0; top:var(--topH, 280px); height:16px; cursor:row-resize; display:flex; align-items:center; justify-content:center; user-select:none; background:#F9F8FF; z-index:20;">
+     style="flex:none; height:16px; cursor:row-resize; display:flex; align-items:center; justify-content:center; user-select:none; background:#F9F8FF; z-index:20;">
     <div style="width:120px; height:6px; border-radius:99px; background:#C4B5FD; transition:background .15s;"
          @mouseenter="$el.style.background='#7B6FE8'" @mouseleave="$el.style.background='#C4B5FD'"></div>
 </div>
 
 {{-- ══ PANEL INFERIOR: ACTIVIDADES ══ --}}
-<div style="position:absolute; left:0; right:0; top:calc(var(--topH, 280px) + 16px); bottom:0; overflow:hidden; display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06);">
+<div style="flex:1; min-height:0; overflow:hidden; display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06);">
 
     {{-- Header actividades --}}
     <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex:none;">
