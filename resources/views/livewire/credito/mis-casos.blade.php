@@ -64,6 +64,8 @@
                 <th style="{{ $thC }}">Nº Pedido</th>
                 <th style="{{ $thC }}">CI</th>
                 <th style="{{ $thC }}">Cliente</th>
+                <th style="{{ $thC }}">Usuario Vend.</th>
+                <th style="{{ $thC }}">Nombre Vendedor</th>
                 <th style="{{ $thC }} text-align:right;">Días Venc.</th>
                 <th style="{{ $thC }} text-align:center;">Cuotas</th>
                 <th style="{{ $thC }} text-align:center;">Estado</th>
@@ -91,6 +93,8 @@
             </td>
             <td style="{{ $tdC }} font-size:12px;">{{ $caso->pedido?->cliente?->ci ?? '—' }}</td>
             <td style="{{ $tdC }} color:#111827;">{{ $caso->pedido?->cliente?->nombre_completo ?? '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->pedido?->vendedor?->user?->name ?? '—' }}</td>
+            <td style="{{ $tdC }} color:#111827;">{{ $caso->pedido?->vendedor?->nombre_completo ?? '—' }}</td>
             <td style="{{ $tdC }} text-align:right;">
                 <span style="color:{{ $dias > 30 ? '#B91C1C' : ($dias > 15 ? '#D97706' : '#374151') }};">{{ $dias }}d</span>
             </td>
@@ -133,7 +137,7 @@
         </tr>
         @empty
         <tr>
-            <td colspan="13" style="padding:40px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
+            <td colspan="15" style="padding:40px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
                 No tienes casos activos asignados.
             </td>
         </tr>

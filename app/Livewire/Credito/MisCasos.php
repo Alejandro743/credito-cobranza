@@ -343,7 +343,7 @@ class MisCasos extends Component
         $diasSub  = "COALESCE(DATEDIFF(NOW(), (SELECT MIN(c.fecha_vencimiento) FROM cuotas c INNER JOIN plan_pagos pp ON pp.id = c.plan_pago_id WHERE pp.pedido_id = pedidos.id AND (c.estado = 'vencido' OR (c.estado = 'pendiente' AND c.fecha_vencimiento < '$today')))), 0)";
         $cntSub   = "(SELECT COUNT(*) FROM cuotas c INNER JOIN plan_pagos pp ON pp.id = c.plan_pago_id WHERE pp.pedido_id = pedidos.id AND (c.estado = 'vencido' OR (c.estado = 'pendiente' AND c.fecha_vencimiento < '$today')))";
 
-        $casos = CobranzaCaso::with(['pedido.cliente.usuario', 'pedido.vendedor', 'asignadoPor'])
+        $casos = CobranzaCaso::with(['pedido.cliente.usuario', 'pedido.vendedor.user', 'asignadoPor'])
             ->join('pedidos', 'pedidos.id', '=', 'cobranza_casos.pedido_id')
             ->where('cobranza_casos.responsable_id', auth()->id())
             ->select('cobranza_casos.*')
@@ -366,7 +366,7 @@ class MisCasos extends Component
         $actividadesAll   = collect();
         $casoSeleccionado = null;
         if ($this->selectedCasoId) {
-            $casoSeleccionado = CobranzaCaso::with(['pedido.cliente.usuario', 'pedido.vendedor', 'responsable'])->find($this->selectedCasoId);
+            $casoSeleccionado = CobranzaCaso::with(['pedido.cliente.usuario', 'pedido.vendedor.user', 'responsable'])->find($this->selectedCasoId);
             if ($casoSeleccionado) {
                 $actividadesAll = CobranzaActividad::with(['tipoContacto', 'accion'])
                     ->where('caso_id', $this->selectedCasoId)
