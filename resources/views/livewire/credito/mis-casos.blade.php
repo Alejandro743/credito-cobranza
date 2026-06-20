@@ -89,7 +89,7 @@
                 <div style="display:inline-flex; align-items:center; gap:6px;">
                     <span style="font-size:12px; font-weight:700; color:#374151;">{{ $i + 1 }}</span>
                     <input type="checkbox"
-                           {{ $selectedCasoId === $caso->id ? 'checked' : '' }}
+                           :checked="$wire.selectedCasoId === {{ $caso->id }}"
                            @click="$wire.selectedCasoId === {{ $caso->id }} ? $wire.set('selectedCasoId', null) : $wire.selectCaso({{ $caso->id }})"
                            style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
                 </div>
