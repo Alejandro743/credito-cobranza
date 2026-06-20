@@ -59,7 +59,9 @@
     <table style="width:100%; border-collapse:collapse; min-width:900px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr>
-                <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:50px; text-align:center; position:sticky; left:0; z-index:11;">#</th>
+                <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:50px; text-align:center; position:sticky; left:0; z-index:11;">
+                    <svg width="13" height="13" fill="none" stroke="#C4B5FD" stroke-width="2" viewBox="0 0 24 24" style="display:inline-block; vertical-align:middle;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                </th>
                 <th style="{{ $thC }}">Ciclo</th>
                 <th style="{{ $thC }}">Nº Pedido</th>
                 <th style="{{ $thC }}">CI</th>
@@ -74,7 +76,6 @@
                 <th style="{{ $thC }} text-align:center;">Estado</th>
                 <th style="{{ $thC }}">Motivo</th>
                 <th style="{{ $thC }}">Observación</th>
-                <th style="{{ $thC }} text-align:center;">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -137,17 +138,10 @@
                 </div>
                 @endif
             </td>
-            <td style="{{ $tdC }} text-align:center;">
-                <button wire:click="selectCaso({{ $caso->id }})"
-                        style="height:26px; padding:0 8px; border:none; border-radius:6px; background:#7B6FE8; color:#fff; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap; display:inline-flex; align-items:center; gap:4px;">
-                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                    Ver actividades
-                </button>
-            </td>
         </tr>
         @empty
         <tr>
-            <td colspan="16" style="padding:40px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
+            <td colspan="15" style="padding:40px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
                 No tienes casos activos asignados.
             </td>
         </tr>
