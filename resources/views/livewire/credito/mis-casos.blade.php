@@ -68,11 +68,11 @@
                 <th style="{{ $thC }}">Nombre Vendedor</th>
                 <th style="{{ $thC }} text-align:right;">Días Venc.</th>
                 <th style="{{ $thC }} text-align:center;">Cuotas</th>
-                <th style="{{ $thC }}">Fecha Asig.</th>
                 <th style="{{ $thC }}">Asignó</th>
+                <th style="{{ $thC }}">Fecha Asig.</th>
+                <th style="{{ $thC }} text-align:center;">Estado</th>
                 <th style="{{ $thC }}">Motivo</th>
                 <th style="{{ $thC }}">Observación</th>
-                <th style="{{ $thC }} text-align:center;">Estado</th>
                 <th style="{{ $thC }} text-align:center;">Acciones</th>
             </tr>
         </thead>
@@ -101,8 +101,15 @@
             <td style="{{ $tdC }} text-align:center;">
                 <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:20px; border-radius:6px; font-size:12px; background:#FEF2F2; color:#B91C1C;">{{ $caso->cuotas_vencidas_count ?? 0 }}</span>
             </td>
-            <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->fecha_asignacion?->format('d/m/Y') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->asignadoPor?->name ?? '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->fecha_asignacion?->format('d/m/Y') ?? '—' }}</td>
+            <td style="{{ $tdC }} text-align:center;">
+                @php
+                    $csMap = ['asignado'=>['#D1FAE5','#065F46','Asignado'],'en_gestion'=>['#EFF6FF','#1D4ED8','En Gestión'],'cerrado'=>['#F0FDF4','#166534','Cerrado'],'cancelado'=>['#FEE2E2','#B91C1C','Cancelado']];
+                    [$csBg,$csCol,$csLbl] = $csMap[$caso->estado] ?? ['#F3F4F6','#6B7280',$caso->estado];
+                @endphp
+                <span style="padding:3px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $csBg }}; color:{{ $csCol }};">{{ $csLbl }}</span>
+            </td>
             <td style="{{ $tdC }} font-size:12px; color:#374151; white-space:nowrap;">
                 @if(in_array($caso->estado, ['cerrado','cancelado'])){{ $caso->motivo_cierre ?? '' }}@endif
             </td>
@@ -119,13 +126,6 @@
                     </div>
                 </div>
                 @endif
-            </td>
-            <td style="{{ $tdC }} text-align:center;">
-                @php
-                    $csMap = ['asignado'=>['#D1FAE5','#065F46','Asignado'],'en_gestion'=>['#EFF6FF','#1D4ED8','En Gestión'],'cerrado'=>['#F0FDF4','#166534','Cerrado'],'cancelado'=>['#FEE2E2','#B91C1C','Cancelado']];
-                    [$csBg,$csCol,$csLbl] = $csMap[$caso->estado] ?? ['#F3F4F6','#6B7280',$caso->estado];
-                @endphp
-                <span style="padding:3px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $csBg }}; color:{{ $csCol }};">{{ $csLbl }}</span>
             </td>
             <td style="{{ $tdC }} text-align:center;">
                 <button wire:click="selectCaso({{ $caso->id }})"
