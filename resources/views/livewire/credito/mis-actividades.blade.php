@@ -80,6 +80,7 @@
                 <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
                 <th style="{{ $thC }}">Ciclo</th>
                 <th style="{{ $thC }}">Nº Pedido</th>
+                <th style="{{ $thC }} text-align:center;">Estado Caso</th>
                 <th style="{{ $thC }}">CI</th>
                 <th style="{{ $thC }}">Cliente</th>
                 <th style="{{ $thC }}">Tipo Contacto</th>
@@ -101,6 +102,13 @@
             </td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:12px; color:#111827;">{{ $act->pedido_numero ?? '—' }}</span>
+            </td>
+            <td style="{{ $tdC }} text-align:center;">
+                @php
+                    $csMap = ['asignado'=>['#D1FAE5','#065F46','Asignado'],'en_gestion'=>['#EFF6FF','#1D4ED8','En Gestión'],'cerrado'=>['#F0FDF4','#166534','Cerrado'],'cancelado'=>['#FEE2E2','#B91C1C','Cancelado']];
+                    [$csBg,$csCol,$csLbl] = $csMap[$act->caso_estado ?? ''] ?? ['#F3F4F6','#9CA3AF','—'];
+                @endphp
+                <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $csBg }}; color:{{ $csCol }};">{{ $csLbl }}</span>
             </td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->cliente_ci ?? '—' }}</td>
             <td style="{{ $tdC }} color:#111827; max-width:180px; overflow:hidden; text-overflow:ellipsis;">{{ Str::title($act->cliente_nombre ?? '—') }}</td>
