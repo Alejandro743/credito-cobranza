@@ -216,11 +216,12 @@
                 <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
                 <th style="{{ $thC }}">Tipo Contacto</th>
                 <th style="{{ $thC }}">Acción</th>
+                <th style="{{ $thC }}">Obs. Acción</th>
                 <th style="{{ $thC }}">Fecha Prog.</th>
                 <th style="{{ $thC }}">Fecha Inicio</th>
                 <th style="{{ $thC }}">Fecha Cierre/Cancel.</th>
                 <th style="{{ $thC }}">Tipo Respuesta</th>
-                <th style="{{ $thC }}">Observación</th>
+                <th style="{{ $thC }}">Obs. Respuesta</th>
                 <th style="{{ $thC }}">Responsable</th>
                 <th style="{{ $thC }} text-align:center;">Estado</th>
                 <th style="{{ $thC }}">Origen</th>
@@ -236,11 +237,12 @@
             <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $act->numero }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->tipoContacto?->nombre ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->accion?->nombre ?? '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px; max-width:160px; overflow:hidden; text-overflow:ellipsis;">{{ $act->observacion ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->fecha_programada?->format('d/m/Y') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->fecha_inicio?->format('d/m/Y H:i') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->fecha_cierre?->format('d/m/Y H:i') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->tipoRespuesta?->nombre ?? '—' }}</td>
-            <td style="{{ $tdC }} font-size:12px; max-width:180px; overflow:hidden; text-overflow:ellipsis;">{{ $act->observacion ?? '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px; max-width:160px; overflow:hidden; text-overflow:ellipsis;">{{ $act->observacion_cierre ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->responsable?->name ?? '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
                 @php
