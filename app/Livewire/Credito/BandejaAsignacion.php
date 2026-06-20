@@ -95,6 +95,10 @@ class BandejaAsignacion extends Component
                 'asignado_por'           => null,
                 'fecha_asignacion'       => null,
                 'observacion_asignacion' => null,
+                'fecha_cierre'           => null,
+                'cerrado_por'            => null,
+                'motivo_cierre'          => null,
+                'observacion_cierre'     => null,
             ]);
         }
 
@@ -121,6 +125,10 @@ class BandejaAsignacion extends Component
                     'fecha_asignacion'       => now(),
                     'estado'                 => 'asignado',
                     'observacion_asignacion' => $this->asignarObservacion ?: null,
+                    'fecha_cierre'           => null,
+                    'cerrado_por'            => null,
+                    'motivo_cierre'          => null,
+                    'observacion_cierre'     => null,
                 ]
             );
         }
@@ -139,6 +147,10 @@ class BandejaAsignacion extends Component
             'asignado_por'           => null,
             'fecha_asignacion'       => null,
             'observacion_asignacion' => null,
+            'fecha_cierre'           => null,
+            'cerrado_por'            => null,
+            'motivo_cierre'          => null,
+            'observacion_cierre'     => null,
         ]);
         session()->flash('success', 'Caso marcado como sin asignar.');
     }
