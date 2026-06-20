@@ -70,7 +70,7 @@
                 <th style="{{ $thC }} text-align:center;">Cuotas</th>
                 <th style="{{ $thC }}">Asignó</th>
                 <th style="{{ $thC }}">Fecha Asig.</th>
-                <th style="{{ $thC }}">Fecha Cierre</th>
+                <th style="{{ $thC }}">Fecha Cierre/Cancel.</th>
                 <th style="{{ $thC }} text-align:center;">Estado</th>
                 <th style="{{ $thC }}">Motivo</th>
                 <th style="{{ $thC }}">Observación</th>
@@ -216,7 +216,7 @@
                 <th style="{{ $thC }}">Acción</th>
                 <th style="{{ $thC }}">Fecha Prog.</th>
                 <th style="{{ $thC }}">Fecha Inicio</th>
-                <th style="{{ $thC }}">Fecha Cierre</th>
+                <th style="{{ $thC }}">Fecha Cierre/Cancel.</th>
                 <th style="{{ $thC }}">Tipo Respuesta</th>
                 <th style="{{ $thC }}">Observación</th>
                 <th style="{{ $thC }}">Responsable</th>
