@@ -1,4 +1,4 @@
-<div style="height:calc(100vh - 152px); display:flex; flex-direction:column;">
+<div style="height:calc(100vh - 152px); overflow:hidden; display:flex; flex-direction:column;">
 
 @php
     $thC = 'padding:9px 12px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#F9F8FF; border-bottom:2px solid #EDE9FE;';
@@ -26,17 +26,18 @@
 
 {{-- ══ CONTENEDOR SPLIT ══ --}}
 <div x-data="{
-    topH: 280, minH: 100,
+    topH: 280, minH: 100, containerH: 0,
     dragging: false, startY: 0, startTop: 0,
-    init() { this.$nextTick(() => { const h = this.$el.offsetHeight; if (h > 0) this.topH = Math.round(h * 0.45); }); },
+    init() { this.$nextTick(() => { this.containerH = this.$el.offsetHeight; if (this.containerH > 0) this.topH = Math.round(this.containerH * 0.45); }); },
     onDown(e) {
+        this.containerH = this.$el.offsetHeight;
         this.dragging = true; this.startY = e.clientY; this.startTop = this.topH;
         document.body.style.userSelect = 'none'; document.body.style.cursor = 'row-resize';
     },
     onMove(e) {
         if (!this.dragging) return;
         const delta = e.clientY - this.startY;
-        this.topH = Math.max(this.minH, Math.min(this.$el.offsetHeight - this.minH - 22, this.startTop + delta));
+        this.topH = Math.max(this.minH, Math.min(this.containerH - this.minH - 22, this.startTop + delta));
     },
     onUp() { this.dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = ''; }
 }" @mousemove.window="onMove($event)" @mouseup.window="onUp()"
