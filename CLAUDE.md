@@ -149,6 +149,29 @@ Product
 
 Custom colors in Tailwind CDN config: `lavanda`, `mint`, `melocoton`, `celeste`. Each with shades 50–700. Used consistently for module/section color-coding.
 
+## Metodología de trabajo — OBLIGATORIO seguir esto
+
+### Antes de tocar cualquier cosa
+- **Leer el código existente primero.** Entender qué funciona y qué no antes de escribir una sola línea.
+- **Si algo funcionaba antes y se rompió:** buscar qué cambió (git diff / leer el archivo), no reescribir desde cero.
+- **Una hipótesis, una ejecución.** No aplicar múltiples cambios a la vez esperando que alguno funcione.
+
+### Velocidad y tokens
+- **Simple = rápido.** Cambios visuales (color, texto, orden de columnas, padding) se hacen directo sin análisis previo.
+- **No pensar en voz alta innecesariamente.** No explicar lo que se va a hacer si es obvio — hacerlo.
+- **Si falló una vez: parar.** No parchear el parche. Decir qué se vio y proponer UNA solución nueva.
+
+### Consistencia visual — CRÍTICO
+- **Antes de crear cualquier tabla, modal, card o componente:** leer uno existente en el proyecto y replicar exactamente el mismo patrón de estilos, estructura y espaciado.
+- **Nunca inventar estilos nuevos** si ya existe el patrón en otro componente. Copiar, no crear.
+- Las tablas tienen `$thC` y `$tdC` definidos al inicio de cada vista — usarlos siempre.
+- Los modales siguen el patrón `$mHead / $mBody / $mFoot / $card` — replicar exactamente.
+
+### Layout y CSS
+- **Flexbox es el patrón del proyecto** para paneles con scroll interno. No usar `position:absolute` para layouts.
+- Panel con scroll: `flex:none` + `:style="{ height: X + 'px' }"` para tamaño fijo; `flex:1; min-height:0; overflow:auto` para el área scrolleable.
+- Si hay un problema de scroll/layout: leer el componente que funciona y comparar, no reescribir.
+
 ## Test Users (password: `password`)
 
 | Email | Role |
