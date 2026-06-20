@@ -230,7 +230,7 @@
         <tr wire:key="act-{{ $act->id }}"
             style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''"
-            x-data="{ menuOpen: false, menuTop: 0, menuLeft: 0, menuArrow: 154 }">
+            x-data="{ menuOpen: false, menuTop: 0, menuLeft: 0 }">
             <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $act->numero }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->tipoContacto?->nombre ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->accion?->nombre ?? '—' }}</td>
@@ -253,21 +253,21 @@
                 <span style="font-size:11px; color:#D1D5DB;">—</span>
                 @else
                 {{-- Trigger ⋮ --}}
-                <button @click.stop="const r=$event.currentTarget.getBoundingClientRect(); menuTop=r.bottom+8; menuLeft=r.right-172; if(menuLeft<8)menuLeft=8; menuArrow=r.left+r.width/2-menuLeft; menuOpen=!menuOpen;"
+                <button @click.stop="const r=$event.currentTarget.getBoundingClientRect(); menuTop=r.top+r.height/2; menuLeft=r.left-180; if(menuLeft<8)menuLeft=8; menuOpen=!menuOpen;"
                         style="width:28px; height:28px; border:none; border-radius:6px; background:#EDE9FE; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
                     <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
                         <circle cx="8" cy="2.5" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13.5" r="1.5"/>
                     </svg>
                 </button>
-                {{-- Dropdown (position:fixed escapa el overflow del scroll) --}}
+                {{-- Dropdown a la izquierda del botón, centrado verticalmente --}}
                 <div x-show="menuOpen" @click.outside="menuOpen=false" x-transition.opacity.duration.100ms
-                     :style="'position:fixed; top:'+menuTop+'px; left:'+menuLeft+'px; z-index:9990; min-width:172px; padding-top:6px;'">
-                    <div :style="'position:absolute; top:0; left:'+menuArrow+'px; transform:translateX(-50%); width:0; height:0; border-left:7px solid transparent; border-right:7px solid transparent; border-bottom:7px solid #E5E7EB;'"></div>
-                    <div :style="'position:absolute; top:1px; left:'+menuArrow+'px; transform:translateX(-50%); width:0; height:0; border-left:6px solid transparent; border-right:6px solid transparent; border-bottom:6px solid #fff;'"></div>
+                     :style="{ position:'fixed', top:menuTop+'px', left:menuLeft+'px', zIndex:9990, minWidth:'172px', transform:'translateY(-50%)' }">
+                    <div style="position:absolute; right:-7px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:7px solid #E5E7EB;"></div>
+                    <div style="position:absolute; right:-6px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:6px solid transparent; border-bottom:6px solid transparent; border-left:6px solid #fff;"></div>
                     <div style="background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:4px 0; box-shadow:0 8px 24px rgba(0,0,0,.12); overflow:hidden;">
                     @if ($act->estado === 'abierta')
                     <button wire:click="iniciarActividad({{ $act->id }})" @click="menuOpen=false"
-                            style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; text-align:left;"
+                            style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; text-align:center; justify-content:center;"
                             @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
                         <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/></svg>
                         Iniciar
@@ -275,14 +275,14 @@
                     @endif
                     @if ($act->estado === 'en_proceso')
                     <button wire:click="abrirCerrarActividad({{ $act->id }})" @click="menuOpen=false"
-                            style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; text-align:left;"
+                            style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; text-align:center; justify-content:center;"
                             @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
                         <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Cerrar
                     </button>
                     @endif
                     <button wire:click="abrirEditarActividad({{ $act->id }})" @click="menuOpen=false"
-                            style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; text-align:left;"
+                            style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; text-align:center; justify-content:center;"
                             @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
                         <svg width="12" height="12" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                         Editar
@@ -290,7 +290,7 @@
                     @if (in_array($act->estado, ['abierta','en_proceso']))
                     <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
                     <button wire:click="abrirCancelarActividad({{ $act->id }})" @click="menuOpen=false"
-                            style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#B91C1C; cursor:pointer; text-align:left;"
+                            style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#B91C1C; cursor:pointer; text-align:center; justify-content:center;"
                             @mouseenter="$el.style.background='#FEF2F2'" @mouseleave="$el.style.background=''">
                         <svg width="12" height="12" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                         Cancelar
