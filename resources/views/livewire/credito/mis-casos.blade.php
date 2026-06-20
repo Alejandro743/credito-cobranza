@@ -85,7 +85,15 @@
         @endphp
         <tr wire:key="caso-{{ $caso->id }}"
             style="background:{{ $sel ? '#F5F3FF' : '#fff' }}; transition:background .1s; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}">
-            <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $i + 1 }}</td>
+            <td class="col-row-num" style="{{ $tdC }} text-align:center;">
+                <div style="display:flex; flex-direction:column; align-items:center; gap:3px;">
+                    <span style="font-size:12px; font-weight:700; color:#374151;">{{ $i + 1 }}</span>
+                    <input type="checkbox"
+                           {{ $selectedCasoId === $caso->id ? 'checked' : '' }}
+                           @click="$wire.selectedCasoId === {{ $caso->id }} ? $wire.set('selectedCasoId', null) : $wire.selectCaso({{ $caso->id }})"
+                           style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                </div>
+            </td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:11px; color:#7B6FE8;">{{ $caso->ciclo_code ?? '—' }}</span>
             </td>
