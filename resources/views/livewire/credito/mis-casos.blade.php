@@ -104,7 +104,7 @@
             </td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->asignadoPor?->name ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->fecha_asignacion?->format('d/m/Y') ?? '—' }}</td>
-            <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->fecha_cierre?->format('d/m/Y') ?? '—' }}</td>
+            <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ in_array($caso->estado, ['cerrado','cancelado']) ? ($caso->fecha_cierre?->format('d/m/Y') ?? '—') : '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
                 @php
                     $csMap = ['asignado'=>['#D1FAE5','#065F46','Asignado'],'en_gestion'=>['#EFF6FF','#1D4ED8','En Gestión'],'cerrado'=>['#F0FDF4','#166534','Cerrado'],'cancelado'=>['#FEE2E2','#B91C1C','Cancelado']];
