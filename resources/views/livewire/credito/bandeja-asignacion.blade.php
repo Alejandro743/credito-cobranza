@@ -195,6 +195,7 @@
                 <th style="{{ $th }}">Responsable</th>
                 <th style="{{ $th }}">Fecha Asig.</th>
                 <th style="{{ $th }}">Fecha Cierre/Cancelación</th>
+                <th style="{{ $th }} text-align:center;">Días Gestión</th>
                 <th style="{{ $th }}">Asignó</th>
                 <th style="{{ $th }}">Estado</th>
                 <th style="{{ $th }}">Motivo</th>
@@ -265,6 +266,13 @@
             <td style="{{ $td }}">{{ $caso?->fecha_asignacion?->format('d/m/Y H:i') ?? '—' }}</td>
             <td style="{{ $td }} font-size:12px; color:#6B7280;">
                 @if($caso && in_array($caso->estado, ['cerrado','cancelado'])){{ $caso->fecha_cierre?->format('d/m/Y H:i') ?? '—' }}@endif
+            </td>
+            <td style="{{ $td }} text-align:center; font-size:12px;">
+                @if($caso && in_array($caso->estado, ['cerrado','cancelado']) && $caso->fecha_asignacion && $caso->fecha_cierre)
+                    <span style="font-weight:600; color:#374151;">{{ (int)$caso->fecha_asignacion->diffInDays($caso->fecha_cierre) }}d</span>
+                @else
+                    <span style="color:#D1D5DB;">—</span>
+                @endif
             </td>
             <td style="{{ $td }}">{{ $caso?->asignadoPor?->name ?? '—' }}</td>
             <td style="{{ $td }}">

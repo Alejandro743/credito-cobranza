@@ -117,7 +117,7 @@
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ in_array($caso->estado, ['cerrado','cancelado']) ? ($caso->fecha_cierre?->format('d/m/Y') ?? '—') : '—' }}</td>
             <td style="{{ $tdC }} text-align:center; font-size:12px;">
                 @if(in_array($caso->estado, ['cerrado','cancelado']) && $caso->fecha_asignacion && $caso->fecha_cierre)
-                    <span style="font-weight:600; color:#374151;">{{ $caso->fecha_asignacion->diffInDays($caso->fecha_cierre) }}d</span>
+                    <span style="font-weight:600; color:#374151;">{{ (int)$caso->fecha_asignacion->diffInDays($caso->fecha_cierre) }}d</span>
                 @else
                     <span style="color:#D1D5DB;">—</span>
                 @endif
