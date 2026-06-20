@@ -37,6 +37,9 @@
     onMove(e) {
         if (!this.dragging) return;
         const delta = e.clientY - this.startY;
+        if (Math.abs(delta) < 3) return;
+        const h = this.$el.offsetHeight;
+        if (h > 100) this.containerH = h;
         this.topH = Math.max(this.minH, Math.min(this.containerH - this.minH - 22, this.startTop + delta));
     },
     onUp() { this.dragging = false; document.body.style.userSelect = ''; document.body.style.cursor = ''; }
@@ -44,7 +47,7 @@
      style="flex:1; min-height:0; display:flex; flex-direction:column;">
 
 {{-- ══ PANEL SUPERIOR: CASOS ══ --}}
-<div :style="'height:' + topH + 'px'"
+<div :style="{ height: topH + 'px' }"
      style="flex:none; overflow:hidden; display:flex; flex-direction:column; background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06);">
 
     <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
