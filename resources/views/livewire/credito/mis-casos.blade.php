@@ -180,6 +180,60 @@
         <span style="font-size:13px; color:#374151; margin-left:16px;">
             <strong>{{ $casoSeleccionado->pedido?->numero }}</strong> - <strong>{{ Str::title($casoSeleccionado->pedido?->cliente?->nombre_completo) }}</strong>
         </span>
+        <div x-data="{ modal: false }" style="display:inline-block; margin-left:10px;">
+            <button @click="modal=true" style="font-size:12px; font-weight:600; color:#EA580C; background:none; border:none; cursor:pointer; text-decoration:underline; padding:0;">Datos del cliente</button>
+            <template x-teleport="body">
+            <div x-show="modal" x-transition.opacity.duration.150ms class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="modal=false" @keydown.escape.window="modal=false">
+                <div style="background:#fff; border-radius:12px; width:100%; max-width:460px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22);">
+                    <div style="padding:16px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:12px; flex-shrink:0;">
+                        <div style="width:36px; height:36px; border-radius:10px; background:#FFEDD5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                            <svg width="18" height="18" fill="none" stroke="#EA580C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                        </div>
+                        <p style="font-size:16px; font-weight:800; color:#111827; margin:0; flex:1;">Datos del Cliente</p>
+                        <button @click="modal=false" style="width:32px; height:32px; background:#EDE9FE; border:none; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#7B6FE8;">
+                            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
+                    </div>
+                    <div style="overflow:auto; flex:1; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
+                        @php $cli = $casoSeleccionado->pedido?->cliente; @endphp
+                        <div style="border:1px solid #EDE9FE; border-radius:10px; padding:14px; background:#fff;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                                <div style="width:8px; height:8px; border-radius:50%; background:#F97316;"></div>
+                                <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.6px;">Datos Personales</span>
+                            </div>
+                            <div style="margin-bottom:10px;">
+                                <p style="font-size:11px; color:#9CA3AF; margin:0 0 4px;">Nombre</p>
+                                <div style="background:#F5F3FF; border-radius:8px; padding:8px 12px; font-size:13px; color:#111827;">{{ $cli?->nombre_completo ?? '—' }}</div>
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                                <div><p style="font-size:11px; color:#9CA3AF; margin:0 0 4px;">CI</p><div style="background:#F5F3FF; border-radius:8px; padding:8px 12px; font-size:13px; font-family:monospace; color:#111827;">{{ $cli?->ci ?? '—' }}</div></div>
+                                <div><p style="font-size:11px; color:#9CA3AF; margin:0 0 4px;">Teléfono</p><div style="background:#F5F3FF; border-radius:8px; padding:8px 12px; font-size:13px; color:#111827;">{{ $cli?->telefono ?? '—' }}</div></div>
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                                <div><p style="font-size:11px; color:#9CA3AF; margin:0 0 4px;">NIT</p><div style="background:#F5F3FF; border-radius:8px; padding:8px 12px; font-size:13px; color:#111827;">{{ $cli?->nit ?? '—' }}</div></div>
+                                <div><p style="font-size:11px; color:#9CA3AF; margin:0 0 4px;">Correo</p><div style="background:#F5F3FF; border-radius:8px; padding:8px 12px; font-size:13px; color:#111827; word-break:break-all;">{{ $cli?->correo ?? '—' }}</div></div>
+                            </div>
+                        </div>
+                        <div style="border:1px solid #EDE9FE; border-radius:10px; padding:14px; background:#fff;">
+                            <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+                                <div style="width:8px; height:8px; border-radius:50%; background:#F97316;"></div>
+                                <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.6px;">Dirección</span>
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+                                <div><p style="font-size:11px; color:#9CA3AF; margin:0 0 4px;">Ciudad</p><div style="background:#F5F3FF; border-radius:8px; padding:8px 12px; font-size:13px; color:#111827;">{{ $cli?->ciudad ?? '—' }}</div></div>
+                                <div><p style="font-size:11px; color:#9CA3AF; margin:0 0 4px;">Provincia</p><div style="background:#F5F3FF; border-radius:8px; padding:8px 12px; font-size:13px; color:#111827;">{{ $cli?->provincia ?? '—' }}</div></div>
+                                <div><p style="font-size:11px; color:#9CA3AF; margin:0 0 4px;">Municipio</p><div style="background:#F5F3FF; border-radius:8px; padding:8px 12px; font-size:13px; color:#111827;">{{ $cli?->municipio ?? '—' }}</div></div>
+                            </div>
+                            <div><p style="font-size:11px; color:#9CA3AF; margin:0 0 4px;">Dirección</p><div style="background:#F5F3FF; border-radius:8px; padding:8px 12px; font-size:13px; color:#111827;">{{ $cli?->direccion ?? '—' }}</div></div>
+                        </div>
+                    </div>
+                    <div style="padding:12px 20px; border-top:1px solid #F3F4F6; flex-shrink:0;">
+                        <button @click="modal=false" style="width:100%; padding:10px; background:#F9FAFB; border:1px solid #E5E7EB; border-radius:10px; font-size:13px; font-weight:700; color:#374151; cursor:pointer;">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+            </template>
+        </div>
         <div style="margin-left:auto; display:flex; align-items:center; gap:8px;">
             @if (in_array($casoSeleccionado->estado, ['cerrado','cancelado']))
             @php
