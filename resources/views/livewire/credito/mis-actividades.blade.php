@@ -90,7 +90,7 @@
         <tr wire:key="act-{{ $act->id }}"
             style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''"
-            x-data="{ menuOpen: false, menuTop: 0, menuLeft: 0 }">
+            x-data="{ menuOpen: false, menuTop: 0, menuLeft: 0 }" @cerrar-menus.window="menuOpen=false">
             <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ ($actividades->currentPage() - 1) * $actividades->perPage() + $loop->iteration }}</td>
             <td style="{{ $tdC }}">
                 <span style="font-family:monospace; font-size:11px; color:#111827;">{{ $act->ciclo_code ?? '—' }}</span>
@@ -123,7 +123,7 @@
                 @if(in_array($act->estado, ['cancelada']) && !$puedeC)
                 <span style="font-size:11px; color:#D1D5DB;">—</span>
                 @else
-                <button @click.stop="const r=$event.currentTarget.getBoundingClientRect(); menuTop=r.top+r.height/2; menuLeft=r.left-180; if(menuLeft<8)menuLeft=8; menuOpen=!menuOpen;"
+                <button @click="$dispatch('cerrar-menus'); const r=$event.currentTarget.getBoundingClientRect(); menuTop=r.top+r.height/2; menuLeft=r.left-180; if(menuLeft<8)menuLeft=8; $nextTick(()=>menuOpen=true);"
                         style="width:28px; height:28px; border:none; border-radius:6px; background:#EDE9FE; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
                     <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
                         <circle cx="8" cy="2.5" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13.5" r="1.5"/>
