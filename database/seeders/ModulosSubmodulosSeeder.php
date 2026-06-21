@@ -101,7 +101,8 @@ class ModulosSubmodulosSeeder extends Seeder
                         'children' => [
                             ['name' => 'Bandeja de Asignación', 'slug' => 'cobranza-bandeja',          'route_name' => 'credito.cobranza.bandeja',          'sort_order' => 1],
                             ['name' => 'Mis Casos',             'slug' => 'cobranza-mis-casos',       'route_name' => 'credito.cobranza.mis-casos',       'sort_order' => 2],
-                            ['name' => 'Mis Actividades',       'slug' => 'cobranza-mis-actividades', 'route_name' => 'credito.cobranza.mis-actividades', 'sort_order' => 3],
+                            ['name' => 'Mis Actividades',       'slug' => 'cobranza-mis-actividades',        'route_name' => 'credito.cobranza.mis-actividades',        'sort_order' => 3],
+                            ['name' => 'Actividades Masivas',   'slug' => 'cobranza-actividades-masivas',    'route_name' => 'credito.cobranza.actividades-masivas',    'sort_order' => 4],
                         ],
                     ],
                     [

@@ -79,6 +79,7 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('credito')->name('credi
     Route::get('/cobranza/bandeja', fn() => view('modules.credito.bandeja-asignacion'))->name('cobranza.bandeja');
     Route::get('/cobranza/mis-casos',        fn() => view('modules.credito.mis-casos'))->name('cobranza.mis-casos');
     Route::get('/cobranza/mis-actividades', fn() => view('modules.credito.mis-actividades'))->name('cobranza.mis-actividades');
+    Route::get('/cobranza/actividades-masivas', fn() => view('modules.credito.actividades-masivas'))->name('cobranza.actividades-masivas');
 
     // Definiciones Cobranza
     Route::get('/cobranza/def/tipos-contacto',  fn() => view('modules.credito.cobranza-def', ['tipo' => 'tipo_contacto',  'titulo' => 'Tipos de Contacto']))->name('cobranza.def.tipos-contacto');

@@ -47,7 +47,14 @@
       "Bash(node -e \"const {chromium}=require\\('playwright'\\);\\(async\\(\\)=>{const b=await chromium.launch\\({headless:true}\\);const p=await b.newPage\\(\\);await p.goto\\('http://credito-cobranza.test/login'\\);await p.fill\\('input[name=email]','admin@credito.test'\\);await p.fill\\('input[name=password]','password'\\);await p.click\\('button[type=submit]'\\);await p.waitForURL\\('**/dashboard',{timeout:8000}\\);await p.goto\\('http://credito-cobranza.test/admin/credito/clientes'\\);await p.waitForTimeout\\(2000\\);await p.screenshot\\({path:'C:/Users/Usuario/grilla-screenshot.png',fullPage:false}\\);await b.close\\(\\);console.log\\('OK'\\);}\\)\\(\\)\")",
       "Bash(where node *)",
       "Bash(where node.exe)",
-      "Bash(php -r \"echo 'ok';\")"
+      "Bash(php -r \"echo 'ok';\")",
+      "PowerShell(Get-Process *)",
+      "PowerShell(Start-Process \"C:\\\\laragon\\\\laragon.exe\")",
+      "PowerShell(Start-Process \"C:\\\\laragon\\\\bin\\\\nginx\\\\nginx-1.26.2\\\\nginx.exe\" -WorkingDirectory \"C:\\\\laragon\\\\bin\\\\nginx\\\\nginx-1.26.2\")",
+      "PowerShell(Start-Process \"C:\\\\laragon\\\\bin\\\\mysql\\\\mysql-8.4.3-winx64\\\\bin\\\\mysqld.exe\" -ArgumentList \"--defaults-file=C:\\\\laragon\\\\bin\\\\mysql\\\\mysql-8.4.3-winx64\\\\my.ini\")",
+      "PowerShell(Stop-Process *)",
+      "PowerShell(Start-Process $phpFpm -ArgumentList \"-b 127.0.0.1:9001\" -WindowStyle Hidden)",
+      "PowerShell($phpFpm = \"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.30-Win32-vs16-x64\\\\php-cgi.exe\")"
     ]
   }
 }
