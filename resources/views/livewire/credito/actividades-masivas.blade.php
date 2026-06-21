@@ -76,6 +76,8 @@
             </td>
             <td style="{{ $tdC }} text-align:center;">
                 <div style="display:inline-flex; gap:4px;">
+                    <button wire:click="verDetalle({{ $c->id }})"
+                            style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#EDE9FE; color:#7B6FE8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Ver</button>
                     @if ($c->estado === 'abierta')
                     <button wire:click="cambiarEstado({{ $c->id }}, 'en_proceso')"
                             style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#EFF6FF; color:#1D4ED8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;"
@@ -114,6 +116,72 @@
     </div>
 </div>
 
+@endif
+
+{{-- ══ MODO FORM ══ --}}
+{{-- ══ MODO DETAIL ══ --}}
+@if ($mode === 'detail' && $campanaDetalle)
+@php
+    $estMap = ['abierta'=>['#E0F2FE','#0369A1','Abierta'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
+    [$eBg,$eCol,$eLbl] = $estMap[$campanaDetalle->estado] ?? ['#F3F4F6','#6B7280',$campanaDetalle->estado];
+    $stMap = ['abierta'=>['#E0F2FE','#0369A1','Abierta'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
+@endphp
+
+<div style="display:flex; flex-direction:column; gap:12px; height:calc(100vh - 152px); overflow:auto; padding-bottom:16px;">
+
+    <div style="display:flex; align-items:center; gap:10px; flex:none; flex-wrap:wrap;">
+        <button wire:click="backToList" style="height:32px; padding:0 12px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            Volver
+        </button>
+        <span style="font-size:14px; font-weight:700; color:#111827;">{{ $campanaDetalle->nombre }}</span>
+        <span style="padding:2px 10px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $eBg }}; color:{{ $eCol }};">{{ $eLbl }}</span>
+        <span style="font-size:12px; color:#6B7280; margin-left:4px;">{{ $campanaDetalle->tipoContacto?->nombre }} · {{ $campanaDetalle->accion?->nombre }} · {{ $campanaDetalle->fecha_programada?->format('d/m/Y') }}</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:auto;">{{ $campanaDetalle->actividades->count() }} actividades</span>
+    </div>
+
+    <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:1; min-height:0; display:flex; flex-direction:column;">
+        <div style="flex:1; min-height:0; overflow:auto;">
+        <table style="width:100%; border-collapse:collapse; min-width:700px;">
+            <thead style="position:sticky; top:0; z-index:10;">
+                <tr>
+                    <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
+                    <th style="{{ $thC }}">Nº Pedido</th>
+                    <th style="{{ $thC }}">CI</th>
+                    <th style="{{ $thC }}">Cliente</th>
+                    <th style="{{ $thC }}">Teléfono</th>
+                    <th style="{{ $thC }}">Tipo Contacto</th>
+                    <th style="{{ $thC }}">Acción</th>
+                    <th style="{{ $thC }}">Fecha Prog.</th>
+                    <th style="{{ $thC }}">Responsable</th>
+                    <th style="{{ $thC }} text-align:center;">Estado Act.</th>
+                </tr>
+            </thead>
+            <tbody>
+            @forelse($campanaDetalle->actividades as $i => $act)
+            @php [$stBg,$stCol,$stLbl] = $stMap[$act->estado] ?? ['#F3F4F6','#6B7280',$act->estado]; @endphp
+            <tr wire:key="det-{{ $act->id }}" style="border-bottom:1px solid #F9FAFB;" @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
+                <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $i + 1 }}</td>
+                <td style="{{ $tdC }}"><span style="font-family:monospace; font-size:12px; color:#7B6FE8;">{{ $act->caso?->pedido?->numero ?? '—' }}</span></td>
+                <td style="{{ $tdC }} font-size:12px;">{{ $act->caso?->pedido?->cliente?->ci ?? '—' }}</td>
+                <td style="{{ $tdC }} color:#111827;">{{ $act->caso?->pedido?->cliente?->nombre_completo ?? '—' }}</td>
+                <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->caso?->pedido?->cliente?->telefono ?? '—' }}</td>
+                <td style="{{ $tdC }} font-size:12px;">{{ $act->tipoContacto?->nombre ?? '—' }}</td>
+                <td style="{{ $tdC }} font-size:12px;">{{ $act->accion?->nombre ?? '—' }}</td>
+                <td style="{{ $tdC }} font-size:12px;">{{ $act->fecha_programada?->format('d/m/Y') ?? '—' }}</td>
+                <td style="{{ $tdC }} font-size:12px;">{{ $act->responsable?->name ?? '—' }}</td>
+                <td style="{{ $tdC }} text-align:center;">
+                    <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $stBg }}; color:{{ $stCol }};">{{ $stLbl }}</span>
+                </td>
+            </tr>
+            @empty
+            <tr><td colspan="10" style="padding:40px; text-align:center; color:#9CA3AF; font-size:13px;">Sin actividades.</td></tr>
+            @endforelse
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
 @endif
 
 {{-- ══ MODO FORM ══ --}}

@@ -17,6 +17,9 @@ class ActividadesMasivas extends Component
 
     public string $mode = 'list';
 
+    // Detalle
+    public ?int $detalleCampanaId = null;
+
     // Filtros list
     public string $search       = '';
     public string $filtroEstado = '';
@@ -42,6 +45,12 @@ class ActividadesMasivas extends Component
 
     public function updatingSearch(): void  { $this->resetPage(); }
     public function updatingFiltroEstado(): void { $this->resetPage(); }
+
+    public function verDetalle(int $id): void
+    {
+        $this->detalleCampanaId = $id;
+        $this->mode = 'detail';
+    }
 
     public function create(): void
     {
@@ -144,6 +153,7 @@ class ActividadesMasivas extends Component
     public function backToList(): void
     {
         $this->resetForm();
+        $this->detalleCampanaId = null;
         $this->mode = 'list';
     }
 
@@ -198,8 +208,16 @@ class ActividadesMasivas extends Component
             )
             ->get();
 
+        $campanaDetalle = $this->detalleCampanaId
+            ? Campana::with([
+                'tipoContacto', 'accion', 'responsable',
+                'actividades.tipoContacto', 'actividades.accion',
+                'actividades.responsable', 'actividades.caso.pedido.cliente',
+              ])->find($this->detalleCampanaId)
+            : null;
+
         return view('livewire.credito.actividades-masivas', compact(
-            'campanas', 'tiposContacto', 'acciones', 'usuarios', 'casosQuery'
+            'campanas', 'tiposContacto', 'acciones', 'usuarios', 'casosQuery', 'campanaDetalle'
         ));
     }
 }
