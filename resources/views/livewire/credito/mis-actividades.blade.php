@@ -1,11 +1,5 @@
 <div>
 
-@if (session('success'))
-<div style="background:#F0FDF4; color:#15803D; border:1px solid #BBF7D0; border-radius:10px; padding:10px 16px; margin-bottom:12px; font-size:13px; font-weight:600; display:flex; align-items:center; gap:8px;">
-    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-    {{ session('success') }}
-</div>
-@endif
 
 @php
     $thC = 'padding:9px 12px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#F9F8FF; border-bottom:2px solid #EDE9FE;';
