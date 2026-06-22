@@ -54,7 +54,7 @@
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
-        <div style="padding:14px 16px; display:flex; align-items:flex-start; gap:10px; flex-wrap:wrap;">
+        <div style="padding:14px 16px; display:flex; align-items:flex-end; gap:10px; flex-wrap:wrap;">
             <div style="flex:2; min-width:150px;">
                 <label style="{{ $lbl }}">Nombre *</label>
                 <input wire:model="nombre" type="text" placeholder="Ej: WhatsApp Junio 22" style="{{ $inp }}">
@@ -93,14 +93,11 @@
                 <label style="{{ $lbl }}">Observación</label>
                 <input wire:model="observacion" type="text" placeholder="Opcional..." style="{{ $inp }}">
             </div>
-            <div style="display:flex; flex-direction:column; gap:5px; flex-shrink:0;">
-                <label style="{{ $lbl }}">&nbsp;</label>
-                <div style="display:flex; gap:6px;">
-                    <button wire:click="cancelForm" style="height:38px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
-                    <button wire:click="save" wire:loading.attr="disabled" style="height:38px; padding:0 18px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">
-                        {{ $campanaId ? 'Guardar cambios' : 'Crear campaña' }}
-                    </button>
-                </div>
+            <div style="display:flex; gap:6px; flex-shrink:0;">
+                <button wire:click="cancelForm" style="height:38px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
+                <button wire:click="save" wire:loading.attr="disabled" style="height:38px; padding:0 18px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">
+                    {{ $campanaId ? 'Guardar cambios' : 'Crear campaña' }}
+                </button>
             </div>
         </div>
     </div>
