@@ -15,10 +15,13 @@ class ActividadesMasivas extends Component
 {
     use WithPagination;
 
-    public string $mode = 'list'; // list | detail
+    public string $mode = 'list'; // list | detail | casos
 
     // Detalle
     public ?int $detalleCampanaId = null;
+
+    // Casos vinculados a campaña
+    public ?int $casosCampanaId = null;
 
     // Filtros list
     public string $search       = '';
@@ -34,9 +37,7 @@ class ActividadesMasivas extends Component
     public int    $responsableId   = 0;
     public string $observacion     = '';
 
-    // Modal agregar casos
-    public bool   $showModalCasos      = false;
-    public int    $modalCasosCampanaId = 0;
+    // (modal casos eliminado — se usa mode='casos')
     public string $filtroCasoEstado    = '';
     public string $filtroCiclo         = '';
     public array  $selectedCasoIds     = [];
@@ -136,23 +137,20 @@ class ActividadesMasivas extends Component
         $this->showAddForm = false;
     }
 
-    public function abrirCasos(int $id): void
+    public function verCasos(int $id): void
     {
-        $this->modalCasosCampanaId = $id;
-        $this->selectedCasoIds     = [];
-        $this->filtroCasoEstado    = '';
-        $this->filtroCiclo         = '';
-        $this->showModalCasos      = true;
+        $this->casosCampanaId   = $id;
+        $this->filtroCasoEstado = '';
+        $this->filtroCiclo      = '';
+        // Pre-seleccionar casos ya vinculados
+        $this->selectedCasoIds  = CobranzaActividad::where('campana_id', $id)
+            ->pluck('caso_id')->map(fn($v) => (int)$v)->toArray();
+        $this->mode = 'casos';
     }
 
     public function guardarCasos(): void
     {
-        if (empty($this->selectedCasoIds)) {
-            $this->showModalCasos = false;
-            return;
-        }
-
-        $campana   = Campana::findOrFail($this->modalCasosCampanaId);
+        $campana    = Campana::findOrFail($this->casosCampanaId);
         $existentes = CobranzaActividad::where('campana_id', $campana->id)
             ->pluck('caso_id')->map(fn($v) => (int)$v)->toArray();
 
@@ -182,9 +180,9 @@ class ActividadesMasivas extends Component
             }
         }
 
-        $this->showModalCasos      = false;
-        $this->modalCasosCampanaId = 0;
-        $this->selectedCasoIds     = [];
+        $this->casosCampanaId  = null;
+        $this->selectedCasoIds = [];
+        $this->mode            = 'list';
     }
 
     public function cambiarEstado(int $id, string $estado): void
@@ -259,6 +257,8 @@ class ActividadesMasivas extends Component
     public function backToList(): void
     {
         $this->detalleCampanaId = null;
+        $this->casosCampanaId   = null;
+        $this->selectedCasoIds  = [];
         $this->mode             = 'list';
     }
 
@@ -308,6 +308,10 @@ class ActividadesMasivas extends Component
             )
             ->get();
 
+        $casosCampana = $this->casosCampanaId
+            ? Campana::find($this->casosCampanaId)
+            : null;
+
         $campanaDetalle = $this->detalleCampanaId
             ? Campana::with([
                 'tipoContacto', 'accion', 'responsable',
@@ -318,7 +322,7 @@ class ActividadesMasivas extends Component
 
         return view('livewire.credito.actividades-masivas', compact(
             'campanas', 'tiposContacto', 'acciones', 'tiposRespuesta', 'tiposCancelacion',
-            'usuarios', 'casosQuery', 'campanaDetalle'
+            'usuarios', 'casosQuery', 'casosCampana', 'campanaDetalle'
         ));
     }
 }
