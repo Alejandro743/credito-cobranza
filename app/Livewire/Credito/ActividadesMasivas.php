@@ -367,7 +367,9 @@ class ActividadesMasivas extends Component
             ? Campana::with([
                 'tipoContacto', 'accion', 'responsable',
                 'actividades.tipoContacto', 'actividades.accion',
-                'actividades.responsable', 'actividades.caso.pedido.cliente',
+                'actividades.responsable',
+                'actividades.caso.pedido.cliente',
+                'actividades.caso.pedido.items.listaMaestraItem.listaMaestra.cycle',
               ])->find($this->detalleCampanaId)
             : null;
 

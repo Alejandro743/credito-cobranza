@@ -292,6 +292,7 @@
                 <tr>
                     <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
                     <th style="{{ $thC }} text-align:center;">Nº Act.</th>
+                    <th style="{{ $thC }}">Ciclo</th>
                     <th style="{{ $thC }}">Nº Pedido</th>
                     <th style="{{ $thC }}">CI</th>
                     <th style="{{ $thC }}">Cliente</th>
@@ -305,12 +306,16 @@
             </thead>
             <tbody>
             @forelse($campanaDetalle->actividades as $i => $act)
-            @php [$stBg,$stCol,$stLbl] = $stMap[$act->estado] ?? ['#F3F4F6','#6B7280',$act->estado]; @endphp
+            @php
+                [$stBg,$stCol,$stLbl] = $stMap[$act->estado] ?? ['#F3F4F6','#6B7280',$act->estado];
+                $actCiclo = $act->caso?->pedido?->items?->first()?->listaMaestraItem?->listaMaestra?->cycle?->code ?? '—';
+            @endphp
             <tr wire:key="det-{{ $act->id }}" style="border-bottom:1px solid #F9FAFB;" @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
                 <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $i + 1 }}</td>
                 <td style="{{ $tdC }} text-align:center;">
                     <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:20px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">#{{ $act->numero }}</span>
                 </td>
+                <td style="{{ $tdC }} font-size:12px; font-weight:600; color:#374151;">{{ $actCiclo }}</td>
                 <td style="{{ $tdC }}"><span style="font-family:monospace; font-size:12px; color:#7B6FE8;">{{ $act->caso?->pedido?->numero ?? '—' }}</span></td>
                 <td style="{{ $tdC }} font-size:12px;">{{ $act->caso?->pedido?->cliente?->ci ?? '—' }}</td>
                 <td style="{{ $tdC }} color:#111827;">{{ $act->caso?->pedido?->cliente?->nombre_completo ?? '—' }}</td>
@@ -324,7 +329,7 @@
                 </td>
             </tr>
             @empty
-            <tr><td colspan="11" style="padding:40px; text-align:center; color:#9CA3AF; font-size:13px;">Sin actividades.</td></tr>
+            <tr><td colspan="12" style="padding:40px; text-align:center; color:#9CA3AF; font-size:13px;">Sin actividades.</td></tr>
             @endforelse
             </tbody>
         </table>
