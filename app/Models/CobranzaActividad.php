@@ -11,7 +11,7 @@ class CobranzaActividad extends Model
     protected $table = 'cobranza_actividades';
 
     protected $fillable = [
-        'caso_id', 'numero', 'actividad_origen_id',
+        'caso_id', 'numero', 'actividad_origen_id', 'campana_id',
         'tipo_contacto_id', 'accion_id', 'tipo_respuesta_id',
         'responsable_id', 'fecha_programada', 'fecha_inicio', 'fecha_cierre',
         'observacion', 'observacion_cierre', 'estado',
