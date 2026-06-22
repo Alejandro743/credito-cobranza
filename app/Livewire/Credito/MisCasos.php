@@ -115,6 +115,7 @@ class MisCasos extends Component
     public function abrirEditarActividad(int $id): void
     {
         $act = CobranzaActividad::findOrFail($id);
+        if (in_array($act->estado, ['cerrada', 'cancelada'])) return;
         $this->actividadId    = $id;
         $this->actEstado      = $act->estado;
         $this->tipoContactoId = $act->tipo_contacto_id ?? 0;

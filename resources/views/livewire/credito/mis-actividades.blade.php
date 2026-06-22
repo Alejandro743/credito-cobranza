@@ -150,12 +150,14 @@
                             Cerrar
                         </button>
                         @endif
+                        @if (!in_array($act->estado, ['cerrada','cancelada']))
                         <button wire:click="abrirEditarActividad({{ $act->id }})" @click="menuOpen=false"
                                 style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; text-align:center; justify-content:center;"
                                 @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
                             <svg width="12" height="12" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                             Editar
                         </button>
+                        @endif
                         @if (in_array($act->estado, ['abierta','en_proceso']))
                         <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
                         <button wire:click="abrirCancelarActividad({{ $act->id }})" @click="menuOpen=false"

@@ -63,6 +63,7 @@ class MisActividades extends Component
     public function abrirEditarActividad(int $id): void
     {
         $act = CobranzaActividad::findOrFail($id);
+        if (in_array($act->estado, ['cerrada', 'cancelada'])) return;
         $this->actividadId     = $id;
         $this->actCasoId       = $act->caso_id;
         $this->actEstado       = $act->estado;
