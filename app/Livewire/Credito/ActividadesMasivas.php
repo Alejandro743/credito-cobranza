@@ -27,15 +27,23 @@ class ActividadesMasivas extends Component
     public string $search       = '';
     public string $filtroEstado = '';
 
-    // Form inline campaña
+    // Form inline campaña (nueva)
     public bool   $showAddForm   = false;
-    public int    $campanaId     = 0;
     public string $nombre        = '';
     public int    $tipoContactoId  = 0;
     public int    $accionId        = 0;
     public string $fechaProgramada = '';
     public int    $responsableId   = 0;
     public string $observacion     = '';
+
+    // Edición inline en fila
+    public ?int   $editingCampanaId   = null;
+    public string $editNombre         = '';
+    public int    $editTipoContactoId = 0;
+    public int    $editAccionId       = 0;
+    public string $editFechaProgramada = '';
+    public int    $editResponsableId  = 0;
+    public string $editObservacion    = '';
 
     // (modal casos eliminado — se usa mode='casos')
     public string $filtroCasoEstado    = '';
@@ -77,14 +85,61 @@ class ActividadesMasivas extends Component
     public function edit(int $id): void
     {
         $c = Campana::findOrFail($id);
-        $this->campanaId       = $c->id;
-        $this->nombre          = $c->nombre;
-        $this->tipoContactoId  = $c->tipo_contacto_id ?? 0;
-        $this->accionId        = $c->accion_id ?? 0;
-        $this->fechaProgramada = $c->fecha_programada?->format('Y-m-d') ?? '';
-        $this->responsableId   = $c->responsable_id ?? auth()->id();
-        $this->observacion     = $c->observacion ?? '';
-        $this->showAddForm     = true;
+        $this->editingCampanaId    = $c->id;
+        $this->editNombre          = $c->nombre;
+        $this->editTipoContactoId  = $c->tipo_contacto_id ?? 0;
+        $this->editAccionId        = $c->accion_id ?? 0;
+        $this->editFechaProgramada = $c->fecha_programada?->format('Y-m-d') ?? '';
+        $this->editResponsableId   = $c->responsable_id ?? auth()->id();
+        $this->editObservacion     = $c->observacion ?? '';
+    }
+
+    public function saveEdit(): void
+    {
+        $this->validate([
+            'editNombre'          => 'required|string|max:150',
+            'editTipoContactoId'  => 'required|integer|min:1',
+            'editAccionId'        => 'required|integer|min:1',
+            'editFechaProgramada' => 'required|date',
+            'editResponsableId'   => 'required|integer|min:1',
+        ], [
+            'editNombre.required'         => 'El nombre es obligatorio.',
+            'editTipoContactoId.min'      => 'Seleccioná un tipo de contacto.',
+            'editAccionId.min'            => 'Seleccioná una acción.',
+            'editFechaProgramada.required'=> 'La fecha es obligatoria.',
+            'editResponsableId.min'       => 'Seleccioná un responsable.',
+        ]);
+
+        $campana = Campana::findOrFail($this->editingCampanaId);
+        $campana->update([
+            'nombre'           => $this->editNombre,
+            'tipo_contacto_id' => $this->editTipoContactoId,
+            'accion_id'        => $this->editAccionId,
+            'fecha_programada' => $this->editFechaProgramada,
+            'responsable_id'   => $this->editResponsableId,
+            'observacion'      => $this->editObservacion ?: null,
+        ]);
+        $campana->actividades()->where('estado', 'abierta')->update([
+            'tipo_contacto_id' => $this->editTipoContactoId,
+            'accion_id'        => $this->editAccionId,
+            'fecha_programada' => $this->editFechaProgramada,
+            'responsable_id'   => $this->editResponsableId,
+            'observacion'      => $this->editObservacion ?: null,
+        ]);
+
+        $this->cancelEdit();
+    }
+
+    public function cancelEdit(): void
+    {
+        $this->editingCampanaId    = null;
+        $this->editNombre          = '';
+        $this->editTipoContactoId  = 0;
+        $this->editAccionId        = 0;
+        $this->editFechaProgramada = '';
+        $this->editResponsableId   = 0;
+        $this->editObservacion     = '';
+        $this->resetValidation();
     }
 
     public function cancelForm(): void
@@ -109,29 +164,15 @@ class ActividadesMasivas extends Component
             'responsableId.min'       => 'Seleccioná un responsable.',
         ]);
 
-        $datos = [
+        Campana::create([
             'nombre'           => $this->nombre,
             'tipo_contacto_id' => $this->tipoContactoId,
             'accion_id'        => $this->accionId,
             'fecha_programada' => $this->fechaProgramada,
             'responsable_id'   => $this->responsableId,
             'observacion'      => $this->observacion ?: null,
-        ];
-
-        if ($this->campanaId) {
-            $campana = Campana::findOrFail($this->campanaId);
-            $campana->update($datos);
-            // Sincronizar actividades abierta con nuevos datos
-            $campana->actividades()->where('estado', 'abierta')->update([
-                'tipo_contacto_id' => $this->tipoContactoId,
-                'accion_id'        => $this->accionId,
-                'fecha_programada' => $this->fechaProgramada,
-                'responsable_id'   => $this->responsableId,
-                'observacion'      => $this->observacion ?: null,
-            ]);
-        } else {
-            Campana::create(array_merge($datos, ['creado_por' => auth()->id()]));
-        }
+            'creado_por'       => auth()->id(),
+        ]);
 
         $this->resetFormFields();
         $this->showAddForm = false;
@@ -264,7 +305,6 @@ class ActividadesMasivas extends Component
 
     private function resetFormFields(): void
     {
-        $this->campanaId        = 0;
         $this->nombre           = '';
         $this->tipoContactoId   = 0;
         $this->accionId         = 0;

@@ -48,7 +48,7 @@
         <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:10px 16px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:13px; font-weight:800; color:#7B6FE8; display:flex; align-items:center; gap:7px;">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                {{ $campanaId ? 'Editar campaña' : 'Nueva campaña' }}
+                Nueva campaña
             </span>
             <button wire:click="cancelForm" style="width:28px; height:28px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -129,15 +129,73 @@
             @php
                 $estMap = ['abierta'=>['#E0F2FE','#0369A1','Sin Iniciar'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
                 [$eBg,$eCol,$eLbl] = $estMap[$c->estado] ?? ['#F3F4F6','#6B7280',$c->estado];
+                $editing = $editingCampanaId === $c->id;
+                $iE = 'width:100%; height:26px; padding:0 6px; border:1px solid #EDE9FE; border-radius:6px; font-size:12px; color:#374151; outline:none; background:#fff; box-sizing:border-box;';
+                $sE = 'width:100%; height:26px; padding:0 4px; border:1px solid #EDE9FE; border-radius:6px; font-size:11px; color:#374151; outline:none; background:#fff; cursor:pointer; box-sizing:border-box;';
             @endphp
-            <tr wire:key="camp-{{ $c->id }}" style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
-                @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
+            <tr wire:key="camp-{{ $c->id }}" style="border-bottom:1px solid #F9FAFB; transition:background .1s; {{ $editing ? 'background:#F8F7FF;' : '' }}"
+                @mouseenter="$el.style.background='{{ $editing ? '#F8F7FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $editing ? '#F8F7FF' : '' }}'" x-data>
                 <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $campanas->firstItem() + $loop->index }}</td>
-                <td style="{{ $tdC }} font-weight:600; color:#111827;">{{ $c->nombre }}</td>
-                <td style="{{ $tdC }} font-size:12px;">{{ $c->tipoContacto?->nombre ?? '—' }}</td>
-                <td style="{{ $tdC }} font-size:12px;">{{ $c->accion?->nombre ?? '—' }}</td>
-                <td style="{{ $tdC }} font-size:12px;">{{ $c->fecha_programada?->format('d/m/Y') ?? '—' }}</td>
-                <td style="{{ $tdC }} font-size:12px;">{{ $c->responsable?->name ?? '—' }}</td>
+
+                {{-- Nombre --}}
+                <td style="{{ $tdC }} font-weight:600; color:#111827; min-width:140px;">
+                    @if($editing)
+                        <input wire:model="editNombre" type="text" style="{{ $iE }}">
+                        @error('editNombre') <p style="font-size:10px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
+                    @else
+                        {{ $c->nombre }}
+                    @endif
+                </td>
+
+                {{-- Tipo Contacto --}}
+                <td style="{{ $tdC }} font-size:12px; min-width:110px;">
+                    @if($editing)
+                        <select wire:model="editTipoContactoId" style="{{ $sE }}">
+                            <option value="0">—</option>
+                            @foreach($tiposContacto as $t)<option value="{{ $t->id }}">{{ $t->nombre }}</option>@endforeach
+                        </select>
+                        @error('editTipoContactoId') <p style="font-size:10px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
+                    @else
+                        {{ $c->tipoContacto?->nombre ?? '—' }}
+                    @endif
+                </td>
+
+                {{-- Acción --}}
+                <td style="{{ $tdC }} font-size:12px; min-width:100px;">
+                    @if($editing)
+                        <select wire:model="editAccionId" style="{{ $sE }}">
+                            <option value="0">—</option>
+                            @foreach($acciones as $a)<option value="{{ $a->id }}">{{ $a->nombre }}</option>@endforeach
+                        </select>
+                        @error('editAccionId') <p style="font-size:10px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
+                    @else
+                        {{ $c->accion?->nombre ?? '—' }}
+                    @endif
+                </td>
+
+                {{-- Fecha --}}
+                <td style="{{ $tdC }} font-size:12px; min-width:110px;">
+                    @if($editing)
+                        <input wire:model="editFechaProgramada" type="date" style="{{ $iE }}">
+                        @error('editFechaProgramada') <p style="font-size:10px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
+                    @else
+                        {{ $c->fecha_programada?->format('d/m/Y') ?? '—' }}
+                    @endif
+                </td>
+
+                {{-- Responsable --}}
+                <td style="{{ $tdC }} font-size:12px; min-width:110px;">
+                    @if($editing)
+                        <select wire:model="editResponsableId" style="{{ $sE }}">
+                            <option value="0">—</option>
+                            @foreach($usuarios as $u)<option value="{{ $u->id }}">{{ $u->name }}</option>@endforeach
+                        </select>
+                        @error('editResponsableId') <p style="font-size:10px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
+                    @else
+                        {{ $c->responsable?->name ?? '—' }}
+                    @endif
+                </td>
+
                 <td style="{{ $tdC }} text-align:center;">
                     <span style="display:inline-flex; align-items:center; justify-content:center; min-width:28px; height:20px; border-radius:6px; font-size:12px; font-weight:600; background:#EDE9FE; color:#7B6FE8; padding:0 6px;">{{ $c->actividades_count }}</span>
                 </td>
@@ -146,25 +204,32 @@
                 </td>
                 <td style="{{ $tdC }} text-align:center;">
                     <div style="display:inline-flex; gap:4px; align-items:center;">
-                        <button wire:click="verDetalle({{ $c->id }})" title="Ver actividades"
-                                style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#EDE9FE; color:#7B6FE8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Ver</button>
-                        @if (in_array($c->estado, ['abierta','en_proceso']))
-                        <button wire:click="verCasos({{ $c->id }})" title="Casos vinculados"
-                                style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#F0FDF4; color:#065F46; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Casos</button>
-                        @endif
-                        @if ($c->estado === 'abierta')
-                        <button wire:click="cambiarEstado({{ $c->id }}, 'en_proceso')" title="Iniciar"
-                                style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#EFF6FF; color:#1D4ED8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Iniciar</button>
-                        @endif
-                        @if ($c->estado === 'en_proceso')
-                        <button wire:click="cambiarEstado({{ $c->id }}, 'cerrada')" title="Cerrar"
-                                style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#F0FDF4; color:#065F46; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cerrar</button>
-                        @endif
-                        @if (in_array($c->estado, ['abierta','en_proceso']))
-                        <button wire:click="edit({{ $c->id }})" title="Editar"
-                                style="height:24px; padding:0 8px; border:1px solid #E5E7EB; border-radius:5px; background:#F9FAFB; color:#374151; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Editar</button>
-                        <button wire:click="cambiarEstado({{ $c->id }}, 'cancelada')" title="Cancelar"
-                                style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#FEF2F2; color:#B91C1C; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cancelar</button>
+                        @if($editing)
+                            <button wire:click="saveEdit"
+                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#7B6FE8; color:#fff; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Guardar</button>
+                            <button wire:click="cancelEdit"
+                                    style="height:24px; padding:0 8px; border:1px solid #E5E7EB; border-radius:5px; background:#fff; color:#6B7280; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cancelar</button>
+                        @else
+                            <button wire:click="verDetalle({{ $c->id }})"
+                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#EDE9FE; color:#7B6FE8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Ver</button>
+                            @if (in_array($c->estado, ['abierta','en_proceso']))
+                            <button wire:click="verCasos({{ $c->id }})"
+                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#F0FDF4; color:#065F46; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Casos</button>
+                            @endif
+                            @if ($c->estado === 'abierta')
+                            <button wire:click="cambiarEstado({{ $c->id }}, 'en_proceso')"
+                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#EFF6FF; color:#1D4ED8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Iniciar</button>
+                            @endif
+                            @if ($c->estado === 'en_proceso')
+                            <button wire:click="cambiarEstado({{ $c->id }}, 'cerrada')"
+                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#F0FDF4; color:#065F46; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cerrar</button>
+                            @endif
+                            @if (in_array($c->estado, ['abierta','en_proceso']))
+                            <button wire:click="edit({{ $c->id }})"
+                                    style="height:24px; padding:0 8px; border:1px solid #E5E7EB; border-radius:5px; background:#F9FAFB; color:#374151; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Editar</button>
+                            <button wire:click="cambiarEstado({{ $c->id }}, 'cancelada')"
+                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#FEF2F2; color:#B91C1C; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cancelar</button>
+                            @endif
                         @endif
                     </div>
                 </td>
