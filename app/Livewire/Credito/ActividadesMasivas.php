@@ -289,7 +289,7 @@ class ActividadesMasivas extends Component
         $tiposCancelacion = CobranzaCatalogo::where('tipo', 'tipo_cancelacion')->where('activo', true)->orderBy('nombre')->get();
         $usuarios         = User::where('active', true)->orderBy('name')->get();
 
-        $casosQuery = CobranzaCaso::with(['pedido.cliente'])
+        $casosQuery = CobranzaCaso::with(['pedido.cliente', 'pedido.items.listaMaestraItem.listaMaestra.cycle'])
             ->whereIn('estado', ['asignado', 'en_gestion'])
             ->where('responsable_id', auth()->id())
             ->when($this->filtroCasoEstado, fn($q) => $q->where('estado', $this->filtroCasoEstado))

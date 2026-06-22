@@ -303,27 +303,26 @@
         </select>
         <input wire:model.live.debounce.300ms="filtroCiclo" type="text" placeholder="Filtrar ciclo..."
                style="width:130px; height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 10px; font-size:13px; color:#374151; outline:none; background:#fff;">
-        <label style="display:flex; align-items:center; gap:7px; height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; background:#fff; font-size:13px; color:#374151; cursor:pointer;">
-            <input type="checkbox"
-                   @change="const ids = @js($casosQuery->pluck('id')->toArray()); $wire.selectedCasoIds = $event.target.checked ? ids : [];"
-                   style="accent-color:#7B6FE8; width:13px; height:13px;">
-            Todos
-        </label>
     </div>
 
     {{-- Tabla --}}
     <div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 1px 4px rgba(0,0,0,.04); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 280px);">
         <div style="padding:10px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
-            <span style="font-size:13px; font-weight:700; color:#111827;">Mis casos</span>
-            <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $casosQuery->count() }}</span>
+            <span style="font-size:13px; font-weight:700; color:#111827;">Mis casos &nbsp;<span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $casosQuery->count() }}</span></span>
         </div>
         <div style="overflow:auto; flex:1;">
-        <table style="width:100%; border-collapse:collapse; min-width:600px;">
+        <table style="width:100%; border-collapse:collapse; min-width:650px;">
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr>
                     <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
-                    <th style="width:40px; background:#F9F8FF; border-bottom:2px solid #EDE9FE;"></th>
+                    <th style="width:40px; background:#F9F8FF; border-bottom:2px solid #EDE9FE; text-align:center; padding:9px 0;">
+                        <input type="checkbox" x-data
+                               @change="const ids = @js($casosQuery->pluck('id')->toArray()); $wire.selectedCasoIds = $event.target.checked ? ids : [];"
+                               :checked="{{ count($selectedCasoIds) > 0 && count($selectedCasoIds) === $casosQuery->count() ? 'true' : 'false' }}"
+                               style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                    </th>
                     <th style="{{ $thC }}">Nº Pedido</th>
+                    <th style="{{ $thC }}">Ciclo</th>
                     <th style="{{ $thC }}">CI</th>
                     <th style="{{ $thC }}">Cliente</th>
                     <th style="{{ $thC }}">Teléfono</th>
@@ -336,6 +335,7 @@
                 $estBadge = ['asignado'=>['#D1FAE5','#065F46'],'en_gestion'=>['#EFF6FF','#1D4ED8']];
                 [$cBg,$cCol] = $estBadge[$caso->estado] ?? ['#F3F4F6','#6B7280'];
                 $selCaso = in_array($caso->id, $selectedCasoIds);
+                $cicloCode = $caso->pedido?->items?->first()?->listaMaestraItem?->listaMaestra?->cycle?->code ?? '—';
             @endphp
             <tr wire:key="caso-v-{{ $caso->id }}"
                 style="border-bottom:1px solid #F3F4F6; background:{{ $selCaso ? '#F5F3FF' : '#fff' }}; cursor:pointer; transition:background .1s;" x-data
@@ -350,6 +350,7 @@
                            style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
                 </td>
                 <td style="{{ $tdC }}"><span style="font-family:monospace; font-size:12px; color:#7B6FE8;">{{ $caso->pedido?->numero ?? '—' }}</span></td>
+                <td style="{{ $tdC }} font-size:12px; font-weight:600; color:#374151;">{{ $cicloCode }}</td>
                 <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->pedido?->cliente?->ci ?? '—' }}</td>
                 <td style="{{ $tdC }} color:#111827;">{{ $caso->pedido?->cliente?->nombre_completo ?? '—' }}</td>
                 <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->pedido?->cliente?->telefono ?? '—' }}</td>
@@ -358,7 +359,7 @@
                 </td>
             </tr>
             @empty
-            <tr><td colspan="7" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">No hay casos disponibles.</td></tr>
+            <tr><td colspan="8" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">No hay casos disponibles.</td></tr>
             @endforelse
             </tbody>
         </table>
