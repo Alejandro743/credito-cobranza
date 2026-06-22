@@ -76,11 +76,6 @@
                 </select>
                 @error('accionId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
-            <div style="flex:1; min-width:120px;">
-                <label style="{{ $lbl }}">Fecha Prog. *</label>
-                <input wire:model="fechaProgramada" type="date" style="{{ $inp }}">
-                @error('fechaProgramada') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-            </div>
             <div style="flex:1; min-width:130px;">
                 <label style="{{ $lbl }}">Responsable *</label>
                 <select wire:model="responsableId" style="{{ $sel }}">
@@ -89,15 +84,23 @@
                 </select>
                 @error('responsableId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
+            <div style="flex:1; min-width:120px;">
+                <label style="{{ $lbl }}">Fecha Prog. *</label>
+                <input wire:model="fechaProgramada" type="date" style="{{ $inp }}">
+                @error('fechaProgramada') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
             <div style="flex:1.5; min-width:130px;">
                 <label style="{{ $lbl }}">Observación</label>
                 <input wire:model="observacion" type="text" placeholder="Opcional..." style="{{ $inp }}">
             </div>
-            <div style="display:flex; align-items:flex-end; gap:6px; flex-shrink:0;">
-                <button wire:click="cancelForm" style="height:38px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
-                <button wire:click="save" wire:loading.attr="disabled" style="height:38px; padding:0 18px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">
-                    {{ $campanaId ? 'Guardar cambios' : 'Crear campaña' }}
-                </button>
+            <div style="display:flex; flex-direction:column; gap:5px; flex-shrink:0;">
+                <label style="{{ $lbl }}">&nbsp;</label>
+                <div style="display:flex; gap:6px;">
+                    <button wire:click="cancelForm" style="height:38px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
+                    <button wire:click="save" wire:loading.attr="disabled" style="height:38px; padding:0 18px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">
+                        {{ $campanaId ? 'Guardar cambios' : 'Crear campaña' }}
+                    </button>
+                </div>
             </div>
         </div>
     </div>
