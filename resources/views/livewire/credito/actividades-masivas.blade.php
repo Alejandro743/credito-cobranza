@@ -255,29 +255,38 @@
 {{-- ══ MODO DETAIL ══ --}}
 @if ($mode === 'detail' && $campanaDetalle)
 @php
-    $estMap = ['abierta'=>['#E0F2FE','#0369A1','Sin Iniciar'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
-    [$eBg,$eCol,$eLbl] = $estMap[$campanaDetalle->estado] ?? ['#F3F4F6','#6B7280',$campanaDetalle->estado];
     $stMap = ['abierta'=>['#E0F2FE','#0369A1','Sin Iniciar'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
+    [$dBg,$dCol,$dLbl] = $stMap[$campanaDetalle->estado] ?? ['#F3F4F6','#6B7280',$campanaDetalle->estado];
 @endphp
+<div>
 
-<div style="display:flex; flex-direction:column; gap:12px; height:calc(100vh - 152px);">
-
-    <div style="display:flex; align-items:center; gap:10px; flex:none; flex-wrap:wrap;">
-        <button wire:click="backToList" style="height:32px; padding:0 12px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px;">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-            Volver
-        </button>
-        <span style="font-size:14px; font-weight:700; color:#111827;">{{ $campanaDetalle->nombre }}</span>
-        <span style="padding:2px 10px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $eBg }}; color:{{ $eCol }};">{{ $eLbl }}</span>
-        <span style="font-size:12px; color:#6B7280; margin-left:4px;">{{ $campanaDetalle->tipoContacto?->nombre }} · {{ $campanaDetalle->accion?->nombre }} · {{ $campanaDetalle->fecha_programada?->format('d/m/Y') }}</span>
+    {{-- Card header — mismo formato que modo casos --}}
+    <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); margin-bottom:20px; overflow:hidden;">
+        <div style="padding:13px 18px; display:flex; align-items:center; justify-content:space-between; gap:12px; flex-wrap:wrap;">
+            <div style="display:flex; align-items:center; gap:12px; min-width:0;">
+                <button wire:click="backToList"
+                        style="width:34px; height:34px; border-radius:9px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+                </button>
+                <div style="min-width:0;">
+                    <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.6px; margin:0 0 2px;">Actividades de campaña</p>
+                    <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $campanaDetalle->nombre }}</p>
+                </div>
+            </div>
+            <div style="display:flex; align-items:center; gap:6px;">
+                <span style="padding:2px 10px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $dBg }}; color:{{ $dCol }};">{{ $dLbl }}</span>
+                <span style="font-size:12px; color:#6B7280;">{{ $campanaDetalle->tipoContacto?->nombre }} · {{ $campanaDetalle->accion?->nombre }} · {{ $campanaDetalle->fecha_programada?->format('d/m/Y') }}</span>
+            </div>
+        </div>
     </div>
 
-    <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:1; min-height:0; display:flex; flex-direction:column;">
-        <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
-            <span style="font-size:13px; font-weight:700; color:#111827;">Actividades</span>
-            <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $campanaDetalle->actividades->count() }}</span>
+    {{-- Panel tabla actividades --}}
+    <div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 1px 4px rgba(0,0,0,.04); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 280px);">
+        <div style="padding:10px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
+            <span style="font-size:13px; font-weight:700; color:#111827;">Actividades &nbsp;<span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $campanaDetalle->actividades->count() }}</span></span>
         </div>
-        <div style="flex:1; min-height:0; overflow:auto;">
+        <div style="overflow:auto; flex:1;">
         <table style="width:100%; border-collapse:collapse; min-width:700px;">
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr>
@@ -323,6 +332,7 @@
     </div>
 </div>
 @endif
+
 
 {{-- ══ MODO CASOS ══ --}}
 @if ($mode === 'casos' && $casosCampana)
