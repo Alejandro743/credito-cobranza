@@ -149,10 +149,8 @@
                         <button wire:click="verDetalle({{ $c->id }})" title="Ver actividades"
                                 style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#EDE9FE; color:#7B6FE8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Ver</button>
                         @if (in_array($c->estado, ['abierta','en_proceso']))
-                        <button wire:click="abrirCasos({{ $c->id }})" title="Agregar casos"
-                                style="width:24px; height:24px; border:none; border-radius:5px; background:#F0FDF4; color:#065F46; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
-                            <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-                        </button>
+                        <button wire:click="verCasos({{ $c->id }})" title="Casos vinculados"
+                                style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#F0FDF4; color:#065F46; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Casos</button>
                         @endif
                         @if ($c->estado === 'abierta')
                         <button wire:click="cambiarEstado({{ $c->id }}, 'en_proceso')" title="Iniciar"
@@ -261,20 +259,28 @@
 </div>
 @endif
 
-{{-- ══ MODAL: AGREGAR CASOS ══ --}}
-<div x-data="{ open: @entangle('showModalCasos') }">
-<template x-teleport="body">
-<div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
-    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:680px; max-height:90vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
-        <div style="{{ $mHead }}">
-            <div style="width:32px; height:32px; border-radius:8px; background:#DCFCE7; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg width="16" height="16" fill="none" stroke="#065F46" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/></svg>
-            </div>
-            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Agregar casos</p>
-            <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ count($selectedCasoIds) }} seleccionados</span>
-            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
-        </div>
-        <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex-wrap:wrap; background:#fff; flex-shrink:0;">
+{{-- ══ MODO CASOS ══ --}}
+@if ($mode === 'casos' && $casosCampana)
+
+<div style="display:flex; flex-direction:column; gap:12px; height:calc(100vh - 152px);">
+
+    {{-- Header --}}
+    <div style="display:flex; align-items:center; gap:10px; flex:none; flex-wrap:wrap;">
+        <button wire:click="backToList" style="height:32px; padding:0 12px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px;">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
+            Volver
+        </button>
+        <span style="font-size:14px; font-weight:700; color:#111827;">{{ $casosCampana->nombre }}</span>
+        <span style="font-size:12px; color:#6B7280;">Casos vinculados</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:auto;">{{ count($selectedCasoIds) }} seleccionados</span>
+    </div>
+
+    {{-- Panel tabla casos --}}
+    <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:1; min-height:0; display:flex; flex-direction:column;">
+
+        {{-- Filtros + botón guardar --}}
+        <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none; flex-wrap:wrap;">
+            <span style="font-size:13px; font-weight:700; color:#111827;">Mis casos</span>
             <select wire:model.live="filtroCasoEstado"
                     style="height:28px; padding:0 8px; border:1px solid #E5E7EB; border-radius:6px; font-size:12px; outline:none; background:#fff; cursor:pointer;">
                 <option value="">Todos los estados</option>
@@ -283,19 +289,28 @@
             </select>
             <input wire:model.live.debounce.300ms="filtroCiclo" type="text" placeholder="Filtrar ciclo..."
                    style="height:28px; padding:0 8px; border:1px solid #E5E7EB; border-radius:6px; font-size:12px; outline:none; background:#fff; width:100px;">
-            <label style="display:flex; align-items:center; gap:5px; font-size:12px; color:#374151; cursor:pointer; margin-left:auto;">
+            <label style="display:flex; align-items:center; gap:5px; font-size:12px; color:#374151; cursor:pointer;">
                 <input type="checkbox"
                        @change="const ids = @js($casosQuery->pluck('id')->toArray()); $wire.selectedCasoIds = $event.target.checked ? ids : [];"
                        style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
                 Todos
             </label>
+            <div style="margin-left:auto; display:flex; gap:6px;">
+                <button wire:click="backToList" style="height:30px; padding:0 12px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:12px; font-weight:600; cursor:pointer;">Cancelar</button>
+                <button wire:click="guardarCasos" wire:loading.attr="disabled"
+                        style="height:30px; padding:0 14px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;">
+                    Guardar casos
+                </button>
+            </div>
         </div>
-        <div style="flex:1; overflow:auto; min-height:0;">
-        <table style="width:100%; border-collapse:collapse;">
+
+        {{-- Tabla --}}
+        <div style="flex:1; min-height:0; overflow:auto;">
+        <table style="width:100%; border-collapse:collapse; min-width:600px;">
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr>
                     <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
-                    <th style="width:36px; background:#F9F8FF; border-bottom:2px solid #EDE9FE;"></th>
+                    <th style="width:40px; background:#F9F8FF; border-bottom:2px solid #EDE9FE;"></th>
                     <th style="{{ $thC }}">Nº Pedido</th>
                     <th style="{{ $thC }}">CI</th>
                     <th style="{{ $thC }}">Cliente</th>
@@ -310,7 +325,8 @@
                 [$cBg,$cCol] = $estBadge[$caso->estado] ?? ['#F3F4F6','#6B7280'];
                 $selCaso = in_array($caso->id, $selectedCasoIds);
             @endphp
-            <tr wire:key="mcaso-{{ $caso->id }}" style="border-bottom:1px solid #F9FAFB; background:{{ $selCaso ? '#F5F3FF' : '#fff' }}; cursor:pointer;" x-data
+            <tr wire:key="caso-v-{{ $caso->id }}"
+                style="border-bottom:1px solid #F9FAFB; background:{{ $selCaso ? '#F5F3FF' : '#fff' }}; cursor:pointer; transition:background .1s;" x-data
                 @click="$wire.selectedCasoIds = {{ $selCaso ? 'true' : 'false' }}
                     ? $wire.selectedCasoIds.filter(id => id != {{ $caso->id }})
                     : [...$wire.selectedCasoIds, {{ $caso->id }}]">
@@ -328,21 +344,15 @@
                 </td>
             </tr>
             @empty
-            <tr><td colspan="7" style="padding:32px; text-align:center; color:#9CA3AF; font-size:13px;">No hay casos disponibles.</td></tr>
+            <tr><td colspan="7" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">No hay casos disponibles.</td></tr>
             @endforelse
             </tbody>
         </table>
         </div>
-        <div style="{{ $mFoot }}">
-            <button @click="open=false" style="height:36px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
-            <button wire:click="guardarCasos" wire:loading.attr="disabled" style="height:36px; padding:0 18px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">
-                Agregar {{ count($selectedCasoIds) > 0 ? count($selectedCasoIds).' caso(s)' : '' }}
-            </button>
-        </div>
     </div>
 </div>
-</template>
-</div>
+
+@endif
 
 {{-- ══ MODAL: CERRAR CAMPAÑA ══ --}}
 <div x-data="{ open: @entangle('showModalCerrar') }">
