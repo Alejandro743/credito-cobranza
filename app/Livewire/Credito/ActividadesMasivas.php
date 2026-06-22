@@ -96,6 +96,12 @@ class ActividadesMasivas extends Component
 
     public function saveEdit(): void
     {
+        $campana = Campana::findOrFail($this->editingCampanaId);
+        if ($campana->estado !== 'abierta') {
+            $this->cancelEdit();
+            return;
+        }
+
         $this->validate([
             'editNombre'          => 'required|string|max:150',
             'editTipoContactoId'  => 'required|integer|min:1',
@@ -110,7 +116,6 @@ class ActividadesMasivas extends Component
             'editResponsableId.min'       => 'Seleccioná un responsable.',
         ]);
 
-        $campana = Campana::findOrFail($this->editingCampanaId);
         $campana->update([
             'nombre'           => $this->editNombre,
             'tipo_contacto_id' => $this->editTipoContactoId,

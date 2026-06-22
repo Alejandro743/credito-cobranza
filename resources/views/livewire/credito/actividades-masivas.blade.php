@@ -224,7 +224,7 @@
                             <button wire:click="cambiarEstado({{ $c->id }}, 'cerrada')"
                                     style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#F0FDF4; color:#065F46; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cerrar</button>
                             @endif
-                            @if (in_array($c->estado, ['abierta','en_proceso']))
+                            @if ($c->estado === 'abierta')
                             <button wire:click="edit({{ $c->id }})"
                                     style="height:24px; padding:0 8px; border:1px solid #E5E7EB; border-radius:5px; background:#F9FAFB; color:#374151; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Editar</button>
                             <button wire:click="cambiarEstado({{ $c->id }}, 'cancelada')"
