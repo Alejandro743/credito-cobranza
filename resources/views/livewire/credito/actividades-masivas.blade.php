@@ -262,7 +262,7 @@
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
                 <select wire:model.live="filtroCasoEstado"
                         style="height:30px; padding:0 8px; border:1px solid #E5E7EB; border-radius:6px; font-size:12px; outline:none; background:#fff; cursor:pointer;">
-                    <option value="">Todos</option>
+                    <option value="">Todos los estados</option>
                     <option value="asignado">Asignado</option>
                     <option value="en_gestion">En Gestión</option>
                 </select>

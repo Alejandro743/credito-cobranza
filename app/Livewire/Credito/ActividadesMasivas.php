@@ -34,7 +34,7 @@ class ActividadesMasivas extends Component
     public string $observacion     = '';
 
     // Selección de casos
-    public string $filtroCasoEstado = 'asignado';
+    public string $filtroCasoEstado = '';
     public string $filtroCiclo      = '';
     public array  $selectedCasoIds  = [];
 
@@ -178,7 +178,7 @@ class ActividadesMasivas extends Component
         $this->responsableId   = 0;
         $this->observacion     = '';
         $this->selectedCasoIds = [];
-        $this->filtroCasoEstado = 'asignado';
+        $this->filtroCasoEstado = '';
         $this->filtroCiclo      = '';
         $this->resetValidation();
     }
