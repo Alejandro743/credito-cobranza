@@ -90,26 +90,38 @@ class ActividadesMasivas extends Component
             'responsableId.min'        => 'Seleccioná un responsable.',
         ]);
 
-        $campana = Campana::updateOrCreate(
-            ['id' => $this->campanaId ?: null],
-            [
-                'nombre'          => $this->nombre,
-                'tipo_contacto_id'=> $this->tipoContactoId,
-                'accion_id'       => $this->accionId,
-                'fecha_programada'=> $this->fechaProgramada,
-                'responsable_id'  => $this->responsableId,
-                'observacion'     => $this->observacion ?: null,
-                'creado_por'      => $this->campanaId ? null : auth()->id(),
-            ]
-        );
+        $datos = [
+            'nombre'           => $this->nombre,
+            'tipo_contacto_id' => $this->tipoContactoId,
+            'accion_id'        => $this->accionId,
+            'fecha_programada' => $this->fechaProgramada,
+            'responsable_id'   => $this->responsableId,
+            'observacion'      => $this->observacion ?: null,
+        ];
 
-        // Generar actividades para los casos seleccionados (solo nuevas)
+        if ($this->campanaId) {
+            $campana = Campana::findOrFail($this->campanaId);
+            $campana->update($datos);
+
+            // Actualizar actividades en estado abierta con los nuevos datos
+            $campana->actividades()->where('estado', 'abierta')->update([
+                'tipo_contacto_id' => $this->tipoContactoId,
+                'accion_id'        => $this->accionId,
+                'fecha_programada' => $this->fechaProgramada,
+                'responsable_id'   => $this->responsableId,
+                'observacion'      => $this->observacion ?: null,
+            ]);
+        } else {
+            $campana = Campana::create(array_merge($datos, ['creado_por' => auth()->id()]));
+        }
+
+        // Generar actividades para los casos seleccionados nuevos
         if (!empty($this->selectedCasoIds)) {
             $existentes = CobranzaActividad::where('campana_id', $campana->id)
                 ->pluck('caso_id')->toArray();
 
             foreach ($this->selectedCasoIds as $casoId) {
-                if (in_array($casoId, $existentes)) continue;
+                if (in_array((int)$casoId, $existentes)) continue;
 
                 $caso = CobranzaCaso::find($casoId);
                 if (!$caso) continue;
@@ -128,7 +140,6 @@ class ActividadesMasivas extends Component
                     'estado'           => 'abierta',
                 ]);
 
-                // Pasar caso a en_gestion si estaba asignado
                 if ($caso->estado === 'asignado') {
                     $caso->update(['estado' => 'en_gestion']);
                 }

@@ -21,7 +21,7 @@
     <select wire:model.live="filtroEstado"
             style="height:32px; padding:0 8px; border:1px solid #E5E7EB; border-radius:8px; font-size:12px; outline:none; background:#fff; cursor:pointer;">
         <option value="">Todos los estados</option>
-        <option value="abierta">Abierta</option>
+        <option value="abierta">Sin Iniciar</option>
         <option value="en_proceso">En Proceso</option>
         <option value="cerrada">Cerrada</option>
         <option value="cancelada">Cancelada</option>
@@ -57,7 +57,7 @@
         <tbody>
         @forelse ($campanas as $i => $c)
         @php
-            $estMap = ['abierta'=>['#E0F2FE','#0369A1','Abierta'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
+            $estMap = ['abierta'=>['#E0F2FE','#0369A1','Sin Iniciar'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
             [$eBg,$eCol,$eLbl] = $estMap[$c->estado] ?? ['#F3F4F6','#6B7280',$c->estado];
         @endphp
         <tr wire:key="camp-{{ $c->id }}" style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
@@ -94,10 +94,6 @@
                     <button wire:click="cambiarEstado({{ $c->id }}, 'cancelada')"
                             style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#FEF2F2; color:#B91C1C; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cancelar</button>
                     @endif
-                    @if ($c->actividades_count === 0)
-                    <button wire:click="delete({{ $c->id }})" wire:confirm="¿Eliminar esta campaña?"
-                            style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#FEF2F2; color:#B91C1C; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Eliminar</button>
-                    @endif
                 </div>
             </td>
         </tr>
@@ -122,9 +118,9 @@
 {{-- ══ MODO DETAIL ══ --}}
 @if ($mode === 'detail' && $campanaDetalle)
 @php
-    $estMap = ['abierta'=>['#E0F2FE','#0369A1','Abierta'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
+    $estMap = ['abierta'=>['#E0F2FE','#0369A1','Sin Iniciar'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
     [$eBg,$eCol,$eLbl] = $estMap[$campanaDetalle->estado] ?? ['#F3F4F6','#6B7280',$campanaDetalle->estado];
-    $stMap = ['abierta'=>['#E0F2FE','#0369A1','Abierta'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
+    $stMap = ['abierta'=>['#E0F2FE','#0369A1','Sin Iniciar'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
 @endphp
 
 <div style="display:flex; flex-direction:column; gap:12px; height:calc(100vh - 152px); overflow:auto; padding-bottom:16px;">
@@ -146,6 +142,7 @@
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr>
                     <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
+                    <th style="{{ $thC }} text-align:center;">Nº Act.</th>
                     <th style="{{ $thC }}">Nº Pedido</th>
                     <th style="{{ $thC }}">CI</th>
                     <th style="{{ $thC }}">Cliente</th>
@@ -162,6 +159,9 @@
             @php [$stBg,$stCol,$stLbl] = $stMap[$act->estado] ?? ['#F3F4F6','#6B7280',$act->estado]; @endphp
             <tr wire:key="det-{{ $act->id }}" style="border-bottom:1px solid #F9FAFB;" @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
                 <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $i + 1 }}</td>
+                <td style="{{ $tdC }} text-align:center;">
+                    <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:20px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">#{{ $act->numero }}</span>
+                </td>
                 <td style="{{ $tdC }}"><span style="font-family:monospace; font-size:12px; color:#7B6FE8;">{{ $act->caso?->pedido?->numero ?? '—' }}</span></td>
                 <td style="{{ $tdC }} font-size:12px;">{{ $act->caso?->pedido?->cliente?->ci ?? '—' }}</td>
                 <td style="{{ $tdC }} color:#111827;">{{ $act->caso?->pedido?->cliente?->nombre_completo ?? '—' }}</td>
