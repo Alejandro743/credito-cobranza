@@ -15,7 +15,7 @@ class ActividadesMasivas extends Component
 {
     use WithPagination;
 
-    public string $mode = 'list';
+    public string $mode = 'list'; // list | detail
 
     // Detalle
     public ?int $detalleCampanaId = null;
@@ -24,19 +24,22 @@ class ActividadesMasivas extends Component
     public string $search       = '';
     public string $filtroEstado = '';
 
-    // Form campaña
-    public int    $campanaId       = 0;
-    public string $nombre          = '';
+    // Form inline campaña
+    public bool   $showAddForm   = false;
+    public int    $campanaId     = 0;
+    public string $nombre        = '';
     public int    $tipoContactoId  = 0;
     public int    $accionId        = 0;
     public string $fechaProgramada = '';
     public int    $responsableId   = 0;
     public string $observacion     = '';
 
-    // Selección de casos
-    public string $filtroCasoEstado = '';
-    public string $filtroCiclo      = '';
-    public array  $selectedCasoIds  = [];
+    // Modal agregar casos
+    public bool   $showModalCasos      = false;
+    public int    $modalCasosCampanaId = 0;
+    public string $filtroCasoEstado    = '';
+    public string $filtroCiclo         = '';
+    public array  $selectedCasoIds     = [];
 
     // Modales cierre/cancelación campaña
     public bool   $showModalCerrar   = false;
@@ -53,7 +56,7 @@ class ActividadesMasivas extends Component
         'filtroEstado' => ['except' => ''],
     ];
 
-    public function updatingSearch(): void  { $this->resetPage(); }
+    public function updatingSearch(): void       { $this->resetPage(); }
     public function updatingFiltroEstado(): void { $this->resetPage(); }
 
     public function verDetalle(int $id): void
@@ -64,10 +67,10 @@ class ActividadesMasivas extends Component
 
     public function create(): void
     {
-        $this->resetForm();
+        $this->resetFormFields();
         $this->responsableId   = auth()->id();
         $this->fechaProgramada = now()->format('Y-m-d');
-        $this->mode = 'form';
+        $this->showAddForm     = true;
     }
 
     public function edit(int $id): void
@@ -80,24 +83,29 @@ class ActividadesMasivas extends Component
         $this->fechaProgramada = $c->fecha_programada?->format('Y-m-d') ?? '';
         $this->responsableId   = $c->responsable_id ?? auth()->id();
         $this->observacion     = $c->observacion ?? '';
-        $this->selectedCasoIds = [];
-        $this->mode = 'form';
+        $this->showAddForm     = true;
+    }
+
+    public function cancelForm(): void
+    {
+        $this->resetFormFields();
+        $this->showAddForm = false;
     }
 
     public function save(): void
     {
         $this->validate([
-            'nombre'         => 'required|string|max:150',
-            'tipoContactoId' => 'required|integer|min:1',
-            'accionId'       => 'required|integer|min:1',
-            'fechaProgramada'=> 'required|date',
-            'responsableId'  => 'required|integer|min:1',
+            'nombre'          => 'required|string|max:150',
+            'tipoContactoId'  => 'required|integer|min:1',
+            'accionId'        => 'required|integer|min:1',
+            'fechaProgramada' => 'required|date',
+            'responsableId'   => 'required|integer|min:1',
         ], [
-            'nombre.required'          => 'El nombre es obligatorio.',
-            'tipoContactoId.min'       => 'Seleccioná un tipo de contacto.',
-            'accionId.min'             => 'Seleccioná una acción.',
-            'fechaProgramada.required' => 'La fecha programada es obligatoria.',
-            'responsableId.min'        => 'Seleccioná un responsable.',
+            'nombre.required'         => 'El nombre es obligatorio.',
+            'tipoContactoId.min'      => 'Seleccioná un tipo de contacto.',
+            'accionId.min'            => 'Seleccioná una acción.',
+            'fechaProgramada.required'=> 'La fecha programada es obligatoria.',
+            'responsableId.min'       => 'Seleccioná un responsable.',
         ]);
 
         $datos = [
@@ -112,8 +120,7 @@ class ActividadesMasivas extends Component
         if ($this->campanaId) {
             $campana = Campana::findOrFail($this->campanaId);
             $campana->update($datos);
-
-            // Actualizar actividades en estado abierta con los nuevos datos
+            // Sincronizar actividades abierta con nuevos datos
             $campana->actividades()->where('estado', 'abierta')->update([
                 'tipo_contacto_id' => $this->tipoContactoId,
                 'accion_id'        => $this->accionId,
@@ -122,41 +129,62 @@ class ActividadesMasivas extends Component
                 'observacion'      => $this->observacion ?: null,
             ]);
         } else {
-            $campana = Campana::create(array_merge($datos, ['creado_por' => auth()->id()]));
+            Campana::create(array_merge($datos, ['creado_por' => auth()->id()]));
         }
 
-        // Generar actividades para los casos seleccionados nuevos
-        if (!empty($this->selectedCasoIds)) {
-            $existentes = CobranzaActividad::where('campana_id', $campana->id)
-                ->pluck('caso_id')->toArray();
+        $this->resetFormFields();
+        $this->showAddForm = false;
+    }
 
-            foreach ($this->selectedCasoIds as $casoId) {
-                if (in_array((int)$casoId, $existentes)) continue;
+    public function abrirCasos(int $id): void
+    {
+        $this->modalCasosCampanaId = $id;
+        $this->selectedCasoIds     = [];
+        $this->filtroCasoEstado    = '';
+        $this->filtroCiclo         = '';
+        $this->showModalCasos      = true;
+    }
 
-                $caso = CobranzaCaso::find($casoId);
-                if (!$caso) continue;
+    public function guardarCasos(): void
+    {
+        if (empty($this->selectedCasoIds)) {
+            $this->showModalCasos = false;
+            return;
+        }
 
-                $ultimo = CobranzaActividad::where('caso_id', $casoId)->max('numero') ?? 0;
+        $campana   = Campana::findOrFail($this->modalCasosCampanaId);
+        $existentes = CobranzaActividad::where('campana_id', $campana->id)
+            ->pluck('caso_id')->map(fn($v) => (int)$v)->toArray();
 
-                CobranzaActividad::create([
-                    'caso_id'          => $casoId,
-                    'campana_id'       => $campana->id,
-                    'numero'           => $ultimo + 1,
-                    'tipo_contacto_id' => $this->tipoContactoId,
-                    'accion_id'        => $this->accionId,
-                    'fecha_programada' => $this->fechaProgramada,
-                    'responsable_id'   => $this->responsableId,
-                    'observacion'      => $this->observacion ?: null,
-                    'estado'           => 'abierta',
-                ]);
+        foreach ($this->selectedCasoIds as $casoId) {
+            $casoId = (int)$casoId;
+            if (in_array($casoId, $existentes)) continue;
 
-                if ($caso->estado === 'asignado') {
-                    $caso->update(['estado' => 'en_gestion']);
-                }
+            $caso = CobranzaCaso::find($casoId);
+            if (!$caso) continue;
+
+            $ultimo = CobranzaActividad::where('caso_id', $casoId)->max('numero') ?? 0;
+
+            CobranzaActividad::create([
+                'caso_id'          => $casoId,
+                'campana_id'       => $campana->id,
+                'numero'           => $ultimo + 1,
+                'tipo_contacto_id' => $campana->tipo_contacto_id,
+                'accion_id'        => $campana->accion_id,
+                'fecha_programada' => $campana->fecha_programada,
+                'responsable_id'   => $campana->responsable_id,
+                'observacion'      => $campana->observacion,
+                'estado'           => 'abierta',
+            ]);
+
+            if ($caso->estado === 'asignado') {
+                $caso->update(['estado' => 'en_gestion']);
             }
         }
 
-        $this->backToList();
+        $this->showModalCasos      = false;
+        $this->modalCasosCampanaId = 0;
+        $this->selectedCasoIds     = [];
     }
 
     public function cambiarEstado(int $id, string $estado): void
@@ -180,10 +208,10 @@ class ActividadesMasivas extends Component
         }
 
         if ($estado === 'cancelada') {
-            $this->modalCampanaId  = $id;
-            $this->cancelTipoId    = 0;
-            $this->cancelMotivo    = '';
-            $this->cancelObs       = '';
+            $this->modalCampanaId    = $id;
+            $this->cancelTipoId      = 0;
+            $this->cancelMotivo      = '';
+            $this->cancelObs         = '';
             $this->showModalCancelar = true;
             return;
         }
@@ -228,32 +256,21 @@ class ActividadesMasivas extends Component
         $this->modalCampanaId    = 0;
     }
 
-    public function delete(int $id): void
-    {
-        $c = Campana::findOrFail($id);
-        if ($c->actividades()->count() > 0) return;
-        $c->delete();
-    }
-
     public function backToList(): void
     {
-        $this->resetForm();
         $this->detalleCampanaId = null;
-        $this->mode = 'list';
+        $this->mode             = 'list';
     }
 
-    private function resetForm(): void
+    private function resetFormFields(): void
     {
-        $this->campanaId       = 0;
-        $this->nombre          = '';
-        $this->tipoContactoId  = 0;
-        $this->accionId        = 0;
-        $this->fechaProgramada = '';
-        $this->responsableId   = 0;
-        $this->observacion     = '';
-        $this->selectedCasoIds = [];
-        $this->filtroCasoEstado = '';
-        $this->filtroCiclo      = '';
+        $this->campanaId        = 0;
+        $this->nombre           = '';
+        $this->tipoContactoId   = 0;
+        $this->accionId         = 0;
+        $this->fechaProgramada  = '';
+        $this->responsableId    = 0;
+        $this->observacion      = '';
         $this->resetValidation();
     }
 
@@ -272,11 +289,7 @@ class ActividadesMasivas extends Component
         $tiposCancelacion = CobranzaCatalogo::where('tipo', 'tipo_cancelacion')->where('activo', true)->orderBy('nombre')->get();
         $usuarios         = User::where('active', true)->orderBy('name')->get();
 
-        // Casos disponibles para seleccionar
-        $today   = now()->toDateString();
-        $cicloSub = '(SELECT cc.code FROM pedido_items pi INNER JOIN lista_maestra_items lmi ON lmi.id = pi.lista_maestra_item_id INNER JOIN lista_maestra lm ON lm.id = lmi.lista_maestra_id INNER JOIN commercial_cycles cc ON cc.id = lm.cycle_id WHERE pi.pedido_id = pedidos.id LIMIT 1)';
-
-        $casosQuery = CobranzaCaso::with(['pedido.cliente', 'pedido.vendedor'])
+        $casosQuery = CobranzaCaso::with(['pedido.cliente'])
             ->whereIn('estado', ['asignado', 'en_gestion'])
             ->where('responsable_id', auth()->id())
             ->when($this->filtroCasoEstado, fn($q) => $q->where('estado', $this->filtroCasoEstado))
