@@ -1,12 +1,17 @@
 <div>
 
 @php
-    $thC = 'padding:9px 12px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#F9F8FF; border-bottom:2px solid #EDE9FE;';
-    $tdC = 'padding:8px 12px; font-size:13px; color:#374151; vertical-align:middle; white-space:nowrap; border-bottom:1px solid #F9FAFB;';
-    $lbl = 'font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:4px;';
-    $inp = 'width:100%; height:36px; padding:0 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:13px; color:#111827; outline:none; background:#F5F3FF; box-sizing:border-box;';
-    $sel = 'width:100%; height:36px; padding:0 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:13px; color:#111827; outline:none; background:#F5F3FF; cursor:pointer; box-sizing:border-box;';
-    $card= 'border:1px solid #EDE9FE; border-radius:10px; padding:14px; background:#fff; display:flex; flex-direction:column; gap:10px;';
+    $thC  = 'padding:9px 12px; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#F9F8FF; border-bottom:2px solid #EDE9FE;';
+    $tdC  = 'padding:8px 12px; font-size:13px; color:#374151; vertical-align:middle; white-space:nowrap; border-bottom:1px solid #F9FAFB;';
+    $lbl  = 'font-size:12px; font-weight:600; color:#374151; display:block; margin-bottom:4px;';
+    $inp  = 'width:100%; height:36px; padding:0 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:13px; color:#111827; outline:none; background:#F5F3FF; box-sizing:border-box;';
+    $sel  = 'width:100%; height:36px; padding:0 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:13px; color:#111827; outline:none; background:#F5F3FF; cursor:pointer; box-sizing:border-box;';
+    $card = 'border:1px solid #EDE9FE; border-radius:10px; padding:14px; background:#fff; display:flex; flex-direction:column; gap:10px;';
+    $mHead= 'padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0; background:#fff;';
+    $mBody= 'padding:14px 16px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1; background:#fff;';
+    $mFoot= 'padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0; background:#fff;';
+    $xBtn = 'width:28px; height:28px; border:none; background:#F3F4F6; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#6B7280;';
+    $sTitle='font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#7B6FE8; margin:0 0 6px;';
 @endphp
 
 {{-- ══ MODO LIST ══ --}}
@@ -302,5 +307,90 @@
 </div>
 
 @endif
+
+{{-- ══ MODAL: CERRAR CAMPAÑA ══ --}}
+<div x-data="{ open: @entangle('showModalCerrar') }">
+<template x-teleport="body">
+<div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:440px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#DCFCE7; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#065F46" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cerrar campaña</p>
+            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <div style="{{ $mBody }}">
+            <p style="font-size:12px; color:#6B7280; margin:0;">Se cerrarán todas las actividades activas de esta campaña con los datos indicados.</p>
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Resultado</p>
+                <div>
+                    <label style="{{ $lbl }}">Tipo de respuesta <span style="color:#EF4444;">*</span></label>
+                    <select wire:model="cierreTipoRespuestaId" style="{{ $sel }}">
+                        <option value="0">— Seleccioná —</option>
+                        @foreach($tiposRespuesta as $tr)
+                        <option value="{{ $tr->id }}">{{ $tr->nombre }}</option>
+                        @endforeach
+                    </select>
+                    @error('cierreTipoRespuestaId') <p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p> @enderror
+                </div>
+                <div>
+                    <label style="{{ $lbl }}">Obs. de cierre <span style="font-weight:400; font-size:10px;">(opcional)</span></label>
+                    <textarea wire:model="cierreObs" rows="2" style="width:100%; padding:8px 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:13px; outline:none; resize:vertical; font-family:inherit; box-sizing:border-box; background:#F5F3FF;"></textarea>
+                </div>
+            </div>
+        </div>
+        <div style="{{ $mFoot }}">
+            <button @click="open=false" style="height:36px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
+            <button wire:click="confirmarCierre" wire:loading.attr="disabled" style="height:36px; padding:0 18px; border:none; border-radius:8px; background:#065F46; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">Confirmar cierre</button>
+        </div>
+    </div>
+</div>
+</template>
+</div>
+
+{{-- ══ MODAL: CANCELAR CAMPAÑA ══ --}}
+<div x-data="{ open: @entangle('showModalCancelar') }">
+<template x-teleport="body">
+<div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:440px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#FEE2E2; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </div>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cancelar campaña</p>
+            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <div style="{{ $mBody }}">
+            <p style="font-size:12px; color:#6B7280; margin:0;">Se cancelarán todas las actividades activas de esta campaña.</p>
+            <div style="{{ $card }}">
+                <p style="{{ $sTitle }}">■ Motivo</p>
+                <div>
+                    <label style="{{ $lbl }}">Tipo de cancelación</label>
+                    <select wire:model="cancelTipoId" style="{{ $sel }}">
+                        <option value="0">— Seleccioná —</option>
+                        @foreach($tiposCancelacion as $tc)
+                        <option value="{{ $tc->id }}">{{ $tc->nombre }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <label style="{{ $lbl }}">Motivo</label>
+                    <input wire:model="cancelMotivo" type="text" placeholder="Motivo de cancelación..." style="{{ $inp }}">
+                </div>
+                <div>
+                    <label style="{{ $lbl }}">Observación <span style="font-weight:400; font-size:10px;">(opcional)</span></label>
+                    <textarea wire:model="cancelObs" rows="2" style="width:100%; padding:8px 10px; border:1px solid #E5E7EB; border-radius:8px; font-size:13px; outline:none; resize:vertical; font-family:inherit; box-sizing:border-box; background:#F5F3FF;"></textarea>
+                </div>
+            </div>
+        </div>
+        <div style="{{ $mFoot }}">
+            <button @click="open=false" style="height:36px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Volver</button>
+            <button wire:click="confirmarCancelacion" wire:loading.attr="disabled" style="height:36px; padding:0 18px; border:none; border-radius:8px; background:#B91C1C; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">Confirmar cancelación</button>
+        </div>
+    </div>
+</div>
+</template>
+</div>
 
 </div>

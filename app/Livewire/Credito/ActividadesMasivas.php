@@ -38,6 +38,16 @@ class ActividadesMasivas extends Component
     public string $filtroCiclo      = '';
     public array  $selectedCasoIds  = [];
 
+    // Modales cierre/cancelación campaña
+    public bool   $showModalCerrar   = false;
+    public bool   $showModalCancelar = false;
+    public int    $modalCampanaId    = 0;
+    public int    $cierreTipoRespuestaId = 0;
+    public string $cierreObs            = '';
+    public int    $cancelTipoId         = 0;
+    public string $cancelMotivo         = '';
+    public string $cancelObs            = '';
+
     protected $queryString = [
         'search'       => ['except' => ''],
         'filtroEstado' => ['except' => ''],
@@ -151,7 +161,71 @@ class ActividadesMasivas extends Component
 
     public function cambiarEstado(int $id, string $estado): void
     {
-        Campana::findOrFail($id)->update(['estado' => $estado]);
+        if ($estado === 'en_proceso') {
+            $campana = Campana::findOrFail($id);
+            $campana->update(['estado' => 'en_proceso']);
+            $campana->actividades()->where('estado', 'abierta')->update([
+                'estado'       => 'en_proceso',
+                'fecha_inicio' => now(),
+            ]);
+            return;
+        }
+
+        if ($estado === 'cerrada') {
+            $this->modalCampanaId        = $id;
+            $this->cierreTipoRespuestaId = 0;
+            $this->cierreObs             = '';
+            $this->showModalCerrar       = true;
+            return;
+        }
+
+        if ($estado === 'cancelada') {
+            $this->modalCampanaId  = $id;
+            $this->cancelTipoId    = 0;
+            $this->cancelMotivo    = '';
+            $this->cancelObs       = '';
+            $this->showModalCancelar = true;
+            return;
+        }
+    }
+
+    public function confirmarCierre(): void
+    {
+        $this->validate([
+            'cierreTipoRespuestaId' => 'required|integer|min:1',
+        ], [
+            'cierreTipoRespuestaId.min' => 'Seleccioná un tipo de respuesta.',
+        ]);
+
+        $campana = Campana::findOrFail($this->modalCampanaId);
+        $campana->update(['estado' => 'cerrada']);
+        $campana->actividades()->whereIn('estado', ['abierta', 'en_proceso'])->update([
+            'estado'             => 'cerrada',
+            'tipo_respuesta_id'  => $this->cierreTipoRespuestaId,
+            'observacion_cierre' => $this->cierreObs ?: null,
+            'fecha_cierre'       => now(),
+            'cerrado_por'        => auth()->id(),
+        ]);
+
+        $this->showModalCerrar = false;
+        $this->modalCampanaId  = 0;
+    }
+
+    public function confirmarCancelacion(): void
+    {
+        $campana = Campana::findOrFail($this->modalCampanaId);
+        $campana->update(['estado' => 'cancelada']);
+        $campana->actividades()->whereIn('estado', ['abierta', 'en_proceso'])->update([
+            'estado'              => 'cancelada',
+            'tipo_cancelacion_id' => $this->cancelTipoId ?: null,
+            'motivo_cancelacion'  => $this->cancelMotivo ?: null,
+            'observacion_cierre'  => $this->cancelObs ?: null,
+            'fecha_cierre'        => now(),
+            'cerrado_por'         => auth()->id(),
+        ]);
+
+        $this->showModalCancelar = false;
+        $this->modalCampanaId    = 0;
     }
 
     public function delete(int $id): void
@@ -192,9 +266,11 @@ class ActividadesMasivas extends Component
             ->orderByDesc('created_at')
             ->paginate(15);
 
-        $tiposContacto = CobranzaCatalogo::where('tipo', 'tipo_contacto')->where('activo', true)->orderBy('nombre')->get();
-        $acciones      = CobranzaCatalogo::where('tipo', 'accion')->where('activo', true)->orderBy('nombre')->get();
-        $usuarios      = User::where('active', true)->orderBy('name')->get();
+        $tiposContacto    = CobranzaCatalogo::where('tipo', 'tipo_contacto')->where('activo', true)->orderBy('nombre')->get();
+        $acciones         = CobranzaCatalogo::where('tipo', 'accion')->where('activo', true)->orderBy('nombre')->get();
+        $tiposRespuesta   = CobranzaCatalogo::where('tipo', 'tipo_respuesta')->where('activo', true)->orderBy('nombre')->get();
+        $tiposCancelacion = CobranzaCatalogo::where('tipo', 'tipo_cancelacion')->where('activo', true)->orderBy('nombre')->get();
+        $usuarios         = User::where('active', true)->orderBy('name')->get();
 
         // Casos disponibles para seleccionar
         $today   = now()->toDateString();
@@ -228,7 +304,8 @@ class ActividadesMasivas extends Component
             : null;
 
         return view('livewire.credito.actividades-masivas', compact(
-            'campanas', 'tiposContacto', 'acciones', 'usuarios', 'casosQuery', 'campanaDetalle'
+            'campanas', 'tiposContacto', 'acciones', 'tiposRespuesta', 'tiposCancelacion',
+            'usuarios', 'casosQuery', 'campanaDetalle'
         ));
     }
 }
