@@ -138,10 +138,13 @@
         <span style="font-size:14px; font-weight:700; color:#111827;">{{ $campanaDetalle->nombre }}</span>
         <span style="padding:2px 10px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $eBg }}; color:{{ $eCol }};">{{ $eLbl }}</span>
         <span style="font-size:12px; color:#6B7280; margin-left:4px;">{{ $campanaDetalle->tipoContacto?->nombre }} · {{ $campanaDetalle->accion?->nombre }} · {{ $campanaDetalle->fecha_programada?->format('d/m/Y') }}</span>
-        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:auto;">{{ $campanaDetalle->actividades->count() }} actividades</span>
     </div>
 
     <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:1; min-height:0; display:flex; flex-direction:column;">
+        <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
+            <span style="font-size:13px; font-weight:700; color:#111827;">Actividades</span>
+            <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $campanaDetalle->actividades->count() }}</span>
+        </div>
         <div style="flex:1; min-height:0; overflow:auto;">
         <table style="width:100%; border-collapse:collapse; min-width:700px;">
             <thead style="position:sticky; top:0; z-index:10;">
@@ -163,7 +166,7 @@
             @forelse($campanaDetalle->actividades as $i => $act)
             @php [$stBg,$stCol,$stLbl] = $stMap[$act->estado] ?? ['#F3F4F6','#6B7280',$act->estado]; @endphp
             <tr wire:key="det-{{ $act->id }}" style="border-bottom:1px solid #F9FAFB;" @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
-                <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#9CA3AF;">{{ $i + 1 }}</td>
+                <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#C4B5FD; background:#EDE9FE;">{{ $i + 1 }}</td>
                 <td style="{{ $tdC }} text-align:center;">
                     <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:20px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">#{{ $act->numero }}</span>
                 </td>
