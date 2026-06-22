@@ -261,51 +261,59 @@
 
 {{-- ══ MODO CASOS ══ --}}
 @if ($mode === 'casos' && $casosCampana)
-
-<div style="display:flex; flex-direction:column; gap:12px; height:calc(100vh - 152px);">
-
-    {{-- Header --}}
-    <div style="display:flex; align-items:center; gap:10px; flex:none; flex-wrap:wrap;">
-        <button wire:click="backToList" style="height:32px; padding:0 12px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:5px;">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-            Volver
+<div>
+    {{-- Cabecera --}}
+    <div class="flex items-start gap-3 mb-5">
+        <button wire:click="backToList" class="mt-1 p-2 rounded-lg hover:bg-gray-100 text-gray-500 transition-colors shrink-0">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
         </button>
-        <span style="font-size:14px; font-weight:700; color:#111827;">{{ $casosCampana->nombre }}</span>
-        <span style="font-size:12px; color:#6B7280;">Casos vinculados</span>
-        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:auto;">{{ count($selectedCasoIds) }} seleccionados</span>
+        <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-2">
+                <h2 class="text-lg font-bold text-gray-800 truncate">{{ $casosCampana->nombre }}</h2>
+                <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ count($selectedCasoIds) }} seleccionados</span>
+            </div>
+            <p class="text-xs text-gray-500 mt-0.5">
+                Casos vinculados · <span class="font-medium text-gray-700">{{ $casosCampana->tipoContacto?->nombre ?? '—' }}</span>
+                · <span class="font-medium text-gray-700">{{ $casosCampana->accion?->nombre ?? '—' }}</span>
+            </p>
+        </div>
     </div>
 
-    {{-- Panel tabla casos --}}
-    <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; flex:1; min-height:0; display:flex; flex-direction:column;">
-
-        {{-- Filtros + botón guardar --}}
-        <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none; flex-wrap:wrap;">
-            <span style="font-size:13px; font-weight:700; color:#111827;">Mis casos</span>
-            <select wire:model.live="filtroCasoEstado"
-                    style="height:28px; padding:0 8px; border:1px solid #E5E7EB; border-radius:6px; font-size:12px; outline:none; background:#fff; cursor:pointer;">
-                <option value="">Todos los estados</option>
-                <option value="asignado">Asignado</option>
-                <option value="en_gestion">En Gestión</option>
-            </select>
-            <input wire:model.live.debounce.300ms="filtroCiclo" type="text" placeholder="Filtrar ciclo..."
-                   style="height:28px; padding:0 8px; border:1px solid #E5E7EB; border-radius:6px; font-size:12px; outline:none; background:#fff; width:100px;">
-            <label style="display:flex; align-items:center; gap:5px; font-size:12px; color:#374151; cursor:pointer;">
-                <input type="checkbox"
-                       @change="const ids = @js($casosQuery->pluck('id')->toArray()); $wire.selectedCasoIds = $event.target.checked ? ids : [];"
-                       style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
-                Todos
-            </label>
-            <div style="margin-left:auto; display:flex; gap:6px;">
-                <button wire:click="backToList" style="height:30px; padding:0 12px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:12px; font-weight:600; cursor:pointer;">Cancelar</button>
-                <button wire:click="guardarCasos" wire:loading.attr="disabled"
-                        style="height:30px; padding:0 14px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;">
-                    Guardar casos
-                </button>
-            </div>
+    {{-- Filtros + botones --}}
+    <div class="flex flex-col sm:flex-row gap-2 mb-4">
+        <select wire:model.live="filtroCasoEstado"
+                class="border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-lavanda-400 bg-white cursor-pointer">
+            <option value="">Todos los estados</option>
+            <option value="asignado">Asignado</option>
+            <option value="en_gestion">En Gestión</option>
+        </select>
+        <input wire:model.live.debounce.300ms="filtroCiclo" type="text" placeholder="Filtrar ciclo..."
+               class="border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-lavanda-400 w-full sm:w-32">
+        <label class="flex items-center gap-2 text-xs text-gray-600 cursor-pointer px-3 py-2 border border-gray-200 rounded-xl bg-white">
+            <input type="checkbox"
+                   @change="const ids = @js($casosQuery->pluck('id')->toArray()); $wire.selectedCasoIds = $event.target.checked ? ids : [];"
+                   style="accent-color:#7B6FE8; width:13px; height:13px;">
+            Todos
+        </label>
+        <div class="flex gap-2 sm:ml-auto">
+            <button wire:click="backToList"
+                    class="px-4 py-2 text-xs font-semibold text-gray-600 border border-gray-200 rounded-xl hover:bg-gray-100 transition-colors">
+                Cancelar
+            </button>
+            <button wire:click="guardarCasos" wire:loading.attr="disabled"
+                    class="flex items-center gap-1.5 bg-lavanda-500 hover:bg-lavanda-600 text-white text-xs font-semibold px-4 py-2 rounded-xl transition-colors whitespace-nowrap">
+                Guardar casos
+            </button>
         </div>
+    </div>
 
-        {{-- Tabla --}}
-        <div style="flex:1; min-height:0; overflow:auto;">
+    {{-- Panel tabla --}}
+    <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 280px);">
+        <div style="padding:10px 18px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px;">
+            <span style="font-size:13px; font-weight:700; color:#111827;">Mis casos</span>
+            <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $casosQuery->count() }}</span>
+        </div>
+        <div style="overflow:auto; flex:1;">
         <table style="width:100%; border-collapse:collapse; min-width:600px;">
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr>
@@ -326,10 +334,12 @@
                 $selCaso = in_array($caso->id, $selectedCasoIds);
             @endphp
             <tr wire:key="caso-v-{{ $caso->id }}"
-                style="border-bottom:1px solid #F9FAFB; background:{{ $selCaso ? '#F5F3FF' : '#fff' }}; cursor:pointer; transition:background .1s;" x-data
+                style="border-bottom:1px solid #F3F4F6; background:{{ $selCaso ? '#F5F3FF' : '#fff' }}; cursor:pointer; transition:background .1s;" x-data
                 @click="$wire.selectedCasoIds = {{ $selCaso ? 'true' : 'false' }}
                     ? $wire.selectedCasoIds.filter(id => id != {{ $caso->id }})
-                    : [...$wire.selectedCasoIds, {{ $caso->id }}]">
+                    : [...$wire.selectedCasoIds, {{ $caso->id }}]"
+                @mouseenter="if (!{{ $selCaso ? 'true' : 'false' }}) $el.style.background='#FAFAFE'"
+                @mouseleave="$el.style.background='{{ $selCaso ? '#F5F3FF' : '#fff' }}'">
                 <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $i + 1 }}</td>
                 <td style="{{ $tdC }} text-align:center;" @click.stop>
                     <input type="checkbox" wire:model.live="selectedCasoIds" value="{{ $caso->id }}"
@@ -351,7 +361,6 @@
         </div>
     </div>
 </div>
-
 @endif
 
 {{-- ══ MODAL: CERRAR CAMPAÑA ══ --}}
