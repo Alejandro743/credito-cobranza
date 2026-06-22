@@ -415,19 +415,23 @@
             @php
                 $estBadge = ['asignado'=>['#D1FAE5','#065F46'],'en_gestion'=>['#EFF6FF','#1D4ED8']];
                 [$cBg,$cCol] = $estBadge[$caso->estado] ?? ['#F3F4F6','#6B7280'];
-                $selCaso = in_array($caso->id, $selectedCasoIds);
                 $cicloCode = $caso->pedido?->items?->first()?->listaMaestraItem?->listaMaestra?->cycle?->code ?? '—';
             @endphp
-            <tr wire:key="caso-v-{{ $caso->id }}"
-                style="border-bottom:1px solid #F3F4F6; background:{{ $selCaso ? '#F5F3FF' : '#fff' }}; cursor:pointer; transition:background .1s;" x-data
-                @click="$wire.selectedCasoIds = {{ $selCaso ? 'true' : 'false' }}
+            <tr wire:key="caso-v-{{ $caso->id }}" x-data
+                style="border-bottom:1px solid #F3F4F6; cursor:pointer; transition:background .1s;"
+                :style="$wire.selectedCasoIds.includes({{ $caso->id }}) ? 'background:#F5F3FF; border-bottom:1px solid #F3F4F6;' : 'background:#fff; border-bottom:1px solid #F3F4F6;'"
+                @click="$wire.set('selectedCasoIds', $wire.selectedCasoIds.includes({{ $caso->id }})
                     ? $wire.selectedCasoIds.filter(id => id != {{ $caso->id }})
-                    : [...$wire.selectedCasoIds, {{ $caso->id }}]"
-                @mouseenter="$el.style.background='{{ $selCaso ? '#EDE9FE' : '#FAFAFE' }}'"
-                @mouseleave="$el.style.background='{{ $selCaso ? '#F5F3FF' : '#fff' }}'">
+                    : [...$wire.selectedCasoIds, {{ $caso->id }}])"
+                @mouseenter="if (!$wire.selectedCasoIds.includes({{ $caso->id }})) $el.style.background='#FAFAFE'"
+                @mouseleave="$el.style.background = $wire.selectedCasoIds.includes({{ $caso->id }}) ? '#F5F3FF' : '#fff'">
                 <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $i + 1 }}</td>
                 <td style="{{ $tdC }} text-align:center;" @click.stop>
-                    <input type="checkbox" wire:model.live="selectedCasoIds" value="{{ $caso->id }}"
+                    <input type="checkbox"
+                           :checked="$wire.selectedCasoIds.includes({{ $caso->id }})"
+                           @change="$wire.set('selectedCasoIds', $event.target.checked
+                               ? [...$wire.selectedCasoIds, {{ $caso->id }}]
+                               : $wire.selectedCasoIds.filter(id => id != {{ $caso->id }}))"
                            style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
                 </td>
                 <td style="{{ $tdC }} font-size:12px; font-weight:600; color:#374151;">{{ $cicloCode }}</td>
