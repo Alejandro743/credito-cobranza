@@ -96,7 +96,7 @@
             <div style="display:flex; gap:6px; flex-shrink:0;">
                 <button wire:click="cancelForm" style="height:38px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
                 <button wire:click="save" wire:loading.attr="disabled" style="height:38px; padding:0 18px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">
-                    {{ $campanaId ? 'Guardar cambios' : 'Crear campaña' }}
+                    Crear campaña
                 </button>
             </div>
         </div>
