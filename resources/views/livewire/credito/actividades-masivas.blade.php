@@ -382,9 +382,9 @@
                 <tr>
                     <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
                     <th style="width:40px; background:#F9F8FF; border-bottom:2px solid #EDE9FE; text-align:center; padding:9px 0;">
-                        <input type="checkbox" x-data
-                               @change="const ids = @js($casosQuery->pluck('id')->toArray()); $wire.selectedCasoIds = $event.target.checked ? ids : [];"
-                               :checked="{{ count($selectedCasoIds) > 0 && count($selectedCasoIds) === $casosQuery->count() ? 'true' : 'false' }}"
+                        <input type="checkbox"
+                               @change="const ids = @js($casosQuery->pluck('id')->toArray()); $wire.set('selectedCasoIds', $event.target.checked ? ids : []);"
+                               {{ count($selectedCasoIds) > 0 && count($selectedCasoIds) === $casosQuery->count() ? 'checked' : '' }}
                                style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
                     </th>
                     <th style="{{ $thC }}">Ciclo</th>
