@@ -166,7 +166,7 @@
             @forelse($campanaDetalle->actividades as $i => $act)
             @php [$stBg,$stCol,$stLbl] = $stMap[$act->estado] ?? ['#F3F4F6','#6B7280',$act->estado]; @endphp
             <tr wire:key="det-{{ $act->id }}" style="border-bottom:1px solid #F9FAFB;" @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''" x-data>
-                <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#C4B5FD; background:#EDE9FE;">{{ $i + 1 }}</td>
+                <td style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700; color:#C4B5FD; background:#F9F8FF;">{{ $i + 1 }}</td>
                 <td style="{{ $tdC }} text-align:center;">
                     <span style="display:inline-flex; align-items:center; justify-content:center; width:24px; height:20px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">#{{ $act->numero }}</span>
                 </td>
