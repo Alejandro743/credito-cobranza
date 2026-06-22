@@ -45,10 +45,10 @@ class ActividadesMasivas extends Component
     public int    $editResponsableId  = 0;
     public string $editObservacion    = '';
 
-    // (modal casos eliminado — se usa mode='casos')
-    public string $filtroCasoEstado    = '';
-    public string $filtroCiclo         = '';
-    public array  $selectedCasoIds     = [];
+    // Filtros modo casos
+    public string $filtroCasoEstado = '';
+    public string $filtroBusqueda   = '';
+    public array  $selectedCasoIds  = [];
 
     // Modales cierre/cancelación campaña
     public bool   $showModalCerrar   = false;
@@ -333,19 +333,30 @@ class ActividadesMasivas extends Component
             ->whereIn('estado', ['asignado', 'en_gestion'])
             ->where('responsable_id', auth()->id())
             ->when($this->filtroCasoEstado, fn($q) => $q->where('estado', $this->filtroCasoEstado))
-            ->when($this->filtroCiclo, fn($q) =>
-                $q->whereHas('pedido', fn($p) =>
-                    $p->whereExists(fn($sub) =>
-                        $sub->select(DB::raw(1))
-                            ->from('pedido_items as pi')
-                            ->join('lista_maestra_items as lmi', 'lmi.id', '=', 'pi.lista_maestra_item_id')
-                            ->join('lista_maestra as lm', 'lm.id', '=', 'lmi.lista_maestra_id')
-                            ->join('commercial_cycles as cc', 'cc.id', '=', 'lm.cycle_id')
-                            ->whereColumn('pi.pedido_id', 'pedidos.id')
-                            ->where('cc.code', 'like', "%{$this->filtroCiclo}%")
+            ->when($this->filtroBusqueda, function($q) {
+                $b = $this->filtroBusqueda;
+                $q->where(function($sub) use ($b) {
+                    // por número de pedido
+                    $sub->whereHas('pedido', fn($p) => $p->where('numero', 'like', "%{$b}%"))
+                    // por nombre o CI del cliente
+                    ->orWhereHas('pedido.cliente', fn($p) =>
+                        $p->where('nombre_completo', 'like', "%{$b}%")
+                          ->orWhere('ci', 'like', "%{$b}%")
                     )
-                )
-            )
+                    // por código de ciclo
+                    ->orWhereHas('pedido', fn($p) =>
+                        $p->whereExists(fn($ex) =>
+                            $ex->select(DB::raw(1))
+                               ->from('pedido_items as pi')
+                               ->join('lista_maestra_items as lmi', 'lmi.id', '=', 'pi.lista_maestra_item_id')
+                               ->join('lista_maestra as lm', 'lm.id', '=', 'lmi.lista_maestra_id')
+                               ->join('commercial_cycles as cc', 'cc.id', '=', 'lm.cycle_id')
+                               ->whereColumn('pi.pedido_id', 'pedidos.id')
+                               ->where('cc.code', 'like', "%{$b}%")
+                        )
+                    );
+                });
+            })
             ->get();
 
         $casosCampana = $this->casosCampanaId

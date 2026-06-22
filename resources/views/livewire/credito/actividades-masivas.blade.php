@@ -360,14 +360,15 @@
 
     {{-- Filtros --}}
     <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+        <input wire:model.live.debounce.300ms="filtroBusqueda" type="text"
+               placeholder="Buscar por ciclo, Nº pedido o cliente..."
+               style="flex:1; min-width:200px; height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 10px; font-size:13px; color:#374151; outline:none; background:#fff;">
         <select wire:model.live="filtroCasoEstado"
                 style="height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 10px; font-size:13px; color:#374151; outline:none; background:#fff; cursor:pointer;">
             <option value="">Todos los estados</option>
             <option value="asignado">Asignado</option>
             <option value="en_gestion">En Gestión</option>
         </select>
-        <input wire:model.live.debounce.300ms="filtroCiclo" type="text" placeholder="Filtrar ciclo..."
-               style="width:130px; height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 10px; font-size:13px; color:#374151; outline:none; background:#fff;">
     </div>
 
     {{-- Tabla --}}
@@ -386,8 +387,8 @@
                                :checked="{{ count($selectedCasoIds) > 0 && count($selectedCasoIds) === $casosQuery->count() ? 'true' : 'false' }}"
                                style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
                     </th>
-                    <th style="{{ $thC }}">Nº Pedido</th>
                     <th style="{{ $thC }}">Ciclo</th>
+                    <th style="{{ $thC }}">Nº Pedido</th>
                     <th style="{{ $thC }}">CI</th>
                     <th style="{{ $thC }}">Cliente</th>
                     <th style="{{ $thC }}">Teléfono</th>
@@ -414,8 +415,8 @@
                     <input type="checkbox" wire:model.live="selectedCasoIds" value="{{ $caso->id }}"
                            style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
                 </td>
-                <td style="{{ $tdC }}"><span style="font-family:monospace; font-size:12px; color:#7B6FE8;">{{ $caso->pedido?->numero ?? '—' }}</span></td>
                 <td style="{{ $tdC }} font-size:12px; font-weight:600; color:#374151;">{{ $cicloCode }}</td>
+                <td style="{{ $tdC }}"><span style="font-family:monospace; font-size:12px; color:#7B6FE8;">{{ $caso->pedido?->numero ?? '—' }}</span></td>
                 <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->pedido?->cliente?->ci ?? '—' }}</td>
                 <td style="{{ $tdC }} color:#111827;">{{ $caso->pedido?->cliente?->nombre_completo ?? '—' }}</td>
                 <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $caso->pedido?->cliente?->telefono ?? '—' }}</td>
