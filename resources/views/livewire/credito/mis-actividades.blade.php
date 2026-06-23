@@ -120,7 +120,7 @@
             <td style="{{ $tdC }} font-size:12px;">{{ $act->actividadOrigen ? '#'.$act->actividadOrigen->numero : '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
                 @php $puedeC = $act->pendientes_caso == 0 && !in_array($act->caso_estado, ['cerrado','cancelado']); @endphp
-                @if(in_array($act->estado, ['cancelada']) && !$puedeC)
+                @if(in_array($act->estado, ['cerrada','cancelada']) && !$puedeC)
                 <span style="font-size:11px; color:#D1D5DB;">—</span>
                 @else
                 <button @click="$dispatch('cerrar-menus'); const r=$event.currentTarget.getBoundingClientRect(); menuTop=r.top+r.height/2; menuLeft=r.left-180; if(menuLeft<8)menuLeft=8; $nextTick(()=>menuOpen=true);"
@@ -134,6 +134,8 @@
                     <div style="position:absolute; right:-7px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:7px solid #E5E7EB;"></div>
                     <div style="position:absolute; right:-6px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:6px solid transparent; border-bottom:6px solid transparent; border-left:6px solid #fff;"></div>
                     <div style="background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:4px 0; box-shadow:0 8px 24px rgba(0,0,0,.12); overflow:hidden;">
+                        @if (!in_array($act->estado, ['cerrada','cancelada']))
+                        {{-- Opciones de actividad --}}
                         @if ($act->estado === 'abierta')
                         <button wire:click="iniciarActividad({{ $act->id }})" @click="menuOpen=false"
                                 style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; text-align:center; justify-content:center;"
@@ -150,15 +152,12 @@
                             Cerrar
                         </button>
                         @endif
-                        @if (!in_array($act->estado, ['cerrada','cancelada']))
                         <button wire:click="abrirEditarActividad({{ $act->id }})" @click="menuOpen=false"
                                 style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; text-align:center; justify-content:center;"
                                 @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
                             <svg width="12" height="12" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                             Editar
                         </button>
-                        @endif
-                        @if (in_array($act->estado, ['abierta','en_proceso']))
                         <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
                         <button wire:click="abrirCancelarActividad({{ $act->id }})" @click="menuOpen=false"
                                 style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#B91C1C; cursor:pointer; text-align:center; justify-content:center;"
@@ -166,9 +165,12 @@
                             <svg width="12" height="12" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                             Cancelar
                         </button>
-                        @endif
                         @if ($puedeC)
                         <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
+                        @endif
+                        @endif
+                        {{-- Opciones del caso (sin divisor huérfano cuando solo aparecen estas) --}}
+                        @if ($puedeC)
                         <button wire:click="abrirCerrarCaso({{ $act->caso_id }})" @click="menuOpen=false"
                                 style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#EA580C; cursor:pointer; text-align:center; justify-content:center;"
                                 @mouseenter="$el.style.background='#FFF7ED'" @mouseleave="$el.style.background=''">
