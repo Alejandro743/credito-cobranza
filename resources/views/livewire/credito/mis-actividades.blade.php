@@ -119,7 +119,7 @@
             <td style="{{ $tdC }} font-size:12px;">{{ $act->fecha_programada?->format('d/m/Y') ?? '—' }}</td>
             <td style="{{ $tdC }} font-size:12px;">{{ $act->actividadOrigen ? '#'.$act->actividadOrigen->numero : '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
-                @php $puedeC = $act->pendientes_caso == 0 && !in_array($act->caso_estado, ['cerrado','cancelado']); @endphp
+                @php $puedeC = !in_array($act->caso_estado, ['cerrado','cancelado']); @endphp
                 @if(in_array($act->estado, ['cerrada','cancelada']) && !$puedeC)
                 <span style="font-size:11px; color:#D1D5DB;">—</span>
                 @else
