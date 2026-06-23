@@ -315,7 +315,7 @@
             </td>
             <td style="{{ $tdC }} font-size:12px; color:#6B7280;">{{ $act->actividadOrigen ? '#'.$act->actividadOrigen->numero : '—' }}</td>
             <td style="{{ $tdC }} text-align:center;">
-                @if (in_array($casoSeleccionado->estado, ['cerrado','cancelado']) || $act->estado === 'cancelada')
+                @if (in_array($casoSeleccionado->estado, ['cerrado','cancelado']) || in_array($act->estado, ['cerrada','cancelada']))
                 <span style="font-size:11px; color:#D1D5DB;">—</span>
                 @else
                 {{-- Trigger ⋮ --}}
