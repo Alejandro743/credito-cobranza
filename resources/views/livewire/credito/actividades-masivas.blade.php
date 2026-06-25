@@ -237,12 +237,6 @@
                         <div style="position:absolute; right:-7px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:7px solid #E5E7EB;"></div>
                         <div style="position:absolute; right:-6px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:6px solid transparent; border-bottom:6px solid transparent; border-left:6px solid #fff;"></div>
                         <div style="background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:4px 0; box-shadow:0 8px 24px rgba(0,0,0,.12); overflow:hidden;">
-                            <button wire:click="verDetalle({{ $c->id }})" @click="menuOpen=false"
-                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
-                                    @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
-                                <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                                Ver
-                            </button>
                             @if (in_array($c->estado, ['abierta','en_proceso']))
                             <button wire:click="verCasos({{ $c->id }})" @click="menuOpen=false"
                                     style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
@@ -250,6 +244,14 @@
                                 <svg width="12" height="12" fill="none" stroke="#065F46" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
                                 Agregar Casos
                             </button>
+                            @endif
+                            <button wire:click="verDetalle({{ $c->id }})" @click="menuOpen=false"
+                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
+                                    @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
+                                <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                Ver Casos Vinculados
+                            </button>
+                            @if (in_array($c->estado, ['abierta','en_proceso']))
                             <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
                             @if ($c->estado === 'abierta' && $c->actividades_count > 0)
                             <button wire:click="cambiarEstado({{ $c->id }}, 'en_proceso')" @click="menuOpen=false"
