@@ -405,6 +405,13 @@
                         @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
                     Cancelar
                 </button>
+                @if ($casosSaved)
+                <span x-data x-init="setTimeout(() => $wire.set('casosSaved', false), 3000)"
+                      style="display:inline-flex; align-items:center; gap:5px; padding:0 12px; height:36px; border-radius:9px; background:#F0FDF4; border:1px solid #BBF7D0; color:#065F46; font-size:12px; font-weight:700;">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    Casos guardados
+                </span>
+                @endif
                 <button wire:click="guardarCasos" wire:loading.attr="disabled"
                         style="height:36px; padding:0 14px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
                         @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">

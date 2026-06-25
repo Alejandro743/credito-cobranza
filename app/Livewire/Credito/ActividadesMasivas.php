@@ -49,6 +49,7 @@ class ActividadesMasivas extends Component
     public string $filtroCasoEstado = '';
     public string $filtroBusqueda   = '';
     public array  $selectedCasoIds  = [];
+    public bool   $casosSaved       = false;
 
     // Modales cierre/cancelación campaña
     public bool   $showModalCerrar   = false;
@@ -226,9 +227,7 @@ class ActividadesMasivas extends Component
             }
         }
 
-        $this->casosCampanaId  = null;
-        $this->selectedCasoIds = [];
-        $this->mode            = 'list';
+        $this->casosSaved = true;
     }
 
     public function cambiarEstado(int $id, string $estado): void
