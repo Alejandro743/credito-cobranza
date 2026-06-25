@@ -183,6 +183,7 @@ class ActividadesMasivas extends Component
 
         $this->resetFormFields();
         $this->showAddForm = false;
+        $this->flashMsg = 'Actividad masiva creada con éxito.';
     }
 
     public function verCasos(int $id): void
