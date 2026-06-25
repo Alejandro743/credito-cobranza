@@ -50,7 +50,7 @@
         <button wire:click="create"
                 style="height:32px; padding:0 14px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:5px; white-space:nowrap;">
             <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-            Nueva campaña
+            Nueva Actividad Masiva
         </button>
         @endif
     </div>
@@ -61,7 +61,7 @@
         <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:10px 16px; display:flex; align-items:center; justify-content:space-between;">
             <span style="font-size:13px; font-weight:800; color:#7B6FE8; display:flex; align-items:center; gap:7px;">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                Nueva campaña
+                Nueva Actividad Masiva
             </span>
             <button wire:click="cancelForm" style="width:28px; height:28px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
