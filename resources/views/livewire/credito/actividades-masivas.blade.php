@@ -281,7 +281,7 @@
                                     style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#B91C1C; cursor:pointer; justify-content:center;"
                                     @mouseenter="$el.style.background='#FEF2F2'" @mouseleave="$el.style.background=''">
                                 <svg width="12" height="12" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                                Cancelar campaña
+                                Cancelar actividades
                             </button>
                             @endif
                             @endif
