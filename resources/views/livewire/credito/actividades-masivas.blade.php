@@ -237,7 +237,7 @@
                         <div style="position:absolute; right:-7px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:7px solid #E5E7EB;"></div>
                         <div style="position:absolute; right:-6px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:6px solid transparent; border-bottom:6px solid transparent; border-left:6px solid #fff;"></div>
                         <div style="background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:4px 0; box-shadow:0 8px 24px rgba(0,0,0,.12); overflow:hidden;">
-                            @if (in_array($c->estado, ['abierta','en_proceso']))
+                            @if ($c->estado === 'abierta')
                             <button wire:click="verCasos({{ $c->id }})" @click="menuOpen=false"
                                     style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
                                     @mouseenter="$el.style.background='#F0FDF4'" @mouseleave="$el.style.background=''">
