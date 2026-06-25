@@ -235,7 +235,7 @@
                                     style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
                                     @mouseenter="$el.style.background='#F0FDF4'" @mouseleave="$el.style.background=''">
                                 <svg width="12" height="12" fill="none" stroke="#065F46" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
-                                Casos
+                                Agregar Casos
                             </button>
                             <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
                             @if ($c->estado === 'abierta' && $c->actividades_count > 0)
