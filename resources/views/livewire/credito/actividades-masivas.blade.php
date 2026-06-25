@@ -238,7 +238,7 @@
                                 Casos
                             </button>
                             <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
-                            @if ($c->estado === 'abierta')
+                            @if ($c->estado === 'abierta' && $c->actividades_count > 0)
                             <button wire:click="cambiarEstado({{ $c->id }}, 'en_proceso')" @click="menuOpen=false"
                                     style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
                                     @mouseenter="$el.style.background='#EFF6FF'" @mouseleave="$el.style.background=''">

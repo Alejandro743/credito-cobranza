@@ -235,6 +235,7 @@ class ActividadesMasivas extends Component
     {
         if ($estado === 'en_proceso') {
             $campana = Campana::findOrFail($id);
+            if ($campana->actividades()->count() === 0) return;
             $campana->update(['estado' => 'en_proceso']);
             $campana->actividades()->where('estado', 'abierta')->update([
                 'estado'       => 'en_proceso',
