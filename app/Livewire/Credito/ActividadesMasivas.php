@@ -200,9 +200,18 @@ class ActividadesMasivas extends Component
         $campana    = Campana::findOrFail($this->casosCampanaId);
         $existentes = CobranzaActividad::where('campana_id', $campana->id)
             ->pluck('caso_id')->map(fn($v) => (int)$v)->toArray();
+        $seleccionados = array_map('intval', $this->selectedCasoIds);
 
-        foreach ($this->selectedCasoIds as $casoId) {
-            $casoId = (int)$casoId;
+        // Quitar: estaban vinculados y el usuario los deseleccionó
+        $quitar = array_diff($existentes, $seleccionados);
+        if ($quitar) {
+            CobranzaActividad::where('campana_id', $campana->id)
+                ->whereIn('caso_id', array_values($quitar))
+                ->delete();
+        }
+
+        // Agregar: nuevos casos seleccionados
+        foreach ($seleccionados as $casoId) {
             if (in_array($casoId, $existentes)) continue;
 
             $caso = CobranzaCaso::find($casoId);
@@ -227,7 +236,7 @@ class ActividadesMasivas extends Component
             }
         }
 
-        $this->flashMsg = 'Casos guardados correctamente.';
+        $this->flashMsg = 'Casos actualizados correctamente.';
     }
 
     public function cambiarEstado(int $id, string $estado): void
