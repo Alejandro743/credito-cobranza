@@ -127,6 +127,7 @@
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr>
                     <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
+                    <th style="{{ $thC }}">Código</th>
                     <th style="{{ $thC }}">Nombre</th>
                     <th style="{{ $thC }}">Tipo Contacto</th>
                     <th style="{{ $thC }}">Acción</th>
@@ -150,6 +151,9 @@
                 @mouseenter="$el.style.background='{{ $editing ? '#F8F7FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $editing ? '#F8F7FF' : '' }}'"
                 x-data="{ menuOpen: false, menuTop: 0, menuLeft: 0 }" @cerrar-menus.window="menuOpen=false">
                 <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $campanas->firstItem() + $loop->index }}</td>
+                <td style="{{ $tdC }}">
+                    <span style="font-family:monospace; font-size:12px; font-weight:700; color:#7B6FE8;">AM-{{ str_pad($c->id, 4, '0', STR_PAD_LEFT) }}</span>
+                </td>
 
                 {{-- Nombre --}}
                 <td style="{{ $tdC }} font-weight:600; color:#111827; min-width:140px;">
@@ -300,7 +304,7 @@
             </tr>
             @empty
             <tr>
-                <td colspan="9" style="padding:48px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
+                <td colspan="10" style="padding:48px 24px; text-align:center; color:#9CA3AF; font-size:13px;">
                     No hay campañas creadas aún.
                 </td>
             </tr>
