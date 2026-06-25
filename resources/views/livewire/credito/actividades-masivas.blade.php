@@ -259,11 +259,13 @@
                                     <svg width="12" height="12" fill="none" stroke="#065F46" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
                                     Agregar Casos
                                 </button>
+                                @if ($c->actividades_count > 0)
                                 <button wire:click="verDetalle({{ $c->id }})" @click="menuOpen=false"
                                         style="{{ $btnS }}" @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
                                     <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                     Ver Casos Vinculados
                                 </button>
+                                @endif
                                 {{-- Seg 3: Editar + Quitar --}}
                                 <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
                                 <button wire:click="edit({{ $c->id }})" @click="menuOpen=false"
