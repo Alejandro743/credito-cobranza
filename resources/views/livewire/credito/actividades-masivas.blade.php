@@ -134,7 +134,8 @@
                 $sE = 'width:100%; height:26px; padding:0 4px; border:1px solid #EDE9FE; border-radius:6px; font-size:11px; color:#374151; outline:none; background:#fff; cursor:pointer; box-sizing:border-box;';
             @endphp
             <tr wire:key="camp-{{ $c->id }}" style="border-bottom:1px solid #F9FAFB; transition:background .1s; {{ $editing ? 'background:#F8F7FF;' : '' }}"
-                @mouseenter="$el.style.background='{{ $editing ? '#F8F7FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $editing ? '#F8F7FF' : '' }}'" x-data>
+                @mouseenter="$el.style.background='{{ $editing ? '#F8F7FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $editing ? '#F8F7FF' : '' }}'"
+                x-data="{ menuOpen: false, menuTop: 0, menuLeft: 0 }" @cerrar-menus.window="menuOpen=false">
                 <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $campanas->firstItem() + $loop->index }}</td>
 
                 {{-- Nombre --}}
@@ -203,35 +204,75 @@
                     <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $eBg }}; color:{{ $eCol }};">{{ $eLbl }}</span>
                 </td>
                 <td style="{{ $tdC }} text-align:center;">
+                    @if($editing)
                     <div style="display:inline-flex; gap:4px; align-items:center;">
-                        @if($editing)
-                            <button wire:click="saveEdit"
-                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#7B6FE8; color:#fff; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Guardar</button>
-                            <button wire:click="cancelEdit"
-                                    style="height:24px; padding:0 8px; border:1px solid #E5E7EB; border-radius:5px; background:#fff; color:#6B7280; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cancelar</button>
-                        @else
-                            <button wire:click="verDetalle({{ $c->id }})"
-                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#EDE9FE; color:#7B6FE8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Ver</button>
+                        <button wire:click="saveEdit"
+                                style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#7B6FE8; color:#fff; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Guardar</button>
+                        <button wire:click="cancelEdit"
+                                style="height:24px; padding:0 8px; border:1px solid #E5E7EB; border-radius:5px; background:#fff; color:#6B7280; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cancelar</button>
+                    </div>
+                    @else
+                    {{-- Trigger ⋮ --}}
+                    <button @click="$dispatch('cerrar-menus'); const r=$event.currentTarget.getBoundingClientRect(); menuTop=r.top+r.height/2; menuLeft=r.left-180; if(menuLeft<8)menuLeft=8; $nextTick(()=>menuOpen=true);"
+                            style="width:28px; height:28px; border:none; border-radius:6px; background:#EDE9FE; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
+                        <svg width="14" height="14" fill="currentColor" viewBox="0 0 16 16">
+                            <circle cx="8" cy="2.5" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="8" cy="13.5" r="1.5"/>
+                        </svg>
+                    </button>
+                    <div x-show="menuOpen" @click.outside="menuOpen=false" x-transition.opacity.duration.100ms
+                         :style="{ position:'fixed', top:menuTop+'px', left:menuLeft+'px', zIndex:9990, minWidth:'172px', transform:'translateY(-50%)' }">
+                        <div style="position:absolute; right:-7px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:7px solid #E5E7EB;"></div>
+                        <div style="position:absolute; right:-6px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:6px solid transparent; border-bottom:6px solid transparent; border-left:6px solid #fff;"></div>
+                        <div style="background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:4px 0; box-shadow:0 8px 24px rgba(0,0,0,.12); overflow:hidden;">
+                            <button wire:click="verDetalle({{ $c->id }})" @click="menuOpen=false"
+                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
+                                    @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
+                                <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                                Ver
+                            </button>
                             @if (in_array($c->estado, ['abierta','en_proceso']))
-                            <button wire:click="verCasos({{ $c->id }})"
-                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#F0FDF4; color:#065F46; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Casos</button>
-                            @endif
+                            <button wire:click="verCasos({{ $c->id }})" @click="menuOpen=false"
+                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
+                                    @mouseenter="$el.style.background='#F0FDF4'" @mouseleave="$el.style.background=''">
+                                <svg width="12" height="12" fill="none" stroke="#065F46" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
+                                Casos
+                            </button>
+                            <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
                             @if ($c->estado === 'abierta')
-                            <button wire:click="cambiarEstado({{ $c->id }}, 'en_proceso')"
-                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#EFF6FF; color:#1D4ED8; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Iniciar</button>
+                            <button wire:click="cambiarEstado({{ $c->id }}, 'en_proceso')" @click="menuOpen=false"
+                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
+                                    @mouseenter="$el.style.background='#EFF6FF'" @mouseleave="$el.style.background=''">
+                                <svg width="12" height="12" fill="none" stroke="#1D4ED8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/></svg>
+                                Iniciar
+                            </button>
+                            <button wire:click="edit({{ $c->id }})" @click="menuOpen=false"
+                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
+                                    @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
+                                <svg width="12" height="12" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                                Editar
+                            </button>
                             @endif
                             @if ($c->estado === 'en_proceso')
-                            <button wire:click="cambiarEstado({{ $c->id }}, 'cerrada')"
-                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#F0FDF4; color:#065F46; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cerrar</button>
+                            <button wire:click="cambiarEstado({{ $c->id }}, 'cerrada')" @click="menuOpen=false"
+                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
+                                    @mouseenter="$el.style.background='#F0FDF4'" @mouseleave="$el.style.background=''">
+                                <svg width="12" height="12" fill="none" stroke="#065F46" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                Cerrar
+                            </button>
                             @endif
                             @if ($c->estado === 'abierta')
-                            <button wire:click="edit({{ $c->id }})"
-                                    style="height:24px; padding:0 8px; border:1px solid #E5E7EB; border-radius:5px; background:#F9FAFB; color:#374151; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Editar</button>
-                            <button wire:click="cambiarEstado({{ $c->id }}, 'cancelada')"
-                                    style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#FEF2F2; color:#B91C1C; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cancelar</button>
+                            <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
+                            <button wire:click="cambiarEstado({{ $c->id }}, 'cancelada')" @click="menuOpen=false"
+                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#B91C1C; cursor:pointer; justify-content:center;"
+                                    @mouseenter="$el.style.background='#FEF2F2'" @mouseleave="$el.style.background=''">
+                                <svg width="12" height="12" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                                Cancelar campaña
+                            </button>
                             @endif
-                        @endif
+                            @endif
+                        </div>
                     </div>
+                    @endif
                 </td>
             </tr>
             @empty
