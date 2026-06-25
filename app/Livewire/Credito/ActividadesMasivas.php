@@ -51,7 +51,8 @@ class ActividadesMasivas extends Component
     public array  $selectedCasoIds  = [];
     public string $flashMsg         = '';
 
-    // Modales cierre/cancelación campaña
+    // Modales cierre/cancelación/eliminar campaña
+    public bool   $showModalEliminar = false;
     public bool   $showModalCerrar   = false;
     public bool   $showModalCancelar = false;
     public int    $modalCampanaId    = 0;
@@ -237,6 +238,25 @@ class ActividadesMasivas extends Component
         }
 
         $this->flashMsg = 'Casos actualizados correctamente.';
+    }
+
+    public function abrirEliminar(int $id): void
+    {
+        $this->modalCampanaId    = $id;
+        $this->showModalEliminar = true;
+    }
+
+    public function confirmarEliminar(): void
+    {
+        $campana = Campana::findOrFail($this->modalCampanaId);
+        if ($campana->estado !== 'abierta') {
+            $this->showModalEliminar = false;
+            return;
+        }
+        $campana->actividades()->delete();
+        $campana->delete();
+        $this->showModalEliminar = false;
+        $this->modalCampanaId    = 0;
     }
 
     public function cambiarEstado(int $id, string $estado): void

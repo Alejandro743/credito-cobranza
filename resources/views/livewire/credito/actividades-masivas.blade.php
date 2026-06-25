@@ -119,7 +119,7 @@
     {{-- Tabla campañas --}}
     <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; flex:1; min-height:0;">
         <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
-            <span style="font-size:13px; font-weight:700; color:#111827;">Campañas</span>
+            <span style="font-size:13px; font-weight:700; color:#111827;">Actividades Masivas</span>
             <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $campanas->total() }}</span>
         </div>
         <div style="flex:1; min-height:0; overflow:auto;">
@@ -275,8 +275,16 @@
                                 Cerrar Actividades
                             </button>
                             @endif
-                            @if (in_array($c->estado, ['abierta','en_proceso']))
                             <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
+                            @if ($c->estado === 'abierta')
+                            <button wire:click="abrirEliminar({{ $c->id }})" @click="menuOpen=false"
+                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#B91C1C; cursor:pointer; justify-content:center;"
+                                    @mouseenter="$el.style.background='#FEF2F2'" @mouseleave="$el.style.background=''">
+                                <svg width="12" height="12" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                Quitar
+                            </button>
+                            @endif
+                            @if ($c->estado === 'en_proceso')
                             <button wire:click="cambiarEstado({{ $c->id }}, 'cancelada')" @click="menuOpen=false"
                                     style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#B91C1C; cursor:pointer; justify-content:center;"
                                     @mouseenter="$el.style.background='#FEF2F2'" @mouseleave="$el.style.background=''">
@@ -508,6 +516,30 @@
     </div>
 </div>
 @endif
+
+{{-- ══ MODAL: QUITAR CAMPAÑA ══ --}}
+<div x-data="{ open: @entangle('showModalEliminar') }">
+<template x-teleport="body">
+<div x-show="open" class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);" @click.self="open=false" @keydown.escape.window="open=false">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:400px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#FEE2E2; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </div>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Quitar campaña</p>
+            <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
+        </div>
+        <div style="{{ $mBody }}">
+            <p style="font-size:13px; color:#374151; margin:0;">¿Confirmás que querés quitar esta campaña? Se eliminará del listado y no podrá recuperarse.</p>
+        </div>
+        <div style="{{ $mFoot }}">
+            <button @click="open=false" style="height:36px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
+            <button wire:click="confirmarEliminar" wire:loading.attr="disabled" style="height:36px; padding:0 18px; border:none; border-radius:8px; background:#B91C1C; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">Quitar</button>
+        </div>
+    </div>
+</div>
+</template>
+</div>
 
 {{-- ══ MODAL: CERRAR CAMPAÑA ══ --}}
 <div x-data="{ open: @entangle('showModalCerrar') }">
