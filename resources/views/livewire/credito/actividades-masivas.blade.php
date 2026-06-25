@@ -13,6 +13,19 @@
     $sTitle='font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:#7B6FE8; margin:0 0 6px;';
 @endphp
 
+{{-- ══ TOAST ══ --}}
+@if ($flashMsg)
+<div x-data x-init="setTimeout(() => $wire.set('flashMsg', ''), 3500)"
+     style="position:fixed; bottom:28px; left:50%; transform:translateX(-50%); z-index:99999;
+            display:flex; align-items:center; gap:10px;
+            background:#1A1A2E; color:#fff; border-radius:12px;
+            padding:12px 20px; box-shadow:0 8px 32px rgba(0,0,0,.28);
+            font-size:13px; font-weight:600; white-space:nowrap;">
+    <svg width="16" height="16" fill="none" stroke="#4ADE80" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+    {{ $flashMsg }}
+</div>
+@endif
+
 {{-- ══ MODO LIST ══ --}}
 @if ($mode === 'list')
 
