@@ -240,58 +240,58 @@
                          :style="{ position:'fixed', top:menuTop+'px', left:menuLeft+'px', zIndex:9990, minWidth:'172px', transform:'translateY(-50%)' }">
                         <div style="position:absolute; right:-7px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:7px solid transparent; border-bottom:7px solid transparent; border-left:7px solid #E5E7EB;"></div>
                         <div style="position:absolute; right:-6px; top:50%; transform:translateY(-50%); width:0; height:0; border-top:6px solid transparent; border-bottom:6px solid transparent; border-left:6px solid #fff;"></div>
-                        <div style="background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:4px 0; box-shadow:0 8px 24px rgba(0,0,0,.12); overflow:hidden;">
+                        <div style="background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:4px 0; box-shadow:0 8px 24px rgba(0,0,0,.12); overflow:hidden; min-width:200px;">
+                            @php $btnS = 'display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; text-align:left;'; @endphp
+
+                            {{-- Segmento 1: acción principal --}}
+                            @if ($c->estado === 'abierta' && $c->actividades_count > 0)
+                            <button wire:click="cambiarEstado({{ $c->id }}, 'en_proceso')" @click="menuOpen=false"
+                                    style="{{ $btnS }}" @mouseenter="$el.style.background='#EFF6FF'" @mouseleave="$el.style.background=''">
+                                <svg width="12" height="12" fill="none" stroke="#1D4ED8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/></svg>
+                                Iniciar Actividades
+                            </button>
+                            @endif
+                            @if ($c->estado === 'en_proceso')
+                            <button wire:click="cambiarEstado({{ $c->id }}, 'cerrada')" @click="menuOpen=false"
+                                    style="{{ $btnS }}" @mouseenter="$el.style.background='#F0FDF4'" @mouseleave="$el.style.background=''">
+                                <svg width="12" height="12" fill="none" stroke="#065F46" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                Cerrar Actividades
+                            </button>
+                            @endif
+
+                            {{-- Segmento 2: casos --}}
+                            <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
                             @if ($c->estado === 'abierta')
                             <button wire:click="verCasos({{ $c->id }})" @click="menuOpen=false"
-                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
-                                    @mouseenter="$el.style.background='#F0FDF4'" @mouseleave="$el.style.background=''">
+                                    style="{{ $btnS }}" @mouseenter="$el.style.background='#F0FDF4'" @mouseleave="$el.style.background=''">
                                 <svg width="12" height="12" fill="none" stroke="#065F46" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
                                 Agregar Casos
                             </button>
                             @endif
                             <button wire:click="verDetalle({{ $c->id }})" @click="menuOpen=false"
-                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
-                                    @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
+                                    style="{{ $btnS }}" @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
                                 <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                                 Ver Casos Vinculados
                             </button>
+
+                            {{-- Segmento 3: edición / destructivo --}}
                             @if (in_array($c->estado, ['abierta','en_proceso']))
                             <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
-                            @if ($c->estado === 'abierta' && $c->actividades_count > 0)
-                            <button wire:click="cambiarEstado({{ $c->id }}, 'en_proceso')" @click="menuOpen=false"
-                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
-                                    @mouseenter="$el.style.background='#EFF6FF'" @mouseleave="$el.style.background=''">
-                                <svg width="12" height="12" fill="none" stroke="#1D4ED8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/></svg>
-                                Iniciar Actividades
-                            </button>
+                            @if ($c->estado === 'abierta')
                             <button wire:click="edit({{ $c->id }})" @click="menuOpen=false"
-                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
-                                    @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
+                                    style="{{ $btnS }}" @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background=''">
                                 <svg width="12" height="12" fill="none" stroke="#374151" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                                 Editar
                             </button>
-                            @endif
-                            @if ($c->estado === 'en_proceso')
-                            <button wire:click="cambiarEstado({{ $c->id }}, 'cerrada')" @click="menuOpen=false"
-                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#374151; cursor:pointer; justify-content:center;"
-                                    @mouseenter="$el.style.background='#F0FDF4'" @mouseleave="$el.style.background=''">
-                                <svg width="12" height="12" fill="none" stroke="#065F46" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                Cerrar Actividades
-                            </button>
-                            @endif
-                            <div style="height:1px; background:#F3F4F6; margin:3px 0;"></div>
-                            @if ($c->estado === 'abierta')
                             <button wire:click="abrirEliminar({{ $c->id }})" @click="menuOpen=false"
-                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#B91C1C; cursor:pointer; justify-content:center;"
-                                    @mouseenter="$el.style.background='#FEF2F2'" @mouseleave="$el.style.background=''">
+                                    style="{{ $btnS }} color:#B91C1C;" @mouseenter="$el.style.background='#FEF2F2'" @mouseleave="$el.style.background=''">
                                 <svg width="12" height="12" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                 Quitar
                             </button>
                             @endif
                             @if ($c->estado === 'en_proceso')
                             <button wire:click="cambiarEstado({{ $c->id }}, 'cancelada')" @click="menuOpen=false"
-                                    style="display:flex; align-items:center; gap:9px; width:100%; padding:9px 14px; border:none; background:none; font-size:12px; font-weight:600; color:#B91C1C; cursor:pointer; justify-content:center;"
-                                    @mouseenter="$el.style.background='#FEF2F2'" @mouseleave="$el.style.background=''">
+                                    style="{{ $btnS }} color:#B91C1C;" @mouseenter="$el.style.background='#FEF2F2'" @mouseleave="$el.style.background=''">
                                 <svg width="12" height="12" fill="none" stroke="#B91C1C" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                                 Cancelar actividades
                             </button>
