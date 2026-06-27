@@ -612,7 +612,7 @@
             <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
         <div style="{{ $mBody }}">
-            <p style="font-size:13px; color:#374151; margin:0;">¿Confirmás que querés quitar esta campaña? Se eliminará del listado y no podrá recuperarse.</p>
+            <p style="font-size:13px; color:#374151; margin:0;">¿Confirmás que querés quitar esta actividad masiva? Se eliminará del listado y no podrá recuperarse.</p>
         </div>
         <div style="{{ $mFoot }}">
             <button @click="open=false" style="height:36px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
@@ -636,7 +636,7 @@
             <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
         <div style="{{ $mBody }}">
-            <p style="font-size:12px; color:#6B7280; margin:0;">Se cerrarán todas las actividades activas de esta campaña con los datos indicados.</p>
+            <p style="font-size:12px; color:#6B7280; margin:0;">Se cerrarán todas las actividades activas de esta actividad masiva con los datos indicados.</p>
             <div style="border:1px solid #EDE9FE; border-radius:10px; padding:14px; background:#fff; display:flex; flex-direction:column; gap:10px;">
                 <p style="{{ $sTitle }}">■ Resultado</p>
                 <div>
@@ -677,7 +677,7 @@
             <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
         <div style="{{ $mBody }}">
-            <p style="font-size:12px; color:#6B7280; margin:0;">Se cancelarán todas las actividades activas de esta campaña.</p>
+            <p style="font-size:12px; color:#6B7280; margin:0;">Se cancelarán todas las actividades activas de esta actividad masiva.</p>
             <div style="border:1px solid #EDE9FE; border-radius:10px; padding:14px; background:#fff; display:flex; flex-direction:column; gap:10px;">
                 <p style="{{ $sTitle }}">■ Motivo</p>
                 <div>
