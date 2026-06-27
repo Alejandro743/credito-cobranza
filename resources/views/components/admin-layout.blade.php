@@ -211,33 +211,28 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
             $hdrIconColor = $hdrColorMap[$moduloActivo?->color ?? ''] ?? '#7B6FE8';
             $hdrIconBg    = $hdrBgMap[$moduloActivo?->color ?? ''] ?? 'rgba(123,111,232,.13)';
         @endphp
-        <header class="flex items-center gap-3 px-4 flex-shrink-0"
-                style="background:#fff; border-bottom:1px solid #E5E7EB; min-height:56px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
+        <header class="flex items-center flex-shrink-0"
+                style="background:#fff; border-bottom:1px solid #E5E7EB; min-height:56px; box-shadow:0 1px 3px rgba(0,0,0,.04); gap:0;">
 
-
-            {{-- Toggle sidebar --}}
+            {{-- Toggle sidebar — alto completo --}}
             <button @click="$dispatch('toggle-sidebar')"
-                    style="width:30px; height:30px; border:none; border-radius:8px; background:#EA580C; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s; box-shadow:0 2px 6px rgba(234,88,12,.45);"
+                    style="align-self:stretch; width:38px; border:none; border-radius:0; background:#EA580C; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s; box-shadow:2px 0 8px rgba(234,88,12,.3);"
                     @mouseenter="$el.style.background='#C2410C'" @mouseleave="$el.style.background='#EA580C'"
                     :title="sidebarCollapsed ? 'Expandir menú' : 'Colapsar menú'">
                 <svg x-show="!sidebarCollapsed" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
                 <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
             </button>
 
-            <div style="width:4px; flex-shrink:0;"></div>
-
-            {{-- Ícono cuadrícula --}}
-            <div style="width:34px; height:34px; border-radius:9px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg width="17" height="17" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-            </div>
-
-            {{-- Título --}}
-            <div class="flex-1 min-w-0" style="overflow:hidden;">
-                <span style="font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; line-height:1;">{{ $pageTitle }}</span>
+            {{-- Ícono cuadrícula + Título --}}
+            <div class="flex items-center flex-1 min-w-0" style="gap:5px; padding:0 12px; overflow:hidden;">
+                <div style="width:34px; height:34px; border-radius:9px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="17" height="17" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+                </div>
+                <span style="font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1;">{{ $pageTitle }}</span>
             </div>
 
             {{-- Fecha --}}
-            <div style="font-size:11px; color:#D1D5DB; flex-shrink:0;" class="hidden sm:block">{{ now()->format('d M Y') }}</div>
+            <div style="font-size:11px; color:#D1D5DB; flex-shrink:0; padding-right:16px;" class="hidden sm:block">{{ now()->format('d M Y') }}</div>
         </header>
 
         {{-- Flash --}}
