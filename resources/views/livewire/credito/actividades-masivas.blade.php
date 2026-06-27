@@ -133,6 +133,7 @@
                     <th style="{{ $thC }}">Acción</th>
                     <th style="{{ $thC }}">Fecha Prog.</th>
                     <th style="{{ $thC }}">Responsable</th>
+                    <th style="{{ $thC }}">Observación</th>
                     <th style="{{ $thC }} text-align:center;">Actividades</th>
                     <th style="{{ $thC }} text-align:center;">Estado</th>
                     <th style="{{ $thC }} text-align:center;">Acciones</th>
@@ -211,6 +212,15 @@
                         @error('editResponsableId') <p style="font-size:10px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
                     @else
                         {{ $c->responsable?->name ?? '—' }}
+                    @endif
+                </td>
+
+                {{-- Observación --}}
+                <td style="{{ $tdC }} font-size:12px; color:#6B7280; min-width:120px; max-width:200px;">
+                    @if($editing)
+                        <input wire:model="editObservacion" type="text" placeholder="Opcional..." style="{{ $iE }}">
+                    @else
+                        {{ $c->observacion ?: '—' }}
                     @endif
                 </td>
 
