@@ -225,6 +225,11 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
             </button>
 
 
+            {{-- Ícono header --}}
+            <div style="width:36px; height:36px; border-radius:10px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="18" height="18" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            </div>
+
             {{-- Título --}}
             <div class="flex-1 min-w-0" style="overflow:hidden;">
                 <span style="font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; line-height:1;">{{ $pageTitle }}</span>
