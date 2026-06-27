@@ -14,7 +14,7 @@ style="background:#0B1120;">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }} — Crediessen</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
     tailwind.config = {
@@ -238,11 +238,8 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
             </div>
 
             {{-- Título --}}
-            <div class="flex-1 min-w-0" style="display:flex; flex-direction:column; justify-content:center; overflow:hidden;">
-                @if($activeModuloName)
-                <span style="font-size:10px; font-weight:600; color:#C4B5FD; text-transform:uppercase; letter-spacing:.8px; line-height:1; margin-bottom:2px;">{{ $activeModuloName }}</span>
-                @endif
-                <span style="font-size:18px; font-weight:900; color:#111827; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.1; font-family:'Inter',sans-serif;">{{ $pageTitle }}</span>
+            <div class="flex-1 min-w-0" style="overflow:hidden;">
+                <span style="font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; color:#111827; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; line-height:1;">{{ $pageTitle }}</span>
             </div>
 
             {{-- Fecha --}}
