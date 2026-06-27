@@ -213,7 +213,8 @@
                         <input type="checkbox"
                                :checked="$wire.selectedCampanaId === {{ $c->id }}"
                                @click="$wire.selectedCampanaId === {{ $c->id }} ? $wire.set('selectedCampanaId', null) : $wire.selectCampana({{ $c->id }})"
-                               style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                               :disabled="{{ $editingCampanaId && !$editing ? 'true' : 'false' }}"
+                               style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingCampanaId && !$editing ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
                     </div>
                 </td>
                 <td style="{{ $tdC }}">
