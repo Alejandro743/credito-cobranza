@@ -41,6 +41,8 @@
             transition: width 0.28s cubic-bezier(.4,0,.2,1);
             overflow: hidden;
         }
+        aside.is-collapsed,
+        aside.is-collapsed .sidebar-nav { overflow: visible !important; }
         .nav-label {
             transition: opacity 0.2s ease, width 0.28s ease;
             white-space: nowrap;
