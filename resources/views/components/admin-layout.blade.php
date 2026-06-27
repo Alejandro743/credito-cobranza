@@ -216,7 +216,7 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
 
             {{-- Toggle sidebar --}}
             <button @click="$dispatch('toggle-sidebar')"
-                    style="align-self:stretch; width:58px; border:none; border-radius:0; background:#7B6FE8; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:2px 0 8px rgba(123,111,232,.4);"
+                    style="align-self:stretch; margin:6px 0; width:58px; border:none; border-radius:6px; background:#7B6FE8; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:2px 0 8px rgba(123,111,232,.4);"
                     :title="sidebarCollapsed ? 'Expandir menú' : 'Colapsar menú'">
                 <div style="width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;">
                     <svg x-show="!sidebarCollapsed" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
