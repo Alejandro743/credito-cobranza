@@ -608,7 +608,7 @@
             <div style="width:32px; height:32px; border-radius:8px; background:#FEE2E2; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="16" height="16" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
             </div>
-            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Quitar campaña</p>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Quitar Actividad Masiva</p>
             <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
         <div style="{{ $mBody }}">
@@ -632,7 +632,7 @@
             <div style="width:32px; height:32px; border-radius:8px; background:#DCFCE7; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="16" height="16" fill="none" stroke="#065F46" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
             </div>
-            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cerrar campaña</p>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cerrar Actividad Masiva</p>
             <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
         <div style="{{ $mBody }}">
@@ -673,7 +673,7 @@
             <div style="width:32px; height:32px; border-radius:8px; background:#FEE2E2; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <svg width="16" height="16" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </div>
-            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cancelar campaña</p>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Cancelar Actividad Masiva</p>
             <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
         <div style="{{ $mBody }}">
