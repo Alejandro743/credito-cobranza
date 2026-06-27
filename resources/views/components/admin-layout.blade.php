@@ -237,13 +237,12 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
                 @endif
             </div>
 
-            {{-- Breadcrumb en lila --}}
-            <div class="flex-1 min-w-0" style="display:flex; align-items:center; gap:6px; overflow:hidden;">
+            {{-- Título --}}
+            <div class="flex-1 min-w-0" style="display:flex; flex-direction:column; justify-content:center; overflow:hidden;">
                 @if($activeModuloName)
-                <span style="font-size:13px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">{{ $activeModuloName }}</span>
-                <span style="font-size:13px; color:#C4B5FD;">/</span>
+                <span style="font-size:10px; font-weight:600; color:#C4B5FD; text-transform:uppercase; letter-spacing:.8px; line-height:1; margin-bottom:2px;">{{ $activeModuloName }}</span>
                 @endif
-                <span style="font-size:13px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $pageTitle }}</span>
+                <span style="font-size:18px; font-weight:900; color:#111827; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.1; font-family:'Inter',sans-serif;">{{ $pageTitle }}</span>
             </div>
 
             {{-- Fecha --}}
