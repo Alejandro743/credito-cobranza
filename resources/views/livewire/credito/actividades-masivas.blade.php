@@ -203,7 +203,7 @@
                 @mouseenter="$el.style.background='{{ $sel ? '#F5F3FF' : ($editing ? '#F8F7FF' : '#FAFAFE') }}'" @mouseleave="$el.style.background='{{ $rowBg }}'"
                 x-data="{ menuOpen: false, menuTop: 0, menuLeft: 0 }" @cerrar-menus.window="menuOpen=false">
                 <td class="col-row-num" style="{{ $tdC }} text-align:center; position:sticky; left:0; z-index:2; background:{{ $rowBg ?: '#fff' }};">
-                    <div style="display:inline-flex; align-items:center; gap:6px;">
+                    <div style="display:inline-flex; align-items:center; gap:14px;">
                         <span style="font-size:12px; font-weight:700; color:#374151;">{{ $campanas->firstItem() + $loop->index }}</span>
                         <input type="checkbox"
                                :checked="$wire.selectedCampanaId === {{ $c->id }}"
