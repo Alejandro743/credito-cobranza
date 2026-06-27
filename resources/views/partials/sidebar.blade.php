@@ -16,8 +16,8 @@
               -translate-x-full md:translate-x-0
               transition-transform duration-300 ease-in-out md:transition-none"
        :class="{ 'translate-x-0': sidebarOpen, 'is-collapsed': sidebarCollapsed }"
-       :style="{ width: sidebarCollapsed ? '64px' : '240px' }"
-       style="width:240px; background:#0B1120;">
+       :style="{ width: sidebarCollapsed ? '64px' : '260px' }"
+       style="width:260px; background:#0B1120;">
 
     {{-- ── Logo ── --}}
     <div style="padding:16px 14px; border-bottom:1px solid rgba(255,255,255,.07); flex-shrink:0; min-height:64px; display:flex; align-items:center; gap:10px;">
