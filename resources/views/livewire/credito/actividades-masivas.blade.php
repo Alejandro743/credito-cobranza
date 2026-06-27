@@ -5,7 +5,7 @@
     $tdC  = 'padding:8px 12px; font-size:13px; color:#374151; vertical-align:middle; white-space:nowrap; border-bottom:1px solid #F9FAFB;';
     $lbl  = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:block; margin-bottom:5px;';
     $inp  = 'width:100%; height:38px; padding:0 10px; border:1px solid #EDE9FE; border-radius:8px; font-size:13px; color:#374151; outline:none; background:#fff; box-sizing:border-box;';
-    $sel  = 'width:100%; height:38px; padding:0 10px; border:1px solid #EDE9FE; border-radius:8px; font-size:13px; color:#374151; outline:none; background:#fff; cursor:pointer; box-sizing:border-box;';
+    $sel  = 'width:100%; height:38px; padding:0 10px; border:1px solid #EDE9FE; border-radius:8px; font-size:13px; color:#374151; outline:none; background:#fff; cursor:pointer; box-sizing:border-box; font-family:inherit;';
     $mHead= 'padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0; background:#fff;';
     $mBody= 'padding:14px 16px; display:flex; flex-direction:column; gap:10px; overflow-y:auto; flex:1; background:#fff;';
     $mFoot= 'padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0; background:#fff;';
