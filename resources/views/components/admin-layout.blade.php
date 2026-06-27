@@ -268,7 +268,7 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
 @include('partials.mobile-nav')
 @livewireScripts
 <div id="nav-tooltip-global"
-     x-show="navTipVisible"
+     x-show="navTipVisible && sidebarCollapsed"
      :style="{ top: navTipY + 'px', left: '72px' }"
      x-text="navTipText">
 </div>
