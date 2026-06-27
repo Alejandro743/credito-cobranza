@@ -231,8 +231,6 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
                 <svg width="17" height="17" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
             </div>
 
-            <div style="width:7px; flex-shrink:0;"></div>
-
             {{-- Título --}}
             <div class="flex-1 min-w-0" style="overflow:hidden;">
                 <span style="font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; line-height:1;">{{ $pageTitle }}</span>
