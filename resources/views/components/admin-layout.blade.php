@@ -5,7 +5,7 @@
     sidebarCollapsed: false,
     mobileTab: sessionStorage.getItem('_mTab') || 'inicio',
     init() { this.$watch('mobileTab', v => sessionStorage.setItem('_mTab', v)); }
-}" style="background:#0B1120;">
+}" @toggle-sidebar.window="sidebarCollapsed = !sidebarCollapsed" style="background:#0B1120;">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -201,6 +201,15 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
         <header class="flex items-center gap-3 px-4 flex-shrink-0"
                 style="background:#fff; border-bottom:1px solid #E5E7EB; min-height:56px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
 
+
+            {{-- Toggle sidebar --}}
+            <button @click="$dispatch('toggle-sidebar')"
+                    style="width:30px; height:30px; border:none; border-radius:8px; background:#EA580C; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s;"
+                    @mouseenter="$el.style.background='#C2410C'" @mouseleave="$el.style.background='#EA580C'"
+                    :title="sidebarCollapsed ? 'Expandir menú' : 'Colapsar menú'">
+                <svg x-show="!sidebarCollapsed" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
+                <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
+            </button>
 
             {{-- Ícono del módulo --}}
             <div style="width:32px; height:32px; border-radius:9px; background:{{ $hdrIconBg }}; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
