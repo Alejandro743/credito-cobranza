@@ -328,7 +328,11 @@ class ActividadesMasivas extends Component
         ]);
 
         $campana = Campana::findOrFail($this->modalCampanaId);
-        $campana->update(['estado' => 'cerrada']);
+        $campana->update([
+            'estado'            => 'cerrada',
+            'tipo_respuesta_id' => $this->cierreTipoRespuestaId,
+            'observacion_cierre'=> $this->cierreObs ?: null,
+        ]);
         $campana->actividades()->whereIn('estado', ['abierta', 'en_proceso'])->update([
             'estado'             => 'cerrada',
             'tipo_respuesta_id'  => $this->cierreTipoRespuestaId,
@@ -347,7 +351,11 @@ class ActividadesMasivas extends Component
     public function confirmarCancelacion(): void
     {
         $campana = Campana::findOrFail($this->modalCampanaId);
-        $campana->update(['estado' => 'cancelada']);
+        $campana->update([
+            'estado'              => 'cancelada',
+            'tipo_cancelacion_id' => $this->cancelTipoId ?: null,
+            'observacion_cierre'  => $this->cancelObs ?: null,
+        ]);
         $campana->actividades()->whereIn('estado', ['abierta', 'en_proceso'])->update([
             'estado'              => 'cancelada',
             'tipo_cancelacion_id' => $this->cancelTipoId ?: null,
@@ -385,7 +393,7 @@ class ActividadesMasivas extends Component
 
     public function render()
     {
-        $campanas = Campana::with(['tipoContacto', 'accion', 'responsable'])
+        $campanas = Campana::with(['tipoContacto', 'accion', 'responsable', 'tipoRespuesta', 'tipoCancelacion'])
             ->when($this->search, fn($q) => $q->where('nombre', 'like', "%{$this->search}%"))
             ->when($this->filtroEstado, fn($q) => $q->where('estado', $this->filtroEstado))
             ->withCount('actividades')

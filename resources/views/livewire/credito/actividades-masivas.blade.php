@@ -190,6 +190,8 @@
                     <th style="{{ $thC }}">Observación</th>
                     <th style="{{ $thC }} text-align:center;">Actividades</th>
                     <th style="{{ $thC }} text-align:center;">Estado</th>
+                    <th style="{{ $thC }}">Tipo Resultado</th>
+                    <th style="{{ $thC }}">Obs. Cierre</th>
                     <th style="{{ $thC }} text-align:center;">Acciones</th>
                 </tr>
             </thead>
@@ -295,6 +297,16 @@
                 <td style="{{ $tdC }} text-align:center;">
                     <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $eBg }}; color:{{ $eCol }};">{{ $eLbl }}</span>
                 </td>
+                <td style="{{ $tdC }} font-size:12px; color:#374151;">
+                    @if ($c->estado === 'cerrada')
+                        {{ $c->tipoRespuesta?->nombre ?? '—' }}
+                    @elseif ($c->estado === 'cancelada')
+                        {{ $c->tipoCancelacion?->nombre ?? '—' }}
+                    @else
+                        —
+                    @endif
+                </td>
+                <td style="{{ $tdC }} font-size:12px; color:#6B7280; min-width:160px;">{{ $c->observacion_cierre ?: '—' }}</td>
                 <td style="{{ $tdC }} text-align:center;">
                     @if(!$editing)
                     {{-- Trigger ⋮ --}}
@@ -688,10 +700,6 @@
                         <option value="{{ $tc->id }}">{{ $tc->nombre }}</option>
                         @endforeach
                     </select>
-                </div>
-                <div>
-                    <label style="{{ $lbl }}">Motivo</label>
-                    <input wire:model="cancelMotivo" type="text" placeholder="Motivo de cancelación..." style="{{ $sel }}">
                 </div>
                 <div>
                     <label style="{{ $lbl }}">Observación <span style="font-weight:400; font-size:10px; text-transform:none;">(opcional)</span></label>
