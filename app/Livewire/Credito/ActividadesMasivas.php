@@ -295,9 +295,9 @@ class ActividadesMasivas extends Component
                 'estado'       => 'en_proceso',
                 'fecha_inicio' => now(),
             ]);
-            $this->selectedCampanaId              = null;
-            $this->selectedCampanaEstado          = '';
-            $this->selectedCampanaActividadesCount = 0;
+            if ($this->selectedCampanaId === $id) {
+                $this->selectedCampanaEstado = 'en_proceso';
+            }
             return;
         }
 
@@ -337,11 +337,11 @@ class ActividadesMasivas extends Component
             'cerrado_por'        => auth()->id(),
         ]);
 
-        $this->showModalCerrar                = false;
-        $this->modalCampanaId                 = 0;
-        $this->selectedCampanaId              = null;
-        $this->selectedCampanaEstado          = '';
-        $this->selectedCampanaActividadesCount = 0;
+        $this->showModalCerrar = false;
+        if ($this->selectedCampanaId === $this->modalCampanaId) {
+            $this->selectedCampanaEstado = 'cerrada';
+        }
+        $this->modalCampanaId = 0;
     }
 
     public function confirmarCancelacion(): void
@@ -357,11 +357,11 @@ class ActividadesMasivas extends Component
             'cerrado_por'         => auth()->id(),
         ]);
 
-        $this->showModalCancelar              = false;
-        $this->modalCampanaId                 = 0;
-        $this->selectedCampanaId              = null;
-        $this->selectedCampanaEstado          = '';
-        $this->selectedCampanaActividadesCount = 0;
+        $this->showModalCancelar = false;
+        if ($this->selectedCampanaId === $this->modalCampanaId) {
+            $this->selectedCampanaEstado = 'cancelada';
+        }
+        $this->modalCampanaId = 0;
     }
 
     public function backToList(): void
