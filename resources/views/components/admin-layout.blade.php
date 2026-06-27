@@ -9,7 +9,7 @@
     navTipText: '', navTipY: 0, navTipVisible: false,
     init() { this.$watch('mobileTab', v => sessionStorage.setItem('_mTab', v)); }
 }"
-@toggle-sidebar.window="sidebarCollapsed = !sidebarCollapsed"
+@toggle-sidebar.window="if(sidebarCollapsed){ sidebarCollapsed = false; sidebarWidth = 240; } else { sidebarCollapsed = true; }"
 style="background:#0B1120;">
 <head>
     <meta charset="utf-8">
