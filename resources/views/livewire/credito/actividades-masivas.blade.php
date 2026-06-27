@@ -118,15 +118,64 @@
 
     {{-- Tabla campañas --}}
     <div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; flex:1; min-height:0;">
-        <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none;">
+        <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none; flex-wrap:wrap;">
             <span style="font-size:13px; font-weight:700; color:#111827;">Actividades Masivas</span>
             <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $campanas->total() }}</span>
+            @if ($selectedCampanaId)
+            @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+            <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB; flex-wrap:wrap;">
+                @if ($selectedCampanaEstado === 'abierta')
+                    @if ($selectedCampanaActividadesCount > 0)
+                    <button wire:click="cambiarEstado({{ $selectedCampanaId }}, 'en_proceso')" style="{{ $btnH }} background:#DBEAFE; color:#1D4ED8;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 010 1.972l-11.54 6.347a1.125 1.125 0 01-1.667-.986V5.653z"/></svg>
+                        Iniciar
+                    </button>
+                    @endif
+                    <button wire:click="verCasos({{ $selectedCampanaId }})" style="{{ $btnH }} background:#D1FAE5; color:#065F46;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0"/></svg>
+                        Agregar Casos
+                    </button>
+                    @if ($selectedCampanaActividadesCount > 0)
+                    <button wire:click="verDetalle({{ $selectedCampanaId }})" style="{{ $btnH }} background:#EDE9FE; color:#7B6FE8;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        Ver Casos
+                    </button>
+                    @endif
+                    <button wire:click="edit({{ $selectedCampanaId }})" style="{{ $btnH }} background:#F3F4F6; color:#374151;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                        Editar
+                    </button>
+                    <button wire:click="abrirEliminar({{ $selectedCampanaId }})" style="{{ $btnH }} background:#FEE2E2; color:#B91C1C;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        Quitar
+                    </button>
+                @elseif ($selectedCampanaEstado === 'en_proceso')
+                    <button wire:click="cambiarEstado({{ $selectedCampanaId }}, 'cerrada')" style="{{ $btnH }} background:#D1FAE5; color:#065F46;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Cerrar
+                    </button>
+                    <button wire:click="cambiarEstado({{ $selectedCampanaId }}, 'cancelada')" style="{{ $btnH }} background:#FEE2E2; color:#B91C1C;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        Cancelar
+                    </button>
+                    <button wire:click="verDetalle({{ $selectedCampanaId }})" style="{{ $btnH }} background:#EDE9FE; color:#7B6FE8;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        Ver Casos
+                    </button>
+                @else
+                    <button wire:click="verDetalle({{ $selectedCampanaId }})" style="{{ $btnH }} background:#EDE9FE; color:#7B6FE8;">
+                        <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                        Ver Casos
+                    </button>
+                @endif
+            </div>
+            @endif
         </div>
         <div style="flex:1; min-height:0; overflow:auto;">
         <table style="width:100%; border-collapse:collapse; min-width:800px;">
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr>
-                    <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:36px; text-align:center;">#</th>
+                    <th style="padding:9px 12px; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.05em; white-space:nowrap; background:#EDE9FE; border-bottom:2px solid #EDE9FE; width:56px; text-align:center; position:sticky; left:0; z-index:11;">#</th>
                     <th style="{{ $thC }}">Código</th>
                     <th style="{{ $thC }}">Nombre</th>
                     <th style="{{ $thC }}">Tipo Contacto</th>
@@ -145,13 +194,23 @@
                 $estMap = ['abierta'=>['#E0F2FE','#0369A1','Sin Iniciar'],'en_proceso'=>['#EFF6FF','#1D4ED8','En Proceso'],'cerrada'=>['#F0FDF4','#065F46','Cerrada'],'cancelada'=>['#FEE2E2','#B91C1C','Cancelada']];
                 [$eBg,$eCol,$eLbl] = $estMap[$c->estado] ?? ['#F3F4F6','#6B7280',$c->estado];
                 $editing = $editingCampanaId === $c->id;
+                $sel     = $selectedCampanaId === $c->id;
+                $rowBg   = $sel ? '#F5F3FF' : ($editing ? '#F8F7FF' : '');
                 $iE = 'width:100%; height:26px; padding:0 6px; border:1px solid #EDE9FE; border-radius:6px; font-size:12px; color:#374151; outline:none; background:#fff; box-sizing:border-box;';
                 $sE = 'width:100%; height:26px; padding:0 4px; border:1px solid #EDE9FE; border-radius:6px; font-size:11px; color:#374151; outline:none; background:#fff; cursor:pointer; box-sizing:border-box;';
             @endphp
-            <tr wire:key="camp-{{ $c->id }}" style="border-bottom:1px solid #F9FAFB; transition:background .1s; {{ $editing ? 'background:#F8F7FF;' : '' }}"
-                @mouseenter="$el.style.background='{{ $editing ? '#F8F7FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $editing ? '#F8F7FF' : '' }}'"
+            <tr wire:key="camp-{{ $c->id }}" style="border-bottom:1px solid #F9FAFB; transition:background .1s; background:{{ $rowBg }}; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}"
+                @mouseenter="$el.style.background='{{ $sel ? '#F5F3FF' : ($editing ? '#F8F7FF' : '#FAFAFE') }}'" @mouseleave="$el.style.background='{{ $rowBg }}'"
                 x-data="{ menuOpen: false, menuTop: 0, menuLeft: 0 }" @cerrar-menus.window="menuOpen=false">
-                <td class="col-row-num" style="{{ $tdC }} text-align:center; font-size:12px; font-weight:700;">{{ $campanas->firstItem() + $loop->index }}</td>
+                <td class="col-row-num" style="{{ $tdC }} text-align:center; position:sticky; left:0; z-index:2; background:{{ $rowBg ?: '#fff' }};">
+                    <div style="display:inline-flex; align-items:center; gap:6px;">
+                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $campanas->firstItem() + $loop->index }}</span>
+                        <input type="checkbox"
+                               :checked="$wire.selectedCampanaId === {{ $c->id }}"
+                               @click="$wire.selectedCampanaId === {{ $c->id }} ? $wire.set('selectedCampanaId', null) : $wire.selectCampana({{ $c->id }})"
+                               style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                    </div>
+                </td>
                 <td style="{{ $tdC }}">
                     <span style="font-family:monospace; font-size:12px; font-weight:700; color:#7B6FE8;">AM-{{ str_pad($c->id, 4, '0', STR_PAD_LEFT) }}</span>
                 </td>

@@ -51,6 +51,11 @@ class ActividadesMasivas extends Component
     public array  $selectedCasoIds  = [];
     public string $flashMsg         = '';
 
+    // Selección de fila
+    public ?int   $selectedCampanaId              = null;
+    public string $selectedCampanaEstado          = '';
+    public int    $selectedCampanaActividadesCount = 0;
+
     // Modales cierre/cancelación/eliminar campaña
     public bool   $showModalEliminar = false;
     public bool   $showModalCerrar   = false;
@@ -69,6 +74,20 @@ class ActividadesMasivas extends Component
 
     public function updatingSearch(): void       { $this->resetPage(); }
     public function updatingFiltroEstado(): void { $this->resetPage(); }
+
+    public function selectCampana(int $id): void
+    {
+        if ($this->selectedCampanaId === $id) {
+            $this->selectedCampanaId              = null;
+            $this->selectedCampanaEstado          = '';
+            $this->selectedCampanaActividadesCount = 0;
+            return;
+        }
+        $c = Campana::withCount('actividades')->findOrFail($id);
+        $this->selectedCampanaId              = $c->id;
+        $this->selectedCampanaEstado          = $c->estado;
+        $this->selectedCampanaActividadesCount = $c->actividades_count;
+    }
 
     public function verDetalle(int $id): void
     {
@@ -256,8 +275,11 @@ class ActividadesMasivas extends Component
         }
         $campana->actividades()->delete();
         $campana->delete();
-        $this->showModalEliminar = false;
-        $this->modalCampanaId    = 0;
+        $this->showModalEliminar          = false;
+        $this->modalCampanaId             = 0;
+        $this->selectedCampanaId          = null;
+        $this->selectedCampanaEstado      = '';
+        $this->selectedCampanaActividadesCount = 0;
     }
 
     public function cambiarEstado(int $id, string $estado): void
@@ -270,6 +292,9 @@ class ActividadesMasivas extends Component
                 'estado'       => 'en_proceso',
                 'fecha_inicio' => now(),
             ]);
+            $this->selectedCampanaId              = null;
+            $this->selectedCampanaEstado          = '';
+            $this->selectedCampanaActividadesCount = 0;
             return;
         }
 
@@ -309,8 +334,11 @@ class ActividadesMasivas extends Component
             'cerrado_por'        => auth()->id(),
         ]);
 
-        $this->showModalCerrar = false;
-        $this->modalCampanaId  = 0;
+        $this->showModalCerrar                = false;
+        $this->modalCampanaId                 = 0;
+        $this->selectedCampanaId              = null;
+        $this->selectedCampanaEstado          = '';
+        $this->selectedCampanaActividadesCount = 0;
     }
 
     public function confirmarCancelacion(): void
@@ -326,8 +354,11 @@ class ActividadesMasivas extends Component
             'cerrado_por'         => auth()->id(),
         ]);
 
-        $this->showModalCancelar = false;
-        $this->modalCampanaId    = 0;
+        $this->showModalCancelar              = false;
+        $this->modalCampanaId                 = 0;
+        $this->selectedCampanaId              = null;
+        $this->selectedCampanaEstado          = '';
+        $this->selectedCampanaActividadesCount = 0;
     }
 
     public function backToList(): void
