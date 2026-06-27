@@ -325,7 +325,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
         @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
         <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
             @if($editingId === $selectedUserId)
-                <button wire:click="saveEdit" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                <button wire:click="saveEdit" style="{{ $btnH }} background:#E5E7EB; color:#374151;">
                     <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     Guardar
                 </button>
