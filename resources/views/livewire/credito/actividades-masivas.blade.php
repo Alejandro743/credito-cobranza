@@ -121,8 +121,13 @@
         <div style="padding:10px 16px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:8px; flex:none; flex-wrap:wrap;">
             <span style="font-size:13px; font-weight:700; color:#111827;">Actividades Masivas</span>
             <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $campanas->total() }}</span>
-            @if ($selectedCampanaId)
             @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+            @if ($editingCampanaId)
+            <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
+                <button wire:click="saveEdit" wire:loading.attr="disabled" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Guardar</button>
+                <button wire:click="cancelEdit" style="{{ $btnH }} background:#F3F4F6; color:#374151;">Cancelar</button>
+            </div>
+            @elseif ($selectedCampanaId)
             <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB; flex-wrap:wrap;">
                 @if ($selectedCampanaEstado === 'abierta')
                     @if ($selectedCampanaActividadesCount > 0)
@@ -290,14 +295,7 @@
                     <span style="padding:2px 9px; border-radius:99px; font-size:11px; font-weight:600; background:{{ $eBg }}; color:{{ $eCol }};">{{ $eLbl }}</span>
                 </td>
                 <td style="{{ $tdC }} text-align:center;">
-                    @if($editing)
-                    <div style="display:inline-flex; gap:4px; align-items:center;">
-                        <button wire:click="saveEdit"
-                                style="height:24px; padding:0 8px; border:none; border-radius:5px; background:#7B6FE8; color:#fff; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Guardar</button>
-                        <button wire:click="cancelEdit"
-                                style="height:24px; padding:0 8px; border:1px solid #E5E7EB; border-radius:5px; background:#fff; color:#6B7280; font-size:10px; font-weight:700; cursor:pointer; white-space:nowrap;">Cancelar</button>
-                    </div>
-                    @else
+                    @if(!$editing)
                     {{-- Trigger ⋮ --}}
                     <button @click="$dispatch('cerrar-menus'); const r=$event.currentTarget.getBoundingClientRect(); menuTop=r.top+r.height/2; menuLeft=r.left-180; if(menuLeft<8)menuLeft=8; $nextTick(()=>menuOpen=true);"
                             style="width:28px; height:28px; border:none; border-radius:6px; background:#EDE9FE; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;">
