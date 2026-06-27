@@ -214,48 +214,15 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
         <header class="flex items-center flex-shrink-0"
                 style="background:#fff; border-bottom:1px solid #E5E7EB; min-height:56px; box-shadow:0 1px 3px rgba(0,0,0,.04); gap:0;">
 
-            {{-- === PRUEBA 4 ESTILOS — elegir uno === --}}
-
-            {{-- 1: Gradiente lila + handle redondeado --}}
+            {{-- Toggle sidebar --}}
             <button @click="$dispatch('toggle-sidebar')"
-                    style="align-self:stretch; width:48px; border:none; border-radius:0 12px 12px 0; background:linear-gradient(180deg,#9B8FF5,#5B50C8); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:3px 0 10px rgba(123,111,232,.5); position:relative;">
-                <svg x-show="!sidebarCollapsed" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
-                <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
-                <span style="position:absolute; bottom:4px; font-size:8px; font-weight:700; color:rgba(255,255,255,.6); letter-spacing:.5px;">1</span>
-            </button>
-
-            <div style="width:6px; flex-shrink:0; background:#F0F2F5;"></div>
-
-            {{-- 2: Fondo oscuro sidebar + acento lila --}}
-            <button @click="$dispatch('toggle-sidebar')"
-                    style="align-self:stretch; width:48px; border:none; border-radius:0; background:#0B1120; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; border-right:3px solid #7B6FE8; position:relative;">
-                <svg x-show="!sidebarCollapsed" width="14" height="14" fill="none" stroke="#9B8FF5" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
-                <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="#9B8FF5" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
-                <span style="position:absolute; bottom:4px; font-size:8px; font-weight:700; color:rgba(255,255,255,.4); letter-spacing:.5px;">2</span>
-            </button>
-
-            <div style="width:6px; flex-shrink:0; background:#F0F2F5;"></div>
-
-            {{-- 3: Blanco con borde izq lila grueso --}}
-            <button @click="$dispatch('toggle-sidebar')"
-                    style="align-self:stretch; width:48px; border:none; border-radius:0; background:#EDE9FE; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; border-left:4px solid #7B6FE8; position:relative;">
-                <svg x-show="!sidebarCollapsed" width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
-                <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
-                <span style="position:absolute; bottom:4px; font-size:8px; font-weight:700; color:#7B6FE8; opacity:.6; letter-spacing:.5px;">3</span>
-            </button>
-
-            <div style="width:6px; flex-shrink:0; background:#F0F2F5;"></div>
-
-            {{-- 4: Lila sólido con círculo + icono --}}
-            <button @click="$dispatch('toggle-sidebar')"
-                    style="align-self:stretch; width:58px; border:none; border-radius:0; background:#7B6FE8; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:2px 0 8px rgba(123,111,232,.4); position:relative;">
+                    style="align-self:stretch; width:58px; border:none; border-radius:0; background:#7B6FE8; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:2px 0 8px rgba(123,111,232,.4);"
+                    :title="sidebarCollapsed ? 'Expandir menú' : 'Colapsar menú'">
                 <div style="width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;">
                     <svg x-show="!sidebarCollapsed" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
                     <svg x-show="sidebarCollapsed"  width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
                 </div>
-                <span style="position:absolute; bottom:4px; font-size:8px; font-weight:700; color:rgba(255,255,255,.6); letter-spacing:.5px;">4</span>
             </button>
-            {{-- === FIN PRUEBA === --}}
 
             {{-- Ícono cuadrícula + Título --}}
             <div class="flex items-center flex-1 min-w-0" style="gap:5px; padding:0 12px; overflow:hidden;">
