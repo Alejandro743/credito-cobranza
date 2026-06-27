@@ -224,7 +224,7 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
                 <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
             </button>
 
-            <div style="width:10px; flex-shrink:0;"></div>
+            <div style="width:4px; flex-shrink:0;"></div>
 
             {{-- Ícono cuadrícula --}}
             <div style="width:34px; height:34px; border-radius:9px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
