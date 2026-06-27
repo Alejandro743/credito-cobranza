@@ -466,7 +466,8 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                             <input type="checkbox"
                                    :checked="$wire.selectedUserId === {{ $user->id }}"
                                    @click="$wire.selectedUserId === {{ $user->id }} ? $wire.set('selectedUserId', null) : $wire.selectUser({{ $user->id }})"
-                                   style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                                   :disabled="{{ $editingId && $editingId !== $user->id ? 'true' : 'false' }}"
+                                   style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $user->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
                         </div>
                     </td>
 
