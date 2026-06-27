@@ -37,7 +37,7 @@
     {{-- ── Handle drag resize ── --}}
     <div x-data="{ h: false }"
          @mouseenter="h = true" @mouseleave="h = false"
-         :style="h || sidebarDragging ? 'background:rgba(123,111,232,.5);' : 'background:rgba(255,255,255,.08);'"
+         :style="h || sidebarDragging ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.22);'"
          style="position:absolute; top:0; right:0; bottom:0; width:5px; cursor:col-resize; z-index:20; transition:background .15s;"
          @mousedown.prevent="
              sidebarDragging = true;
