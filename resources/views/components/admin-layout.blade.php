@@ -214,7 +214,7 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
              const startW = sidebarCollapsed ? 64 : sidebarWidth;
              const onMove = (e) => {
                  const newW = Math.max(64, Math.min(Math.round(window.innerWidth / 2), startW + e.clientX - startX));
-                 if (newW <= 72) { sidebarCollapsed = true; }
+                 if (newW <= 120) { sidebarCollapsed = true; }
                  else { sidebarCollapsed = false; sidebarWidth = newW; }
              };
              const onUp = () => {
