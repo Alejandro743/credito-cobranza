@@ -318,11 +318,22 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     {{-- Barra --}}
-    <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
-        <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:13px; font-weight:700; color:#111827;">Usuarios registrados</span>
-            <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $users->total() }}</span>
+    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-wrap:wrap;">
+        <span style="font-size:13px; font-weight:700; color:#111827;">Usuarios registrados</span>
+        <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $users->total() }}</span>
+        @if($selectedUserId)
+        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            <button wire:click="startEdit({{ $selectedUserId }})" style="{{ $btnH }} background:#EDE9FE; color:#7B6FE8;">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                Editar
+            </button>
+            <button wire:click="openPasswordModal({{ $selectedUserId }})" style="{{ $btnH }} background:#DBEAFE; color:#1D4ED8;">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>
+                Cambiar Contraseña
+            </button>
         </div>
+        @endif
     </div>
 
     <div style="overflow:auto; flex:1;">
@@ -433,11 +444,20 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
 
                 {{-- Fila normal --}}
                 @else
+                @php $selU = $selectedUserId === $user->id; @endphp
                 <tr wire:key="u-{{ $user->id }}"
-                    style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
-                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                    style="border-bottom:1px solid #F9FAFB; transition:background .1s; background:{{ $selU ? '#F5F3FF' : '' }}; {{ $selU ? 'border-left:3px solid #7B6FE8;' : '' }}"
+                    @mouseenter="$el.style.background='{{ $selU ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selU ? '#F5F3FF' : '' }}'">
 
-                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $users->firstItem() + $loop->index }}</td>
+                    <td class="col-row-num" style="padding:8px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selU ? '#F5F3FF' : '#fff' }};">
+                        <div style="display:inline-flex; align-items:center; gap:8px;">
+                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $users->firstItem() + $loop->index }}</span>
+                            <input type="checkbox"
+                                   :checked="$wire.selectedUserId === {{ $user->id }}"
+                                   @click="$wire.selectedUserId === {{ $user->id }} ? $wire.set('selectedUserId', null) : $wire.selectUser({{ $user->id }})"
+                                   style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                        </div>
+                    </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
                         <span style="font-size:13px; font-weight:400; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($user->name)) }}</span>

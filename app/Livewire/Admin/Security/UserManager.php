@@ -58,6 +58,14 @@ class UserManager extends Component
     public string $passwordModalNew      = '';
     public bool   $passwordModalShow     = false;  // toggle mostrar/ocultar texto
 
+    // ── Selección de fila ─────────────────────────────────────────────────────
+    public ?int $selectedUserId = null;
+
+    public function selectUser(int $id): void
+    {
+        $this->selectedUserId = $this->selectedUserId === $id ? null : $id;
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
 
     public function mount(): void
