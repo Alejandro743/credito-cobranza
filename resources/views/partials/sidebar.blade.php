@@ -16,7 +16,7 @@
               -translate-x-full md:translate-x-0
               transition-transform duration-300 ease-in-out md:transition-none"
        :class="{ 'translate-x-0': sidebarOpen, 'is-collapsed': sidebarCollapsed }"
-       :style="{ width: sidebarCollapsed ? '64px' : '240px' }"
+       :style="{ width: sidebarCollapsed ? '64px' : sidebarWidth + 'px', transition: sidebarDragging ? 'none' : '' }"
        style="width:240px; background:#0B1120;">
 
     {{-- ── Logo ── --}}
@@ -34,12 +34,32 @@
         </div>
     </div>
 
-    {{-- ── Borde resize (reemplaza botón toggle) ── --}}
+    {{-- ── Handle drag resize ── --}}
     <div x-data="{ h: false }"
-         @click="sidebarCollapsed = !sidebarCollapsed"
          @mouseenter="h = true" @mouseleave="h = false"
-         :style="h ? 'background:rgba(123,111,232,.3);' : 'background:rgba(255,255,255,.04);'"
-         style="position:absolute; top:0; right:0; bottom:0; width:4px; cursor:col-resize; z-index:20; transition:background .2s; display:none;"
+         :style="h || sidebarDragging ? 'background:rgba(123,111,232,.5);' : 'background:rgba(255,255,255,.08);'"
+         style="position:absolute; top:0; right:0; bottom:0; width:5px; cursor:col-resize; z-index:20; transition:background .15s;"
+         @mousedown.prevent="
+             sidebarDragging = true;
+             const startX = $event.clientX;
+             const startW = sidebarCollapsed ? 64 : sidebarWidth;
+             const onMove = (e) => {
+                 const newW = Math.max(64, Math.min(Math.round(window.innerWidth / 2), startW + e.clientX - startX));
+                 if (newW <= 72) {
+                     sidebarCollapsed = true;
+                 } else {
+                     sidebarCollapsed = false;
+                     sidebarWidth = newW;
+                 }
+             };
+             const onUp = () => {
+                 sidebarDragging = false;
+                 document.removeEventListener('mousemove', onMove);
+                 document.removeEventListener('mouseup', onUp);
+             };
+             document.addEventListener('mousemove', onMove);
+             document.addEventListener('mouseup', onUp);
+         "
          class="md:block"></div>
 
     {{-- ── Navegación ── --}}

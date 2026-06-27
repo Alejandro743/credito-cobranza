@@ -3,6 +3,8 @@
 <html lang="es" x-data="{
     sidebarOpen: false,
     sidebarCollapsed: false,
+    sidebarWidth: 240,
+    sidebarDragging: false,
     mobileTab: sessionStorage.getItem('_mTab') || 'inicio',
     navTipText: '', navTipY: 0, navTipVisible: false,
     init() { this.$watch('mobileTab', v => sessionStorage.setItem('_mTab', v)); }
