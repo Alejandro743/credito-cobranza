@@ -105,6 +105,9 @@ class ActividadesMasivas extends Component
 
     public function edit(int $id): void
     {
+        $this->selectedCampanaId              = null;
+        $this->selectedCampanaEstado          = '';
+        $this->selectedCampanaActividadesCount = 0;
         $c = Campana::findOrFail($id);
         $this->editingCampanaId    = $c->id;
         $this->editNombre          = $c->nombre;
