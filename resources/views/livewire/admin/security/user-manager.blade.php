@@ -393,7 +393,6 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                     </th>
                     @endif
                     @endforeach
-                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -495,24 +494,6 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                         </span>
                     </td>
 
-                    <td style="padding:10px 16px; text-align:center;">
-                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
-                            <button wire:click="startEdit({{ $user->id }})" title="Editar"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                </svg>
-                            </button>
-                            <button wire:click="openPasswordModal({{ $user->id }})" title="Cambiar contraseña"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </td>
                 </tr>
                 @endif
 
