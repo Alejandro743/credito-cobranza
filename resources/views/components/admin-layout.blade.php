@@ -216,9 +216,9 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
 
             {{-- === PRUEBA 4 ESTILOS — elegir uno === --}}
 
-            {{-- 1: Gradiente + handle redondeado --}}
+            {{-- 1: Gradiente plomo + handle redondeado --}}
             <button @click="$dispatch('toggle-sidebar')"
-                    style="align-self:stretch; width:38px; border:none; border-radius:0 12px 12px 0; background:linear-gradient(180deg,#FB923C,#C2410C); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:3px 0 10px rgba(234,88,12,.45); position:relative;">
+                    style="align-self:stretch; width:38px; border:none; border-radius:0 12px 12px 0; background:linear-gradient(180deg,#9CA3AF,#4B5563); color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:3px 0 10px rgba(75,85,99,.45); position:relative;">
                 <svg x-show="!sidebarCollapsed" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
                 <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
                 <span style="position:absolute; bottom:4px; font-size:8px; font-weight:700; color:rgba(255,255,255,.6); letter-spacing:.5px;">1</span>
@@ -226,29 +226,29 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
 
             <div style="width:6px; flex-shrink:0; background:#F0F2F5;"></div>
 
-            {{-- 2: Fondo oscuro sidebar + acento naranja --}}
+            {{-- 2: Fondo oscuro + acento plomo claro --}}
             <button @click="$dispatch('toggle-sidebar')"
-                    style="align-self:stretch; width:38px; border:none; border-radius:0; background:#0B1120; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; border-right:3px solid #EA580C; position:relative;">
-                <svg x-show="!sidebarCollapsed" width="14" height="14" fill="none" stroke="#EA580C" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
-                <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="#EA580C" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
+                    style="align-self:stretch; width:38px; border:none; border-radius:0; background:#1F2937; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; border-right:3px solid #9CA3AF; position:relative;">
+                <svg x-show="!sidebarCollapsed" width="14" height="14" fill="none" stroke="#D1D5DB" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
+                <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="#D1D5DB" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
                 <span style="position:absolute; bottom:4px; font-size:8px; font-weight:700; color:rgba(255,255,255,.4); letter-spacing:.5px;">2</span>
             </button>
 
             <div style="width:6px; flex-shrink:0; background:#F0F2F5;"></div>
 
-            {{-- 3: Blanco con borde izq naranja --}}
+            {{-- 3: Blanco con borde izq plomo grueso --}}
             <button @click="$dispatch('toggle-sidebar')"
-                    style="align-self:stretch; width:38px; border:none; border-radius:0; background:#FFF7ED; color:#EA580C; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; border-left:4px solid #EA580C; position:relative;">
-                <svg x-show="!sidebarCollapsed" width="14" height="14" fill="none" stroke="#EA580C" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
-                <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="#EA580C" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
-                <span style="position:absolute; bottom:4px; font-size:8px; font-weight:700; color:#EA580C; opacity:.5; letter-spacing:.5px;">3</span>
+                    style="align-self:stretch; width:38px; border:none; border-radius:0; background:#F3F4F6; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; border-left:4px solid #6B7280; position:relative;">
+                <svg x-show="!sidebarCollapsed" width="14" height="14" fill="none" stroke="#6B7280" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
+                <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="#6B7280" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
+                <span style="position:absolute; bottom:4px; font-size:8px; font-weight:700; color:#6B7280; opacity:.6; letter-spacing:.5px;">3</span>
             </button>
 
             <div style="width:6px; flex-shrink:0; background:#F0F2F5;"></div>
 
-            {{-- 4: Naranja con círculo + icono --}}
+            {{-- 4: Plomo con círculo + icono --}}
             <button @click="$dispatch('toggle-sidebar')"
-                    style="align-self:stretch; width:38px; border:none; border-radius:0; background:#EA580C; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:2px 0 8px rgba(234,88,12,.3); position:relative;">
+                    style="align-self:stretch; width:38px; border:none; border-radius:0; background:#6B7280; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:2px 0 8px rgba(107,114,128,.4); position:relative;">
                 <div style="width:24px; height:24px; border-radius:50%; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;">
                     <svg x-show="!sidebarCollapsed" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
                     <svg x-show="sidebarCollapsed"  width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
