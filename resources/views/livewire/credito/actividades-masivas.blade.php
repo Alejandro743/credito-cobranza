@@ -206,7 +206,7 @@
                 $sE = 'width:100%; height:26px; padding:0 4px; border:1px solid #EDE9FE; border-radius:6px; font-size:11px; color:#374151; outline:none; background:#fff; cursor:pointer; box-sizing:border-box;';
             @endphp
             <tr wire:key="camp-{{ $c->id }}" style="border-bottom:1px solid #F9FAFB; transition:background .1s; background:{{ $rowBg }}; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}"
-                @mouseenter="$el.style.background='{{ $sel ? '#F5F3FF' : ($editing ? '#F8F7FF' : '#FAFAFE') }}'" @mouseleave="$el.style.background='{{ $rowBg }}'"
+                @mouseenter="$el.style.background='{{ $sel ? '#F5F3FF' : ($editing ? '#F8F7FF' : '#FAFAFE') }}'" @mouseleave="$el.style.background='{{ $rowBg }}'">
                 <td class="col-row-num" style="{{ $tdC }} text-align:center; position:sticky; left:0; z-index:2; background:{{ $rowBg ?: '#fff' }};">
                     <div style="display:inline-flex; align-items:center; gap:14px;">
                         <span style="font-size:12px; font-weight:700; color:#374151;">{{ $campanas->firstItem() + $loop->index }}</span>
