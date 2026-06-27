@@ -8,8 +8,6 @@
     init() { this.$watch('mobileTab', v => sessionStorage.setItem('_mTab', v)); }
 }"
 @toggle-sidebar.window="sidebarCollapsed = !sidebarCollapsed"
-@show-nav-tip.window="if(sidebarCollapsed){ navTipText=$event.detail.text; navTipY=$event.detail.y; navTipVisible=true; }"
-@hide-nav-tip.window="navTipVisible=false"
 style="background:#0B1120;">
 <head>
     <meta charset="utf-8">
