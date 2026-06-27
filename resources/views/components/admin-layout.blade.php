@@ -4,8 +4,13 @@
     sidebarOpen: false,
     sidebarCollapsed: false,
     mobileTab: sessionStorage.getItem('_mTab') || 'inicio',
+    navTipText: '', navTipY: 0, navTipVisible: false,
     init() { this.$watch('mobileTab', v => sessionStorage.setItem('_mTab', v)); }
-}" @toggle-sidebar.window="sidebarCollapsed = !sidebarCollapsed" style="background:#0B1120;">
+}"
+@toggle-sidebar.window="sidebarCollapsed = !sidebarCollapsed"
+@show-nav-tip.window="if(sidebarCollapsed){ navTipText=$event.detail.text; navTipY=$event.detail.y; navTipVisible=true; }"
+@hide-nav-tip.window="navTipVisible=false"
+style="background:#0B1120;">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -41,8 +46,15 @@
             transition: width 0.28s cubic-bezier(.4,0,.2,1);
             overflow: hidden;
         }
-        aside.is-collapsed,
-        aside.is-collapsed .sidebar-nav { overflow: visible !important; }
+        #nav-tooltip-global {
+            position: fixed; z-index: 9999; pointer-events: none;
+            background: #1E2A50; color: #fff;
+            font-size: 11px; font-weight: 600;
+            padding: 5px 10px; border-radius: 6px;
+            white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,.3);
+            transform: translateY(-50%);
+            transition: opacity .1s;
+        }
         .nav-label {
             transition: opacity 0.2s ease, width 0.28s ease;
             white-space: nowrap;
@@ -257,5 +269,10 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
 
 @include('partials.mobile-nav')
 @livewireScripts
+<div id="nav-tooltip-global"
+     x-show="navTipVisible"
+     :style="{ top: navTipY + 'px', left: '72px' }"
+     x-text="navTipText">
+</div>
 </body>
 </html>

@@ -51,6 +51,8 @@
         <div style="margin-bottom:2px;">
             <a href="{{ $dashRoute }}" wire:navigate
                class="nav-item-wrap flex items-center gap-3"
+               @mouseenter="$dispatch('show-nav-tip', { text: 'Panel Inicio', y: $event.currentTarget.getBoundingClientRect().top + $event.currentTarget.getBoundingClientRect().height / 2 })"
+               @mouseleave="$dispatch('hide-nav-tip')"
                style="padding:9px 10px; border-radius:8px; position:relative; {{ $dashActivo ? 'background:rgba(123,111,232,.25);' : '' }}">
                 <span class="nav-tooltip">Panel Inicio</span>
                 <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $dashActivo ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}">
@@ -70,6 +72,8 @@
         <div style="margin-bottom:2px;">
 
             <button @click="sidebarCollapsed ? (sidebarCollapsed = false, activeModule = '{{ $slug }}') : (activeModule = activeModule === '{{ $slug }}' ? '' : '{{ $slug }}')"
+                    @mouseenter="$dispatch('show-nav-tip', { text: '{{ $modulo->name }}', y: $event.currentTarget.getBoundingClientRect().top + $event.currentTarget.getBoundingClientRect().height / 2 })"
+                    @mouseleave="$dispatch('hide-nav-tip')"
                     class="nav-item-wrap w-full flex items-center gap-3"
                     style="padding:9px 10px; border-radius:8px; position:relative; {{ $activeModuloSlug === $slug ? 'background:rgba(123,111,232,.15);' : '' }}">
                 <span class="nav-tooltip">{{ $modulo->name }}</span>
