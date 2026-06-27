@@ -217,29 +217,21 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
 
             {{-- Toggle sidebar --}}
             <button @click="$dispatch('toggle-sidebar')"
-                    style="width:30px; height:30px; border:none; border-radius:8px; background:#EA580C; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s;"
+                    style="width:30px; height:30px; border:none; border-radius:8px; background:#EA580C; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s; box-shadow:0 2px 6px rgba(234,88,12,.45);"
                     @mouseenter="$el.style.background='#C2410C'" @mouseleave="$el.style.background='#EA580C'"
                     :title="sidebarCollapsed ? 'Expandir menú' : 'Colapsar menú'">
                 <svg x-show="!sidebarCollapsed" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
                 <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
             </button>
 
+            <div style="width:20px; flex-shrink:0;"></div>
 
-            {{-- Iconos prueba --}}
-            <div style="display:flex; align-items:center; gap:6px; flex-shrink:0;">
-                <div style="width:36px; height:36px; border-radius:10px; background:#EDE9FE; display:flex; align-items:center; justify-content:center;" title="1. Escudo">
-                    <svg width="18" height="18" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                </div>
-                <div style="width:36px; height:36px; border-radius:10px; background:#EDE9FE; display:flex; align-items:center; justify-content:center;" title="2. Cuadricula">
-                    <svg width="18" height="18" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
-                </div>
-                <div style="width:36px; height:36px; border-radius:10px; background:#EDE9FE; display:flex; align-items:center; justify-content:center;" title="3. Rayo">
-                    <svg width="18" height="18" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                </div>
-                <div style="width:36px; height:36px; border-radius:10px; background:#EDE9FE; display:flex; align-items:center; justify-content:center;" title="4. Edificio">
-                    <svg width="18" height="18" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M3 21h18M3 7l9-4 9 4M4 7v14M20 7v14M9 21V11h6v10"/></svg>
-                </div>
+            {{-- Ícono cuadrícula --}}
+            <div style="width:34px; height:34px; border-radius:9px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="17" height="17" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
             </div>
+
+            <div style="width:7px; flex-shrink:0;"></div>
 
             {{-- Título --}}
             <div class="flex-1 min-w-0" style="overflow:hidden;">
