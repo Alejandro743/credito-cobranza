@@ -4,14 +4,17 @@
     sidebarOpen: false,
     sidebarCollapsed: false,
     mobileTab: sessionStorage.getItem('_mTab') || 'inicio',
+    navTipText: '', navTipY: 0, navTipVisible: false,
     init() { this.$watch('mobileTab', v => sessionStorage.setItem('_mTab', v)); }
-}" style="background:#0B1120;">
+}"
+@toggle-sidebar.window="sidebarCollapsed = !sidebarCollapsed"
+style="background:#0B1120;">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ config('app.name') }} — Crediessen</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@600;700&display=swap" rel="stylesheet"/>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
     tailwind.config = {
@@ -35,9 +38,20 @@
         @media (max-width: 767px) {
             .sidebar-wrap:not(.translate-x-0) { display: none; }
         }
-        .sidebar-nav::-webkit-scrollbar       { width: 3px; }
-        .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 4px; }
+        .sidebar-nav::-webkit-scrollbar       { width: 6px; }
+        .sidebar-nav::-webkit-scrollbar-track { background: rgba(255,255,255,.05); border-radius: 4px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.35); border-radius: 4px; }
+        .sidebar-nav::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.55); }
+        #nav-tooltip-global {
+            position: fixed; z-index: 9999; pointer-events: none;
+            background: #1E2A50; color: #fff;
+            font-size: 11px; font-weight: 600;
+            padding: 5px 10px; border-radius: 6px;
+            white-space: nowrap; box-shadow: 0 4px 12px rgba(0,0,0,.3);
+            transform: translateY(-50%);
+            transition: opacity .1s;
+        }
+        aside.is-collapsed .nav-item-wrap:hover .nav-tooltip { display: block; }
         .sidebar-wrap {
             background: #0B1120;
             transition: width 0.28s cubic-bezier(.4,0,.2,1);
@@ -203,49 +217,29 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
             $hdrIconColor2 = $hdrColorMap2[$moduloActivo?->color ?? ''] ?? '#7B6FE8';
             $hdrIconBg2    = $hdrBgMap2[$moduloActivo?->color ?? ''] ?? 'rgba(123,111,232,.13)';
         @endphp
-        <header class="flex items-center gap-3 px-4 flex-shrink-0"
-                style="background:#fff; border-bottom:1px solid #E5E7EB; min-height:56px; box-shadow:0 1px 3px rgba(0,0,0,.04);">
+        <header class="flex items-center flex-shrink-0"
+                style="background:#fff; border-bottom:1px solid #E5E7EB; min-height:56px; box-shadow:0 1px 3px rgba(0,0,0,.04); gap:0;">
 
-            {{-- Hamburguesa --}}
-            <button @click="sidebarOpen = !sidebarOpen"
-                    class="hidden md:flex"
-                    style="width:32px; height:32px; border-radius:8px; background:#F3F4F6; border:none; cursor:pointer; flex-shrink:0; align-items:center; justify-content:center;">
-                <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2.2" stroke-linecap="round" viewBox="0 0 24 24">
-                    <path d="M4 6h16M4 12h16M4 18h16"/>
-                </svg>
+            {{-- Toggle sidebar --}}
+            <button @click="$dispatch('toggle-sidebar')"
+                    style="align-self:stretch; width:58px; border:none; border-radius:0; background:#7B6FE8; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:2px 0 8px rgba(123,111,232,.4);"
+                    :title="sidebarCollapsed ? 'Expandir menú' : 'Colapsar menú'">
+                <div style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;">
+                    <svg x-show="!sidebarCollapsed" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
+                    <svg x-show="sidebarCollapsed"  width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
+                </div>
             </button>
 
-            {{-- Ícono del módulo --}}
-            <div style="width:32px; height:32px; border-radius:9px; background:{{ $hdrIconBg2 }}; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
-                @if($moduloActivo?->icon)
-                <svg width="16" height="16" fill="none" stroke="{{ $hdrIconColor2 }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                    <path d="{{ $moduloActivo->icon }}"/>
-                </svg>
-                @else
-                <svg width="16" height="16" fill="none" stroke="{{ $hdrIconColor2 }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                </svg>
-                @endif
-            </div>
-
-            {{-- Breadcrumb --}}
-            <div class="flex-1 min-w-0" style="display:flex; align-items:center; gap:6px; overflow:hidden;">
-                @if($customHeaderText)
-                <div style="display:flex; flex-direction:column; min-width:0;">
-                    <span style="font-size:16px; font-weight:900; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.08em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $customHeaderText }}</span>
-                    <div style="height:2px; background:linear-gradient(to right,#9CA3AF,#E5E7EB); border-radius:1px; margin-top:3px;"></div>
+            {{-- Ícono cuadrícula + Título --}}
+            <div class="flex items-center flex-1 min-w-0" style="gap:5px; padding:0 12px; overflow:hidden;">
+                <div style="width:34px; height:34px; border-radius:9px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="17" height="17" fill="none" stroke="#7B6FE8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
                 </div>
-                @else
-                @if($activeModuloName)
-                <span style="font-size:13px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">{{ $activeModuloName }}</span>
-                <span style="font-size:13px; color:#C4B5FD;">/</span>
-                @endif
-                <span style="font-size:13px; font-weight:800; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $headerTitle ?: $pageTitle }}</span>
-                @endif
+                <span style="font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1;">{{ $headerTitle ?: $pageTitle }}</span>
             </div>
 
             {{-- Fecha --}}
-            <div style="font-size:11px; color:#D1D5DB; flex-shrink:0;" class="hidden sm:block">{{ now()->format('d M Y') }}</div>
+            <div style="font-size:11px; color:#D1D5DB; flex-shrink:0; padding-right:16px;" class="hidden sm:block">{{ now()->format('d M Y') }}</div>
         </header>
         @endunless
 
@@ -266,5 +260,10 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
 
 @include('partials.mobile-nav')
 @livewireScripts
+<div id="nav-tooltip-global"
+     x-show="navTipVisible && sidebarCollapsed"
+     :style="{ top: navTipY + 'px', left: '72px' }"
+     x-text="navTipText">
+</div>
 </body>
 </html>
