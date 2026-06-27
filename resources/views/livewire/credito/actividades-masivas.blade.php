@@ -216,7 +216,7 @@
                 </td>
 
                 {{-- Observación --}}
-                <td style="{{ $tdC }} font-size:12px; color:#6B7280; min-width:120px; max-width:200px;">
+                <td style="{{ $tdC }} font-size:12px; color:#6B7280; min-width:260px;">
                     @if($editing)
                         <input wire:model="editObservacion" type="text" placeholder="Opcional..." style="{{ $iE }}">
                     @else
