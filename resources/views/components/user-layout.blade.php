@@ -38,7 +38,7 @@ style="background:#0B1120;">
         @media (max-width: 767px) {
             .sidebar-wrap:not(.translate-x-0) { display: none; }
         }
-        .sidebar-nav::-webkit-scrollbar       { width: 6px; }
+        .sidebar-nav::-webkit-scrollbar       { width: 9px; }
         .sidebar-nav::-webkit-scrollbar-track { background: rgba(255,255,255,.05); border-radius: 4px; }
         .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.35); border-radius: 4px; }
         .sidebar-nav::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.55); }
