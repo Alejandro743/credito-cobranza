@@ -360,7 +360,6 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                 <col style="width:110px;">
                 <col style="width:100px;">
                 <col style="width:95px;">
-                <col style="width:95px;">
             </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
@@ -437,18 +436,6 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                             <option value="1">Activo</option>
                             <option value="0">Inactivo</option>
                         </select>
-                    </td>
-                    <td style="padding:7px 10px; text-align:center;">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
-                            <button wire:click="saveEdit"
-                                    style="height:30px; padding:0 10px; background:#7B6FE8; color:#fff; border:none; border-radius:7px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
-                                Guardar
-                            </button>
-                            <button wire:click="cancelEdit"
-                                    style="height:30px; padding:0 8px; background:#F3F4F6; color:#6B7280; border:none; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
-                                Cancelar
-                            </button>
-                        </div>
                     </td>
                 </tr>
 
