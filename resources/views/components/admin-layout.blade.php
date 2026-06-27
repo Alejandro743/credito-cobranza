@@ -224,18 +224,6 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
                 <svg x-show="sidebarCollapsed"  width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
             </button>
 
-            {{-- Ícono del módulo --}}
-            <div style="width:32px; height:32px; border-radius:9px; background:{{ $hdrIconBg }}; flex-shrink:0; display:flex; align-items:center; justify-content:center;">
-                @if($moduloActivo?->icon)
-                <svg width="16" height="16" fill="none" stroke="{{ $hdrIconColor }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                    <path d="{{ $moduloActivo->icon }}"/>
-                </svg>
-                @else
-                <svg width="16" height="16" fill="none" stroke="{{ $hdrIconColor }}" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
-                    <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-                </svg>
-                @endif
-            </div>
 
             {{-- Título --}}
             <div class="flex-1 min-w-0" style="overflow:hidden;">
