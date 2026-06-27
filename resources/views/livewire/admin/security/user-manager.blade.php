@@ -440,15 +440,15 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                     <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $users->firstItem() + $loop->index }}</td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($user->name)) }}</span>
+                        <span style="font-size:13px; font-weight:400; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($user->name)) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $user->email }}</span>
+                        <span style="font-size:12px; font-family:monospace; font-weight:400; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $user->email }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucfirst($user->tipo ?? 'administrativo') }}</span>
+                        <span style="font-size:13px; font-weight:400; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucfirst($user->tipo ?? 'administrativo') }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
