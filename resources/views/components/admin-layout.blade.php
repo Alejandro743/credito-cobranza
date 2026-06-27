@@ -59,6 +59,7 @@
         }
         /* Solo mostrar tooltip cuando el sidebar está colapsado */
         aside.is-collapsed .nav-item-wrap:hover .nav-tooltip { display: block; }
+        aside .nav-item-wrap { position: relative; }
         aside .nav-item-wrap,
         .sidebar-nav button.w-full,
         .sidebar-nav a.flex { transition: box-shadow 0.15s ease; }
