@@ -32,9 +32,10 @@
         body { font-family: 'Inter', sans-serif; }
         [x-cloak] { display: none !important; }
         aside.is-collapsed .nav-label { opacity: 0; max-width: 0; pointer-events: none; }
-        .sidebar-nav::-webkit-scrollbar       { width: 3px; }
-        .sidebar-nav::-webkit-scrollbar-track { background: transparent; }
-        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.2); border-radius: 4px; }
+        .sidebar-nav::-webkit-scrollbar       { width: 6px; }
+        .sidebar-nav::-webkit-scrollbar-track { background: rgba(255,255,255,.05); border-radius: 4px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,.35); border-radius: 4px; }
+        .sidebar-nav::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,.55); }
         .sidebar-wrap {
             background: #0B1120;
             transition: width 0.28s cubic-bezier(.4,0,.2,1);
