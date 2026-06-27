@@ -64,7 +64,7 @@
         @php $slug = $modulo->slug; @endphp
         <div style="margin-bottom:2px;">
 
-            <button @click="sidebarCollapsed ? (sidebarCollapsed = false, activeModule = '{{ $slug }}') : (activeModule = activeModule === '{{ $slug }}' ? '' : '{{ $slug }}')"
+            <button @click="sidebarCollapsed ? (sidebarCollapsed = false, sidebarWidth = 240, activeModule = '{{ $slug }}') : (activeModule = activeModule === '{{ $slug }}' ? '' : '{{ $slug }}')"
                     @mouseenter="navTipText='{{ $modulo->name }}'; navTipY=$event.currentTarget.getBoundingClientRect().top+$event.currentTarget.getBoundingClientRect().height/2; navTipVisible=true"
                     @mouseleave="navTipVisible=false"
                     class="nav-item-wrap w-full flex items-center gap-3"
