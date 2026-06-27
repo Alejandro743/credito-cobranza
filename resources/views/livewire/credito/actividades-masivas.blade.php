@@ -636,7 +636,7 @@
             <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
         <div style="{{ $mBody }}">
-            <p style="font-size:12px; color:#6B7280; margin:0;">Se cerrarán todas las actividades activas de esta actividad masiva con los datos indicados.</p>
+            <p style="font-size:12px; color:#6B7280; margin:0;">Se cerrarán todas las actividades de los casos seleccionados con los datos indicados.</p>
             <div style="border:1px solid #EDE9FE; border-radius:10px; padding:14px; background:#fff; display:flex; flex-direction:column; gap:10px;">
                 <p style="{{ $sTitle }}">■ Resultado</p>
                 <div>
@@ -677,7 +677,7 @@
             <button @click="open=false" style="{{ $xBtn }}"><svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>
         </div>
         <div style="{{ $mBody }}">
-            <p style="font-size:12px; color:#6B7280; margin:0;">Se cancelarán todas las actividades activas de esta actividad masiva.</p>
+            <p style="font-size:12px; color:#6B7280; margin:0;">Se cancelarán todas las actividades de los casos seleccionados.</p>
             <div style="border:1px solid #EDE9FE; border-radius:10px; padding:14px; background:#fff; display:flex; flex-direction:column; gap:10px;">
                 <p style="{{ $sTitle }}">■ Motivo</p>
                 <div>
