@@ -419,15 +419,8 @@
 
                     <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $roles->firstItem() + $loop->index }}</td>
 
-                    <td style="padding:10px 14px; overflow:hidden; text-align:left;">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <div style="width:28px; height:28px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                                <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                                </svg>
-                            </div>
-                            <span style="font-size:13px; font-weight:500; color:#111827; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $role->name }}</span>
-                        </div>
+                    <td style="padding:10px 14px; overflow:hidden; text-align:center;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $role->name }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">
