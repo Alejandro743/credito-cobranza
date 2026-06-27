@@ -239,7 +239,7 @@ $dashActivo = request()->routeIs('administrativo.dashboard');
 
             {{-- Título --}}
             <div class="flex-1 min-w-0" style="overflow:hidden;">
-                <span style="font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; color:#111827; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; line-height:1;">{{ $pageTitle }}</span>
+                <span style="font-family:'Oswald',sans-serif; font-size:22px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:1px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; line-height:1;">{{ $pageTitle }}</span>
             </div>
 
             {{-- Fecha --}}
