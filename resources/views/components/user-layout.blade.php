@@ -208,6 +208,32 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
 
     @include('partials.sidebar')
 
+    {{-- ── Handle resize sidebar ── --}}
+    <div x-data="{ h: false }"
+         style="position:relative; width:0; flex-shrink:0; z-index:50;"
+         class="hidden md:block">
+        <div @mouseenter="h=true" @mouseleave="h=false"
+             :style="h || sidebarDragging ? 'background:#7B6FE8;' : 'background:rgba(123,111,232,.25);'"
+             style="position:absolute; top:0; bottom:0; left:-3px; width:6px; cursor:col-resize; transition:background .15s;"
+             @mousedown.prevent="
+                 sidebarDragging = true;
+                 const startX = $event.clientX;
+                 const startW = sidebarCollapsed ? 64 : sidebarWidth;
+                 const onMove = (e) => {
+                     const newW = Math.max(64, Math.min(Math.round(window.innerWidth / 2), startW + e.clientX - startX));
+                     if (newW <= 72) { sidebarCollapsed = true; }
+                     else { sidebarCollapsed = false; sidebarWidth = newW; }
+                 };
+                 const onUp = () => {
+                     sidebarDragging = false;
+                     document.removeEventListener('mousemove', onMove);
+                     document.removeEventListener('mouseup', onUp);
+                 };
+                 document.addEventListener('mousemove', onMove);
+                 document.addEventListener('mouseup', onUp);
+             "></div>
+    </div>
+
     {{-- ═══ MAIN ═══ --}}
     <div class="flex-1 flex flex-col min-w-0 overflow-hidden" style="background:{{ $bgMain }};">
 

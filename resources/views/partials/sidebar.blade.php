@@ -34,33 +34,6 @@
         </div>
     </div>
 
-    {{-- ── Handle drag resize ── --}}
-    <div x-data="{ h: false }"
-         @mouseenter="h = true" @mouseleave="h = false"
-         :style="h || sidebarDragging ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.22);'"
-         style="position:absolute; top:0; right:0; bottom:0; width:5px; cursor:col-resize; z-index:20; transition:background .15s;"
-         @mousedown.prevent="
-             sidebarDragging = true;
-             const startX = $event.clientX;
-             const startW = sidebarCollapsed ? 64 : sidebarWidth;
-             const onMove = (e) => {
-                 const newW = Math.max(64, Math.min(Math.round(window.innerWidth / 2), startW + e.clientX - startX));
-                 if (newW <= 72) {
-                     sidebarCollapsed = true;
-                 } else {
-                     sidebarCollapsed = false;
-                     sidebarWidth = newW;
-                 }
-             };
-             const onUp = () => {
-                 sidebarDragging = false;
-                 document.removeEventListener('mousemove', onMove);
-                 document.removeEventListener('mouseup', onUp);
-             };
-             document.addEventListener('mousemove', onMove);
-             document.addEventListener('mouseup', onUp);
-         "
-         class="md:block"></div>
 
     {{-- ── Navegación ── --}}
     <nav class="sidebar-nav flex-1 overflow-y-auto overflow-x-hidden"
