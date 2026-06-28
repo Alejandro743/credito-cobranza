@@ -41,14 +41,6 @@
                 @endif
             </p>
         </div>
-        {{-- Botón Actualizar --}}
-        <button wire:click="$refresh" title="Actualizar tabla desde catálogo"
-                class="shrink-0 flex items-center gap-1.5 px-3 py-2 text-xs font-semibold text-gray-500 hover:text-lavanda-600 border border-gray-200 hover:border-lavanda-300 hover:bg-lavanda-50 rounded-xl transition-colors">
-            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-            </svg>
-            Actualizar
-        </button>
     </div>
 
     {{-- Barra de filtros + botón nuevo producto --}}
@@ -682,54 +674,67 @@ $lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase
 @endif
 
 {{-- Tabla escritorio --}}
-{{-- (siempre visible en mode list o form) --}}
-<div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hidden sm:block">
-    <div class="overflow-x-auto">
-        <table class="w-full text-sm">
-            <thead class="{{ $theadClass }} text-xs uppercase tracking-wide">
-                <tr>
-                    <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Nombre</th>
-                    <th class="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase">Ciclo</th>
-                    <th class="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Estado</th>
-                    <th class="px-5 py-3 text-center text-xs font-semibold text-gray-500 uppercase">Creada</th>
-                    <th class="px-5 py-3 text-right text-xs font-semibold text-gray-500 uppercase">Acciones</th>
+<div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 220px);">
+
+    {{-- Barra --}}
+    <div style="padding:10px 18px; display:flex; align-items:center; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
+        <span style="font-size:13px; font-weight:700; color:#111827;">Listas registradas</span>
+        <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:8px;">{{ $listas->total() }}</span>
+        @if($selectedListaId)
+        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            <button wire:click="viewItems({{ $selectedListaId }})" style="{{ $btnH }} background:#0EA5E9; color:#fff;">Ver productos</button>
+            <button wire:click="edit({{ $selectedListaId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Editar</button>
+        </div>
+        @endif
+    </div>
+
+    <div style="overflow:auto; flex:1;">
+        <table style="width:100%; border-collapse:collapse; font-size:13px;">
+            <thead style="position:sticky; top:0; z-index:10;">
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                    <th style="width:50px; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; position:sticky; left:0; z-index:11; background:#F9F8FF; white-space:nowrap;">#</th>
+                    <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Nombre</th>
+                    <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Ciclo</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</th>
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Creada</th>
                 </tr>
             </thead>
-            <tbody class="divide-y divide-gray-50">
+            <tbody>
                 @forelse ($listas as $lista)
-                <tr class="hover:bg-gray-50 transition-colors">
-                    <td class="px-5 py-3.5 font-medium text-gray-800">{{ $lista->name }}</td>
-                    <td class="px-5 py-3.5 font-mono text-xs text-gray-500">{{ $lista->cycle?->code ?? '—' }}</td>
-                    <td class="px-5 py-3.5 text-center">
-                        <span class="inline-flex px-2.5 py-0.5 rounded-full text-xs font-semibold
-                            {{ $lista->estado === 'activa' ? 'bg-mint-100 text-mint-700' : 'bg-gray-100 text-gray-600' }}">
+                @php $selL = $selectedListaId === $lista->id; @endphp
+                <tr wire:key="lista-{{ $lista->id }}" style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
+                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selL ? '#F5F3FF' : '#fff' }}; white-space:nowrap;">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                            <input type="checkbox"
+                                   :checked="$wire.selectedListaId === {{ $lista->id }}"
+                                   @click="$wire.selectedListaId === {{ $lista->id }} ? $wire.set('selectedListaId', null) : $wire.selectLista({{ $lista->id }})"
+                                   style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $listas->firstItem() + $loop->index }}</span>
+                        </div>
+                    </td>
+                    <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827;">{{ $lista->name }}</td>
+                    <td style="padding:10px 14px; font-family:monospace; font-size:12px; color:#6B7280;">{{ $lista->cycle?->code ?? '—' }}</td>
+                    <td style="padding:10px 14px; text-align:center;">
+                        <span style="display:inline-flex; padding:2px 10px; border-radius:99px; font-size:12px; font-weight:700;
+                            {{ $lista->estado === 'activa' ? 'background:#D1FAE5; color:#059669;' : 'background:#F3F4F6; color:#6B7280;' }}">
                             {{ ucfirst($lista->estado) }}
                         </span>
                     </td>
-                    <td class="px-5 py-3.5 text-center text-gray-500 text-xs">{{ $lista->created_at->format('d/m/Y') }}</td>
-                    <td class="px-5 py-3.5">
-                        <div class="flex items-center justify-end gap-1">
-                            <button wire:click="viewItems({{ $lista->id }})" title="Ver productos"
-                                    class="p-1.5 rounded-lg text-gray-400 hover:text-celeste-600 hover:bg-celeste-50 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                            </button>
-                            <button wire:click="edit({{ $lista->id }})" title="Editar"
-                                    class="p-1.5 rounded-lg text-gray-400 hover:text-lavanda-600 hover:bg-lavanda-50 transition-colors">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                            </button>
-                        </div>
-                    </td>
+                    <td style="padding:10px 14px; text-align:center; font-size:12px; color:#6B7280;">{{ $lista->created_at->format('d/m/Y') }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5" class="px-5 py-14 text-center text-gray-400 text-sm">No hay listas de precios registradas.</td>
+                    <td colspan="5" style="padding:64px; text-align:center; color:#9CA3AF; font-size:13px;">No hay listas de precios registradas.</td>
                 </tr>
                 @endforelse
             </tbody>
         </table>
     </div>
+
     @if ($listas->hasPages())
-    <div class="px-5 py-3 border-t border-gray-100">{{ $listas->links() }}</div>
+    <div style="padding:10px 18px; border-top:1px solid #F3F4F6; flex-shrink:0;">{{ $listas->links() }}</div>
     @endif
 </div>
 

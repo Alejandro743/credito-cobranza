@@ -59,6 +59,13 @@ class ListaPreciosManager extends Component
     public string $editPuntos       = '0';
     public string $editStockInicial = '0';
 
+    public ?int $selectedListaId = null;
+
+    public function selectLista(int $id): void
+    {
+        $this->selectedListaId = $this->selectedListaId === $id ? null : $id;
+    }
+
     public function mount(): void
     {
         $this->initModuleColor();
@@ -382,7 +389,7 @@ class ListaPreciosManager extends Component
 
     private function resetForm(): void
     {
-        $this->reset(['cycle_id', 'name', 'editingId', 'editing', 'viewingId']);
+        $this->reset(['cycle_id', 'name', 'editingId', 'editing', 'viewingId', 'selectedListaId']);
         $this->estado            = 'activa';
         $this->showAddItemForm   = false;
         $this->editItemId        = null;
