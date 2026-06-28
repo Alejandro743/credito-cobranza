@@ -354,7 +354,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
         @php $sortCols = ['Usuario'=>'name','Email'=>'email','Tipo'=>'tipo','Rol'=>'rol','Estado'=>'active']; @endphp
         <table class="um-table" style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <colgroup>
-                <col style="width:48px;">
+                <col style="width:42px;">
                 <col style="width:180px;">
                 <col style="width:180px;">
                 <col style="width:110px;">
@@ -446,14 +446,14 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s; background:{{ $selU ? '#F5F3FF' : '' }}; {{ $selU ? 'border-left:3px solid #7B6FE8;' : '' }}"
                     @mouseenter="$el.style.background='{{ $selU ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selU ? '#F5F3FF' : '' }}'">
 
-                    <td class="col-row-num" style="padding:8px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selU ? '#F5F3FF' : '#fff' }};">
+                    <td class="col-row-num" style="padding:6px 4px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selU ? '#F5F3FF' : '#fff' }};">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:3px;">
-                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $users->firstItem() + $loop->index }}</span>
                             <input type="checkbox"
                                    :checked="$wire.selectedUserId === {{ $user->id }}"
                                    @click="$wire.selectedUserId === {{ $user->id }} ? $wire.set('selectedUserId', null) : $wire.selectUser({{ $user->id }})"
                                    :disabled="{{ $editingId && $editingId !== $user->id ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $user->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
+                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $users->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
 
