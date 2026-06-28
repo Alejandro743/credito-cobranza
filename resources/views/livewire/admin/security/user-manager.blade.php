@@ -352,18 +352,10 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay usuarios registrados.</p>
         @else
         @php $sortCols = ['Usuario'=>'name','Email'=>'email','Tipo'=>'tipo','Rol'=>'rol','Estado'=>'active']; @endphp
-        <table class="um-table" style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
-            <colgroup>
-                <col style="width:60px;">
-                <col style="width:180px;">
-                <col style="width:180px;">
-                <col style="width:110px;">
-                <col style="width:100px;">
-                <col style="width:95px;">
-            </colgroup>
+        <table class="um-table" style="width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; width:50px; position:sticky; left:0; z-index:11; background:#F9F8FF;">#</th>
                     @foreach($sortCols as $label => $key)
                     @php $isActive = $sortBy === $key; $canSort = $key !== 'rol'; @endphp
                     @if($canSort)
@@ -447,13 +439,13 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                     @mouseenter="$el.style.background='{{ $selU ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selU ? '#F5F3FF' : '' }}'">
 
                     <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selU ? '#F5F3FF' : '#fff' }};">
-                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $users->firstItem() + $loop->index }}</span>
                             <input type="checkbox"
                                    :checked="$wire.selectedUserId === {{ $user->id }}"
                                    @click="$wire.selectedUserId === {{ $user->id }} ? $wire.set('selectedUserId', null) : $wire.selectUser({{ $user->id }})"
                                    :disabled="{{ $editingId && $editingId !== $user->id ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $user->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
-                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $users->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
 
