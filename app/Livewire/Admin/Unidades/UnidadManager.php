@@ -40,6 +40,13 @@ class UnidadManager extends Component
     public string $editAbreviatura = '';
     public bool   $editActive      = true;
 
+    public ?int $selectedUnidadId = null;
+
+    public function selectUnidad(int $id): void
+    {
+        $this->selectedUnidadId = $this->selectedUnidadId === $id ? null : $id;
+    }
+
     public function mount(): void
     {
         $this->initModuleColor();
