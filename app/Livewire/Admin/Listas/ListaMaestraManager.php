@@ -72,6 +72,13 @@ class ListaMaestraManager extends Component
     public string $editTipoCuotaInicial  = 'ninguna';
     public string $editValorCuotaInicial = '0';
 
+    public ?int $selectedMaestraId = null;
+
+    public function selectMaestra(int $id): void
+    {
+        $this->selectedMaestraId = $this->selectedMaestraId === $id ? null : $id;
+    }
+
     // ── Items mode ────────────────────────────────────────────────────────────
     public string $filterCodigo   = '';
     public string $filterProducto = '';
@@ -782,9 +789,10 @@ class ListaMaestraManager extends Component
 
     public function backToList(): void
     {
-        $this->mode      = 'list';
-        $this->viewingId = null;
-        $this->editingId = null;
+        $this->mode              = 'list';
+        $this->viewingId         = null;
+        $this->editingId         = null;
+        $this->selectedMaestraId = null;
         $this->showAddItemForm    = false;
         $this->quickAddProductId = null;
         $this->editItemId        = null;

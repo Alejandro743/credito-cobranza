@@ -1116,16 +1116,23 @@
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     {{-- Barra --}}
-    <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
-        <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:13px; font-weight:700; color:#111827;">Listas registradas</span>
-            <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $maestras->total() }}</span>
+    <div style="padding:10px 18px; display:flex; align-items:center; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
+        <span style="font-size:13px; font-weight:700; color:#111827;">Listas registradas</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:8px;">{{ $maestras->total() }}</span>
+        @if($selectedMaestraId)
+        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            @if($editingId === $selectedMaestraId)
+                <button wire:click="saveEdit" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Guardar</button>
+                <button wire:click="cancelEdit" style="{{ $btnH }} background:#E5E7EB; color:#374151;">Cancelar</button>
+            @else
+                <button wire:click="viewItems({{ $selectedMaestraId }})" style="{{ $btnH }} background:#CFFAFE; color:#0E7490; border:1px solid #A5F3FC;">Ver artículos</button>
+                <button wire:click="viewAcceso({{ $selectedMaestraId }})" style="{{ $btnH }} background:#FFF7ED; color:#C2410C; border:1px solid #FED7AA;">Acceso</button>
+                <button wire:click="openView({{ $selectedMaestraId }})" style="{{ $btnH }} background:#F3F4F6; color:#374151; border:1px solid #E5E7EB;">Ver detalle</button>
+                <button wire:click="startEdit({{ $selectedMaestraId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Editar</button>
+            @endif
         </div>
-        <button type="button" wire:click="$refresh"
-                style="height:30px; padding:0 10px; border:1px solid #E5E7EB; border-radius:7px; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500; box-sizing:border-box;">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            Actualizar
-        </button>
+        @endif
     </div>
 
     <div style="overflow:auto; flex:1;">
@@ -1135,20 +1142,10 @@
         @php
         $sortColsM = ['Código'=>'code','Nombre'=>'name','Ciclo'=>'cycle_id','Cuotas'=>'cantidad_cuotas','Estado'=>'active'];
         @endphp
-        <table style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
-            <colgroup>
-                <col style="width:44px;">
-                <col style="width:110px;">
-                <col>
-                <col style="width:130px;">
-                <col style="width:85px;">
-                <col style="width:115px;">
-                <col style="width:110px;">
-                <col style="width:155px;">
-            </colgroup>
+        <table style="width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                    <th style="width:50px; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; position:sticky; left:0; z-index:11; background:#F9F8FF; white-space:nowrap;">#</th>
                     @foreach($sortColsM as $label => $key)
                     @php $isActive = ($sortBy ?? '') === $key; @endphp
                     <th wire:click="toggleSort('{{ $key }}')"
@@ -1166,7 +1163,6 @@
                     </th>
                     @endforeach
                     <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">C. Inicial</th>
-                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -1175,7 +1171,9 @@
                 @if ($editingId === $m->id)
                 {{-- Fila edición principal --}}
                 <tr wire:key="m-edit-{{ $m->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
-                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $maestras->firstItem() + $loop->index }}</td>
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap;">
+                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $maestras->firstItem() + $loop->index }}</span>
+                    </td>
                     <td style="padding:7px 16px;">
                         <input wire:model="editCode" type="text"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; font-family:monospace; outline:none; box-sizing:border-box; background:#fff; text-transform:uppercase;">
@@ -1210,18 +1208,6 @@
                             <option value="1">Activa</option>
                             <option value="0">Inactiva</option>
                         </select>
-                    </td>
-                    <td style="padding:7px 10px; text-align:center;">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
-                            <button wire:click="saveEdit"
-                                    style="height:30px; padding:0 10px; background:#7B6FE8; color:#fff; border:none; border-radius:7px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
-                                Guardar
-                            </button>
-                            <button wire:click="cancelEdit"
-                                    style="height:30px; padding:0 8px; background:#F3F4F6; color:#6B7280; border:none; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
-                                Cancelar
-                            </button>
-                        </div>
                     </td>
                 </tr>
                 {{-- Sub-fila: incremento + financiamiento --}}
@@ -1269,7 +1255,17 @@
                     style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
 
-                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $maestras->firstItem() + $loop->index }}</td>
+                    @php $selM = $selectedMaestraId === $m->id; @endphp
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selM ? '#F5F3FF' : '#fff' }}; white-space:nowrap;">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                            <input type="checkbox"
+                                   :checked="$wire.selectedMaestraId === {{ $m->id }}"
+                                   @click="$wire.selectedMaestraId === {{ $m->id }} ? $wire.set('selectedMaestraId', null) : $wire.selectMaestra({{ $m->id }})"
+                                   :disabled="{{ $editingId && $editingId !== $m->id ? 'true' : 'false' }}"
+                                   style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $m->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
+                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $maestras->firstItem() + $loop->index }}</span>
+                        </div>
+                    </td>
                     <td style="padding:10px 14px; overflow:hidden;">
                         <span style="font-size:12px; font-family:monospace; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->code ?? '—' }}</span>
                     </td>
@@ -1297,34 +1293,6 @@
                                      color:{{ $m->active ? '#059669' : '#9CA3AF' }};">
                             {{ $m->active ? 'Activa' : 'Inactiva' }}
                         </span>
-                    </td>
-                    <td style="padding:10px 16px; text-align:center;">
-                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
-                            {{-- Editar --}}
-                            <button wire:click="startEdit({{ $m->id }})" title="Editar"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                            </button>
-                            {{-- Ver detalle --}}
-                            <button wire:click="openView({{ $m->id }})" title="Ver detalle"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                    @mouseenter="$el.style.background='#F3F4F6';$el.style.borderColor='#D1D5DB';" @mouseleave="$el.style.background='#F9FAFB';$el.style.borderColor='#E5E7EB';">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                            </button>
-                            {{-- Ver productos --}}
-                            <button wire:click="viewItems({{ $m->id }})" title="Ver productos"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #A5F3FC; background:#CFFAFE; color:#0E7490; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                    @mouseenter="$el.style.background='#A5F3FC'" @mouseleave="$el.style.background='#CFFAFE'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
-                            </button>
-                            {{-- Gestionar acceso --}}
-                            <button wire:click="viewAcceso({{ $m->id }})" title="Gestionar acceso"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #FED7AA; background:#FFF7ED; color:#C2410C; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                    @mouseenter="$el.style.opacity='.75'" @mouseleave="$el.style.opacity='1'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
-                            </button>
-                        </div>
                     </td>
                 </tr>
                 @endif
