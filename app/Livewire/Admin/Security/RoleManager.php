@@ -39,6 +39,14 @@ class RoleManager extends Component
     public string $editRoleName = '';
     public bool   $editActivo   = true;
 
+    // Selección de fila
+    public ?int $selectedRoleId = null;
+
+    public function selectRole(int $id): void
+    {
+        $this->selectedRoleId = $this->selectedRoleId === $id ? null : $id;
+    }
+
     // Permissions tree
     public ?int   $permissionsRoleId   = null;
     public string $permissionsRoleName = '';
