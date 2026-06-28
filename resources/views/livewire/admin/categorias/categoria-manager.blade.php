@@ -96,37 +96,42 @@
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     {{-- Barra --}}
-    <div style="padding:10px 18px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #F3F4F6;">
-        <div style="display:flex; align-items:center; gap:8px;">
-            <span style="font-size:13px; font-weight:700; color:#111827;">Categorías registradas</span>
-            <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $categorias->total() }}</span>
+    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-wrap:wrap;">
+        <span style="font-size:13px; font-weight:700; color:#111827;">Categorías registradas</span>
+        <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $categorias->total() }}</span>
+        @if($selectedCategoriaId)
+        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            @if($editingId === $selectedCategoriaId)
+                <button wire:click="saveEdit" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    Guardar
+                </button>
+                <button wire:click="cancelEdit" style="{{ $btnH }} background:#E5E7EB; color:#374151;">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Cancelar
+                </button>
+            @else
+                <button wire:click="startEdit({{ $selectedCategoriaId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                    Editar
+                </button>
+            @endif
         </div>
-        <button type="button" wire:click="$refresh"
-                style="height:30px; padding:0 10px; border:1px solid #E5E7EB; border-radius:7px; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; gap:4px; font-size:12px; font-weight:500; box-sizing:border-box;">
-            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-            Actualizar
-        </button>
+        @endif
     </div>
 
     <div style="overflow:auto; flex:1;">
         @if ($categorias->isEmpty())
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay categorías registradas.</p>
         @else
-        <table style="table-layout:fixed; width:100%; min-width:600px; border-collapse:collapse; font-size:13px;">
+        <table style="width:100%; min-width:600px; border-collapse:collapse; font-size:13px;">
             @php
             $sortCols = ['Código'=>'code','Nombre'=>'name','Descripción'=>'descripcion','Estado'=>'active'];
             @endphp
-            <colgroup>
-                <col style="width:44px;">
-                <col style="width:100px;">
-                <col style="width:200px;">
-                <col style="width:220px;">
-                <col style="width:90px;">
-                <col style="width:120px;">
-            </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; width:50px; position:sticky; left:0; z-index:11; background:#F9F8FF;">#</th>
                     @foreach($sortCols as $label => $key)
                     @php $isActive = $sortBy === $key; @endphp
                     <th wire:click="toggleSort('{{ $key }}')"
@@ -146,7 +151,6 @@
                         @endif
                     </th>
                     @endforeach
-                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
                 </tr>
             </thead>
             <tbody>
@@ -155,7 +159,9 @@
                 {{-- Fila edición inline --}}
                 @if ($editingId === $cat->id)
                 <tr wire:key="edit-{{ $cat->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
-                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $categorias->firstItem() + $loop->index }}</td>
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#F8F7FF;">
+                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $categorias->firstItem() + $loop->index }}</span>
+                    </td>
                     <td style="padding:7px 10px;">
                         <input wire:model="editCode" type="text"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; font-family:monospace; text-transform:uppercase;">
@@ -177,27 +183,25 @@
                             <option value="0">Inactiva</option>
                         </select>
                     </td>
-                    <td style="padding:7px 10px; text-align:center;">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
-                            <button wire:click="saveEdit"
-                                    style="height:30px; padding:0 10px; background:#7B6FE8; color:#fff; border:none; border-radius:7px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
-                                Guardar
-                            </button>
-                            <button wire:click="cancelEdit"
-                                    style="height:30px; padding:0 8px; background:#F3F4F6; color:#6B7280; border:none; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
-                                Cancelar
-                            </button>
-                        </div>
-                    </td>
                 </tr>
 
                 {{-- Fila normal --}}
                 @else
+                @php $selC = $selectedCategoriaId === $cat->id; @endphp
                 <tr wire:key="cat-{{ $cat->id }}"
-                    style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
-                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                    style="border-bottom:1px solid #F3F4F6; transition:background .1s; background:{{ $selC ? '#F5F3FF' : '' }}; {{ $selC ? 'border-left:3px solid #7B6FE8;' : '' }}"
+                    @mouseenter="$el.style.background='{{ $selC ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selC ? '#F5F3FF' : '' }}'">
 
-                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $categorias->firstItem() + $loop->index }}</td>
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selC ? '#F5F3FF' : '#fff' }};">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                            <input type="checkbox"
+                                   :checked="$wire.selectedCategoriaId === {{ $cat->id }}"
+                                   @click="$wire.selectedCategoriaId === {{ $cat->id }} ? $wire.set('selectedCategoriaId', null) : $wire.selectCategoria({{ $cat->id }})"
+                                   :disabled="{{ $editingId && $editingId !== $cat->id ? 'true' : 'false' }}"
+                                   style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $cat->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
+                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $categorias->firstItem() + $loop->index }}</span>
+                        </div>
+                    </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
                         <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cat->code }}</span>
@@ -219,17 +223,6 @@
                         </span>
                     </td>
 
-                    <td style="padding:10px 16px; text-align:center;">
-                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
-                            <button wire:click="startEdit({{ $cat->id }})" title="Editar"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                </svg>
-                            </button>
-                        </div>
-                    </td>
                 </tr>
                 @endif
 

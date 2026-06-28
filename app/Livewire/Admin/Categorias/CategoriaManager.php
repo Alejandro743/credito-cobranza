@@ -42,6 +42,13 @@ class CategoriaManager extends Component
     public string $editDescripcion = '';
     public bool   $editActive      = true;
 
+    public ?int $selectedCategoriaId = null;
+
+    public function selectCategoria(int $id): void
+    {
+        $this->selectedCategoriaId = $this->selectedCategoriaId === $id ? null : $id;
+    }
+
     public function mount(): void
     {
         $this->initModuleColor();
