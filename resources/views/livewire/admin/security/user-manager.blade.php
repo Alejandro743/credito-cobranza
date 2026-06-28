@@ -354,7 +354,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
         @php $sortCols = ['Usuario'=>'name','Email'=>'email','Tipo'=>'tipo','Rol'=>'rol','Estado'=>'active']; @endphp
         <table class="um-table" style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <colgroup>
-                <col style="width:56px;">
+                <col style="width:48px;">
                 <col style="width:180px;">
                 <col style="width:180px;">
                 <col style="width:110px;">
