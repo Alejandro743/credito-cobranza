@@ -354,7 +354,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
         @php $sortCols = ['Usuario'=>'name','Email'=>'email','Tipo'=>'tipo','Rol'=>'rol','Estado'=>'active']; @endphp
         <table class="um-table" style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <colgroup>
-                <col style="width:44px;">
+                <col style="width:1px;">
                 <col style="width:180px;">
                 <col style="width:180px;">
                 <col style="width:110px;">
@@ -363,7 +363,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
             </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 4px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; width:44px;">#</th>
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">#</th>
                     @foreach($sortCols as $label => $key)
                     @php $isActive = $sortBy === $key; $canSort = $key !== 'rol'; @endphp
                     @if($canSort)
@@ -446,7 +446,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s; background:{{ $selU ? '#F5F3FF' : '' }}; {{ $selU ? 'border-left:3px solid #7B6FE8;' : '' }}"
                     @mouseenter="$el.style.background='{{ $selU ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selU ? '#F5F3FF' : '' }}'">
 
-                    <td class="col-row-num" style="padding:6px 2px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selU ? '#F5F3FF' : '#fff' }}; width:44px;">
+                    <td class="col-row-num" style="padding:6px 8px; text-align:center; position:sticky; left:0; z-index:2; white-space:nowrap; background:{{ $selU ? '#F5F3FF' : '#fff' }};">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:8px;">
                             <input type="checkbox"
                                    :checked="$wire.selectedUserId === {{ $user->id }}"
