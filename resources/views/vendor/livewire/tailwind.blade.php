@@ -13,7 +13,7 @@ $btnOn   = 'width:30px; height:30px; display:inline-flex; align-items:center; ju
 
 <div>
 @if ($paginator->hasPages())
-<nav style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;">
+<nav style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px; background:#F9FAFB; border-radius:10px; padding:8px 14px;">
 
     {{-- Info --}}
     <span style="font-size:12px; color:#9CA3AF;">
