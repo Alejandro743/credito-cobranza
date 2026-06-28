@@ -48,6 +48,14 @@ class ProductManager extends Component
     public        $editImage       = null;
     public string $editCurrentImage = '';
 
+    // Selección de fila
+    public ?int $selectedProductId = null;
+
+    public function selectProduct(int $id): void
+    {
+        $this->selectedProductId = $this->selectedProductId === $id ? null : $id;
+    }
+
     // Modal stock en listas
     public ?int   $stockModalProductId = null;
     public array  $stockEdits          = [];
