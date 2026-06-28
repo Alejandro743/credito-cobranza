@@ -354,7 +354,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
         @php $sortCols = ['Usuario'=>'name','Email'=>'email','Tipo'=>'tipo','Rol'=>'rol','Estado'=>'active']; @endphp
         <table class="um-table" style="table-layout:fixed; width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <colgroup>
-                <col style="width:42px;">
+                <col style="width:54px;">
                 <col style="width:180px;">
                 <col style="width:180px;">
                 <col style="width:110px;">
@@ -447,7 +447,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                     @mouseenter="$el.style.background='{{ $selU ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selU ? '#F5F3FF' : '' }}'">
 
                     <td class="col-row-num" style="padding:6px 4px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selU ? '#F5F3FF' : '#fff' }};">
-                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:3px;">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:12px;">
                             <input type="checkbox"
                                    :checked="$wire.selectedUserId === {{ $user->id }}"
                                    @click="$wire.selectedUserId === {{ $user->id }} ? $wire.set('selectedUserId', null) : $wire.selectUser({{ $user->id }})"
