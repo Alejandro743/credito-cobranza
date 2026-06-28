@@ -440,12 +440,12 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
 
                     <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selU ? '#F5F3FF' : '#fff' }};">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
-                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $users->firstItem() + $loop->index }}</span>
                             <input type="checkbox"
                                    :checked="$wire.selectedUserId === {{ $user->id }}"
                                    @click="$wire.selectedUserId === {{ $user->id }} ? $wire.set('selectedUserId', null) : $wire.selectUser({{ $user->id }})"
                                    :disabled="{{ $editingId && $editingId !== $user->id ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $user->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
+                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $users->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
 
