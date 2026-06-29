@@ -1273,16 +1273,16 @@
                         <input wire:model="editCantidadCuotas" type="number" min="1" max="999" placeholder="—"
                                style="width:58px; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
                     </td>
-                    <td style="padding:7px 10px; text-align:center;">
-                        <input type="checkbox" wire:model="editUsaCuotaInicial"
-                               style="width:15px; height:15px; cursor:pointer; accent-color:#7B6FE8;">
-                    </td>
                     <td style="padding:7px 8px; text-align:center;">
                         <select wire:model="editActive"
                                 style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 4px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
                             <option value="1">Activa</option>
                             <option value="0">Inactiva</option>
                         </select>
+                    </td>
+                    <td style="padding:7px 10px; text-align:center;">
+                        <input type="checkbox" wire:model="editUsaCuotaInicial"
+                               style="width:15px; height:15px; cursor:pointer; accent-color:#7B6FE8;">
                     </td>
                     <td></td>
                     <td></td>
@@ -1355,21 +1355,21 @@
                     <td style="padding:10px 14px; text-align:center;">
                         <span style="font-size:13px; color:#6B7280;">{{ $m->cantidad_cuotas ? $m->cantidad_cuotas.'c' : '—' }}</span>
                     </td>
-                    <td style="padding:10px 16px; text-align:center;">
-                        @if ($m->usa_cuota_inicial)
-                        <span style="font-size:13px; color:#374151; font-weight:500;">
-                            {{ $m->tipo_cuota_inicial === 'porcentaje' ? number_format($m->valor_cuota_inicial, 0).'%' : 'Bs '.number_format($m->valor_cuota_inicial, 2) }}
-                        </span>
-                        @else
-                        <span style="font-size:13px; color:#374151; font-weight:500;">—</span>
-                        @endif
-                    </td>
                     <td style="padding:10px 14px; text-align:center;">
                         <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
                                      background:{{ $m->active ? '#D1FAE5' : '#F3F4F6' }};
                                      color:{{ $m->active ? '#059669' : '#9CA3AF' }};">
                             {{ $m->active ? 'Activa' : 'Inactiva' }}
                         </span>
+                    </td>
+                    <td style="padding:10px 16px; text-align:center;">
+                        @if ($m->usa_cuota_inicial)
+                        <span style="font-size:13px; color:#374151;">
+                            {{ $m->tipo_cuota_inicial === 'porcentaje' ? number_format($m->valor_cuota_inicial, 0).'%' : 'Bs '.number_format($m->valor_cuota_inicial, 2) }}
+                        </span>
+                        @else
+                        <span style="font-size:13px; color:#9CA3AF;">—</span>
+                        @endif
                     </td>
                     <td style="padding:10px 14px; text-align:center;">
                         @if($m->tipo_incremento === 'porcentaje')
