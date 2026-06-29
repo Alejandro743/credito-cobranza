@@ -60,11 +60,12 @@ class StockArticulosManager extends Component
 
     public function selectItem(int $id): void
     {
-        $this->selectedItemId = $this->selectedItemId === $id ? null : $id;
-        if ($this->selectedItemId === null) {
-            $this->editingItemId    = null;
-            $this->stockModalItemId = null;
+        if ($this->editingItemId && $this->editingItemId !== $id) {
+            $this->editingItemId = null;
+            $this->resetValidation();
         }
+        $this->selectedItemId   = $this->selectedItemId === $id ? null : $id;
+        $this->stockModalItemId = null;
     }
 
     // ── Edición inline ────────────────────────────────────────────────────────
