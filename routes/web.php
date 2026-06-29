@@ -39,7 +39,8 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('admin')->name('admin.'
         Route::get('/categorias', fn() => view('admin.catalogo.categorias.index'))->name('categorias');
         Route::get('/unidades',   fn() => view('admin.catalogo.unidades.index'))->name('unidades');
         Route::get('/listas',           fn() => view('admin.catalogo.listas.index'))->name('listas');
-        Route::get('/maestro-articulos', fn() => view('admin.catalogo.maestro-articulos.index'))->name('maestro-articulos');
+        Route::get('/maestro-articulos',  fn() => view('admin.catalogo.maestro-articulos.index'))->name('maestro-articulos');
+        Route::get('/stock-articulos',    fn() => view('admin.catalogo.stock-articulos.index'))->name('stock-articulos');
     });
 
     // Configuración del Ciclo
