@@ -182,18 +182,19 @@
             </div>
         </div>
 
-    </div>
-    <div style="padding:10px 20px 14px; border-top:1px solid #EDE9FE; display:flex; justify-content:flex-end; gap:8px;">
-        <button wire:click="cancelAdd"
-                style="height:36px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
-                @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
-            Cancelar
-        </button>
-        <button wire:click="saveNew"
-                style="height:36px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-            Guardar
-        </button>
+        <div style="display:flex; align-items:flex-end; gap:8px;">
+            <button wire:click="saveNew"
+                    style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                Guardar
+            </button>
+            <button wire:click="cancelAdd"
+                    style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                Cancelar
+            </button>
+        </div>
+
     </div>
 </div>
 @endif
