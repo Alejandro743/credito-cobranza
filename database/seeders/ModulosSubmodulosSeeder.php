@@ -50,12 +50,11 @@ class ModulosSubmodulosSeeder extends Seeder
                         'name' => 'Catálogo', 'slug' => 'catalogo',
                         'route_name' => null, 'sort_order' => 2,
                         'children' => [
-                            ['name' => 'Productos',           'slug' => 'cat-productos',          'route_name' => 'admin.catalogo.productos',          'sort_order' => 1],
-                            ['name' => 'Categorías',          'slug' => 'cat-categorias',         'route_name' => 'admin.catalogo.categorias',         'sort_order' => 2],
-                            ['name' => 'Unidades',            'slug' => 'cat-unidades',           'route_name' => 'admin.catalogo.unidades',           'sort_order' => 3],
-                            ['name' => 'Maestro Artículos',   'slug' => 'cat-maestro-articulos',  'route_name' => 'admin.catalogo.maestro-articulos',  'sort_order' => 4],
-                            ['name' => 'Stock de Artículos',  'slug' => 'cat-stock-articulos',    'route_name' => 'admin.catalogo.stock-articulos',    'sort_order' => 5],
-                            ['name' => 'Listas de Precios',   'slug' => 'cat-listas',             'route_name' => 'admin.catalogo.listas',             'sort_order' => 6],
+                            ['name' => 'Categorías',          'slug' => 'cat-categorias',        'route_name' => 'admin.catalogo.categorias',        'sort_order' => 1],
+                            ['name' => 'Unidades',            'slug' => 'cat-unidades',          'route_name' => 'admin.catalogo.unidades',          'sort_order' => 2],
+                            ['name' => 'Maestro Artículos',   'slug' => 'cat-maestro-articulos', 'route_name' => 'admin.catalogo.maestro-articulos', 'sort_order' => 3],
+                            ['name' => 'Stock de Artículos',  'slug' => 'cat-productos',         'route_name' => 'admin.catalogo.productos',         'sort_order' => 4],
+                            ['name' => 'Listas de Precios',   'slug' => 'cat-listas',            'route_name' => 'admin.catalogo.listas',            'sort_order' => 5],
                         ],
                     ],
                     // Grupo: Definiciones
