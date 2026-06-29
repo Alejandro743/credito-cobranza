@@ -474,7 +474,7 @@
                 <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 12h6M9 16h4"/></svg>
             </div>
             <div style="flex:1; min-width:0;">
-                <p style="font-size:13px; font-weight:800; color:#7B6FE8; margin:0;">Stock en listas de precios</p>
+                <p style="font-size:13px; font-weight:800; color:#7B6FE8; margin:0;">Stock del artículo por ciclo</p>
                 <p style="font-size:12px; color:#9CA3AF; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
                     {{ $stockModalItem?->maestroArticulo?->codigo }} — {{ $stockModalItem?->maestroArticulo?->nombre }}
                 </p>
@@ -486,55 +486,47 @@
             </button>
         </div>
 
-        {{-- Resumen stock --}}
-        <div style="padding:12px 20px; background:#F8F7FF; border-bottom:1px solid #EDE9FE; display:flex; gap:20px; flex-shrink:0;">
-            <div>
-                <p style="font-size:11px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Stock Inicial</p>
-                <p style="font-size:16px; font-weight:800; color:#111827; font-family:monospace; margin:0;">{{ number_format((float)$stockModalItem?->stock_inicial, 0) }}</p>
-            </div>
-            <div>
-                <p style="font-size:11px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Stock Actual</p>
-                <p style="font-size:16px; font-weight:800; color:#111827; font-family:monospace; margin:0;">{{ number_format((float)$stockModalItem?->stock_actual, 0) }}</p>
-            </div>
-            <div>
-                <p style="font-size:11px; font-weight:700; color:#6366F1; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Comprometido</p>
-                <p style="font-size:16px; font-weight:800; color:#6366F1; font-family:monospace; margin:0;">{{ number_format((float)$stockModalItem?->stock_comprometido, 0) }}</p>
-            </div>
-            <div>
-                <p style="font-size:11px; font-weight:700; color:#059669; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Disponible</p>
-                @php $dispModal = $stockModalItem?->stockDisponible() ?? 0; @endphp
-                <p style="font-size:16px; font-weight:800; font-family:monospace; margin:0; color:{{ $dispModal > 0 ? '#059669' : '#EF4444' }};">{{ number_format($dispModal, 0) }}</p>
-            </div>
-        </div>
-
         {{-- Body --}}
         <div style="overflow:auto; flex:1; padding:16px 20px;">
             @if($stockModalRows->isEmpty())
             <div style="text-align:center; padding:40px 20px;">
                 <svg width="40" height="40" fill="none" stroke="#D1D5DB" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 10px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
-                <p style="font-size:13px; color:#9CA3AF;">Este artículo no está asignado a ninguna lista de precios.</p>
+                <p style="font-size:13px; color:#9CA3AF;">Este artículo no tiene stock en ningún ciclo.</p>
             </div>
             @else
             <table style="width:100%; border-collapse:collapse; font-size:13px;">
                 <thead>
                     <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                        <th style="padding:9px 12px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Lista de Precios</th>
-                        <th style="padding:9px 12px; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Stock Asignado</th>
-                        <th style="padding:9px 12px; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Descuento</th>
+                        <th style="padding:9px 12px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Ciclo</th>
+                        <th style="padding:9px 12px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Lista</th>
+                        <th style="padding:9px 12px; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Stock Ini.</th>
+                        <th style="padding:9px 12px; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Stock Act.</th>
+                        <th style="padding:9px 12px; text-align:right; font-size:11px; font-weight:700; color:#6366F1; text-transform:uppercase; letter-spacing:.4px;">Comprom.</th>
+                        <th style="padding:9px 12px; text-align:right; font-size:11px; font-weight:700; color:#059669; text-transform:uppercase; letter-spacing:.4px;">Disponible</th>
                         <th style="padding:9px 12px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Estado</th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($stockModalRows as $row)
-                    <tr style="border-bottom:1px solid #F3F4F6;">
+                    @php $dispRow = $row->stockDisponible(); $esCurrent = $row->id === $stockModalItemId; @endphp
+                    <tr style="border-bottom:1px solid #F3F4F6; {{ $esCurrent ? 'background:#F5F3FF;' : '' }}">
+                        <td style="padding:10px 12px; white-space:nowrap;">
+                            <span style="font-size:12px; font-family:monospace; font-weight:700; color:#7B6FE8;">{{ $row->listaMaestra?->cycle?->code ?? '—' }}</span>
+                        </td>
                         <td style="padding:10px 12px;">
-                            <span style="font-size:13px; font-weight:600; color:#111827;">{{ $row->listaDerivada?->name ?? '—' }}</span>
+                            <span style="font-size:12px; color:#374151;">{{ $row->listaMaestra?->name ?? '—' }}</span>
                         </td>
                         <td style="padding:10px 12px; text-align:right;">
-                            <span style="font-size:13px; font-weight:700; color:#6366F1; font-family:monospace;">{{ number_format((float)$row->stock_asignado, 0) }}</span>
+                            <span style="font-size:13px; font-weight:600; color:#111827; font-family:monospace;">{{ number_format((float)$row->stock_inicial, 0) }}</span>
                         </td>
                         <td style="padding:10px 12px; text-align:right;">
-                            <span style="font-size:13px; color:#374151; font-family:monospace;">{{ number_format((float)$row->descuento, 2) }}</span>
+                            <span style="font-size:13px; font-weight:600; color:#111827; font-family:monospace;">{{ number_format((float)$row->stock_actual, 0) }}</span>
+                        </td>
+                        <td style="padding:10px 12px; text-align:right;">
+                            <span style="font-size:13px; font-weight:700; color:#6366F1; font-family:monospace;">{{ number_format((float)$row->stock_comprometido, 0) }}</span>
+                        </td>
+                        <td style="padding:10px 12px; text-align:right;">
+                            <span style="font-size:13px; font-weight:700; font-family:monospace; color:{{ $dispRow > 0 ? '#059669' : '#9CA3AF' }};">{{ number_format($dispRow, 0) }}</span>
                         </td>
                         <td style="padding:10px 12px; text-align:center;">
                             <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700;
