@@ -240,13 +240,10 @@
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                     <th style="width:50px; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; position:sticky; left:0; z-index:11; background:#F9F8FF; white-space:nowrap;">#</th>
-                    <th style="padding:10px 12px; text-align:center;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Img</span>
-                    </th>
                     {{-- Ciclo (sortable) --}}
                     @php $isActive = $sortBy === 'lista_maestra_id'; @endphp
                     <th wire:click="toggleSort('lista_maestra_id')"
-                        style="padding:10px 14px; text-align:left; user-select:none; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        style="padding:10px 14px; text-align:left; user-select:none; cursor:pointer; white-space:nowrap; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
                             Ciclo
@@ -256,6 +253,7 @@
                             @endif
                         </span>
                     </th>
+                    <th style="padding:10px 14px; text-align:left; min-width:140px;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Lista</span></th>
                     {{-- Código, Nombre, Categoría, Unidad — columnas de tabla relacionada, sin sort --}}
                     <th style="padding:10px 14px; text-align:left;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Código</span></th>
                     <th style="padding:10px 14px; text-align:left; min-width:160px;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Nombre</span></th>
@@ -304,19 +302,11 @@
                     <td class="col-row-num" style="padding:6px 8px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap;">
                         <span style="font-size:12px; font-weight:700; color:#374151;">{{ $items->firstItem() + $loop->index }}</span>
                     </td>
-                    <td style="padding:7px 12px; text-align:center;">
-                        @php $foto = $item->maestroArticulo?->foto_url; @endphp
-                        @if($foto)
-                        <img src="{{ $foto }}" style="width:36px; height:36px; border-radius:8px; object-fit:cover; border:1px solid #E5E7EB; display:block; margin:0 auto;" onerror="this.style.display='none';">
-                        @else
-                        <div style="width:36px; height:36px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; margin:0 auto;">
-                            <svg width="16" height="16" fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        </div>
-                        @endif
-                    </td>
                     <td style="padding:10px 14px; white-space:nowrap;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:600; color:#7B6FE8;">{{ $item->listaMaestra?->cycle?->code }}</span>
-                        <span style="font-size:11px; color:#9CA3AF; display:block;">{{ $item->listaMaestra?->name }}</span>
+                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#7B6FE8;">{{ $item->listaMaestra?->cycle?->code }}</span>
+                    </td>
+                    <td style="padding:10px 14px; min-width:140px;">
+                        <span style="font-size:12px; color:#374151;">{{ $item->listaMaestra?->name }}</span>
                     </td>
                     <td style="padding:10px 14px;">
                         <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827;">{{ $item->maestroArticulo?->codigo }}</span>
@@ -371,22 +361,12 @@
                         </div>
                     </td>
 
-                    <td style="padding:7px 12px; text-align:center;">
-                        @php $foto = $item->maestroArticulo?->foto_url; @endphp
-                        @if($foto)
-                        <img src="{{ $foto }}" alt="{{ $item->maestroArticulo?->nombre }}"
-                             style="width:36px; height:36px; border-radius:8px; object-fit:cover; border:1px solid #E5E7EB; display:block; margin:0 auto;"
-                             onerror="this.style.display='none';">
-                        @else
-                        <div style="width:36px; height:36px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; margin:0 auto;">
-                            <svg width="16" height="16" fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        </div>
-                        @endif
+                    <td style="padding:10px 14px; white-space:nowrap;">
+                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#7B6FE8;">{{ $item->listaMaestra?->cycle?->code }}</span>
                     </td>
 
-                    <td style="padding:10px 14px; white-space:nowrap;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:600; color:#7B6FE8;">{{ $item->listaMaestra?->cycle?->code }}</span>
-                        <span style="font-size:11px; color:#9CA3AF; display:block;">{{ $item->listaMaestra?->name }}</span>
+                    <td style="padding:10px 14px; min-width:140px;">
+                        <span style="font-size:12px; color:#374151;">{{ $item->listaMaestra?->name }}</span>
                     </td>
 
                     <td style="padding:10px 14px;">
