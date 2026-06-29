@@ -145,12 +145,12 @@
                         @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
                         <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
                         <td style="padding:10px 14px; overflow:hidden;">
-                            <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($item->maestraItem->product->name ?? '—')) }}</span>
+                            <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($item->maestraItem->product->name ?? '—')) }}</span>
                         </td>
-                        <td style="padding:10px 14px; text-align:right; font-size:13px; color:#6B7280; white-space:nowrap;">S/ {{ number_format($item->maestraItem->precio_base ?? 0, 2) }}</td>
-                        <td style="padding:10px 14px; text-align:right; font-size:13px; color:#F59E0B; white-space:nowrap;">S/ {{ number_format($item->descuento, 2) }}</td>
-                        <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:700; color:#059669; white-space:nowrap;">S/ {{ number_format($item->precio_final, 2) }}</td>
-                        <td style="padding:10px 14px; text-align:right; font-size:13px; color:#6B7280; white-space:nowrap;">{{ number_format($item->stock_asignado, 2) }}</td>
+                        <td style="padding:10px 14px; text-align:right; font-size:13px; color:#374151; white-space:nowrap;">S/ {{ number_format($item->maestraItem->precio_base ?? 0, 2) }}</td>
+                        <td style="padding:10px 14px; text-align:right; font-size:13px; color:#374151; white-space:nowrap;">S/ {{ number_format($item->descuento, 2) }}</td>
+                        <td style="padding:10px 14px; text-align:right; font-size:13px; color:#374151; white-space:nowrap;">S/ {{ number_format($item->precio_final, 2) }}</td>
+                        <td style="padding:10px 14px; text-align:right; font-size:13px; color:#374151; white-space:nowrap;">{{ number_format($item->stock_asignado, 2) }}</td>
                         <td style="padding:10px 14px; text-align:center;">
                             <button wire:click="toggleItemActive({{ $item->id }})"
                                     style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; border:none; cursor:pointer; white-space:nowrap;
@@ -294,10 +294,10 @@
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
                     <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $derivadas->firstItem() + $loop->index }}</td>
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($d->name)) }}</span>
+                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($d->name)) }}</span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $d->listaMaestra->name ?? '—' }}</span>
+                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $d->listaMaestra->name ?? '—' }}</span>
                     </td>
                     <td style="padding:10px 14px; text-align:center;">
                         <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
@@ -306,7 +306,7 @@
                             {{ ucfirst($d->estado) }}
                         </span>
                     </td>
-                    <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280;">{{ $d->created_at->format('d/m/Y') }}</td>
+                    <td style="padding:10px 14px; text-align:center; font-size:13px; color:#374151;">{{ $d->created_at->format('d/m/Y') }}</td>
                     <td style="padding:10px 14px; text-align:center;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
                             <button wire:click="viewItems({{ $d->id }})" title="Productos"
