@@ -13,12 +13,11 @@ class MaestroArticulo extends Model
     protected $fillable = [
         'codigo', 'nombre', 'descripcion',
         'categoria_id', 'unidad_id',
-        'precio_base', 'active',
+        'active',
     ];
 
     protected $casts = [
-        'precio_base' => 'decimal:2',
-        'active'      => 'boolean',
+        'active' => 'boolean',
     ];
 
     public function categoria(): BelongsTo

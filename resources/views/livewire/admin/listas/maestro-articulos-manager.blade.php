@@ -78,12 +78,6 @@
                 @endforeach
             </select>
         </div>
-        <div style="min-width:110px; max-width:140px;">
-            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Precio Base</label>
-            <input wire:model="newPrecioBase" type="number" min="0" step="0.01" placeholder="0.00"
-                   style="{{ $iS }} text-align:right;">
-            @error('newPrecioBase') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-        </div>
         <div style="min-width:100px;">
             <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Estado</label>
             <select wire:model="newActive" style="{{ $iS }} cursor:pointer; padding:0 8px;">
@@ -132,7 +126,7 @@
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay artículos maestros registrados.</p>
         @else
         @php
-            $sortCols = ['Código'=>'codigo','Nombre'=>'nombre','Categoría'=>'categoria_id','Unidad'=>'unidad_id','Precio Base'=>'precio_base','Estado'=>'active'];
+            $sortCols = ['Código'=>'codigo','Nombre'=>'nombre','Categoría'=>'categoria_id','Unidad'=>'unidad_id','Estado'=>'active'];
         @endphp
         <table style="width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
@@ -188,10 +182,6 @@
                             @endforeach
                         </select>
                     </td>
-                    <td style="padding:7px 10px; min-width:110px;">
-                        <input wire:model="editPrecioBase" type="number" min="0" step="0.01" style="{{ $eI }} text-align:right;">
-                        @error('editPrecioBase') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                    </td>
                     <td style="padding:7px 10px;">
                         <select wire:model="editActive" style="{{ $eI }} padding:0 6px; cursor:pointer;">
                             <option value="1">Activo</option>
@@ -243,10 +233,6 @@
                         @else
                         <span style="color:#D1D5DB; font-size:13px;">—</span>
                         @endif
-                    </td>
-
-                    <td style="padding:10px 14px; text-align:right; white-space:nowrap;">
-                        <span style="font-size:13px; font-weight:600; color:#111827; font-family:monospace;">{{ number_format((float)$a->precio_base, 2) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">
@@ -318,19 +304,12 @@
                     </select>
                 </div>
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div>
-                    <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Precio Base</label>
-                    <input wire:model="editPrecioBase" type="number" min="0" step="0.01" style="{{ $iM }} text-align:right;">
-                    @error('editPrecioBase')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
-                </div>
-                <div>
-                    <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Estado</label>
-                    <select wire:model="editActive" style="{{ $iM }} cursor:pointer; padding:0 8px;">
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
-                    </select>
-                </div>
+            <div>
+                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Estado</label>
+                <select wire:model="editActive" style="{{ $iM }} cursor:pointer; padding:0 8px;">
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select>
             </div>
             <div style="display:flex; gap:8px; padding-top:2px;">
                 <button wire:click="saveEdit"
@@ -365,7 +344,6 @@
             @if($a->unidad)
             <span style="font-size:12px; color:#6B7280;">{{ $a->unidad->name }}</span>
             @endif
-            <span style="font-size:12px; font-weight:600; color:#111827; font-family:monospace;">{{ number_format((float)$a->precio_base, 2) }}</span>
         </div>
         <div style="padding:10px 14px;">
             <button wire:click="startEdit({{ $a->id }})"

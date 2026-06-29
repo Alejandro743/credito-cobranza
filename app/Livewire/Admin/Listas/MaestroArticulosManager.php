@@ -26,7 +26,6 @@ class MaestroArticulosManager extends Component
     public string $newDescripcion = '';
     public ?int   $newCategoriaId = null;
     public ?int   $newUnidadId    = null;
-    public string $newPrecioBase  = '0.00';
     public bool   $newActive      = true;
 
     // Edición inline
@@ -36,7 +35,6 @@ class MaestroArticulosManager extends Component
     public string $editDescripcion= '';
     public ?int   $editCategoriaId= null;
     public ?int   $editUnidadId   = null;
-    public string $editPrecioBase = '0.00';
     public bool   $editActive     = true;
 
     // Selección
@@ -72,7 +70,6 @@ class MaestroArticulosManager extends Component
         $this->newDescripcion  = '';
         $this->newCategoriaId  = null;
         $this->newUnidadId     = null;
-        $this->newPrecioBase   = '0.00';
         $this->newActive       = true;
         $this->cancelEdit();
         $this->resetValidation();
@@ -89,11 +86,9 @@ class MaestroArticulosManager extends Component
         $this->validate([
             'newCodigo'  => ['required', 'string', 'max:50', Rule::unique('maestro_articulos', 'codigo')],
             'newNombre'  => 'required|string|max:255',
-            'newPrecioBase' => 'required|numeric|min:0',
         ], [], [
-            'newCodigo'     => 'código',
-            'newNombre'     => 'nombre',
-            'newPrecioBase' => 'precio base',
+            'newCodigo' => 'código',
+            'newNombre' => 'nombre',
         ]);
 
         MaestroArticulo::create([
@@ -102,7 +97,6 @@ class MaestroArticulosManager extends Component
             'descripcion'  => trim($this->newDescripcion) ?: null,
             'categoria_id' => $this->newCategoriaId,
             'unidad_id'    => $this->newUnidadId,
-            'precio_base'  => $this->newPrecioBase,
             'active'       => $this->newActive,
         ]);
 
@@ -121,7 +115,6 @@ class MaestroArticulosManager extends Component
         $this->editDescripcion = $a->descripcion ?? '';
         $this->editCategoriaId = $a->categoria_id;
         $this->editUnidadId    = $a->unidad_id;
-        $this->editPrecioBase  = number_format((float)$a->precio_base, 2, '.', '');
         $this->editActive      = $a->active;
         $this->showAddForm     = false;
         $this->resetValidation();
@@ -136,13 +129,11 @@ class MaestroArticulosManager extends Component
     public function saveEdit(): void
     {
         $this->validate([
-            'editCodigo'  => ['required', 'string', 'max:50', Rule::unique('maestro_articulos', 'codigo')->ignore($this->editingId)],
-            'editNombre'  => 'required|string|max:255',
-            'editPrecioBase' => 'required|numeric|min:0',
+            'editCodigo' => ['required', 'string', 'max:50', Rule::unique('maestro_articulos', 'codigo')->ignore($this->editingId)],
+            'editNombre' => 'required|string|max:255',
         ], [], [
-            'editCodigo'     => 'código',
-            'editNombre'     => 'nombre',
-            'editPrecioBase' => 'precio base',
+            'editCodigo' => 'código',
+            'editNombre' => 'nombre',
         ]);
 
         MaestroArticulo::findOrFail($this->editingId)->update([
@@ -151,7 +142,6 @@ class MaestroArticulosManager extends Component
             'descripcion'  => trim($this->editDescripcion) ?: null,
             'categoria_id' => $this->editCategoriaId,
             'unidad_id'    => $this->editUnidadId,
-            'precio_base'  => $this->editPrecioBase,
             'active'       => $this->editActive,
         ]);
 
