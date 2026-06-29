@@ -37,6 +37,8 @@ class ListaMaestraManager extends Component
     public string $colFilterCuotas       = '';
     public string $colFilterEstado       = '';
     public string $colFilterCuotaInicial = '';
+    public string $colFilterIncremento   = '';
+    public string $colFilterDias         = '';
 
     public function toggleSort(string $col): void
     {
@@ -830,6 +832,8 @@ class ListaMaestraManager extends Component
             ->when($this->colFilterCuotas !== '',    fn($q) => $q->where('cantidad_cuotas', $this->colFilterCuotas))
             ->when($this->colFilterEstado !== '',    fn($q) => $q->where('active', (bool) $this->colFilterEstado))
             ->when($this->colFilterCuotaInicial !== '', fn($q) => $q->where('usa_cuota_inicial', (bool) $this->colFilterCuotaInicial))
+            ->when($this->colFilterIncremento,          fn($q) => $q->where('tipo_incremento', $this->colFilterIncremento))
+            ->when($this->colFilterDias !== '',         fn($q) => $q->where('dias_entre_cuotas', $this->colFilterDias))
             ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(15);
 

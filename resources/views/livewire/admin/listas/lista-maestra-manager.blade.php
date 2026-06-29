@@ -1222,6 +1222,22 @@
                             <option value="0">No</option>
                         </select>
                     </th>
+
+                    {{-- Incremento --}}
+                    <th style="padding:8px 14px 6px; text-align:center; vertical-align:top;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Incremento</span>
+                        <select wire:model.live="colFilterIncremento" style="{{ $fI }} padding:0 4px; cursor:pointer;">
+                            <option value="">Todos</option>
+                            <option value="porcentaje">%</option>
+                            <option value="monto_fijo">Bs</option>
+                        </select>
+                    </th>
+
+                    {{-- Días --}}
+                    <th style="padding:8px 14px 6px; text-align:center; vertical-align:top;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Días</span>
+                        <input wire:model.live.debounce.300ms="colFilterDias" @click.stop type="number" min="1" placeholder="#" style="{{ $fI }} text-align:center;">
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -1268,10 +1284,12 @@
                             <option value="0">Inactiva</option>
                         </select>
                     </td>
+                    <td></td>
+                    <td></td>
                 </tr>
                 {{-- Sub-fila: incremento + financiamiento --}}
                 <tr style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
-                    <td colspan="7" style="padding:0 16px 10px 16px;">
+                    <td colspan="9" style="padding:0 16px 10px 16px;">
                         <div style="display:flex; flex-wrap:wrap; align-items:center; gap:16px;">
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <span style="font-size:11px; font-weight:600; color:#7B6FE8;">Incremento:</span>
@@ -1353,11 +1371,23 @@
                             {{ $m->active ? 'Activa' : 'Inactiva' }}
                         </span>
                     </td>
+                    <td style="padding:10px 14px; text-align:center;">
+                        @if($m->tipo_incremento === 'porcentaje')
+                        <span style="font-size:13px; color:#374151;">{{ number_format($m->valor_incremento, 0) }}%</span>
+                        @elseif($m->tipo_incremento === 'monto_fijo')
+                        <span style="font-size:13px; color:#374151;">Bs {{ number_format($m->valor_incremento, 2) }}</span>
+                        @else
+                        <span style="font-size:13px; color:#9CA3AF;">—</span>
+                        @endif
+                    </td>
+                    <td style="padding:10px 14px; text-align:center;">
+                        <span style="font-size:13px; color:#374151;">{{ $m->dias_entre_cuotas ? $m->dias_entre_cuotas.'d' : '—' }}</span>
+                    </td>
                 </tr>
                 @endif
 
                 @empty
-                <tr><td colspan="8" style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">Sin resultados.</td></tr>
+                <tr><td colspan="9" style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">Sin resultados.</td></tr>
                 @endforelse
             </tbody>
         </table>
