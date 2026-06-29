@@ -30,6 +30,14 @@ class ListaMaestraManager extends Component
     public string $sortBy        = 'code';
     public string $sortDir       = 'asc';
 
+    // Filtros por columna en thead
+    public string $colFilterCodigo       = '';
+    public string $colFilterNombre       = '';
+    public string $colFilterCiclo        = '';
+    public string $colFilterCuotas       = '';
+    public string $colFilterEstado       = '';
+    public string $colFilterCuotaInicial = '';
+
     public function toggleSort(string $col): void
     {
         if ($this->sortBy === $col) {
@@ -816,6 +824,12 @@ class ListaMaestraManager extends Component
                   ->orWhere('code', 'like', "%{$this->search}%"))
             ->when($this->filterCycleId, fn($q) => $q->where('cycle_id', $this->filterCycleId))
             ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
+            ->when($this->colFilterCodigo,           fn($q) => $q->where('code', 'like', "%{$this->colFilterCodigo}%"))
+            ->when($this->colFilterNombre,           fn($q) => $q->where('name', 'like', "%{$this->colFilterNombre}%"))
+            ->when($this->colFilterCiclo,            fn($q) => $q->whereHas('cycle', fn($sq) => $sq->where('code', 'like', "%{$this->colFilterCiclo}%")))
+            ->when($this->colFilterCuotas !== '',    fn($q) => $q->where('cantidad_cuotas', $this->colFilterCuotas))
+            ->when($this->colFilterEstado !== '',    fn($q) => $q->where('active', (bool) $this->colFilterEstado))
+            ->when($this->colFilterCuotaInicial !== '', fn($q) => $q->where('usa_cuota_inicial', (bool) $this->colFilterCuotaInicial))
             ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(15);
 
