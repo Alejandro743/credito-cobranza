@@ -62,70 +62,100 @@
             @error('formListaMaestraId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
         </div>
 
-        {{-- ARTÍCULO: dos opciones lado a lado --}}
-        <div style="flex:3; min-width:300px; display:flex; gap:16px; flex-wrap:wrap;">
+        {{-- ARTÍCULO: autocomplete Alpine --}}
+        <div style="flex:2; min-width:240px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Código — Descripción *</label>
 
-            {{-- OPCIÓN A: Select nativo --}}
-            <div style="flex:1; min-width:200px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">
-                    Opción A — Selector
-                </label>
-                @if(!$formListaMaestraId)
-                <div style="height:38px; border:1px solid #E5E7EB; border-radius:8px; padding:0 12px; font-size:13px; color:#9CA3AF; background:#F9FAFB; display:flex; align-items:center;">
-                    Primero seleccioná un ciclo
-                </div>
-                @else
-                <select wire:change="selectMaestro($event.target.value)"
-                        style="{{ $iS }} cursor:pointer; padding:0 8px;">
-                    <option value="">— Seleccionar artículo —</option>
-                    @foreach($maestrosDisponibles as $m)
-                    <option value="{{ $m->id }}" {{ $selectedMaestroId == $m->id ? 'selected' : '' }}>
-                        {{ $m->codigo }} — {{ $m->nombre }}
-                    </option>
-                    @endforeach
-                </select>
-                @if($maestrosDisponibles->isEmpty())
-                <p style="font-size:12px; color:#9CA3AF; margin-top:4px;">Sin artículos disponibles para este ciclo.</p>
-                @endif
-                @endif
+            @if(!$formListaMaestraId)
+            <div style="height:38px; border:1px solid #E5E7EB; border-radius:8px; padding:0 12px; font-size:13px; color:#9CA3AF; background:#F9FAFB; display:flex; align-items:center;">
+                Primero seleccioná un ciclo
             </div>
+            @else
 
-            {{-- OPCIÓN B: Buscador con lista --}}
-            <div style="flex:1; min-width:200px;">
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">
-                    Opción B — Buscador
-                </label>
-                @if(!$formListaMaestraId)
-                <div style="height:38px; border:1px solid #E5E7EB; border-radius:8px; padding:0 12px; font-size:13px; color:#9CA3AF; background:#F9FAFB; display:flex; align-items:center;">
-                    Primero seleccioná un ciclo
-                </div>
-                @else
-                <input wire:model.live.debounce.250ms="searchMaestro" type="text"
-                       placeholder="Escribí código o nombre..."
-                       style="{{ $iS }}">
-                @if($selectedMaestroId && !$searchMaestro)
-                @php $mSel = \App\Models\MaestroArticulo::find($selectedMaestroId) @endphp
-                <div style="margin-top:4px; padding:7px 10px; background:#F0FDF4; border:1px solid #6EE7B7; border-radius:8px; font-size:12px; font-weight:600; color:#065F46;">
-                    ✓ {{ $mSel?->codigo }} — {{ $mSel?->nombre }}
-                </div>
-                @elseif($maestrosDisponibles->isNotEmpty())
-                <div style="margin-top:4px; border:1px solid #E5E7EB; border-radius:8px; overflow:hidden; max-height:160px; overflow-y:auto;">
-                    @foreach($maestrosDisponibles->take(15) as $m)
-                    <button wire:click="selectMaestro({{ $m->id }}); $wire.set('searchMaestro', '')"
-                            style="width:100%; text-align:left; padding:7px 10px; border:none; border-bottom:1px solid #F9FAFB; background:#fff; font-size:12px; color:#374151; cursor:pointer; display:block;"
-                            @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background='#fff'">
-                        <span style="font-family:monospace; font-weight:700; color:#7B6FE8;">{{ $m->codigo }}</span> — {{ $m->nombre }}
+            @php
+                $itemsJson = $maestrosDisponibles->map(fn($m) => [
+                    'id'     => $m->id,
+                    'codigo' => $m->codigo,
+                    'nombre' => $m->nombre,
+                    'label'  => $m->codigo . ' — ' . $m->nombre,
+                ])->values()->toJson();
+            @endphp
+
+            <div wire:key="autocomplete-{{ $formListaMaestraId }}"
+                 x-data="{
+                     open: false,
+                     query: '',
+                     selected: null,
+                     items: {{ $itemsJson }},
+                     get filtered() {
+                         if (!this.query) return this.items;
+                         const q = this.query.toLowerCase();
+                         return this.items.filter(i =>
+                             i.codigo.toLowerCase().includes(q) ||
+                             i.nombre.toLowerCase().includes(q)
+                         );
+                     },
+                     pick(item) {
+                         this.selected = item;
+                         this.query = item.label;
+                         this.open = false;
+                         $wire.selectMaestro(item.id);
+                     },
+                     clear() {
+                         this.selected = null;
+                         this.query = '';
+                         this.open = true;
+                         $wire.set('selectedMaestroId', null);
+                         $wire.set('maestroCategoria', '');
+                         $wire.set('maestroUnidad', '');
+                         $nextTick(() => this.$refs.input.focus());
+                     }
+                 }"
+                 @click.outside="open = false"
+                 style="position:relative;">
+
+                <div style="position:relative;">
+                    <input x-ref="input"
+                           x-model="query"
+                           @focus="open = true"
+                           @input="open = true; if(selected && query !== selected.label){ selected = null; $wire.set('selectedMaestroId', null); $wire.set('maestroCategoria',''); $wire.set('maestroUnidad',''); }"
+                           @keydown.escape="open = false"
+                           type="text"
+                           placeholder="Escribí código o nombre..."
+                           style="{{ $iS }} padding-right:32px;">
+
+                    {{-- X para limpiar --}}
+                    <button x-show="selected" @click.prevent="clear()"
+                            style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:#9CA3AF; padding:2px; display:flex; align-items:center;">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     </button>
-                    @endforeach
                 </div>
-                @elseif($searchMaestro)
-                <p style="font-size:12px; color:#9CA3AF; margin-top:4px;">Sin resultados.</p>
-                @endif
-                @endif
-            </div>
 
+                {{-- Dropdown --}}
+                <div x-show="open && filtered.length > 0"
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="opacity-0 -translate-y-1"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     style="position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #E5E7EB; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,.1); z-index:50; max-height:200px; overflow-y:auto;">
+                    <template x-for="item in filtered" :key="item.id">
+                        <button @mousedown.prevent="pick(item)"
+                                style="width:100%; text-align:left; padding:8px 12px; border:none; border-bottom:1px solid #F9FAFB; background:#fff; font-size:13px; color:#374151; cursor:pointer; display:block;"
+                                @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background='#fff'">
+                            <span x-text="item.codigo" style="font-family:monospace; font-weight:700; color:#7B6FE8;"></span>
+                            <span x-text="' — ' + item.nombre"></span>
+                        </button>
+                    </template>
+                </div>
+
+                <div x-show="open && filtered.length === 0 && query.length > 0"
+                     style="position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #E5E7EB; border-radius:10px; padding:12px; font-size:12px; color:#9CA3AF; z-index:50;">
+                    Sin resultados para "<span x-text="query"></span>"
+                </div>
+
+            </div>
+            @endif
+            @error('selectedMaestroId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
         </div>
-        @error('selectedMaestroId') <p style="color:#EF4444; font-size:11px; margin-top:3px; width:100%;">{{ $message }}</p> @enderror
 
         {{-- STOCK INICIAL --}}
         <div style="min-width:120px; max-width:160px;">

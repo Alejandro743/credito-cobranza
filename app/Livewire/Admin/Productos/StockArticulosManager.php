@@ -17,9 +17,8 @@ class StockArticulosManager extends Component
     public string $filterListaId = '';
 
     // Formulario agregar
-    public bool   $showAddForm       = false;
+    public bool   $showAddForm        = false;
     public ?int   $formListaMaestraId = null;
-    public string $searchMaestro     = '';
     public ?int   $selectedMaestroId  = null;
     public string $stockInicial       = '0';
 
@@ -39,7 +38,6 @@ class StockArticulosManager extends Component
     public function updatedFormListaMaestraId(): void
     {
         $this->selectedMaestroId = null;
-        $this->searchMaestro     = '';
         $this->maestroCategoria  = '';
         $this->maestroUnidad     = '';
     }
@@ -58,9 +56,8 @@ class StockArticulosManager extends Component
 
     public function showAdd(): void
     {
-        $this->showAddForm       = true;
+        $this->showAddForm        = true;
         $this->formListaMaestraId = null;
-        $this->searchMaestro     = '';
         $this->selectedMaestroId  = null;
         $this->stockInicial       = '0';
         $this->maestroCategoria   = '';
@@ -143,9 +140,6 @@ class StockArticulosManager extends Component
 
             $maestrosDisponibles = MaestroArticulo::whereNotIn('id', $usados)
                 ->where('active', true)
-                ->when($this->searchMaestro, fn($q) =>
-                    $q->where('codigo', 'like', "%{$this->searchMaestro}%")
-                      ->orWhere('nombre', 'like', "%{$this->searchMaestro}%"))
                 ->orderBy('codigo')
                 ->get();
         }
