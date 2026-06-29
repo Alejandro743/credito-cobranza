@@ -212,7 +212,7 @@
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cat->descripcion ? ucwords(strtolower($cat->descripcion)) : '—' }}</span>
+                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cat->descripcion ? ucwords(strtolower($cat->descripcion)) : '—' }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">

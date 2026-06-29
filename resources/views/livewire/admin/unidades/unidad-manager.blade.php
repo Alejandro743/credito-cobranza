@@ -194,11 +194,7 @@
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        @if($u->abreviatura)
-                        <span style="display:inline-block; padding:2px 8px; border-radius:6px; background:#F3F4F6; font-family:monospace; font-size:12px; font-weight:600; color:#374151;">{{ $u->abreviatura }}</span>
-                        @else
-                        <span style="font-size:13px; color:#D1D5DB;">—</span>
-                        @endif
+                        <span style="font-size:12px; color:#374151;">{{ $u->abreviatura ?: '—' }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">
