@@ -34,4 +34,11 @@ class MaestroArticulo extends Model
     {
         return $this->hasMany(ListaMaestraItem::class);
     }
+
+    public function getFotoUrlAttribute(): ?string
+    {
+        if (!$this->codigo || !config('services.cloudinary.cloud_name')) return null;
+        $cloud = config('services.cloudinary.cloud_name');
+        return "https://res.cloudinary.com/{$cloud}/image/upload/{$this->codigo}";
+    }
 }

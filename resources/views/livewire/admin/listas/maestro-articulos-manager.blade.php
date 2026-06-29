@@ -132,6 +132,9 @@
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                     <th style="width:50px; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; position:sticky; left:0; z-index:11; background:#F9F8FF; white-space:nowrap;">#</th>
+                    <th style="padding:10px 12px; text-align:center;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Img</span>
+                    </th>
                     @foreach($sortCols as $label => $key)
                     @php $isActive = $sortBy === $key; @endphp
                     <th wire:click="toggleSort('{{ $key }}')"
@@ -157,6 +160,17 @@
                 <tr wire:key="edit-{{ $a->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
                     <td class="col-row-num" style="padding:6px 8px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap;">
                         <span style="font-size:12px; font-weight:700; color:#374151;">{{ $articulos->firstItem() + $loop->index }}</span>
+                    </td>
+                    <td style="padding:7px 12px; text-align:center;">
+                        @if($a->foto_url)
+                        <img src="{{ $a->foto_url }}" alt="{{ $a->nombre }}"
+                             style="width:36px; height:36px; border-radius:8px; object-fit:cover; border:1px solid #E5E7EB;"
+                             onerror="this.style.display='none';">
+                        @else
+                        <div style="width:36px; height:36px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; margin:0 auto;">
+                            <svg width="16" height="16" fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        </div>
+                        @endif
                     </td>
                     <td style="padding:7px 10px; min-width:110px;">
                         <input wire:model="editCodigo" type="text" maxlength="50" style="{{ $eI }} font-family:monospace; text-transform:uppercase;">
@@ -205,6 +219,17 @@
                                    :disabled="{{ $editingId && $editingId !== $a->id ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $a->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
                             <span style="font-size:12px; font-weight:700; color:#374151;">{{ $articulos->firstItem() + $loop->index }}</span>
+                        </div>
+                    </td>
+
+                    <td style="padding:8px 12px; text-align:center;">
+                        @if($a->foto_url)
+                        <img src="{{ $a->foto_url }}" alt="{{ $a->nombre }}"
+                             style="width:38px; height:38px; border-radius:9px; object-fit:cover; border:1px solid #E5E7EB;"
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        @endif
+                        <div style="width:38px; height:38px; border-radius:9px; background:#EDE9FE; display:{{ $a->foto_url ? 'none' : 'flex' }}; align-items:center; justify-content:center; margin:0 auto;">
+                            <svg width="16" height="16" fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
                         </div>
                     </td>
 
@@ -324,8 +349,15 @@
     <div wire:key="card-{{ $a->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.05); overflow:hidden;">
         <div style="padding:12px 14px; display:flex; align-items:center; gap:10px; border-bottom:1px solid #F3F4F6;">
-            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0; overflow:hidden;">
+                @if($a->foto_url)
+                <img src="{{ $a->foto_url }}" alt="{{ $a->nombre }}"
+                     style="width:30px; height:30px; object-fit:cover;"
+                     onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8; display:none;">{{ mb_strtoupper(mb_substr($a->nombre, 0, 1)) }}</span>
+                @else
                 <span style="font-size:12px; font-weight:700; color:#7B6FE8;">{{ mb_strtoupper(mb_substr($a->nombre, 0, 1)) }}</span>
+                @endif
             </div>
             <div style="flex:1; min-width:0;">
                 <p style="font-size:14px; font-weight:700; color:#111827; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $a->nombre }}</p>
