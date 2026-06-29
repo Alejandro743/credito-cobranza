@@ -19,11 +19,11 @@
         <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por código o nombre..."
                style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
     </div>
-    <select wire:model.live="filterListaId" class="w-full sm:w-auto"
+    <select wire:model.live="filterCicloId" class="w-full sm:w-auto"
             style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box; max-width:220px;">
         <option value="">Todos los ciclos</option>
-        @foreach($listas as $l)
-        <option value="{{ $l->id }}">{{ $l->cycle?->code }} — {{ $l->name }}</option>
+        @foreach($ciclos as $c)
+        <option value="{{ $c->id }}">{{ $c->code }} — {{ $c->name }}</option>
         @endforeach
     </select>
     <button wire:click="showAdd" class="w-full sm:w-auto"
@@ -53,20 +53,20 @@
         {{-- CICLO --}}
         <div style="min-width:200px; flex:1;">
             <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Ciclo *</label>
-            <select wire:model.live="formListaMaestraId" style="{{ $iS }} cursor:pointer; padding:0 8px;">
+            <select wire:model.live="formCicloId" style="{{ $iS }} cursor:pointer; padding:0 8px;">
                 <option value="">— Seleccionar ciclo —</option>
-                @foreach($listas as $l)
-                <option value="{{ $l->id }}">{{ $l->cycle?->code }} — {{ $l->name }}</option>
+                @foreach($ciclos as $c)
+                <option value="{{ $c->id }}">{{ $c->code }} — {{ $c->name }}</option>
                 @endforeach
             </select>
-            @error('formListaMaestraId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            @error('formCicloId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
         </div>
 
         {{-- ARTÍCULO: autocomplete Alpine --}}
         <div style="flex:2; min-width:240px;">
             <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Código — Descripción *</label>
 
-            @if(!$formListaMaestraId)
+            @if(!$formCicloId)
             <div style="height:38px; border:1px solid #E5E7EB; border-radius:8px; padding:0 12px; font-size:13px; color:#9CA3AF; background:#F9FAFB; display:flex; align-items:center;">
                 Primero seleccioná un ciclo
             </div>
@@ -81,7 +81,7 @@
                 ])->values()->toJson();
             @endphp
 
-            <div wire:key="autocomplete-{{ $formListaMaestraId }}"
+            <div wire:key="autocomplete-{{ $formCicloId }}"
                  x-data="{
                      open: false,
                      query: '',
@@ -155,7 +155,7 @@
 
             </div>
             @endif
-            @if($formListaMaestraId) @error('selectedMaestroId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror @endif
+            @if($formCicloId) @error('selectedMaestroId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror @endif
         </div>
 
         {{-- STOCK INICIAL --}}
