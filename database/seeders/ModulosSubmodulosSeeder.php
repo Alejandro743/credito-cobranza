@@ -182,7 +182,7 @@ class ModulosSubmodulosSeeder extends Seeder
         ];
 
         // Eliminar submodulos obsoletos que fueron reestructurados
-        Submodulo::whereIn('slug', ['listas-precios', 'lista-maestra', 'listas-derivadas', 'grupos', 'reglas', 'cat-grupos', 'config-financiera', 'cat-clientes', 'admin-clientes', 'admin-clientes-gestion', 'credito-pedidos', 'credito-aprobacion'])->delete();
+        Submodulo::whereIn('slug', ['listas-precios', 'lista-maestra', 'listas-derivadas', 'grupos', 'reglas', 'cat-grupos', 'config-financiera', 'cat-clientes', 'admin-clientes', 'admin-clientes-gestion', 'credito-pedidos', 'credito-aprobacion', 'cat-stock-articulos'])->delete();
 
         foreach ($estructura as $moduloData) {
             $submodulosData = $moduloData['submodulos'];
