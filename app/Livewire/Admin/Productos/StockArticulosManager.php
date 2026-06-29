@@ -44,9 +44,9 @@ class StockArticulosManager extends Component
 
     // ── Al seleccionar un maestro articulo ────────────────────────────────────
 
-    public function selectMaestro(int $id): void
+    public function selectMaestro(int|string $id): void
     {
-        $this->selectedMaestroId = $id;
+        $this->selectedMaestroId = (int) $id;
         $m = MaestroArticulo::with(['categoria', 'unidad'])->find($id);
         $this->maestroCategoria = $m?->categoria?->descripcion ?? '—';
         $this->maestroUnidad    = $m?->unidad?->name ?? '—';
