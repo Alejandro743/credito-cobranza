@@ -356,7 +356,8 @@
                             <input type="checkbox"
                                    :checked="$wire.selectedItemId === {{ $item->id }}"
                                    @click="$wire.selectedItemId === {{ $item->id }} ? $wire.set('selectedItemId', null) : $wire.selectItem({{ $item->id }})"
-                                   style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                                   :disabled="{{ $editingItemId && $editingItemId !== $item->id ? 'true' : 'false' }}"
+                                   style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingItemId && $editingItemId !== $item->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
                             <span style="font-size:12px; font-weight:700; color:#374151;">{{ $items->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
