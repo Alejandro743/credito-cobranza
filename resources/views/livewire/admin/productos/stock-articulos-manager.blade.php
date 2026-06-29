@@ -155,7 +155,7 @@
 
             </div>
             @endif
-            @error('selectedMaestroId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            @if($formListaMaestraId) @error('selectedMaestroId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror @endif
         </div>
 
         {{-- STOCK INICIAL --}}
