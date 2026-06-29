@@ -3,6 +3,7 @@
 namespace App\Livewire\Admin\Productos;
 
 use App\Models\CommercialCycle;
+use App\Models\ListaDerivadaItem;
 use App\Models\ListaMaestra;
 use App\Models\ListaMaestraItem;
 use App\Models\MaestroArticulo;
@@ -245,16 +246,15 @@ class StockArticulosManager extends Component
                 ->get();
         }
 
-        // Modal: todos los ciclos donde el mismo maestro_articulo tiene stock
+        // Modal: listas de precios (lista_derivada) que referencian este item de stock
         $stockModalItem = null;
         $stockModalRows = collect();
         if ($this->stockModalItemId) {
             $stockModalItem = ListaMaestraItem::with(['maestroArticulo', 'listaMaestra.cycle'])
                 ->find($this->stockModalItemId);
-            if ($stockModalItem?->maestro_articulo_id) {
-                $stockModalRows = ListaMaestraItem::with(['listaMaestra.cycle'])
-                    ->where('maestro_articulo_id', $stockModalItem->maestro_articulo_id)
-                    ->orderBy('lista_maestra_id')
+            if ($stockModalItem) {
+                $stockModalRows = ListaDerivadaItem::with(['listaDerivada'])
+                    ->where('lista_maestra_item_id', $this->stockModalItemId)
                     ->get();
             }
         }
