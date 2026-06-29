@@ -39,7 +39,7 @@
 {{-- ══ FORM: Agregar artículo al stock ══ --}}
 @if ($showAddForm)
 @php $iS = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;'; @endphp
-<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px; overflow:hidden;">
+<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px;">
     <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
         <span style="font-size:14px; font-weight:800; color:#7B6FE8;">Agregar Artículo al Stock</span>
         <button wire:click="cancelAdd"
@@ -88,7 +88,7 @@
                      selected: null,
                      items: {{ $itemsJson }},
                      get filtered() {
-                         if (!this.query) return this.items;
+                         if (!this.query || this.selected) return [];
                          const q = this.query.toLowerCase();
                          return this.items.filter(i =>
                              i.codigo.toLowerCase().includes(q) ||
