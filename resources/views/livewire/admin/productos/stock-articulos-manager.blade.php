@@ -363,46 +363,44 @@
                     </td>
 
                     <td style="padding:10px 14px; white-space:nowrap;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#7B6FE8;">{{ $item->listaMaestra?->cycle?->code }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ $item->listaMaestra?->cycle?->code }}</span>
                     </td>
 
                     <td style="padding:10px 14px; min-width:160px;">
-                        <span style="font-size:12px; color:#374151;">{{ $item->listaMaestra?->cycle?->name }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ $item->listaMaestra?->cycle?->name }}</span>
                     </td>
 
                     <td style="padding:10px 14px;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827;">{{ $item->maestroArticulo?->codigo }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ $item->maestroArticulo?->codigo }}</span>
                     </td>
 
                     <td style="padding:10px 14px; min-width:160px;">
-                        <span style="font-size:13px; color:#111827;">{{ $item->maestroArticulo?->nombre }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ $item->maestroArticulo?->nombre }}</span>
                     </td>
 
                     <td style="padding:10px 14px;">
-                        <span style="font-size:12px; color:#374151;">{{ $item->maestroArticulo?->categoria?->descripcion ?? '—' }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ $item->maestroArticulo?->categoria?->descripcion ?? '—' }}</span>
                     </td>
 
                     <td style="padding:10px 14px;">
-                        <span style="font-size:12px; color:#374151;">{{ $item->maestroArticulo?->unidad?->name ?? '—' }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ $item->maestroArticulo?->unidad?->name ?? '—' }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:right;">
-                        <span style="font-size:13px; font-weight:600; color:#111827; font-family:monospace;">{{ number_format((float)$item->stock_inicial, 0) }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ number_format((float)$item->stock_inicial, 0) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:right;">
-                        <span style="font-size:13px; font-weight:600; color:#111827; font-family:monospace;">{{ number_format((float)$item->stock_actual, 0) }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ number_format((float)$item->stock_actual, 0) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:right;">
-                        <span style="font-size:13px; font-weight:600; color:#6366F1; font-family:monospace;">{{ number_format((float)$item->stock_comprometido, 0) }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ number_format((float)$item->stock_comprometido, 0) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:right;">
                         @php $disp = $item->stockDisponible(); @endphp
-                        <span style="font-size:13px; font-weight:700; font-family:monospace; color:{{ $disp > 0 ? '#059669' : '#9CA3AF' }};">
-                            {{ number_format($disp, 0) }}
-                        </span>
+                        <span style="font-size:13px; color:#374151;">{{ number_format($disp, 0) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">
