@@ -252,7 +252,7 @@
         <div style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay listas derivadas.</div>
     @else
     @php
-    $sortColsDerivadas = ['Nombre'=>'name','Lista Maestra'=>null,'Estado'=>'estado','Creada'=>'created_at'];
+    $fI = 'height:22px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px; width:100%; outline:none; box-sizing:border-box; background:#fff; margin-top:4px; color:#374151; font-weight:400;';
     @endphp
     <div style="overflow:auto; flex:1;">
         <table style="table-layout:fixed; width:100%; min-width:620px; border-collapse:collapse; font-size:13px;">
@@ -266,26 +266,62 @@
             </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
-                    @foreach($sortColsDerivadas as $label => $key)
-                    @if($key)
-                    @php $isActive = $sortBy === $key; @endphp
-                    <th wire:click="toggleSort('{{ $key }}')"
-                        style="padding:10px 14px; text-align:{{ in_array($label,['Estado','Creada']) ? 'center' : 'left' }}; user-select:none; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; vertical-align:top;">#</th>
+
+                    {{-- Nombre --}}
+                    <th wire:click="toggleSort('name')"
+                        style="padding:8px 14px 6px; text-align:left; user-select:none; cursor:pointer; vertical-align:top; {{ $sortBy==='name' ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $sortBy==='name' ? '#EDE9FE' : '' }}'">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
-                            {{ $label }}
-                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            Nombre
+                            @if($sortBy==='name' && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($sortBy==='name') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
+                        <input wire:model.live.debounce.300ms="filterNombre" @click.stop type="text" placeholder="Filtrar..." style="{{ $fI }}">
                     </th>
-                    @else
-                    <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">{{ $label }}</th>
-                    @endif
-                    @endforeach
-                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
+
+                    {{-- Lista Maestra --}}
+                    <th style="padding:8px 14px 6px; text-align:left; vertical-align:top;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:block;">Lista Maestra</span>
+                        <input wire:model.live.debounce.300ms="filterListaMaestra" type="text" placeholder="Filtrar..." style="{{ $fI }}">
+                    </th>
+
+                    {{-- Estado --}}
+                    <th wire:click="toggleSort('estado')"
+                        style="padding:8px 14px 6px; text-align:center; user-select:none; cursor:pointer; vertical-align:top; {{ $sortBy==='estado' ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $sortBy==='estado' ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; justify-content:center; gap:5px;">
+                            Estado
+                            @if($sortBy==='estado' && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($sortBy==='estado') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        <select wire:model.live="filterEstado" @click.stop style="{{ $fI }} padding:0 4px; cursor:pointer;">
+                            <option value="">Todos</option>
+                            <option value="activa">Activa</option>
+                            <option value="cerrada">Cerrada</option>
+                        </select>
+                    </th>
+
+                    {{-- Creada --}}
+                    <th wire:click="toggleSort('created_at')"
+                        style="padding:8px 14px 6px; text-align:center; user-select:none; cursor:pointer; vertical-align:top; {{ $sortBy==='created_at' ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $sortBy==='created_at' ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; justify-content:center; gap:5px;">
+                            Creada
+                            @if($sortBy==='created_at' && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($sortBy==='created_at') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        <input wire:model.live.debounce.300ms="filterCreada" @click.stop type="text" placeholder="dd/mm/aaaa" style="{{ $fI }}">
+                    </th>
+
+                    {{-- Acciones --}}
+                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; vertical-align:top;">Acciones</th>
                 </tr>
             </thead>
             <tbody>

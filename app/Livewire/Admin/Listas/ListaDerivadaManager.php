@@ -21,6 +21,12 @@ class ListaDerivadaManager extends Component
     public string $sortBy  = 'created_at';
     public string $sortDir = 'desc';
 
+    // Filtros por columna
+    public string $filterNombre       = '';
+    public string $filterListaMaestra = '';
+    public string $filterEstado       = '';
+    public string $filterCreada       = '';
+
     public function toggleSort(string $col): void
     {
         if ($this->sortBy === $col) {
@@ -54,7 +60,11 @@ class ListaDerivadaManager extends Component
         $this->initModuleColor();
     }
 
-    public function updatingSearch(): void { $this->resetPage(); }
+    public function updatingSearch(): void       { $this->resetPage(); }
+    public function updatingFilterNombre(): void       { $this->resetPage(); }
+    public function updatingFilterListaMaestra(): void { $this->resetPage(); }
+    public function updatingFilterEstado(): void       { $this->resetPage(); }
+    public function updatingFilterCreada(): void       { $this->resetPage(); }
 
     protected $rules = [
         'lista_maestra_id' => 'required|integer|exists:lista_maestra,id',
@@ -191,7 +201,11 @@ class ListaDerivadaManager extends Component
         $allowed = ['name', 'estado', 'created_at'];
         $col = in_array($this->sortBy, $allowed) ? $this->sortBy : 'created_at';
         $derivadas = ListaDerivada::with('listaMaestra')
-            ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
+            ->when($this->search,             fn($q) => $q->where('name', 'like', "%{$this->search}%"))
+            ->when($this->filterNombre,       fn($q) => $q->where('name', 'like', "%{$this->filterNombre}%"))
+            ->when($this->filterListaMaestra, fn($q) => $q->whereHas('listaMaestra', fn($sq) => $sq->where('name', 'like', "%{$this->filterListaMaestra}%")))
+            ->when($this->filterEstado,       fn($q) => $q->where('estado', $this->filterEstado))
+            ->when($this->filterCreada,       fn($q) => $q->whereRaw("DATE_FORMAT(created_at, '%d/%m/%Y') LIKE ?", ["%{$this->filterCreada}%"]))
             ->orderBy($col, $this->sortDir)
             ->paginate(15);
 
