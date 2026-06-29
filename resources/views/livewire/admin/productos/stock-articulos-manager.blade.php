@@ -253,7 +253,7 @@
                             @endif
                         </span>
                     </th>
-                    <th style="padding:10px 14px; text-align:left; min-width:140px;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Lista</span></th>
+                    <th style="padding:10px 14px; text-align:left; min-width:160px;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Descripción Ciclo</span></th>
                     {{-- Código, Nombre, Categoría, Unidad — columnas de tabla relacionada, sin sort --}}
                     <th style="padding:10px 14px; text-align:left;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Código</span></th>
                     <th style="padding:10px 14px; text-align:left; min-width:160px;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Nombre</span></th>
@@ -305,8 +305,8 @@
                     <td style="padding:10px 14px; white-space:nowrap;">
                         <span style="font-size:12px; font-family:monospace; font-weight:700; color:#7B6FE8;">{{ $item->listaMaestra?->cycle?->code }}</span>
                     </td>
-                    <td style="padding:10px 14px; min-width:140px;">
-                        <span style="font-size:12px; color:#374151;">{{ $item->listaMaestra?->name }}</span>
+                    <td style="padding:10px 14px; min-width:160px;">
+                        <span style="font-size:12px; color:#374151;">{{ $item->listaMaestra?->cycle?->name }}</span>
                     </td>
                     <td style="padding:10px 14px;">
                         <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827;">{{ $item->maestroArticulo?->codigo }}</span>
@@ -365,8 +365,8 @@
                         <span style="font-size:12px; font-family:monospace; font-weight:700; color:#7B6FE8;">{{ $item->listaMaestra?->cycle?->code }}</span>
                     </td>
 
-                    <td style="padding:10px 14px; min-width:140px;">
-                        <span style="font-size:12px; color:#374151;">{{ $item->listaMaestra?->name }}</span>
+                    <td style="padding:10px 14px; min-width:160px;">
+                        <span style="font-size:12px; color:#374151;">{{ $item->listaMaestra?->cycle?->name }}</span>
                     </td>
 
                     <td style="padding:10px 14px;">
