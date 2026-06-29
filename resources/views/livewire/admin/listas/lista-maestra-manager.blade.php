@@ -1136,9 +1136,6 @@
     </div>
 
     <div style="overflow:auto; flex:1;">
-        @if ($maestras->isEmpty())
-        <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay listas registradas.</p>
-        @else
         @php
         $fI = 'height:22px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px; width:100%; outline:none; box-sizing:border-box; background:#fff; margin-top:4px; color:#374151; font-weight:400;';
         @endphp
@@ -1149,9 +1146,9 @@
 
                     {{-- Código --}}
                     @php $isActive = ($sortBy??'') === 'code'; @endphp
-                    <th wire:click="toggleSort('code')" style="padding:8px 14px 6px; text-align:left; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('code')" style="padding:8px 14px 6px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; gap:5px;">Código
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Código
                             @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
                             @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
@@ -1162,9 +1159,9 @@
 
                     {{-- Nombre --}}
                     @php $isActive = ($sortBy??'') === 'name'; @endphp
-                    <th wire:click="toggleSort('name')" style="padding:8px 14px 6px; text-align:left; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('name')" style="padding:8px 14px 6px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; gap:5px;">Nombre
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Nombre
                             @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
                             @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
@@ -1175,9 +1172,9 @@
 
                     {{-- Ciclo --}}
                     @php $isActive = ($sortBy??'') === 'cycle_id'; @endphp
-                    <th wire:click="toggleSort('cycle_id')" style="padding:8px 14px 6px; text-align:left; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('cycle_id')" style="padding:8px 14px 6px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; gap:5px;">Ciclo
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Ciclo
                             @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
                             @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
@@ -1228,7 +1225,7 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach ($maestras as $m)
+                @forelse ($maestras as $m)
 
                 @if ($editingId === $m->id)
                 {{-- Fila edición principal --}}
@@ -1359,10 +1356,11 @@
                 </tr>
                 @endif
 
-                @endforeach
+                @empty
+                <tr><td colspan="8" style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">Sin resultados.</td></tr>
+                @endforelse
             </tbody>
         </table>
-        @endif
     </div>
 
     @if ($maestras->hasPages())
