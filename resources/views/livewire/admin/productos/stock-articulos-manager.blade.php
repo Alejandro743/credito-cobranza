@@ -182,7 +182,7 @@
             </div>
         </div>
 
-        <div style="display:flex; align-items:flex-end; gap:8px;">
+        <div style="padding-top:21px; display:flex; gap:8px;">
             <button wire:click="saveNew"
                     style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
                     @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
