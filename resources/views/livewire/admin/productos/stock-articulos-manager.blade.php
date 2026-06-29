@@ -117,12 +117,13 @@
                 <div style="position:relative;">
                     <input x-ref="input"
                            x-model="query"
-                           @focus="open = true"
-                           @input="open = true; if(selected && query !== selected.label){ selected = null; $wire.set('selectedMaestroId', null); $wire.set('maestroCategoria',''); $wire.set('maestroUnidad',''); }"
+                           @focus="if(!selected) open = true"
+                           @input="if(!selected){ open = true; }"
                            @keydown.escape="open = false"
+                           :readonly="!!selected"
                            type="text"
                            placeholder="Escribí código o nombre..."
-                           style="{{ $iS }} padding-right:32px;">
+                           :style="'{{ $iS }} padding-right:32px;' + (selected ? 'background:#F0FDF4; color:#065F46; font-weight:600; cursor:default;' : '')">
 
                     {{-- X para limpiar --}}
                     <button x-show="selected" @click.prevent="clear()"
