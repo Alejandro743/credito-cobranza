@@ -1,4 +1,4 @@
 <x-admin-layout>
-@section('page-title', 'Productos')
-<livewire:admin.products.product-manager />
+@section('page-title', 'Stock de Artículos')
+<livewire:admin.productos.stock-articulos-manager />
 </x-admin-layout>
