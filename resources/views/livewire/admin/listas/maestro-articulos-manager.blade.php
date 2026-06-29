@@ -164,7 +164,7 @@
                     <td style="padding:7px 12px; text-align:center;">
                         @if($a->foto_url)
                         <img src="{{ $a->foto_url }}" alt="{{ $a->nombre }}"
-                             style="width:36px; height:36px; border-radius:8px; object-fit:cover; border:1px solid #E5E7EB;"
+                             style="width:36px; height:36px; border-radius:8px; object-fit:cover; border:1px solid #E5E7EB; display:block; margin:0 auto;"
                              onerror="this.style.display='none';">
                         @else
                         <div style="width:36px; height:36px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; margin:0 auto;">
@@ -225,7 +225,7 @@
                     <td style="padding:8px 12px; text-align:center;">
                         @if($a->foto_url)
                         <img src="{{ $a->foto_url }}" alt="{{ $a->nombre }}"
-                             style="width:38px; height:38px; border-radius:9px; object-fit:cover; border:1px solid #E5E7EB;"
+                             style="width:38px; height:38px; border-radius:9px; object-fit:cover; border:1px solid #E5E7EB; display:block; margin:0 auto;"
                              onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                         @endif
                         <div style="width:38px; height:38px; border-radius:9px; background:#EDE9FE; display:{{ $a->foto_url ? 'none' : 'flex' }}; align-items:center; justify-content:center; margin:0 auto;">
