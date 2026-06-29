@@ -363,19 +363,19 @@
                     </td>
 
                     <td style="padding:10px 14px; white-space:nowrap;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827;">{{ $item->listaMaestra?->cycle?->code }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ $item->listaMaestra?->cycle?->code }}</span>
                     </td>
 
                     <td style="padding:10px 14px; min-width:160px;">
-                        <span style="font-size:13px; font-weight:500; color:#111827;">{{ $item->listaMaestra?->cycle?->name }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ $item->listaMaestra?->cycle?->name }}</span>
                     </td>
 
                     <td style="padding:10px 14px;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $item->maestroArticulo?->codigo }}</span>
+                        <span style="font-size:13px; color:#374151; white-space:nowrap;">{{ $item->maestroArticulo?->codigo }}</span>
                     </td>
 
                     <td style="padding:10px 14px; min-width:160px;">
-                        <span style="font-size:13px; font-weight:500; color:#111827;">{{ $item->maestroArticulo?->nombre }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ $item->maestroArticulo?->nombre }}</span>
                     </td>
 
                     <td style="padding:10px 14px;">

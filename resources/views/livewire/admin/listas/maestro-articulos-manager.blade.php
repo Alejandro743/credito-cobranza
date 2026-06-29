@@ -234,11 +234,11 @@
                     </td>
 
                     <td style="padding:10px 14px;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $a->codigo }}</span>
+                        <span style="font-size:13px; color:#374151; white-space:nowrap;">{{ $a->codigo }}</span>
                     </td>
 
                     <td style="padding:10px 14px; min-width:180px;">
-                        <span style="font-size:13px; font-weight:500; color:#111827;">{{ $a->nombre }}</span>
+                        <span style="font-size:13px; color:#374151;">{{ $a->nombre }}</span>
                         @if($a->descripcion)
                         <p style="font-size:11px; color:#9CA3AF; margin:2px 0 0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:220px;">{{ $a->descripcion }}</p>
                         @endif

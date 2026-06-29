@@ -186,11 +186,11 @@
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $u->code }}</span>
+                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $u->code }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($u->name)) }}</span>
+                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($u->name)) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
