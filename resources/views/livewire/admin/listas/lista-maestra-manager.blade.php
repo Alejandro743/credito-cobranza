@@ -1196,23 +1196,6 @@
                         <input wire:model.live.debounce.300ms="colFilterCuotas" @click.stop type="number" min="1" placeholder="#" style="{{ $fI }} text-align:center;">
                     </th>
 
-                    {{-- Estado --}}
-                    @php $isActive = ($sortBy??'') === 'active'; @endphp
-                    <th wire:click="toggleSort('active')" style="padding:8px 14px 6px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Estado
-                            @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
-                            @endif
-                        </span>
-                        <select wire:model.live="colFilterEstado" @click.stop style="{{ $fI }} padding:0 4px; cursor:pointer;">
-                            <option value="">Todos</option>
-                            <option value="1">Activa</option>
-                            <option value="0">Inactiva</option>
-                        </select>
-                    </th>
-
                     {{-- C. Inicial --}}
                     <th style="padding:8px 14px 6px; text-align:center; vertical-align:top;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:block;">C. Inicial</span>
@@ -1237,6 +1220,23 @@
                     <th style="padding:8px 14px 6px; text-align:center; vertical-align:top;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Días</span>
                         <input wire:model.live.debounce.300ms="colFilterDias" @click.stop type="number" min="1" placeholder="#" style="{{ $fI }} text-align:center;">
+                    </th>
+
+                    {{-- Estado --}}
+                    @php $isActive = ($sortBy??'') === 'active'; @endphp
+                    <th wire:click="toggleSort('active')" style="padding:8px 14px 6px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Estado
+                            @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        <select wire:model.live="colFilterEstado" @click.stop style="{{ $fI }} padding:0 4px; cursor:pointer;">
+                            <option value="">Todos</option>
+                            <option value="1">Activa</option>
+                            <option value="0">Inactiva</option>
+                        </select>
                     </th>
                 </tr>
             </thead>
@@ -1273,6 +1273,12 @@
                         <input wire:model="editCantidadCuotas" type="number" min="1" max="999" placeholder="—"
                                style="width:58px; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
                     </td>
+                    <td style="padding:7px 10px; text-align:center;">
+                        <input type="checkbox" wire:model="editUsaCuotaInicial"
+                               style="width:15px; height:15px; cursor:pointer; accent-color:#7B6FE8;">
+                    </td>
+                    <td></td>
+                    <td></td>
                     <td style="padding:7px 8px; text-align:center;">
                         <select wire:model="editActive"
                                 style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 4px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
@@ -1280,12 +1286,6 @@
                             <option value="0">Inactiva</option>
                         </select>
                     </td>
-                    <td style="padding:7px 10px; text-align:center;">
-                        <input type="checkbox" wire:model="editUsaCuotaInicial"
-                               style="width:15px; height:15px; cursor:pointer; accent-color:#7B6FE8;">
-                    </td>
-                    <td></td>
-                    <td></td>
                 </tr>
                 {{-- Sub-fila: incremento + financiamiento --}}
                 <tr style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
@@ -1355,13 +1355,6 @@
                     <td style="padding:10px 14px; text-align:center;">
                         <span style="font-size:13px; color:#6B7280;">{{ $m->cantidad_cuotas ? $m->cantidad_cuotas.'c' : '—' }}</span>
                     </td>
-                    <td style="padding:10px 14px; text-align:center;">
-                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
-                                     background:{{ $m->active ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $m->active ? '#059669' : '#9CA3AF' }};">
-                            {{ $m->active ? 'Activa' : 'Inactiva' }}
-                        </span>
-                    </td>
                     <td style="padding:10px 16px; text-align:center;">
                         @if ($m->usa_cuota_inicial)
                         <span style="font-size:13px; color:#374151;">
@@ -1382,6 +1375,13 @@
                     </td>
                     <td style="padding:10px 14px; text-align:center;">
                         <span style="font-size:13px; color:#374151;">{{ $m->dias_entre_cuotas ? $m->dias_entre_cuotas.'d' : '—' }}</span>
+                    </td>
+                    <td style="padding:10px 14px; text-align:center;">
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
+                                     background:{{ $m->active ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $m->active ? '#059669' : '#9CA3AF' }};">
+                            {{ $m->active ? 'Activa' : 'Inactiva' }}
+                        </span>
                     </td>
                 </tr>
                 @endif
