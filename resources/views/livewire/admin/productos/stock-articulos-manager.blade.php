@@ -209,7 +209,25 @@
         @if($selectedItemId)
         @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
         <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
-            <button style="{{ $btnH }} background:#7B6FE8; color:#fff;">Editar</button>
+            @if($editingItemId === $selectedItemId)
+                <button wire:click="saveEdit"   style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    Guardar
+                </button>
+                <button wire:click="cancelEdit" style="{{ $btnH }} background:#E5E7EB; color:#374151;">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Cancelar
+                </button>
+            @else
+                <button wire:click="startEdit({{ $selectedItemId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                    Editar
+                </button>
+                <button wire:click="openStockModal({{ $selectedItemId }})" style="{{ $btnH }} background:#EDE9FE; color:#7B6FE8;">
+                    <svg width="10" height="10" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 12h6M9 16h4"/></svg>
+                    Ver Listas
+                </button>
+            @endif
         </div>
         @endif
     </div>
@@ -278,6 +296,66 @@
             <tbody>
                 @foreach($items as $item)
                 @php $isSelected = $selectedItemId === $item->id; @endphp
+
+                {{-- Fila edición inline --}}
+                @if($editingItemId === $item->id)
+                @php $eI = 'height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;'; @endphp
+                <tr wire:key="edit-{{ $item->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+                    <td class="col-row-num" style="padding:6px 8px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap;">
+                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $items->firstItem() + $loop->index }}</span>
+                    </td>
+                    <td style="padding:7px 12px; text-align:center;">
+                        @php $foto = $item->maestroArticulo?->foto_url; @endphp
+                        @if($foto)
+                        <img src="{{ $foto }}" style="width:36px; height:36px; border-radius:8px; object-fit:cover; border:1px solid #E5E7EB; display:block; margin:0 auto;" onerror="this.style.display='none';">
+                        @else
+                        <div style="width:36px; height:36px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; margin:0 auto;">
+                            <svg width="16" height="16" fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        </div>
+                        @endif
+                    </td>
+                    <td style="padding:10px 14px; white-space:nowrap;">
+                        <span style="font-size:12px; font-family:monospace; font-weight:600; color:#7B6FE8;">{{ $item->listaMaestra?->cycle?->code }}</span>
+                        <span style="font-size:11px; color:#9CA3AF; display:block;">{{ $item->listaMaestra?->name }}</span>
+                    </td>
+                    <td style="padding:10px 14px;">
+                        <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827;">{{ $item->maestroArticulo?->codigo }}</span>
+                    </td>
+                    <td style="padding:10px 14px; min-width:160px;">
+                        <span style="font-size:13px; color:#111827;">{{ $item->maestroArticulo?->nombre }}</span>
+                    </td>
+                    <td style="padding:10px 14px;">
+                        <span style="font-size:12px; color:#374151;">{{ $item->maestroArticulo?->categoria?->descripcion ?? '—' }}</span>
+                    </td>
+                    <td style="padding:10px 14px;">
+                        <span style="font-size:12px; color:#374151;">{{ $item->maestroArticulo?->unidad?->name ?? '—' }}</span>
+                    </td>
+                    {{-- Stock Inicial editable --}}
+                    <td style="padding:6px 10px;">
+                        <input wire:model="editStockInicial" type="number" min="0" step="1"
+                               style="{{ $eI }} width:90px; text-align:right;">
+                        @error('editStockInicial') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                    </td>
+                    <td style="padding:10px 14px; text-align:right;">
+                        <span style="font-size:13px; font-weight:600; color:#111827; font-family:monospace;">{{ number_format((float)$item->stock_actual, 0) }}</span>
+                    </td>
+                    <td style="padding:10px 14px; text-align:right;">
+                        <span style="font-size:13px; font-weight:600; color:#6366F1; font-family:monospace;">{{ number_format((float)$item->stock_comprometido, 0) }}</span>
+                    </td>
+                    <td style="padding:10px 14px; text-align:right;">
+                        <span style="font-size:13px; font-weight:700; font-family:monospace; color:#9CA3AF;">{{ number_format($item->stockDisponible(), 0) }}</span>
+                    </td>
+                    {{-- Estado editable --}}
+                    <td style="padding:6px 10px; text-align:center;">
+                        <select wire:model="editActive" style="{{ $eI }} width:90px; padding:0 6px; cursor:pointer;">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </td>
+                </tr>
+
+                {{-- Fila normal --}}
+                @else
                 <tr wire:key="item-{{ $item->id }}"
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s; {{ $isSelected ? 'background:#F5F3FF;' : '' }}"
                     @mouseenter="$el.style.background='{{ $isSelected ? '#EDEAFF' : '#FAFAFE' }}'"
@@ -354,6 +432,7 @@
                         </span>
                     </td>
                 </tr>
+                @endif
                 @endforeach
             </tbody>
         </table>
@@ -402,5 +481,105 @@
     <div style="padding-top:8px;">{{ $items->links() }}</div>
     @endif
 </div>
+
+{{-- ══ MODAL: Listas de Precios ══ --}}
+@if($stockModalItemId)
+<div style="position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.45);"
+     @keydown.escape.window="$wire.closeStockModal()">
+    <div style="background:#fff; border-radius:20px; width:100%; max-width:640px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22);">
+
+        {{-- Header --}}
+        <div style="padding:16px 20px; border-bottom:1px solid #EDE9FE; display:flex; align-items:center; gap:10px; flex-shrink:0;">
+            <div style="width:36px; height:36px; border-radius:10px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2M9 12h6M9 16h4"/></svg>
+            </div>
+            <div style="flex:1; min-width:0;">
+                <p style="font-size:13px; font-weight:800; color:#7B6FE8; margin:0;">Stock en listas de precios</p>
+                <p style="font-size:12px; color:#9CA3AF; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    {{ $stockModalItem?->maestroArticulo?->codigo }} — {{ $stockModalItem?->maestroArticulo?->nombre }}
+                </p>
+            </div>
+            <button wire:click="closeStockModal"
+                    style="width:32px; height:32px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; border-radius:9px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        {{-- Resumen stock --}}
+        <div style="padding:12px 20px; background:#F8F7FF; border-bottom:1px solid #EDE9FE; display:flex; gap:20px; flex-shrink:0;">
+            <div>
+                <p style="font-size:11px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Stock Inicial</p>
+                <p style="font-size:16px; font-weight:800; color:#111827; font-family:monospace; margin:0;">{{ number_format((float)$stockModalItem?->stock_inicial, 0) }}</p>
+            </div>
+            <div>
+                <p style="font-size:11px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Stock Actual</p>
+                <p style="font-size:16px; font-weight:800; color:#111827; font-family:monospace; margin:0;">{{ number_format((float)$stockModalItem?->stock_actual, 0) }}</p>
+            </div>
+            <div>
+                <p style="font-size:11px; font-weight:700; color:#6366F1; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Comprometido</p>
+                <p style="font-size:16px; font-weight:800; color:#6366F1; font-family:monospace; margin:0;">{{ number_format((float)$stockModalItem?->stock_comprometido, 0) }}</p>
+            </div>
+            <div>
+                <p style="font-size:11px; font-weight:700; color:#059669; text-transform:uppercase; letter-spacing:.5px; margin:0 0 2px;">Disponible</p>
+                @php $dispModal = $stockModalItem?->stockDisponible() ?? 0; @endphp
+                <p style="font-size:16px; font-weight:800; font-family:monospace; margin:0; color:{{ $dispModal > 0 ? '#059669' : '#EF4444' }};">{{ number_format($dispModal, 0) }}</p>
+            </div>
+        </div>
+
+        {{-- Body --}}
+        <div style="overflow:auto; flex:1; padding:16px 20px;">
+            @if($stockModalRows->isEmpty())
+            <div style="text-align:center; padding:40px 20px;">
+                <svg width="40" height="40" fill="none" stroke="#D1D5DB" stroke-width="1.5" viewBox="0 0 24 24" style="margin:0 auto 10px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+                <p style="font-size:13px; color:#9CA3AF;">Este artículo no está asignado a ninguna lista de precios.</p>
+            </div>
+            @else
+            <table style="width:100%; border-collapse:collapse; font-size:13px;">
+                <thead>
+                    <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                        <th style="padding:9px 12px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Lista de Precios</th>
+                        <th style="padding:9px 12px; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Stock Asignado</th>
+                        <th style="padding:9px 12px; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Descuento</th>
+                        <th style="padding:9px 12px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px;">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($stockModalRows as $row)
+                    <tr style="border-bottom:1px solid #F3F4F6;">
+                        <td style="padding:10px 12px;">
+                            <span style="font-size:13px; font-weight:600; color:#111827;">{{ $row->listaDerivada?->name ?? '—' }}</span>
+                        </td>
+                        <td style="padding:10px 12px; text-align:right;">
+                            <span style="font-size:13px; font-weight:700; color:#6366F1; font-family:monospace;">{{ number_format((float)$row->stock_asignado, 0) }}</span>
+                        </td>
+                        <td style="padding:10px 12px; text-align:right;">
+                            <span style="font-size:13px; color:#374151; font-family:monospace;">{{ number_format((float)$row->descuento, 2) }}</span>
+                        </td>
+                        <td style="padding:10px 12px; text-align:center;">
+                            <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700;
+                                         background:{{ $row->active ? '#D1FAE5' : '#F3F4F6' }};
+                                         color:{{ $row->active ? '#059669' : '#9CA3AF' }};">
+                                {{ $row->active ? 'Activo' : 'Inactivo' }}
+                            </span>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+            @endif
+        </div>
+
+        {{-- Footer --}}
+        <div style="padding:14px 20px; border-top:1px solid #EDE9FE; display:flex; justify-content:flex-end; flex-shrink:0;">
+            <button wire:click="closeStockModal"
+                    style="height:36px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
+                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                Cerrar
+            </button>
+        </div>
+    </div>
+</div>
+@endif
 
 </div>
