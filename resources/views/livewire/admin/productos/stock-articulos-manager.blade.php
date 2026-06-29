@@ -182,20 +182,18 @@
             </div>
         </div>
 
-        {{-- ACCIONES --}}
-        <div style="display:flex; align-items:flex-end; gap:8px;">
-            <button wire:click="saveNew"
-                    style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-                Guardar
-            </button>
-            <button wire:click="cancelAdd"
-                    style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
-                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
-                Cancelar
-            </button>
-        </div>
-
+    </div>
+    <div style="padding:10px 20px 14px; border-top:1px solid #EDE9FE; display:flex; justify-content:flex-end; gap:8px;">
+        <button wire:click="cancelAdd"
+                style="height:36px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+            Cancelar
+        </button>
+        <button wire:click="saveNew"
+                style="height:36px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+            Guardar
+        </button>
     </div>
 </div>
 @endif
@@ -203,37 +201,108 @@
 {{-- ══ TABLA ══ --}}
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
+    {{-- Barra --}}
     <div style="padding:10px 18px; display:flex; align-items:center; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Stock de artículos</span>
         <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:8px;">{{ $items->total() }}</span>
+        @if($selectedItemId)
+        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            <button style="{{ $btnH }} background:#7B6FE8; color:#fff;">Editar</button>
+        </div>
+        @endif
     </div>
 
     <div style="overflow:auto; flex:1;">
         @if($items->isEmpty())
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay artículos en el stock.</p>
         @else
-        <table style="width:100%; min-width:800px; border-collapse:collapse; font-size:13px;">
+        <table style="width:100%; min-width:1000px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="width:50px; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; position:sticky; left:0; z-index:11; background:#F9F8FF;">#</th>
-                    <th style="padding:10px 14px; text-align:left;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Ciclo</span></th>
+                    <th style="width:50px; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; position:sticky; left:0; z-index:11; background:#F9F8FF; white-space:nowrap;">#</th>
+                    <th style="padding:10px 12px; text-align:center;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Img</span>
+                    </th>
+                    {{-- Ciclo (sortable) --}}
+                    @php $isActive = $sortBy === 'lista_maestra_id'; @endphp
+                    <th wire:click="toggleSort('lista_maestra_id')"
+                        style="padding:10px 14px; text-align:left; user-select:none; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                            Ciclo
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                    </th>
+                    {{-- Código, Nombre, Categoría, Unidad — columnas de tabla relacionada, sin sort --}}
                     <th style="padding:10px 14px; text-align:left;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Código</span></th>
-                    <th style="padding:10px 14px; text-align:left;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Nombre</span></th>
+                    <th style="padding:10px 14px; text-align:left; min-width:160px;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Nombre</span></th>
                     <th style="padding:10px 14px; text-align:left;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Categoría</span></th>
                     <th style="padding:10px 14px; text-align:left;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Unidad</span></th>
-                    <th style="padding:10px 14px; text-align:right;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stock Ini.</span></th>
-                    <th style="padding:10px 14px; text-align:right;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stock Act.</span></th>
-                    <th style="padding:10px 14px; text-align:center;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</span></th>
+                    {{-- Stock Ini., Stock Act., Stock Asig. — sortable --}}
+                    @foreach(['stock_inicial'=>'Stock Ini.','stock_actual'=>'Stock Act.','stock_comprometido'=>'Stock Asig.'] as $col=>$label)
+                    @php $isActive = $sortBy === $col; @endphp
+                    <th wire:click="toggleSort('{{ $col }}')"
+                        style="padding:10px 14px; text-align:right; user-select:none; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; justify-content:flex-end; gap:5px;">
+                            {{ $label }}
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                    </th>
+                    @endforeach
+                    {{-- Stock Disponible — calculado, sin sort --}}
+                    <th style="padding:10px 14px; text-align:right;"><span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Stock Disp.</span></th>
+                    {{-- Estado — sortable --}}
+                    @php $isActive = $sortBy === 'active'; @endphp
+                    <th wire:click="toggleSort('active')"
+                        style="padding:10px 14px; text-align:center; user-select:none; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                            Estado
+                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 @foreach($items as $item)
+                @php $isSelected = $selectedItemId === $item->id; @endphp
                 <tr wire:key="item-{{ $item->id }}"
-                    style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
-                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                    style="border-bottom:1px solid #F9FAFB; transition:background .1s; {{ $isSelected ? 'background:#F5F3FF;' : '' }}"
+                    @mouseenter="$el.style.background='{{ $isSelected ? '#EDEAFF' : '#FAFAFE' }}'"
+                    @mouseleave="$el.style.background='{{ $isSelected ? '#F5F3FF' : '' }}'">
 
-                    <td class="col-row-num" style="padding:10px 8px; text-align:center; position:sticky; left:0; z-index:2; background:#fff;">
-                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $items->firstItem() + $loop->index }}</span>
+                    <td class="col-row-num" style="padding:6px 8px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $isSelected ? '#F5F3FF' : '#fff' }}; white-space:nowrap;">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                            <input type="checkbox"
+                                   :checked="$wire.selectedItemId === {{ $item->id }}"
+                                   @click="$wire.selectedItemId === {{ $item->id }} ? $wire.set('selectedItemId', null) : $wire.selectItem({{ $item->id }})"
+                                   style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $items->firstItem() + $loop->index }}</span>
+                        </div>
+                    </td>
+
+                    <td style="padding:7px 12px; text-align:center;">
+                        @php $foto = $item->maestroArticulo?->foto_url; @endphp
+                        @if($foto)
+                        <img src="{{ $foto }}" alt="{{ $item->maestroArticulo?->nombre }}"
+                             style="width:36px; height:36px; border-radius:8px; object-fit:cover; border:1px solid #E5E7EB; display:block; margin:0 auto;"
+                             onerror="this.style.display='none';">
+                        @else
+                        <div style="width:36px; height:36px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; margin:0 auto;">
+                            <svg width="16" height="16" fill="none" stroke="#A78BFA" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+                        </div>
+                        @endif
                     </td>
 
                     <td style="padding:10px 14px; white-space:nowrap;">
@@ -263,6 +332,17 @@
 
                     <td style="padding:10px 14px; text-align:right;">
                         <span style="font-size:13px; font-weight:600; color:#111827; font-family:monospace;">{{ number_format((float)$item->stock_actual, 0) }}</span>
+                    </td>
+
+                    <td style="padding:10px 14px; text-align:right;">
+                        <span style="font-size:13px; font-weight:600; color:#6366F1; font-family:monospace;">{{ number_format((float)$item->stock_comprometido, 0) }}</span>
+                    </td>
+
+                    <td style="padding:10px 14px; text-align:right;">
+                        @php $disp = $item->stockDisponible(); @endphp
+                        <span style="font-size:13px; font-weight:700; font-family:monospace; color:{{ $disp > 0 ? '#059669' : '#9CA3AF' }};">
+                            {{ number_format($disp, 0) }}
+                        </span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">

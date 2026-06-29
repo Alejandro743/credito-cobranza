@@ -15,6 +15,11 @@ class StockArticulosManager extends Component
 
     public string $search        = '';
     public string $filterListaId = '';
+    public string $sortBy        = 'lista_maestra_id';
+    public string $sortDir       = 'asc';
+
+    // Selección en grilla
+    public ?int $selectedItemId = null;
 
     // Formulario agregar
     public bool   $showAddForm        = false;
@@ -33,7 +38,23 @@ class StockArticulosManager extends Component
 
     public function updatingSearch(): void { $this->resetPage(); }
 
-    // ── Al cambiar la lista seleccionada en el form ───────────────────────────
+    public function toggleSort(string $col): void
+    {
+        if ($this->sortBy === $col) {
+            $this->sortDir = $this->sortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->sortBy  = $col;
+            $this->sortDir = 'asc';
+        }
+        $this->resetPage();
+    }
+
+    public function selectItem(int $id): void
+    {
+        $this->selectedItemId = $this->selectedItemId === $id ? null : $id;
+    }
+
+    // ── Al cambiar la lista en el form ────────────────────────────────────────
 
     public function updatedFormListaMaestraId(): void
     {
@@ -42,7 +63,7 @@ class StockArticulosManager extends Component
         $this->maestroUnidad     = '';
     }
 
-    // ── Al seleccionar un maestro articulo ────────────────────────────────────
+    // ── Al seleccionar maestro articulo ───────────────────────────────────────
 
     public function selectMaestro(int|string $id): void
     {
@@ -52,7 +73,7 @@ class StockArticulosManager extends Component
         $this->maestroUnidad    = $m?->unidad?->name ?? '—';
     }
 
-    // ── Mostrar / ocultar form ────────────────────────────────────────────────
+    // ── Form ──────────────────────────────────────────────────────────────────
 
     public function showAdd(): void
     {
@@ -62,6 +83,7 @@ class StockArticulosManager extends Component
         $this->stockInicial       = '0';
         $this->maestroCategoria   = '';
         $this->maestroUnidad      = '';
+        $this->selectedItemId     = null;
         $this->resetValidation();
     }
 
@@ -79,13 +101,16 @@ class StockArticulosManager extends Component
             'formListaMaestraId' => 'required|exists:lista_maestra,id',
             'selectedMaestroId'  => 'required|exists:maestro_articulos,id',
             'stockInicial'       => 'required|numeric|min:0',
-        ], [], [
-            'formListaMaestraId' => 'lista / ciclo',
-            'selectedMaestroId'  => 'artículo',
-            'stockInicial'       => 'stock inicial',
+        ], [
+            'formListaMaestraId.required' => 'Debe seleccionar un ciclo.',
+            'formListaMaestraId.exists'   => 'El ciclo seleccionado no es válido.',
+            'selectedMaestroId.required'  => 'Debe seleccionar un artículo.',
+            'selectedMaestroId.exists'    => 'El artículo seleccionado no es válido.',
+            'stockInicial.required'       => 'El stock inicial es obligatorio.',
+            'stockInicial.numeric'        => 'El stock inicial debe ser un número.',
+            'stockInicial.min'            => 'El stock inicial no puede ser negativo.',
         ]);
 
-        // Verificar que no exista ya en esa lista
         $existe = ListaMaestraItem::where('lista_maestra_id', $this->formListaMaestraId)
             ->where('maestro_articulo_id', $this->selectedMaestroId)
             ->exists();
@@ -95,19 +120,17 @@ class StockArticulosManager extends Component
             return;
         }
 
-        $maestro = MaestroArticulo::findOrFail($this->selectedMaestroId);
-
         ListaMaestraItem::create([
-            'lista_maestra_id'   => $this->formListaMaestraId,
-            'maestro_articulo_id'=> $this->selectedMaestroId,
-            'stock_inicial'      => $this->stockInicial,
-            'stock_actual'       => $this->stockInicial,
-            'stock_consumido'    => 0,
-            'stock_comprometido' => 0,
-            'precio_base'        => 0,
-            'puntos'             => 0,
-            'descuento'          => 0,
-            'active'             => true,
+            'lista_maestra_id'    => $this->formListaMaestraId,
+            'maestro_articulo_id' => $this->selectedMaestroId,
+            'stock_inicial'       => $this->stockInicial,
+            'stock_actual'        => $this->stockInicial,
+            'stock_consumido'     => 0,
+            'stock_comprometido'  => 0,
+            'precio_base'         => 0,
+            'puntos'              => 0,
+            'descuento'           => 0,
+            'active'              => true,
         ]);
 
         $this->showAddForm = false;
@@ -126,12 +149,11 @@ class StockArticulosManager extends Component
                     $sq->where('codigo', 'like', "%{$this->search}%")
                        ->orWhere('nombre', 'like', "%{$this->search}%")
                 ))
-            ->orderBy('lista_maestra_id')
+            ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(20);
 
         $listas = ListaMaestra::with('cycle')->orderBy('id')->get();
 
-        // Maestros disponibles para el form (no están ya en la lista seleccionada)
         $maestrosDisponibles = collect();
         if ($this->formListaMaestraId) {
             $usados = ListaMaestraItem::where('lista_maestra_id', $this->formListaMaestraId)
