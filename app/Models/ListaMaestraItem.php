@@ -11,7 +11,7 @@ class ListaMaestraItem extends Model
     protected $table = 'lista_maestra_items';
 
     protected $fillable = [
-        'lista_maestra_id', 'product_id',
+        'lista_maestra_id', 'product_id', 'maestro_articulo_id',
         'precio_base', 'puntos',
         'stock_inicial', 'stock_consumido', 'stock_comprometido', 'stock_actual',
         'descuento', 'active',
@@ -56,6 +56,11 @@ class ListaMaestraItem extends Model
     public function product(): BelongsTo
     {
         return $this->belongsTo(Product::class);
+    }
+
+    public function maestroArticulo(): BelongsTo
+    {
+        return $this->belongsTo(MaestroArticulo::class);
     }
 
     public function itemsDerivados(): HasMany
