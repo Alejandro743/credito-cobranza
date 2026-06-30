@@ -134,9 +134,21 @@
 {{-- Tabla de productos (desktop) --}}
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 1px 4px rgba(0,0,0,.04); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
     {{-- Barra header --}}
-    <div style="padding:10px 18px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
+    <div style="padding:10px 18px; display:flex; align-items:center; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Ítems del catálogo</span>
-        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $products->count() }}</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:8px;">{{ $products->count() }}</span>
+        @if($selectedItemId)
+        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            @if($editItemId === $selectedItemId)
+                <button wire:click="saveEditItem" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Guardar</button>
+                <button wire:click="cancelEditItem" style="{{ $btnH }} background:#E5E7EB; color:#374151;">Cancelar</button>
+            @else
+                <button wire:click="startEditItem({{ $selectedItemId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Editar</button>
+                <button wire:click="removeItem({{ $selectedItemId }})" style="{{ $btnH }} background:#FEF2F2; color:#EF4444; border:1px solid #FEE2E2;">Quitar de lista</button>
+            @endif
+        </div>
+        @endif
     </div>
     <div style="overflow:auto; flex:1;">
         <table style="width:100%; min-width:1600px; border-collapse:collapse;">
@@ -295,8 +307,6 @@
                         </div>
                     </th>
 
-                    {{-- Acciones --}}
-                    <th style="{{ $thC }}">Acciones{!! $emptyF !!}</th>
 
                 </tr>
             </thead>
@@ -320,7 +330,7 @@
                         get final() { return (this.precio + this.monto).toFixed(2); }
                     }"
                     style="background:#F8F7FF; border-left:3px solid #7c3aed;">
-                    <td colspan="15" style="padding:0; background:#F8F7FF; border-left:3px solid #7B6FE8;">
+                    <td colspan="14" style="padding:0; background:#F8F7FF; border-left:3px solid #7B6FE8;">
                         <div style="padding:12px 16px; display:flex; flex-wrap:wrap; align-items:flex-end; gap:10px;">
                             @php $eLabel = 'display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:5px;'; @endphp
 
@@ -489,7 +499,6 @@
                         </div>
                     </td>
                     <td colspan="5"></td>
-                    <td style="{{ $tdC }}"><span style="font-size:11px; color:#0E7490; font-weight:600;">Agregar</span></td>
                     <td style="{{ $tdC }}">
                         <div style="display:inline-flex; align-items:center; gap:4px;">
                             <button wire:click="saveQuickAdd" title="Guardar"
@@ -591,36 +600,18 @@
                             {{ $item->active ? 'Activo' : 'Inactivo' }}
                         </span>
                         @else
-                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#F3F4F6; color:#9CA3AF;">Sin agregar</span>
+                        <button wire:click="startQuickAdd({{ $p->id }})" title="Agregar a lista"
+                                style="height:26px; padding:0 10px; border-radius:7px; border:1px solid #A5F3FC; background:#CFFAFE; color:#0E7490; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px;"
+                                @mouseenter="$el.style.background='#A5F3FC'" @mouseleave="$el.style.background='#CFFAFE'">
+                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                            Agregar
+                        </button>
                         @endif
-                    </td>
-                    <td style="padding:10px 12px; text-align:center;">
-                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
-                            @if ($inLista)
-                                <button wire:click="startEditItem({{ $item->id }})" title="Editar"
-                                        style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                                </button>
-                                <button wire:click="removeItem({{ $item->id }})" title="Quitar de lista"
-                                        style="width:28px; height:28px; border-radius:7px; border:1px solid #FEE2E2; background:#FEF2F2; color:#EF4444; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                        @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
-                                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                                </button>
-                            @else
-                                <button wire:click="startQuickAdd({{ $p->id }})" title="Agregar a lista"
-                                        style="height:26px; padding:0 10px; border-radius:7px; border:1px solid #A5F3FC; background:#CFFAFE; color:#0E7490; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;"
-                                        @mouseenter="$el.style.background='#A5F3FC'" @mouseleave="$el.style.background='#CFFAFE'">
-                                    <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                                    Agregar
-                                </button>
-                            @endif
-                        </div>
                     </td>
                 </tr>
                 @endif
                 @empty
-                <tr><td colspan="15" style="padding:48px 20px; text-align:center; font-size:13px; color:#9CA3AF;">No hay productos en el catálogo.</td></tr>
+                <tr><td colspan="14" style="padding:48px 20px; text-align:center; font-size:13px; color:#9CA3AF;">No hay productos en el catálogo.</td></tr>
                 @endforelse
             </tbody>
         </table>
