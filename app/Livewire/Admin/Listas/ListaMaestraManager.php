@@ -906,16 +906,13 @@ class ListaMaestraManager extends Component
             $itemSortCol = $itemSortMap[$this->itemSortBy] ?? 'products.name';
             $viewingId   = $this->viewingId;
 
-            // Mostrar: productos ya en la lista + productos disponibles en el ciclo
-            $allProductIds = $inListaIds->merge($cicloProductoIds)->unique()->values();
-
             $products = Product::with(['categoria', 'unidad'])
                 ->leftJoin('lista_maestra_items as lmi', function ($join) use ($viewingId) {
                     $join->on('lmi.product_id', '=', 'products.id')
                          ->where('lmi.lista_maestra_id', $viewingId);
                 })
                 ->select('products.*')
-                ->whereIn('products.id', $allProductIds)
+                ->whereIn('products.id', $cicloProductoIds)
                 ->when($this->itemColFilterCodigo,           fn($q) => $q->where('products.code', 'like', "%{$this->itemColFilterCodigo}%"))
                 ->when($this->itemColFilterNombre,           fn($q) => $q->where('products.name', 'like', "%{$this->itemColFilterNombre}%"))
                 ->when($this->itemColFilterTipoInc,          fn($q) => $q->where('lmi.tipo_incremento', $this->itemColFilterTipoInc))
