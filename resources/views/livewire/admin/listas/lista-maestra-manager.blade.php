@@ -1114,7 +1114,10 @@
 
     <div style="overflow:auto; flex:1;">
         @php
-        $fI = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px; width:100%; outline:none; box-sizing:border-box; background:#fff; margin-top:4px; color:#374151; font-weight:700; text-align:center;';
+        $fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#374151; font-weight:700; text-align:center;';
+        $fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#374151; font-weight:700; text-align:center; cursor:pointer;';
+        $fW  = 'position:relative; margin-top:4px;';
+        $fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
         @endphp
         <table style="width:100%; min-width:1200px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
@@ -1131,7 +1134,7 @@
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
-                        <input wire:model.live.debounce.300ms="colFilterCodigo" @click.stop type="text" placeholder="🔍" style="{{ $fI }}">
+                        <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><input wire:model.live.debounce.300ms="colFilterCodigo" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Nombre --}}
@@ -1144,7 +1147,7 @@
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
-                        <input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" placeholder="🔍" style="{{ $fI }}">
+                        <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Ciclo --}}
@@ -1157,7 +1160,7 @@
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
-                        <input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" placeholder="🔍" style="{{ $fI }}">
+                        <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Cuotas --}}
@@ -1170,7 +1173,7 @@
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
-                        <input wire:model.live.debounce.300ms="colFilterCuotas" @click.stop type="number" min="1" placeholder="#" style="{{ $fI }} text-align:center;">
+                        <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><input wire:model.live.debounce.300ms="colFilterCuotas" @click.stop type="number" min="1" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- C. Inicial --}}
@@ -1183,7 +1186,7 @@
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
-                        <select wire:model.live="colFilterCuotaInicial" @click.stop style="{{ $fI }} padding:0 4px; cursor:pointer;">
+                        <select wire:model.live="colFilterCuotaInicial" @click.stop style="{{ $fS }}">
                             <option value="">Todos</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
@@ -1200,7 +1203,7 @@
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
-                        <select wire:model.live="colFilterIncremento" @click.stop style="{{ $fI }} padding:0 4px; cursor:pointer;">
+                        <select wire:model.live="colFilterIncremento" @click.stop style="{{ $fS }}">
                             <option value="">Todos</option>
                             <option value="porcentaje">%</option>
                             <option value="monto_fijo">Bs</option>
@@ -1217,7 +1220,7 @@
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
-                        <input wire:model.live.debounce.300ms="colFilterDias" @click.stop type="number" min="1" placeholder="#" style="{{ $fI }} text-align:center;">
+                        <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><input wire:model.live.debounce.300ms="colFilterDias" @click.stop type="number" min="1" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Estado --}}
@@ -1230,7 +1233,7 @@
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
-                        <select wire:model.live="colFilterEstado" @click.stop style="{{ $fI }} padding:0 4px; cursor:pointer;">
+                        <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
                             <option value="">Todos</option>
                             <option value="1">Activa</option>
                             <option value="0">Inactiva</option>
