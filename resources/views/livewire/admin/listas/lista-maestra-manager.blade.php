@@ -143,7 +143,7 @@
             <colgroup>
                 <col style="width:44px;">
                 <col style="width:90px;">
-                <col>
+                <col style="width:260px;">
                 <col style="width:100px;">
                 <col style="width:70px;">
                 <col style="width:85px;">
