@@ -1308,7 +1308,7 @@
                 </tr>
                 {{-- Fila edición — Fila 2: valores de C. Inicial e Incremento --}}
                 <tr style="background:#F8F7FF; border-bottom:2px solid #C4B5FD;">
-                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; vertical-align:middle;">
+                    <td style="padding:8px 6px; text-align:center; background:#F8F7FF; vertical-align:middle;">
                         <input type="checkbox"
                                :checked="$wire.selectedMaestraId === {{ $m->id }}"
                                @click="$wire.selectedMaestraId === {{ $m->id }} ? $wire.set('selectedMaestraId', null) : $wire.selectMaestra({{ $m->id }})"
