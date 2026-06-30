@@ -1115,7 +1115,7 @@
     <div style="overflow:auto; flex:1;">
         @php
         $fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#374151; font-weight:700; text-align:center;';
-        $fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#374151; font-weight:700; text-align:center; cursor:pointer;';
+        $fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#374151; font-weight:700; text-align:center; cursor:pointer;';
         $fW  = 'position:relative; margin-top:4px;';
         $fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
         @endphp
