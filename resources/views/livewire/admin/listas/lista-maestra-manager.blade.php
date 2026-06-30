@@ -980,19 +980,19 @@
         {{-- Fila 1: Info general --}}
         <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:12px;">
             <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Código *</label>
+                <label style="display:block; font-size:12px; font-weight:700; color:#7B6FE8; margin-bottom:4px; text-transform:uppercase; letter-spacing:.4px;">Código *</label>
                 <input wire:model="newCode" type="text" maxlength="30" placeholder="LP-202601"
                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box; font-family:monospace;">
                 @error('newCode') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
             <div style="grid-column:span 2;">
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Nombre *</label>
+                <label style="display:block; font-size:12px; font-weight:700; color:#7B6FE8; margin-bottom:4px; text-transform:uppercase; letter-spacing:.4px;">Nombre *</label>
                 <input wire:model="newName" type="text" placeholder="Lista Enero 2026"
                        style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; box-sizing:border-box;">
                 @error('newName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
             <div>
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Ciclo *</label>
+                <label style="display:block; font-size:12px; font-weight:700; color:#7B6FE8; margin-bottom:4px; text-transform:uppercase; letter-spacing:.4px;">Ciclo *</label>
                 <select wire:model="newCycleId"
                         style="width:100%; border:1px solid #E5E7EB; border-radius:8px; padding:7px 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
                     <option value="">— Seleccionar —</option>
@@ -1014,7 +1014,7 @@
         {{-- Fila 2: Incremento --}}
         <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;">
             <div style="width:170px;">
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Tipo Incremento</label>
+                <label style="display:block; font-size:12px; font-weight:700; color:#7B6FE8; margin-bottom:4px; text-transform:uppercase; letter-spacing:.4px;">Tipo Incremento</label>
                 <select wire:model="newTipoIncremento" x-on:change="tipoInc = $event.target.value"
                         style="width:100%; height:36px; border:1px solid #E5E7EB; border-radius:8px; padding:0 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
                     <option value="">— Sin incremento —</option>
@@ -1023,7 +1023,7 @@
                 </select>
             </div>
             <div style="width:120px;">
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Valor</label>
+                <label style="display:block; font-size:12px; font-weight:700; color:#7B6FE8; margin-bottom:4px; text-transform:uppercase; letter-spacing:.4px;">Valor</label>
                 <input wire:model="newValorIncremento" x-on:input="valorInc = parseFloat($event.target.value) || 0"
                        type="number" step="0.01" min="0" placeholder="Ej: 10"
                        style="width:100%; height:36px; border:1px solid #E5E7EB; border-radius:8px; padding:0 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
@@ -1043,19 +1043,19 @@
         {{-- Fila 3: Financiamiento --}}
         <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:flex-end;">
             <div style="width:150px;">
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Cant. de Cuotas</label>
+                <label style="display:block; font-size:12px; font-weight:700; color:#7B6FE8; margin-bottom:4px; text-transform:uppercase; letter-spacing:.4px;">Cant. de Cuotas</label>
                 <input wire:model="newCantidadCuotas" x-on:input="cantCuotas = parseInt($event.target.value) || 0"
                        type="number" min="1" max="999" placeholder="Ej: 6"
                        style="width:100%; height:36px; border:1px solid #E5E7EB; border-radius:8px; padding:0 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
             </div>
             <div style="width:150px;">
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Días entre Cuotas</label>
+                <label style="display:block; font-size:12px; font-weight:700; color:#7B6FE8; margin-bottom:4px; text-transform:uppercase; letter-spacing:.4px;">Días entre Cuotas</label>
                 <input wire:model="newDiasEntreCuotas"
                        type="number" min="1" max="365" placeholder="Ej: 30"
                        style="width:100%; height:36px; border:1px solid #E5E7EB; border-radius:8px; padding:0 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
             </div>
             <div style="width:170px;">
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Tipo Cuota Inicial</label>
+                <label style="display:block; font-size:12px; font-weight:700; color:#7B6FE8; margin-bottom:4px; text-transform:uppercase; letter-spacing:.4px;">Tipo Cuota Inicial</label>
                 <select wire:model="newTipoCuotaInicial" x-on:change="tipoCuotaIni = $event.target.value"
                         style="width:100%; height:36px; border:1px solid #E5E7EB; border-radius:8px; padding:0 10px; font-size:13px; outline:none; background:#fff; box-sizing:border-box;">
                     <option value="ninguna">Sin cuota inicial</option>
@@ -1064,7 +1064,7 @@
                 </select>
             </div>
             <div x-show="tipoCuotaIni !== 'ninguna'" x-cloak style="width:130px;">
-                <label style="display:block; font-size:12px; font-weight:600; color:#374151; margin-bottom:4px;">Valor Inicial</label>
+                <label style="display:block; font-size:12px; font-weight:700; color:#7B6FE8; margin-bottom:4px; text-transform:uppercase; letter-spacing:.4px;">Valor Inicial</label>
                 <input wire:model="newValorCuotaInicial" x-on:input="valorCuotaIni = parseFloat($event.target.value) || 0"
                        type="number" step="0.01" min="0" placeholder="Ej: 20"
                        style="width:100%; height:36px; border:1px solid #E5E7EB; border-radius:8px; padding:0 10px; font-size:13px; outline:none; box-sizing:border-box; text-align:center;">
