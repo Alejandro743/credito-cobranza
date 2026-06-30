@@ -1131,7 +1131,7 @@
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
-                        <input wire:model.live.debounce.300ms="colFilterCodigo" @click.stop type="text" placeholder="Filtrar..." style="{{ $fI }}">
+                        <input wire:model.live.debounce.300ms="colFilterCodigo" @click.stop type="text" placeholder="🔍" style="{{ $fI }}">
                     </th>
 
                     {{-- Nombre --}}
@@ -1144,7 +1144,7 @@
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
-                        <input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" placeholder="Filtrar..." style="{{ $fI }}">
+                        <input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" placeholder="🔍" style="{{ $fI }}">
                     </th>
 
                     {{-- Ciclo --}}
@@ -1157,7 +1157,7 @@
                             @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
                             @endif
                         </span>
-                        <input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" placeholder="Filtrar..." style="{{ $fI }}">
+                        <input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" placeholder="🔍" style="{{ $fI }}">
                     </th>
 
                     {{-- Cuotas --}}
