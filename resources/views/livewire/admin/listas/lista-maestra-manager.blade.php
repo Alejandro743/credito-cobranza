@@ -1119,7 +1119,7 @@
         $fW  = 'position:relative; margin-top:4px;';
         $fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
         @endphp
-        <table style="width:100%; min-width:1200px; border-collapse:collapse; font-size:13px;">
+        <table style="width:100%; min-width:1500px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                     <th style="width:50px; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; position:sticky; left:0; z-index:11; background:#F9F8FF; white-space:nowrap; vertical-align:top;">#</th>
@@ -1178,7 +1178,7 @@
 
                     {{-- C. Inicial --}}
                     @php $isActive = ($sortBy??'') === 'valor_cuota_inicial'; @endphp
-                    <th wire:click="toggleSort('valor_cuota_inicial')" style="padding:8px 14px 6px; min-width:130px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('valor_cuota_inicial')" style="padding:8px 14px 6px; min-width:160px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">C. Inicial
                             @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
@@ -1195,7 +1195,7 @@
 
                     {{-- Incremento --}}
                     @php $isActive = ($sortBy??'') === 'valor_incremento'; @endphp
-                    <th wire:click="toggleSort('valor_incremento')" style="padding:8px 14px 6px; min-width:130px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('valor_incremento')" style="padding:8px 14px 6px; min-width:160px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Incremento
                             @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
@@ -1225,7 +1225,7 @@
 
                     {{-- Estado --}}
                     @php $isActive = ($sortBy??'') === 'active'; @endphp
-                    <th wire:click="toggleSort('active')" style="padding:8px 14px 6px; min-width:110px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('active')" style="padding:8px 14px 6px; min-width:160px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Estado
                             @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
