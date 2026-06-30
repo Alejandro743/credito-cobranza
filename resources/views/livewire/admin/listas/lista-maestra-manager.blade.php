@@ -1121,7 +1121,7 @@
         @endphp
         <table style="width:100%; min-width:1500px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
-                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editingId ? 'opacity:0.45; pointer-events:none;' : '' }}">
                     <th style="width:50px; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; position:sticky; left:0; z-index:11; background:#F9F8FF; white-space:nowrap; vertical-align:top;">#</th>
 
                     {{-- Código --}}
@@ -1250,17 +1250,21 @@
                     <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap;">
                         <span style="font-size:12px; font-weight:700; color:#374151;">{{ $maestras->firstItem() + $loop->index }}</span>
                     </td>
+                    @php $lE = 'font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px; margin-bottom:3px;'; @endphp
                     <td style="padding:7px 16px;">
+                        <div style="{{ $lE }}">Código</div>
                         <input wire:model="editCode" type="text"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; font-family:monospace; outline:none; box-sizing:border-box; background:#fff; text-transform:uppercase;">
                         @error('editCode') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:7px 10px;">
+                        <div style="{{ $lE }}">Nombre</div>
                         <input wire:model="editName" type="text"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
                         @error('editName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:7px 10px;">
+                        <div style="{{ $lE }}">Ciclo</div>
                         <select wire:model="editCycleId"
                                 style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
                             <option value="">— Ciclo —</option>
@@ -1271,16 +1275,19 @@
                         @error('editCycleId') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:7px 10px; text-align:center;">
+                        <div style="{{ $lE }}">Cuotas</div>
                         <input wire:model="editCantidadCuotas" type="number" min="1" max="999" placeholder="—"
                                style="width:58px; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
                     </td>
                     <td style="padding:7px 10px; text-align:center;">
+                        <div style="{{ $lE }}">C. Inicial</div>
                         <input type="checkbox" wire:model="editUsaCuotaInicial"
                                style="width:15px; height:15px; cursor:pointer; accent-color:#7B6FE8;">
                     </td>
                     <td></td>
                     <td></td>
                     <td style="padding:7px 8px; text-align:center;">
+                        <div style="{{ $lE }}">Estado</div>
                         <select wire:model="editActive"
                                 style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 4px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;">
                             <option value="1">Activa</option>
