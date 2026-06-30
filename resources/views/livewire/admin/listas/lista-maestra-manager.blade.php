@@ -1137,7 +1137,7 @@
 
     <div style="overflow:auto; flex:1;">
         @php
-        $fI = 'height:22px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px; width:100%; outline:none; box-sizing:border-box; background:#fff; margin-top:4px; color:#374151; font-weight:700;';
+        $fI = 'height:22px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px; width:100%; outline:none; box-sizing:border-box; background:#fff; margin-top:4px; color:#374151; font-weight:700; text-align:center;';
         @endphp
         <table style="width:100%; min-width:1200px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
