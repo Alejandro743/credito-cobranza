@@ -1249,8 +1249,14 @@
                 @php $lE = 'font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px; margin-bottom:3px;';
                      $iE = 'width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;'; @endphp
                 <tr wire:key="m-edit-{{ $m->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
-                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap; vertical-align:middle;">
-                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $maestras->firstItem() + $loop->index }}</span>
+                    <td class="col-row-num" rowspan="2" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap; vertical-align:middle;">
+                        <div style="display:flex; flex-direction:column; align-items:center; gap:6px;">
+                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $maestras->firstItem() + $loop->index }}</span>
+                            <input type="checkbox"
+                                   :checked="$wire.selectedMaestraId === {{ $m->id }}"
+                                   @click="$wire.selectedMaestraId === {{ $m->id }} ? $wire.set('selectedMaestraId', null) : $wire.selectMaestra({{ $m->id }})"
+                                   style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                        </div>
                     </td>
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Código</div>
@@ -1308,12 +1314,6 @@
                 </tr>
                 {{-- Fila edición — Fila 2: valores de C. Inicial e Incremento --}}
                 <tr style="background:#F8F7FF; border-bottom:2px solid #C4B5FD;">
-                    <td style="padding:8px 6px; text-align:center; background:#F8F7FF; vertical-align:middle;">
-                        <input type="checkbox"
-                               :checked="$wire.selectedMaestraId === {{ $m->id }}"
-                               @click="$wire.selectedMaestraId === {{ $m->id }} ? $wire.set('selectedMaestraId', null) : $wire.selectMaestra({{ $m->id }})"
-                               style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
-                    </td>
                     <td colspan="4"></td>{{-- Código + Nombre + Ciclo + Cuotas --}}
                     <td style="padding:0 10px 7px;">
                         @if($editTipoCuotaInicial !== 'ninguna')
