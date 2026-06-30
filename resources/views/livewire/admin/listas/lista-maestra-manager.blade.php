@@ -1127,8 +1127,9 @@
                         <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
                             <input type="checkbox"
                                    :checked="$wire.selectedMaestraId !== null"
-                                   @click="$wire.set('selectedMaestraId', null)"
-                                   style="accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;">
+                                   :disabled="$wire.selectedMaestraId === null"
+                                   @click.prevent="$wire.selectedMaestraId !== null && $wire.set('selectedMaestraId', null)"
+                                   :style="$wire.selectedMaestraId !== null ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
                         </div>
                     </th>
 
