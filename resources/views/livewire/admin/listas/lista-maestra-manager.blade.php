@@ -1308,7 +1308,7 @@
                 </tr>
                 {{-- Fila edición — Fila 2: valores de C. Inicial e Incremento --}}
                 <tr style="background:#F8F7FF; border-bottom:2px solid #C4B5FD;">
-                    <td colspan="3"></td>
+                    <td colspan="4"></td>{{-- Código + Nombre + Ciclo + Cuotas --}}
                     <td style="padding:0 10px 7px;">
                         @if($editTipoCuotaInicial !== 'ninguna')
                         <input wire:model="editValorCuotaInicial" type="number" step="0.01" min="0" placeholder="Valor {{ $editTipoCuotaInicial === 'porcentaje' ? '%' : 'Bs' }}"
@@ -1321,7 +1321,7 @@
                                style="{{ $iE }} text-align:center;">
                         @endif
                     </td>
-                    <td colspan="2"></td>
+                    <td colspan="2"></td>{{-- Días + Estado --}}
                 </tr>
 
                 @else
