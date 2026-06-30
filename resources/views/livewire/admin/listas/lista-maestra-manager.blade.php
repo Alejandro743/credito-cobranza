@@ -1124,11 +1124,11 @@
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editingId ? 'opacity:0.45; pointer-events:none;' : '' }}">
                     <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; position:sticky; left:0; z-index:11; background:#F9F8FF; white-space:nowrap; vertical-align:top;">
                         #
-                        <div style="margin-top:4px; display:flex; justify-content:center;">
+                        <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
                             <input type="checkbox"
                                    :checked="$wire.selectedMaestraId !== null"
                                    @click="$wire.set('selectedMaestraId', null)"
-                                   style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                                   style="accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;">
                         </div>
                     </th>
 
