@@ -1245,27 +1245,23 @@
                 @forelse ($maestras as $m)
 
                 @if ($editingId === $m->id)
-                {{-- Fila edición inline (una sola fila, cada campo en su columna) --}}
+                {{-- Fila edición — Fila 1: campos principales --}}
                 @php $lE = 'font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px; margin-bottom:3px;';
                      $iE = 'width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;'; @endphp
-                <tr wire:key="m-edit-{{ $m->id }}" style="background:#F8F7FF; border-bottom:2px solid #C4B5FD;">
-                    {{-- # --}}
-                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap;">
+                <tr wire:key="m-edit-{{ $m->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+                    <td class="col-row-num" rowspan="2" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap; vertical-align:middle;">
                         <span style="font-size:12px; font-weight:700; color:#374151;">{{ $maestras->firstItem() + $loop->index }}</span>
                     </td>
-                    {{-- Código --}}
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Código</div>
                         <input wire:model="editCode" type="text" style="{{ $iE }} text-transform:uppercase; font-family:monospace;">
                         @error('editCode') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    {{-- Nombre --}}
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Nombre</div>
                         <input wire:model="editName" type="text" style="{{ $iE }}">
                         @error('editName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    {{-- Ciclo --}}
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Ciclo</div>
                         <select wire:model="editCycleId" style="{{ $iE }} padding:0 6px;">
@@ -1276,13 +1272,11 @@
                         </select>
                         @error('editCycleId') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    {{-- Cuotas --}}
                     <td style="padding:7px 10px; text-align:center;">
                         <div style="{{ $lE }}">Cuotas</div>
                         <input wire:model="editCantidadCuotas" type="number" min="1" max="999" placeholder="—"
                                style="width:60px; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
                     </td>
-                    {{-- C. Inicial --}}
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">C. Inicial</div>
                         <select wire:model.live="editTipoCuotaInicial" style="{{ $iE }} padding:0 6px;">
@@ -1290,12 +1284,7 @@
                             <option value="porcentaje">%</option>
                             <option value="monto_fijo">Bs</option>
                         </select>
-                        @if($editTipoCuotaInicial !== 'ninguna')
-                        <input wire:model="editValorCuotaInicial" type="number" step="0.01" min="0" placeholder="0"
-                               style="width:100%; height:28px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box; margin-top:3px;">
-                        @endif
                     </td>
-                    {{-- Incremento --}}
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Incremento</div>
                         <select wire:model.live="editTipoIncremento" style="{{ $iE }} padding:0 6px;">
@@ -1303,18 +1292,12 @@
                             <option value="porcentaje">%</option>
                             <option value="monto_fijo">Bs</option>
                         </select>
-                        @if($editTipoIncremento)
-                        <input wire:model="editValorIncremento" type="number" step="0.01" min="0" placeholder="0"
-                               style="width:100%; height:28px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box; margin-top:3px;">
-                        @endif
                     </td>
-                    {{-- Días --}}
                     <td style="padding:7px 10px; text-align:center;">
                         <div style="{{ $lE }}">Días</div>
                         <input wire:model="editDiasEntreCuotas" type="number" min="1" max="365" placeholder="30"
                                style="width:60px; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
                     </td>
-                    {{-- Estado --}}
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Estado</div>
                         <select wire:model="editActive" style="{{ $iE }} padding:0 6px;">
@@ -1322,6 +1305,23 @@
                             <option value="0">Inactiva</option>
                         </select>
                     </td>
+                </tr>
+                {{-- Fila edición — Fila 2: valores de C. Inicial e Incremento --}}
+                <tr style="background:#F8F7FF; border-bottom:2px solid #C4B5FD;">
+                    <td colspan="3"></td>
+                    <td style="padding:0 10px 7px;">
+                        @if($editTipoCuotaInicial !== 'ninguna')
+                        <input wire:model="editValorCuotaInicial" type="number" step="0.01" min="0" placeholder="Valor {{ $editTipoCuotaInicial === 'porcentaje' ? '%' : 'Bs' }}"
+                               style="{{ $iE }} text-align:center;">
+                        @endif
+                    </td>
+                    <td style="padding:0 10px 7px;">
+                        @if($editTipoIncremento)
+                        <input wire:model="editValorIncremento" type="number" step="0.01" min="0" placeholder="Valor {{ $editTipoIncremento === 'porcentaje' ? '%' : 'Bs' }}"
+                               style="{{ $iE }} text-align:center;">
+                        @endif
+                    </td>
+                    <td colspan="2"></td>
                 </tr>
 
                 @else
