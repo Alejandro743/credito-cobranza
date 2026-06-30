@@ -131,20 +131,6 @@
 </div>
 @endif
 
-{{-- Filtros del catálogo --}}
-<div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
-    <input wire:model.live.debounce.300ms="filterCodigo" type="text" placeholder="Código..."
-           style="width:110px; height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 10px; font-size:13px; color:#374151; outline:none; background:#fff;">
-    <input wire:model.live.debounce.300ms="filterProducto" type="text" placeholder="Nombre del producto..."
-           style="flex:1; min-width:160px; height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 10px; font-size:13px; color:#374151; outline:none; background:#fff;">
-    <select wire:model.live="filterEnLista"
-            style="height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 10px; font-size:13px; color:#374151; outline:none; background:#fff; cursor:pointer;">
-        <option value="">Todos</option>
-        <option value="1">En lista</option>
-        <option value="0">Disponibles</option>
-    </select>
-</div>
-
 {{-- Tabla de productos (desktop) --}}
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 1px 4px rgba(0,0,0,.04); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
     {{-- Barra header --}}
@@ -170,23 +156,148 @@
                 <col style="width:135px;">
             </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
-                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    @php $thStyle = 'font-size:11px; font-weight:700; color:#7B6FE8; text-align:center; padding:10px 12px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none;'; @endphp
-                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
-                    <th style="{{ $thStyle }}">Código</th>
-                    <th style="{{ $thStyle }} text-align:left;">Producto</th>
-                    <th style="{{ $thStyle }}">Precio Base</th>
-                    <th style="{{ $thStyle }}">Precio Final</th>
-                    <th style="{{ $thStyle }}">Puntos</th>
-                    <th style="{{ $thStyle }}">Stock Máx.</th>
-                    <th style="{{ $thStyle }}">Stock Inicial</th>
-                    <th style="{{ $thStyle }}">Stock Comprometido</th>
-                    <th style="{{ $thStyle }}">Stock Consumido</th>
-                    <th style="{{ $thStyle }}">Stock Disponible</th>
-                    <th style="{{ $thStyle }}">Tipo Inc.</th>
-                    <th style="{{ $thStyle }}">Incremento</th>
-                    <th style="{{ $thStyle }}">Estado</th>
-                    <th style="{{ $thStyle }}">Acciones</th>
+                @php
+                    $fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center;';
+                    $fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; text-indent:16px; cursor:pointer;';
+                    $fW  = 'position:relative; margin-top:4px;';
+                    $fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
+                    $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
+                    $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; text-align:center; padding:8px 8px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top;';
+                    $emptyF = '<div style="margin-top:4px; height:28px;"></div>';
+                @endphp
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editItemId ? 'opacity:0.45; pointer-events:none;' : '' }}">
+
+                    {{-- # --}}
+                    <th style="width:44px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top;">
+                        #
+                        <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
+                            <input type="checkbox"
+                                   :checked="$wire.selectedItemId !== null"
+                                   :disabled="$wire.selectedItemId === null"
+                                   @click.prevent="$wire.selectedItemId !== null && $wire.set('selectedItemId', null)"
+                                   :style="$wire.selectedItemId !== null ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
+                        </div>
+                    </th>
+
+                    {{-- Código --}}
+                    @php $isA = $itemSortBy === 'code'; @endphp
+                    <th wire:click="toggleItemSort('code')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Código
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="itemColFilterCodigo" @click.stop type="text" style="{{ $fI }}"></div>
+                    </th>
+
+                    {{-- Producto --}}
+                    @php $isA = $itemSortBy === 'name'; @endphp
+                    <th wire:click="toggleItemSort('name')" style="{{ $thC }} text-align:left; cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; gap:4px;">Producto
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="itemColFilterNombre" @click.stop type="text" style="{{ $fI }}"></div>
+                    </th>
+
+                    {{-- Precio Base --}}
+                    @php $isA = $itemSortBy === 'precio_base'; @endphp
+                    <th wire:click="toggleItemSort('precio_base')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Precio Base
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        {!! $emptyF !!}
+                    </th>
+
+                    {{-- Precio Final --}}
+                    <th style="{{ $thC }}">Precio Final{!! $emptyF !!}</th>
+
+                    {{-- Puntos --}}
+                    @php $isA = $itemSortBy === 'puntos'; @endphp
+                    <th wire:click="toggleItemSort('puntos')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Puntos
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        {!! $emptyF !!}
+                    </th>
+
+                    {{-- Stock Máx --}}
+                    <th style="{{ $thC }}">Stock Máx.{!! $emptyF !!}</th>
+
+                    {{-- Stock Inicial --}}
+                    @php $isA = $itemSortBy === 'stock_inicial'; @endphp
+                    <th wire:click="toggleItemSort('stock_inicial')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Stock Inicial
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        {!! $emptyF !!}
+                    </th>
+
+                    {{-- Stock Comprometido --}}
+                    <th style="{{ $thC }}">Stock Comp.{!! $emptyF !!}</th>
+
+                    {{-- Stock Consumido --}}
+                    <th style="{{ $thC }}">Stock Cons.{!! $emptyF !!}</th>
+
+                    {{-- Stock Disponible --}}
+                    <th style="{{ $thC }}">Stock Disp.{!! $emptyF !!}</th>
+
+                    {{-- Tipo Inc --}}
+                    @php $isA = $itemSortBy === 'tipo_incremento'; @endphp
+                    <th wire:click="toggleItemSort('tipo_incremento')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Tipo Inc.
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>
+                            {!! $fSvg !!}
+                            <select wire:model.live="itemColFilterTipoInc" @click.stop style="{{ $fS }}">
+                                <option value=""></option>
+                                <option value="porcentaje">% Porcentaje</option>
+                                <option value="monto_fijo">Bs Monto Fijo</option>
+                            </select>
+                        </div>
+                    </th>
+
+                    {{-- Incremento --}}
+                    <th style="{{ $thC }}">Incremento{!! $emptyF !!}</th>
+
+                    {{-- Estado --}}
+                    <th style="{{ $thC }}">
+                        Estado
+                        <div style="{{ $fW }}">
+                            {!! $fSvg !!}
+                            <select wire:model.live="itemColFilterEnLista" @click.stop style="{{ $fS }}">
+                                <option value=""></option>
+                                <option value="1">En lista</option>
+                                <option value="0">Sin agregar</option>
+                            </select>
+                        </div>
+                    </th>
+
+                    {{-- Acciones --}}
+                    <th style="{{ $thC }}">Acciones{!! $emptyF !!}</th>
+
                 </tr>
             </thead>
             <tbody>
@@ -401,9 +512,21 @@
                     $trStyle = $inLista ? 'border-bottom:1px solid #F9FAFB;' : 'border-bottom:1px solid #F9FAFB; opacity:.5;';
                     $tdBase  = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap;';
                 @endphp
-                <tr wire:key="prod-{{ $p->id }}" style="{{ $trStyle }}"
-                    @mouseenter="$el.style.background='#FAFAFA'" @mouseleave="$el.style.background=''">
-                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
+                @php $selI = $inLista && $selectedItemId === $item?->id; @endphp
+                <tr wire:key="prod-{{ $p->id }}" style="{{ $trStyle }} {{ $selI ? 'background:#F5F3FF;' : '' }}"
+                    @mouseenter="$el.style.background='{{ $selI ? '#F5F3FF' : '#FAFAFA' }}'" @mouseleave="$el.style.background='{{ $selI ? '#F5F3FF' : '' }}'">
+                    <td class="col-row-num" style="padding:6px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:5px;">
+                            @if($inLista)
+                            <input type="checkbox"
+                                   :checked="$wire.selectedItemId === {{ $item->id }}"
+                                   @click="$wire.selectedItemId === {{ $item->id }} ? $wire.set('selectedItemId', null) : $wire.selectItem({{ $item->id }})"
+                                   :disabled="{{ ($editItemId && $editItemId !== $item->id) ? 'true' : 'false' }}"
+                                   style="accent-color:#7B6FE8; width:13px; height:13px; {{ ($editItemId && $editItemId !== $item->id) ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
+                            @endif
+                            <span>{{ $loop->iteration }}</span>
+                        </div>
+                    </td>
                     <td style="{{ $tdBase }} font-family:monospace; font-size:12px; color:#6B7280;">{{ $p->code }}</td>
                     <td style="{{ $tdBase }} text-align:left; padding-left:14px; overflow:hidden; text-overflow:ellipsis; max-width:0;">{{ ucwords(strtolower($p->name)) }}</td>
                     <td style="{{ $tdBase }}">

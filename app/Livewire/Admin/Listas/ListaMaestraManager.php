@@ -94,6 +94,29 @@ class ListaMaestraManager extends Component
     public string $filterProducto = '';
     public string $filterEnLista  = '';
 
+    public ?int   $selectedItemId       = null;
+    public string $itemSortBy           = 'name';
+    public string $itemSortDir          = 'asc';
+    public string $itemColFilterCodigo  = '';
+    public string $itemColFilterNombre  = '';
+    public string $itemColFilterTipoInc = '';
+    public string $itemColFilterEnLista = '';
+
+    public function selectItem(int $id): void
+    {
+        $this->selectedItemId = $this->selectedItemId === $id ? null : $id;
+    }
+
+    public function toggleItemSort(string $col): void
+    {
+        if ($this->itemSortBy === $col) {
+            $this->itemSortDir = $this->itemSortDir === 'asc' ? 'desc' : 'asc';
+        } else {
+            $this->itemSortBy  = $col;
+            $this->itemSortDir = 'asc';
+        }
+    }
+
     public bool   $showAddItemForm  = false;
     public string $newItemCode      = '';
     public string $newItemNombre    = '';
@@ -326,14 +349,21 @@ class ListaMaestraManager extends Component
 
     public function viewItems(int $id): void
     {
-        $this->viewingId       = $id;
-        $this->mode            = 'items';
-        $this->showAddItemForm = false;
-        $this->editItemId      = null;
-        $this->quickAddProductId = null;
-        $this->filterCodigo    = '';
-        $this->filterProducto  = '';
-        $this->filterEnLista   = '';
+        $this->viewingId            = $id;
+        $this->mode                 = 'items';
+        $this->showAddItemForm      = false;
+        $this->editItemId           = null;
+        $this->quickAddProductId    = null;
+        $this->filterCodigo         = '';
+        $this->filterProducto       = '';
+        $this->filterEnLista        = '';
+        $this->selectedItemId       = null;
+        $this->itemSortBy           = 'name';
+        $this->itemSortDir          = 'asc';
+        $this->itemColFilterCodigo  = '';
+        $this->itemColFilterNombre  = '';
+        $this->itemColFilterTipoInc = '';
+        $this->itemColFilterEnLista = '';
         $this->resetValidation();
     }
 
@@ -803,6 +833,7 @@ class ListaMaestraManager extends Component
         $this->viewingId         = null;
         $this->editingId         = null;
         $this->selectedMaestraId = null;
+        $this->selectedItemId    = null;
         $this->showAddItemForm    = false;
         $this->quickAddProductId = null;
         $this->editItemId        = null;
@@ -864,15 +895,30 @@ class ListaMaestraManager extends Component
                     ->pluck('product_id')
                 : collect();
 
+            $itemSortMap = [
+                'code'            => 'products.code',
+                'name'            => 'products.name',
+                'precio_base'     => 'lmi.precio_base',
+                'puntos'          => 'lmi.puntos',
+                'stock_inicial'   => 'lmi.stock_inicial',
+                'tipo_incremento' => 'lmi.tipo_incremento',
+            ];
+            $itemSortCol = $itemSortMap[$this->itemSortBy] ?? 'products.name';
+            $viewingId   = $this->viewingId;
+
             $products = Product::with(['categoria', 'unidad'])
-                ->whereIn('id', $cicloProductoIds)
-                ->when($this->filterCodigo, fn($q) =>
-                    $q->where('code', 'like', "%{$this->filterCodigo}%"))
-                ->when($this->filterProducto, fn($q) =>
-                    $q->where('name', 'like', "%{$this->filterProducto}%"))
-                ->when($this->filterEnLista === '1', fn($q) => $q->whereIn('id', $inListaIds))
-                ->when($this->filterEnLista === '0', fn($q) => $q->whereNotIn('id', $inListaIds))
-                ->orderBy('name')
+                ->leftJoin('lista_maestra_items as lmi', function ($join) use ($viewingId) {
+                    $join->on('lmi.product_id', '=', 'products.id')
+                         ->where('lmi.lista_maestra_id', $viewingId);
+                })
+                ->select('products.*')
+                ->whereIn('products.id', $cicloProductoIds)
+                ->when($this->itemColFilterCodigo,           fn($q) => $q->where('products.code', 'like', "%{$this->itemColFilterCodigo}%"))
+                ->when($this->itemColFilterNombre,           fn($q) => $q->where('products.name', 'like', "%{$this->itemColFilterNombre}%"))
+                ->when($this->itemColFilterTipoInc,          fn($q) => $q->where('lmi.tipo_incremento', $this->itemColFilterTipoInc))
+                ->when($this->itemColFilterEnLista === '1',  fn($q) => $q->whereIn('products.id', $inListaIds))
+                ->when($this->itemColFilterEnLista === '0',  fn($q) => $q->whereNotIn('products.id', $inListaIds))
+                ->orderBy($itemSortCol, $this->itemSortDir)
                 ->get();
 
             $categorias = Categoria::where('active', true)->orderBy('name')->get();
@@ -912,10 +958,13 @@ class ListaMaestraManager extends Component
                 ->get();
         }
 
+        $itemSortBy  = $this->itemSortBy;
+        $itemSortDir = $this->itemSortDir;
+
         return view('livewire.admin.listas.lista-maestra-manager', compact(
             'maestras', 'cycles', 'viewingMaestra', 'products', 'itemsMap',
             'categorias', 'unidades', 'accesosClientes', 'accesosVendedores',
-            'stockMap', 'asignadoMap'
+            'stockMap', 'asignadoMap', 'itemSortBy', 'itemSortDir'
         ));
     }
 }
