@@ -1197,9 +1197,16 @@
                     </th>
 
                     {{-- C. Inicial --}}
-                    <th style="padding:8px 14px 6px; min-width:130px; text-align:center; vertical-align:top;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:block;">C. Inicial</span>
-                        <select wire:model.live="colFilterCuotaInicial" style="{{ $fI }} padding:0 4px; cursor:pointer;">
+                    @php $isActive = ($sortBy??'') === 'valor_cuota_inicial'; @endphp
+                    <th wire:click="toggleSort('valor_cuota_inicial')" style="padding:8px 14px 6px; min-width:130px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">C. Inicial
+                            @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        <select wire:model.live="colFilterCuotaInicial" @click.stop style="{{ $fI }} padding:0 4px; cursor:pointer;">
                             <option value="">Todos</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
@@ -1207,9 +1214,16 @@
                     </th>
 
                     {{-- Incremento --}}
-                    <th style="padding:8px 14px 6px; min-width:130px; text-align:center; vertical-align:top;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Incremento</span>
-                        <select wire:model.live="colFilterIncremento" style="{{ $fI }} padding:0 4px; cursor:pointer;">
+                    @php $isActive = ($sortBy??'') === 'valor_incremento'; @endphp
+                    <th wire:click="toggleSort('valor_incremento')" style="padding:8px 14px 6px; min-width:130px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Incremento
+                            @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        <select wire:model.live="colFilterIncremento" @click.stop style="{{ $fI }} padding:0 4px; cursor:pointer;">
                             <option value="">Todos</option>
                             <option value="porcentaje">%</option>
                             <option value="monto_fijo">Bs</option>
@@ -1217,8 +1231,15 @@
                     </th>
 
                     {{-- Días --}}
-                    <th style="padding:8px 14px 6px; min-width:80px; text-align:center; vertical-align:top;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Días</span>
+                    @php $isActive = ($sortBy??'') === 'dias_entre_cuotas'; @endphp
+                    <th wire:click="toggleSort('dias_entre_cuotas')" style="padding:8px 14px 6px; min-width:80px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Días
+                            @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
                         <input wire:model.live.debounce.300ms="colFilterDias" @click.stop type="number" min="1" placeholder="#" style="{{ $fI }} text-align:center;">
                     </th>
 
