@@ -139,11 +139,11 @@
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $products->count() }}</span>
     </div>
     <div style="overflow:auto; flex:1;">
-        <table style="width:100%; border-collapse:collapse;">
+        <table style="width:100%; min-width:1600px; border-collapse:collapse;">
             <colgroup>
                 <col style="width:44px;">
                 <col style="width:90px;">
-                <col style="width:260px;">
+                <col style="width:300px;">
                 <col style="width:100px;">
                 <col style="width:70px;">
                 <col style="width:85px;">
