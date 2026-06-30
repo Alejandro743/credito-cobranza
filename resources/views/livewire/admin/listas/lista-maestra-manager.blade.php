@@ -922,29 +922,6 @@
 @if(!$showAddForm)
 <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
 
-    <div class="relative w-full sm:flex-1" style="min-width:0;">
-        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
-        </svg>
-        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por código o nombre..."
-               style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
-    </div>
-
-    <select wire:model.live="filterCycleId" class="w-full sm:w-auto"
-            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
-        <option value="">Todos los ciclos</option>
-        @foreach ($cycles as $cycle)
-            <option value="{{ $cycle->id }}">{{ $cycle->code }}</option>
-        @endforeach
-    </select>
-
-    <select wire:model.live="filterStatus" class="w-full sm:w-auto"
-            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
-        <option value="">Todos los estados</option>
-        <option value="1">Activa</option>
-        <option value="0">Inactiva</option>
-    </select>
-
     <button wire:click="showAdd" class="w-full sm:w-auto"
             style="height:36px; padding:0 18px; display:flex; align-items:center; justify-content:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
