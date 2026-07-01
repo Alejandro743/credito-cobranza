@@ -143,8 +143,8 @@
     <div style="padding:10px 18px; display:flex; align-items:center; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Ítems del catálogo</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:8px;">{{ $products->count() }}</span>
-        @if($selectedItemId)
         @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        @if($selectedItemId)
         <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
             @if($editItemId === $selectedItemId)
                 <button wire:click="saveEditItem" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Guardar</button>
@@ -153,6 +153,17 @@
                 <button wire:click="startEditItem({{ $selectedItemId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Editar</button>
                 <button wire:click="removeItem({{ $selectedItemId }})" style="{{ $btnH }} background:#FEF2F2; color:#EF4444; border:1px solid #FEE2E2;">Quitar de lista</button>
             @endif
+        </div>
+        @elseif($selectedProductId)
+        <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            <button wire:click="startQuickAdd({{ $selectedProductId }})" style="{{ $btnH }} background:#0E7490; color:#fff;">
+                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                Agregar a lista
+            </button>
+            <button wire:click="clearItemSelections" style="{{ $btnH }} background:#E5E7EB; color:#374151;">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                Cancelar
+            </button>
         </div>
         @endif
     </div>
@@ -190,10 +201,10 @@
                         #
                         <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
                             <input type="checkbox"
-                                   :checked="$wire.selectedItemId !== null"
-                                   :disabled="$wire.selectedItemId === null"
-                                   @click.prevent="$wire.selectedItemId !== null && $wire.set('selectedItemId', null)"
-                                   :style="$wire.selectedItemId !== null ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
+                                   :checked="$wire.selectedItemId !== null || $wire.selectedProductId !== null"
+                                   :disabled="$wire.selectedItemId === null && $wire.selectedProductId === null"
+                                   @click.prevent="($wire.selectedItemId !== null || $wire.selectedProductId !== null) && $wire.clearItemSelections()"
+                                   :style="($wire.selectedItemId !== null || $wire.selectedProductId !== null) ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
                         </div>
                     </th>
 
@@ -535,14 +546,13 @@
                             @if($inLista)
                             <input type="checkbox"
                                    :checked="$wire.selectedItemId === {{ $item->id }}"
-                                   @click="$wire.selectedItemId === {{ $item->id }} ? $wire.set('selectedItemId', null) : $wire.selectItem({{ $item->id }})"
-                                   :disabled="{{ ($editItemId && $editItemId !== $item->id) ? 'true' : 'false' }}"
-                                   style="accent-color:#7B6FE8; width:13px; height:13px; {{ ($editItemId && $editItemId !== $item->id) ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
+                                   @click="($wire.selectedProductId !== null || {{ ($editItemId && $editItemId !== $item->id) ? 'true' : 'false' }}) ? null : ($wire.selectedItemId === {{ $item->id }} ? $wire.set('selectedItemId', null) : $wire.selectItem({{ $item->id }}))"
+                                   :style="($wire.selectedProductId !== null || {{ ($editItemId && $editItemId !== $item->id) ? 'true' : 'false' }}) ? 'accent-color:#7B6FE8; width:13px; height:13px; cursor:not-allowed; opacity:0.3;' : 'accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;'">
                             @else
                             <input type="checkbox"
-                                   :checked="$wire.quickAddProductId === {{ $p->id }}"
-                                   @click="$wire.quickAddProductId === {{ $p->id }} ? $wire.cancelQuickAdd() : $wire.startQuickAdd({{ $p->id }})"
-                                   style="accent-color:#0E7490; width:13px; height:13px; cursor:pointer;">
+                                   :checked="$wire.selectedProductId === {{ $p->id }}"
+                                   @click="($wire.selectedItemId !== null || ($wire.selectedProductId !== null && $wire.selectedProductId !== {{ $p->id }})) ? null : ($wire.selectedProductId === {{ $p->id }} ? $wire.set('selectedProductId', null) : $wire.selectProduct({{ $p->id }}))"
+                                   :style="($wire.selectedItemId !== null || ($wire.selectedProductId !== null && $wire.selectedProductId !== {{ $p->id }})) ? 'accent-color:#0E7490; width:13px; height:13px; cursor:not-allowed; opacity:0.3;' : 'accent-color:#0E7490; width:13px; height:13px; cursor:pointer; opacity:0.55;'">
                             @endif
                             <span>{{ $loop->iteration }}</span>
                         </div>

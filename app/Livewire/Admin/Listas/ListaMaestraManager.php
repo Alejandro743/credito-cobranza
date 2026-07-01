@@ -95,6 +95,7 @@ class ListaMaestraManager extends Component
     public string $filterEnLista  = '';
 
     public ?int   $selectedItemId       = null;
+    public ?int   $selectedProductId    = null;
     public string $itemSortBy           = 'name';
     public string $itemSortDir          = 'asc';
     public string $itemColFilterCodigo  = '';
@@ -104,7 +105,20 @@ class ListaMaestraManager extends Component
 
     public function selectItem(int $id): void
     {
-        $this->selectedItemId = $this->selectedItemId === $id ? null : $id;
+        $this->selectedItemId    = $this->selectedItemId === $id ? null : $id;
+        $this->selectedProductId = null;
+    }
+
+    public function selectProduct(int $id): void
+    {
+        $this->selectedProductId = $this->selectedProductId === $id ? null : $id;
+        $this->selectedItemId    = null;
+    }
+
+    public function clearItemSelections(): void
+    {
+        $this->selectedItemId    = null;
+        $this->selectedProductId = null;
     }
 
     public function toggleItemSort(string $col): void
@@ -358,6 +372,7 @@ class ListaMaestraManager extends Component
         $this->filterProducto       = '';
         $this->filterEnLista        = '';
         $this->selectedItemId       = null;
+        $this->selectedProductId    = null;
         $this->itemSortBy           = 'name';
         $this->itemSortDir          = 'asc';
         $this->itemColFilterCodigo  = '';
@@ -443,6 +458,8 @@ class ListaMaestraManager extends Component
     public function startQuickAdd(int $productId): void
     {
         $this->quickAddProductId = $productId;
+        $this->selectedProductId = null;
+        $this->selectedItemId    = null;
         $this->quickAddPrecio    = '0';
         $this->quickAddPuntos    = '0';
         $this->quickAddStock     = '0';
@@ -454,6 +471,7 @@ class ListaMaestraManager extends Component
     public function cancelQuickAdd(): void
     {
         $this->quickAddProductId = null;
+        $this->selectedProductId = null;
         $this->resetValidation();
     }
 
@@ -845,6 +863,7 @@ class ListaMaestraManager extends Component
         $this->editingId         = null;
         $this->selectedMaestraId = null;
         $this->selectedItemId    = null;
+        $this->selectedProductId = null;
         $this->showAddItemForm    = false;
         $this->quickAddProductId = null;
         $this->editItemId        = null;
