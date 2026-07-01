@@ -165,6 +165,17 @@
                 Cancelar
             </button>
         </div>
+        @elseif($quickAddProductId)
+        <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            <button wire:click="saveQuickAdd" style="{{ $btnH }} background:#059669; color:#fff;">
+                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Aceptar
+            </button>
+            <button wire:click="cancelQuickAdd" style="{{ $btnH }} background:#E5E7EB; color:#374151;">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                Cancelar
+            </button>
+        </div>
         @endif
     </div>
     <div style="overflow:auto; flex:1;">
@@ -202,9 +213,9 @@
                         <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
                             <input type="checkbox"
                                    :checked="$wire.selectedItemId !== null || $wire.selectedProductId !== null"
-                                   :disabled="$wire.selectedItemId === null && $wire.selectedProductId === null"
-                                   @click.prevent="($wire.selectedItemId !== null || $wire.selectedProductId !== null) && $wire.clearItemSelections()"
-                                   :style="($wire.selectedItemId !== null || $wire.selectedProductId !== null) ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
+                                   :disabled="($wire.selectedItemId === null && $wire.selectedProductId === null) || $wire.quickAddProductId !== null"
+                                   @click.prevent="($wire.selectedItemId !== null || $wire.selectedProductId !== null) && !$wire.quickAddProductId && $wire.clearItemSelections()"
+                                   :style="($wire.selectedItemId !== null || $wire.selectedProductId !== null) && !$wire.quickAddProductId ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
                         </div>
                     </th>
 
@@ -549,15 +560,16 @@
                     <td class="col-row-num" style="padding:6px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap; background:{{ $trBg }};">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:5px;">
                             @if($inLista)
+                            @php $blockedInLista = ($editItemId && $editItemId !== $item->id) ? 'true' : 'false'; @endphp
                             <input type="checkbox"
                                    :checked="$wire.selectedItemId === {{ $item->id }}"
-                                   @click="($wire.selectedProductId !== null || {{ ($editItemId && $editItemId !== $item->id) ? 'true' : 'false' }}) ? null : ($wire.selectedItemId === {{ $item->id }} ? $wire.set('selectedItemId', null) : $wire.selectItem({{ $item->id }}))"
-                                   :style="($wire.selectedProductId !== null || {{ ($editItemId && $editItemId !== $item->id) ? 'true' : 'false' }}) ? 'accent-color:#7B6FE8; width:13px; height:13px; cursor:not-allowed; opacity:0.3;' : 'accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;'">
+                                   @click="($wire.selectedProductId !== null || $wire.quickAddProductId !== null || {{ $blockedInLista }}) ? null : ($wire.selectedItemId === {{ $item->id }} ? $wire.set('selectedItemId', null) : $wire.selectItem({{ $item->id }}))"
+                                   :style="($wire.selectedProductId !== null || $wire.quickAddProductId !== null || {{ $blockedInLista }}) ? 'accent-color:#7B6FE8; width:13px; height:13px; cursor:not-allowed; opacity:0.3;' : 'accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;'">
                             @else
                             <input type="checkbox"
                                    :checked="$wire.selectedProductId === {{ $p->id }}"
-                                   @click="($wire.selectedItemId !== null || ($wire.selectedProductId !== null && $wire.selectedProductId !== {{ $p->id }})) ? null : ($wire.selectedProductId === {{ $p->id }} ? $wire.set('selectedProductId', null) : $wire.selectProduct({{ $p->id }}))"
-                                   :style="($wire.selectedItemId !== null || ($wire.selectedProductId !== null && $wire.selectedProductId !== {{ $p->id }})) ? 'accent-color:#0E7490; width:13px; height:13px; cursor:not-allowed; opacity:0.3;' : 'accent-color:#0E7490; width:13px; height:13px; cursor:pointer; opacity:0.6;'">
+                                   @click="($wire.selectedItemId !== null || $wire.quickAddProductId !== null || ($wire.selectedProductId !== null && $wire.selectedProductId !== {{ $p->id }})) ? null : ($wire.selectedProductId === {{ $p->id }} ? $wire.set('selectedProductId', null) : $wire.selectProduct({{ $p->id }}))"
+                                   :style="($wire.selectedItemId !== null || $wire.quickAddProductId !== null || ($wire.selectedProductId !== null && $wire.selectedProductId !== {{ $p->id }})) ? 'accent-color:#0E7490; width:13px; height:13px; cursor:not-allowed; opacity:0.3;' : 'accent-color:#0E7490; width:13px; height:13px; cursor:pointer; opacity:0.6;'">
                             @endif
                             <span style="color:{{ $inLista ? '#374151' : '#9CA3AF' }};">{{ $loop->iteration }}</span>
                         </div>
