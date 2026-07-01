@@ -535,13 +535,18 @@
                 @else
                 {{-- FILA NORMAL --}}
                 @php
-                    $trStyle = 'border-bottom:1px solid #F9FAFB;';
+                    $selI    = $inLista && $selectedItemId === $item?->id;
+                    $selP    = !$inLista && $selectedProductId === $p->id;
+                    $trBg    = $selI ? '#F5F3FF' : ($selP ? '#ECFEFF' : ($inLista ? '#fff' : '#F9FAFB'));
+                    $trHover = $selI ? '#F5F3FF' : ($selP ? '#CFFAFE' : ($inLista ? '#FAFAFE' : '#F3F4F6'));
+                    $trStyle = 'border-bottom:1px solid #F3F4F6;';
                     $tdBase  = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap;';
+                    $codeCol = $inLista ? '#6B7280' : '#9CA3AF';
+                    $nameCol = $inLista ? '#111827' : '#9CA3AF';
                 @endphp
-                @php $selI = $inLista && $selectedItemId === $item?->id; @endphp
-                <tr wire:key="prod-{{ $p->id }}" style="{{ $trStyle }} {{ $selI ? 'background:#F5F3FF;' : '' }}"
-                    @mouseenter="$el.style.background='{{ $selI ? '#F5F3FF' : '#FAFAFA' }}'" @mouseleave="$el.style.background='{{ $selI ? '#F5F3FF' : '' }}'">
-                    <td class="col-row-num" style="padding:6px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">
+                <tr wire:key="prod-{{ $p->id }}" style="{{ $trStyle }} background:{{ $trBg }};"
+                    @mouseenter="$el.style.background='{{ $trHover }}'" @mouseleave="$el.style.background='{{ $trBg }}'">
+                    <td class="col-row-num" style="padding:6px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap; background:{{ $trBg }};">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:5px;">
                             @if($inLista)
                             <input type="checkbox"
@@ -552,13 +557,13 @@
                             <input type="checkbox"
                                    :checked="$wire.selectedProductId === {{ $p->id }}"
                                    @click="($wire.selectedItemId !== null || ($wire.selectedProductId !== null && $wire.selectedProductId !== {{ $p->id }})) ? null : ($wire.selectedProductId === {{ $p->id }} ? $wire.set('selectedProductId', null) : $wire.selectProduct({{ $p->id }}))"
-                                   :style="($wire.selectedItemId !== null || ($wire.selectedProductId !== null && $wire.selectedProductId !== {{ $p->id }})) ? 'accent-color:#0E7490; width:13px; height:13px; cursor:not-allowed; opacity:0.3;' : 'accent-color:#0E7490; width:13px; height:13px; cursor:pointer; opacity:0.55;'">
+                                   :style="($wire.selectedItemId !== null || ($wire.selectedProductId !== null && $wire.selectedProductId !== {{ $p->id }})) ? 'accent-color:#0E7490; width:13px; height:13px; cursor:not-allowed; opacity:0.3;' : 'accent-color:#0E7490; width:13px; height:13px; cursor:pointer; opacity:0.6;'">
                             @endif
-                            <span>{{ $loop->iteration }}</span>
+                            <span style="color:{{ $inLista ? '#374151' : '#9CA3AF' }};">{{ $loop->iteration }}</span>
                         </div>
                     </td>
-                    <td style="{{ $tdBase }} font-family:monospace; font-size:12px; color:#6B7280;">{{ $p->code }}</td>
-                    <td style="{{ $tdBase }} text-align:left; padding-left:14px; overflow:hidden; text-overflow:ellipsis; max-width:0;">{{ ucwords(strtolower($p->name)) }}</td>
+                    <td style="{{ $tdBase }} font-family:monospace; font-size:12px; color:{{ $codeCol }};">{{ $p->code }}</td>
+                    <td style="{{ $tdBase }} text-align:left; padding-left:14px; overflow:hidden; text-overflow:ellipsis; max-width:0; color:{{ $nameCol }}; {{ $inLista ? 'font-weight:600;' : '' }}">{{ ucwords(strtolower($p->name)) }}</td>
                     <td style="{{ $tdBase }}">
                         @if ($inLista) Bs {{ number_format($item->precio_base, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
