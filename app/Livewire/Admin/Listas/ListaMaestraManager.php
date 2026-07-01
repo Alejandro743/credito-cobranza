@@ -634,7 +634,18 @@ class ListaMaestraManager extends Component
 
     public function removeItem(int $itemId): void
     {
+        $hasOrders = DB::table('pedido_items')
+            ->where('lista_maestra_item_id', $itemId)
+            ->exists();
+
+        if ($hasOrders) {
+            session()->flash('error', 'No se puede quitar: el ítem tiene pedidos asociados.');
+            return;
+        }
+
         ListaMaestraItem::destroy($itemId);
+        $this->selectedItemId = null;
+        session()->flash('success', 'Ítem quitado de la lista.');
     }
 
     public function refreshFromCatalog(): void

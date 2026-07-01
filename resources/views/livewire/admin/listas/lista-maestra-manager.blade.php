@@ -17,6 +17,12 @@
     {{ session('success') }}
 </div>
 @endif
+@if (session('error'))
+<div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 5000)"
+     class="fixed bottom-20 sm:bottom-5 right-5 z-50 bg-red-500 text-white text-sm font-semibold px-5 py-3 rounded-xl shadow-lg">
+    {{ session('error') }}
+</div>
+@endif
 
 {{-- ═══════════════════════════════════════════════════════ ITEMS MODE ═══ --}}
 @if ($mode === 'items' && $viewingMaestra)
