@@ -312,12 +312,12 @@
                     <th style="{{ $thC }}">Incremento{!! $emptyF !!}</th>
 
                     {{-- Estado --}}
-                    <th style="{{ $thC }}">
+                    <th style="{{ $thC }} min-width:130px;">
                         Estado
                         <div style="{{ $fW }}">
                             {!! $fSvg !!}
                             <select wire:model.live="itemColFilterEnLista" @click.stop style="{{ $fS }}">
-                                <option value=""></option>
+                                <option value="">Todos</option>
                                 <option value="1">En lista</option>
                                 <option value="0">Sin agregar</option>
                             </select>
@@ -537,8 +537,8 @@
                 @php
                     $selI    = $inLista && $selectedItemId === $item?->id;
                     $selP    = !$inLista && $selectedProductId === $p->id;
-                    $trBg    = $selI ? '#F5F3FF' : ($selP ? '#ECFEFF' : ($inLista ? '#fff' : '#F9FAFB'));
-                    $trHover = $selI ? '#F5F3FF' : ($selP ? '#CFFAFE' : ($inLista ? '#FAFAFE' : '#F3F4F6'));
+                    $trBg    = $selI ? '#F5F3FF' : ($selP ? '#ECFEFF' : ($inLista ? '#fff' : '#FFF1F2'));
+                    $trHover = $selI ? '#F5F3FF' : ($selP ? '#CFFAFE' : ($inLista ? '#FAFAFE' : '#FEE2E2'));
                     $trStyle = 'border-bottom:1px solid #F3F4F6;';
                     $tdBase  = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap;';
                     $codeCol = $inLista ? '#6B7280' : '#9CA3AF';
@@ -626,12 +626,7 @@
                             {{ $item->active ? 'Activo' : 'Inactivo' }}
                         </span>
                         @else
-                        <button wire:click="startQuickAdd({{ $p->id }})" title="Agregar a lista"
-                                style="height:26px; padding:0 10px; border-radius:7px; border:1px solid #A5F3FC; background:#CFFAFE; color:#0E7490; font-size:12px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:4px;"
-                                @mouseenter="$el.style.background='#A5F3FC'" @mouseleave="$el.style.background='#CFFAFE'">
-                            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                            Agregar
-                        </button>
+                        <span style="color:#D1D5DB;">—</span>
                         @endif
                     </td>
                 </tr>
