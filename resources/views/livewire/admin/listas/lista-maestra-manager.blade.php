@@ -524,7 +524,7 @@
                 @else
                 {{-- FILA NORMAL --}}
                 @php
-                    $trStyle = $inLista ? 'border-bottom:1px solid #F9FAFB;' : 'border-bottom:1px solid #F9FAFB; opacity:.5;';
+                    $trStyle = 'border-bottom:1px solid #F9FAFB;';
                     $tdBase  = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap;';
                 @endphp
                 @php $selI = $inLista && $selectedItemId === $item?->id; @endphp
@@ -539,7 +539,10 @@
                                    :disabled="{{ ($editItemId && $editItemId !== $item->id) ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ ($editItemId && $editItemId !== $item->id) ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
                             @else
-                            <input type="checkbox" disabled style="accent-color:#7B6FE8; width:13px; height:13px; cursor:default; opacity:0.3;">
+                            <input type="checkbox"
+                                   :checked="$wire.quickAddProductId === {{ $p->id }}"
+                                   @click="$wire.quickAddProductId === {{ $p->id }} ? $wire.cancelQuickAdd() : $wire.startQuickAdd({{ $p->id }})"
+                                   style="accent-color:#0E7490; width:13px; height:13px; cursor:pointer;">
                             @endif
                             <span>{{ $loop->iteration }}</span>
                         </div>
