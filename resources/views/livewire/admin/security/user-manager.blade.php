@@ -310,9 +310,6 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
     </div>
 
     <div style="overflow:auto; flex:1;">
-        @if ($users->isEmpty())
-        <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay usuarios registrados.</p>
-        @else
         <table class="um-table" style="width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
                 @php
@@ -514,9 +511,11 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                 @endif
 
                 @endforeach
+                @if ($users->isEmpty())
+                <tr><td colspan="6" style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">No se encontraron usuarios.</td></tr>
+                @endif
             </tbody>
         </table>
-        @endif
     </div>
 
     @if ($users->hasPages())
