@@ -313,7 +313,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
         <table class="um-table" style="width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
                 @php
-                    $fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center;';
+                    $fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:left;';
                     $fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; text-indent:16px; cursor:pointer;';
                     $fW  = 'position:relative; margin-top:4px;';
                     $fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
@@ -375,7 +375,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                         <div style="{{ $fW }}" @click.stop>
                             {!! $fSvg !!}
                             <select wire:model.live="colFilterTipo" @click.stop style="{{ $fS }}">
-                                <option value=""></option>
+                                <option value="">Todos</option>
                                 <option value="administrativo">Administrativo</option>
                                 <option value="vendedor">Vendedor</option>
                                 <option value="cliente">Cliente</option>
@@ -389,7 +389,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                         <div style="{{ $fW }}">
                             {!! $fSvg !!}
                             <select wire:model.live="colFilterRol" @click.stop style="{{ $fS }}">
-                                <option value=""></option>
+                                <option value="">Todos</option>
                                 @foreach ($roles as $role)
                                     <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
                                 @endforeach
@@ -411,7 +411,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                         <div style="{{ $fW }}" @click.stop>
                             {!! $fSvg !!}
                             <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
-                                <option value=""></option>
+                                <option value="">Todos</option>
                                 <option value="1">Activo</option>
                                 <option value="0">Inactivo</option>
                             </select>
