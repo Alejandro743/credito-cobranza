@@ -73,51 +73,6 @@
 </div>
 @endif
 
-{{-- ══ TOOLBAR ══ --}}
-@if(!$showAddForm)
-<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
-
-    <div class="relative w-full sm:flex-1" style="min-width:0; max-width:100%; sm:max-width:280px;">
-        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
-        </svg>
-        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por nombre o usuario..."
-               style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
-    </div>
-
-    <select wire:model.live="filterTipo" class="w-full sm:flex-1"
-            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
-        <option value="">Todos los tipos</option>
-        <option value="administrativo">Administrativo</option>
-        <option value="vendedor">Vendedor</option>
-        <option value="cliente">Cliente</option>
-    </select>
-
-    <select wire:model.live="filterRole" class="w-full sm:flex-1"
-            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
-        <option value="">Todos los roles</option>
-        @foreach ($roles as $role)
-            <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
-        @endforeach
-    </select>
-
-    <select wire:model.live="filterStatus" class="w-full sm:flex-1"
-            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
-        <option value="">Todos los estados</option>
-        <option value="1">Activo</option>
-        <option value="0">Inactivo</option>
-    </select>
-
-    <button wire:click="showAdd" class="w-full sm:w-auto"
-            style="height:36px; padding:0 18px; display:flex; align-items:center; justify-content:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
-        </svg>
-        Nuevo usuario
-    </button>
-</div>
-
-@endif
 
 {{-- ══ FORM: Nuevo usuario ══ --}}
 @if ($showAddForm)
@@ -321,6 +276,13 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-wrap:wrap;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Usuarios registrados</span>
         <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $users->total() }}</span>
+        @if(!$showAddForm)
+        <button wire:click="showAdd"
+                style="height:28px; padding:0 12px; display:inline-flex; align-items:center; gap:5px; border:none; border-radius:7px; background:#7B6FE8; font-size:11px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap;">
+            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            Nuevo usuario
+        </button>
+        @endif
         @if($selectedUserId)
         @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
         <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
@@ -351,39 +313,114 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
         @if ($users->isEmpty())
         <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay usuarios registrados.</p>
         @else
-        @php $sortCols = ['Usuario'=>'name','Email'=>'email','Tipo'=>'tipo','Rol'=>'rol','Estado'=>'active']; @endphp
         <table class="um-table" style="width:100%; min-width:700px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
-                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; width:50px; position:sticky; left:0; z-index:11; background:#F9F8FF;">#</th>
-                    @foreach($sortCols as $label => $key)
-                    @php $isActive = $sortBy === $key; $canSort = $key !== 'rol'; @endphp
-                    @if($canSort)
-                    <th wire:click="toggleSort('{{ $key }}')"
-                        style="padding:10px 14px; text-align:{{ $label==='Estado' ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:70px; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
-                            {{ $label }}
-                            @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
-                            @endif
-                        </span>
-                        @if(!in_array($label, ['Estado']))
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                        @endif
+                @php
+                    $fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center;';
+                    $fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; text-indent:16px; cursor:pointer;';
+                    $fW  = 'position:relative; margin-top:4px;';
+                    $fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
+                    $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
+                    $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top; position:relative; overflow:hidden;';
+                @endphp
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editingId ? 'opacity:0.45; pointer-events:none;' : '' }}">
+
+                    {{-- # --}}
+                    <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF;">
+                        #
+                        <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
+                            <input type="checkbox"
+                                   :checked="$wire.selectedUserId !== null"
+                                   :disabled="$wire.selectedUserId === null"
+                                   @click.prevent="$wire.selectedUserId !== null && $wire.set('selectedUserId', null)"
+                                   :style="$wire.selectedUserId !== null ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
+                        </div>
                     </th>
-                    @else
-                    <th style="padding:10px 14px; text-align:left; position:relative; user-select:none; overflow:hidden; min-width:70px;">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">{{ $label }}</span>
-                        <div x-data="colResize()" @mousedown="start($event)"
-                             style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
-                             @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+
+                    {{-- Usuario --}}
+                    @php $isA = $sortBy === 'name'; @endphp
+                    <th wire:click="toggleSort('name')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:160px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; gap:4px;">Usuario
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" style="{{ $fI }}"></div>
+                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
                     </th>
-                    @endif
-                    @endforeach
+
+                    {{-- Email --}}
+                    @php $isA = $sortBy === 'email'; @endphp
+                    <th wire:click="toggleSort('email')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:160px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; gap:4px;">Email
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterUsuario" @click.stop type="text" style="{{ $fI }}"></div>
+                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+
+                    {{-- Tipo --}}
+                    @php $isA = $sortBy === 'tipo'; @endphp
+                    <th wire:click="toggleSort('tipo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:120px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Tipo
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>
+                            {!! $fSvg !!}
+                            <select wire:model.live="colFilterTipo" @click.stop style="{{ $fS }}">
+                                <option value=""></option>
+                                <option value="administrativo">Administrativo</option>
+                                <option value="vendedor">Vendedor</option>
+                                <option value="cliente">Cliente</option>
+                            </select>
+                        </div>
+                    </th>
+
+                    {{-- Rol (sin sort) --}}
+                    <th style="{{ $thC }} text-align:left; min-width:100px;">
+                        Rol
+                        <div style="{{ $fW }}">
+                            {!! $fSvg !!}
+                            <select wire:model.live="colFilterRol" @click.stop style="{{ $fS }}">
+                                <option value=""></option>
+                                @foreach ($roles as $role)
+                                    <option value="{{ $role->name }}">{{ ucfirst($role->name) }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+
+                    {{-- Estado --}}
+                    @php $isA = $sortBy === 'active'; @endphp
+                    <th wire:click="toggleSort('active')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>
+                            {!! $fSvg !!}
+                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                                <option value=""></option>
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                    </th>
+
                 </tr>
             </thead>
             <tbody>

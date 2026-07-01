@@ -22,6 +22,19 @@ class UserManager extends Component
     public string $sortBy       = 'name';
     public string $sortDir      = 'asc';
 
+    // Filtros por columna en thead
+    public string $colFilterNombre  = '';
+    public string $colFilterUsuario = '';
+    public string $colFilterTipo    = '';
+    public string $colFilterRol     = '';
+    public string $colFilterEstado  = '';
+
+    public function updatingColFilterNombre():  void { $this->resetPage(); }
+    public function updatingColFilterUsuario(): void { $this->resetPage(); }
+    public function updatingColFilterTipo():    void { $this->resetPage(); }
+    public function updatingColFilterRol():     void { $this->resetPage(); }
+    public function updatingColFilterEstado():  void { $this->resetPage(); }
+
     public function toggleSort(string $col): void
     {
         if ($this->sortBy === $col) {
@@ -225,12 +238,11 @@ class UserManager extends Component
     public function render()
     {
         $users = User::with('roles')
-            ->when($this->search, fn($q) =>
-                $q->where('name',  'like', "%{$this->search}%")
-                  ->orWhere('email','like', "%{$this->search}%"))
-            ->when($this->filterTipo,   fn($q) => $q->where('tipo', $this->filterTipo))
-            ->when($this->filterRole,   fn($q) => $q->whereHas('roles', fn($r) => $r->where('name', $this->filterRole)))
-            ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
+            ->when($this->colFilterNombre,           fn($q) => $q->where('name',  'like', "%{$this->colFilterNombre}%"))
+            ->when($this->colFilterUsuario,          fn($q) => $q->where('email', 'like', "%{$this->colFilterUsuario}%"))
+            ->when($this->colFilterTipo,             fn($q) => $q->where('tipo', $this->colFilterTipo))
+            ->when($this->colFilterRol,              fn($q) => $q->whereHas('roles', fn($r) => $r->where('name', $this->colFilterRol)))
+            ->when($this->colFilterEstado !== '',    fn($q) => $q->where('active', (bool) $this->colFilterEstado))
             ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(20);
 
