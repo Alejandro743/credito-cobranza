@@ -1253,6 +1253,19 @@
                         </div>
                     </th>
 
+                    {{-- Ciclo --}}
+                    @php $isActive = ($sortBy??'') === 'cycle_id'; @endphp
+                    <th wire:click="toggleSort('cycle_id')" style="padding:8px 14px 6px; min-width:100px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Ciclo
+                            @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" style="{{ $fI }}"></div>
+                    </th>
+
                     {{-- Código --}}
                     @php $isActive = ($sortBy??'') === 'code'; @endphp
                     <th wire:click="toggleSort('code')" style="padding:8px 14px 6px; min-width:100px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
@@ -1277,19 +1290,6 @@
                             @endif
                         </span>
                         <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" style="{{ $fI }}"></div>
-                    </th>
-
-                    {{-- Ciclo --}}
-                    @php $isActive = ($sortBy??'') === 'cycle_id'; @endphp
-                    <th wire:click="toggleSort('cycle_id')" style="padding:8px 14px 6px; min-width:100px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Ciclo
-                            @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
-                            @endif
-                        </span>
-                        <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Cuotas --}}
@@ -1382,16 +1382,6 @@
                         <span style="font-size:12px; font-weight:700; color:#374151;">{{ $maestras->firstItem() + $loop->index }}</span>
                     </td>
                     <td style="padding:7px 10px;">
-                        <div style="{{ $lE }}">Código</div>
-                        <input wire:model="editCode" type="text" style="{{ $iE }} text-transform:uppercase; font-family:monospace;">
-                        @error('editCode') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                    </td>
-                    <td style="padding:7px 10px;">
-                        <div style="{{ $lE }}">Nombre</div>
-                        <input wire:model="editName" type="text" style="{{ $iE }}">
-                        @error('editName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                    </td>
-                    <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Ciclo</div>
                         <select wire:model="editCycleId" style="{{ $iE }} padding:0 6px;">
                             <option value="">— Ciclo —</option>
@@ -1400,6 +1390,16 @@
                             @endforeach
                         </select>
                         @error('editCycleId') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                    </td>
+                    <td style="padding:7px 10px;">
+                        <div style="{{ $lE }}">Código</div>
+                        <input wire:model="editCode" type="text" style="{{ $iE }} text-transform:uppercase; font-family:monospace;">
+                        @error('editCode') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                    </td>
+                    <td style="padding:7px 10px;">
+                        <div style="{{ $lE }}">Nombre</div>
+                        <input wire:model="editName" type="text" style="{{ $iE }}">
+                        @error('editName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:7px 10px; text-align:center;">
                         <div style="{{ $lE }}">Cuotas</div>
@@ -1437,7 +1437,7 @@
                 </tr>
                 {{-- Fila edición — Fila 2: valores de C. Inicial e Incremento --}}
                 <tr style="background:#F8F7FF; border-bottom:2px solid #C4B5FD;">
-                    <td colspan="4"></td>{{-- Código + Nombre + Ciclo + Cuotas --}}
+                    <td colspan="4"></td>{{-- Ciclo + Código + Nombre + Cuotas --}}
                     <td style="padding:0 10px 7px;">
                         @if($editTipoCuotaInicial !== 'ninguna')
                         <input wire:model="editValorCuotaInicial" type="number" step="0.01" min="0" placeholder="Valor {{ $editTipoCuotaInicial === 'porcentaje' ? '%' : 'Bs' }}"
@@ -1471,13 +1471,13 @@
                         </div>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden;">
+                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle?->code ?? '—' }}</span>
+                    </td>
+                    <td style="padding:10px 14px; overflow:hidden;">
                         <span style="font-size:12px; font-family:monospace; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->code ?? '—' }}</span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden;">
                         <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($m->name)) }}</span>
-                    </td>
-                    <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle?->code ?? '—' }}</span>
                     </td>
                     <td style="padding:10px 14px; text-align:center;">
                         <span style="font-size:13px; color:#6B7280;">{{ $m->cantidad_cuotas ? $m->cantidad_cuotas.'c' : '—' }}</span>
