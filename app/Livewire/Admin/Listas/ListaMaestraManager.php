@@ -94,7 +94,6 @@ class ListaMaestraManager extends Component
     public string $filterProducto = '';
     public string $filterEnLista  = '';
 
-    public ?int   $selectedItemId       = null;
     public ?int   $selectedProductId    = null;
     public string $itemSortBy           = 'name';
     public string $itemSortDir          = 'asc';
@@ -103,22 +102,9 @@ class ListaMaestraManager extends Component
     public string $itemColFilterTipoInc = '';
     public string $itemColFilterEnLista = '';
 
-    public function selectItem(int $id): void
-    {
-        $this->selectedItemId    = $this->selectedItemId === $id ? null : $id;
-        $this->selectedProductId = null;
-    }
-
     public function selectProduct(int $id): void
     {
         $this->selectedProductId = $this->selectedProductId === $id ? null : $id;
-        $this->selectedItemId    = null;
-    }
-
-    public function clearItemSelections(): void
-    {
-        $this->selectedItemId    = null;
-        $this->selectedProductId = null;
     }
 
     public function toggleItemSort(string $col): void
@@ -131,21 +117,86 @@ class ListaMaestraManager extends Component
         }
     }
 
-    public bool   $showAddItemForm  = false;
-    public string $newItemCode      = '';
-    public string $newItemNombre    = '';
-    public ?int   $newItemUnidadId  = null;
-    public ?int   $newItemCatId     = null;
-    public string $newItemPrecio    = '0';
-    public string $newItemPuntos    = '0';
-    public string $newItemStock     = '0';
-    public bool   $newItemActive    = true;
+    // ── Modales items ─────────────────────────────────────────────────────────
+    public bool   $showAgregarModal = false;
+    public string $modalPrecio      = '0';
+    public string $modalPuntos      = '0';
+    public string $modalStock       = '0';
+    public bool   $showEditModal    = false;
 
-    public ?int   $quickAddProductId = null;
-    public string $quickAddPrecio    = '0';
-    public string $quickAddPuntos    = '0';
-    public string $quickAddStock     = '0';
+    public function openAgregarModal(): void
+    {
+        $this->modalPrecio      = '0';
+        $this->modalPuntos      = '0';
+        $this->modalStock       = '0';
+        $this->showAgregarModal = true;
+        $this->resetValidation();
+    }
 
+    public function openAgregarParaProducto(int $productId): void
+    {
+        $this->selectedProductId = $productId;
+        $this->openAgregarModal();
+    }
+
+    public function closeAgregarModal(): void
+    {
+        $this->showAgregarModal = false;
+        $this->resetValidation();
+    }
+
+    public function saveAgregarModal(): void
+    {
+        $this->validate([
+            'modalPrecio' => 'required|numeric|min:0',
+            'modalPuntos' => 'required|integer|min:0',
+            'modalStock'  => 'required|numeric|min:0',
+        ], [], [
+            'modalPrecio' => 'precio',
+            'modalPuntos' => 'puntos',
+            'modalStock'  => 'stock inicial',
+        ]);
+
+        $lista     = ListaMaestra::findOrFail($this->viewingId);
+        $productId = $this->selectedProductId;
+        $cicloId   = $lista->cycle_id;
+        $newStock  = (float) $this->modalStock;
+
+        try {
+            DB::transaction(function () use ($productId, $cicloId, $newStock) {
+                $disp = $this->disponibleParaAsignar($productId, $cicloId, null);
+
+                if ($disp !== null && $newStock > $disp + 0.001) {
+                    throw new \RuntimeException('Stock insuficiente. Disponible: ' . number_format(max(0, $disp), 2));
+                }
+
+                [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista((float) $this->modalPrecio);
+
+                ListaMaestraItem::create([
+                    'lista_maestra_id'  => $this->viewingId,
+                    'product_id'        => $productId,
+                    'precio_base'       => $this->modalPrecio,
+                    'puntos'            => (int) $this->modalPuntos,
+                    'stock_inicial'     => $newStock,
+                    'stock_consumido'   => 0,
+                    'stock_actual'      => $newStock,
+                    'descuento'         => 0,
+                    'active'            => true,
+                    'tipo_incremento'   => $tipoInc,
+                    'factor_incremento' => $factorInc,
+                    'monto_incremento'  => $montoInc,
+                ]);
+            });
+        } catch (\RuntimeException $e) {
+            $this->addError('modalStock', $e->getMessage());
+            return;
+        }
+
+        $this->showAgregarModal = false;
+        session()->flash('success', 'Producto agregado a la lista.');
+    }
+
+    public ?int   $showAddItemForm  = null;  // legacy, unused
     public ?int   $editItemId              = null;
     public string $editItemCode            = '';
     public string $editItemPrecio          = '0';
@@ -365,14 +416,13 @@ class ListaMaestraManager extends Component
     {
         $this->viewingId            = $id;
         $this->mode                 = 'items';
-        $this->showAddItemForm      = false;
         $this->editItemId           = null;
-        $this->quickAddProductId    = null;
+        $this->selectedProductId    = null;
+        $this->showAgregarModal     = false;
+        $this->showEditModal        = false;
         $this->filterCodigo         = '';
         $this->filterProducto       = '';
         $this->filterEnLista        = '';
-        $this->selectedItemId       = null;
-        $this->selectedProductId    = null;
         $this->itemSortBy           = 'name';
         $this->itemSortDir          = 'asc';
         $this->itemColFilterCodigo  = '';
@@ -394,7 +444,6 @@ class ListaMaestraManager extends Component
         $this->newItemStock    = '0';
         $this->newItemActive   = true;
         $this->editItemId      = null;
-        $this->quickAddProductId = null;
         $this->resetValidation();
     }
 
@@ -455,97 +504,26 @@ class ListaMaestraManager extends Component
         session()->flash('success', "Producto \"{$product->name}\" creado y agregado.");
     }
 
-    public function startQuickAdd(int $productId): void
-    {
-        $this->quickAddProductId = $productId;
-        $this->selectedProductId = null;
-        $this->selectedItemId    = null;
-        $this->quickAddPrecio    = '0';
-        $this->quickAddPuntos    = '0';
-        $this->quickAddStock     = '0';
-        $this->showAddItemForm   = false;
-        $this->editItemId        = null;
-        $this->resetValidation();
-    }
-
-    public function cancelQuickAdd(): void
-    {
-        $this->quickAddProductId = null;
-        $this->selectedProductId = null;
-        $this->resetValidation();
-    }
-
-    public function saveQuickAdd(): void
-    {
-        $this->validate([
-            'quickAddPrecio' => 'required|numeric|min:0',
-            'quickAddPuntos' => 'required|integer|min:0',
-            'quickAddStock'  => 'required|numeric|min:0',
-        ], [], [
-            'quickAddPrecio' => 'precio',
-            'quickAddPuntos' => 'puntos',
-            'quickAddStock'  => 'stock inicial',
-        ]);
-
-        $lista     = ListaMaestra::findOrFail($this->viewingId);
-        $productId = $this->quickAddProductId;
-        $cicloId   = $lista->cycle_id;
-        $newStock  = (float) $this->quickAddStock;
-
-        try {
-            DB::transaction(function () use ($productId, $cicloId, $newStock) {
-                $disp = $this->disponibleParaAsignar($productId, $cicloId, null);
-
-                if ($disp !== null && $newStock > $disp + 0.001) {
-                    throw new \RuntimeException('Stock insuficiente. Disponible: ' . number_format(max(0, $disp), 2));
-                }
-
-                [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista((float) $this->quickAddPrecio);
-
-                ListaMaestraItem::create([
-                    'lista_maestra_id'  => $this->viewingId,
-                    'product_id'        => $productId,
-                    'precio_base'       => $this->quickAddPrecio,
-                    'puntos'            => (int) $this->quickAddPuntos,
-                    'stock_inicial'     => $newStock,
-                    'stock_consumido'   => 0,
-                    'stock_actual'      => $newStock,
-                    'descuento'         => 0,
-                    'active'            => true,
-                    'tipo_incremento'   => $tipoInc,
-                    'factor_incremento' => $factorInc,
-                    'monto_incremento'  => $montoInc,
-                ]);
-            });
-        } catch (\RuntimeException $e) {
-            $this->addError('quickAddStock', $e->getMessage());
-            return;
-        }
-
-        $this->quickAddProductId = null;
-        session()->flash('success', 'Producto agregado a la lista.');
-    }
 
     public function startEditItem(int $id): void
     {
         $item = ListaMaestraItem::with('product')->findOrFail($id);
-        $this->editItemId              = $id;
-        $this->editItemCode            = $item->product?->code ?? '';
-        $this->editItemPrecio          = (string) $item->precio_base;
-        $this->editItemPuntos          = (string) $item->puntos;
-        $this->editItemStock           = (string) $item->stock_inicial;
-        $this->editItemActive          = (bool) $item->active;
+        $this->editItemId               = $id;
+        $this->editItemCode             = $item->product?->code ?? '';
+        $this->editItemPrecio           = (string) $item->precio_base;
+        $this->editItemPuntos           = (string) $item->puntos;
+        $this->editItemStock            = (string) $item->stock_inicial;
+        $this->editItemActive           = (bool) $item->active;
         $this->editItemTipoIncremento   = (string) ($item->tipo_incremento ?? '');
         $this->editItemFactorIncremento = (string) ($item->factor_incremento ?? '0');
-
-        $this->showAddItemForm   = false;
-        $this->quickAddProductId = null;
+        $this->showEditModal            = true;
         $this->resetValidation();
     }
 
     public function cancelEditItem(): void
     {
-        $this->editItemId = null;
+        $this->editItemId    = null;
+        $this->showEditModal = false;
         $this->resetValidation();
     }
 
@@ -613,7 +591,8 @@ class ListaMaestraManager extends Component
             return;
         }
 
-        $this->editItemId = null;
+        $this->editItemId    = null;
+        $this->showEditModal = false;
         session()->flash('success', 'Ítem actualizado.');
     }
 
@@ -662,7 +641,7 @@ class ListaMaestraManager extends Component
         }
 
         ListaMaestraItem::destroy($itemId);
-        $this->selectedItemId = null;
+        $this->selectedProductId = null;
         session()->flash('success', 'Ítem quitado de la lista.');
     }
 
@@ -862,11 +841,10 @@ class ListaMaestraManager extends Component
         $this->viewingId         = null;
         $this->editingId         = null;
         $this->selectedMaestraId = null;
-        $this->selectedItemId    = null;
         $this->selectedProductId = null;
-        $this->showAddItemForm    = false;
-        $this->quickAddProductId = null;
         $this->editItemId        = null;
+        $this->showAgregarModal  = false;
+        $this->showEditModal     = false;
         $this->sqlClienteResult  = null;
         $this->sqlVendedorResult = null;
         $this->manualClienteResult  = null;
