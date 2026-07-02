@@ -353,7 +353,6 @@
                     $tdBase   = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap;';
                     $codeCol  = $inLista ? '#6B7280' : '#9CA3AF';
                     $nameCol  = $inLista ? '#111827' : '#9CA3AF';
-                    $chkBlock = ($selectedProductId !== null && $selectedProductId !== $p->id) ? 'true' : 'false';
                 @endphp
                 <tr wire:key="prod-{{ $p->id }}" style="{{ $trStyle }} background:{{ $trBg }};"
                     @mouseenter="$el.style.background='{{ $trHover }}'" @mouseleave="$el.style.background='{{ $trBg }}'">
@@ -361,8 +360,8 @@
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:5px;">
                             <input type="checkbox"
                                    :checked="$wire.selectedProductId === {{ $p->id }}"
-                                   @click.prevent="{{ $chkBlock }} ? null : ($wire.selectedProductId === {{ $p->id }} ? $wire.set('selectedProductId', null) : $wire.selectProduct({{ $p->id }}))"
-                                   :style="{{ $chkBlock }} ? 'accent-color:#7B6FE8; width:13px; height:13px; cursor:not-allowed; opacity:0.3;' : 'accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;'">
+                                   @click.prevent="$wire.selectedProductId === {{ $p->id }} ? $wire.set('selectedProductId', null) : $wire.selectProduct({{ $p->id }})"
+                                   style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
                             <span style="color:{{ $inLista ? '#374151' : '#9CA3AF' }};">{{ $loop->iteration }}</span>
                         </div>
                     </td>
