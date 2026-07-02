@@ -40,22 +40,6 @@
                 <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $viewingMaestra->name }}</p>
             </div>
         </div>
-        <div style="display:flex; align-items:center; gap:6px;">
-            <button wire:click="refreshFromCatalog"
-                    style="height:36px; padding:0 14px; border:1px solid #E5E7EB; background:#fff; color:#6B7280; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;"
-                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-                Actualizar
-            </button>
-            <button style="height:36px; padding:0 14px; border:1px solid #EDE9FE; background:#fff; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
-                Importar
-            </button>
-            <button style="height:36px; padding:0 14px; border:1px solid #EDE9FE; background:#fff; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:6px;">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 8l5-5 5 5M12 3v12"/></svg>
-                Exportar
-            </button>
-        </div>
     </div>
 </div>
 
@@ -166,6 +150,21 @@
             @endif
         </div>
         @endif
+
+        <div style="margin-left:auto; display:flex; align-items:center; gap:6px;">
+            <button wire:click="refreshFromCatalog" style="{{ $btnH }} background:#fff; color:#7B6FE8; border:1px solid #EDE9FE;">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                Actualizar
+            </button>
+            <button style="{{ $btnH }} background:#fff; color:#7B6FE8; border:1px solid #EDE9FE;">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+                Importar
+            </button>
+            <button style="{{ $btnH }} background:#fff; color:#7B6FE8; border:1px solid #EDE9FE;">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 8l5-5 5 5M12 3v12"/></svg>
+                Exportar
+            </button>
+        </div>
     </div>
     <div style="overflow:auto; flex:1;">
         <table style="width:100%; min-width:1600px; border-collapse:collapse;">
