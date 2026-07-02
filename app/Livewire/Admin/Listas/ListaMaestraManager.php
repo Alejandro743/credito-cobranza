@@ -104,7 +104,7 @@ class ListaMaestraManager extends Component
 
     public function selectProduct(int $id): void
     {
-        $this->selectedProductId = $this->selectedProductId === $id ? null : $id;
+        $this->selectedProductId = $id;
     }
 
     public function toggleItemSort(string $col): void
