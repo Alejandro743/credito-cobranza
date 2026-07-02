@@ -36,6 +36,13 @@
         <option value="0">Inactivos</option>
     </select>
 
+    <button wire:click="showAdd" class="w-full sm:w-auto"
+            style="height:36px; padding:0 18px; display:flex; align-items:center; justify-content:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
+        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+        </svg>
+        Nuevo producto
+    </button>
 </div>
 @endif
 
@@ -138,8 +145,8 @@
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-wrap:wrap;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Productos registrados</span>
         <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $products->total() }}</span>
-        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
         @if($selectedProductId)
+        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
         <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
             @if($editingId === $selectedProductId)
                 <button wire:click="saveEdit" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
@@ -162,21 +169,6 @@
             @endif
         </div>
         @endif
-
-        <div style="margin-left:auto; display:flex; align-items:center; gap:6px;">
-            <button style="{{ $btnH }} background:#fff; color:#7B6FE8; border:1px solid #EDE9FE;">
-                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/>
-                </svg>
-                Importar
-            </button>
-            <button style="{{ $btnH }} background:#fff; color:#7B6FE8; border:1px solid #EDE9FE;">
-                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 8l5-5 5 5M12 3v12"/>
-                </svg>
-                Exportar
-            </button>
-        </div>
     </div>
 
     <div style="overflow:auto; flex:1; overflow-x:auto;">
