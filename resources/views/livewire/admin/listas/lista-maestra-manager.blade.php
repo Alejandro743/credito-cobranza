@@ -360,7 +360,7 @@
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:5px;">
                             <input type="checkbox"
                                    :checked="$wire.selectedProductId === {{ $p->id }}"
-                                   @click.prevent="$wire.selectProduct({{ $p->id }})"
+                                   @click.prevent="$wire.selectedProductId === {{ $p->id }} ? $wire.set('selectedProductId', null) : $wire.selectProduct({{ $p->id }})"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
                             <span style="color:{{ $inLista ? '#374151' : '#9CA3AF' }};">{{ $loop->iteration }}</span>
                         </div>
