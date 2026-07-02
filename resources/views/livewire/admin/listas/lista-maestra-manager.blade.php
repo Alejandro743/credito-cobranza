@@ -508,74 +508,60 @@
 {{-- ══ MODAL AGREGAR A LISTA ══ --}}
 @if ($showAgregarModal && $selectedProductId)
 @php $selProdModal = $products->firstWhere('id', $selectedProductId); @endphp
-<div style="position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:50; display:flex; align-items:center; justify-content:center; padding:16px;"
+<div style="position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:50; display:flex; align-items:center; justify-content:center; padding:16px;"
      wire:click.self="closeAgregarModal">
-    <div style="background:#fff; border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.2); width:100%; max-width:400px; overflow:hidden;">
+    <div style="background:#fff; border-radius:8px; box-shadow:0 4px 24px rgba(0,0,0,.15); width:100%; max-width:400px; overflow:hidden;">
         {{-- Header --}}
-        <div style="padding:16px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; justify-content:space-between;">
-            <p style="font-size:16px; font-weight:800; color:#111827; margin:0;">Habilitar producto</p>
-            <button wire:click="closeAgregarModal"
-                    style="width:28px; height:28px; border-radius:8px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+        <div style="padding:14px 20px; border-bottom:1px solid #E5E7EB; display:flex; align-items:center; justify-content:space-between;">
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0;">Agregar a lista — <span style="font-weight:400; color:#6B7280;">{{ $selProdModal?->name }}</span></p>
+            <button wire:click="closeAgregarModal" style="background:none; border:none; color:#9CA3AF; cursor:pointer; font-size:18px; line-height:1; padding:2px 6px;">✕</button>
         </div>
         {{-- Body --}}
-        <div x-data="{
-                precio: parseFloat('{{ (float)$modalPrecio }}') || 0,
-                get final() { return Math.max(0, this.precio).toFixed(2); }
-             }"
-             style="padding:20px;">
-            {{-- Producto info (referencia) --}}
-            <div style="background:#F8F7FF; border:1px solid #EDE9FE; border-radius:10px; padding:10px 14px; margin-bottom:16px;">
-                <p style="font-size:10px; font-weight:600; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 3px;">Producto</p>
-                <p style="font-size:13px; font-weight:700; color:#111827; margin:0 0 2px;">{{ $selProdModal?->name }}</p>
-                <p style="font-size:11px; font-family:monospace; color:#7B6FE8; background:#EDE9FE; display:inline-block; padding:1px 7px; border-radius:5px; margin:0;">{{ $selProdModal?->code }}</p>
-            </div>
-            {{-- Campos --}}
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">Precio (Bs)</label>
-                    <input wire:model.live="modalPrecio" x-on:input="precio = parseFloat($event.target.value) || 0"
-                           type="number" step="0.01" min="0"
-                           style="width:100%; height:38px; border:1px solid #D1D5DB; border-radius:8px; padding:0 10px; font-size:14px; text-align:center; outline:none; box-sizing:border-box; background:#fff;"
-                           @focus="$el.style.borderColor='#7B6FE8'" @blur="$el.style.borderColor='#D1D5DB'">
-                    @error('modalPrecio') <p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
-                </div>
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">Puntos</label>
-                    <input wire:model="modalPuntos" type="number" min="0"
-                           style="width:100%; height:38px; border:1px solid #D1D5DB; border-radius:8px; padding:0 10px; font-size:14px; text-align:center; outline:none; box-sizing:border-box; background:#fff;"
-                           @focus="$el.style.borderColor='#7B6FE8'" @blur="$el.style.borderColor='#D1D5DB'">
-                </div>
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">Stock Inicial</label>
-                    <input wire:model="modalStock" type="number" step="0.01" min="0"
-                           onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()"
-                           style="width:100%; height:38px; border:1px solid #D1D5DB; border-radius:8px; padding:0 10px; font-size:14px; text-align:center; outline:none; box-sizing:border-box; background:#fff;"
-                           @focus="$el.style.borderColor='#7B6FE8'" @blur="$el.style.borderColor='#D1D5DB'">
-                    @error('modalStock') <p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
-                </div>
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">Precio Final (referencia)</label>
-                    <div style="height:38px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; display:flex; align-items:center; justify-content:center; gap:4px;">
-                        <span style="font-size:11px; color:#9CA3AF;">Bs</span>
-                        <span x-text="final" style="font-size:15px; font-weight:800; color:#7B6FE8;"></span>
-                    </div>
-                </div>
-            </div>
+        <div style="padding:20px;">
+            <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#F9FAFB;">
+                        <th style="padding:8px 12px; font-size:12px; font-weight:600; color:#374151; text-align:left; border:1px solid #E5E7EB;">Campo</th>
+                        <th style="padding:8px 12px; font-size:12px; font-weight:600; color:#374151; text-align:left; border:1px solid #E5E7EB;">Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td style="padding:8px 12px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Precio (Bs)</td>
+                        <td style="padding:6px 12px; border:1px solid #E5E7EB;">
+                            <input wire:model="modalPrecio" type="number" step="0.01" min="0"
+                                   style="width:100%; height:32px; border:1px solid #D1D5DB; border-radius:6px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
+                            @error('modalPrecio') <p style="font-size:11px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 12px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Puntos</td>
+                        <td style="padding:6px 12px; border:1px solid #E5E7EB;">
+                            <input wire:model="modalPuntos" type="number" min="0"
+                                   style="width:100%; height:32px; border:1px solid #D1D5DB; border-radius:6px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:8px 12px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Stock Inicial</td>
+                        <td style="padding:6px 12px; border:1px solid #E5E7EB;">
+                            <input wire:model="modalStock" type="number" step="0.01" min="0"
+                                   onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()"
+                                   style="width:100%; height:32px; border:1px solid #D1D5DB; border-radius:6px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
+                            @error('modalStock') <p style="font-size:11px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
         {{-- Footer --}}
-        <div style="padding:14px 20px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px;">
+        <div style="padding:12px 20px; border-top:1px solid #E5E7EB; display:flex; justify-content:flex-end; gap:8px;">
             <button wire:click="closeAgregarModal"
-                    style="height:38px; padding:0 18px; border:1px solid #E5E7EB; border-radius:9px; background:#fff; color:#6B7280; font-size:13px; font-weight:600; cursor:pointer;"
-                    @mouseenter="$el.style.background='#F9FAFB'" @mouseleave="$el.style.background='#fff'">
+                    style="height:36px; padding:0 16px; border:1px solid #E5E7EB; border-radius:6px; background:#fff; color:#374151; font-size:13px; cursor:pointer;">
                 Cancelar
             </button>
             <button wire:click="saveAgregarModal"
-                    style="height:38px; padding:0 20px; border:none; border-radius:9px; background:#059669; color:#fff; font-size:13px; font-weight:700; cursor:pointer;"
-                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-                Habilitar
+                    style="height:36px; padding:0 16px; border:none; border-radius:6px; background:#059669; color:#fff; font-size:13px; font-weight:600; cursor:pointer;">
+                Agregar
             </button>
         </div>
     </div>
