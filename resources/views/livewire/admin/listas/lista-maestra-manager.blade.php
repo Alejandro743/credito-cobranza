@@ -169,8 +169,8 @@
                 @endif
             @else
                 <button wire:click="openAgregarModal" style="{{ $btnH }} background:#D1FAE5; color:#059669; border:1px solid #6EE7B7;">
-                    <svg width="10" height="10" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-                    Habilitar
+                    <svg width="10" height="10" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                    Agregar a lista
                 </button>
             @endif
             <button wire:click="$set('selectedProductId', null)" style="{{ $btnH }} background:#F3F4F6; color:#6B7280;">
