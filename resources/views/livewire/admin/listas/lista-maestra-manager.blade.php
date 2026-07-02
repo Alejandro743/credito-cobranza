@@ -253,6 +253,29 @@
                         {!! $emptyF !!}
                     </th>
 
+                    {{-- Tipo Inc --}}
+                    @php $isA = $itemSortBy === 'tipo_incremento'; @endphp
+                    <th wire:click="toggleItemSort('tipo_incremento')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Tipo Inc.
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>
+                            {!! $fSvg !!}
+                            <select wire:model.live="itemColFilterTipoInc" @click.stop style="{{ $fS }}">
+                                <option value=""></option>
+                                <option value="porcentaje">% Porcentaje</option>
+                                <option value="monto_fijo">Bs Monto Fijo</option>
+                            </select>
+                        </div>
+                    </th>
+
+                    {{-- Incremento --}}
+                    <th style="{{ $thC }}">Incremento{!! $emptyF !!}</th>
+
                     {{-- Precio Final --}}
                     <th style="{{ $thC }}">Precio Final{!! $emptyF !!}</th>
 
@@ -293,29 +316,6 @@
 
                     {{-- Stock Disponible --}}
                     <th style="{{ $thC }}">Stock Disp.{!! $emptyF !!}</th>
-
-                    {{-- Tipo Inc --}}
-                    @php $isA = $itemSortBy === 'tipo_incremento'; @endphp
-                    <th wire:click="toggleItemSort('tipo_incremento')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Tipo Inc.
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        <div style="{{ $fW }}" @click.stop>
-                            {!! $fSvg !!}
-                            <select wire:model.live="itemColFilterTipoInc" @click.stop style="{{ $fS }}">
-                                <option value=""></option>
-                                <option value="porcentaje">% Porcentaje</option>
-                                <option value="monto_fijo">Bs Monto Fijo</option>
-                            </select>
-                        </div>
-                    </th>
-
-                    {{-- Incremento --}}
-                    <th style="{{ $thC }}">Incremento{!! $emptyF !!}</th>
 
                     {{-- Estado --}}
                     <th style="{{ $thC }} min-width:130px;">
@@ -364,6 +364,20 @@
                         @if ($inLista) Bs {{ number_format($item->precio_base, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
+                    <td style="{{ $tdBase }}">
+                        @if ($inLista && $item->tipo_incremento)
+                        <span style="padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">
+                            {{ $item->tipo_incremento === 'porcentaje' ? '%' : 'Bs' }}
+                        </span>
+                        @else <span style="color:#D1D5DB;">—</span> @endif
+                    </td>
+                    <td style="{{ $tdBase }}">
+                        @if ($inLista && $item->factor_incremento > 0)
+                            {{ $item->tipo_incremento === 'porcentaje'
+                                ? number_format($item->factor_incremento, 2).'%'
+                                : 'Bs '.number_format($item->factor_incremento, 2) }}
+                        @else <span style="color:#D1D5DB;">—</span> @endif
+                    </td>
                     <td style="{{ $tdBase }}{{ $inLista ? ' color:#7B6FE8; font-weight:700;' : '' }}">
                         @if ($inLista) Bs {{ number_format($item->precio_final, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
@@ -398,20 +412,6 @@
                     </td>
                     <td style="{{ $tdBase }}{{ $inLista && $item->stock_actual <= 0 ? ' color:#EF4444; font-weight:700;' : '' }}">
                         @if ($inLista) {{ number_format($item->stock_actual, 2) }}
-                        @else <span style="color:#D1D5DB;">—</span> @endif
-                    </td>
-                    <td style="{{ $tdBase }}">
-                        @if ($inLista && $item->tipo_incremento)
-                        <span style="padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">
-                            {{ $item->tipo_incremento === 'porcentaje' ? '%' : 'Bs' }}
-                        </span>
-                        @else <span style="color:#D1D5DB;">—</span> @endif
-                    </td>
-                    <td style="{{ $tdBase }}">
-                        @if ($inLista && $item->factor_incremento > 0)
-                            {{ $item->tipo_incremento === 'porcentaje'
-                                ? number_format($item->factor_incremento, 2).'%'
-                                : 'Bs '.number_format($item->factor_incremento, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
                     <td style="padding:10px 12px; text-align:center;">
