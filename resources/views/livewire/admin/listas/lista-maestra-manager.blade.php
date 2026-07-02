@@ -149,21 +149,29 @@
             $selItem = $selectedProductId ? $itemsMap->get($selectedProductId) : null;
             $selInLista = $selItem !== null;
         @endphp
-        @if($selectedProductId)
+        @if($selectedProductId && $selInLista)
         <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
-            @if($selInLista)
-                <button wire:click="startEditItem({{ $selItem->id }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
-                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
-                    Editar
-                </button>
-            @else
-                <button wire:click="openAgregarModal" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
-                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                    Agregar a lista
-                </button>
-            @endif
+            <button wire:click="startEditItem({{ $selItem->id }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                Editar
+            </button>
         </div>
         @endif
+
+        <div style="margin-left:auto; display:flex; align-items:center; gap:6px;">
+            <button style="{{ $btnH }} background:#fff; color:#7B6FE8; border:1px solid #EDE9FE;">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/>
+                </svg>
+                Importar
+            </button>
+            <button style="{{ $btnH }} background:#fff; color:#7B6FE8; border:1px solid #EDE9FE;">
+                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 8l5-5 5 5M12 3v12"/>
+                </svg>
+                Exportar
+            </button>
+        </div>
     </div>
     <div style="overflow:auto; flex:1;">
         <table style="width:100%; min-width:1600px; border-collapse:collapse;">
