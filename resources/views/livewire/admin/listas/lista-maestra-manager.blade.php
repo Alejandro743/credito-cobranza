@@ -665,6 +665,9 @@
 @if ($showEditModal && $editItemId)
 @php
     $editProdModal = $selectedProductId ? $products->firstWhere('id', $selectedProductId) : null;
+    $stkMaxEdit    = $selectedProductId && $stockMap->has($selectedProductId)
+        ? max(0, ($stockMap->get($selectedProductId) ?? 0) - ($asignadoMap->get($selectedProductId, 0)))
+        : null;
 @endphp
 <div style="position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:50; display:flex; align-items:center; justify-content:center; padding:16px;"
      wire:click.self="cancelEditItem">
@@ -737,6 +740,15 @@
                 <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
                     <input wire:model="editItemPuntos" type="number" min="0" style="{{ $inp }}">
                 </div>
+            </div>
+            <div style="{{ $row }}">
+                <span style="{{ $lbl }}">Stock Máximo</span>
+                <span style="{{ $val }}">
+                    @if($stkMaxEdit !== null)
+                        <span style="font-weight:600; color:{{ $stkMaxEdit > 0 ? '#059669' : '#EF4444' }};">{{ number_format($stkMaxEdit, 2) }}</span>
+                    @else —
+                    @endif
+                </span>
             </div>
             <div style="{{ $row }}">
                 <span style="{{ $lbl }}">Stock Inicial</span>
