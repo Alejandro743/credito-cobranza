@@ -597,14 +597,14 @@
             $row = 'display:flex; align-items:center; border-bottom:1px solid #E5E7EB;';
             $lbl = 'width:45%; padding:8px 14px; font-size:13px; color:#6B7280; text-align:right; flex-shrink:0;';
             $val = 'flex:1; padding:8px 12px; font-size:13px; color:#111827;';
+            $inp = 'width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; font-family:inherit; outline:none; box-sizing:border-box;';
         @endphp
         <div>
             <div style="{{ $row }}">
                 <span style="{{ $lbl }}">Precio (Bs)</span>
                 <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
                     <input wire:model="modalPrecio" x-on:input="precio = parseFloat($event.target.value) || 0"
-                           type="number" step="0.01" min="0"
-                           style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
+                           type="number" step="0.01" min="0" style="{{ $inp }}">
                     @error('modalPrecio') <p style="font-size:11px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
                 </div>
             </div>
@@ -623,8 +623,7 @@
             <div style="{{ $row }}">
                 <span style="{{ $lbl }}">Puntos</span>
                 <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
-                    <input wire:model="modalPuntos" type="number" min="0"
-                           style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
+                    <input wire:model="modalPuntos" type="number" min="0" style="{{ $inp }}">
                 </div>
             </div>
             <div style="{{ $row }}">
@@ -641,7 +640,7 @@
                 <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
                     <input wire:model="modalStock" type="number" step="0.01" min="0"
                            onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()"
-                           style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
+                           style="{{ $inp }}">
                     @error('modalStock') <p style="font-size:11px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
                 </div>
             </div>
