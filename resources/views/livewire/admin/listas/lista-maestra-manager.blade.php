@@ -331,9 +331,8 @@
                             {!! $fSvg !!}
                             <select wire:model.live="itemColFilterEnLista" @click.stop style="{{ $fS }}">
                                 <option value="">Todos</option>
-                                <option value="1">En lista</option>
-                                <option value="inactive">Inactivo</option>
-                                <option value="0">Sin asignar</option>
+                                <option value="1">Habilitado</option>
+                                <option value="0">Deshabilitado</option>
                             </select>
                         </div>
                     </th>
@@ -423,11 +422,9 @@
                     </td>
                     <td style="padding:10px 12px; text-align:center;">
                         @if ($inLista && $item->active)
-                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#D1FAE5; color:#059669;">En lista</span>
-                        @elseif ($inLista && !$item->active)
-                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#FEF3C7; color:#D97706;">Inactivo</span>
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#D1FAE5; color:#059669;">Habilitado</span>
                         @else
-                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#F3F4F6; color:#9CA3AF;">Sin asignar</span>
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#F3F4F6; color:#9CA3AF;">Deshabilitado</span>
                         @endif
                     </td>
                 </tr>
