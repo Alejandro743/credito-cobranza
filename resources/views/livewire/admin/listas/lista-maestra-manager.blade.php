@@ -345,7 +345,7 @@
                     $trBg     = $selProd ? '#F5F3FF' : ($inLista ? '#fff' : '#FFF1F2');
                     $trHover  = $selProd ? '#F5F3FF' : ($inLista ? '#FAFAFE' : '#FEE2E2');
                     $trStyle  = 'border-bottom:1px solid #F3F4F6;';
-                    $tdBase   = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap;';
+                    $tdBase   = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap; text-transform:uppercase;';
                     $codeCol  = $inLista ? '#6B7280' : '#9CA3AF';
                     $nameCol  = $inLista ? '#111827' : '#9CA3AF';
                 @endphp
