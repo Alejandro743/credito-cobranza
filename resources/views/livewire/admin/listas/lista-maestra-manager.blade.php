@@ -173,10 +173,6 @@
                     Agregar a lista
                 </button>
             @endif
-            <button wire:click="$set('selectedProductId', null)" style="{{ $btnH }} background:#F3F4F6; color:#6B7280;">
-                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                Cancelar
-            </button>
         </div>
         @endif
     </div>
