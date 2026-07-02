@@ -529,12 +529,12 @@
          }"
          style="background:#fff; border-radius:8px; box-shadow:0 4px 24px rgba(0,0,0,.15); width:100%; max-width:420px; overflow:hidden;">
         {{-- Header --}}
-        <div style="padding:14px 20px; border-bottom:1px solid #E5E7EB; display:flex; align-items:flex-start; justify-content:space-between;">
+        <div style="padding:14px 20px; border-bottom:1px solid #EDE9FE; background:#F5F3FF; display:flex; align-items:flex-start; justify-content:space-between;">
             <div>
                 <p style="font-size:15px; font-weight:700; color:#111827; margin:0 0 2px;">Agregar a Lista</p>
                 <p style="font-size:12px; color:#9CA3AF; margin:0;">{{ $selProdModal?->code }} — {{ $selProdModal?->name }}</p>
             </div>
-            <button wire:click="closeAgregarModal" style="width:28px; height:28px; border:1px solid #E5E7EB; border-radius:6px; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">✕</button>
+            <button wire:click="closeAgregarModal" style="width:28px; height:28px; border:1px solid #EDE9FE; border-radius:6px; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">✕</button>
         </div>
         {{-- Body --}}
         <div style="padding:16px 20px;">
