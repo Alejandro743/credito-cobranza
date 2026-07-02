@@ -537,12 +537,13 @@
             <button wire:click="closeAgregarModal" style="width:28px; height:28px; border:1px solid #EDE9FE; border-radius:6px; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">✕</button>
         </div>
         {{-- Body --}}
-        <div style="padding:16px 20px;">
+        @php $lbl = 'padding:8px 12px; font-size:13px; color:#6B7280; text-align:right; width:45%; border-bottom:1px solid #E5E7EB;'; $val = 'padding:8px 12px; font-size:13px; color:#111827; text-align:left; border-bottom:1px solid #E5E7EB;'; @endphp
+        <div style="padding:0;">
             <table style="width:100%; border-collapse:collapse;">
                 <tbody>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB; width:45%;">Precio (Bs)</td>
-                        <td style="padding:5px 8px; border:1px solid #E5E7EB;">
+                        <td style="{{ $lbl }}">Precio (Bs)</td>
+                        <td style="{{ $val }} padding-top:5px; padding-bottom:5px;">
                             <input wire:model.live="modalPrecio" x-on:input="precio = parseFloat($event.target.value) || 0"
                                    type="number" step="0.01" min="0"
                                    style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
@@ -550,27 +551,27 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Incremento</td>
-                        <td style="padding:7px 10px; font-size:13px; color:#6B7280; border:1px solid #E5E7EB;">{{ $incLabel }}</td>
+                        <td style="{{ $lbl }}">Incremento</td>
+                        <td style="{{ $val }}">{{ $incLabel }}</td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Monto Incremento</td>
-                        <td style="padding:7px 10px; font-size:13px; color:#6B7280; border:1px solid #E5E7EB;">Bs <span x-text="montoFmt"></span></td>
+                        <td style="{{ $lbl }}">Monto Incremento</td>
+                        <td style="{{ $val }}">Bs <span x-text="montoFmt"></span></td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Precio Final</td>
-                        <td style="padding:7px 10px; font-size:13px; font-weight:700; color:#7B6FE8; border:1px solid #E5E7EB;">Bs <span x-text="final"></span></td>
+                        <td style="{{ $lbl }}">Precio Final</td>
+                        <td style="{{ $val }} font-weight:700; color:#7B6FE8;">Bs <span x-text="final"></span></td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Puntos</td>
-                        <td style="padding:5px 8px; border:1px solid #E5E7EB;">
+                        <td style="{{ $lbl }}">Puntos</td>
+                        <td style="{{ $val }} padding-top:5px; padding-bottom:5px;">
                             <input wire:model="modalPuntos" type="number" min="0"
                                    style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Stock Inicial</td>
-                        <td style="padding:5px 8px; border:1px solid #E5E7EB;">
+                        <td style="{{ $lbl }}">Stock Inicial</td>
+                        <td style="{{ $val }} padding-top:5px; padding-bottom:5px;">
                             <input wire:model="modalStock" type="number" step="0.01" min="0"
                                    onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()"
                                    style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
@@ -578,8 +579,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Stock Máximo</td>
-                        <td style="padding:7px 10px; font-size:13px; color:#6B7280; border:1px solid #E5E7EB;">
+                        <td style="{{ $lbl }} border-bottom:none;">Stock Máximo</td>
+                        <td style="{{ $val }} border-bottom:none;">
                             @if($stkMaxModal !== null)
                                 <span style="font-weight:600; color:{{ $stkMaxModal > 0 ? '#059669' : '#EF4444' }};">{{ number_format($stkMaxModal, 2) }}</span>
                             @else —
