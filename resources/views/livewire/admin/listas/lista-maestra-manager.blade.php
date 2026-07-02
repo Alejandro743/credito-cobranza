@@ -168,8 +168,8 @@
                 </button>
                 @endif
             @else
-                <button wire:click="openAgregarModal" style="{{ $btnH }} background:#D1FAE5; color:#059669; border:1px solid #6EE7B7;">
-                    <svg width="10" height="10" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                <button wire:click="openAgregarModal" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     Agregar a lista
                 </button>
             @endif
