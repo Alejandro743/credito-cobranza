@@ -534,14 +534,14 @@
                 <p style="font-size:15px; font-weight:700; color:#111827; margin:0 0 2px;">Agregar a Lista</p>
                 <p style="font-size:12px; color:#9CA3AF; margin:0;">{{ $selProdModal?->code }} — {{ $selProdModal?->name }}</p>
             </div>
-            <button wire:click="closeAgregarModal" style="background:none; border:none; color:#9CA3AF; cursor:pointer; font-size:18px; line-height:1; padding:2px 6px; margin-top:-2px;">✕</button>
+            <button wire:click="closeAgregarModal" style="width:28px; height:28px; border:1px solid #E5E7EB; border-radius:6px; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">✕</button>
         </div>
         {{-- Body --}}
         <div style="padding:16px 20px;">
             <table style="width:100%; border-collapse:collapse;">
                 <tbody>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB; width:45%; background:#F9FAFB;">Precio (Bs)</td>
+                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB; width:45%;">Precio (Bs)</td>
                         <td style="padding:5px 8px; border:1px solid #E5E7EB;">
                             <input wire:model.live="modalPrecio" x-on:input="precio = parseFloat($event.target.value) || 0"
                                    type="number" step="0.01" min="0"
@@ -550,26 +550,26 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB; background:#F9FAFB;">Incremento</td>
+                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Incremento</td>
                         <td style="padding:7px 10px; font-size:13px; color:#6B7280; border:1px solid #E5E7EB;">{{ $incLabel }}</td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB; background:#F9FAFB;">Monto Incremento</td>
+                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Monto Incremento</td>
                         <td style="padding:7px 10px; font-size:13px; color:#6B7280; border:1px solid #E5E7EB;">Bs <span x-text="montoFmt"></span></td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB; background:#F9FAFB;">Precio Final</td>
+                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Precio Final</td>
                         <td style="padding:7px 10px; font-size:13px; font-weight:700; color:#7B6FE8; border:1px solid #E5E7EB;">Bs <span x-text="final"></span></td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB; background:#F9FAFB;">Puntos</td>
+                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Puntos</td>
                         <td style="padding:5px 8px; border:1px solid #E5E7EB;">
                             <input wire:model="modalPuntos" type="number" min="0"
                                    style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB; background:#F9FAFB;">Stock Inicial</td>
+                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Stock Inicial</td>
                         <td style="padding:5px 8px; border:1px solid #E5E7EB;">
                             <input wire:model="modalStock" type="number" step="0.01" min="0"
                                    onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()"
@@ -578,7 +578,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB; background:#F9FAFB;">Stock Máximo</td>
+                        <td style="padding:7px 10px; font-size:13px; color:#374151; border:1px solid #E5E7EB;">Stock Máximo</td>
                         <td style="padding:7px 10px; font-size:13px; color:#6B7280; border:1px solid #E5E7EB;">
                             @if($stkMaxModal !== null)
                                 <span style="font-weight:600; color:{{ $stkMaxModal > 0 ? '#059669' : '#EF4444' }};">{{ number_format($stkMaxModal, 2) }}</span>
