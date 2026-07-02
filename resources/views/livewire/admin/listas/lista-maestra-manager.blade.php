@@ -602,7 +602,7 @@
             <div style="{{ $row }}">
                 <span style="{{ $lbl }}">Precio (Bs)</span>
                 <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
-                    <input wire:model.live="modalPrecio" x-on:input="precio = parseFloat($event.target.value) || 0"
+                    <input wire:model="modalPrecio" x-on:input="precio = parseFloat($event.target.value) || 0"
                            type="number" step="0.01" min="0"
                            style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
                     @error('modalPrecio') <p style="font-size:11px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
