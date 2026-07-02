@@ -168,9 +168,9 @@
                 </button>
                 @endif
             @else
-                <button wire:click="openAgregarModal" style="{{ $btnH }} background:#059669; color:#fff;">
-                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-                    Agregar a lista
+                <button wire:click="openAgregarModal" style="{{ $btnH }} background:#D1FAE5; color:#059669; border:1px solid #6EE7B7;">
+                    <svg width="10" height="10" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Habilitar
                 </button>
             @endif
             <button wire:click="$set('selectedProductId', null)" style="{{ $btnH }} background:#F3F4F6; color:#6B7280;">
@@ -513,7 +513,7 @@
     <div style="background:#fff; border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.2); width:100%; max-width:400px; overflow:hidden;">
         {{-- Header --}}
         <div style="padding:16px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; justify-content:space-between;">
-            <p style="font-size:16px; font-weight:800; color:#111827; margin:0;">Agregar a lista</p>
+            <p style="font-size:16px; font-weight:800; color:#111827; margin:0;">Habilitar producto</p>
             <button wire:click="closeAgregarModal"
                     style="width:28px; height:28px; border-radius:8px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center;"
                     @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
@@ -573,9 +573,9 @@
                 Cancelar
             </button>
             <button wire:click="saveAgregarModal"
-                    style="height:38px; padding:0 20px; border:none; border-radius:9px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;"
+                    style="height:38px; padding:0 20px; border:none; border-radius:9px; background:#059669; color:#fff; font-size:13px; font-weight:700; cursor:pointer;"
                     @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-                Agregar
+                Habilitar
             </button>
         </div>
     </div>
