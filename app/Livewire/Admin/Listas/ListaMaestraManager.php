@@ -906,12 +906,17 @@ class ListaMaestraManager extends Component
                 : collect();
 
             $itemSortMap = [
-                'code'            => 'products.code',
-                'name'            => 'products.name',
-                'precio_base'     => 'lmi.precio_base',
-                'puntos'          => 'lmi.puntos',
-                'stock_inicial'   => 'lmi.stock_inicial',
-                'tipo_incremento' => 'lmi.tipo_incremento',
+                'code'               => 'products.code',
+                'name'               => 'products.name',
+                'precio_base'        => 'lmi.precio_base',
+                'tipo_incremento'    => 'lmi.tipo_incremento',
+                'factor_incremento'  => 'lmi.factor_incremento',
+                'puntos'             => 'lmi.puntos',
+                'stock_inicial'      => 'lmi.stock_inicial',
+                'stock_comprometido' => 'lmi.stock_comprometido',
+                'stock_consumido'    => 'lmi.stock_consumido',
+                'stock_actual'       => 'lmi.stock_actual',
+                'active'             => 'lmi.active',
             ];
             $itemSortCol = $itemSortMap[$this->itemSortBy] ?? 'products.name';
             $viewingId   = $this->viewingId;
