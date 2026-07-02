@@ -279,15 +279,7 @@
                     </th>
 
                     {{-- Precio Final --}}
-                    <th style="{{ $thC }}">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Precio Final
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="#C4B5FD"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="#C4B5FD"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        {!! $emptyF !!}
-                    </th>
+                    <th style="{{ $thC }}">Precio Final{!! $emptyF !!}</th>
 
                     {{-- Puntos --}}
                     @php $isA = $itemSortBy === 'puntos'; @endphp
@@ -303,15 +295,7 @@
                     </th>
 
                     {{-- Stock Máx --}}
-                    <th style="{{ $thC }}">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Stock Máx.
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="#C4B5FD"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="#C4B5FD"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        {!! $emptyF !!}
-                    </th>
+                    <th style="{{ $thC }}">Stock Máx.{!! $emptyF !!}</th>
 
                     {{-- Stock Inicial --}}
                     @php $isA = $itemSortBy === 'stock_inicial'; @endphp
