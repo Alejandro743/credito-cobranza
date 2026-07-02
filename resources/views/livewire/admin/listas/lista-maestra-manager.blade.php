@@ -156,10 +156,17 @@
                     <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                     Editar
                 </button>
-                <button wire:click="removeItem({{ $selItem->id }})" style="{{ $btnH }} background:#FEF2F2; color:#EF4444; border:1px solid #FEE2E2;">
-                    <svg width="10" height="10" fill="none" stroke="#EF4444" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    Quitar de lista
+                @if($selItem->active)
+                <button wire:click="toggleItemActive({{ $selItem->id }})" style="{{ $btnH }} background:#FEF3C7; color:#D97706; border:1px solid #FDE68A;">
+                    <svg width="10" height="10" fill="none" stroke="#D97706" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21"/></svg>
+                    Deshabilitar
                 </button>
+                @else
+                <button wire:click="toggleItemActive({{ $selItem->id }})" style="{{ $btnH }} background:#D1FAE5; color:#059669; border:1px solid #6EE7B7;">
+                    <svg width="10" height="10" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.964-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    Habilitar
+                </button>
+                @endif
             @else
                 <button wire:click="openAgregarModal" style="{{ $btnH }} background:#059669; color:#fff;">
                     <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
@@ -325,7 +332,8 @@
                             <select wire:model.live="itemColFilterEnLista" @click.stop style="{{ $fS }}">
                                 <option value="">Todos</option>
                                 <option value="1">En lista</option>
-                                <option value="0">Sin agregar</option>
+                                <option value="inactive">Inactivo</option>
+                                <option value="0">Sin asignar</option>
                             </select>
                         </div>
                     </th>
@@ -415,14 +423,12 @@
                         @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
                     <td style="padding:10px 12px; text-align:center;">
-                        @if ($inLista)
-                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#D1FAE5; color:#059669;">
-                            En lista
-                        </span>
+                        @if ($inLista && $item->active)
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#D1FAE5; color:#059669;">En lista</span>
+                        @elseif ($inLista && !$item->active)
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#FEF3C7; color:#D97706;">Inactivo</span>
                         @else
-                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#F3F4F6; color:#9CA3AF;">
-                            Sin asignar
-                        </span>
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#F3F4F6; color:#9CA3AF;">Sin asignar</span>
                         @endif
                     </td>
                 </tr>

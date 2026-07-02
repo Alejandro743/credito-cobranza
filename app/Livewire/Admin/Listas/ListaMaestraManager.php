@@ -893,7 +893,9 @@ class ListaMaestraManager extends Component
             $itemsMap = ListaMaestraItem::where('lista_maestra_id', $this->viewingId)
                 ->get()->keyBy('product_id');
 
-            $inListaIds = $itemsMap->keys();
+            $inListaIds       = $itemsMap->keys();
+            $activeInListaIds = $itemsMap->filter(fn($i) => $i->active)->keys();
+            $inactiveIds      = $itemsMap->filter(fn($i) => !$i->active)->keys();
 
             $cicloId = $viewingMaestra?->cycle_id;
 
@@ -924,8 +926,9 @@ class ListaMaestraManager extends Component
                 ->when($this->itemColFilterCodigo,           fn($q) => $q->where('products.code', 'like', "%{$this->itemColFilterCodigo}%"))
                 ->when($this->itemColFilterNombre,           fn($q) => $q->where('products.name', 'like', "%{$this->itemColFilterNombre}%"))
                 ->when($this->itemColFilterTipoInc,          fn($q) => $q->where('lmi.tipo_incremento', $this->itemColFilterTipoInc))
-                ->when($this->itemColFilterEnLista === '1',  fn($q) => $q->whereIn('products.id', $inListaIds))
-                ->when($this->itemColFilterEnLista === '0',  fn($q) => $q->whereNotIn('products.id', $inListaIds))
+                ->when($this->itemColFilterEnLista === '1',        fn($q) => $q->whereIn('products.id', $activeInListaIds))
+                ->when($this->itemColFilterEnLista === 'inactive',  fn($q) => $q->whereIn('products.id', $inactiveIds))
+                ->when($this->itemColFilterEnLista === '0',         fn($q) => $q->whereNotIn('products.id', $inListaIds))
                 ->orderBy($itemSortCol, $this->itemSortDir)
                 ->get();
 
