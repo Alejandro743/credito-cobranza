@@ -919,12 +919,26 @@ class ListaMaestraManager extends Component
                 'active'             => 'lmi.active',
             ];
             $itemSortCol = $itemSortMap[$this->itemSortBy] ?? 'products.name';
+            $sortDir     = $this->itemSortDir === 'desc' ? 'desc' : 'asc';
             $viewingId   = $this->viewingId;
+
+            // Compute $listaIds here so stock_max sort subquery can use it
+            $listaIds = $cicloId ? ListaMaestra::where('cycle_id', $cicloId)->pluck('id') : collect();
 
             $products = Product::with(['categoria', 'unidad'])
                 ->leftJoin('lista_maestra_items as lmi', function ($join) use ($viewingId) {
                     $join->on('lmi.product_id', '=', 'products.id')
                          ->where('lmi.lista_maestra_id', $viewingId);
+                })
+                ->when($this->itemSortBy === 'stock_max' && $cicloId, function ($q) use ($cicloId, $listaIds) {
+                    $q->leftJoin('ciclo_productos as cp_sort', function ($j) use ($cicloId) {
+                        $j->on('cp_sort.product_id', '=', 'products.id')
+                          ->where('cp_sort.commercial_cycle_id', $cicloId);
+                    });
+                    $asigSub = ListaMaestraItem::whereIn('lista_maestra_id', $listaIds)
+                        ->selectRaw('product_id, SUM(stock_inicial) as asignado')
+                        ->groupBy('product_id');
+                    $q->leftJoinSub($asigSub, 'asig_sort', 'asig_sort.product_id', '=', 'products.id');
                 })
                 ->select('products.*')
                 ->whereIn('products.id', $cicloProductoIds)
@@ -933,7 +947,12 @@ class ListaMaestraManager extends Component
                 ->when($this->itemColFilterTipoInc,          fn($q) => $q->where('lmi.tipo_incremento', $this->itemColFilterTipoInc))
                 ->when($this->itemColFilterEnLista === '1', fn($q) => $q->whereIn('products.id', $habilitadosIds))
                 ->when($this->itemColFilterEnLista === '0', fn($q) => $q->whereNotIn('products.id', $habilitadosIds))
-                ->orderBy($itemSortCol, $this->itemSortDir)
+                ->when($this->itemSortBy === 'precio_final',
+                    fn($q) => $q->orderByRaw("(COALESCE(lmi.precio_base,0) + COALESCE(lmi.monto_incremento,0)) $sortDir"),
+                    fn($q) => $this->itemSortBy === 'stock_max' && $cicloId
+                        ? $q->orderByRaw("(COALESCE(cp_sort.stock_total,0) - COALESCE(asig_sort.asignado,0)) $sortDir")
+                        : $q->orderBy($itemSortCol, $sortDir)
+                )
                 ->get();
 
             $categorias = Categoria::where('active', true)->orderBy('name')->get();
@@ -944,8 +963,6 @@ class ListaMaestraManager extends Component
                     ->where('commercial_cycle_id', $cicloId)
                     ->pluck('stock_total', 'product_id')
                     ->map(fn($v) => (float) $v);
-
-                $listaIds = ListaMaestra::where('cycle_id', $cicloId)->pluck('id');
 
                 $asignadoMap = ListaMaestraItem::whereIn('lista_maestra_id', $listaIds)
                     ->selectRaw('product_id, SUM(stock_inicial) as total')

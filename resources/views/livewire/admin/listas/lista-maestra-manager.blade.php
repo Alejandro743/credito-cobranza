@@ -279,7 +279,17 @@
                     </th>
 
                     {{-- Precio Final --}}
-                    <th style="{{ $thC }}">Precio Final{!! $emptyF !!}</th>
+                    @php $isA = $itemSortBy === 'precio_final'; @endphp
+                    <th wire:click="toggleItemSort('precio_final')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Precio Final
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        {!! $emptyF !!}
+                    </th>
 
                     {{-- Puntos --}}
                     @php $isA = $itemSortBy === 'puntos'; @endphp
@@ -295,7 +305,17 @@
                     </th>
 
                     {{-- Stock Máx --}}
-                    <th style="{{ $thC }}">Stock Máx.{!! $emptyF !!}</th>
+                    @php $isA = $itemSortBy === 'stock_max'; @endphp
+                    <th wire:click="toggleItemSort('stock_max')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Stock Máx.
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        {!! $emptyF !!}
+                    </th>
 
                     {{-- Stock Inicial --}}
                     @php $isA = $itemSortBy === 'stock_inicial'; @endphp
