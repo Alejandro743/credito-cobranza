@@ -607,108 +607,119 @@
 
 {{-- ══ MODAL EDITAR ÍTEM ══ --}}
 @if ($showEditModal && $editItemId)
-@php $editItemModal = $itemsMap->first(fn($i) => $i->id === $editItemId); @endphp
-<div style="position:fixed; inset:0; background:rgba(0,0,0,.45); z-index:50; display:flex; align-items:center; justify-content:center; padding:16px;"
+@php
+    $editProdModal = $selectedProductId ? $products->firstWhere('id', $selectedProductId) : null;
+@endphp
+<div style="position:fixed; inset:0; background:rgba(0,0,0,.4); z-index:50; display:flex; align-items:center; justify-content:center; padding:16px;"
      wire:click.self="cancelEditItem">
-    <div style="background:#fff; border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.2); width:100%; max-width:480px; overflow:hidden;">
+    <div x-data="{
+            precio: parseFloat('{{ (float)$editItemPrecio }}') || 0,
+            tipo:   '{{ $editItemTipoIncremento }}',
+            factor: parseFloat('{{ (float)$editItemFactorIncremento }}') || 0,
+            get monto() {
+                if (!this.tipo || !this.factor) return 0;
+                return this.tipo === 'porcentaje'
+                    ? Math.round(this.precio * this.factor / 100 * 100) / 100
+                    : parseFloat(this.factor);
+            },
+            get final() { return (this.precio + this.monto).toFixed(2); },
+            get montoFmt() { return this.monto.toFixed(2); }
+         }"
+         style="background:#fff; border-radius:8px; box-shadow:0 4px 24px rgba(0,0,0,.15); width:100%; max-width:420px; overflow:hidden;">
         {{-- Header --}}
-        <div style="padding:16px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; justify-content:space-between;">
-            <p style="font-size:16px; font-weight:800; color:#111827; margin:0;">Editar ítem</p>
-            <button wire:click="cancelEditItem"
-                    style="width:28px; height:28px; border-radius:8px; border:1px solid #E5E7EB; background:#F9FAFB; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
-                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            </button>
+        <div style="padding:14px 20px; border-bottom:1px solid #EDE9FE; background:#F5F3FF; display:flex; align-items:flex-start; justify-content:space-between;">
+            <div>
+                <p style="font-size:15px; font-weight:700; color:#111827; margin:0 0 2px;">Editar ítem</p>
+                <p style="font-size:12px; color:#9CA3AF; margin:0;">{{ $editProdModal?->code }} — {{ $editProdModal?->name }}</p>
+            </div>
+            <button wire:click="cancelEditItem" style="width:28px; height:28px; border:1px solid #EDE9FE; border-radius:6px; background:#fff; color:#6B7280; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">✕</button>
         </div>
         {{-- Body --}}
-        <div x-data="{
-                precio: parseFloat('{{ (float)$editItemPrecio }}') || 0,
-                tipo:   '{{ $editItemTipoIncremento }}',
-                factor: parseFloat('{{ (float)$editItemFactorIncremento }}') || 0,
-                get monto() {
-                    if (!this.tipo || !this.factor) return 0;
-                    return this.tipo === 'porcentaje'
-                        ? Math.round(this.precio * this.factor / 100 * 100) / 100
-                        : parseFloat(this.factor);
-                },
-                get final() { return (this.precio + this.monto).toFixed(2); }
-             }"
-             style="padding:20px; display:flex; flex-direction:column; gap:12px;">
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">Código</label>
+        @php
+            $row = 'display:flex; align-items:center; border-bottom:1px solid #E5E7EB;';
+            $lbl = 'width:45%; padding:8px 14px; font-size:13px; color:#6B7280; text-align:right; flex-shrink:0;';
+            $val = 'flex:1; padding:8px 12px; font-size:13px; color:#111827;';
+        @endphp
+        <div>
+            <div style="{{ $row }}">
+                <span style="{{ $lbl }}">Código</span>
+                <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
                     <input wire:model.live="editItemCode" type="text"
-                           style="width:100%; height:36px; border:1px solid #D1D5DB; border-radius:8px; padding:0 10px; font-size:13px; font-family:monospace; text-transform:uppercase; outline:none; box-sizing:border-box; background:#fff;"
-                           @focus="$el.style.borderColor='#7B6FE8'" @blur="$el.style.borderColor='#D1D5DB'">
-                    @error('editItemCode') <p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
+                           style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; font-family:monospace; text-transform:uppercase; outline:none; box-sizing:border-box;">
+                    @error('editItemCode') <p style="font-size:11px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
                 </div>
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">Precio (Bs)</label>
+            </div>
+            <div style="{{ $row }}">
+                <span style="{{ $lbl }}">Precio (Bs)</span>
+                <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
                     <input wire:model="editItemPrecio" x-on:input="precio = parseFloat($event.target.value) || 0"
                            type="number" step="0.01" min="0"
-                           style="width:100%; height:36px; border:1px solid #D1D5DB; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;"
-                           @focus="$el.style.borderColor='#7B6FE8'" @blur="$el.style.borderColor='#D1D5DB'">
-                    @error('editItemPrecio') <p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
+                           style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
+                    @error('editItemPrecio') <p style="font-size:11px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
                 </div>
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">Puntos</label>
-                    <input wire:model="editItemPuntos" type="number" min="0"
-                           style="width:100%; height:36px; border:1px solid #D1D5DB; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;"
-                           @focus="$el.style.borderColor='#7B6FE8'" @blur="$el.style.borderColor='#D1D5DB'">
-                </div>
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">Stock Inicial</label>
-                    <input wire:model="editItemStock" type="number" step="0.01" min="0"
-                           onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()"
-                           style="width:100%; height:36px; border:1px solid #D1D5DB; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;"
-                           @focus="$el.style.borderColor='#7B6FE8'" @blur="$el.style.borderColor='#D1D5DB'">
-                    @error('editItemStock') <p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
-                </div>
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">Tipo Inc.</label>
+            </div>
+            <div style="{{ $row }}">
+                <span style="{{ $lbl }}">Tipo Inc.</span>
+                <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
                     <select wire:model="editItemTipoIncremento" x-on:change="tipo = $event.target.value"
-                            style="width:100%; height:36px; border:1px solid #D1D5DB; border-radius:8px; padding:0 8px; font-size:13px; outline:none; background:#fff; box-sizing:border-box; cursor:pointer;"
-                            @focus="$el.style.borderColor='#7B6FE8'" @blur="$el.style.borderColor='#D1D5DB'">
+                            style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; background:#fff; box-sizing:border-box; cursor:pointer;">
                         <option value="">— Sin inc. —</option>
                         <option value="porcentaje">% Porcentaje</option>
                         <option value="monto_fijo">Bs Monto Fijo</option>
                     </select>
                 </div>
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">Valor Inc.</label>
+            </div>
+            <div style="{{ $row }}">
+                <span style="{{ $lbl }}">Valor Inc.</span>
+                <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
                     <input wire:model="editItemFactorIncremento" x-on:input="factor = parseFloat($event.target.value) || 0"
                            type="number" step="0.01" min="0" placeholder="0"
-                           style="width:100%; height:36px; border:1px solid #D1D5DB; border-radius:8px; padding:0 10px; font-size:13px; text-align:center; outline:none; box-sizing:border-box; background:#fff;"
-                           @focus="$el.style.borderColor='#7B6FE8'" @blur="$el.style.borderColor='#D1D5DB'">
+                           style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
                 </div>
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">Estado</label>
+            </div>
+            <div style="{{ $row }}">
+                <span style="{{ $lbl }}">Monto Incremento</span>
+                <span style="{{ $val }}">Bs <span x-text="montoFmt"></span></span>
+            </div>
+            <div style="{{ $row }}">
+                <span style="{{ $lbl }}">Precio Final</span>
+                <span style="{{ $val }} font-weight:700; color:#7B6FE8;">Bs <span x-text="final"></span></span>
+            </div>
+            <div style="{{ $row }}">
+                <span style="{{ $lbl }}">Puntos</span>
+                <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
+                    <input wire:model="editItemPuntos" type="number" min="0"
+                           style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
+                </div>
+            </div>
+            <div style="{{ $row }}">
+                <span style="{{ $lbl }}">Stock Inicial</span>
+                <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
+                    <input wire:model="editItemStock" type="number" step="0.01" min="0"
+                           onkeydown="if(event.key==='-'||event.key==='e'||event.key==='E')event.preventDefault()"
+                           style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; box-sizing:border-box;">
+                    @error('editItemStock') <p style="font-size:11px; color:#ef4444; margin:2px 0 0;">{{ $message }}</p> @enderror
+                </div>
+            </div>
+            <div style="display:flex; align-items:center;">
+                <span style="{{ $lbl }}">Estado</span>
+                <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
                     <select wire:model="editItemActive"
-                            style="width:100%; height:36px; border:1px solid #D1D5DB; border-radius:8px; padding:0 8px; font-size:13px; outline:none; background:#fff; box-sizing:border-box; cursor:pointer;"
-                            @focus="$el.style.borderColor='#7B6FE8'" @blur="$el.style.borderColor='#D1D5DB'">
-                        <option value="1">Activo</option>
-                        <option value="0">Inactivo</option>
+                            style="width:100%; height:30px; border:1px solid #D1D5DB; border-radius:5px; padding:0 8px; font-size:13px; outline:none; background:#fff; box-sizing:border-box; cursor:pointer;">
+                        <option value="1">Habilitado</option>
+                        <option value="0">Deshabilitado</option>
                     </select>
-                </div>
-                <div>
-                    <label style="font-size:11px; font-weight:600; color:#6B7280; display:block; margin-bottom:5px;">P. Final (referencia)</label>
-                    <div style="height:36px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; display:flex; align-items:center; justify-content:center; gap:4px;">
-                        <span style="font-size:11px; color:#9CA3AF;">Bs</span>
-                        <span x-text="final" style="font-size:15px; font-weight:800; color:#7B6FE8;"></span>
-                    </div>
                 </div>
             </div>
         </div>
         {{-- Footer --}}
-        <div style="padding:14px 20px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px;">
+        <div style="padding:12px 20px; border-top:1px solid #E5E7EB; display:flex; justify-content:flex-end; gap:8px;">
             <button wire:click="cancelEditItem"
-                    style="height:38px; padding:0 18px; border:1px solid #E5E7EB; border-radius:9px; background:#fff; color:#6B7280; font-size:13px; font-weight:600; cursor:pointer;"
-                    @mouseenter="$el.style.background='#F9FAFB'" @mouseleave="$el.style.background='#fff'">
+                    style="height:36px; padding:0 16px; border:1px solid #E5E7EB; border-radius:6px; background:#fff; color:#374151; font-size:13px; cursor:pointer;">
                 Cancelar
             </button>
             <button wire:click="saveEditItem"
-                    style="height:38px; padding:0 20px; border:none; border-radius:9px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;"
-                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                    style="height:36px; padding:0 20px; border:none; border-radius:6px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:600; cursor:pointer;">
                 Guardar
             </button>
         </div>
