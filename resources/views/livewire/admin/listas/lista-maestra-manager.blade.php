@@ -160,7 +160,7 @@
                 <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
                 Importar
             </button>
-            <button style="{{ $btnH }} background:#fff; color:#7B6FE8; border:1px solid #EDE9FE;">
+            <button wire:click="exportCsv" style="{{ $btnH }} background:#fff; color:#7B6FE8; border:1px solid #EDE9FE;">
                 <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 8l5-5 5 5M12 3v12"/></svg>
                 Exportar
             </button>

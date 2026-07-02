@@ -854,6 +854,86 @@ class ListaMaestraManager extends Component
 
     // ── Render ────────────────────────────────────────────────────────────────
 
+    public function exportCsv(): \Symfony\Component\HttpFoundation\StreamedResponse
+    {
+        $viewingMaestra = ListaMaestra::with('cycle')->find($this->viewingId);
+        $cicloId        = $viewingMaestra?->cycle_id;
+        $viewingId      = $this->viewingId;
+
+        $itemsMap       = ListaMaestraItem::where('lista_maestra_id', $viewingId)
+            ->get()->keyBy('product_id');
+
+        $habilitadosIds = $itemsMap->filter(fn($i) => $i->active)->keys();
+
+        $cicloProductoIds = $cicloId
+            ? DB::table('ciclo_productos')->where('commercial_cycle_id', $cicloId)->pluck('product_id')
+            : collect();
+
+        $listaIds = $cicloId ? ListaMaestra::where('cycle_id', $cicloId)->pluck('id') : collect();
+
+        $stockMap = $cicloId
+            ? DB::table('ciclo_productos')->where('commercial_cycle_id', $cicloId)
+                ->pluck('stock_total', 'product_id')->map(fn($v) => (float) $v)
+            : collect();
+
+        $asignadoMap = $cicloId
+            ? ListaMaestraItem::whereIn('lista_maestra_id', $listaIds)
+                ->selectRaw('product_id, SUM(stock_inicial) as total')
+                ->groupBy('product_id')->pluck('total', 'product_id')->map(fn($v) => (float) $v)
+            : collect();
+
+        $products = Product::with(['categoria', 'unidad'])
+            ->leftJoin('lista_maestra_items as lmi', function ($join) use ($viewingId) {
+                $join->on('lmi.product_id', '=', 'products.id')
+                     ->where('lmi.lista_maestra_id', $viewingId);
+            })
+            ->select('products.*')
+            ->whereIn('products.id', $cicloProductoIds)
+            ->when($this->itemColFilterCodigo,          fn($q) => $q->where('products.code', 'like', "%{$this->itemColFilterCodigo}%"))
+            ->when($this->itemColFilterNombre,          fn($q) => $q->where('products.name', 'like', "%{$this->itemColFilterNombre}%"))
+            ->when($this->itemColFilterTipoInc,         fn($q) => $q->where('lmi.tipo_incremento', $this->itemColFilterTipoInc))
+            ->when($this->itemColFilterEnLista === '1', fn($q) => $q->whereIn('products.id', $habilitadosIds))
+            ->when($this->itemColFilterEnLista === '0', fn($q) => $q->whereNotIn('products.id', $habilitadosIds))
+            ->orderBy('products.name')
+            ->get();
+
+        $filename = 'lista-' . str($viewingMaestra?->code ?? 'export')->slug() . '-' . now()->format('Ymd') . '.csv';
+
+        return response()->streamDownload(function () use ($products, $itemsMap, $stockMap, $asignadoMap) {
+            $out = fopen('php://output', 'w');
+            fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF)); // UTF-8 BOM para Excel
+
+            fputcsv($out, ['Código', 'Producto', 'Precio Base', 'Tipo Inc.', 'Incremento', 'Precio Final', 'Puntos', 'Stock Máx.', 'Stock Inicial', 'Stock Comp.', 'Stock Cons.', 'Stock Disp.', 'Estado'], ';');
+
+            foreach ($products as $p) {
+                $item    = $itemsMap->get($p->id);
+                $inLista = $item !== null;
+
+                $stkMax = $stockMap->has($p->id)
+                    ? max(0, $stockMap->get($p->id) - $asignadoMap->get($p->id, 0))
+                    : '';
+
+                fputcsv($out, [
+                    $p->code,
+                    $p->name,
+                    $inLista ? number_format($item->precio_base, 2, '.', '') : '',
+                    $inLista ? ($item->tipo_incremento ?? '') : '',
+                    $inLista && $item->factor_incremento > 0 ? number_format($item->factor_incremento, 2, '.', '') : '',
+                    $inLista ? number_format($item->precio_final, 2, '.', '') : '',
+                    $inLista ? $item->puntos : '',
+                    $stkMax !== '' ? number_format($stkMax, 2, '.', '') : '',
+                    $inLista ? number_format($item->stock_inicial, 2, '.', '') : '',
+                    $inLista ? number_format($item->stock_comprometido, 2, '.', '') : '',
+                    $inLista ? number_format($item->stock_consumido, 2, '.', '') : '',
+                    $inLista ? number_format($item->stock_actual, 2, '.', '') : '',
+                    $inLista && $item->active ? 'Habilitado' : 'Deshabilitado',
+                ], ';');
+            }
+
+            fclose($out);
+        }, $filename, ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
     public function render()
     {
         $cycles = CommercialCycle::where('status', '!=', 'cerrado')->orderByDesc('start_date')->get();
