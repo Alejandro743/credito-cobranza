@@ -270,19 +270,24 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
 </div>
 
 {{-- ══ DESKTOP: Tabla ══ --}}
+<div class="hidden sm:block">
+@if(!$showAddForm)
+<div style="display:flex; justify-content:flex-start; margin-bottom:8px;">
+    <button wire:click="showAdd"
+            style="height:32px; padding:0 14px; display:inline-flex; align-items:center; gap:5px; border:none; border-radius:8px; background:#7B6FE8; font-size:12px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap;"
+            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Nuevo usuario
+    </button>
+</div>
+@endif
+</div>
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     {{-- Barra --}}
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-wrap:wrap;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Usuarios registrados</span>
         <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $users->total() }}</span>
-        @if(!$showAddForm)
-        <button wire:click="showAdd"
-                style="height:28px; padding:0 12px; display:inline-flex; align-items:center; gap:5px; border:none; border-radius:7px; background:#7B6FE8; font-size:11px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap;">
-            <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-            Nuevo usuario
-        </button>
-        @endif
         @if($selectedUserId)
         @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
         <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
