@@ -14,9 +14,12 @@ class MaestroArticulosManager extends Component
 {
     use WithPagination, HasModuleColor;
 
-    public string $search       = '';
-    public string $filterStatus = '';
-    public string $sortBy       = 'nombre';
+    public string $colFilterCodigo      = '';
+    public string $colFilterNombre      = '';
+    public string $colFilterCategoriaId = '';
+    public string $colFilterUnidadId    = '';
+    public string $colFilterEstado      = '';
+    public string $sortBy               = 'nombre';
     public string $sortDir      = 'asc';
 
     // Formulario agregar
@@ -45,7 +48,11 @@ class MaestroArticulosManager extends Component
         $this->initModuleColor();
     }
 
-    public function updatingSearch(): void { $this->resetPage(); }
+    public function updatingColFilterCodigo(): void      { $this->resetPage(); }
+    public function updatingColFilterNombre(): void       { $this->resetPage(); }
+    public function updatingColFilterCategoriaId(): void  { $this->resetPage(); }
+    public function updatingColFilterUnidadId(): void     { $this->resetPage(); }
+    public function updatingColFilterEstado(): void       { $this->resetPage(); }
 
     public function toggleSort(string $col): void
     {
@@ -158,10 +165,11 @@ class MaestroArticulosManager extends Component
     public function render()
     {
         $articulos = MaestroArticulo::with(['categoria', 'unidad'])
-            ->when($this->search, fn($q) =>
-                $q->where('nombre', 'like', "%{$this->search}%")
-                  ->orWhere('codigo', 'like', "%{$this->search}%"))
-            ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool)$this->filterStatus))
+            ->when($this->colFilterCodigo,       fn($q) => $q->where('codigo',      'like', "%{$this->colFilterCodigo}%"))
+            ->when($this->colFilterNombre,       fn($q) => $q->where('nombre',      'like', "%{$this->colFilterNombre}%"))
+            ->when($this->colFilterCategoriaId,  fn($q) => $q->where('categoria_id', $this->colFilterCategoriaId))
+            ->when($this->colFilterUnidadId,     fn($q) => $q->where('unidad_id',   $this->colFilterUnidadId))
+            ->when($this->colFilterEstado !== '', fn($q) => $q->where('active', (bool)$this->colFilterEstado))
             ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(20);
 

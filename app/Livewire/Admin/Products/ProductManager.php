@@ -19,10 +19,11 @@ class ProductManager extends Component
 {
     use WithPagination, HasModuleColor, WithFileUploads;
 
-    public string $search            = '';
-    public string $filterStatus      = '';
-    public string $filterCategoriaId = '';
-    public string $sortBy            = 'code';
+    public string $colFilterCodigo      = '';
+    public string $colFilterNombre      = '';
+    public string $colFilterCategoriaId = '';
+    public string $colFilterEstado      = '';
+    public string $sortBy               = 'code';
     public string $sortDir           = 'asc';
 
     // Formulario de agregar (inline arriba de tabla)
@@ -65,7 +66,10 @@ class ProductManager extends Component
         $this->initModuleColor();
     }
 
-    public function updatingSearch(): void { $this->resetPage(); }
+    public function updatingColFilterCodigo(): void      { $this->resetPage(); }
+    public function updatingColFilterNombre(): void       { $this->resetPage(); }
+    public function updatingColFilterCategoriaId(): void  { $this->resetPage(); }
+    public function updatingColFilterEstado(): void       { $this->resetPage(); }
 
     public function toggleSort(string $col): void
     {
@@ -334,11 +338,10 @@ class ProductManager extends Component
         $ciclos       = \App\Models\CommercialCycle::where('status', 'abierto')->orderByDesc('start_date')->get();
 
         $products = Product::with(['categoria', 'unidad', 'ciclos', 'listaMaestraItems'])
-            ->when($this->search, fn($q) =>
-                $q->where('name', 'like', "%{$this->search}%")
-                  ->orWhere('code', 'like', "%{$this->search}%"))
-            ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
-            ->when($this->filterCategoriaId, fn($q) => $q->where('categoria_id', $this->filterCategoriaId))
+            ->when($this->colFilterCodigo,       fn($q) => $q->where('code',        'like', "%{$this->colFilterCodigo}%"))
+            ->when($this->colFilterNombre,       fn($q) => $q->where('name',        'like', "%{$this->colFilterNombre}%"))
+            ->when($this->colFilterCategoriaId,  fn($q) => $q->where('categoria_id', $this->colFilterCategoriaId))
+            ->when($this->colFilterEstado !== '', fn($q) => $q->where('active', (bool) $this->colFilterEstado))
             ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(20);
 

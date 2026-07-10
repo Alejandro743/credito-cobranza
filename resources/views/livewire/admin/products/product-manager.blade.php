@@ -9,36 +9,11 @@
 </div>
 @endif
 
-{{-- ══ TOOLBAR ══ --}}
 @if(!$showAddForm)
-<div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
-
-    <div class="relative w-full sm:flex-1" style="min-width:0;">
-        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
-        </svg>
-        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por código o nombre..."
-               style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
-    </div>
-
-    <select wire:model.live="filterCategoriaId" class="w-full sm:flex-1"
-            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
-        <option value="">Todas las categorías</option>
-        @foreach ($categorias as $cat)
-            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-        @endforeach
-    </select>
-
-    <select wire:model.live="filterStatus" class="w-full sm:flex-1"
-            style="height:36px; padding:0 12px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; background:#fff; outline:none; color:#374151; cursor:pointer; box-sizing:border-box;">
-        <option value="">Todos los estados</option>
-        <option value="1">Activos</option>
-        <option value="0">Inactivos</option>
-    </select>
-
-    <button wire:click="showAdd" class="w-full sm:w-auto"
-            style="height:36px; padding:0 18px; display:flex; align-items:center; justify-content:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+<div class="hidden sm:flex mb-3">
+    <button wire:click="showAdd"
+            style="height:34px; padding:0 16px; display:flex; align-items:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap;">
+        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
         </svg>
         Nuevo producto
@@ -172,17 +147,22 @@
     </div>
 
     <div style="overflow:auto; flex:1; overflow-x:auto;">
-        @if ($products->isEmpty())
-        <p style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">No hay productos registrados.</p>
-        @else
         @php
+        $fI = 'width:100%; height:26px; border:1px solid #EDE9FE; border-radius:6px; padding:0 8px; font-size:11px; color:#374151; background:#fff; outline:none; box-sizing:border-box;';
+        $fS = 'width:100%; height:26px; border:1px solid #EDE9FE; border-radius:6px; padding:0 6px; font-size:11px; color:#374151; background:#fff; outline:none; cursor:pointer; box-sizing:border-box;';
+        $fW = 'padding:4px 8px;' . ($editingId ? ' opacity:0.45; pointer-events:none;' : '');
         $sortBefore = ['Código'=>'code','Nombre'=>'name'];
         $sortAfter  = ['Categoría'=>'categoria_id','Unidad'=>'unidad_id','Estado'=>'active'];
         @endphp
         <table style="width:100%; min-width:1100px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
-                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; width:50px; position:sticky; left:0; z-index:11; background:#F9F8FF;">#</th>
+                <tr style="background:#F9F8FF; border-bottom:1px solid #EDE9FE; {{ $editingId ? 'pointer-events:none;' : '' }}">
+                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; width:50px; position:sticky; left:0; z-index:11; background:#F9F8FF;">
+                        <input type="checkbox"
+                               :checked="$wire.selectedProductId !== null"
+                               @click="$wire.set('selectedProductId', null)"
+                               style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                    </th>
                     <th style="padding:10px 12px; text-align:center;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Img</span>
                     </th>
@@ -235,9 +215,39 @@
                     </th>
                     @endforeach
                 </tr>
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                    <td style="{{ $fW }}"></td>
+                    <td style="{{ $fW }}"></td>
+                    <td style="{{ $fW }}"></td>
+                    <td style="{{ $fW }}">
+                        <input wire:model.live.debounce.300ms="colFilterCodigo" type="text" placeholder="Filtrar..." style="{{ $fI }}">
+                    </td>
+                    <td style="{{ $fW }}">
+                        <input wire:model.live.debounce.300ms="colFilterNombre" type="text" placeholder="Filtrar..." style="{{ $fI }}">
+                    </td>
+                    <td style="{{ $fW }}"></td>
+                    <td style="{{ $fW }}"></td>
+                    <td style="{{ $fW }}"></td>
+                    <td style="{{ $fW }}">
+                        <select wire:model.live="colFilterCategoriaId" style="{{ $fS }}">
+                            <option value="">Todas</option>
+                            @foreach($categorias as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td style="{{ $fW }}"></td>
+                    <td style="{{ $fW }}">
+                        <select wire:model.live="colFilterEstado" style="{{ $fS }}">
+                            <option value="">Todos</option>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </td>
+                </tr>
             </thead>
             <tbody>
-                @foreach ($products as $p)
+                @forelse ($products as $p)
 
                 {{-- Fila edición inline --}}
                 @if ($editingId === $p->id)
@@ -398,10 +408,17 @@
                 </tr>
                 @endif
 
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="11" style="padding:48px;">
+                        <p style="text-align:center; color:#9CA3AF; font-size:13px; margin:0;">
+                            {{ $colFilterCodigo || $colFilterNombre || $colFilterCategoriaId || $colFilterEstado !== '' ? 'Sin resultados para los filtros aplicados.' : 'No hay productos registrados.' }}
+                        </p>
+                    </td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
-        @endif
     </div>
 
     @if ($products->hasPages())
@@ -536,7 +553,7 @@
     @endif
 
     @empty
-    <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">No hay productos registrados.</p>
+    <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">{{ $colFilterCodigo || $colFilterNombre || $colFilterCategoriaId || $colFilterEstado !== '' ? 'Sin resultados para los filtros aplicados.' : 'No hay productos registrados.' }}</p>
     @endforelse
     @if ($products->hasPages())
     <div style="padding-top:8px;">{{ $products->links() }}</div>

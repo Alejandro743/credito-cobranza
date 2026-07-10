@@ -14,9 +14,11 @@ class RoleManager extends Component
     use WithPagination, HasModuleColor;
 
     public string $mode   = 'list';   // list | permissions
-    public string $search = '';
     public string $sortBy  = 'name';
     public string $sortDir = 'asc';
+
+    public string $colFilterNombre = '';
+    public string $colFilterEstado = '';
 
     public function toggleSort(string $col): void
     {
@@ -28,6 +30,9 @@ class RoleManager extends Component
         }
         $this->resetPage();
     }
+
+    public function updatingColFilterNombre(): void { $this->resetPage(); }
+    public function updatingColFilterEstado(): void  { $this->resetPage(); }
 
     // Inline add
     public bool   $showAddForm  = false;
@@ -62,7 +67,6 @@ class RoleManager extends Component
         $this->initModuleColor();
     }
 
-    public function updatingSearch(): void { $this->resetPage(); }
 
     // ── Inline add ────────────────────────────────────────────────────────────
 
@@ -261,7 +265,8 @@ class RoleManager extends Component
     public function render()
     {
         $roles = Role::withCount('users')
-            ->when($this->search, fn($q) => $q->where('name', 'like', "%{$this->search}%"))
+            ->when($this->colFilterNombre, fn($q) => $q->where('name', 'like', "%{$this->colFilterNombre}%"))
+            ->when($this->colFilterEstado !== '', fn($q) => $q->where('activo', (bool) $this->colFilterEstado))
             ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(20);
 

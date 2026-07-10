@@ -7,6 +7,7 @@ use App\Models\CommercialCycle;
 use App\Models\ListaAcceso;
 use App\Models\ListaMaestra;
 use App\Models\ListaMaestraItem;
+use App\Models\MaestroArticulo;
 use App\Models\Product;
 use App\Models\Unidad;
 use App\Models\User;
@@ -94,13 +95,35 @@ class ListaMaestraManager extends Component
     public string $filterProducto = '';
     public string $filterEnLista  = '';
 
+    // Agregar maestro artículo inline
+    public bool   $showAddMaestroForm    = false;
+    public ?int   $addMaestroId          = null;
+
+    // Modal: crear nuevo maestro artículo desde autocomplete
+    public bool   $showCreateMaestroModal   = false;
+    public string $newMaestroCodigo         = '';
+    public string $newMaestroNombreModal    = '';
+    public ?int   $newMaestroCategoriaId    = null;
+    public ?int   $newMaestroUnidadId       = null;
+    public string $addMaestroStock       = '';
+    public string $addMaestroPrecio      = '0';
+    public string $addMaestroPuntos      = '0';
+    public string $maestroCategoria      = '';
+    public string $maestroUnidad         = '';
+    public ?int   $selectedMaestroItemId = null;
+
     public ?int   $selectedProductId    = null;
     public string $itemSortBy           = 'name';
     public string $itemSortDir          = 'asc';
-    public string $itemColFilterCodigo  = '';
-    public string $itemColFilterNombre  = '';
-    public string $itemColFilterTipoInc = '';
-    public string $itemColFilterEnLista = '';
+    public string $itemColFilterCodigo    = '';
+    public string $itemColFilterNombre    = '';
+    public string $itemColFilterTipoInc   = '';
+    public string $itemColFilterEnLista   = '';
+    public string $itemColFilterPrecioBase  = '';
+    public string $itemColFilterFactorInc  = '';
+    public string $itemColFilterPrecioFinal = '';
+    public string $itemColFilterPuntos     = '';
+    public string $itemColFilterStock      = '';
 
     public function selectProduct(int $id): void
     {
@@ -425,11 +448,142 @@ class ListaMaestraManager extends Component
         $this->filterEnLista        = '';
         $this->itemSortBy           = 'name';
         $this->itemSortDir          = 'asc';
-        $this->itemColFilterCodigo  = '';
-        $this->itemColFilterNombre  = '';
-        $this->itemColFilterTipoInc = '';
-        $this->itemColFilterEnLista = '';
+        $this->itemColFilterCodigo      = '';
+        $this->itemColFilterNombre      = '';
+        $this->itemColFilterTipoInc     = '';
+        $this->itemColFilterEnLista     = '';
+        $this->itemColFilterPrecioBase  = '';
+        $this->itemColFilterFactorInc   = '';
+        $this->itemColFilterPrecioFinal = '';
+        $this->itemColFilterPuntos      = '';
+        $this->itemColFilterStock       = '';
         $this->resetValidation();
+    }
+
+    public function showAddMaestro(): void
+    {
+        $this->showAddMaestroForm = true;
+        $this->addMaestroId       = null;
+        $this->addMaestroStock    = '';
+        $this->addMaestroPrecio   = '0';
+        $this->addMaestroPuntos   = '0';
+        $this->maestroCategoria   = '';
+        $this->maestroUnidad      = '';
+        $this->showAddItemForm    = null;
+        $this->resetValidation();
+    }
+
+    public function cancelAddMaestro(): void
+    {
+        $this->showAddMaestroForm = false;
+        $this->addMaestroId       = null;
+        $this->addMaestroStock    = '';
+        $this->addMaestroPrecio   = '0';
+        $this->addMaestroPuntos   = '0';
+        $this->maestroCategoria   = '';
+        $this->maestroUnidad      = '';
+        $this->resetValidation();
+    }
+
+    public function selectMaestro(int|string|null $id): void
+    {
+        if ($id === null) return;
+        $this->addMaestroId     = (int) $id;
+        $m = MaestroArticulo::with(['categoria', 'unidad'])->find($id);
+        $this->maestroCategoria = $m?->categoria?->descripcion ?? '—';
+        $this->maestroUnidad    = $m?->unidad?->name ?? '—';
+    }
+
+    public function openCreateMaestroModal(string $query = ''): void
+    {
+        $this->showCreateMaestroModal = true;
+        $this->newMaestroCodigo       = strtoupper(trim($query));
+        $this->newMaestroNombreModal  = trim($query);
+        $this->newMaestroCategoriaId  = null;
+        $this->newMaestroUnidadId     = null;
+        $this->resetValidation(['newMaestroCodigo', 'newMaestroNombreModal']);
+    }
+
+    public function saveCreateMaestroModal(): void
+    {
+        $this->validate([
+            'newMaestroCodigo'      => ['required', 'string', 'max:50', Rule::unique('maestro_articulos', 'codigo')],
+            'newMaestroNombreModal' => 'required|string|max:255',
+        ], [], [
+            'newMaestroCodigo'      => 'código',
+            'newMaestroNombreModal' => 'nombre',
+        ]);
+
+        $nuevo = MaestroArticulo::create([
+            'codigo'       => strtoupper(trim($this->newMaestroCodigo)),
+            'nombre'       => trim($this->newMaestroNombreModal),
+            'categoria_id' => $this->newMaestroCategoriaId,
+            'unidad_id'    => $this->newMaestroUnidadId,
+            'active'       => true,
+        ]);
+
+        $this->showCreateMaestroModal = false;
+        $this->selectMaestro($nuevo->id);
+
+        $this->dispatch('maestro-created',
+            id:     $nuevo->id,
+            codigo: $nuevo->codigo,
+            nombre: $nuevo->nombre,
+            label:  $nuevo->codigo . ' — ' . $nuevo->nombre,
+        );
+    }
+
+    public function saveAddMaestro(): void
+    {
+        $this->validate([
+            'addMaestroId'     => 'required|exists:maestro_articulos,id',
+            'addMaestroStock'  => 'required|numeric|min:0',
+            'addMaestroPrecio' => 'required|numeric|min:0',
+            'addMaestroPuntos' => 'required|integer|min:0',
+        ], [], [
+            'addMaestroId'     => 'artículo',
+            'addMaestroStock'  => 'stock',
+            'addMaestroPrecio' => 'precio base',
+            'addMaestroPuntos' => 'puntos',
+        ]);
+
+        $existe = ListaMaestraItem::where('lista_maestra_id', $this->viewingId)
+            ->where('maestro_articulo_id', $this->addMaestroId)
+            ->exists();
+
+        if ($existe) {
+            $this->addError('addMaestroId', 'Este artículo ya está en esta lista.');
+            return;
+        }
+
+        $stock = (float) $this->addMaestroStock;
+
+        [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista((float) $this->addMaestroPrecio);
+
+        ListaMaestraItem::create([
+            'lista_maestra_id'    => $this->viewingId,
+            'maestro_articulo_id' => $this->addMaestroId,
+            'stock_inicial'       => $stock,
+            'stock_actual'        => $stock,
+            'stock_consumido'     => 0,
+            'stock_comprometido'  => 0,
+            'precio_base'         => (float) $this->addMaestroPrecio,
+            'puntos'              => (int) $this->addMaestroPuntos,
+            'descuento'           => 0,
+            'active'              => true,
+            'tipo_incremento'     => $tipoInc,
+            'factor_incremento'   => $factorInc,
+            'monto_incremento'    => $montoInc,
+        ]);
+
+        $this->showAddMaestroForm = false;
+        $this->addMaestroId       = null;
+        $this->addMaestroStock    = '';
+        $this->addMaestroPrecio   = '0';
+        $this->addMaestroPuntos   = '0';
+        $this->maestroCategoria   = '';
+        $this->maestroUnidad      = '';
+        session()->flash('success', 'Artículo agregado a la lista.');
     }
 
     public function showAddItem(): void
@@ -516,7 +670,7 @@ class ListaMaestraManager extends Component
         $this->editItemActive           = (bool) $item->active;
         $this->editItemTipoIncremento   = (string) ($item->tipo_incremento ?? '');
         $this->editItemFactorIncremento = (string) ($item->factor_incremento ?? '0');
-        $this->showEditModal            = true;
+        $this->showEditModal            = false;
         $this->resetValidation();
     }
 
@@ -531,17 +685,21 @@ class ListaMaestraManager extends Component
     {
         $item = ListaMaestraItem::with('product')->findOrFail($this->editItemId);
 
-        $this->validate([
-            'editItemCode'             => ['required', 'string', 'max:30',
-                                          Rule::unique('products', 'code')
-                                              ->ignore($item->product_id)
-                                              ->whereNull('deleted_at')],
+        $rules = [
             'editItemPrecio'           => 'required|numeric|min:0',
             'editItemPuntos'           => 'required|integer|min:0',
             'editItemStock'            => 'required|numeric|min:0',
             'editItemTipoIncremento'   => 'nullable|in:porcentaje,monto_fijo',
             'editItemFactorIncremento' => 'required|numeric|min:0',
-        ], [], [
+        ];
+        if ($item->product_id) {
+            $rules['editItemCode'] = ['required', 'string', 'max:30',
+                                      Rule::unique('products', 'code')
+                                          ->ignore($item->product_id)
+                                          ->whereNull('deleted_at')];
+        }
+
+        $this->validate($rules, [], [
             'editItemCode'             => 'código',
             'editItemPrecio'           => 'precio',
             'editItemPuntos'           => 'puntos',
@@ -557,13 +715,16 @@ class ListaMaestraManager extends Component
 
         try {
             DB::transaction(function () use ($item, $productId, $cicloId, $newStock, $itemId) {
-                $disp = $this->disponibleParaAsignar($productId, $cicloId, $itemId);
-
-                if ($disp !== null && $newStock > $disp + 0.001) {
-                    throw new \RuntimeException('Stock insuficiente. Disponible: ' . number_format(max(0, $disp), 2));
+                if ($productId !== null) {
+                    $disp = $this->disponibleParaAsignar($productId, $cicloId, $itemId);
+                    if ($disp !== null && $newStock > $disp + 0.001) {
+                        throw new \RuntimeException('Stock insuficiente. Disponible: ' . number_format(max(0, $disp), 2));
+                    }
                 }
 
-                $item->product->update(['code' => strtoupper(trim($this->editItemCode))]);
+                if ($item->product_id && $item->product) {
+                    $item->product->update(['code' => strtoupper(trim($this->editItemCode))]);
+                }
                 $nuevoActual = max(0, $newStock - (float) $item->stock_consumido);
                 $precioBase  = (float) $this->editItemPrecio;
                 $tipo        = $this->editItemTipoIncremento ?: null;
@@ -837,10 +998,11 @@ class ListaMaestraManager extends Component
 
     public function backToList(): void
     {
+        $restoreId               = in_array($this->mode, ['items', 'acceso']) ? $this->viewingId : null;
         $this->mode              = 'list';
         $this->viewingId         = null;
         $this->editingId         = null;
-        $this->selectedMaestraId = null;
+        $this->selectedMaestraId = $restoreId;
         $this->selectedProductId = null;
         $this->editItemId        = null;
         $this->showAgregarModal  = false;
@@ -860,27 +1022,25 @@ class ListaMaestraManager extends Component
         $cicloId        = $viewingMaestra?->cycle_id;
         $viewingId      = $this->viewingId;
 
-        $itemsMap       = ListaMaestraItem::where('lista_maestra_id', $viewingId)
-            ->get()->keyBy('product_id');
-
-        $habilitadosIds = $itemsMap->filter(fn($i) => $i->active)->keys();
-
         $cicloProductoIds = $cicloId
             ? DB::table('ciclo_productos')->where('commercial_cycle_id', $cicloId)->pluck('product_id')
             : collect();
 
-        $listaIds = $cicloId ? ListaMaestra::where('cycle_id', $cicloId)->pluck('id') : collect();
-
-        $stockMap = $cicloId
+        $listaIds    = $cicloId ? ListaMaestra::where('cycle_id', $cicloId)->pluck('id') : collect();
+        $stockMap    = $cicloId
             ? DB::table('ciclo_productos')->where('commercial_cycle_id', $cicloId)
                 ->pluck('stock_total', 'product_id')->map(fn($v) => (float) $v)
             : collect();
-
         $asignadoMap = $cicloId
             ? ListaMaestraItem::whereIn('lista_maestra_id', $listaIds)
                 ->selectRaw('product_id, SUM(stock_inicial) as total')
                 ->groupBy('product_id')->pluck('total', 'product_id')->map(fn($v) => (float) $v)
             : collect();
+
+        // Productos en el ciclo
+        $itemsMap       = ListaMaestraItem::where('lista_maestra_id', $viewingId)
+            ->whereNotNull('product_id')->get()->keyBy('product_id');
+        $habilitadosIds = $itemsMap->filter(fn($i) => $i->active)->keys();
 
         $products = Product::with(['categoria', 'unidad'])
             ->leftJoin('lista_maestra_items as lmi', function ($join) use ($viewingId) {
@@ -894,39 +1054,68 @@ class ListaMaestraManager extends Component
             ->when($this->itemColFilterTipoInc,         fn($q) => $q->where('lmi.tipo_incremento', $this->itemColFilterTipoInc))
             ->when($this->itemColFilterEnLista === '1', fn($q) => $q->whereIn('products.id', $habilitadosIds))
             ->when($this->itemColFilterEnLista === '0', fn($q) => $q->whereNotIn('products.id', $habilitadosIds))
+            ->when($this->itemColFilterPrecioBase !== '',    fn($q) => $q->whereRaw("CAST(lmi.precio_base AS CHAR) LIKE ?", ["%{$this->itemColFilterPrecioBase}%"]))
+            ->when($this->itemColFilterFactorInc !== '',     fn($q) => $q->whereRaw("CAST(lmi.factor_incremento AS CHAR) LIKE ?", ["%{$this->itemColFilterFactorInc}%"]))
+            ->when($this->itemColFilterPrecioFinal !== '',   fn($q) => $q->whereRaw("CAST(COALESCE(lmi.precio_base,0) + COALESCE(lmi.monto_incremento,0) AS CHAR) LIKE ?", ["%{$this->itemColFilterPrecioFinal}%"]))
+            ->when($this->itemColFilterPuntos !== '',        fn($q) => $q->whereRaw("CAST(lmi.puntos AS CHAR) LIKE ?", ["%{$this->itemColFilterPuntos}%"]))
+            ->when($this->itemColFilterStock !== '',         fn($q) => $q->whereRaw("CAST(lmi.stock_inicial AS CHAR) LIKE ?", ["%{$this->itemColFilterStock}%"]))
             ->orderBy('products.name')
+            ->get();
+
+        // Artículos maestro en esta lista
+        $maestroItems = ListaMaestraItem::with(['maestroArticulo'])
+            ->where('lista_maestra_id', $viewingId)
+            ->whereNotNull('maestro_articulo_id')
+            ->when($this->itemColFilterCodigo,            fn($q) => $q->whereHas('maestroArticulo', fn($sq) => $sq->where('codigo', 'like', "%{$this->itemColFilterCodigo}%")))
+            ->when($this->itemColFilterNombre,            fn($q) => $q->whereHas('maestroArticulo', fn($sq) => $sq->where('nombre', 'like', "%{$this->itemColFilterNombre}%")))
+            ->when($this->itemColFilterPrecioBase !== '',    fn($q) => $q->whereRaw("CAST(precio_base AS CHAR) LIKE ?", ["%{$this->itemColFilterPrecioBase}%"]))
+            ->when($this->itemColFilterFactorInc !== '',     fn($q) => $q->whereRaw("CAST(factor_incremento AS CHAR) LIKE ?", ["%{$this->itemColFilterFactorInc}%"]))
+            ->when($this->itemColFilterPrecioFinal !== '',   fn($q) => $q->whereRaw("CAST(COALESCE(precio_base,0) + COALESCE(monto_incremento,0) AS CHAR) LIKE ?", ["%{$this->itemColFilterPrecioFinal}%"]))
+            ->when($this->itemColFilterPuntos !== '',        fn($q) => $q->whereRaw("CAST(puntos AS CHAR) LIKE ?", ["%{$this->itemColFilterPuntos}%"]))
+            ->when($this->itemColFilterStock !== '',         fn($q) => $q->whereRaw("CAST(stock_inicial AS CHAR) LIKE ?", ["%{$this->itemColFilterStock}%"]))
+            ->orderBy('id')
             ->get();
 
         $filename = 'lista-' . str($viewingMaestra?->code ?? 'export')->slug() . '-' . now()->format('Ymd') . '.csv';
 
-        return response()->streamDownload(function () use ($products, $itemsMap, $stockMap, $asignadoMap) {
+        return response()->streamDownload(function () use ($products, $maestroItems, $itemsMap, $stockMap, $asignadoMap) {
             $out = fopen('php://output', 'w');
-            fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF)); // UTF-8 BOM para Excel
+            fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
-            fputcsv($out, ['Código', 'Producto', 'Precio Base', 'Tipo Inc.', 'Incremento', 'Precio Final', 'Puntos', 'Stock Máx.', 'Stock Inicial', 'Stock Comp.', 'Stock Cons.', 'Stock Disp.', 'Estado'], ';');
+            fputcsv($out, ['Código', 'Artículo', 'Precio Base', 'Tipo Inc.', 'Incremento', 'Precio Final', 'Puntos', 'Stock Inicial', 'Stock Cons.', 'Stock Disp.', 'Estado'], ';');
 
             foreach ($products as $p) {
                 $item    = $itemsMap->get($p->id);
                 $inLista = $item !== null;
-
-                $stkMax = $stockMap->has($p->id)
-                    ? max(0, $stockMap->get($p->id) - $asignadoMap->get($p->id, 0))
-                    : '';
-
                 fputcsv($out, [
-                    $p->code,
-                    $p->name,
+                    strtoupper($p->code),
+                    strtoupper($p->name),
                     $inLista ? number_format($item->precio_base, 2, '.', '') : '',
                     $inLista ? ($item->tipo_incremento ?? '') : '',
                     $inLista && $item->factor_incremento > 0 ? number_format($item->factor_incremento, 2, '.', '') : '',
                     $inLista ? number_format($item->precio_final, 2, '.', '') : '',
                     $inLista ? $item->puntos : '',
-                    $stkMax !== '' ? number_format($stkMax, 2, '.', '') : '',
                     $inLista ? number_format($item->stock_inicial, 2, '.', '') : '',
-                    $inLista ? number_format($item->stock_comprometido, 2, '.', '') : '',
                     $inLista ? number_format($item->stock_consumido, 2, '.', '') : '',
                     $inLista ? number_format($item->stock_actual, 2, '.', '') : '',
-                    $inLista && $item->active ? 'Habilitado' : 'Deshabilitado',
+                    $inLista ? ($item->active ? 'Habilitado' : 'Deshabilitado') : '',
+                ], ';');
+            }
+
+            foreach ($maestroItems as $mi) {
+                $ma = $mi->maestroArticulo;
+                fputcsv($out, [
+                    strtoupper($ma?->codigo ?? ''),
+                    strtoupper($ma?->nombre ?? ''),
+                    number_format($mi->precio_base, 2, '.', ''),
+                    $mi->tipo_incremento ?? '',
+                    $mi->factor_incremento > 0 ? number_format($mi->factor_incremento, 2, '.', '') : '',
+                    number_format($mi->precio_final, 2, '.', ''),
+                    $mi->puntos,
+                    number_format($mi->stock_inicial, 2, '.', ''),
+                    number_format($mi->stock_consumido, 2, '.', ''),
+                    number_format($mi->stock_actual, 2, '.', ''),
+                    $mi->active ? 'Habilitado' : 'Deshabilitado',
                 ], ';');
             }
 
@@ -957,13 +1146,15 @@ class ListaMaestraManager extends Component
             ->paginate(15);
 
         // Items mode
-        $viewingMaestra = null;
-        $products       = collect();
-        $itemsMap       = collect();
-        $categorias     = collect();
-        $unidades       = collect();
-        $stockMap       = collect();
-        $asignadoMap    = collect();
+        $viewingMaestra      = null;
+        $products            = collect();
+        $itemsMap            = collect();
+        $maestroItems        = collect();
+        $maestrosDisponibles = collect();
+        $categorias          = collect();
+        $unidades            = collect();
+        $stockMap            = collect();
+        $asignadoMap         = collect();
 
         if ($this->viewingId && in_array($this->mode, ['items', 'acceso'])) {
             $viewingMaestra = ListaMaestra::with('cycle')->find($this->viewingId);
@@ -1022,11 +1213,16 @@ class ListaMaestraManager extends Component
                 })
                 ->select('products.*')
                 ->whereIn('products.id', $cicloProductoIds)
-                ->when($this->itemColFilterCodigo,           fn($q) => $q->where('products.code', 'like', "%{$this->itemColFilterCodigo}%"))
-                ->when($this->itemColFilterNombre,           fn($q) => $q->where('products.name', 'like', "%{$this->itemColFilterNombre}%"))
-                ->when($this->itemColFilterTipoInc,          fn($q) => $q->where('lmi.tipo_incremento', $this->itemColFilterTipoInc))
-                ->when($this->itemColFilterEnLista === '1', fn($q) => $q->whereIn('products.id', $habilitadosIds))
-                ->when($this->itemColFilterEnLista === '0', fn($q) => $q->whereNotIn('products.id', $habilitadosIds))
+                ->when($this->itemColFilterCodigo,              fn($q) => $q->where('products.code', 'like', "%{$this->itemColFilterCodigo}%"))
+                ->when($this->itemColFilterNombre,              fn($q) => $q->where('products.name', 'like', "%{$this->itemColFilterNombre}%"))
+                ->when($this->itemColFilterTipoInc,             fn($q) => $q->where('lmi.tipo_incremento', $this->itemColFilterTipoInc))
+                ->when($this->itemColFilterEnLista === '1',     fn($q) => $q->whereIn('products.id', $habilitadosIds))
+                ->when($this->itemColFilterEnLista === '0',     fn($q) => $q->whereNotIn('products.id', $habilitadosIds))
+                ->when($this->itemColFilterPrecioBase !== '',    fn($q) => $q->whereRaw("CAST(lmi.precio_base AS CHAR) LIKE ?", ["%{$this->itemColFilterPrecioBase}%"]))
+                ->when($this->itemColFilterFactorInc !== '',   fn($q) => $q->whereRaw("CAST(lmi.factor_incremento AS CHAR) LIKE ?", ["%{$this->itemColFilterFactorInc}%"]))
+                ->when($this->itemColFilterPrecioFinal !== '', fn($q) => $q->whereRaw("CAST(COALESCE(lmi.precio_base,0) + COALESCE(lmi.monto_incremento,0) AS CHAR) LIKE ?", ["%{$this->itemColFilterPrecioFinal}%"]))
+                ->when($this->itemColFilterPuntos !== '',      fn($q) => $q->whereRaw("CAST(lmi.puntos AS CHAR) LIKE ?", ["%{$this->itemColFilterPuntos}%"]))
+                ->when($this->itemColFilterStock !== '',       fn($q) => $q->whereRaw("CAST(lmi.stock_inicial AS CHAR) LIKE ?", ["%{$this->itemColFilterStock}%"]))
                 ->when($this->itemSortBy === 'precio_final',
                     fn($q) => $q->orderByRaw("(COALESCE(lmi.precio_base,0) + COALESCE(lmi.monto_incremento,0)) $sortDir"),
                     fn($q) => $this->itemSortBy === 'stock_max' && $cicloId
@@ -1037,6 +1233,26 @@ class ListaMaestraManager extends Component
 
             $categorias = Categoria::where('active', true)->orderBy('name')->get();
             $unidades   = Unidad::where('active', true)->orderBy('name')->get();
+
+            $maestroItems = ListaMaestraItem::with(['maestroArticulo.categoria', 'maestroArticulo.unidad'])
+                ->where('lista_maestra_id', $this->viewingId)
+                ->whereNotNull('maestro_articulo_id')
+                ->when($this->itemColFilterCodigo,            fn($q) => $q->whereHas('maestroArticulo', fn($sq) => $sq->where('codigo', 'like', "%{$this->itemColFilterCodigo}%")))
+                ->when($this->itemColFilterNombre,            fn($q) => $q->whereHas('maestroArticulo', fn($sq) => $sq->where('nombre', 'like', "%{$this->itemColFilterNombre}%")))
+                ->when($this->itemColFilterPrecioBase !== '',    fn($q) => $q->whereRaw("CAST(precio_base AS CHAR) LIKE ?", ["%{$this->itemColFilterPrecioBase}%"]))
+                ->when($this->itemColFilterFactorInc !== '',   fn($q) => $q->whereRaw("CAST(factor_incremento AS CHAR) LIKE ?", ["%{$this->itemColFilterFactorInc}%"]))
+                ->when($this->itemColFilterPrecioFinal !== '', fn($q) => $q->whereRaw("CAST(COALESCE(precio_base,0) + COALESCE(monto_incremento,0) AS CHAR) LIKE ?", ["%{$this->itemColFilterPrecioFinal}%"]))
+                ->when($this->itemColFilterPuntos !== '',      fn($q) => $q->whereRaw("CAST(puntos AS CHAR) LIKE ?", ["%{$this->itemColFilterPuntos}%"]))
+                ->when($this->itemColFilterStock !== '',       fn($q) => $q->whereRaw("CAST(stock_inicial AS CHAR) LIKE ?", ["%{$this->itemColFilterStock}%"]))
+                ->get();
+
+            $usadosEnEstaLista   = ListaMaestraItem::where('lista_maestra_id', $this->viewingId)
+                ->whereNotNull('maestro_articulo_id')
+                ->pluck('maestro_articulo_id');
+            $maestrosDisponibles = MaestroArticulo::where('active', true)
+                ->whereNotIn('id', $usadosEnEstaLista)
+                ->orderBy('nombre')
+                ->get();
 
             if ($cicloId) {
                 $stockMap = DB::table('ciclo_productos')
@@ -1075,7 +1291,8 @@ class ListaMaestraManager extends Component
 
         return view('livewire.admin.listas.lista-maestra-manager', compact(
             'maestras', 'cycles', 'viewingMaestra', 'products', 'itemsMap',
-            'categorias', 'unidades', 'accesosClientes', 'accesosVendedores',
+            'maestroItems', 'maestrosDisponibles', 'categorias', 'unidades',
+            'accesosClientes', 'accesosVendedores',
             'stockMap', 'asignadoMap', 'itemSortBy', 'itemSortDir'
         ));
     }

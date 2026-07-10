@@ -385,7 +385,13 @@ class ListaPreciosManager extends Component
 
     // ─────────────────────────────────────────────────────────────────────────
 
-    public function backToList(): void { $this->resetForm(); $this->mode = 'list'; }
+    public function backToList(): void
+    {
+        $restoreId = $this->mode === 'items' ? $this->viewingId : null;
+        $this->resetForm();
+        $this->mode = 'list';
+        if ($restoreId) $this->selectedListaId = $restoreId;
+    }
 
     private function resetForm(): void
     {

@@ -145,7 +145,7 @@
                         @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
                         <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
                         <td style="padding:10px 14px; overflow:hidden;">
-                            <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($item->maestraItem->product->name ?? '—')) }}</span>
+                            <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ strtoupper($item->maestraItem->product->name ?? '—') }}</span>
                         </td>
                         <td style="padding:10px 14px; text-align:right; font-size:13px; color:#374151; white-space:nowrap;">S/ {{ number_format($item->maestraItem->precio_base ?? 0, 2) }}</td>
                         <td style="padding:10px 14px; text-align:right; font-size:13px; color:#374151; white-space:nowrap;">S/ {{ number_format($item->descuento, 2) }}</td>
@@ -330,7 +330,7 @@
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
                     <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $derivadas->firstItem() + $loop->index }}</td>
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($d->name)) }}</span>
+                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ strtoupper($d->name) }}</span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden;">
                         <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $d->listaMaestra->name ?? '—' }}</span>

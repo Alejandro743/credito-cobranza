@@ -54,7 +54,8 @@
       "PowerShell(Start-Process \"C:\\\\laragon\\\\bin\\\\mysql\\\\mysql-8.4.3-winx64\\\\bin\\\\mysqld.exe\" -ArgumentList \"--defaults-file=C:\\\\laragon\\\\bin\\\\mysql\\\\mysql-8.4.3-winx64\\\\my.ini\")",
       "PowerShell(Stop-Process *)",
       "PowerShell(Start-Process $phpFpm -ArgumentList \"-b 127.0.0.1:9001\" -WindowStyle Hidden)",
-      "PowerShell($phpFpm = \"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.30-Win32-vs16-x64\\\\php-cgi.exe\")"
+      "PowerShell($phpFpm = \"C:\\\\laragon\\\\bin\\\\php\\\\php-8.3.30-Win32-vs16-x64\\\\php-cgi.exe\")",
+      "Bash(/c/laragon/bin/apache/httpd-2.4.66-260223-Win64-VS18/bin/httpd.exe -k restart)"
     ]
   }
 }

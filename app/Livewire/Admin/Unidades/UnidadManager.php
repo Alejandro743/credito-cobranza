@@ -12,10 +12,12 @@ class UnidadManager extends Component
 {
     use WithPagination, HasModuleColor;
 
-    public string $search       = '';
-    public string $filterStatus = '';
-    public string $sortBy       = 'name';
-    public string $sortDir      = 'asc';
+    public string $sortBy  = 'name';
+    public string $sortDir = 'asc';
+
+    public string $colFilterNombre      = '';
+    public string $colFilterAbreviatura = '';
+    public string $colFilterEstado      = '';
 
     public function toggleSort(string $col): void
     {
@@ -52,7 +54,9 @@ class UnidadManager extends Component
         $this->initModuleColor();
     }
 
-    public function updatingSearch(): void { $this->resetPage(); }
+    public function updatingColFilterNombre(): void      { $this->resetPage(); }
+    public function updatingColFilterAbreviatura(): void { $this->resetPage(); }
+    public function updatingColFilterEstado(): void      { $this->resetPage(); }
 
     // ── Agregar ───────────────────────────────────────────────────────────────
 
@@ -164,10 +168,9 @@ class UnidadManager extends Component
     public function render()
     {
         $unidades = Unidad::withCount('products')
-            ->when($this->search, fn($q) =>
-                $q->where('name', 'like', "%{$this->search}%")
-                  ->orWhere('code', 'like', "%{$this->search}%"))
-            ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
+            ->when($this->colFilterNombre,      fn($q) => $q->where('name',        'like', "%{$this->colFilterNombre}%"))
+            ->when($this->colFilterAbreviatura, fn($q) => $q->where('abreviatura', 'like', "%{$this->colFilterAbreviatura}%"))
+            ->when($this->colFilterEstado !== '', fn($q) => $q->where('active', (bool) $this->colFilterEstado))
             ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(20);
 

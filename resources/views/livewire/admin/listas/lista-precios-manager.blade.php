@@ -714,12 +714,12 @@ $lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase
                             <span style="font-size:12px; font-weight:700; color:#374151;">{{ $listas->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
-                    <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827;">{{ $lista->name }}</td>
-                    <td style="padding:10px 14px; font-family:monospace; font-size:12px; color:#6B7280;">{{ $lista->cycle?->code ?? '—' }}</td>
+                    <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827;">{{ strtoupper($lista->name) }}</td>
+                    <td style="padding:10px 14px; font-family:monospace; font-size:12px; color:#6B7280;">{{ strtoupper($lista->cycle?->code ?? '—') }}</td>
                     <td style="padding:10px 14px; text-align:center;">
                         <span style="display:inline-flex; padding:2px 10px; border-radius:99px; font-size:12px; font-weight:700;
                             {{ $lista->estado === 'activa' ? 'background:#D1FAE5; color:#059669;' : 'background:#F3F4F6; color:#6B7280;' }}">
-                            {{ ucfirst($lista->estado) }}
+                            {{ strtoupper($lista->estado) }}
                         </span>
                     </td>
                     <td style="padding:10px 14px; text-align:center; font-size:12px; color:#6B7280;">{{ $lista->created_at->format('d/m/Y') }}</td>
@@ -744,10 +744,10 @@ $lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase
     <div style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; overflow:hidden;">
         {{-- Cabecera card --}}
         <div style="background:#F8F7FF; padding:10px 14px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #EDE9FE;">
-            <span style="font-size:14px; font-weight:700; color:#1F2937;">{{ $lista->name }}</span>
+            <span style="font-size:14px; font-weight:700; color:#1F2937;">{{ strtoupper($lista->name) }}</span>
             <span style="display:inline-flex; padding:2px 10px; border-radius:99px; font-size:11px; font-weight:700;
                 {{ $lista->estado === 'activa' ? 'background:#D1FAE5; color:#065F46;' : 'background:#F3F4F6; color:#6B7280;' }}">
-                {{ ucfirst($lista->estado) }}
+                {{ strtoupper($lista->estado) }}
             </span>
         </div>
         {{-- Cuerpo card --}}

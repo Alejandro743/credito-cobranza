@@ -53,8 +53,7 @@ class ModulosSubmodulosSeeder extends Seeder
                             ['name' => 'Categorías',          'slug' => 'cat-categorias',        'route_name' => 'admin.catalogo.categorias',        'sort_order' => 1],
                             ['name' => 'Unidades',            'slug' => 'cat-unidades',          'route_name' => 'admin.catalogo.unidades',          'sort_order' => 2],
                             ['name' => 'Maestro Artículos',   'slug' => 'cat-maestro-articulos', 'route_name' => 'admin.catalogo.maestro-articulos', 'sort_order' => 3],
-                            ['name' => 'Stock de Artículos',  'slug' => 'cat-productos',         'route_name' => 'admin.catalogo.productos',         'sort_order' => 4],
-                            ['name' => 'Listas de Precios',   'slug' => 'cat-listas',            'route_name' => 'admin.catalogo.listas',            'sort_order' => 5],
+                            ['name' => 'Listas de Precios',   'slug' => 'cat-listas',            'route_name' => 'admin.catalogo.listas',            'sort_order' => 4],
                         ],
                     ],
                     // Grupo: Definiciones

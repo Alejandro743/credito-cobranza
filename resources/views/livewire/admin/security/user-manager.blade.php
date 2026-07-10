@@ -320,12 +320,12 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                 @php
                     $fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:left;';
                     $fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; text-indent:16px; cursor:pointer;';
-                    $fW  = 'position:relative; margin-top:4px;';
+                    $fW  = 'position:relative; margin-top:4px;' . ($editingId ? ' opacity:0.45;' : '');
                     $fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
                     $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
                     $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top; position:relative; overflow:hidden;';
                 @endphp
-                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editingId ? 'opacity:0.45; pointer-events:none;' : '' }}">
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editingId ? 'pointer-events:none;' : '' }}">
 
                     {{-- # --}}
                     <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF;">
@@ -517,7 +517,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
 
                 @endforeach
                 @if ($users->isEmpty())
-                <tr><td colspan="6" style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">No se encontraron usuarios.</td></tr>
+                <tr><td colspan="6" style="padding:48px;"><p style="text-align:center; color:#9CA3AF; font-size:13px; margin:0;">{{ $colFilterNombre || $colFilterUsuario || $colFilterTipo || $colFilterRol || $colFilterEstado ? 'Sin resultados para los filtros aplicados.' : 'No hay usuarios registrados.' }}</p></td></tr>
                 @endif
             </tbody>
         </table>

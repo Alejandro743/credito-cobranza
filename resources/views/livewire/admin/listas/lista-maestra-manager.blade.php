@@ -123,19 +123,199 @@
 </div>
 @endif
 
+{{-- Botón agregar artículo maestro --}}
+@if(!$showAddMaestroForm && !$showAddItemForm)
+<div style="display:flex; justify-content:flex-start; margin-bottom:10px;">
+    <button wire:click="showAddMaestro" style="height:32px; padding:0 14px; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; background:#7B6FE8; color:#fff;">
+        <svg width="11" height="11" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Agregar artículo
+    </button>
+</div>
+@endif
+
+{{-- Formulario agregar maestro artículo --}}
+@if ($showAddMaestroForm)
+@php $iS = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;'; @endphp
+<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 12px rgba(123,111,232,.12); margin-bottom:20px;">
+    <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:12px 20px; display:flex; align-items:center; justify-content:space-between;">
+        <div>
+            <span style="font-size:14px; font-weight:800; color:#7B6FE8;">Agregar Artículo al Stock</span>
+        </div>
+        <button wire:click="cancelAddMaestro"
+                style="width:30px; height:30px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center;"
+                @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
+    </div>
+    <div style="padding:20px; display:flex; flex-wrap:wrap; gap:16px;">
+
+        {{-- CICLO (read-only, ya lo sabemos) --}}
+        <div style="min-width:200px; flex:1;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Ciclo</label>
+            <div style="height:38px; border:1px solid #E5E7EB; border-radius:8px; padding:0 12px; font-size:13px; font-weight:700; color:#7B6FE8; background:#F5F3FF; display:flex; align-items:center; font-family:monospace;">
+                {{ $viewingMaestra->cycle?->code }} — {{ $viewingMaestra->cycle?->name }}
+            </div>
+        </div>
+
+        {{-- ARTÍCULO: autocomplete Alpine --}}
+        <div style="flex:2; min-width:240px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Código — Descripción *</label>
+            @php
+                $itemsJson = $maestrosDisponibles->map(fn($m) => [
+                    'id'     => $m->id,
+                    'codigo' => $m->codigo,
+                    'nombre' => $m->nombre,
+                    'label'  => $m->codigo . ' — ' . $m->nombre,
+                ])->values()->toJson();
+            @endphp
+            <div wire:key="autocomplete-{{ $viewingId }}"
+                 x-data="{
+                     open: false,
+                     query: '',
+                     selected: null,
+                     items: {{ $itemsJson }},
+                     get filtered() {
+                         if (!this.query || this.selected) return [];
+                         const q = this.query.toLowerCase();
+                         return this.items.filter(i =>
+                             (i.codigo || '').toLowerCase().includes(q) ||
+                             (i.nombre || '').toLowerCase().includes(q)
+                         );
+                     },
+                     pick(item) {
+                         this.selected = item;
+                         this.query = item.label;
+                         this.open = false;
+                         $wire.selectMaestro(item.id);
+                     },
+                     clear() {
+                         this.selected = null;
+                         this.query = '';
+                         this.open = true;
+                         $wire.set('addMaestroId', null);
+                         $wire.set('maestroCategoria', '');
+                         $wire.set('maestroUnidad', '');
+                         $nextTick(() => this.$refs.input.focus());
+                     }
+                 }"
+                 @click.outside="open = false"
+                 @maestro-created.window="pick($event.detail)"
+                 style="position:relative;">
+                <div style="position:relative;">
+                    <input x-ref="input"
+                           x-model="query"
+                           @focus="if(!selected) open = true"
+                           @input="if(!selected){ open = true; }"
+                           @keydown.escape="open = false"
+                           :readonly="!!selected"
+                           type="text"
+                           placeholder="Escribí código o nombre..."
+                           :style="'{{ $iS }} padding-right:32px;' + (selected ? 'background:#F0FDF4; color:#065F46; font-weight:600; cursor:default;' : '')">
+                    <button x-show="selected" @click.prevent="clear()"
+                            style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:#9CA3AF; padding:2px; display:flex; align-items:center;">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    </button>
+                </div>
+                <div x-show="open && filtered.length > 0"
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="opacity-0 -translate-y-1"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     style="position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #E5E7EB; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,.1); z-index:50; max-height:200px; overflow-y:auto;">
+                    <template x-for="item in filtered" :key="item.id">
+                        <button @mousedown.prevent="pick(item)"
+                                style="width:100%; text-align:left; padding:8px 12px; border:none; border-bottom:1px solid #F9FAFB; background:#fff; font-size:13px; color:#374151; cursor:pointer; display:block;"
+                                @mouseenter="$el.style.background='#F5F3FF'" @mouseleave="$el.style.background='#fff'">
+                            <span x-text="item.codigo" style="font-family:monospace; font-weight:700; color:#7B6FE8;"></span>
+                            <span x-text="' — ' + item.nombre"></span>
+                        </button>
+                    </template>
+                </div>
+                <div x-show="open && filtered.length === 0 && query.length > 0"
+                     style="position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #E5E7EB; border-radius:10px; z-index:50; overflow:hidden;">
+                    <div style="padding:10px 12px; font-size:12px; color:#9CA3AF;">
+                        Sin resultados para "<span x-text="query" style="font-style:italic;"></span>"
+                    </div>
+                    <button @mousedown.prevent="$wire.openCreateMaestroModal(query); open = false"
+                            style="width:100%; text-align:left; padding:10px 12px; border:none; border-top:1px solid #F3F4F6; background:#F8F7FF; font-size:12px; font-weight:700; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; gap:6px;"
+                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                        <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                        ¿No existe? Agregarlo al Maestro
+                    </button>
+                </div>
+            </div>
+            @error('addMaestroId') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+
+        {{-- PRECIO BASE --}}
+        <div style="min-width:110px; max-width:150px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Precio Base *</label>
+            <input wire:model="addMaestroPrecio" type="number" min="0" step="0.01" placeholder="0.00"
+                   style="{{ $iS }} text-align:right;">
+            @error('addMaestroPrecio') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+
+        {{-- PUNTOS --}}
+        <div style="min-width:90px; max-width:110px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Puntos</label>
+            <input wire:model="addMaestroPuntos" type="number" min="0" step="1" placeholder="0"
+                   style="{{ $iS }} text-align:right;">
+            @error('addMaestroPuntos') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+
+        {{-- STOCK INICIAL --}}
+        <div style="min-width:120px; max-width:160px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Stock Inicial *</label>
+            <input wire:model="addMaestroStock" type="number" min="0" step="1" placeholder="0"
+                   style="{{ $iS }} text-align:right;">
+            @error('addMaestroStock') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+
+        {{-- CATEGORÍA (auto) --}}
+        <div style="min-width:130px; flex:1;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Categoría</label>
+            <div style="height:38px; border:1px solid #E5E7EB; border-radius:8px; padding:0 12px; font-size:13px; color:#6B7280; background:#F9FAFB; display:flex; align-items:center;">
+                {{ $maestroCategoria ?: '—' }}
+            </div>
+        </div>
+
+        {{-- UNIDAD (auto) --}}
+        <div style="min-width:120px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Unidad</label>
+            <div style="height:38px; border:1px solid #E5E7EB; border-radius:8px; padding:0 12px; font-size:13px; color:#6B7280; background:#F9FAFB; display:flex; align-items:center;">
+                {{ $maestroUnidad ?: '—' }}
+            </div>
+        </div>
+
+        <div style="padding-top:21px; display:flex; gap:8px;">
+            <button wire:click="saveAddMaestro"
+                    style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
+                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                Guardar
+            </button>
+            <button wire:click="cancelAddMaestro"
+                    style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
+                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                Cancelar
+            </button>
+        </div>
+
+    </div>
+</div>
+@endif
+
 {{-- Tabla de productos (desktop) --}}
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 1px 4px rgba(0,0,0,.04); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
     {{-- Barra header --}}
     <div style="padding:10px 18px; display:flex; align-items:center; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Ítems del catálogo</span>
-        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:8px;">{{ $products->count() }}</span>
+        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:8px;">{{ $products->count() + $maestroItems->count() }}</span>
         @php
             $btnH    = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;';
             $selProd = $selectedProductId ? $products->firstWhere('id', $selectedProductId) : null;
             $selItem = $selectedProductId ? $itemsMap->get($selectedProductId) : null;
             $selInLista = $selItem !== null;
         @endphp
-        @if($selectedProductId)
+        @if($selectedProductId && !$editItemId)
         <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
             @if($selInLista)
                 <button wire:click="startEditItem({{ $selItem->id }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
@@ -148,6 +328,27 @@
                     Agregar a lista
                 </button>
             @endif
+        </div>
+        @elseif($selectedMaestroItemId && !$editItemId)
+        <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            <button wire:click="startEditItem({{ $selectedMaestroItemId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                Editar
+            </button>
+            <button wire:click="removeItem({{ $selectedMaestroItemId }}); $wire.set('selectedMaestroItemId', null)" style="{{ $btnH }} background:#FEE2E2; color:#DC2626; border:1px solid #FECACA;">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                Quitar
+            </button>
+        </div>
+        @elseif($editItemId)
+        <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            <button wire:click="saveEditItem" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Guardar
+            </button>
+            <button wire:click="cancelEditItem" style="{{ $btnH }} background:#F3F4F6; color:#6B7280; border:1px solid #E5E7EB;">
+                Cancelar
+            </button>
         </div>
         @endif
 
@@ -177,9 +378,8 @@
                 <col style="width:85px;">
                 <col style="width:85px;">
                 <col style="width:85px;">
-                <col style="width:85px;">
                 <col style="width:95px;">
-                <col style="width:95px;">
+                <col style="width:105px;">
                 <col style="width:105px;">
                 <col style="width:135px;">
             </colgroup>
@@ -187,23 +387,23 @@
                 @php
                     $fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center;';
                     $fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; text-indent:16px; cursor:pointer;';
-                    $fW  = 'position:relative; margin-top:4px;';
+                    $fW  = 'position:relative; margin-top:4px;' . ($editItemId ? ' opacity:0.45;' : '');
                     $fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
                     $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
                     $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; text-align:center; padding:8px 8px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top;';
                     $emptyF = '<div style="margin-top:4px; height:28px;"></div>';
                 @endphp
-                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editItemId ? 'pointer-events:none;' : '' }}">
 
                     {{-- # --}}
-                    <th style="width:44px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top;">
+                    <th style="width:44px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF;">
                         #
                         <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
                             <input type="checkbox"
-                                   :checked="$wire.selectedProductId !== null"
-                                   :disabled="$wire.selectedProductId === null"
-                                   @click.prevent="$wire.selectedProductId !== null && $wire.set('selectedProductId', null)"
-                                   :style="$wire.selectedProductId !== null ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
+                                   :checked="$wire.selectedProductId !== null || $wire.selectedMaestroItemId !== null"
+                                   :disabled="$wire.editItemId !== null || ($wire.selectedProductId === null && $wire.selectedMaestroItemId === null)"
+                                   @click.prevent="$wire.editItemId === null && ($wire.set('selectedProductId', null), $wire.set('selectedMaestroItemId', null))"
+                                   :style="$wire.editItemId !== null ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:not-allowed; opacity:0.3;' : ($wire.selectedProductId !== null || $wire.selectedMaestroItemId !== null) ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
                         </div>
                     </th>
 
@@ -243,7 +443,7 @@
                                 <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
                             </span>
                         </div>
-                        {!! $emptyF !!}
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="itemColFilterPrecioBase" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Tipo Inc --}}
@@ -276,7 +476,7 @@
                                 <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
                             </span>
                         </div>
-                        {!! $emptyF !!}
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="itemColFilterFactorInc" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Precio Final --}}
@@ -289,7 +489,7 @@
                                 <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
                             </span>
                         </div>
-                        {!! $emptyF !!}
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="itemColFilterPrecioFinal" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Puntos --}}
@@ -302,20 +502,7 @@
                                 <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
                             </span>
                         </div>
-                        {!! $emptyF !!}
-                    </th>
-
-                    {{-- Stock Máx --}}
-                    @php $isA = $itemSortBy === 'stock_max'; @endphp
-                    <th wire:click="toggleItemSort('stock_max')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Stock Máx.
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        {!! $emptyF !!}
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="itemColFilterPuntos" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Stock Inicial --}}
@@ -328,20 +515,7 @@
                                 <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
                             </span>
                         </div>
-                        {!! $emptyF !!}
-                    </th>
-
-                    {{-- Stock Comprometido --}}
-                    @php $isA = $itemSortBy === 'stock_comprometido'; @endphp
-                    <th wire:click="toggleItemSort('stock_comprometido')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Stock Comp.
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $itemSortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        {!! $emptyF !!}
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="itemColFilterStock" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Stock Consumido --}}
@@ -406,19 +580,69 @@
                     $codeCol  = $inLista ? '#6B7280' : '#9CA3AF';
                     $nameCol  = $inLista ? '#111827' : '#9CA3AF';
                 @endphp
+                @if($inLista && $editItemId === $item->id)
+                @php $iE = 'height:26px; border:1px solid #DDD8FA; border-radius:5px; padding:0 5px; font-size:12px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;'; @endphp
+                <tr wire:key="prod-edit-{{ $p->id }}" style="border-bottom:1px solid #EDE9FE; background:#F5F3FF;"
+                    x-data="{
+                        precio: {{ (float)$editItemPrecio }},
+                        tipo:   '{{ $editItemTipoIncremento }}',
+                        factor: {{ (float)$editItemFactorIncremento }},
+                        get final() {
+                            if (!this.tipo || this.factor <= 0) return this.precio;
+                            let m = this.tipo === 'porcentaje'
+                                ? Math.round(this.precio * this.factor / 100 * 100) / 100
+                                : this.factor;
+                            return Math.max(0, this.precio + m);
+                        }
+                    }">
+                    <td class="col-row-num" style="padding:6px 8px; text-align:center; background:#F5F3FF; position:sticky; left:0; z-index:2;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8;">{{ $loop->iteration }}</span>
+                    </td>
+                    <td style="padding:4px 6px;"><input wire:model="editItemCode" type="text" style="{{ $iE }} font-family:monospace; text-transform:uppercase;">
+                        @error('editItemCode') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
+                    <td style="padding:4px 8px; font-size:12px; font-weight:600; color:#111827;">{{ strtoupper($p->name) }}</td>
+                    <td style="padding:4px 6px;"><input wire:model="editItemPrecio" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;"
+                        x-on:input="precio = parseFloat($event.target.value) || 0">
+                        @error('editItemPrecio') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
+                    <td style="padding:4px 6px;">
+                        <select wire:model="editItemTipoIncremento" style="{{ $iE }} background:#fff; cursor:pointer;"
+                            x-on:change="tipo = $event.target.value">
+                            <option value="">— Sin —</option>
+                            <option value="porcentaje">%</option>
+                            <option value="monto_fijo">Bs</option>
+                        </select>
+                    </td>
+                    <td style="padding:4px 6px;"><input wire:model="editItemFactorIncremento" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;"
+                        x-on:input="factor = parseFloat($event.target.value) || 0"></td>
+                    <td style="padding:4px 8px; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8;" x-text="'Bs ' + final.toFixed(2)"></td>
+                    <td style="padding:4px 6px;"><input wire:model="editItemPuntos" type="number" min="0" style="{{ $iE }} text-align:right;">
+                        @error('editItemPuntos') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
+                    <td style="padding:4px 6px;"><input wire:model="editItemStock" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;">
+                        @error('editItemStock') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
+                    <td style="padding:4px 8px; font-size:12px; text-align:center; color:#6B7280;">{{ number_format($item->stock_consumido, 2) }}</td>
+                    <td style="padding:4px 8px; font-size:12px; text-align:center; color:#6B7280;">{{ number_format($item->stock_actual, 2) }}</td>
+                    <td style="padding:4px 6px;">
+                        <select wire:model="editItemActive" style="{{ $iE }} background:#fff; cursor:pointer;">
+                            <option value="1">Habilitado</option>
+                            <option value="0">Deshabilitado</option>
+                        </select>
+                    </td>
+                </tr>
+                @else
                 <tr wire:key="prod-{{ $p->id }}" style="{{ $trStyle }} background:{{ $trBg }};"
                     @mouseenter="$el.style.background='{{ $trHover }}'" @mouseleave="$el.style.background='{{ $trBg }}'">
-                    <td class="col-row-num" style="padding:6px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap; background:{{ $trBg }};">
+                    <td class="col-row-num" style="padding:6px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap; background:{{ $trBg }}; position:sticky; left:0; z-index:2;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:5px;">
                             <input type="checkbox"
                                    :checked="$wire.selectedProductId === {{ $p->id }}"
-                                   @click="$wire.selectedProductId === {{ $p->id }} ? $wire.set('selectedProductId', null) : $wire.selectProduct({{ $p->id }})"
-                                   style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                                   :disabled="$wire.editItemId !== null"
+                                   @click="$wire.editItemId === null && ($wire.selectedProductId === {{ $p->id }} ? $wire.set('selectedProductId', null) : $wire.selectProduct({{ $p->id }}))"
+                                   :style="$wire.editItemId !== null ? 'accent-color:#7B6FE8; width:13px; height:13px; cursor:not-allowed; opacity:0.3;' : 'accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;'">
                             <span style="color:{{ $inLista ? '#374151' : '#9CA3AF' }};">{{ $loop->iteration }}</span>
                         </div>
                     </td>
                     <td style="{{ $tdBase }} font-family:monospace; font-size:12px; color:{{ $codeCol }};">{{ $p->code }}</td>
-                    <td style="{{ $tdBase }} text-align:left; padding-left:14px; overflow:hidden; text-overflow:ellipsis; max-width:0; color:{{ $nameCol }}; {{ $inLista ? 'font-weight:600;' : '' }}">{{ ucwords(strtolower($p->name)) }}</td>
+                    <td style="{{ $tdBase }} text-align:left; padding-left:14px; overflow:hidden; text-overflow:ellipsis; max-width:0; color:{{ $nameCol }}; {{ $inLista ? 'font-weight:600;' : '' }}">{{ strtoupper($p->name) }}</td>
                     <td style="{{ $tdBase }}">
                         @if ($inLista) Bs {{ number_format($item->precio_base, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
@@ -445,24 +669,8 @@
                         @if ($inLista) {{ $item->puntos }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
-                    @php
-                        $rdStkMax = $stockMap->has($p->id)
-                            ? max(0, $stockMap->get($p->id) - $asignadoMap->get($p->id, 0))
-                            : null;
-                    @endphp
-                    <td style="{{ $tdBase }}">
-                        @if($rdStkMax !== null)
-                            <span style="font-weight:600; color:{{ $rdStkMax > 0 ? '#059669' : '#EF4444' }};">{{ number_format($rdStkMax, 0) }}</span>
-                        @else
-                            <span style="color:#D1D5DB;">—</span>
-                        @endif
-                    </td>
                     <td style="{{ $tdBase }}">
                         @if ($inLista) {{ number_format($item->stock_inicial, 2) }}
-                        @else <span style="color:#D1D5DB;">—</span> @endif
-                    </td>
-                    <td style="{{ $tdBase }}{{ $inLista ? ' color:#F59E0B; font-weight:600;' : '' }}">
-                        @if ($inLista) {{ number_format($item->stock_comprometido, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
                     <td style="{{ $tdBase }}">
@@ -481,12 +689,181 @@
                         @endif
                     </td>
                 </tr>
+                @endif
                 @empty
-                <tr><td colspan="14" style="padding:48px 20px; text-align:center; font-size:13px; color:#9CA3AF;">No hay productos en el catálogo.</td></tr>
+                @if ($maestroItems->isEmpty())
+                <tr><td colspan="12" style="padding:48px 20px; text-align:center; font-size:13px; color:#9CA3AF;">No hay productos en el catálogo.</td></tr>
+                @endif
                 @endforelse
+
+                @foreach ($maestroItems as $mi)
+                @php
+                    $ma     = $mi->maestroArticulo;
+                    $trBgMa = '#fff';
+                    $tdBase = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap; text-transform:uppercase;';
+                @endphp
+                @if($editItemId === $mi->id)
+                @php $iE = 'height:26px; border:1px solid #DDD8FA; border-radius:5px; padding:0 5px; font-size:12px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;'; @endphp
+                <tr wire:key="ma-edit-{{ $mi->id }}" style="border-bottom:1px solid #EDE9FE; background:#F5F3FF;"
+                    x-data="{
+                        precio: {{ (float)$editItemPrecio }},
+                        tipo:   '{{ $editItemTipoIncremento }}',
+                        factor: {{ (float)$editItemFactorIncremento }},
+                        get final() {
+                            if (!this.tipo || this.factor <= 0) return this.precio;
+                            let m = this.tipo === 'porcentaje'
+                                ? Math.round(this.precio * this.factor / 100 * 100) / 100
+                                : this.factor;
+                            return Math.max(0, this.precio + m);
+                        }
+                    }">
+                    <td class="col-row-num" style="padding:6px 8px; text-align:center; background:#F5F3FF; position:sticky; left:0; z-index:2;">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8;">{{ $loop->iteration }}</span>
+                    </td>
+                    <td style="padding:4px 8px; font-family:monospace; font-size:12px; color:#6B7280; text-align:center;">{{ $ma->codigo }}</td>
+                    <td style="padding:4px 8px; font-size:12px; font-weight:600; color:#111827;">{{ strtoupper($ma->nombre) }}</td>
+                    <td style="padding:4px 6px;"><input wire:model="editItemPrecio" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;"
+                        x-on:input="precio = parseFloat($event.target.value) || 0">
+                        @error('editItemPrecio') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
+                    <td style="padding:4px 6px;">
+                        <select wire:model="editItemTipoIncremento" style="{{ $iE }} background:#fff; cursor:pointer;"
+                            x-on:change="tipo = $event.target.value">
+                            <option value="">— Sin —</option>
+                            <option value="porcentaje">%</option>
+                            <option value="monto_fijo">Bs</option>
+                        </select>
+                    </td>
+                    <td style="padding:4px 6px;"><input wire:model="editItemFactorIncremento" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;"
+                        x-on:input="factor = parseFloat($event.target.value) || 0"></td>
+                    <td style="padding:4px 8px; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8;" x-text="'Bs ' + final.toFixed(2)"></td>
+                    <td style="padding:4px 6px;"><input wire:model="editItemPuntos" type="number" min="0" style="{{ $iE }} text-align:right;">
+                        @error('editItemPuntos') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
+                    <td style="padding:4px 6px;"><input wire:model="editItemStock" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;">
+                        @error('editItemStock') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
+                    <td style="padding:4px 8px; font-size:12px; text-align:center; color:#6B7280;">{{ number_format($mi->stock_consumido, 2) }}</td>
+                    <td style="padding:4px 8px; font-size:12px; text-align:center; color:#6B7280;">{{ number_format($mi->stock_actual, 2) }}</td>
+                    <td style="padding:4px 6px;">
+                        <select wire:model="editItemActive" style="{{ $iE }} background:#fff; cursor:pointer;">
+                            <option value="1">Habilitado</option>
+                            <option value="0">Deshabilitado</option>
+                        </select>
+                    </td>
+                </tr>
+                @else
+                <tr wire:key="ma-{{ $mi->id }}" style="border-bottom:1px solid #F3F4F6; background:{{ $trBgMa }};"
+                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background='{{ $trBgMa }}'">
+                    <td class="col-row-num" style="padding:6px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap; background:{{ $trBgMa }}; position:sticky; left:0; z-index:2;">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:5px;">
+                            <input type="checkbox"
+                                   :checked="$wire.selectedMaestroItemId === {{ $mi->id }}"
+                                   :disabled="$wire.editItemId !== null"
+                                   @click="$wire.editItemId === null && ($wire.selectedMaestroItemId === {{ $mi->id }} ? $wire.set('selectedMaestroItemId', null) : $wire.set('selectedMaestroItemId', {{ $mi->id }}))"
+                                   :style="$wire.editItemId !== null ? 'accent-color:#7B6FE8; width:13px; height:13px; cursor:not-allowed; opacity:0.3;' : 'accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;'">
+                            <span style="color:#374151;">{{ $loop->iteration }}</span>
+                        </div>
+                    </td>
+                    <td style="{{ $tdBase }} font-family:monospace; font-size:12px; color:#6B7280;">{{ $ma->codigo }}</td>
+                    <td style="{{ $tdBase }} text-align:left; padding-left:14px; overflow:hidden; text-overflow:ellipsis; max-width:0; color:#111827; font-weight:600;">
+                        {{ strtoupper($ma->nombre) }}
+                    </td>
+                    <td style="{{ $tdBase }}">Bs {{ number_format($mi->precio_base, 2) }}</td>
+                    <td style="{{ $tdBase }}">
+                        @if($mi->tipo_incremento)
+                        <span style="padding:2px 8px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">
+                            {{ $mi->tipo_incremento === 'porcentaje' ? '%' : 'Bs' }}
+                        </span>
+                        @else <span style="color:#D1D5DB;">—</span> @endif
+                    </td>
+                    <td style="{{ $tdBase }}">
+                        @if($mi->factor_incremento > 0)
+                            {{ $mi->tipo_incremento === 'porcentaje'
+                                ? number_format($mi->factor_incremento, 2).'%'
+                                : 'Bs '.number_format($mi->factor_incremento, 2) }}
+                        @else <span style="color:#D1D5DB;">—</span> @endif
+                    </td>
+                    <td style="{{ $tdBase }} color:#7B6FE8; font-weight:700;">Bs {{ number_format($mi->precio_final, 2) }}</td>
+                    <td style="{{ $tdBase }}">{{ $mi->puntos }}</td>
+                    <td style="{{ $tdBase }}">{{ number_format($mi->stock_inicial, 2) }}</td>
+                    <td style="{{ $tdBase }}">{{ number_format($mi->stock_consumido, 2) }}</td>
+                    <td style="{{ $tdBase }}{{ $mi->stock_actual <= 0 ? ' color:#EF4444; font-weight:700;' : '' }}">{{ number_format($mi->stock_actual, 2) }}</td>
+                    <td style="padding:10px 12px; text-align:center;">
+                        @if ($mi->active)
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#D1FAE5; color:#059669;">Habilitado</span>
+                        @else
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#F3F4F6; color:#9CA3AF;">Deshabilitado</span>
+                        @endif
+                    </td>
+                </tr>
+                @endif
+                @endforeach
             </tbody>
         </table>
     </div>
+</div>
+
+{{-- ══ MODAL: Crear Maestro Artículo desde autocomplete ══ --}}
+@php
+    $mHead = 'padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0; background:#fff;';
+    $mBody = 'padding:20px; display:flex; flex-direction:column; gap:14px; background:#fff;';
+    $mFoot = 'padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0; background:#fff;';
+    $xBtn  = 'width:28px; height:28px; border:none; background:#F3F4F6; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#6B7280;';
+    $mInp  = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;';
+    $mLbl  = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;';
+@endphp
+<div x-data="{ open: @entangle('showCreateMaestroModal') }">
+<template x-teleport="body">
+<div x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);"
+     @click.self="$wire.set('showCreateMaestroModal', false)" @keydown.escape.window="$wire.set('showCreateMaestroModal', false)">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:480px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            </div>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Nuevo Artículo Maestro</p>
+            <button wire:click="$set('showCreateMaestroModal', false)" style="{{ $xBtn }}">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div style="{{ $mBody }}">
+            <div>
+                <label style="{{ $mLbl }}">Código *</label>
+                <input wire:model="newMaestroCodigo" type="text" maxlength="50" style="{{ $mInp }} text-transform:uppercase; font-family:monospace;">
+                @error('newMaestroCodigo') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
+            <div>
+                <label style="{{ $mLbl }}">Nombre *</label>
+                <input wire:model="newMaestroNombreModal" type="text" maxlength="255" style="{{ $mInp }}">
+                @error('newMaestroNombreModal') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
+            <div style="display:flex; gap:12px;">
+                <div style="flex:1;">
+                    <label style="{{ $mLbl }}">Categoría</label>
+                    <select wire:model="newMaestroCategoriaId" style="{{ $mInp }} cursor:pointer;">
+                        <option value="">— Sin categoría —</option>
+                        @foreach($categorias as $cat)
+                        <option value="{{ $cat->id }}">{{ $cat->descripcion }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div style="flex:1;">
+                    <label style="{{ $mLbl }}">Unidad</label>
+                    <select wire:model="newMaestroUnidadId" style="{{ $mInp }} cursor:pointer;">
+                        <option value="">— Sin unidad —</option>
+                        @foreach($unidades as $un)
+                        <option value="{{ $un->id }}">{{ $un->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div style="{{ $mFoot }}">
+            <button wire:click="$set('showCreateMaestroModal', false)" style="height:36px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
+            <button wire:click="saveCreateMaestroModal" wire:loading.attr="disabled" style="height:36px; padding:0 18px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">Guardar</button>
+        </div>
+    </div>
+</div>
+</template>
 </div>
 
 {{-- ══ MOBILE: Cards productos ══ --}}
