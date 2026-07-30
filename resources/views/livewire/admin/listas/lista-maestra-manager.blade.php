@@ -392,9 +392,11 @@
                     $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
                     $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; text-align:center; padding:8px 8px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top;';
                     $emptyF = '<div style="margin-top:4px; height:28px;"></div>';
-                    $tieneCuota = $viewingMaestra?->usa_cuota_inicial ?? false;
-                    $tipoCuota  = $viewingMaestra?->tipo_cuota_inicial;
-                    $valorCuota = $viewingMaestra?->valor_cuota_inicial;
+                    $tieneCuota  = $viewingMaestra?->usa_cuota_inicial ?? false;
+                    $tipoCuota   = $viewingMaestra?->tipo_cuota_inicial;
+                    $valorCuota  = $viewingMaestra?->valor_cuota_inicial;
+                    $tipoLista   = $viewingMaestra?->tipo_incremento;
+                    $factorLista = (float)($viewingMaestra?->valor_incremento ?? 0);
                 @endphp
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editItemId ? 'pointer-events:none;' : '' }}">
 
@@ -595,13 +597,10 @@
                 @php
                     $iE  = 'height:26px; border:1px solid #DDD8FA; border-radius:5px; padding:0 5px; font-size:12px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;';
                     $iRO = 'padding:4px 8px; font-size:12px; text-align:center; color:#9CA3AF; font-style:italic;';
-                    $precioEdit = (float)$editItemPrecio;
-                    $tipoLista  = $viewingMaestra?->tipo_incremento;
-                    $factorLista = (float)($viewingMaestra?->valor_incremento ?? 0);
-                    $montoLista  = 0.0;
-                    if ($tipoLista && $factorLista > 0) {
-                        $montoLista = $tipoLista === 'porcentaje' ? round($precioEdit * $factorLista / 100, 2) : $factorLista;
-                    }
+                    $precioEdit  = (float)$editItemPrecio;
+                    $montoLista  = ($tipoLista && $factorLista > 0)
+                        ? ($tipoLista === 'porcentaje' ? round($precioEdit * $factorLista / 100, 2) : $factorLista)
+                        : 0.0;
                     $precioFinalEdit = $precioEdit + $montoLista;
                 @endphp
                 <tr wire:key="prod-edit-{{ $p->id }}" style="border-bottom:1px solid #EDE9FE; background:#F5F3FF;">
@@ -722,11 +721,10 @@
                 @php
                     $iE  = 'height:26px; border:1px solid #DDD8FA; border-radius:5px; padding:0 5px; font-size:12px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;';
                     $iRO = 'padding:4px 8px; font-size:12px; text-align:center; color:#9CA3AF; font-style:italic;';
-                    $precioEditMa   = (float)$editItemPrecio;
-                    $montoListaMa   = 0.0;
-                    if ($tipoLista && $factorLista > 0) {
-                        $montoListaMa = $tipoLista === 'porcentaje' ? round($precioEditMa * $factorLista / 100, 2) : $factorLista;
-                    }
+                    $precioEditMa = (float)$editItemPrecio;
+                    $montoListaMa = ($tipoLista && $factorLista > 0)
+                        ? ($tipoLista === 'porcentaje' ? round($precioEditMa * $factorLista / 100, 2) : $factorLista)
+                        : 0.0;
                     $precioFinalEditMa = $precioEditMa + $montoListaMa;
                 @endphp
                 <tr wire:key="ma-edit-{{ $mi->id }}" style="border-bottom:1px solid #EDE9FE; background:#F5F3FF;">
