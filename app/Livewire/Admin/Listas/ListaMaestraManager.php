@@ -15,11 +15,12 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
 use App\Livewire\Concerns\HasModuleColor;
 use Livewire\Component;
+use Livewire\WithFileUploads;
 use Livewire\WithPagination;
 
 class ListaMaestraManager extends Component
 {
-    use WithPagination, HasModuleColor;
+    use WithPagination, HasModuleColor, WithFileUploads;
 
     public string $mode      = 'list';  // list | items | acceso
     public ?int   $viewingId = null;
@@ -98,6 +99,12 @@ class ListaMaestraManager extends Component
     // Agregar maestro artículo inline
     public bool   $showAddMaestroForm    = false;
     public ?int   $addMaestroId          = null;
+
+    // Import CSV
+    public bool   $showImportModal       = false;
+    public        $importFile            = null;
+    public bool   $showImportResultModal = false;
+    public array  $importResult          = [];
 
     // Modal: crear nuevo maestro artículo desde autocomplete
     public bool   $showCreateMaestroModal   = false;
@@ -976,6 +983,122 @@ class ListaMaestraManager extends Component
     public function removeAcceso(int $accesoId): void
     {
         ListaAcceso::destroy($accesoId);
+    }
+
+    // ── Import CSV ────────────────────────────────────────────────────────────
+
+    public function downloadImportTemplate(): \Symfony\Component\HttpFoundation\StreamedResponse
+    {
+        return response()->streamDownload(function () {
+            $out = fopen('php://output', 'w');
+            fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF));
+            fputcsv($out, ['Código', 'Precio Base', 'Stock Inicial', 'Estado'], ';');
+            fputcsv($out, ['PROD-001', '1500.00', '10', '1'], ';');
+            fputcsv($out, ['PROD-002', '2300.50', '5', '1'], ';');
+            fclose($out);
+        }, 'formato-importacion.csv', ['Content-Type' => 'text/csv; charset=UTF-8']);
+    }
+
+    public function importCsv(): void
+    {
+        $this->validate(['importFile' => 'required|file|mimes:csv,txt|max:4096']);
+
+        $handle = fopen($this->importFile->getRealPath(), 'r');
+
+        // Detect delimiter (semicolon or comma)
+        $firstLine = fgets($handle);
+        rewind($handle);
+        $delim = substr_count($firstLine, ';') >= substr_count($firstLine, ',') ? ';' : ',';
+
+        // Skip header row
+        fgetcsv($handle, 0, $delim);
+
+        $actualizados   = 0;
+        $creados        = 0;
+        $noEncontrados  = [];
+
+        while (($row = fgetcsv($handle, 0, $delim)) !== false) {
+            if (count($row) < 2 || empty(trim($row[0] ?? ''))) continue;
+
+            $codigo      = strtoupper(trim($row[0]));
+            $precioBase  = (float) str_replace(',', '.', trim($row[1] ?? '0'));
+            $stockInicial= (float) str_replace(',', '.', trim($row[2] ?? '0'));
+            $estadoRaw   = strtolower(trim($row[3] ?? '1'));
+            $active      = in_array($estadoRaw, ['1', 'si', 'sí', 'habilitado', 'true', 'yes', 'activo']);
+
+            [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista($precioBase);
+
+            // Buscar producto
+            $product = Product::where('code', $codigo)->first();
+            if ($product) {
+                $item = ListaMaestraItem::where('lista_maestra_id', $this->viewingId)
+                    ->where('product_id', $product->id)->first();
+                $data = [
+                    'precio_base'       => $precioBase,
+                    'stock_inicial'     => $stockInicial,
+                    'stock_actual'      => $stockInicial,
+                    'active'            => $active,
+                    'tipo_incremento'   => $tipoInc,
+                    'factor_incremento' => $factorInc,
+                    'monto_incremento'  => $montoInc,
+                ];
+                if ($item) { $item->update($data); $actualizados++; }
+                else {
+                    ListaMaestraItem::create(array_merge($data, [
+                        'lista_maestra_id' => $this->viewingId,
+                        'product_id'       => $product->id,
+                        'stock_consumido'  => 0,
+                        'stock_comprometido' => 0,
+                        'puntos'           => 0,
+                        'descuento'        => 0,
+                    ]));
+                    $creados++;
+                }
+                continue;
+            }
+
+            // Buscar maestro artículo
+            $maestro = MaestroArticulo::where('codigo', $codigo)->first();
+            if ($maestro) {
+                $item = ListaMaestraItem::where('lista_maestra_id', $this->viewingId)
+                    ->where('maestro_articulo_id', $maestro->id)->first();
+                $data = [
+                    'precio_base'       => $precioBase,
+                    'stock_inicial'     => $stockInicial,
+                    'stock_actual'      => $stockInicial,
+                    'active'            => $active,
+                    'tipo_incremento'   => $tipoInc,
+                    'factor_incremento' => $factorInc,
+                    'monto_incremento'  => $montoInc,
+                ];
+                if ($item) { $item->update($data); $actualizados++; }
+                else {
+                    ListaMaestraItem::create(array_merge($data, [
+                        'lista_maestra_id'    => $this->viewingId,
+                        'maestro_articulo_id' => $maestro->id,
+                        'stock_consumido'     => 0,
+                        'stock_comprometido'  => 0,
+                        'puntos'              => 0,
+                        'descuento'           => 0,
+                    ]));
+                    $creados++;
+                }
+                continue;
+            }
+
+            $noEncontrados[] = $codigo;
+        }
+
+        fclose($handle);
+
+        $this->importFile            = null;
+        $this->showImportModal       = false;
+        $this->importResult          = [
+            'actualizados'  => $actualizados,
+            'creados'       => $creados,
+            'noEncontrados' => $noEncontrados,
+        ];
+        $this->showImportResultModal = true;
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────

@@ -357,7 +357,7 @@
                 <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
                 Actualizar
             </button>
-            <button style="{{ $btnH }} background:#fff; color:#7B6FE8; border:1px solid #EDE9FE;">
+            <button wire:click="$set('showImportModal', true)" style="{{ $btnH }} background:#fff; color:#7B6FE8; border:1px solid #EDE9FE;">
                 <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
                 Importar
             </button>
@@ -799,6 +799,109 @@
             </tbody>
         </table>
     </div>
+</div>
+
+{{-- ══ MODAL: Importar CSV ══ --}}
+@php
+    $mHead2 = 'padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0; background:#fff;';
+    $mBody2 = 'padding:20px; display:flex; flex-direction:column; gap:14px; background:#fff;';
+    $mFoot2 = 'padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0; background:#fff;';
+    $xBtn2  = 'width:28px; height:28px; border:none; background:#F3F4F6; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#6B7280;';
+@endphp
+<div x-data="{ open: @entangle('showImportModal') }">
+<template x-teleport="body">
+<div x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);"
+     @click.self="$wire.set('showImportModal', false)" @keydown.escape.window="$wire.set('showImportModal', false)">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:440px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead2 }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+            </div>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Importar CSV</p>
+            <button wire:click="$set('showImportModal', false)" style="{{ $xBtn2 }}">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div style="{{ $mBody2 }}">
+            <p style="font-size:13px; color:#374151; margin:0;">
+                El archivo debe tener las columnas en orden:<br>
+                <span style="font-family:monospace; font-size:12px; color:#7B6FE8; font-weight:700;">Código ; Precio Base ; Stock Inicial ; Estado</span><br>
+                <span style="font-size:11px; color:#9CA3AF;">Estado: 1 = Habilitado, 0 = Deshabilitado. Primera fila = encabezado (se omite).</span>
+            </p>
+            <button wire:click="downloadImportTemplate"
+                    style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px dashed #C4B5FD; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:700; cursor:pointer; width:fit-content;">
+                <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 8l5-5 5 5M12 3v12"/></svg>
+                Descargar formato de ejemplo
+            </button>
+            <div>
+                <input wire:model="importFile" type="file" accept=".csv,.txt"
+                       style="width:100%; font-size:13px; color:#374151; border:1px dashed #C4B5FD; border-radius:8px; padding:10px; background:#F8F7FF; cursor:pointer; box-sizing:border-box;">
+                @error('importFile') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
+        </div>
+        <div style="{{ $mFoot2 }}">
+            <button wire:click="$set('showImportModal', false)" style="height:36px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
+            <button wire:click="importCsv" wire:loading.attr="disabled" wire:target="importCsv"
+                    style="height:36px; padding:0 18px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                <span wire:loading.remove wire:target="importCsv">Procesar</span>
+                <span wire:loading wire:target="importCsv">Procesando...</span>
+            </button>
+        </div>
+    </div>
+</div>
+</template>
+</div>
+
+{{-- ══ MODAL: Resultado Import ══ --}}
+<div x-data="{ open: @entangle('showImportResultModal') }">
+<template x-teleport="body">
+<div x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);"
+     @keydown.escape.window="$wire.set('showImportResultModal', false)">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:440px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead2 }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#D1FAE5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Importación completada</p>
+            <button wire:click="$set('showImportResultModal', false)" style="{{ $xBtn2 }}">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div style="{{ $mBody2 }}">
+            {{-- Contadores --}}
+            <div style="display:flex; gap:10px;">
+                <div style="flex:1; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:14px; text-align:center;">
+                    <div style="font-size:26px; font-weight:800; color:#059669;">{{ $importResult['actualizados'] ?? 0 }}</div>
+                    <div style="font-size:11px; font-weight:600; color:#065F46; margin-top:2px;">Actualizados</div>
+                </div>
+                <div style="flex:1; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:10px; padding:14px; text-align:center;">
+                    <div style="font-size:26px; font-weight:800; color:#1D4ED8;">{{ $importResult['creados'] ?? 0 }}</div>
+                    <div style="font-size:11px; font-weight:600; color:#1E3A8A; margin-top:2px;">Creados</div>
+                </div>
+                <div style="flex:1; background:#FFF7ED; border:1px solid #FED7AA; border-radius:10px; padding:14px; text-align:center;">
+                    <div style="font-size:26px; font-weight:800; color:#C2410C;">{{ count($importResult['noEncontrados'] ?? []) }}</div>
+                    <div style="font-size:11px; font-weight:600; color:#9A3412; margin-top:2px;">No encontrados</div>
+                </div>
+            </div>
+            {{-- Lista de no encontrados --}}
+            @if(!empty($importResult['noEncontrados']))
+            <div style="border:1px solid #FED7AA; border-radius:8px; background:#FFF7ED; padding:10px 12px; max-height:140px; overflow-y:auto;">
+                <p style="font-size:11px; font-weight:700; color:#9A3412; margin:0 0 6px; text-transform:uppercase; letter-spacing:.5px;">Códigos no encontrados</p>
+                @foreach($importResult['noEncontrados'] as $cod)
+                <span style="display:inline-block; font-family:monospace; font-size:11px; background:#FEE2E2; color:#B91C1C; border-radius:4px; padding:2px 6px; margin:2px;">{{ $cod }}</span>
+                @endforeach
+            </div>
+            @endif
+        </div>
+        <div style="{{ $mFoot2 }}">
+            <button wire:click="$set('showImportResultModal', false)"
+                    style="height:36px; padding:0 20px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">Listo</button>
+        </div>
+    </div>
+</div>
+</template>
 </div>
 
 {{-- ══ MODAL: Crear Maestro Artículo desde autocomplete ══ --}}
