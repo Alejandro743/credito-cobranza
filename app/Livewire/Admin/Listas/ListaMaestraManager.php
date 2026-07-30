@@ -373,19 +373,19 @@ class ListaMaestraManager extends Component
         ]);
 
         // Propagar incremento a todos los ítems de la lista
-        if ($tipoInc && $valorInc > 0) {
-            ListaMaestraItem::where('lista_maestra_id', $this->editingId)->get()
-                ->each(function ($item) use ($tipoInc, $valorInc) {
-                    $monto = $tipoInc === 'porcentaje'
+        ListaMaestraItem::where('lista_maestra_id', $this->editingId)->get()
+            ->each(function ($item) use ($tipoInc, $valorInc) {
+                $monto = ($tipoInc && $valorInc > 0)
+                    ? ($tipoInc === 'porcentaje'
                         ? round((float) $item->precio_base * $valorInc / 100, 2)
-                        : $valorInc;
-                    $item->update([
-                        'tipo_incremento'   => $tipoInc,
-                        'factor_incremento' => $valorInc,
-                        'monto_incremento'  => $monto,
-                    ]);
-                });
-        }
+                        : $valorInc)
+                    : 0.0;
+                $item->update([
+                    'tipo_incremento'   => $tipoInc,
+                    'factor_incremento' => $valorInc,
+                    'monto_incremento'  => $monto,
+                ]);
+            });
 
         $this->editingId = null;
         session()->flash('success', 'Lista actualizada.');
@@ -693,11 +693,9 @@ class ListaMaestraManager extends Component
         $item = ListaMaestraItem::with('product')->findOrFail($this->editItemId);
 
         $rules = [
-            'editItemPrecio'           => 'required|numeric|min:0',
-            'editItemPuntos'           => 'required|integer|min:0',
-            'editItemStock'            => 'required|numeric|min:0',
-            'editItemTipoIncremento'   => 'nullable|in:porcentaje,monto_fijo',
-            'editItemFactorIncremento' => 'required|numeric|min:0',
+            'editItemPrecio' => 'required|numeric|min:0',
+            'editItemPuntos' => 'required|integer|min:0',
+            'editItemStock'  => 'required|numeric|min:0',
         ];
         if ($item->product_id) {
             $rules['editItemCode'] = ['required', 'string', 'max:30',
@@ -707,11 +705,10 @@ class ListaMaestraManager extends Component
         }
 
         $this->validate($rules, [], [
-            'editItemCode'             => 'código',
-            'editItemPrecio'           => 'precio',
-            'editItemPuntos'           => 'puntos',
-            'editItemStock'            => 'stock inicial',
-            'editItemFactorIncremento' => 'factor incremento',
+            'editItemCode'   => 'código',
+            'editItemPrecio' => 'precio',
+            'editItemPuntos' => 'puntos',
+            'editItemStock'  => 'stock inicial',
         ]);
 
         $lista     = ListaMaestra::findOrFail($this->viewingId);
@@ -721,7 +718,7 @@ class ListaMaestraManager extends Component
         $productId = $item->product_id;
 
         try {
-            DB::transaction(function () use ($item, $productId, $cicloId, $newStock, $itemId) {
+            DB::transaction(function () use ($item, $productId, $cicloId, $newStock, $itemId, $lista) {
                 if ($productId !== null) {
                     $disp = $this->disponibleParaAsignar($productId, $cicloId, $itemId);
                     if ($disp !== null && $newStock > $disp + 0.001) {
@@ -732,26 +729,20 @@ class ListaMaestraManager extends Component
                 if ($item->product_id && $item->product) {
                     $item->product->update(['code' => strtoupper(trim($this->editItemCode))]);
                 }
+
+                $precioBase = (float) $this->editItemPrecio;
                 $nuevoActual = max(0, $newStock - (float) $item->stock_consumido);
-                $precioBase  = (float) $this->editItemPrecio;
-                $tipo        = $this->editItemTipoIncremento ?: null;
-                $factor      = (float) $this->editItemFactorIncremento;
-                $monto       = 0.0;
-                if ($tipo && $factor > 0) {
-                    $monto = $tipo === 'porcentaje'
-                        ? round($precioBase * $factor / 100, 2)
-                        : $factor;
-                }
+                [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista($precioBase);
 
                 $item->update([
                     'precio_base'       => $precioBase,
                     'puntos'            => (int) $this->editItemPuntos,
                     'stock_inicial'     => $newStock,
                     'stock_actual'      => $nuevoActual,
-                    'active'            => $this->editItemActive,
-                    'tipo_incremento'   => $tipo,
-                    'factor_incremento' => $factor,
-                    'monto_incremento'  => $monto,
+                    'active'            => (bool) $this->editItemActive,
+                    'tipo_incremento'   => $tipoInc,
+                    'factor_incremento' => $factorInc,
+                    'monto_incremento'  => $montoInc,
                 ]);
             });
         } catch (\RuntimeException $e) {

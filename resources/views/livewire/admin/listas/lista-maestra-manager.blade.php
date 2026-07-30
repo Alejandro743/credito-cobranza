@@ -392,6 +392,9 @@
                     $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
                     $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; text-align:center; padding:8px 8px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top;';
                     $emptyF = '<div style="margin-top:4px; height:28px;"></div>';
+                    $tieneCuota = $viewingMaestra?->usa_cuota_inicial ?? false;
+                    $tipoCuota  = $viewingMaestra?->tipo_cuota_inicial;
+                    $valorCuota = $viewingMaestra?->valor_cuota_inicial;
                 @endphp
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editItemId ? 'pointer-events:none;' : '' }}">
 
@@ -492,6 +495,14 @@
                         <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="itemColFilterPrecioFinal" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
+                    {{-- Cuota Inicial (condicional) --}}
+                    @if($tieneCuota)
+                    <th style="{{ $thC }}">
+                        <div>Cuota Ini.</div>
+                        {!! $emptyF !!}
+                    </th>
+                    @endif
+
                     {{-- Puntos --}}
                     @php $isA = $itemSortBy === 'puntos'; @endphp
                     <th wire:click="toggleItemSort('puntos')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
@@ -581,40 +592,38 @@
                     $nameCol  = $inLista ? '#111827' : '#9CA3AF';
                 @endphp
                 @if($inLista && $editItemId === $item->id)
-                @php $iE = 'height:26px; border:1px solid #DDD8FA; border-radius:5px; padding:0 5px; font-size:12px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;'; @endphp
-                <tr wire:key="prod-edit-{{ $p->id }}" style="border-bottom:1px solid #EDE9FE; background:#F5F3FF;"
-                    x-data="{
-                        precio: {{ (float)$editItemPrecio }},
-                        tipo:   '{{ $editItemTipoIncremento }}',
-                        factor: {{ (float)$editItemFactorIncremento }},
-                        get final() {
-                            if (!this.tipo || this.factor <= 0) return this.precio;
-                            let m = this.tipo === 'porcentaje'
-                                ? Math.round(this.precio * this.factor / 100 * 100) / 100
-                                : this.factor;
-                            return Math.max(0, this.precio + m);
-                        }
-                    }">
+                @php
+                    $iE  = 'height:26px; border:1px solid #DDD8FA; border-radius:5px; padding:0 5px; font-size:12px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;';
+                    $iRO = 'padding:4px 8px; font-size:12px; text-align:center; color:#9CA3AF; font-style:italic;';
+                    $precioEdit = (float)$editItemPrecio;
+                    $tipoLista  = $viewingMaestra?->tipo_incremento;
+                    $factorLista = (float)($viewingMaestra?->valor_incremento ?? 0);
+                    $montoLista  = 0.0;
+                    if ($tipoLista && $factorLista > 0) {
+                        $montoLista = $tipoLista === 'porcentaje' ? round($precioEdit * $factorLista / 100, 2) : $factorLista;
+                    }
+                    $precioFinalEdit = $precioEdit + $montoLista;
+                @endphp
+                <tr wire:key="prod-edit-{{ $p->id }}" style="border-bottom:1px solid #EDE9FE; background:#F5F3FF;">
                     <td class="col-row-num" style="padding:6px 8px; text-align:center; background:#F5F3FF; position:sticky; left:0; z-index:2;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8;">{{ $loop->iteration }}</span>
                     </td>
                     <td style="padding:4px 6px;"><input wire:model="editItemCode" type="text" style="{{ $iE }} font-family:monospace; text-transform:uppercase;">
                         @error('editItemCode') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
                     <td style="padding:4px 8px; font-size:12px; font-weight:600; color:#111827;">{{ strtoupper($p->name) }}</td>
-                    <td style="padding:4px 6px;"><input wire:model="editItemPrecio" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;"
-                        x-on:input="precio = parseFloat($event.target.value) || 0">
+                    <td style="padding:4px 6px;"><input wire:model.live="editItemPrecio" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;">
                         @error('editItemPrecio') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
-                    <td style="padding:4px 6px;">
-                        <select wire:model="editItemTipoIncremento" style="{{ $iE }} background:#fff; cursor:pointer;"
-                            x-on:change="tipo = $event.target.value">
-                            <option value="">— Sin —</option>
-                            <option value="porcentaje">%</option>
-                            <option value="monto_fijo">Bs</option>
-                        </select>
+                    <td style="{{ $iRO }}">
+                        @if($tipoLista)<span style="padding:2px 8px; border-radius:6px; font-size:11px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">{{ $tipoLista === 'porcentaje' ? '%' : 'Bs' }}</span>
+                        @else —@endif
                     </td>
-                    <td style="padding:4px 6px;"><input wire:model="editItemFactorIncremento" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;"
-                        x-on:input="factor = parseFloat($event.target.value) || 0"></td>
-                    <td style="padding:4px 8px; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8;" x-text="'Bs ' + final.toFixed(2)"></td>
+                    <td style="{{ $iRO }}">{{ $tipoLista && $factorLista > 0 ? ($tipoLista === 'porcentaje' ? number_format($factorLista,2).'%' : 'Bs '.number_format($factorLista,2)) : '—' }}</td>
+                    <td style="padding:4px 8px; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8;">Bs {{ number_format($precioFinalEdit, 2) }}</td>
+                    @if($tieneCuota)
+                    <td style="{{ $iRO }}">
+                        {{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'%' : 'Bs '.number_format($valorCuota,2) }}
+                    </td>
+                    @endif
                     <td style="padding:4px 6px;"><input wire:model="editItemPuntos" type="number" min="0" style="{{ $iE }} text-align:right;">
                         @error('editItemPuntos') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
                     <td style="padding:4px 6px;"><input wire:model="editItemStock" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;">
@@ -665,6 +674,13 @@
                         @if ($inLista) Bs {{ number_format($item->precio_final, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
+                    @if($tieneCuota)
+                    <td style="{{ $tdBase }}">
+                        @if($inLista)
+                            {{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'%' : 'Bs '.number_format($valorCuota,2) }}
+                        @else <span style="color:#D1D5DB;">—</span> @endif
+                    </td>
+                    @endif
                     <td style="{{ $tdBase }}">
                         @if ($inLista) {{ $item->puntos }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
@@ -703,39 +719,35 @@
                     $tdBase = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap; text-transform:uppercase;';
                 @endphp
                 @if($editItemId === $mi->id)
-                @php $iE = 'height:26px; border:1px solid #DDD8FA; border-radius:5px; padding:0 5px; font-size:12px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;'; @endphp
-                <tr wire:key="ma-edit-{{ $mi->id }}" style="border-bottom:1px solid #EDE9FE; background:#F5F3FF;"
-                    x-data="{
-                        precio: {{ (float)$editItemPrecio }},
-                        tipo:   '{{ $editItemTipoIncremento }}',
-                        factor: {{ (float)$editItemFactorIncremento }},
-                        get final() {
-                            if (!this.tipo || this.factor <= 0) return this.precio;
-                            let m = this.tipo === 'porcentaje'
-                                ? Math.round(this.precio * this.factor / 100 * 100) / 100
-                                : this.factor;
-                            return Math.max(0, this.precio + m);
-                        }
-                    }">
+                @php
+                    $iE  = 'height:26px; border:1px solid #DDD8FA; border-radius:5px; padding:0 5px; font-size:12px; color:#374151; background:#fff; outline:none; box-sizing:border-box; width:100%;';
+                    $iRO = 'padding:4px 8px; font-size:12px; text-align:center; color:#9CA3AF; font-style:italic;';
+                    $precioEditMa   = (float)$editItemPrecio;
+                    $montoListaMa   = 0.0;
+                    if ($tipoLista && $factorLista > 0) {
+                        $montoListaMa = $tipoLista === 'porcentaje' ? round($precioEditMa * $factorLista / 100, 2) : $factorLista;
+                    }
+                    $precioFinalEditMa = $precioEditMa + $montoListaMa;
+                @endphp
+                <tr wire:key="ma-edit-{{ $mi->id }}" style="border-bottom:1px solid #EDE9FE; background:#F5F3FF;">
                     <td class="col-row-num" style="padding:6px 8px; text-align:center; background:#F5F3FF; position:sticky; left:0; z-index:2;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8;">{{ $loop->iteration }}</span>
                     </td>
                     <td style="padding:4px 8px; font-family:monospace; font-size:12px; color:#6B7280; text-align:center;">{{ $ma->codigo }}</td>
                     <td style="padding:4px 8px; font-size:12px; font-weight:600; color:#111827;">{{ strtoupper($ma->nombre) }}</td>
-                    <td style="padding:4px 6px;"><input wire:model="editItemPrecio" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;"
-                        x-on:input="precio = parseFloat($event.target.value) || 0">
+                    <td style="padding:4px 6px;"><input wire:model.live="editItemPrecio" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;">
                         @error('editItemPrecio') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
-                    <td style="padding:4px 6px;">
-                        <select wire:model="editItemTipoIncremento" style="{{ $iE }} background:#fff; cursor:pointer;"
-                            x-on:change="tipo = $event.target.value">
-                            <option value="">— Sin —</option>
-                            <option value="porcentaje">%</option>
-                            <option value="monto_fijo">Bs</option>
-                        </select>
+                    <td style="{{ $iRO }}">
+                        @if($tipoLista)<span style="padding:2px 8px; border-radius:6px; font-size:11px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">{{ $tipoLista === 'porcentaje' ? '%' : 'Bs' }}</span>
+                        @else —@endif
                     </td>
-                    <td style="padding:4px 6px;"><input wire:model="editItemFactorIncremento" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;"
-                        x-on:input="factor = parseFloat($event.target.value) || 0"></td>
-                    <td style="padding:4px 8px; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8;" x-text="'Bs ' + final.toFixed(2)"></td>
+                    <td style="{{ $iRO }}">{{ $tipoLista && $factorLista > 0 ? ($tipoLista === 'porcentaje' ? number_format($factorLista,2).'%' : 'Bs '.number_format($factorLista,2)) : '—' }}</td>
+                    <td style="padding:4px 8px; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8;">Bs {{ number_format($precioFinalEditMa, 2) }}</td>
+                    @if($tieneCuota)
+                    <td style="{{ $iRO }}">
+                        {{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'%' : 'Bs '.number_format($valorCuota,2) }}
+                    </td>
+                    @endif
                     <td style="padding:4px 6px;"><input wire:model="editItemPuntos" type="number" min="0" style="{{ $iE }} text-align:right;">
                         @error('editItemPuntos') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
                     <td style="padding:4px 6px;"><input wire:model="editItemStock" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;">
@@ -782,6 +794,9 @@
                         @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
                     <td style="{{ $tdBase }} color:#7B6FE8; font-weight:700;">Bs {{ number_format($mi->precio_final, 2) }}</td>
+                    @if($tieneCuota)
+                    <td style="{{ $tdBase }}">{{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'%' : 'Bs '.number_format($valorCuota,2) }}</td>
+                    @endif
                     <td style="{{ $tdBase }}">{{ $mi->puntos }}</td>
                     <td style="{{ $tdBase }}">{{ number_format($mi->stock_inicial, 2) }}</td>
                     <td style="{{ $tdBase }}">{{ number_format($mi->stock_consumido, 2) }}</td>
