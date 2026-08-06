@@ -173,7 +173,7 @@
                 @if ($editingId === $u->id)
                 <tr wire:key="edit-{{ $u->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
                     <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap;">
-                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $unidades->firstItem() + $loop->index }}</span>
+                        <span style="font-size:13px; color:#111827;">{{ $unidades->firstItem() + $loop->index }}</span>
                     </td>
                     <td style="padding:7px 10px;">
                         <input wire:model="editName" type="text" placeholder="Nombre *"
@@ -207,16 +207,16 @@
                                    @click="$wire.selectedUnidadId === {{ $u->id }} ? $wire.set('selectedUnidadId', null) : $wire.selectUnidad({{ $u->id }})"
                                    :disabled="{{ $editingId && $editingId !== $u->id ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $u->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
-                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $unidades->firstItem() + $loop->index }}</span>
+                            <span style="font-size:13px; color:#111827;">{{ $unidades->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($u->name)) }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($u->name)) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:12px; color:#374151;">{{ $u->abreviatura ?: '—' }}</span>
+                        <span style="font-size:13px; color:#111827;">{{ $u->abreviatura ?: '—' }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">

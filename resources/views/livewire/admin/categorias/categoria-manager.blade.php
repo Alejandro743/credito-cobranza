@@ -201,7 +201,7 @@
                 @if ($editingId === $cat->id)
                 <tr wire:key="edit-{{ $cat->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
                     <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#F8F7FF;">
-                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $categorias->firstItem() + $loop->index }}</span>
+                        <span style="font-size:13px; color:#111827;">{{ $categorias->firstItem() + $loop->index }}</span>
                     </td>
                     <td style="padding:7px 10px;">
                         <input wire:model="editCode" type="text"
@@ -240,20 +240,20 @@
                                    @click="$wire.selectedCategoriaId === {{ $cat->id }} ? $wire.set('selectedCategoriaId', null) : $wire.selectCategoria({{ $cat->id }})"
                                    :disabled="{{ $editingId && $editingId !== $cat->id ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $cat->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
-                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $categorias->firstItem() + $loop->index }}</span>
+                            <span style="font-size:13px; color:#111827;">{{ $categorias->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cat->code }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cat->code }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($cat->name)) }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($cat->name)) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cat->descripcion ? ucwords(strtolower($cat->descripcion)) : '—' }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cat->descripcion ? ucwords(strtolower($cat->descripcion)) : '—' }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">

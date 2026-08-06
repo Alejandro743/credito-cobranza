@@ -86,15 +86,15 @@
             @php $esVigente = \App\Models\RangoCalificacion::vigente()?->id === $r->id; @endphp
             <tr wire:key="rc-{{ $r->id }}" style="border-bottom:1px solid #F3F4F6; {{ $esVigente ? 'background:#FAFAFE;' : '' }}"
                 @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background='{{ $esVigente ? '#FAFAFE' : '' }}'">
-                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
-                <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($r->nombre)) }}</td>
-                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
-                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
+                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $loop->iteration }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($r->nombre)) }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
                 <td style="padding:10px 14px; text-align:center;">
                     @if($esVigente)
                     <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">Sí</span>
                     @else
-                    <span style="font-size:13px; color:#9CA3AF;">—</span>
+                    <span style="font-size:13px; color:#111827;">—</span>
                     @endif
                 </td>
                 <td style="padding:10px 14px; text-align:center;">

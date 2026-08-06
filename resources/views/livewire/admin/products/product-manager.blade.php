@@ -253,7 +253,7 @@
                 @if ($editingId === $p->id)
                 <tr wire:key="edit-{{ $p->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
                     <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#F8F7FF;">
-                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $products->firstItem() + $loop->index }}</span>
+                        <span style="font-size:13px; color:#111827;">{{ $products->firstItem() + $loop->index }}</span>
                     </td>
                     <td style="padding:7px 12px; text-align:center;">
                         @if($p->foto_url)
@@ -331,7 +331,7 @@
                                    @click="$wire.selectedProductId === {{ $p->id }} ? $wire.set('selectedProductId', null) : $wire.selectProduct({{ $p->id }})"
                                    :disabled="{{ $editingId && $editingId !== $p->id ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $p->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
-                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $products->firstItem() + $loop->index }}</span>
+                            <span style="font-size:13px; color:#111827;">{{ $products->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
                     <td style="padding:8px 12px; text-align:center;">
@@ -353,14 +353,14 @@
                     @endphp
                     <td style="padding:10px 10px; overflow:hidden;">
                         @if($cicloDelProducto)
-                        <span style="font-size:12px; color:#7c3aed; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cicloDelProducto->code }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $cicloDelProducto->code }}</span>
                         @else
-                        <span style="font-size:12px; color:#D1D5DB;">—</span>
+                        <span style="font-size:13px; color:#111827;">—</span>
                         @endif
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:12px; font-family:monospace; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->code }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->code }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
@@ -369,32 +369,32 @@
 
                     <td style="padding:10px 8px; text-align:center; overflow:hidden;">
                         @if($cicloDelProducto)
-                        <span style="font-size:13px; color:#374151;">{{ number_format($stkTotal, 0) }}</span>
+                        <span style="font-size:13px; color:#111827;">{{ number_format($stkTotal, 0) }}</span>
                         @else
-                        <span style="font-size:12px; color:#D1D5DB;">—</span>
+                        <span style="font-size:13px; color:#111827;">—</span>
                         @endif
                     </td>
                     <td style="padding:10px 8px; text-align:center; overflow:hidden;">
                         @if($cicloDelProducto)
-                        <span style="font-size:13px; color:#6B7280;">{{ number_format($stkAsignado, 0) }}</span>
+                        <span style="font-size:13px; color:#111827;">{{ number_format($stkAsignado, 0) }}</span>
                         @else
-                        <span style="font-size:12px; color:#D1D5DB;">—</span>
+                        <span style="font-size:13px; color:#111827;">—</span>
                         @endif
                     </td>
                     <td style="padding:10px 8px; text-align:center; overflow:hidden;">
                         @if($cicloDelProducto)
                         <span style="font-size:13px; color:{{ $stkDisp > 0 ? '#059669' : '#EF4444' }};">{{ number_format($stkDisp, 0) }}</span>
                         @else
-                        <span style="font-size:12px; color:#D1D5DB;">—</span>
+                        <span style="font-size:13px; color:#111827;">—</span>
                         @endif
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($p->categoria?->name ?? '—')) }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($p->categoria?->name ?? '—')) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->unidad?->abreviatura ?? $p->unidad?->name ?? '—' }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $p->unidad?->abreviatura ?? $p->unidad?->name ?? '—' }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">

@@ -412,11 +412,11 @@
                 @if ($editingId === $role->id)
                 <tr wire:key="edit-{{ $role->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
                     <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#F8F7FF;">
-                        <span style="font-size:12px; font-weight:700; color:#374151;">{{ $roles->firstItem() + $loop->index }}</span>
+                        <span style="font-size:13px; color:#111827;">{{ $roles->firstItem() + $loop->index }}</span>
                     </td>
                     <td style="padding:7px 10px; text-align:left;">
                         @if ($role->name === 'admin')
-                            <span style="font-size:13px; font-weight:600; color:#6B7280; text-transform:capitalize;">admin</span>
+                            <span style="font-size:13px; color:#111827; text-transform:capitalize;">admin</span>
                         @else
                             <input wire:model="editRoleName" type="text" placeholder="Nombre del rol"
                                    style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
@@ -450,12 +450,12 @@
                                    @click="$wire.selectedRoleId === {{ $role->id }} ? $wire.set('selectedRoleId', null) : $wire.selectRole({{ $role->id }})"
                                    :disabled="{{ $editingId && $editingId !== $role->id ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $role->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
-                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $roles->firstItem() + $loop->index }}</span>
+                            <span style="font-size:13px; color:#111827;">{{ $roles->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; font-weight:400; color:#374151; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $role->name }}</span>
+                        <span style="font-size:13px; color:#111827; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $role->name }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">

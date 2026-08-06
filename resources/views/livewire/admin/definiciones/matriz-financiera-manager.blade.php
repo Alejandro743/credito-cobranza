@@ -278,30 +278,30 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas'];
         {{-- ── FILA NORMAL ── --}}
         <tr wire:key="mf-{{ $r->id }}" style="border-bottom:1px solid #F9FAFB;"
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
-            <td style="padding:11px 14px; font-family:monospace; font-size:12px; font-weight:700; color:#7B6FE8; white-space:nowrap;">{{ $r->code }}</td>
-            <td style="padding:11px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $r->name }}</td>
-            <td style="padding:11px 14px; text-align:center; font-size:13px; font-weight:700; color:#374151;">
+            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $loop->iteration }}</td>
+            <td style="padding:11px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $r->code }}</td>
+            <td style="padding:11px 14px; font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $r->name }}</td>
+            <td style="padding:11px 14px; text-align:center; font-size:13px; color:#111827;">
                 {{ $r->cantidad_cuotas === 1 ? 'Contado' : $r->cantidad_cuotas }}
             </td>
-            <td style="padding:11px 14px; font-size:12px; color:#374151;">
+            <td style="padding:11px 14px; font-size:13px; color:#111827;">
                 @if($r->usa_cuota_inicial)
                 <span style="display:inline-flex; align-items:center; gap:5px;">
                     <span style="width:6px; height:6px; border-radius:50%; background:#f97316; flex-shrink:0;"></span>
                     {{ $r->tipo_cuota_inicial === 'porcentaje' ? number_format($r->valor_cuota_inicial, 2).'%' : 'Bs. '.number_format($r->valor_cuota_inicial, 2) }}
                 </span>
                 @else
-                <span style="color:#D1D5DB; font-size:12px;">—</span>
+                <span style="color:#111827; font-size:13px;">—</span>
                 @endif
             </td>
-            <td style="padding:11px 14px; font-size:12px; color:#374151;">
+            <td style="padding:11px 14px; font-size:13px; color:#111827;">
                 @if($r->usa_incremento)
                 <span style="display:inline-flex; align-items:center; gap:5px;">
                     <span style="width:6px; height:6px; border-radius:50%; background:#7B6FE8; flex-shrink:0;"></span>
                     {{ $r->tipo_incremento === 'porcentaje' ? number_format($r->valor_incremento, 2).'%' : 'Bs. '.number_format($r->valor_incremento, 2) }}
                 </span>
                 @else
-                <span style="color:#D1D5DB; font-size:12px;">—</span>
+                <span style="color:#111827; font-size:13px;">—</span>
                 @endif
             </td>
             <td style="padding:11px 14px; text-align:center;">

@@ -432,7 +432,7 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                 {{-- Fila edición inline --}}
                 @if ($editingId === $user->id)
                 <tr wire:key="edit-{{ $user->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
-                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $users->firstItem() + $loop->index }}</td>
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $users->firstItem() + $loop->index }}</td>
                     <td style="padding:7px 10px; text-align:left;">
                         <input wire:model="editName" type="text" placeholder="Nombre completo"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
@@ -484,24 +484,24 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                                    @click="$wire.selectedUserId === {{ $user->id }} ? $wire.set('selectedUserId', null) : $wire.selectUser({{ $user->id }})"
                                    :disabled="{{ $editingId && $editingId !== $user->id ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $user->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
-                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $users->firstItem() + $loop->index }}</span>
+                            <span style="font-size:13px; color:#111827;">{{ $users->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; font-weight:400; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($user->name)) }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($user->name)) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
-                        <span style="font-size:12px; font-family:monospace; font-weight:400; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $user->email }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $user->email }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; font-weight:400; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucfirst($user->tipo ?? 'administrativo') }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucfirst($user->tipo ?? 'administrativo') }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; text-transform:capitalize;">{{ $roleName }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block; text-transform:capitalize;">{{ $roleName }}</span>
                     </td>
 
                     <td style="padding:10px 14px; text-align:center;">

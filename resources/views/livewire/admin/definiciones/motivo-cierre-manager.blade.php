@@ -138,7 +138,7 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
         @if($r->id === $editId)
         {{-- ── FILA EDICIÓN INLINE ── --}}
         <tr wire:key="mc-edit-{{ $r->id }}" style="background:#FAFAFE; border-bottom:1px solid #EDE9FE;">
-            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
+            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $loop->iteration }}</td>
             <td style="padding:10px 14px;">
                 <input wire:model="nombre" type="text"
                        style="width:100%; {{ $iRow }}">
@@ -177,8 +177,8 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
         {{-- ── FILA NORMAL ── --}}
         <tr wire:key="mc-{{ $r->id }}" style="border-bottom:1px solid #F9FAFB;"
             @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $loop->iteration }}</td>
-            <td style="padding:11px 14px; font-size:13px; font-weight:500; color:#111827;">{{ ucwords(strtolower($r->nombre)) }}</td>
+            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $loop->iteration }}</td>
+            <td style="padding:11px 14px; font-size:13px; color:#111827;">{{ ucwords(strtolower($r->nombre)) }}</td>
             <td style="padding:11px 14px; text-align:center;">
                 @if($r->afecta_mora)
                 <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px; background:#FEE2E2; color:#DC2626;">Sí afecta</span>

@@ -151,7 +151,7 @@
                 @if ($editingId === $c->id)
                 @php $eS = 'height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;'; @endphp
                 <tr wire:key="edit-{{ $c->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; border-left:3px solid #7B6FE8;">
-                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $correlativos->firstItem() + $loop->index }}</td>
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $correlativos->firstItem() + $loop->index }}</td>
                     <td colspan="6" style="padding:10px 14px;">
                         <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
                             <div style="width:100px;">
@@ -203,21 +203,21 @@
                 @else
                 <tr wire:key="row-{{ $c->id }}" style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
                     @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $correlativos->firstItem() + $loop->index }}</td>
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $correlativos->firstItem() + $loop->index }}</td>
                     <td style="padding:10px 14px; overflow:hidden;">
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="font-size:12px; font-family:monospace; font-weight:700; color:#111827; white-space:nowrap;">{{ $c->prefijo }}</span>
-                            <span style="font-size:11px; color:#9CA3AF;">→</span>
+                            <span style="font-size:13px; color:#111827; white-space:nowrap;">{{ $c->prefijo }}</span>
+                            <span style="font-size:13px; color:#111827;">→</span>
                             <span style="font-family:monospace; font-size:12px; color:#7B6FE8; font-weight:600; background:#F0EEFF; padding:2px 7px; border-radius:6px; white-space:nowrap;">
                                 {{ $c->prefijo }}{{ str_pad($c->siguiente_numero, $c->longitud, '0', STR_PAD_LEFT) }}
                             </span>
                         </div>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->descripcion ? ucwords(strtolower($c->descripcion)) : '—' }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->descripcion ? ucwords(strtolower($c->descripcion)) : '—' }}</span>
                     </td>
-                    <td style="padding:10px 14px; text-align:center; font-family:monospace; font-size:12px; font-weight:700; color:#111827;">{{ $c->siguiente_numero }}</td>
-                    <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280;">{{ $c->longitud }}</td>
+                    <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827;">{{ $c->siguiente_numero }}</td>
+                    <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827;">{{ $c->longitud }}</td>
                     <td style="padding:10px 14px; text-align:center;">
                         <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
                                      background:{{ $c->activo ? '#D1FAE5' : '#F3F4F6' }};
