@@ -13,10 +13,14 @@ class CycleManager extends Component
 {
     use WithPagination, HasModuleColor;
 
-    public string $search       = '';
-    public string $filterStatus = '';
     public string $sortBy       = 'code';
     public string $sortDir      = 'asc';
+
+    public string $colFilterCodigo      = '';
+    public string $colFilterDescripcion = '';
+    public string $colFilterInicio      = '';
+    public string $colFilterFin         = '';
+    public string $colFilterEstado      = '';
 
     public function toggleSort(string $col): void
     {
@@ -28,6 +32,12 @@ class CycleManager extends Component
         }
         $this->resetPage();
     }
+
+    public function updatingColFilterCodigo(): void      { $this->resetPage(); }
+    public function updatingColFilterDescripcion(): void { $this->resetPage(); }
+    public function updatingColFilterInicio(): void      { $this->resetPage(); }
+    public function updatingColFilterFin(): void         { $this->resetPage(); }
+    public function updatingColFilterEstado(): void      { $this->resetPage(); }
 
     // Inline add
     public bool   $showAddForm  = false;
@@ -47,12 +57,17 @@ class CycleManager extends Component
     public string $editStatus    = 'abierto';
     public string $editNotes     = '';
 
+    public ?int $selectedCycleId = null;
+
+    public function selectCycle(int $id): void
+    {
+        $this->selectedCycleId = $this->selectedCycleId === $id ? null : $id;
+    }
+
     public function mount(): void
     {
         $this->initModuleColor();
     }
-
-    public function updatingSearch(): void { $this->resetPage(); }
 
     // ── Inline add ────────────────────────────────────────────────────────────
 
@@ -220,10 +235,11 @@ class CycleManager extends Component
 
     public function render()
     {
-        $cycles = CommercialCycle::when($this->search, fn($q) =>
-                        $q->where('code', 'like', "%{$this->search}%")
-                          ->orWhere('name', 'like', "%{$this->search}%"))
-                    ->when($this->filterStatus, fn($q) => $q->where('status', $this->filterStatus))
+        $cycles = CommercialCycle::when($this->colFilterCodigo,      fn($q) => $q->where('code', 'like', "%{$this->colFilterCodigo}%"))
+                    ->when($this->colFilterDescripcion, fn($q) => $q->where('name', 'like', "%{$this->colFilterDescripcion}%"))
+                    ->when($this->colFilterInicio,      fn($q) => $q->where('start_date', '>=', $this->colFilterInicio))
+                    ->when($this->colFilterFin,         fn($q) => $q->where('end_date', '<=', $this->colFilterFin))
+                    ->when($this->colFilterEstado !== '', fn($q) => $q->where('status', $this->colFilterEstado))
                     ->orderBy($this->sortBy, $this->sortDir)
                     ->paginate(15);
 

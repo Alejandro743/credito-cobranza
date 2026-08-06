@@ -13,10 +13,20 @@ class ConfiguracionPuntosManager extends Component
 {
     use WithPagination, HasModuleColor;
 
-    public string $search       = '';
-    public string $filterStatus = '';
     public string $sortBy       = 'code';
     public string $sortDir      = 'asc';
+
+    public string $colFilterCiclo       = '';
+    public string $colFilterValor       = '';
+    public string $colFilterDescripcion = '';
+    public string $colFilterEstado      = '';
+
+    public ?int $selectedPuntoId = null;
+
+    public function selectPunto(int $id): void
+    {
+        $this->selectedPuntoId = $this->selectedPuntoId === $id ? null : $id;
+    }
 
     public function toggleSort(string $col): void
     {
@@ -28,6 +38,11 @@ class ConfiguracionPuntosManager extends Component
         }
         $this->resetPage();
     }
+
+    public function updatingColFilterCiclo(): void       { $this->resetPage(); }
+    public function updatingColFilterValor(): void        { $this->resetPage(); }
+    public function updatingColFilterDescripcion(): void  { $this->resetPage(); }
+    public function updatingColFilterEstado(): void       { $this->resetPage(); }
 
     // Inline add
     public bool   $showAddForm     = false;
@@ -47,8 +62,6 @@ class ConfiguracionPuntosManager extends Component
     {
         $this->initModuleColor();
     }
-
-    public function updatingSearch(): void { $this->resetPage(); }
 
     // ── Inline add ────────────────────────────────────────────────────────────
 
@@ -146,12 +159,16 @@ class ConfiguracionPuntosManager extends Component
     public function render()
     {
         $puntos = ConfiguracionPuntos::with('cycle')
-            ->when($this->search, fn($q) =>
-                $q->whereHas('cycle', fn($r) =>
-                    $r->where('name', 'like', "%{$this->search}%")
-                      ->orWhere('code', 'like', "%{$this->search}%")))
-            ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
             ->join('commercial_cycles', 'commercial_cycles.id', '=', 'configuracion_puntos.cycle_id')
+            ->when($this->colFilterCiclo, fn($q) => $q->where(function ($qq) {
+                    $qq->where('commercial_cycles.code', 'like', "%{$this->colFilterCiclo}%")
+                       ->orWhere('commercial_cycles.name', 'like', "%{$this->colFilterCiclo}%");
+                }))
+            ->when($this->colFilterValor !== '', fn($q) =>
+                $q->whereRaw("CAST(configuracion_puntos.valor_punto AS CHAR) LIKE ?", ["%{$this->colFilterValor}%"]))
+            ->when($this->colFilterDescripcion, fn($q) =>
+                $q->where('configuracion_puntos.description', 'like', "%{$this->colFilterDescripcion}%"))
+            ->when($this->colFilterEstado !== '', fn($q) => $q->where('configuracion_puntos.active', (bool) $this->colFilterEstado))
             ->when($this->sortBy === 'code',        fn($q) => $q->orderBy('commercial_cycles.code', $this->sortDir))
             ->when($this->sortBy === 'valor_punto', fn($q) => $q->orderBy('configuracion_puntos.valor_punto', $this->sortDir))
             ->when($this->sortBy === 'active',      fn($q) => $q->orderBy('configuracion_puntos.active', $this->sortDir))

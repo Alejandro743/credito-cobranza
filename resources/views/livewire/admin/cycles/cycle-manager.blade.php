@@ -20,20 +20,7 @@
 
 {{-- ══════ TOOLBAR ══════ --}}
 @if(!$showAddForm)
-<div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
-
-    <div style="position:relative; flex:1; min-width:200px;">
-        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); color:#9CA3AF;" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar por código o descripción..."
-               style="width:100%; height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 12px 0 32px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;">
-    </div>
-
-    <select wire:model.live="filterStatus"
-            style="height:36px; border:1px solid #E5E7EB; border-radius:9px; padding:0 12px; font-size:13px; color:#374151; background:#fff; outline:none; cursor:pointer;">
-        <option value="">Todos los estados</option>
-        <option value="abierto">Abierto</option>
-        <option value="cerrado">Cerrado</option>
-    </select>
+<div style="display:flex; align-items:center; gap:10px; margin-bottom:16px; flex-wrap:wrap; justify-content:flex-start;">
 
     <button wire:click="showAdd"
             style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; white-space:nowrap;"
@@ -170,34 +157,133 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
 @endphp
 
 @php
-$sortColsC = ['Código'=>'code','Descripción'=>'name','Inicio'=>'start_date','Fin'=>'end_date','Estado'=>'status'];
+$fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:left;';
+$fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; text-indent:16px; cursor:pointer;';
+$fW  = 'position:relative; margin-top:4px;' . ($editingId ? ' opacity:0.45;' : '');
+$fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
+$fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
+$thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top; position:relative; overflow:hidden;';
 @endphp
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Ciclos Comerciales</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $cycles->total() }}</span>
+        @if($selectedCycleId)
+        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            @if($editingId === $selectedCycleId)
+                <button wire:click="saveEdit" wire:loading.attr="disabled" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    Guardar
+                </button>
+                <button wire:click="cancelEdit" style="{{ $btnH }} background:#E5E7EB; color:#374151;">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Cancelar
+                </button>
+            @else
+                <button wire:click="startEdit({{ $selectedCycleId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                    Editar
+                </button>
+            @endif
+        </div>
+        @endif
     </div>
 
     <div style="overflow:auto; flex:1;">
     <table style="width:100%; border-collapse:collapse; min-width:640px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
-                @foreach($sortColsC as $label => $key)
-                @php $isActive = $sortBy === $key; @endphp
-                <th wire:click="toggleSort('{{ $key }}')"
-                    style="padding:10px 14px; text-align:{{ in_array($label,['Inicio','Fin','Estado']) ? 'center' : 'left' }}; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; cursor:pointer; user-select:none; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
-                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                    <span style="display:inline-flex; align-items:center; gap:5px;">{{ $label }}
-                        @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                        @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                        @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
-                        @endif
-                    </span>
+                <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF;">
+                    #
+                    <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
+                        <input type="checkbox"
+                               :checked="$wire.selectedCycleId !== null"
+                               :disabled="$wire.selectedCycleId === null || $wire.editingId !== null"
+                               @click.prevent="$wire.selectedCycleId !== null && $wire.editingId === null && $wire.set('selectedCycleId', null)"
+                               :style="($wire.selectedCycleId !== null && $wire.editingId === null) ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
+                    </div>
                 </th>
-                @endforeach
-                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
+                {{-- Código --}}
+                @php $isA = $sortBy === 'code'; @endphp
+                <th wire:click="toggleSort('code')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:120px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                    <div style="display:flex; align-items:center; gap:4px;">Código
+                        <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                        </span>
+                    </div>
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterCodigo" @click.stop type="text" style="{{ $fI }}"></div>
+                    <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                </th>
+
+                {{-- Descripción --}}
+                @php $isA = $sortBy === 'name'; @endphp
+                <th wire:click="toggleSort('name')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:180px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                    <div style="display:flex; align-items:center; gap:4px;">Descripción
+                        <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                        </span>
+                    </div>
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterDescripcion" @click.stop type="text" style="{{ $fI }}"></div>
+                    <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                </th>
+
+                {{-- Inicio --}}
+                @php $isA = $sortBy === 'start_date'; @endphp
+                <th wire:click="toggleSort('start_date')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Inicio
+                        <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                        </span>
+                    </div>
+                    <div style="{{ $fW }}" @click.stop>
+                        <input wire:model.live.debounce.300ms="colFilterInicio" @click.stop type="date" title="Desde esta fecha"
+                               style="height:28px; font-size:10px; border:1px solid #DDD8FA; border-radius:5px; padding:0 3px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; cursor:pointer;">
+                    </div>
+                </th>
+
+                {{-- Fin --}}
+                @php $isA = $sortBy === 'end_date'; @endphp
+                <th wire:click="toggleSort('end_date')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Fin
+                        <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                        </span>
+                    </div>
+                    <div style="{{ $fW }}" @click.stop>
+                        <input wire:model.live.debounce.300ms="colFilterFin" @click.stop type="date" title="Hasta esta fecha"
+                               style="height:28px; font-size:10px; border:1px solid #DDD8FA; border-radius:5px; padding:0 3px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; cursor:pointer;">
+                    </div>
+                </th>
+
+                {{-- Estado --}}
+                @php $isA = $sortBy === 'status'; @endphp
+                <th wire:click="toggleSort('status')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:120px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
+                        <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                        </span>
+                    </div>
+                    <div style="{{ $fW }}" @click.stop>
+                        {!! $fSvg !!}
+                        <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                            <option value="">Todos</option>
+                            <option value="abierto">Abierto</option>
+                            <option value="cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -206,7 +292,9 @@ $sortColsC = ['Código'=>'code','Descripción'=>'name','Inicio'=>'start_date','F
         @if($editingId === $cycle->id)
         {{-- ── FILA EDICIÓN INLINE ── --}}
         <tr wire:key="edit-{{ $cycle->id }}" style="background:#FAFAFE; border-bottom:1px solid #EDE9FE;">
-            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $cycles->firstItem() + $loop->index }}</td>
+            <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#FAFAFE;">
+                <span style="font-size:13px; color:#111827;">{{ $cycles->firstItem() + $loop->index }}</span>
+            </td>
             <td style="padding:10px 16px;">
                 <input wire:model="editCode" type="text" maxlength="30"
                        style="width:100%; {{ $iRow }} text-transform:uppercase;">
@@ -232,32 +320,28 @@ $sortColsC = ['Código'=>'code','Descripción'=>'name','Inicio'=>'start_date','F
                 </select>
                 @error('editStatus')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
             </td>
-            <td style="padding:10px 16px;">
-                <div style="display:flex; gap:6px; justify-content:center;">
-                    <button wire:click="saveEdit" wire:loading.attr="disabled"
-                            style="height:34px; padding:0 16px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                            @mouseenter="$el.style.opacity='.85'" @mouseleave="$el.style.opacity='1'">
-                        <span wire:loading.remove wire:target="saveEdit">Guardar</span>
-                        <span wire:loading wire:target="saveEdit">...</span>
-                    </button>
-                    <button wire:click="cancelEdit"
-                            style="height:34px; padding:0 14px; border-radius:7px; border:1px solid #E5E7EB; background:#F3F4F6; color:#6B7280; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
-                            @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
-                        Cerrar
-                    </button>
-                </div>
-            </td>
         </tr>
 
         @else
         {{-- ── FILA NORMAL ── --}}
-        <tr wire:key="c-{{ $cycle->id }}" style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
-            @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $cycles->firstItem() + $loop->index }}</td>
-            <td style="padding:10px 14px; font-size:12px; font-weight:700; color:#111827; font-family:monospace; white-space:nowrap;">{{ $cycle->code }}</td>
-            <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827;">{{ ucwords(strtolower($cycle->name)) }}</td>
-            <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $cycle->start_date->format('d/m/Y') }}</td>
-            <td style="padding:10px 14px; text-align:center; font-size:13px; color:#6B7280; white-space:nowrap;">{{ $cycle->end_date->format('d/m/Y') }}</td>
+        @php $selCy = $selectedCycleId === $cycle->id; @endphp
+        <tr wire:key="c-{{ $cycle->id }}"
+            style="border-bottom:1px solid #F3F4F6; transition:background .1s; background:{{ $selCy ? '#F5F3FF' : '' }}; {{ $selCy ? 'border-left:3px solid #7B6FE8;' : '' }}"
+            @mouseenter="$el.style.background='{{ $selCy ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selCy ? '#F5F3FF' : '' }}'">
+            <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selCy ? '#F5F3FF' : '#fff' }};">
+                <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                    <input type="checkbox"
+                           :checked="$wire.selectedCycleId === {{ $cycle->id }}"
+                           @click="$wire.selectedCycleId === {{ $cycle->id }} ? $wire.set('selectedCycleId', null) : $wire.selectCycle({{ $cycle->id }})"
+                           :disabled="{{ $editingId && $editingId !== $cycle->id ? 'true' : 'false' }}"
+                           style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $cycle->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
+                    <span style="font-size:13px; color:#111827;">{{ $cycles->firstItem() + $loop->index }}</span>
+                </div>
+            </td>
+            <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $cycle->code }}</td>
+            <td style="padding:10px 14px; font-size:13px; color:#111827;">{{ ucwords(strtolower($cycle->name)) }}</td>
+            <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $cycle->start_date->format('d/m/Y') }}</td>
+            <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $cycle->end_date->format('d/m/Y') }}</td>
             <td style="padding:10px 14px; text-align:center;">
                 <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700;
                              background:{{ $cycle->status === 'abierto' ? '#D1FAE5' : '#F3F4F6' }};
@@ -265,20 +349,11 @@ $sortColsC = ['Código'=>'code','Descripción'=>'name','Inicio'=>'start_date','F
                     {{ ucfirst($cycle->status) }}
                 </span>
             </td>
-            <td style="padding:11px 16px; text-align:center;">
-                <div style="display:flex; gap:6px; justify-content:center;">
-                    <button wire:click="startEdit({{ $cycle->id }})" title="Editar"
-                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; justify-content:center;"
-                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    </button>
-                </div>
-            </td>
         </tr>
         @endif
 
         @empty
-        <tr><td colspan="7" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">No hay ciclos registrados.</td></tr>
+        <tr><td colspan="6" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">No hay ciclos registrados.</td></tr>
         @endforelse
         </tbody>
     </table>
@@ -401,5 +476,32 @@ $sortColsC = ['Código'=>'code','Descripción'=>'name','Inicio'=>'start_date','F
     <div style="margin-top:4px;">{{ $cycles->links() }}</div>
     @endif
 </div>
+
+<script>
+window.colResize = function () {
+    return {
+        start(e) {
+            e.preventDefault();
+            const th = this.$el.closest('th');
+            const table = th.closest('table');
+            const idx = Array.from(th.closest('tr').querySelectorAll('th')).indexOf(th);
+            const col = table.querySelectorAll('colgroup col')[idx];
+            const startX = e.clientX;
+            const startW = col ? (parseFloat(col.style.width) || th.getBoundingClientRect().width)
+                               : th.getBoundingClientRect().width;
+            const onMove = mv => {
+                const w = Math.max(60, startW + mv.clientX - startX);
+                if (col) col.style.width = w + 'px';
+            };
+            const onUp = () => {
+                document.removeEventListener('mousemove', onMove);
+                document.removeEventListener('mouseup', onUp);
+            };
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('mouseup', onUp);
+        }
+    };
+};
+</script>
 
 </div>
