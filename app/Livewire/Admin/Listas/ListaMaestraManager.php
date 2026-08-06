@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Listas;
 
 use App\Models\Categoria;
 use App\Models\CommercialCycle;
+use App\Models\ConfiguracionPuntos;
 use App\Models\ListaAcceso;
 use App\Models\ListaMaestra;
 use App\Models\ListaMaestraItem;
@@ -29,7 +30,7 @@ class ListaMaestraManager extends Component
     public string $search        = '';
     public string $filterCycleId = '';
     public string $filterStatus  = '';
-    public string $sortBy        = 'code';
+    public string $sortBy        = 'cycle_id';
     public string $sortDir       = 'asc';
 
     // Filtros por columna en thead
@@ -546,12 +547,10 @@ class ListaMaestraManager extends Component
             'addMaestroId'     => 'required|exists:maestro_articulos,id',
             'addMaestroStock'  => 'required|numeric|min:0',
             'addMaestroPrecio' => 'required|numeric|min:0',
-            'addMaestroPuntos' => 'required|integer|min:0',
         ], [], [
             'addMaestroId'     => 'artículo',
             'addMaestroStock'  => 'stock',
             'addMaestroPrecio' => 'precio base',
-            'addMaestroPuntos' => 'puntos',
         ]);
 
         $existe = ListaMaestraItem::where('lista_maestra_id', $this->viewingId)
@@ -565,7 +564,10 @@ class ListaMaestraManager extends Component
 
         $stock = (float) $this->addMaestroStock;
 
-        [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista((float) $this->addMaestroPrecio);
+        $lista      = ListaMaestra::find($this->viewingId);
+        $precioBase = (float) $this->addMaestroPrecio;
+        [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista($precioBase);
+        $puntosCalc = $this->calcPuntosFromPrecioFinal(max(0, $precioBase + $montoInc), $lista?->cycle_id);
 
         ListaMaestraItem::create([
             'lista_maestra_id'    => $this->viewingId,
@@ -574,8 +576,8 @@ class ListaMaestraManager extends Component
             'stock_actual'        => $stock,
             'stock_consumido'     => 0,
             'stock_comprometido'  => 0,
-            'precio_base'         => (float) $this->addMaestroPrecio,
-            'puntos'              => (int) $this->addMaestroPuntos,
+            'precio_base'         => $precioBase,
+            'puntos'              => $puntosCalc,
             'descuento'           => 0,
             'active'              => true,
             'tipo_incremento'     => $tipoInc,
@@ -624,7 +626,6 @@ class ListaMaestraManager extends Component
             'newItemUnidadId' => 'nullable|integer|exists:unidades,id',
             'newItemCatId'    => 'nullable|integer|exists:categorias,id',
             'newItemPrecio'   => 'required|numeric|min:0',
-            'newItemPuntos'   => 'required|integer|min:0',
             'newItemStock'    => 'required|numeric|min:0',
         ], [], [
             'newItemCode'     => 'código',
@@ -632,7 +633,6 @@ class ListaMaestraManager extends Component
             'newItemUnidadId' => 'unidad',
             'newItemCatId'    => 'categoría',
             'newItemPrecio'   => 'precio',
-            'newItemPuntos'   => 'puntos',
             'newItemStock'    => 'stock inicial',
         ]);
 
@@ -644,13 +644,16 @@ class ListaMaestraManager extends Component
             'active'       => $this->newItemActive,
         ]);
 
-        [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista((float) $this->newItemPrecio);
+        $lista      = ListaMaestra::find($this->viewingId);
+        $precioBase = (float) $this->newItemPrecio;
+        [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista($precioBase);
+        $puntosCalc = $this->calcPuntosFromPrecioFinal(max(0, $precioBase + $montoInc), $lista?->cycle_id);
 
         ListaMaestraItem::create([
             'lista_maestra_id' => $this->viewingId,
             'product_id'       => $product->id,
             'precio_base'      => $this->newItemPrecio,
-            'puntos'           => (int) $this->newItemPuntos,
+            'puntos'           => $puntosCalc,
             'stock_inicial'    => $this->newItemStock,
             'stock_consumido'  => 0,
             'stock_actual'     => $this->newItemStock,
@@ -694,7 +697,6 @@ class ListaMaestraManager extends Component
 
         $rules = [
             'editItemPrecio' => 'required|numeric|min:0',
-            'editItemPuntos' => 'required|integer|min:0',
             'editItemStock'  => 'required|numeric|min:0',
         ];
         if ($item->product_id) {
@@ -707,7 +709,6 @@ class ListaMaestraManager extends Component
         $this->validate($rules, [], [
             'editItemCode'   => 'código',
             'editItemPrecio' => 'precio',
-            'editItemPuntos' => 'puntos',
             'editItemStock'  => 'stock inicial',
         ]);
 
@@ -733,10 +734,11 @@ class ListaMaestraManager extends Component
                 $precioBase = (float) $this->editItemPrecio;
                 $nuevoActual = max(0, $newStock - (float) $item->stock_consumido);
                 [$tipoInc, $factorInc, $montoInc] = $this->calcIncrementoFromLista($precioBase);
+                $puntosCalc = $this->calcPuntosFromPrecioFinal(max(0, $precioBase + $montoInc), $cicloId);
 
                 $item->update([
                     'precio_base'       => $precioBase,
-                    'puntos'            => (int) $this->editItemPuntos,
+                    'puntos'            => $puntosCalc,
                     'stock_inicial'     => $newStock,
                     'stock_actual'      => $nuevoActual,
                     'active'            => (bool) $this->editItemActive,
@@ -788,6 +790,21 @@ class ListaMaestraManager extends Component
         $item->update(['active' => !$item->active]);
     }
 
+    public bool $showRemoveItemModal   = false;
+    public ?int $confirmRemoveItemId   = null;
+
+    public function askRemoveItem(int $itemId): void
+    {
+        $this->confirmRemoveItemId = $itemId;
+        $this->showRemoveItemModal = true;
+    }
+
+    public function cancelRemoveItem(): void
+    {
+        $this->showRemoveItemModal = false;
+        $this->confirmRemoveItemId = null;
+    }
+
     public function removeItem(int $itemId): void
     {
         $hasOrders = DB::table('pedido_items')
@@ -796,11 +813,14 @@ class ListaMaestraManager extends Component
 
         if ($hasOrders) {
             session()->flash('error', 'No se puede quitar: el ítem tiene pedidos asociados.');
+            $this->cancelRemoveItem();
             return;
         }
 
         ListaMaestraItem::destroy($itemId);
-        $this->selectedProductId = null;
+        $this->selectedProductId     = null;
+        $this->selectedMaestroItemId = null;
+        $this->cancelRemoveItem();
         session()->flash('success', 'Ítem quitado de la lista.');
     }
 
@@ -1106,6 +1126,51 @@ class ListaMaestraManager extends Component
                 : $factorInc;
         }
         return [$tipoInc, $factorInc, $montoInc];
+    }
+
+    private function calcPuntosFromPrecioFinal(float $precioFinal, ?int $cycleId): int
+    {
+        if (!$cycleId) {
+            return 0;
+        }
+        $valorPunto = (float) (ConfiguracionPuntos::where('cycle_id', $cycleId)->value('valor_punto') ?? 0);
+        if ($valorPunto <= 0) {
+            return 0;
+        }
+        return (int) ceil($precioFinal / $valorPunto);
+    }
+
+    public function newItemPuntosPreview(): int
+    {
+        $lista = ListaMaestra::find($this->viewingId);
+        if (!$lista) {
+            return 0;
+        }
+        $precioBase = (float) $this->newItemPrecio;
+        [, , $montoInc] = $this->calcIncrementoFromLista($precioBase);
+        return $this->calcPuntosFromPrecioFinal(max(0, $precioBase + $montoInc), $lista->cycle_id);
+    }
+
+    public function editItemPuntosPreview(): int
+    {
+        $lista = ListaMaestra::find($this->viewingId);
+        if (!$lista) {
+            return 0;
+        }
+        $precioBase = (float) $this->editItemPrecio;
+        [, , $montoInc] = $this->calcIncrementoFromLista($precioBase);
+        return $this->calcPuntosFromPrecioFinal(max(0, $precioBase + $montoInc), $lista->cycle_id);
+    }
+
+    public function addMaestroPuntosPreview(): int
+    {
+        $lista = ListaMaestra::find($this->viewingId);
+        if (!$lista) {
+            return 0;
+        }
+        $precioBase = (float) $this->addMaestroPrecio;
+        [, , $montoInc] = $this->calcIncrementoFromLista($precioBase);
+        return $this->calcPuntosFromPrecioFinal(max(0, $precioBase + $montoInc), $lista->cycle_id);
     }
 
     // ── Navigation ────────────────────────────────────────────────────────────

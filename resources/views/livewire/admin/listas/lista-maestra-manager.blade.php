@@ -48,6 +48,18 @@
 @php
     $iStyle = 'border:1px solid #EDE9FE; border-radius:8px; padding:7px 10px; font-size:13px; color:#374151; background:#fff; outline:none; width:100%;';
     $lStyle = 'display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:5px;';
+    $roStyle = 'padding:7px 10px; font-size:13px; text-align:center; color:#9CA3AF; font-style:italic;';
+
+    $formTieneCuota  = $viewingMaestra?->usa_cuota_inicial ?? false;
+    $formTipoCuota   = $viewingMaestra?->tipo_cuota_inicial;
+    $formValorCuota  = $viewingMaestra?->valor_cuota_inicial;
+    $formTipoInc     = $viewingMaestra?->tipo_incremento;
+    $formFactorInc   = (float) ($viewingMaestra?->valor_incremento ?? 0);
+    $formPrecioBase  = (float) $this->newItemPrecio;
+    $formMontoInc    = ($formTipoInc && $formFactorInc > 0)
+        ? ($formTipoInc === 'porcentaje' ? round($formPrecioBase * $formFactorInc / 100, 2) : $formFactorInc)
+        : 0.0;
+    $formPrecioFinal = max(0, $formPrecioBase + $formMontoInc);
 @endphp
 <div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:16px; overflow:hidden;">
     {{-- Header --}}
@@ -77,12 +89,33 @@
             </div>
             <div style="width:90px;">
                 <label style="{{ $lStyle }}">Precio (Bs) *</label>
-                <input wire:model="newItemPrecio" type="number" step="0.01" min="0" placeholder="0.00" style="{{ $iStyle }} text-align:center;">
+                <input wire:model.live="newItemPrecio" type="number" step="0.01" min="0" placeholder="0.00" style="{{ $iStyle }} text-align:center;">
                 @error('newItemPrecio') <p style="font-size:10px; color:#ef4444; margin-top:3px;">{{ $message }}</p> @enderror
             </div>
             <div style="width:70px;">
+                <label style="{{ $lStyle }}">Tipo Inc.</label>
+                <div style="{{ $roStyle }}">
+                    @if($formTipoInc)<span style="padding:2px 8px; border-radius:6px; font-size:11px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">{{ $formTipoInc === 'porcentaje' ? '%' : 'Bs' }}</span>
+                    @else —@endif
+                </div>
+            </div>
+            <div style="width:90px;">
+                <label style="{{ $lStyle }}">Incremento</label>
+                <div style="{{ $roStyle }}">{{ $formTipoInc && $formFactorInc > 0 ? ($formTipoInc === 'porcentaje' ? number_format($formFactorInc,2).'%' : 'Bs '.number_format($formFactorInc,2)) : '—' }}</div>
+            </div>
+            <div style="width:100px;">
+                <label style="{{ $lStyle }}">Precio Final</label>
+                <div style="{{ $iStyle }} text-align:center; font-weight:700; color:#7B6FE8; background:#F9FAFB;">Bs {{ number_format($formPrecioFinal, 2) }}</div>
+            </div>
+            @if($formTieneCuota)
+            <div style="width:100px;">
+                <label style="{{ $lStyle }}">Cuota Inicial</label>
+                <div style="{{ $roStyle }}">{{ $formTipoCuota === 'porcentaje' ? number_format($formValorCuota,2).'%' : 'Bs '.number_format($formValorCuota,2) }}</div>
+            </div>
+            @endif
+            <div style="width:70px;">
                 <label style="{{ $lStyle }}">Puntos</label>
-                <input wire:model="newItemPuntos" type="number" min="0" placeholder="0" style="{{ $iStyle }} text-align:center;">
+                <div style="{{ $iStyle }} text-align:center; display:flex; align-items:center; justify-content:center; font-weight:700; color:#7B6FE8; background:#F9FAFB;">{{ $this->newItemPuntosPreview() }}</div>
             </div>
             <div style="width:80px;">
                 <label style="{{ $lStyle }}">Stock ini.</label>
@@ -249,17 +282,55 @@
         {{-- PRECIO BASE --}}
         <div style="min-width:110px; max-width:150px;">
             <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Precio Base *</label>
-            <input wire:model="addMaestroPrecio" type="number" min="0" step="0.01" placeholder="0.00"
+            <input wire:model.live="addMaestroPrecio" type="number" min="0" step="0.01" placeholder="0.00"
                    style="{{ $iS }} text-align:right;">
             @error('addMaestroPrecio') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
         </div>
 
+        @php
+            $amTieneCuota = $viewingMaestra?->usa_cuota_inicial ?? false;
+            $amTipoCuota  = $viewingMaestra?->tipo_cuota_inicial;
+            $amValorCuota = $viewingMaestra?->valor_cuota_inicial;
+            $amTipoInc    = $viewingMaestra?->tipo_incremento;
+            $amFactorInc  = (float) ($viewingMaestra?->valor_incremento ?? 0);
+            $amPrecioBase = (float) $this->addMaestroPrecio;
+            $amMontoInc   = ($amTipoInc && $amFactorInc > 0)
+                ? ($amTipoInc === 'porcentaje' ? round($amPrecioBase * $amFactorInc / 100, 2) : $amFactorInc)
+                : 0.0;
+            $amPrecioFinal = max(0, $amPrecioBase + $amMontoInc);
+            $roStyleAm = 'height:38px; border:1px solid #E5E7EB; border-radius:8px; padding:0 12px; font-size:13px; font-weight:700; color:#7B6FE8; background:#F5F3FF; display:flex; align-items:center; justify-content:center;';
+        @endphp
+
+        {{-- TIPO INCREMENTO --}}
+        <div style="min-width:80px; max-width:100px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Tipo Inc.</label>
+            <div style="{{ $roStyleAm }}">{{ $amTipoInc ? ($amTipoInc === 'porcentaje' ? '%' : 'Bs') : '—' }}</div>
+        </div>
+
+        {{-- INCREMENTO --}}
+        <div style="min-width:90px; max-width:110px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Incremento</label>
+            <div style="{{ $roStyleAm }}">{{ $amTipoInc && $amFactorInc > 0 ? ($amTipoInc === 'porcentaje' ? number_format($amFactorInc,2).'%' : 'Bs '.number_format($amFactorInc,2)) : '—' }}</div>
+        </div>
+
+        {{-- PRECIO FINAL --}}
+        <div style="min-width:100px; max-width:130px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Precio Final</label>
+            <div style="{{ $roStyleAm }}">Bs {{ number_format($amPrecioFinal, 2) }}</div>
+        </div>
+
+        @if($amTieneCuota)
+        {{-- CUOTA INICIAL --}}
+        <div style="min-width:100px; max-width:130px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Cuota Inicial</label>
+            <div style="{{ $roStyleAm }}">{{ $amTipoCuota === 'porcentaje' ? number_format($amValorCuota,2).'%' : 'Bs '.number_format($amValorCuota,2) }}</div>
+        </div>
+        @endif
+
         {{-- PUNTOS --}}
         <div style="min-width:90px; max-width:110px;">
             <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Puntos</label>
-            <input wire:model="addMaestroPuntos" type="number" min="0" step="1" placeholder="0"
-                   style="{{ $iS }} text-align:right;">
-            @error('addMaestroPuntos') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            <div style="{{ $roStyleAm }}">{{ $this->addMaestroPuntosPreview() }}</div>
         </div>
 
         {{-- STOCK INICIAL --}}
@@ -335,9 +406,9 @@
                 <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                 Editar
             </button>
-            <button wire:click="removeItem({{ $selectedMaestroItemId }}); $wire.set('selectedMaestroItemId', null)" style="{{ $btnH }} background:#FEE2E2; color:#DC2626; border:1px solid #FECACA;">
+            <button wire:click="askRemoveItem({{ $selectedMaestroItemId }})" style="{{ $btnH }} background:#FEE2E2; color:#DC2626; border:1px solid #FECACA;">
                 <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                Quitar
+                Quitar Item del Listado
             </button>
         </div>
         @elseif($editItemId)
@@ -623,8 +694,7 @@
                         {{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'%' : 'Bs '.number_format($valorCuota,2) }}
                     </td>
                     @endif
-                    <td style="padding:4px 6px;"><input wire:model="editItemPuntos" type="number" min="0" style="{{ $iE }} text-align:right;">
-                        @error('editItemPuntos') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
+                    <td style="padding:4px 8px; text-align:right; font-size:12px; font-weight:700; color:#7B6FE8;">{{ $this->editItemPuntosPreview() }}</td>
                     <td style="padding:4px 6px;"><input wire:model="editItemStock" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;">
                         @error('editItemStock') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
                     <td style="padding:4px 8px; font-size:12px; text-align:center; color:#6B7280;">{{ number_format($item->stock_consumido, 2) }}</td>
@@ -746,8 +816,7 @@
                         {{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'%' : 'Bs '.number_format($valorCuota,2) }}
                     </td>
                     @endif
-                    <td style="padding:4px 6px;"><input wire:model="editItemPuntos" type="number" min="0" style="{{ $iE }} text-align:right;">
-                        @error('editItemPuntos') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
+                    <td style="padding:4px 8px; text-align:right; font-size:12px; font-weight:700; color:#7B6FE8;">{{ $this->editItemPuntosPreview() }}</td>
                     <td style="padding:4px 6px;"><input wire:model="editItemStock" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;">
                         @error('editItemStock') <p style="color:#EF4444; font-size:10px; margin:2px 0 0;">{{ $message }}</p> @enderror</td>
                     <td style="padding:4px 8px; font-size:12px; text-align:center; color:#6B7280;">{{ number_format($mi->stock_consumido, 2) }}</td>
@@ -1028,7 +1097,7 @@
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
             </button>
-            <button wire:click="removeItem({{ $item->id }})" title="Quitar de lista"
+            <button wire:click="askRemoveItem({{ $item->id }})" title="Quitar de lista"
                     style="width:32px; height:32px; border-radius:8px; border:1px solid #FEE2E2; background:#FEF2F2; color:#EF4444; cursor:pointer; display:flex; align-items:center; justify-content:center;"
                     @mouseenter="$el.style.opacity='.7'" @mouseleave="$el.style.opacity='1'">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
@@ -1230,9 +1299,7 @@
             </div>
             <div style="{{ $row }}">
                 <span style="{{ $lbl }}">Puntos</span>
-                <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
-                    <input wire:model="editItemPuntos" type="number" min="0" style="{{ $inp }}">
-                </div>
+                <span style="{{ $val }} font-weight:700; color:#7B6FE8;">{{ $this->editItemPuntosPreview() }}</span>
             </div>
             <div style="{{ $row }}">
                 <span style="{{ $lbl }}">Stock Máximo</span>
@@ -1277,6 +1344,34 @@
     </div>
 </div>
 @endif
+
+{{-- ══ MODAL: Confirmar quitar artículo ══ --}}
+<div x-data="{ open: @entangle('showRemoveItemModal') }">
+<template x-teleport="body">
+<div x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);"
+     @click.self="$wire.cancelRemoveItem()" @keydown.escape.window="$wire.cancelRemoveItem()">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:400px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#FEE2E2; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#DC2626" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </div>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Quitar Artículo de la Lista</p>
+            <button wire:click="cancelRemoveItem" style="{{ $xBtn }}">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div style="{{ $mBody }}">
+            <p style="font-size:13px; color:#374151; margin:0;">¿Confirmás que querés quitar este artículo de la lista? Esta acción no se puede deshacer.</p>
+        </div>
+        <div style="{{ $mFoot }}">
+            <button wire:click="cancelRemoveItem" style="height:36px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
+            <button wire:click="removeItem({{ (int) $confirmRemoveItemId }})" wire:loading.attr="disabled" style="height:36px; padding:0 18px; border:none; border-radius:8px; background:#B91C1C; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">Confirmar</button>
+        </div>
+    </div>
+</div>
+</template>
+</div>
 
 {{-- ═══════════════════════════════════════════════════════ ACCESO MODE ══ --}}
 @elseif ($mode === 'acceso' && $viewingMaestra)
