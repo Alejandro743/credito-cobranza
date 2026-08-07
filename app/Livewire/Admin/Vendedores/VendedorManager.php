@@ -2,10 +2,10 @@
 
 namespace App\Livewire\Admin\Vendedores;
 
-use App\Models\Group;
 use App\Models\User;
 use App\Models\Vendedor;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\Rule;
 use App\Livewire\Concerns\HasModuleColor;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -15,13 +15,24 @@ class VendedorManager extends Component
 {
     use WithPagination, HasModuleColor;
 
-    public string $search       = '';
-    public string $filtroGrupo  = '';
-    public string $filtroActivo = '';
-    public string $sortBy       = 'apellido';
-    public string $sortDir      = 'asc';
+    public string $sortBy  = 'apellido';
+    public string $sortDir = 'asc';
 
-    public string $mode = 'list';
+    public string $colFilterNombre   = '';
+    public string $colFilterApellido = '';
+    public string $colFilterTelefono = '';
+    public string $colFilterEmail    = '';
+    public string $colFilterEstado   = '';
+    public string $colFilterAcceso   = '';
+    public string $colFilterUsuario  = '';
+    public string $colFilterRol      = '';
+
+    public ?int $selectedVendedorId = null;
+
+    public function selectVendedor(int $id): void
+    {
+        $this->selectedVendedorId = $this->selectedVendedorId === $id ? null : $id;
+    }
 
     public function toggleSort(string $col): void
     {
@@ -34,188 +45,244 @@ class VendedorManager extends Component
         $this->resetPage();
     }
 
-    public bool   $editing   = false;
-    public ?int   $editingId = null;
+    public function updatingColFilterNombre():   void { $this->resetPage(); }
+    public function updatingColFilterApellido(): void { $this->resetPage(); }
+    public function updatingColFilterTelefono(): void { $this->resetPage(); }
+    public function updatingColFilterEmail():    void { $this->resetPage(); }
+    public function updatingColFilterEstado():   void { $this->resetPage(); }
+    public function updatingColFilterAcceso():   void { $this->resetPage(); }
+    public function updatingColFilterUsuario():  void { $this->resetPage(); }
+    public function updatingColFilterRol():      void { $this->resetPage(); }
 
-    public string $nombre   = '';
-    public string $apellido = '';
-    public string $telefono = '';
-    public string $email    = '';
-    public string $grupoId  = '';
-    public bool   $activo   = true;
+    // ── Panel alta ───────────────────────────────────────────────────────────
+    public bool   $showAddForm      = false;
+    public string $newNombre        = '';
+    public string $newApellido      = '';
+    public string $newTelefono      = '';
+    public string $newEmail         = '';
+    public int    $newActivo        = 1;
+    public bool   $newTieneAcceso   = false;
+    public string $newUserEmail     = '';
+    public string $newUserPassword  = '';
+    public string $newUserRol       = '';
 
-    // Acceso al sistema (usuario vinculado)
-    public bool   $tieneAcceso  = false;
-    public ?int   $userIdActual = null;   // si ya tiene usuario al editar
-    public string $userEmail    = '';
-    public string $userPassword = '';
-    public string $userRol      = '';
-
-    protected function rules(): array
-    {
-        $emailUnico = $this->userIdActual
-            ? "unique:users,email,{$this->userIdActual}"
-            : 'unique:users,email';
-
-        return [
-            'nombre'      => 'required|string|min:2|max:100',
-            'apellido'    => 'required|string|min:2|max:100',
-            'telefono'    => 'nullable|string|max:30',
-            'email'       => 'nullable|email|max:150',
-            'grupoId'     => 'nullable|exists:groups,id',
-            'userEmail'   => $this->tieneAcceso ? "required|email|max:150|{$emailUnico}" : 'nullable',
-            'userPassword'=> $this->tieneAcceso && !$this->userIdActual ? 'required|min:6' : 'nullable|min:6',
-            'userRol'     => $this->tieneAcceso ? 'required|exists:roles,name' : 'nullable',
-        ];
-    }
-
-    protected $messages = [
-        'userEmail.required'    => 'El email de acceso es obligatorio.',
-        'userEmail.unique'      => 'Ese email ya está en uso.',
-        'userPassword.required' => 'La contraseña es obligatoria.',
-        'userPassword.min'      => 'Mínimo 6 caracteres.',
-        'userRol.required'      => 'Seleccioná un rol.',
-    ];
+    // ── Fila edición inline ──────────────────────────────────────────────────
+    public ?int   $editingId         = null;
+    public string $editNombre        = '';
+    public string $editApellido      = '';
+    public string $editTelefono      = '';
+    public string $editEmail         = '';
+    public int    $editActivo        = 1;
+    public bool   $editTieneAcceso   = false;
+    public ?int   $editUserIdActual  = null;
+    public string $editUserEmail     = '';
+    public string $editUserPassword  = '';
+    public string $editUserRol       = '';
 
     public function mount(): void
     {
         $this->initModuleColor();
     }
 
-    public function updatingSearch():       void { $this->resetPage(); }
-    public function updatingFiltroGrupo():  void { $this->resetPage(); }
-    public function updatingFiltroActivo(): void { $this->resetPage(); }
+    // ── Alta ─────────────────────────────────────────────────────────────────
 
-    public function create(): void
+    public function showAdd(): void
     {
-        $this->reset(['nombre','apellido','telefono','email','grupoId',
-                      'tieneAcceso','userIdActual','userEmail','userPassword','userRol',
-                      'editingId','editing']);
-        $this->activo = true;
-        $this->mode   = 'form';
+        $this->showAddForm     = true;
+        $this->editingId       = null;
+        $this->newNombre       = '';
+        $this->newApellido     = '';
+        $this->newTelefono     = '';
+        $this->newEmail        = '';
+        $this->newActivo       = 1;
+        $this->newTieneAcceso  = false;
+        $this->newUserEmail    = '';
+        $this->newUserPassword = '';
+        $this->newUserRol      = '';
+        $this->resetValidation();
     }
 
-    public function edit(int $id): void
+    public function cancelAdd(): void
+    {
+        $this->showAddForm = false;
+        $this->resetValidation();
+    }
+
+    public function saveNew(): void
+    {
+        $this->validate([
+            'newNombre'       => 'required|string|min:2|max:100',
+            'newApellido'     => 'required|string|min:2|max:100',
+            'newTelefono'     => 'nullable|string|max:30',
+            'newEmail'        => 'nullable|email|max:150',
+            'newUserEmail'    => $this->newTieneAcceso
+                ? ['required', 'string', 'min:3', 'max:80', 'regex:/^[a-zA-Z0-9._@-]+$/', Rule::unique('users', 'email')]
+                : 'nullable',
+            'newUserPassword' => $this->newTieneAcceso ? 'required|min:6' : 'nullable|min:6',
+            'newUserRol'      => $this->newTieneAcceso ? 'required|exists:roles,name' : 'nullable',
+        ], [
+            'newUserEmail.unique' => 'Ese usuario ya está en uso.',
+            'newUserEmail.regex'  => 'Solo letras, números, punto, guión, guión bajo o @.',
+        ], [
+            'newNombre'       => 'nombre',
+            'newApellido'     => 'apellido',
+            'newTelefono'     => 'teléfono',
+            'newEmail'        => 'email',
+            'newUserEmail'    => 'usuario',
+            'newUserPassword' => 'contraseña',
+            'newUserRol'      => 'rol',
+        ]);
+
+        $userId = null;
+        if ($this->newTieneAcceso) {
+            $user = User::create([
+                'name'     => "{$this->newNombre} {$this->newApellido}",
+                'email'    => $this->newUserEmail,
+                'password' => Hash::make($this->newUserPassword),
+                'tipo'     => 'vendedor',
+            ]);
+            $user->assignRole($this->newUserRol);
+            $userId = $user->id;
+        }
+
+        Vendedor::create([
+            'nombre'   => $this->newNombre,
+            'apellido' => $this->newApellido,
+            'telefono' => $this->newTelefono ?: null,
+            'email'    => $this->newEmail    ?: null,
+            'user_id'  => $userId,
+            'activo'   => $this->newActivo,
+        ]);
+
+        $this->showAddForm = false;
+        session()->flash('success', 'Vendedor creado.');
+    }
+
+    // ── Edición inline ───────────────────────────────────────────────────────
+
+    public function startEdit(int $id): void
     {
         $v = Vendedor::with('user')->findOrFail($id);
 
-        $this->editingId = $id;
-        $this->editing   = true;
-        $this->nombre    = $v->nombre;
-        $this->apellido  = $v->apellido;
-        $this->telefono  = $v->telefono ?? '';
-        $this->email     = $v->email    ?? '';
-        $this->grupoId   = (string) ($v->grupo_id ?? '');
-        $this->activo    = $v->activo;
+        $this->editingId    = $id;
+        $this->editNombre   = $v->nombre;
+        $this->editApellido = $v->apellido;
+        $this->editTelefono = $v->telefono ?? '';
+        $this->editEmail    = $v->email    ?? '';
+        $this->editActivo   = $v->activo ? 1 : 0;
 
         if ($v->user) {
-            $this->tieneAcceso   = true;
-            $this->userIdActual  = $v->user->id;
-            $this->userEmail     = $v->user->email;
-            $this->userPassword  = '';
-            $this->userRol       = $v->user->getRoleNames()->first() ?? '';
+            $this->editTieneAcceso  = true;
+            $this->editUserIdActual = $v->user->id;
+            $this->editUserEmail    = $v->user->email;
+            $this->editUserPassword = '';
+            $this->editUserRol      = $v->user->getRoleNames()->first() ?? '';
         } else {
-            $this->tieneAcceso  = false;
-            $this->userIdActual = null;
-            $this->userEmail    = '';
-            $this->userPassword = '';
-            $this->userRol      = '';
+            $this->editTieneAcceso  = false;
+            $this->editUserIdActual = null;
+            $this->editUserEmail    = '';
+            $this->editUserPassword = '';
+            $this->editUserRol      = '';
         }
 
-        $this->mode = 'form';
+        $this->showAddForm = false;
+        $this->resetValidation();
     }
 
-    public function save(): void
+    public function cancelEdit(): void
     {
-        $this->validate();
+        $this->editingId = null;
+        $this->resetValidation();
+    }
 
-        // ── Usuario del sistema ───────────────────────────────────────────────
+    public function saveEdit(): void
+    {
+        $emailUnico = $this->editUserIdActual
+            ? Rule::unique('users', 'email')->ignore($this->editUserIdActual)
+            : Rule::unique('users', 'email');
+
+        $this->validate([
+            'editNombre'       => 'required|string|min:2|max:100',
+            'editApellido'     => 'required|string|min:2|max:100',
+            'editTelefono'     => 'nullable|string|max:30',
+            'editEmail'        => 'nullable|email|max:150',
+            'editUserEmail'    => $this->editTieneAcceso
+                ? ['required', 'string', 'min:3', 'max:80', 'regex:/^[a-zA-Z0-9._@-]+$/', $emailUnico]
+                : 'nullable',
+            'editUserPassword' => $this->editTieneAcceso && !$this->editUserIdActual ? 'required|min:6' : 'nullable|min:6',
+            'editUserRol'      => $this->editTieneAcceso ? 'required|exists:roles,name' : 'nullable',
+        ], [
+            'editUserEmail.unique' => 'Ese usuario ya está en uso.',
+            'editUserEmail.regex'  => 'Solo letras, números, punto, guión, guión bajo o @.',
+        ], [
+            'editNombre'       => 'nombre',
+            'editApellido'     => 'apellido',
+            'editTelefono'     => 'teléfono',
+            'editEmail'        => 'email',
+            'editUserEmail'    => 'usuario',
+            'editUserPassword' => 'contraseña',
+            'editUserRol'      => 'rol',
+        ]);
+
         $userId = null;
-
-        if ($this->tieneAcceso) {
-            if ($this->userIdActual) {
-                // Actualizar usuario existente
-                $user = User::findOrFail($this->userIdActual);
-                $user->email = $this->userEmail;
-                if ($this->userPassword) {
-                    $user->password = Hash::make($this->userPassword);
+        if ($this->editTieneAcceso) {
+            if ($this->editUserIdActual) {
+                $user = User::findOrFail($this->editUserIdActual);
+                $user->email = $this->editUserEmail;
+                $user->tipo  = 'vendedor';
+                if ($this->editUserPassword) {
+                    $user->password = Hash::make($this->editUserPassword);
                 }
                 $user->save();
-                $user->syncRoles([$this->userRol]);
+                $user->syncRoles([$this->editUserRol]);
+                $userId = $user->id;
             } else {
-                // Crear nuevo usuario
                 $user = User::create([
-                    'name'     => "{$this->nombre} {$this->apellido}",
-                    'email'    => $this->userEmail,
-                    'password' => Hash::make($this->userPassword),
+                    'name'     => "{$this->editNombre} {$this->editApellido}",
+                    'email'    => $this->editUserEmail,
+                    'password' => Hash::make($this->editUserPassword),
+                    'tipo'     => 'vendedor',
                 ]);
-                $user->assignRole($this->userRol);
+                $user->assignRole($this->editUserRol);
+                $userId = $user->id;
             }
-            $userId = $user->id;
-        } else {
-            // Sin acceso: desvincula si tenía usuario antes
-            $userId = null;
         }
 
-        // ── Vendedor ──────────────────────────────────────────────────────────
-        $data = [
-            'nombre'   => $this->nombre,
-            'apellido' => $this->apellido,
-            'telefono' => $this->telefono ?: null,
-            'email'    => $this->email    ?: null,
-            'grupo_id' => $this->grupoId  ?: null,
+        Vendedor::findOrFail($this->editingId)->update([
+            'nombre'   => $this->editNombre,
+            'apellido' => $this->editApellido,
+            'telefono' => $this->editTelefono ?: null,
+            'email'    => $this->editEmail    ?: null,
             'user_id'  => $userId,
-            'activo'   => $this->activo,
-        ];
+            'activo'   => $this->editActivo,
+        ]);
 
-        if ($this->editing) {
-            Vendedor::findOrFail($this->editingId)->update($data);
-            $msg = 'Vendedor actualizado.';
-        } else {
-            Vendedor::create($data);
-            $msg = 'Vendedor creado.';
-        }
-
-        session()->flash('success', $msg);
-        $this->backToList();
+        $this->editingId = null;
+        session()->flash('success', 'Vendedor actualizado.');
     }
 
-    public function backToList(): void
-    {
-        $this->reset(['nombre','apellido','telefono','email','grupoId',
-                      'tieneAcceso','userIdActual','userEmail','userPassword','userRol',
-                      'editingId','editing']);
-        $this->activo = true;
-        $this->mode   = 'list';
-    }
-
-    public function toggleActivo(int $id): void
-    {
-        $v = Vendedor::findOrFail($id);
-        $v->update(['activo' => !$v->activo]);
-        session()->flash('success', $v->fresh()->activo ? 'Vendedor activado.' : 'Vendedor desactivado.');
-    }
+    // ─────────────────────────────────────────────────────────────────────────
 
     public function render()
     {
-        $vendedores = Vendedor::with(['grupo', 'user'])
-            ->when($this->search, fn($q) => $q->where(fn($q) =>
-                $q->where('nombre',    'like', "%{$this->search}%")
-                  ->orWhere('apellido','like', "%{$this->search}%")
-                  ->orWhere('email',   'like', "%{$this->search}%")
-            ))
-            ->when($this->filtroGrupo,  fn($q) => $q->where('grupo_id', $this->filtroGrupo))
-            ->when($this->filtroActivo !== '', fn($q) => $q->where('activo', $this->filtroActivo === '1'))
+        $vendedores = Vendedor::with('user.roles')
+            ->when($this->colFilterNombre,   fn($q) => $q->where('nombre',   'like', "%{$this->colFilterNombre}%"))
+            ->when($this->colFilterApellido, fn($q) => $q->where('apellido', 'like', "%{$this->colFilterApellido}%"))
+            ->when($this->colFilterTelefono, fn($q) => $q->where('telefono', 'like', "%{$this->colFilterTelefono}%"))
+            ->when($this->colFilterEmail,    fn($q) => $q->where('email',    'like', "%{$this->colFilterEmail}%"))
+            ->when($this->colFilterEstado !== '', fn($q) => $q->where('activo', $this->colFilterEstado === '1'))
+            ->when($this->colFilterAcceso !== '', fn($q) =>
+                $this->colFilterAcceso === '1' ? $q->whereNotNull('user_id') : $q->whereNull('user_id'))
+            ->when($this->colFilterUsuario, fn($q) => $q->whereHas('user',
+                fn($qq) => $qq->where('email', 'like', "%{$this->colFilterUsuario}%")))
+            ->when($this->colFilterRol, fn($q) => $q->whereHas('user.roles',
+                fn($qq) => $qq->where('name', $this->colFilterRol)))
             ->orderBy($this->sortBy, $this->sortDir)
-            ->paginate(10);
-
-        $grupos = Group::where('active', true)
-            ->where('type', 'vendedores')
-            ->orderBy('name')->get();
+            ->paginate(15);
 
         $roles = Role::orderBy('name')->get();
 
         return view('livewire.admin.vendedores.vendedor-manager',
-            compact('vendedores', 'grupos', 'roles'));
+            compact('vendedores', 'roles'));
     }
 }

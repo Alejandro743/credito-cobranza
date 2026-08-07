@@ -41,8 +41,9 @@ class ModulosSubmodulosSeeder extends Seeder
                         'name' => 'Seguridad', 'slug' => 'seguridad',
                         'route_name' => null, 'sort_order' => 1,
                         'children' => [
-                            ['name' => 'Usuarios',        'slug' => 'seg-usuarios', 'route_name' => 'admin.security.users', 'sort_order' => 1],
-                            ['name' => 'Roles y Permisos','slug' => 'seg-roles',    'route_name' => 'admin.security.roles', 'sort_order' => 2],
+                            ['name' => 'Usuarios',        'slug' => 'seg-usuarios',   'route_name' => 'admin.security.users',      'sort_order' => 1],
+                            ['name' => 'Vendedores',      'slug' => 'seg-vendedores', 'route_name' => 'admin.security.vendedores', 'sort_order' => 2],
+                            ['name' => 'Roles y Permisos','slug' => 'seg-roles',      'route_name' => 'admin.security.roles',      'sort_order' => 3],
                         ],
                     ],
                     // Grupo: Catálogo

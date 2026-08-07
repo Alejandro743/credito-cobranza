@@ -339,11 +339,11 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                         </div>
                     </th>
 
-                    {{-- Usuario --}}
+                    {{-- Nombre Completo --}}
                     @php $isA = $sortBy === 'name'; @endphp
                     <th wire:click="toggleSort('name')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:160px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; gap:4px;">Usuario
+                        <div style="display:flex; align-items:center; gap:4px;">Nombre Completo
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
                                 <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
                                 <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
@@ -353,11 +353,11 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                         <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
                     </th>
 
-                    {{-- Email --}}
+                    {{-- Usuario --}}
                     @php $isA = $sortBy === 'email'; @endphp
                     <th wire:click="toggleSort('email')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:160px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; gap:4px;">Email
+                        <div style="display:flex; align-items:center; gap:4px;">Usuario
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
                                 <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
                                 <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>

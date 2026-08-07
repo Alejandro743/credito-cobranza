@@ -25,8 +25,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/dashboard', fn() => view('admin.dashboard'))->name('dashboard');
 
     Route::prefix('security')->name('security.')->group(function () {
-        Route::get('/users', fn() => view('admin.security.users'))->name('users');
-        Route::get('/roles', fn() => view('admin.security.roles'))->name('roles');
+        Route::get('/users',      fn() => view('admin.security.users'))->name('users');
+        Route::get('/vendedores', fn() => view('admin.security.vendedores'))->name('vendedores');
+        Route::get('/roles',      fn() => view('admin.security.roles'))->name('roles');
     });
 });
 

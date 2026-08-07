@@ -230,6 +230,12 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
                     </th>
 
+                    {{-- Descripción --}}
+                    <th style="{{ $thC }} text-align:left; min-width:160px;">
+                        Descripción
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterDescripcion" @click.stop type="text" style="{{ $fI }}"></div>
+                    </th>
+
                     {{-- Estado --}}
                     @php $isA = $sortBy === 'active'; @endphp
                     <th wire:click="toggleSort('active')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
@@ -248,12 +254,6 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                                 <option value="0">Inactivo</option>
                             </select>
                         </div>
-                    </th>
-
-                    {{-- Descripción --}}
-                    <th style="{{ $thC }} text-align:left; min-width:160px;">
-                        Descripción
-                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterDescripcion" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
                 </tr>
             </thead>
@@ -283,14 +283,14 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         @error('editValorPunto')<p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p>@enderror
                     </td>
                     <td style="padding:10px 16px;">
+                        <input wire:model="editDescription" type="text" placeholder="Descripción"
+                               style="width:100%;{{ $iRow }}">
+                    </td>
+                    <td style="padding:10px 16px;">
                         <select wire:model="editActive" style="width:100%;{{ $iRow }} cursor:pointer;">
                             <option value="1">Activo</option>
                             <option value="0">Inactivo</option>
                         </select>
-                    </td>
-                    <td style="padding:10px 16px;">
-                        <input wire:model="editDescription" type="text" placeholder="Descripción"
-                               style="width:100%;{{ $iRow }}">
                     </td>
                 </tr>
                 @else
@@ -316,6 +316,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         <span style="font-size:13px;color:#111827;">Bs {{ number_format((float)$punto->valor_punto, 2) }}</span>
                         <span style="font-size:13px;color:#111827;"> / pto</span>
                     </td>
+                    <td style="padding:10px 14px;font-size:13px;color:#111827;">{{ $punto->description ?? '—' }}</td>
                     <td style="padding:10px 14px;text-align:center;">
                         <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;
                                      background:{{ $punto->active ? '#D1FAE5' : '#F3F4F6' }};
@@ -323,7 +324,6 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                             {{ $punto->active ? 'Activo' : 'Inactivo' }}
                         </span>
                     </td>
-                    <td style="padding:10px 14px;font-size:13px;color:#111827;">{{ $punto->description ?? '—' }}</td>
                 </tr>
                 @endif
                 @empty
