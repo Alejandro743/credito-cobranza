@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Admin\Vendedores;
 
+use App\Models\Ciudad;
 use App\Models\User;
 use App\Models\Vendedor;
 use Illuminate\Support\Facades\Hash;
@@ -22,6 +23,7 @@ class VendedorManager extends Component
     public string $colFilterApellido = '';
     public string $colFilterTelefono = '';
     public string $colFilterEmail    = '';
+    public string $colFilterCiudad   = '';
     public string $colFilterEstado   = '';
     public string $colFilterAcceso   = '';
     public string $colFilterUsuario  = '';
@@ -49,6 +51,7 @@ class VendedorManager extends Component
     public function updatingColFilterApellido(): void { $this->resetPage(); }
     public function updatingColFilterTelefono(): void { $this->resetPage(); }
     public function updatingColFilterEmail():    void { $this->resetPage(); }
+    public function updatingColFilterCiudad():   void { $this->resetPage(); }
     public function updatingColFilterEstado():   void { $this->resetPage(); }
     public function updatingColFilterAcceso():   void { $this->resetPage(); }
     public function updatingColFilterUsuario():  void { $this->resetPage(); }
@@ -60,6 +63,7 @@ class VendedorManager extends Component
     public string $newApellido      = '';
     public string $newTelefono      = '';
     public string $newEmail         = '';
+    public string $newCiudadId      = '';
     public int    $newActivo        = 1;
     public bool   $newTieneAcceso   = false;
     public string $newUserEmail     = '';
@@ -72,6 +76,7 @@ class VendedorManager extends Component
     public string $editApellido      = '';
     public string $editTelefono      = '';
     public string $editEmail         = '';
+    public string $editCiudadId      = '';
     public int    $editActivo        = 1;
     public bool   $editTieneAcceso   = false;
     public ?int   $editUserIdActual  = null;
@@ -94,6 +99,7 @@ class VendedorManager extends Component
         $this->newApellido     = '';
         $this->newTelefono     = '';
         $this->newEmail        = '';
+        $this->newCiudadId     = '';
         $this->newActivo       = 1;
         $this->newTieneAcceso  = false;
         $this->newUserEmail    = '';
@@ -115,6 +121,7 @@ class VendedorManager extends Component
             'newApellido'     => 'required|string|min:2|max:100',
             'newTelefono'     => 'nullable|string|max:30',
             'newEmail'        => 'nullable|email|max:150',
+            'newCiudadId'     => 'nullable|exists:ciudades,id',
             'newUserEmail'    => $this->newTieneAcceso
                 ? ['required', 'string', 'min:3', 'max:80', 'regex:/^[a-zA-Z0-9._@-]+$/', Rule::unique('users', 'email')]
                 : 'nullable',
@@ -128,6 +135,7 @@ class VendedorManager extends Component
             'newApellido'     => 'apellido',
             'newTelefono'     => 'teléfono',
             'newEmail'        => 'email',
+            'newCiudadId'     => 'ciudad',
             'newUserEmail'    => 'usuario',
             'newUserPassword' => 'contraseña',
             'newUserRol'      => 'rol',
@@ -148,10 +156,11 @@ class VendedorManager extends Component
         Vendedor::create([
             'nombre'   => $this->newNombre,
             'apellido' => $this->newApellido,
-            'telefono' => $this->newTelefono ?: null,
-            'email'    => $this->newEmail    ?: null,
-            'user_id'  => $userId,
-            'activo'   => $this->newActivo,
+            'telefono'  => $this->newTelefono ?: null,
+            'email'     => $this->newEmail    ?: null,
+            'ciudad_id' => $this->newCiudadId ?: null,
+            'user_id'   => $userId,
+            'activo'    => $this->newActivo,
         ]);
 
         $this->showAddForm = false;
@@ -169,6 +178,7 @@ class VendedorManager extends Component
         $this->editApellido = $v->apellido;
         $this->editTelefono = $v->telefono ?? '';
         $this->editEmail    = $v->email    ?? '';
+        $this->editCiudadId = (string) ($v->ciudad_id ?? '');
         $this->editActivo   = $v->activo ? 1 : 0;
 
         if ($v->user) {
@@ -206,6 +216,7 @@ class VendedorManager extends Component
             'editApellido'     => 'required|string|min:2|max:100',
             'editTelefono'     => 'nullable|string|max:30',
             'editEmail'        => 'nullable|email|max:150',
+            'editCiudadId'     => 'nullable|exists:ciudades,id',
             'editUserEmail'    => $this->editTieneAcceso
                 ? ['required', 'string', 'min:3', 'max:80', 'regex:/^[a-zA-Z0-9._@-]+$/', $emailUnico]
                 : 'nullable',
@@ -219,6 +230,7 @@ class VendedorManager extends Component
             'editApellido'     => 'apellido',
             'editTelefono'     => 'teléfono',
             'editEmail'        => 'email',
+            'editCiudadId'     => 'ciudad',
             'editUserEmail'    => 'usuario',
             'editUserPassword' => 'contraseña',
             'editUserRol'      => 'rol',
@@ -251,10 +263,11 @@ class VendedorManager extends Component
         Vendedor::findOrFail($this->editingId)->update([
             'nombre'   => $this->editNombre,
             'apellido' => $this->editApellido,
-            'telefono' => $this->editTelefono ?: null,
-            'email'    => $this->editEmail    ?: null,
-            'user_id'  => $userId,
-            'activo'   => $this->editActivo,
+            'telefono'  => $this->editTelefono ?: null,
+            'email'     => $this->editEmail    ?: null,
+            'ciudad_id' => $this->editCiudadId ?: null,
+            'user_id'   => $userId,
+            'activo'    => $this->editActivo,
         ]);
 
         $this->editingId = null;
@@ -265,11 +278,13 @@ class VendedorManager extends Component
 
     public function render()
     {
-        $vendedores = Vendedor::with('user.roles')
+        $vendedores = Vendedor::with(['user.roles', 'ciudad'])
             ->when($this->colFilterNombre,   fn($q) => $q->where('nombre',   'like', "%{$this->colFilterNombre}%"))
             ->when($this->colFilterApellido, fn($q) => $q->where('apellido', 'like', "%{$this->colFilterApellido}%"))
             ->when($this->colFilterTelefono, fn($q) => $q->where('telefono', 'like', "%{$this->colFilterTelefono}%"))
             ->when($this->colFilterEmail,    fn($q) => $q->where('email',    'like', "%{$this->colFilterEmail}%"))
+            ->when($this->colFilterCiudad,   fn($q) => $q->whereHas('ciudad',
+                fn($qq) => $qq->where('nombre', 'like', "%{$this->colFilterCiudad}%")))
             ->when($this->colFilterEstado !== '', fn($q) => $q->where('activo', $this->colFilterEstado === '1'))
             ->when($this->colFilterAcceso !== '', fn($q) =>
                 $this->colFilterAcceso === '1' ? $q->whereNotNull('user_id') : $q->whereNull('user_id'))
@@ -280,9 +295,10 @@ class VendedorManager extends Component
             ->orderBy($this->sortBy, $this->sortDir)
             ->paginate(15);
 
-        $roles = Role::orderBy('name')->get();
+        $roles   = Role::orderBy('name')->get();
+        $ciudades = Ciudad::orderBy('nombre')->get();
 
         return view('livewire.admin.vendedores.vendedor-manager',
-            compact('vendedores', 'roles'));
+            compact('vendedores', 'roles', 'ciudades'));
     }
 }

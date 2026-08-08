@@ -63,11 +63,13 @@ $lStyle = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-t
             <input wire:model="newEmail" type="email" style="width:100%;{{ $iS }}">
             @error('newEmail') <p style="font-size:11px;color:#EF4444;margin-top:4px;">{{ $message }}</p> @enderror
         </div>
-        <div style="min-width:110px;">
-            <label style="{{ $lStyle }}">Estado</label>
-            <select wire:model="newActivo" style="width:100%;{{ $iS }}">
-                <option value="1">Activo</option>
-                <option value="0">Inactivo</option>
+        <div style="min-width:160px;">
+            <label style="{{ $lStyle }}">Ciudad</label>
+            <select wire:model="newCiudadId" style="width:100%;{{ $iS }}">
+                <option value="">— Sin ciudad —</option>
+                @foreach($ciudades as $c)
+                <option value="{{ $c->id }}">{{ $c->nombre }}</option>
+                @endforeach
             </select>
         </div>
     </div>
@@ -149,10 +151,12 @@ $lStyle = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-t
         </div>
     </div>
     <div style="margin-bottom:12px;">
-        <label style="{{ $lStyle }}">Estado</label>
-        <select wire:model="newActivo" style="width:100%;{{ $iS }}">
-            <option value="1">Activo</option>
-            <option value="0">Inactivo</option>
+        <label style="{{ $lStyle }}">Ciudad</label>
+        <select wire:model="newCiudadId" style="width:100%;{{ $iS }}">
+            <option value="">— Sin ciudad —</option>
+            @foreach($ciudades as $c)
+            <option value="{{ $c->id }}">{{ $c->nombre }}</option>
+            @endforeach
         </select>
     </div>
 
@@ -238,7 +242,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
     </div>
 
     <div style="overflow:auto;flex:1;">
-        <table style="width:100%;border-collapse:collapse;min-width:1300px;">
+        <table style="width:100%;border-collapse:collapse;min-width:1530px;">
             <thead style="position:sticky;top:0;z-index:10;">
                 <tr style="background:#F9F8FF;border-bottom:2px solid #EDE9FE;">
                     <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF;">
@@ -268,7 +272,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
 
                     {{-- Apellido --}}
                     @php $isA = $sortBy === 'apellido'; @endphp
-                    <th wire:click="toggleSort('apellido')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:140px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('apellido')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:170px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
                         <div style="display:flex; align-items:center; gap:4px;">Apellido
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
@@ -300,6 +304,12 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
                     </th>
 
+                    {{-- Ciudad --}}
+                    <th style="{{ $thC }} text-align:left; min-width:180px;">
+                        Ciudad
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterCiudad" @click.stop type="text" style="{{ $fI }}"></div>
+                    </th>
+
                     {{-- Estado --}}
                     @php $isA = $sortBy === 'activo'; @endphp
                     <th wire:click="toggleSort('activo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
@@ -321,7 +331,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                     </th>
 
                     {{-- Acceso --}}
-                    <th style="{{ $thC }} text-align:center; min-width:100px;">
+                    <th style="{{ $thC }} text-align:center; min-width:120px;">
                         Acceso
                         <div style="{{ $fW }}" @click.stop>
                             {!! $fSvg !!}
@@ -383,6 +393,14 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         @error('editEmail') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:10px 10px;">
+                        <select wire:model="editCiudadId" style="width:100%;{{ $iRow }} cursor:pointer;">
+                            <option value="">— Sin ciudad —</option>
+                            @foreach($ciudades as $c)
+                            <option value="{{ $c->id }}">{{ $c->nombre }}</option>
+                            @endforeach
+                        </select>
+                    </td>
+                    <td style="padding:10px 10px;">
                         <select wire:model="editActivo" style="width:100%;{{ $iRow }} cursor:pointer;">
                             <option value="1">Activo</option>
                             <option value="0">Inactivo</option>
@@ -431,6 +449,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                     <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ ucwords(strtolower($v->apellido)) }}</span></td>
                     <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ $v->telefono ?? '—' }}</span></td>
                     <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ $v->email ?? '—' }}</span></td>
+                    <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ $v->ciudad->nombre ?? '—' }}</span></td>
                     <td style="padding:10px 14px;text-align:center;">
                         <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;
                                      background:{{ $v->activo ? '#D1FAE5' : '#F3F4F6' }};
@@ -457,7 +476,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 </tr>
                 @endif
                 @empty
-                <tr><td colspan="10" style="padding:48px;text-align:center;color:#9CA3AF;font-size:13px;">No hay vendedores registrados.</td></tr>
+                <tr><td colspan="11" style="padding:48px;text-align:center;color:#9CA3AF;font-size:13px;">No hay vendedores registrados.</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -496,12 +515,23 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 @error('editEmail') <p style="font-size:10px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
             </div>
         </div>
-        <div style="margin-bottom:12px;">
-            <label style="{{ $lStyle }}">Estado</label>
-            <select wire:model="editActivo" style="width:100%;{{ $iRow }} cursor:pointer;">
-                <option value="1">Activo</option>
-                <option value="0">Inactivo</option>
-            </select>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
+            <div>
+                <label style="{{ $lStyle }}">Ciudad</label>
+                <select wire:model="editCiudadId" style="width:100%;{{ $iRow }} cursor:pointer;">
+                    <option value="">— Sin ciudad —</option>
+                    @foreach($ciudades as $c)
+                    <option value="{{ $c->id }}">{{ $c->nombre }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div>
+                <label style="{{ $lStyle }}">Estado</label>
+                <select wire:model="editActivo" style="width:100%;{{ $iRow }} cursor:pointer;">
+                    <option value="1">Activo</option>
+                    <option value="0">Inactivo</option>
+                </select>
+            </div>
         </div>
 
         <div style="border:1px solid #EDE9FE;border-radius:10px;padding:12px;background:#fff;margin-bottom:12px;">
@@ -568,6 +598,10 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 <div>
                     <span style="display:block;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Teléfono</span>
                     <span style="font-size:13px;color:#111827;">{{ $v->telefono ?? '—' }}</span>
+                </div>
+                <div>
+                    <span style="display:block;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Ciudad</span>
+                    <span style="font-size:13px;color:#111827;">{{ $v->ciudad->nombre ?? '—' }}</span>
                 </div>
                 <div>
                     <span style="display:block;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Rol</span>

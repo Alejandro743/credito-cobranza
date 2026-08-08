@@ -12,7 +12,7 @@ class Vendedor extends Model
     use SoftDeletes;
 
     protected $table    = 'vendedores';
-    protected $fillable = ['nombre', 'apellido', 'telefono', 'email', 'grupo_id', 'user_id', 'activo'];
+    protected $fillable = ['nombre', 'apellido', 'telefono', 'email', 'grupo_id', 'ciudad_id', 'user_id', 'activo'];
 
     protected $casts = ['activo' => 'boolean'];
 
@@ -24,6 +24,11 @@ class Vendedor extends Model
     public function grupo(): BelongsTo
     {
         return $this->belongsTo(Group::class, 'grupo_id');
+    }
+
+    public function ciudad(): BelongsTo
+    {
+        return $this->belongsTo(Ciudad::class);
     }
 
     public function user(): BelongsTo
