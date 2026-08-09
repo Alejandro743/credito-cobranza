@@ -44,6 +44,16 @@ $lStyle = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-t
         </button>
     </div>
     <div style="padding:16px 20px;display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+        <div style="min-width:170px;">
+            <label style="{{ $lStyle }}">Código de Usuario *</label>
+            <input wire:model="newCodigoUsuario" type="text" placeholder="Ej. jperez" style="width:100%;{{ $iS }} font-family:monospace;">
+            @error('newCodigoUsuario') <p style="font-size:11px;color:#EF4444;margin-top:4px;">{{ $message }}</p> @enderror
+        </div>
+        <div style="min-width:130px;">
+            <label style="{{ $lStyle }}">CI *</label>
+            <input wire:model="newCi" type="text" style="width:100%;{{ $iS }}">
+            @error('newCi') <p style="font-size:11px;color:#EF4444;margin-top:4px;">{{ $message }}</p> @enderror
+        </div>
         <div style="min-width:150px;">
             <label style="{{ $lStyle }}">Nombre *</label>
             <input wire:model="newNombre" type="text" style="width:100%;{{ $iS }}">
@@ -80,16 +90,11 @@ $lStyle = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-t
             <label style="display:flex;align-items:center;gap:10px;cursor:pointer;user-select:none;">
                 <input wire:model.live="newTieneAcceso" type="checkbox" style="width:16px;height:16px;accent-color:#7B6FE8;cursor:pointer;">
                 <span style="font-size:13px;font-weight:700;color:{{ $newTieneAcceso ? '#7B6FE8' : '#6B7280' }};">¿Tiene acceso al sistema?</span>
-                <span style="font-size:11px;color:#9CA3AF;">Permite que el vendedor inicie sesión</span>
+                <span style="font-size:11px;color:#9CA3AF;">Inicia sesión con su Código de Usuario</span>
             </label>
 
             @if($newTieneAcceso)
             <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;margin-top:14px;">
-                <div style="min-width:200px;">
-                    <label style="{{ $lStyle }}">Usuario *</label>
-                    <input wire:model="newUserEmail" type="text" placeholder="Ej. maria.garcia" style="width:100%;{{ $iS }} font-family:monospace;">
-                    @error('newUserEmail') <p style="font-size:11px;color:#EF4444;margin-top:4px;">{{ $message }}</p> @enderror
-                </div>
                 <div style="min-width:180px;">
                     <label style="{{ $lStyle }}">Contraseña *</label>
                     <input wire:model="newUserPassword" type="password" placeholder="Mínimo 6 caracteres" style="width:100%;{{ $iS }}">
@@ -127,6 +132,16 @@ $lStyle = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-t
 
 {{-- Móvil --}}
 <div class="sm:hidden" style="background:#FAFAFE;border-radius:14px;border:1px solid #EDE9FE;margin-bottom:16px;padding:14px 16px;box-shadow:0 1px 4px rgba(123,111,232,.1);">
+    <div style="margin-bottom:10px;">
+        <label style="{{ $lStyle }}">Código de Usuario *</label>
+        <input wire:model="newCodigoUsuario" type="text" placeholder="Ej. jperez" style="width:100%;{{ $iS }} font-family:monospace;">
+        @error('newCodigoUsuario') <p style="font-size:10px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+    </div>
+    <div style="margin-bottom:10px;">
+        <label style="{{ $lStyle }}">CI *</label>
+        <input wire:model="newCi" type="text" style="width:100%;{{ $iS }}">
+        @error('newCi') <p style="font-size:10px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+    </div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
         <div>
             <label style="{{ $lStyle }}">Nombre *</label>
@@ -167,11 +182,6 @@ $lStyle = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-t
         </label>
         @if($newTieneAcceso)
         <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
-            <div>
-                <label style="{{ $lStyle }}">Usuario *</label>
-                <input wire:model="newUserEmail" type="text" placeholder="Ej. maria.garcia" style="width:100%;{{ $iS }} font-family:monospace;">
-                @error('newUserEmail') <p style="font-size:10px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
-            </div>
             <div>
                 <label style="{{ $lStyle }}">Contraseña *</label>
                 <input wire:model="newUserPassword" type="password" placeholder="Mínimo 6 caracteres" style="width:100%;{{ $iS }}">
@@ -239,10 +249,22 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
             @endif
         </div>
         @endif
+
+        @php $btnH2 = 'height:28px; padding:0 10px; border:1px solid #EDE9FE; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; background:#fff; color:#7B6FE8; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        <div style="margin-left:auto; display:flex; align-items:center; gap:6px;">
+            <button wire:click="$set('showImportModal', true)" style="{{ $btnH2 }}">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+                Importar
+            </button>
+            <button wire:click="exportCsv" style="{{ $btnH2 }}">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 8l5-5 5 5M12 3v12"/></svg>
+                Exportar
+            </button>
+        </div>
     </div>
 
     <div style="overflow:auto;flex:1;">
-        <table style="width:100%;border-collapse:collapse;min-width:1530px;">
+        <table style="width:100%;border-collapse:collapse;min-width:1600px;">
             <thead style="position:sticky;top:0;z-index:10;">
                 <tr style="background:#F9F8FF;border-bottom:2px solid #EDE9FE;">
                     <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF;">
@@ -254,6 +276,34 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                                    @click.prevent="$wire.selectedVendedorId !== null && $wire.editingId === null && $wire.set('selectedVendedorId', null)"
                                    :style="($wire.selectedVendedorId !== null && $wire.editingId === null) ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
                         </div>
+                    </th>
+
+                    {{-- Código Usuario --}}
+                    @php $isA = $sortBy === 'codigo_usuario'; @endphp
+                    <th wire:click="toggleSort('codigo_usuario')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:150px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; gap:4px;">Código Usuario
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterCodigoUsuario" @click.stop type="text" style="{{ $fI }}"></div>
+                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+
+                    {{-- CI --}}
+                    @php $isA = $sortBy === 'ci'; @endphp
+                    <th wire:click="toggleSort('ci')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:130px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; gap:4px;">CI
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterCi" @click.stop type="text" style="{{ $fI }}"></div>
+                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
                     </th>
 
                     {{-- Nombre --}}
@@ -310,26 +360,6 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterCiudad" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
-                    {{-- Estado --}}
-                    @php $isA = $sortBy === 'activo'; @endphp
-                    <th wire:click="toggleSort('activo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        <div style="{{ $fW }}" @click.stop>
-                            {!! $fSvg !!}
-                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
-                                <option value="">Todos</option>
-                                <option value="1">Activo</option>
-                                <option value="0">Inactivo</option>
-                            </select>
-                        </div>
-                    </th>
-
                     {{-- Acceso --}}
                     <th style="{{ $thC }} text-align:center; min-width:120px;">
                         Acceso
@@ -341,12 +371,6 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                                 <option value="0">No</option>
                             </select>
                         </div>
-                    </th>
-
-                    {{-- Usuario (login) --}}
-                    <th style="{{ $thC }} text-align:left; min-width:190px;">
-                        Usuario
-                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterUsuario" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Contraseña --}}
@@ -367,6 +391,26 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                             </select>
                         </div>
                     </th>
+
+                    {{-- Estado --}}
+                    @php $isA = $sortBy === 'activo'; @endphp
+                    <th wire:click="toggleSort('activo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:130px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>
+                            {!! $fSvg !!}
+                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                                <option value="">Todos</option>
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -376,6 +420,14 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 <tr wire:key="edit-{{ $v->id }}" style="background:#FAFAFE;border-bottom:1px solid #EDE9FE;">
                     <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#FAFAFE;">
                         <span style="font-size:13px; color:#111827;">{{ $vendedores->firstItem() + $loop->index }}</span>
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <input wire:model="editCodigoUsuario" type="text" style="width:100%;{{ $iRow }} font-family:monospace;">
+                        @error('editCodigoUsuario') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <input wire:model="editCi" type="text" style="width:100%;{{ $iRow }}">
+                        @error('editCi') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:10px 10px;">
                         <input wire:model="editNombre" type="text" style="width:100%;{{ $iRow }}">
@@ -400,19 +452,8 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                             @endforeach
                         </select>
                     </td>
-                    <td style="padding:10px 10px;">
-                        <select wire:model="editActivo" style="width:100%;{{ $iRow }} cursor:pointer;">
-                            <option value="1">Activo</option>
-                            <option value="0">Inactivo</option>
-                        </select>
-                    </td>
                     <td style="padding:10px 10px;text-align:center;">
                         <input wire:model.live="editTieneAcceso" type="checkbox" style="width:16px;height:16px;accent-color:#7B6FE8;cursor:pointer;">
-                    </td>
-                    <td style="padding:10px 10px;">
-                        <input wire:model="editUserEmail" type="text" placeholder="Usuario"
-                               style="width:100%;{{ $iRow }} font-family:monospace;" {{ $editTieneAcceso ? '' : 'disabled' }}>
-                        @error('editUserEmail') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:10px 10px;">
                         <input wire:model="editUserPassword" type="password" placeholder="{{ $editUserIdActual ? 'Dejar vacío' : 'Mínimo 6' }}"
@@ -427,6 +468,12 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                             @endforeach
                         </select>
                         @error('editUserRol') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <select wire:model="editActivo" style="width:100%;{{ $iRow }} cursor:pointer;">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
                     </td>
                 </tr>
                 @else
@@ -445,18 +492,13 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                             <span style="font-size:13px; color:#111827;">{{ $vendedores->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
+                    <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;font-family:monospace;">{{ $v->codigo_usuario ?? '—' }}</span></td>
+                    <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;font-family:monospace;">{{ $v->ci ?? '—' }}</span></td>
                     <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ ucwords(strtolower($v->nombre)) }}</span></td>
                     <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ ucwords(strtolower($v->apellido)) }}</span></td>
                     <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ $v->telefono ?? '—' }}</span></td>
                     <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ $v->email ?? '—' }}</span></td>
                     <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ $v->ciudad->nombre ?? '—' }}</span></td>
-                    <td style="padding:10px 14px;text-align:center;">
-                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;
-                                     background:{{ $v->activo ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $v->activo ? '#059669' : '#9CA3AF' }};">
-                            {{ $v->activo ? 'Activo' : 'Inactivo' }}
-                        </span>
-                    </td>
                     <td style="padding:10px 14px;text-align:center;">
                         @if($v->user)
                         <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;background:#DBEAFE;color:#2563EB;">Sí</span>
@@ -464,7 +506,6 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         <span style="font-size:13px;color:#D1D5DB;">No</span>
                         @endif
                     </td>
-                    <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ $v->user->email ?? '—' }}</span></td>
                     <td style="padding:10px 14px;text-align:center;"><span style="font-size:13px;color:#D1D5DB;">{{ $v->user ? '••••••••' : '—' }}</span></td>
                     <td style="padding:10px 14px;text-align:center;">
                         @if($v->user && $v->user->roles->first())
@@ -473,10 +514,17 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         <span style="font-size:13px;color:#D1D5DB;">—</span>
                         @endif
                     </td>
+                    <td style="padding:10px 14px;text-align:center;">
+                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;
+                                     background:{{ $v->activo ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $v->activo ? '#059669' : '#9CA3AF' }};">
+                            {{ $v->activo ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </td>
                 </tr>
                 @endif
                 @empty
-                <tr><td colspan="11" style="padding:48px;text-align:center;color:#9CA3AF;font-size:13px;">No hay vendedores registrados.</td></tr>
+                <tr><td colspan="12" style="padding:48px;text-align:center;color:#9CA3AF;font-size:13px;">No hay vendedores registrados.</td></tr>
                 @endforelse
             </tbody>
         </table>
@@ -492,6 +540,16 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
     @if($editingId === $v->id)
     <div wire:key="card-edit-{{ $v->id }}"
          style="background:#FAFAFE;border-radius:14px;border:1px solid #EDE9FE;padding:14px 16px;box-shadow:0 1px 4px rgba(123,111,232,.1);">
+        <div style="margin-bottom:10px;">
+            <label style="{{ $lStyle }}">Código de Usuario *</label>
+            <input wire:model="editCodigoUsuario" type="text" style="width:100%;{{ $iRow }} font-family:monospace;">
+            @error('editCodigoUsuario') <p style="font-size:10px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+        <div style="margin-bottom:10px;">
+            <label style="{{ $lStyle }}">CI *</label>
+            <input wire:model="editCi" type="text" style="width:100%;{{ $iRow }}">
+            @error('editCi') <p style="font-size:10px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
             <div>
                 <label style="{{ $lStyle }}">Nombre *</label>
@@ -542,11 +600,6 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
             @if($editTieneAcceso)
             <div style="margin-top:10px;display:flex;flex-direction:column;gap:10px;">
                 <div>
-                    <label style="{{ $lStyle }}">Usuario *</label>
-                    <input wire:model="editUserEmail" type="text" placeholder="Ej. maria.garcia" style="width:100%;{{ $iRow }} font-family:monospace;">
-                    @error('editUserEmail') <p style="font-size:10px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
-                </div>
-                <div>
                     <label style="{{ $lStyle }}">Contraseña {{ $editUserIdActual ? '' : '*' }}</label>
                     <input wire:model="editUserPassword" type="password" placeholder="{{ $editUserIdActual ? 'Dejar vacío' : 'Mínimo 6 caracteres' }}" style="width:100%;{{ $iRow }}">
                     @error('editUserPassword') <p style="font-size:10px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
@@ -585,7 +638,10 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
             <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                 <span style="font-size:12px; font-weight:700; color:#7B6FE8;">{{ strtoupper(substr($v->nombre, 0, 1) . substr($v->apellido, 0, 1)) }}</span>
             </div>
-            <span style="font-size:13px;font-weight:700;color:#111827;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ ucwords(strtolower($v->nombre.' '.$v->apellido)) }}</span>
+            <div style="flex:1;min-width:0;">
+                <span style="font-size:13px;font-weight:700;color:#111827;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ ucwords(strtolower($v->nombre.' '.$v->apellido)) }}</span>
+                @if($v->ci) <span style="font-size:11px;color:#7B6FE8;font-family:monospace;">CI {{ $v->ci }}</span> @endif
+            </div>
             @if($v->activo)
             <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#D1FAE5;color:#059669;flex-shrink:0;">Activo</span>
             @else
@@ -609,8 +665,8 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 </div>
             </div>
             <div style="margin-top:10px;">
-                <span style="display:block;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Usuario (login)</span>
-                <span style="font-size:13px;color:#111827;word-break:break-all;">{{ $v->user?->email ?? '—' }}</span>
+                <span style="display:block;font-size:10px;font-weight:700;color:#9CA3AF;text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px;">Código de Usuario</span>
+                <span style="font-size:13px;color:#111827;font-family:monospace;word-break:break-all;">{{ $v->codigo_usuario ?? '—' }}</span>
             </div>
             @if($v->email)
             <p style="font-size:12px;color:#9CA3AF;margin:8px 0 0;">{{ $v->email }}</p>
@@ -632,6 +688,107 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
     @if($vendedores->hasPages())
     <div style="margin-top:4px;">{{ $vendedores->links() }}</div>
     @endif
+</div>
+
+{{-- ══ MODAL: Importar CSV ══ --}}
+@php
+    $mHead2 = 'padding:14px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:10px; flex-shrink:0; background:#fff;';
+    $mBody2 = 'padding:20px; display:flex; flex-direction:column; gap:14px; background:#fff;';
+    $mFoot2 = 'padding:12px 20px 14px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end; gap:8px; flex-shrink:0; background:#fff;';
+    $xBtn2  = 'width:28px; height:28px; border:none; background:#F3F4F6; border-radius:6px; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#6B7280;';
+@endphp
+<div x-data="{ open: @entangle('showImportModal') }">
+<template x-teleport="body">
+<div x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);"
+     @click.self="$wire.set('showImportModal', false)" @keydown.escape.window="$wire.set('showImportModal', false)">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:440px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead2 }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/></svg>
+            </div>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Importar CSV</p>
+            <button wire:click="$set('showImportModal', false)" style="{{ $xBtn2 }}">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div style="{{ $mBody2 }}">
+            <p style="font-size:13px; color:#374151; margin:0;">
+                El archivo debe tener las columnas en orden:<br>
+                <span style="font-family:monospace; font-size:12px; color:#7B6FE8; font-weight:700;">Código Usuario ; CI ; Nombre ; Apellido ; Teléfono ; Email ; Ciudad ; Estado ; Acceso ; Rol</span><br>
+                <span style="font-size:11px; color:#9CA3AF;">Se identifica por CI: si ya existe un vendedor con ese CI se actualiza, si no existe se crea. Acceso = 1 crea/actualiza su login con Usuario = Código de Usuario y Contraseña = su CI. Los códigos válidos de Estado, Acceso y Rol están en las hojas de referencia del formato de ejemplo. Primera fila = encabezado (se omite).</span>
+            </p>
+            <button wire:click="downloadImportTemplate"
+                    style="display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 12px; border:1px dashed #C4B5FD; border-radius:8px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:700; cursor:pointer; width:fit-content;">
+                <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 8l5-5 5 5M12 3v12"/></svg>
+                Descargar formato de ejemplo (.xlsx)
+            </button>
+            <div>
+                <input wire:model="importFile" type="file" accept=".csv,.txt"
+                       style="width:100%; font-size:13px; color:#374151; border:1px dashed #C4B5FD; border-radius:8px; padding:10px; background:#F8F7FF; cursor:pointer; box-sizing:border-box;">
+                @error('importFile') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+            </div>
+        </div>
+        <div style="{{ $mFoot2 }}">
+            <button wire:click="$set('showImportModal', false)" style="height:36px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
+            <button wire:click="importCsv" wire:loading.attr="disabled" wire:target="importCsv"
+                    style="height:36px; padding:0 18px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                <span wire:loading.remove wire:target="importCsv">Procesar</span>
+                <span wire:loading wire:target="importCsv">Procesando...</span>
+            </button>
+        </div>
+    </div>
+</div>
+</template>
+</div>
+
+{{-- ══ MODAL: Resultado Import ══ --}}
+<div x-data="{ open: @entangle('showImportResultModal') }">
+<template x-teleport="body">
+<div x-show="open" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+     class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);"
+     @keydown.escape.window="$wire.set('showImportResultModal', false)">
+    <div style="background:#F8F7FF; border-radius:12px; width:100%; max-width:440px; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22); overflow:hidden;">
+        <div style="{{ $mHead2 }}">
+            <div style="width:32px; height:32px; border-radius:8px; background:#D1FAE5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="16" height="16" fill="none" stroke="#059669" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            </div>
+            <p style="font-size:15px; font-weight:700; color:#111827; margin:0; flex:1;">Importación completada</p>
+            <button wire:click="$set('showImportResultModal', false)" style="{{ $xBtn2 }}">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+        <div style="{{ $mBody2 }}">
+            <div style="display:flex; gap:10px;">
+                <div style="flex:1; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:10px; padding:14px; text-align:center;">
+                    <div style="font-size:26px; font-weight:800; color:#059669;">{{ $importResult['actualizados'] ?? 0 }}</div>
+                    <div style="font-size:11px; font-weight:600; color:#065F46; margin-top:2px;">Actualizados</div>
+                </div>
+                <div style="flex:1; background:#EFF6FF; border:1px solid #BFDBFE; border-radius:10px; padding:14px; text-align:center;">
+                    <div style="font-size:26px; font-weight:800; color:#1D4ED8;">{{ $importResult['creados'] ?? 0 }}</div>
+                    <div style="font-size:11px; font-weight:600; color:#1E3A8A; margin-top:2px;">Creados</div>
+                </div>
+                <div style="flex:1; background:#FFF7ED; border:1px solid #FED7AA; border-radius:10px; padding:14px; text-align:center;">
+                    <div style="font-size:26px; font-weight:800; color:#C2410C;">{{ count($importResult['errores'] ?? []) }}</div>
+                    <div style="font-size:11px; font-weight:600; color:#9A3412; margin-top:2px;">Con errores</div>
+                </div>
+            </div>
+            @if(!empty($importResult['errores']))
+            <div style="border:1px solid #FED7AA; border-radius:8px; background:#FFF7ED; padding:10px 12px; max-height:140px; overflow-y:auto;">
+                <p style="font-size:11px; font-weight:700; color:#9A3412; margin:0 0 6px; text-transform:uppercase; letter-spacing:.5px;">Filas con errores</p>
+                @foreach($importResult['errores'] as $err)
+                <span style="display:inline-block; font-family:monospace; font-size:11px; background:#FEE2E2; color:#B91C1C; border-radius:4px; padding:2px 6px; margin:2px;">{{ $err }}</span>
+                @endforeach
+            </div>
+            @endif
+        </div>
+        <div style="{{ $mFoot2 }}">
+            <button wire:click="$set('showImportResultModal', false)"
+                    style="height:36px; padding:0 20px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">Listo</button>
+        </div>
+    </div>
+</div>
+</template>
 </div>
 
 <script>

@@ -53,6 +53,7 @@
     $formTieneCuota  = $viewingMaestra?->usa_cuota_inicial ?? false;
     $formTipoCuota   = $viewingMaestra?->tipo_cuota_inicial;
     $formValorCuota  = $viewingMaestra?->valor_cuota_inicial;
+    $formCantidadCuotas = $viewingMaestra?->cantidad_cuotas ?? 0;
     $formTipoInc     = $viewingMaestra?->tipo_incremento;
     $formFactorInc   = (float) ($viewingMaestra?->valor_incremento ?? 0);
     $formPrecioBase  = (float) $this->newItemPrecio;
@@ -60,6 +61,10 @@
         ? ($formTipoInc === 'porcentaje' ? round($formPrecioBase * $formFactorInc / 100, 2) : $formFactorInc)
         : 0.0;
     $formPrecioFinal = max(0, $formPrecioBase + $formMontoInc);
+    $formMontoCuota  = $formTieneCuota
+        ? ($formTipoCuota === 'porcentaje' ? round($formPrecioFinal * $formValorCuota / 100, 2) : (float) $formValorCuota)
+        : 0.0;
+    $formMontoPorCuota = $formCantidadCuotas > 0 ? round(($formPrecioFinal - $formMontoCuota) / $formCantidadCuotas, 2) : 0.0;
 @endphp
 <div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:16px; overflow:hidden;">
     {{-- Header --}}
@@ -108,9 +113,19 @@
                 <div style="{{ $iStyle }} text-align:center; font-weight:700; color:#7B6FE8; background:#F9FAFB;">Bs {{ number_format($formPrecioFinal, 2) }}</div>
             </div>
             @if($formTieneCuota)
-            <div style="width:100px;">
+            <div style="width:130px;">
                 <label style="{{ $lStyle }}">Cuota Inicial</label>
-                <div style="{{ $roStyle }}">{{ $formTipoCuota === 'porcentaje' ? number_format($formValorCuota,2).'%' : 'Bs '.number_format($formValorCuota,2) }}</div>
+                <div style="{{ $roStyle }}">{{ $formTipoCuota === 'porcentaje' ? number_format($formValorCuota,2).'% (Bs '.number_format($formMontoCuota,2).')' : 'Bs '.number_format($formMontoCuota,2) }}</div>
+            </div>
+            @endif
+            @if($formCantidadCuotas > 0)
+            <div style="width:80px;">
+                <label style="{{ $lStyle }}">Cant. Cuotas</label>
+                <div style="{{ $roStyle }}">{{ $formCantidadCuotas }}</div>
+            </div>
+            <div style="width:100px;">
+                <label style="{{ $lStyle }}">Monto x Cuota</label>
+                <div style="{{ $roStyle }}">Bs {{ number_format($formMontoPorCuota, 2) }}</div>
             </div>
             @endif
             <div style="width:70px;">
@@ -298,6 +313,11 @@
                 ? ($amTipoInc === 'porcentaje' ? round($amPrecioBase * $amFactorInc / 100, 2) : $amFactorInc)
                 : 0.0;
             $amPrecioFinal = max(0, $amPrecioBase + $amMontoInc);
+            $amCantidadCuotas = $viewingMaestra?->cantidad_cuotas ?? 0;
+            $amMontoCuota  = $amTieneCuota
+                ? ($amTipoCuota === 'porcentaje' ? round($amPrecioFinal * $amValorCuota / 100, 2) : (float) $amValorCuota)
+                : 0.0;
+            $amMontoPorCuota = $amCantidadCuotas > 0 ? round(($amPrecioFinal - $amMontoCuota) / $amCantidadCuotas, 2) : 0.0;
             $roStyleAm = 'height:38px; border:1px solid #E5E7EB; border-radius:8px; padding:0 12px; font-size:13px; font-weight:700; color:#7B6FE8; background:#F5F3FF; display:flex; align-items:center; justify-content:center;';
         @endphp
 
@@ -321,9 +341,23 @@
 
         @if($amTieneCuota)
         {{-- CUOTA INICIAL --}}
-        <div style="min-width:100px; max-width:130px;">
+        <div style="min-width:130px; max-width:170px;">
             <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Cuota Inicial</label>
-            <div style="{{ $roStyleAm }}">{{ $amTipoCuota === 'porcentaje' ? number_format($amValorCuota,2).'%' : 'Bs '.number_format($amValorCuota,2) }}</div>
+            <div style="{{ $roStyleAm }}">{{ $amTipoCuota === 'porcentaje' ? number_format($amValorCuota,2).'% (Bs '.number_format($amMontoCuota,2).')' : 'Bs '.number_format($amMontoCuota,2) }}</div>
+        </div>
+        @endif
+
+        @if($amCantidadCuotas > 0)
+        {{-- CANTIDAD CUOTAS --}}
+        <div style="min-width:80px; max-width:100px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Cant. Cuotas</label>
+            <div style="{{ $roStyleAm }}">{{ $amCantidadCuotas }}</div>
+        </div>
+
+        {{-- MONTO POR CUOTA --}}
+        <div style="min-width:100px; max-width:130px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Monto x Cuota</label>
+            <div style="{{ $roStyleAm }}">Bs {{ number_format($amMontoPorCuota, 2) }}</div>
         </div>
         @endif
 
@@ -439,7 +473,15 @@
         </div>
     </div>
     <div style="overflow:auto; flex:1;">
-        <table style="width:100%; min-width:1600px; border-collapse:collapse;">
+        <table style="width:100%; min-width:1900px; border-collapse:collapse;">
+            @php
+                $tieneCuota  = $viewingMaestra?->usa_cuota_inicial ?? false;
+                $tipoCuota   = $viewingMaestra?->tipo_cuota_inicial;
+                $valorCuota  = $viewingMaestra?->valor_cuota_inicial;
+                $cantidadCuotas = $viewingMaestra?->cantidad_cuotas ?? 0;
+                $tipoLista   = $viewingMaestra?->tipo_incremento;
+                $factorLista = (float)($viewingMaestra?->valor_incremento ?? 0);
+            @endphp
             <colgroup>
                 <col style="width:44px;">
                 <col style="width:90px;">
@@ -448,11 +490,18 @@
                 <col style="width:70px;">
                 <col style="width:85px;">
                 <col style="width:85px;">
+                @if($tieneCuota)
+                <col style="width:130px;">
+                @endif
+                @if($cantidadCuotas > 0)
+                <col style="width:90px;">
+                <col style="width:100px;">
+                @endif
                 <col style="width:85px;">
                 <col style="width:95px;">
                 <col style="width:105px;">
                 <col style="width:105px;">
-                <col style="width:135px;">
+                <col style="width:150px;">
             </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
                 @php
@@ -463,11 +512,6 @@
                     $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
                     $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; text-align:center; padding:8px 8px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top;';
                     $emptyF = '<div style="margin-top:4px; height:28px;"></div>';
-                    $tieneCuota  = $viewingMaestra?->usa_cuota_inicial ?? false;
-                    $tipoCuota   = $viewingMaestra?->tipo_cuota_inicial;
-                    $valorCuota  = $viewingMaestra?->valor_cuota_inicial;
-                    $tipoLista   = $viewingMaestra?->tipo_incremento;
-                    $factorLista = (float)($viewingMaestra?->valor_incremento ?? 0);
                 @endphp
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editItemId ? 'pointer-events:none;' : '' }}">
 
@@ -576,6 +620,18 @@
                     </th>
                     @endif
 
+                    {{-- Cant. Cuotas / Monto x Cuota (condicional, informativo) --}}
+                    @if($cantidadCuotas > 0)
+                    <th style="{{ $thC }}">
+                        <div>Cant. Cuotas</div>
+                        {!! $emptyF !!}
+                    </th>
+                    <th style="{{ $thC }}">
+                        <div>Monto x Cuota</div>
+                        {!! $emptyF !!}
+                    </th>
+                    @endif
+
                     {{-- Puntos --}}
                     @php $isA = $itemSortBy === 'puntos'; @endphp
                     <th wire:click="toggleItemSort('puntos')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
@@ -630,7 +686,7 @@
 
                     {{-- Estado --}}
                     @php $isA = $itemSortBy === 'active'; @endphp
-                    <th wire:click="toggleItemSort('active')" style="{{ $thC }} min-width:130px; cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleItemSort('active')" style="{{ $thC }} cursor:pointer; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA ? 'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA ? 'true':'false' }} && ($el.style.background='')">
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
@@ -663,6 +719,12 @@
                     $tdBase   = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap; text-transform:uppercase;';
                     $codeCol  = $inLista ? '#6B7280' : '#9CA3AF';
                     $nameCol  = $inLista ? '#111827' : '#9CA3AF';
+                    $montoCuotaItem = ($inLista && $tieneCuota)
+                        ? ($tipoCuota === 'porcentaje' ? round($item->precio_final * $valorCuota / 100, 2) : (float) $valorCuota)
+                        : 0.0;
+                    $montoPorCuotaItem = ($inLista && $cantidadCuotas > 0)
+                        ? round(($item->precio_final - $montoCuotaItem) / $cantidadCuotas, 2)
+                        : 0.0;
                 @endphp
                 @if($inLista && $editItemId === $item->id)
                 @php
@@ -673,6 +735,10 @@
                         ? ($tipoLista === 'porcentaje' ? round($precioEdit * $factorLista / 100, 2) : $factorLista)
                         : 0.0;
                     $precioFinalEdit = $precioEdit + $montoLista;
+                    $montoCuotaEdit  = $tieneCuota
+                        ? ($tipoCuota === 'porcentaje' ? round($precioFinalEdit * $valorCuota / 100, 2) : (float) $valorCuota)
+                        : 0.0;
+                    $montoPorCuotaEdit = $cantidadCuotas > 0 ? round(($precioFinalEdit - $montoCuotaEdit) / $cantidadCuotas, 2) : 0.0;
                 @endphp
                 <tr wire:key="prod-edit-{{ $p->id }}" style="border-bottom:1px solid #EDE9FE; background:#F5F3FF;">
                     <td class="col-row-num" style="padding:6px 8px; text-align:center; background:#F5F3FF; position:sticky; left:0; z-index:2;">
@@ -690,9 +756,11 @@
                     <td style="{{ $iRO }}">{{ $tipoLista && $factorLista > 0 ? ($tipoLista === 'porcentaje' ? number_format($factorLista,2).'%' : 'Bs '.number_format($factorLista,2)) : '—' }}</td>
                     <td style="padding:4px 8px; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8;">Bs {{ number_format($precioFinalEdit, 2) }}</td>
                     @if($tieneCuota)
-                    <td style="{{ $iRO }}">
-                        {{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'%' : 'Bs '.number_format($valorCuota,2) }}
-                    </td>
+                    <td style="{{ $iRO }}">{{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'% (Bs '.number_format($montoCuotaEdit,2).')' : 'Bs '.number_format($montoCuotaEdit, 2) }}</td>
+                    @endif
+                    @if($cantidadCuotas > 0)
+                    <td style="{{ $iRO }}">{{ $cantidadCuotas }}</td>
+                    <td style="{{ $iRO }}">Bs {{ number_format($montoPorCuotaEdit, 2) }}</td>
                     @endif
                     <td style="padding:4px 8px; text-align:right; font-size:12px; font-weight:700; color:#7B6FE8;">{{ $this->editItemPuntosPreview() }}</td>
                     <td style="padding:4px 6px;"><input wire:model="editItemStock" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;">
@@ -745,8 +813,17 @@
                     </td>
                     @if($tieneCuota)
                     <td style="{{ $tdBase }}">
-                        @if($inLista)
-                            {{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'%' : 'Bs '.number_format($valorCuota,2) }}
+                        @if($inLista) {{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'% (Bs '.number_format($montoCuotaItem,2).')' : 'Bs '.number_format($montoCuotaItem, 2) }}
+                        @else <span style="color:#D1D5DB;">—</span> @endif
+                    </td>
+                    @endif
+                    @if($cantidadCuotas > 0)
+                    <td style="{{ $tdBase }}">
+                        @if($inLista) {{ $cantidadCuotas }}
+                        @else <span style="color:#D1D5DB;">—</span> @endif
+                    </td>
+                    <td style="{{ $tdBase }}">
+                        @if($inLista) Bs {{ number_format($montoPorCuotaItem, 2) }}
                         @else <span style="color:#D1D5DB;">—</span> @endif
                     </td>
                     @endif
@@ -786,6 +863,10 @@
                     $ma     = $mi->maestroArticulo;
                     $trBgMa = '#fff';
                     $tdBase = 'padding:10px 12px; text-align:center; font-size:13px; color:#374151; font-weight:500; white-space:nowrap; text-transform:uppercase;';
+                    $montoCuotaMi = $tieneCuota
+                        ? ($tipoCuota === 'porcentaje' ? round($mi->precio_final * $valorCuota / 100, 2) : (float) $valorCuota)
+                        : 0.0;
+                    $montoPorCuotaMi = $cantidadCuotas > 0 ? round(($mi->precio_final - $montoCuotaMi) / $cantidadCuotas, 2) : 0.0;
                 @endphp
                 @if($editItemId === $mi->id)
                 @php
@@ -796,6 +877,10 @@
                         ? ($tipoLista === 'porcentaje' ? round($precioEditMa * $factorLista / 100, 2) : $factorLista)
                         : 0.0;
                     $precioFinalEditMa = $precioEditMa + $montoListaMa;
+                    $montoCuotaEditMa  = $tieneCuota
+                        ? ($tipoCuota === 'porcentaje' ? round($precioFinalEditMa * $valorCuota / 100, 2) : (float) $valorCuota)
+                        : 0.0;
+                    $montoPorCuotaEditMa = $cantidadCuotas > 0 ? round(($precioFinalEditMa - $montoCuotaEditMa) / $cantidadCuotas, 2) : 0.0;
                 @endphp
                 <tr wire:key="ma-edit-{{ $mi->id }}" style="border-bottom:1px solid #EDE9FE; background:#F5F3FF;">
                     <td class="col-row-num" style="padding:6px 8px; text-align:center; background:#F5F3FF; position:sticky; left:0; z-index:2;">
@@ -812,9 +897,11 @@
                     <td style="{{ $iRO }}">{{ $tipoLista && $factorLista > 0 ? ($tipoLista === 'porcentaje' ? number_format($factorLista,2).'%' : 'Bs '.number_format($factorLista,2)) : '—' }}</td>
                     <td style="padding:4px 8px; text-align:center; font-size:12px; font-weight:700; color:#7B6FE8;">Bs {{ number_format($precioFinalEditMa, 2) }}</td>
                     @if($tieneCuota)
-                    <td style="{{ $iRO }}">
-                        {{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'%' : 'Bs '.number_format($valorCuota,2) }}
-                    </td>
+                    <td style="{{ $iRO }}">{{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'% (Bs '.number_format($montoCuotaEditMa,2).')' : 'Bs '.number_format($montoCuotaEditMa, 2) }}</td>
+                    @endif
+                    @if($cantidadCuotas > 0)
+                    <td style="{{ $iRO }}">{{ $cantidadCuotas }}</td>
+                    <td style="{{ $iRO }}">Bs {{ number_format($montoPorCuotaEditMa, 2) }}</td>
                     @endif
                     <td style="padding:4px 8px; text-align:right; font-size:12px; font-weight:700; color:#7B6FE8;">{{ $this->editItemPuntosPreview() }}</td>
                     <td style="padding:4px 6px;"><input wire:model="editItemStock" type="number" min="0" step="0.01" style="{{ $iE }} text-align:right;">
@@ -862,7 +949,11 @@
                     </td>
                     <td style="{{ $tdBase }} color:#7B6FE8; font-weight:700;">Bs {{ number_format($mi->precio_final, 2) }}</td>
                     @if($tieneCuota)
-                    <td style="{{ $tdBase }}">{{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'%' : 'Bs '.number_format($valorCuota,2) }}</td>
+                    <td style="{{ $tdBase }}">{{ $tipoCuota === 'porcentaje' ? number_format($valorCuota,2).'% (Bs '.number_format($montoCuotaMi,2).')' : 'Bs '.number_format($montoCuotaMi, 2) }}</td>
+                    @endif
+                    @if($cantidadCuotas > 0)
+                    <td style="{{ $tdBase }}">{{ $cantidadCuotas }}</td>
+                    <td style="{{ $tdBase }}">Bs {{ number_format($montoPorCuotaMi, 2) }}</td>
                     @endif
                     <td style="{{ $tdBase }}">{{ $mi->puntos }}</td>
                     <td style="{{ $tdBase }}">{{ number_format($mi->stock_inicial, 2) }}</td>

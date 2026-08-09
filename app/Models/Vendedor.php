@@ -12,7 +12,7 @@ class Vendedor extends Model
     use SoftDeletes;
 
     protected $table    = 'vendedores';
-    protected $fillable = ['nombre', 'apellido', 'telefono', 'email', 'grupo_id', 'ciudad_id', 'user_id', 'activo'];
+    protected $fillable = ['nombre', 'apellido', 'ci', 'codigo_usuario', 'telefono', 'email', 'grupo_id', 'ciudad_id', 'user_id', 'activo'];
 
     protected $casts = ['activo' => 'boolean'];
 

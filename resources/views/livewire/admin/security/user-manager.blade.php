@@ -92,17 +92,17 @@
         </button>
     </div>
     <div style="padding:16px 20px; display:flex; align-items:flex-start; gap:12px; flex-wrap:wrap;">
-        <div style="flex:1; min-width:150px;">
-            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Nombre Completo *</label>
-            <input wire:model="newName" type="text" placeholder="Ej. María García"
-                   style="width:100%; {{ $iS }}">
-            @error('newName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
-        </div>
         <div style="flex:1; min-width:140px;">
             <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Usuario *</label>
             <input wire:model="newUsuario" type="text" placeholder="Ej. maria.garcia"
                    style="width:100%; {{ $iS }} font-family:monospace;">
             @error('newUsuario') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+        <div style="flex:1; min-width:150px;">
+            <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Nombre Completo *</label>
+            <input wire:model="newName" type="text" placeholder="Ej. María García"
+                   style="width:100%; {{ $iS }}">
+            @error('newName') <p style="color:#EF4444; font-size:11px; margin-top:3px;">{{ $message }}</p> @enderror
         </div>
         <div style="flex:1; min-width:140px;">
             <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Contraseña *</label>
@@ -171,14 +171,14 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
         <div style="padding:14px; display:flex; flex-direction:column; gap:10px;">
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <div>
-                    <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Nombre *</label>
-                    <input wire:model="editName" type="text" style="{{ $iM }}">
-                    @error('editName')<p style="font-size:11px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
-                </div>
-                <div>
                     <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Usuario *</label>
                     <input wire:model="editUsuario" type="text" style="{{ $iM }} font-family:monospace;">
                     @error('editUsuario')<p style="font-size:11px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
+                </div>
+                <div>
+                    <label style="display:block; font-size:11px; font-weight:600; color:#7B6FE8; margin-bottom:4px;">Nombre *</label>
+                    <input wire:model="editName" type="text" style="{{ $iM }}">
+                    @error('editName')<p style="font-size:11px; color:#EF4444; margin-top:2px;">{{ $message }}</p>@enderror
                 </div>
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px;">
@@ -339,20 +339,6 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                         </div>
                     </th>
 
-                    {{-- Nombre Completo --}}
-                    @php $isA = $sortBy === 'name'; @endphp
-                    <th wire:click="toggleSort('name')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:160px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; gap:4px;">Nombre Completo
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" style="{{ $fI }}"></div>
-                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-
                     {{-- Usuario --}}
                     @php $isA = $sortBy === 'email'; @endphp
                     <th wire:click="toggleSort('email')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:160px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
@@ -364,6 +350,20 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                             </span>
                         </div>
                         <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterUsuario" @click.stop type="text" style="{{ $fI }}"></div>
+                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+
+                    {{-- Nombre Completo --}}
+                    @php $isA = $sortBy === 'name'; @endphp
+                    <th wire:click="toggleSort('name')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:160px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; gap:4px;">Nombre Completo
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" style="{{ $fI }}"></div>
                         <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
                     </th>
 
@@ -434,14 +434,14 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                 <tr wire:key="edit-{{ $user->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
                     <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $users->firstItem() + $loop->index }}</td>
                     <td style="padding:7px 10px; text-align:left;">
-                        <input wire:model="editName" type="text" placeholder="Nombre completo"
-                               style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
-                        @error('editName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                    </td>
-                    <td style="padding:7px 10px; text-align:left;">
                         <input wire:model="editUsuario" type="text" placeholder="usuario"
                                style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; font-family:monospace;">
                         @error('editUsuario') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
+                    </td>
+                    <td style="padding:7px 10px; text-align:left;">
+                        <input wire:model="editName" type="text" placeholder="Nombre completo"
+                               style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;">
+                        @error('editName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:7px 10px; text-align:left;">
                         <select wire:model="editTipo"
@@ -489,11 +489,11 @@ $tipoBadgeMobile = fn($tipo) => match($tipo ?? 'administrativo') {
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($user->name)) }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $user->email }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">
-                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $user->email }}</span>
+                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($user->name)) }}</span>
                     </td>
 
                     <td style="padding:10px 14px; overflow:hidden; text-align:left;">

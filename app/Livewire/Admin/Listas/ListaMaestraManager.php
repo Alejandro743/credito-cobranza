@@ -1257,15 +1257,34 @@ class ListaMaestraManager extends Component
 
         $filename = 'lista-' . str($viewingMaestra?->code ?? 'export')->slug() . '-' . now()->format('Ymd') . '.csv';
 
-        return response()->streamDownload(function () use ($products, $maestroItems, $itemsMap, $stockMap, $asignadoMap) {
+        $tieneCuota     = $viewingMaestra?->usa_cuota_inicial ?? false;
+        $tipoCuota      = $viewingMaestra?->tipo_cuota_inicial;
+        $valorCuota     = $viewingMaestra?->valor_cuota_inicial;
+        $cantidadCuotas = $viewingMaestra?->cantidad_cuotas ?? 0;
+
+        $calcCuota = function (float $precioFinal) use ($tieneCuota, $tipoCuota, $valorCuota, $cantidadCuotas) {
+            $montoCuota = $tieneCuota
+                ? ($tipoCuota === 'porcentaje' ? round($precioFinal * $valorCuota / 100, 2) : (float) $valorCuota)
+                : 0.0;
+            $montoPorCuota = $cantidadCuotas > 0 ? round(($precioFinal - $montoCuota) / $cantidadCuotas, 2) : 0.0;
+            return [
+                $tieneCuota && $tipoCuota === 'porcentaje' ? number_format($valorCuota, 2, '.', '') : '',
+                $tieneCuota ? number_format($montoCuota, 2, '.', '') : '',
+                $cantidadCuotas > 0 ? $cantidadCuotas : '',
+                $cantidadCuotas > 0 ? number_format($montoPorCuota, 2, '.', '') : '',
+            ];
+        };
+
+        return response()->streamDownload(function () use ($products, $maestroItems, $itemsMap, $stockMap, $asignadoMap, $calcCuota) {
             $out = fopen('php://output', 'w');
             fprintf($out, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
-            fputcsv($out, ['Código', 'Artículo', 'Precio Base', 'Tipo Inc.', 'Incremento', 'Precio Final', 'Puntos', 'Stock Inicial', 'Stock Cons.', 'Stock Disp.', 'Estado'], ';');
+            fputcsv($out, ['Código', 'Artículo', 'Precio Base', 'Tipo Inc.', 'Incremento', 'Precio Final', 'Cuota Inicial %', 'Cuota Inicial (Bs)', 'Cant. Cuotas', 'Monto x Cuota', 'Puntos', 'Stock Inicial', 'Stock Cons.', 'Stock Disp.', 'Estado'], ';');
 
             foreach ($products as $p) {
                 $item    = $itemsMap->get($p->id);
                 $inLista = $item !== null;
+                $cuota   = $inLista ? $calcCuota((float) $item->precio_final) : ['', '', '', ''];
                 fputcsv($out, [
                     strtoupper($p->code),
                     strtoupper($p->name),
@@ -1273,6 +1292,10 @@ class ListaMaestraManager extends Component
                     $inLista ? ($item->tipo_incremento ?? '') : '',
                     $inLista && $item->factor_incremento > 0 ? number_format($item->factor_incremento, 2, '.', '') : '',
                     $inLista ? number_format($item->precio_final, 2, '.', '') : '',
+                    $cuota[0],
+                    $cuota[1],
+                    $cuota[2],
+                    $cuota[3],
                     $inLista ? $item->puntos : '',
                     $inLista ? number_format($item->stock_inicial, 2, '.', '') : '',
                     $inLista ? number_format($item->stock_consumido, 2, '.', '') : '',
@@ -1282,7 +1305,8 @@ class ListaMaestraManager extends Component
             }
 
             foreach ($maestroItems as $mi) {
-                $ma = $mi->maestroArticulo;
+                $ma    = $mi->maestroArticulo;
+                $cuota = $calcCuota((float) $mi->precio_final);
                 fputcsv($out, [
                     strtoupper($ma?->codigo ?? ''),
                     strtoupper($ma?->nombre ?? ''),
@@ -1290,6 +1314,10 @@ class ListaMaestraManager extends Component
                     $mi->tipo_incremento ?? '',
                     $mi->factor_incremento > 0 ? number_format($mi->factor_incremento, 2, '.', '') : '',
                     number_format($mi->precio_final, 2, '.', ''),
+                    $cuota[0],
+                    $cuota[1],
+                    $cuota[2],
+                    $cuota[3],
                     $mi->puntos,
                     number_format($mi->stock_inicial, 2, '.', ''),
                     number_format($mi->stock_consumido, 2, '.', ''),

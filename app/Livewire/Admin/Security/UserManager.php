@@ -4,6 +4,7 @@ namespace App\Livewire\Admin\Security;
 
 use App\Livewire\Concerns\HasModuleColor;
 use App\Models\User;
+use App\Models\Vendedor;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -163,11 +164,18 @@ class UserManager extends Component
 
     public function saveEdit(): void
     {
+        $vendedorVinculado = Vendedor::where('user_id', $this->editingId)->first();
+
+        $usuarioRules = ['required', 'string', 'min:3', 'max:80',
+                          'regex:/^[a-zA-Z0-9._@-]+$/',
+                          Rule::unique('users', 'email')->ignore($this->editingId)];
+        if ($vendedorVinculado) {
+            $usuarioRules[] = Rule::unique('vendedores', 'codigo_usuario')->ignore($vendedorVinculado->id);
+        }
+
         $this->validate([
             'editName'    => 'required|string|min:2',
-            'editUsuario' => ['required', 'string', 'min:3', 'max:80',
-                              'regex:/^[a-zA-Z0-9._@-]+$/',
-                              Rule::unique('users', 'email')->ignore($this->editingId)],
+            'editUsuario' => $usuarioRules,
             'editTipo'    => 'required|in:administrativo,vendedor,cliente',
             'editRole'    => 'required|string|exists:roles,name',
         ], [], [
@@ -185,6 +193,11 @@ class UserManager extends Component
             'active' => $this->editActive,
         ]);
         $user->syncRoles([$this->editRole]);
+
+        // El código de usuario del vendedor debe seguir sincronizado con su login.
+        if ($vendedorVinculado) {
+            $vendedorVinculado->update(['codigo_usuario' => trim($this->editUsuario)]);
+        }
 
         $this->editingId = null;
         session()->flash('success', 'Usuario actualizado.');
