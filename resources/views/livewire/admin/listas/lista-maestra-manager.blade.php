@@ -1853,19 +1853,41 @@
         <span style="font-size:13px; font-weight:700; color:#111827;">Listas registradas</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px; margin-left:8px;">{{ $maestras->total() }}</span>
         @if($selectedMaestraId)
-        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
-        <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
+        @php
+            $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; box-sizing:border-box;';
+            $selMRow = $maestras->firstWhere('id', $selectedMaestraId);
+        @endphp
+        <div style="display:flex; align-items:center; gap:8px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            @if($selMRow)
+            <span style="font-size:12px; font-weight:700; color:#111827; white-space:nowrap;">{{ $selMRow->code ?? '—' }} - {{ ucwords(strtolower($selMRow->name)) }}</span>
+            @endif
             @if($editingId === $selectedMaestraId)
-                <button wire:click="saveEdit" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Guardar</button>
-                <button wire:click="cancelEdit" style="{{ $btnH }} background:#E5E7EB; color:#374151;">Cancelar</button>
+                <div style="display:flex; align-items:center; gap:5px; margin-left:2px; padding-left:10px; border-left:1px solid #E5E7EB;">
+                    <button wire:click="saveEdit" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Guardar</button>
+                    <button wire:click="cancelEdit" style="{{ $btnH }} background:#E5E7EB; color:#374151;">Cancelar</button>
+                </div>
             @else
-                <button wire:click="viewItems({{ $selectedMaestraId }})" style="{{ $btnH }} background:#CFFAFE; color:#0E7490; border:1px solid #A5F3FC;">Ver artículos</button>
-                <button wire:click="viewAcceso({{ $selectedMaestraId }})" style="{{ $btnH }} background:#FFF7ED; color:#C2410C; border:1px solid #FED7AA;">Acceso</button>
-                <button wire:click="openView({{ $selectedMaestraId }})" style="{{ $btnH }} background:#F3F4F6; color:#374151; border:1px solid #E5E7EB;">Ver detalle</button>
-                <button wire:click="startEdit({{ $selectedMaestraId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Editar</button>
+                <div style="display:flex; align-items:center; gap:5px; margin-left:2px; padding-left:10px; border-left:1px solid #E5E7EB;">
+                    <button wire:click="viewItems({{ $selectedMaestraId }})" style="{{ $btnH }} background:#fff; color:#7B6FE8; box-shadow:inset 0 0 0 1px #EDE9FE;" @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">Ver artículos</button>
+                    <button wire:click="viewAcceso({{ $selectedMaestraId }})" style="{{ $btnH }} background:#fff; color:#7B6FE8; box-shadow:inset 0 0 0 1px #EDE9FE;" @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">Acceso</button>
+                    <button wire:click="openView({{ $selectedMaestraId }})" style="{{ $btnH }} background:#fff; color:#7B6FE8; box-shadow:inset 0 0 0 1px #EDE9FE;" @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">Ver detalle</button>
+                    <button wire:click="startEdit({{ $selectedMaestraId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Editar</button>
+                </div>
             @endif
         </div>
         @endif
+
+        <button wire:click="$toggle('mostrarInactivas')"
+                style="height:28px; padding:0 10px; border:1px solid #EDE9FE; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; background:#fff; color:#7B6FE8; margin-left:auto;"
+                @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">
+            @if($mostrarInactivas)
+            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.774 3.162 10.065 7.498a10.522 10.522 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>
+            Ocultar Listas Inactivas
+            @else
+            <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            Mostrar Listas Inactivas
+            @endif
+        </button>
     </div>
 
     <div style="overflow:auto; flex:1;">
@@ -1900,6 +1922,19 @@
                             @endif
                         </span>
                         <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" style="{{ $fI }}"></div>
+                    </th>
+
+                    {{-- ID LISTA --}}
+                    @php $isActive = ($sortBy??'') === 'id'; @endphp
+                    <th wire:click="toggleSort('id')" style="padding:8px 14px 6px; min-width:90px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">ID LISTA
+                            @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><input wire:model.live.debounce.300ms="colFilterId" @click.stop type="text" style="{{ $fI }}"></div>
                     </th>
 
                     {{-- Código --}}
@@ -2028,6 +2063,10 @@
                         @error('editCycleId') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:7px 10px;">
+                        <div style="{{ $lE }}">ID LISTA</div>
+                        <div style="{{ $iE }} display:flex; align-items:center; justify-content:center; font-family:monospace; color:#9CA3AF; font-style:italic; background:#F9FAFB;">{{ $m->id }}</div>
+                    </td>
+                    <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Código</div>
                         <input wire:model="editCode" type="text" style="{{ $iE }} text-transform:uppercase; font-family:monospace;">
                         @error('editCode') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
@@ -2073,7 +2112,7 @@
                 </tr>
                 {{-- Fila edición — Fila 2: valores de C. Inicial e Incremento --}}
                 <tr style="background:#F8F7FF; border-bottom:2px solid #C4B5FD;">
-                    <td colspan="4"></td>{{-- Ciclo + Código + Nombre + Cuotas --}}
+                    <td colspan="5"></td>{{-- Ciclo + ID LISTA + Código + Nombre + Cuotas --}}
                     <td style="padding:0 10px 7px;">
                         @if($editTipoCuotaInicial !== 'ninguna')
                         <input wire:model="editValorCuotaInicial" type="number" step="0.01" min="0" placeholder="Valor {{ $editTipoCuotaInicial === 'porcentaje' ? '%' : 'Bs' }}"
@@ -2091,11 +2130,11 @@
 
                 @else
                 {{-- Fila normal --}}
+                @php $selM = $selectedMaestraId === $m->id; @endphp
                 <tr wire:key="m-{{ $m->id }}"
-                    style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
-                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                    style="border-bottom:1px solid #F3F4F6; transition:background .1s; background:{{ $selM ? '#F5F3FF' : '' }}; {{ $selM ? 'border-left:3px solid #7B6FE8;' : '' }}"
+                    @mouseenter="$el.style.background='{{ $selM ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selM ? '#F5F3FF' : '' }}'">
 
-                    @php $selM = $selectedMaestraId === $m->id; @endphp
                     <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selM ? '#F5F3FF' : '#fff' }}; white-space:nowrap;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                             <input type="checkbox"
@@ -2108,6 +2147,9 @@
                     </td>
                     <td style="padding:10px 14px; overflow:hidden;">
                         <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle?->code ?? '—' }}</span>
+                    </td>
+                    <td style="padding:10px 14px; overflow:hidden; text-align:center;">
+                        <span style="font-size:12px; font-family:monospace; color:#9CA3AF;">{{ $m->id }}</span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden;">
                         <span style="font-size:12px; font-family:monospace; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->code ?? '—' }}</span>
@@ -2150,7 +2192,7 @@
                 @endif
 
                 @empty
-                <tr><td colspan="9" style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">Sin resultados.</td></tr>
+                <tr><td colspan="10" style="text-align:center; padding:64px; color:#9CA3AF; font-size:13px;">Sin resultados.</td></tr>
                 @endforelse
             </tbody>
         </table>

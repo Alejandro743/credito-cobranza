@@ -30,10 +30,12 @@ class ListaMaestraManager extends Component
     public string $search        = '';
     public string $filterCycleId = '';
     public string $filterStatus  = '';
+    public bool   $mostrarInactivas = true;
     public string $sortBy        = 'cycle_id';
     public string $sortDir       = 'asc';
 
     // Filtros por columna en thead
+    public string $colFilterId           = '';
     public string $colFilterCodigo       = '';
     public string $colFilterNombre       = '';
     public string $colFilterCiclo        = '';
@@ -258,6 +260,7 @@ class ListaMaestraManager extends Component
     }
 
     public function updatingSearch(): void { $this->resetPage(); }
+    public function updatedMostrarInactivas(): void { $this->resetPage(); }
 
     // ── List: inline add ─────────────────────────────────────────────────────
 
@@ -287,8 +290,7 @@ class ListaMaestraManager extends Component
     public function saveNew(): void
     {
         $this->validate([
-            'newCode'    => ['required', 'string', 'max:30',
-                             Rule::unique('lista_maestra', 'code')->whereNull('deleted_at')],
+            'newCode'    => ['required', 'string', 'max:30'],
             'newName'    => 'required|string|min:2',
             'newCycleId' => ['required', 'integer', 'exists:commercial_cycles,id'],
         ], [], [
@@ -345,8 +347,7 @@ class ListaMaestraManager extends Component
     public function saveEdit(): void
     {
         $this->validate([
-            'editCode'    => ['required', 'string', 'max:30',
-                              Rule::unique('lista_maestra', 'code')->ignore($this->editingId)],
+            'editCode'    => ['required', 'string', 'max:30'],
             'editName'    => 'required|string|min:2',
             'editCycleId' => ['required', 'integer', 'exists:commercial_cycles,id'],
         ], [], [
@@ -1341,6 +1342,8 @@ class ListaMaestraManager extends Component
                   ->orWhere('code', 'like', "%{$this->search}%"))
             ->when($this->filterCycleId, fn($q) => $q->where('cycle_id', $this->filterCycleId))
             ->when($this->filterStatus !== '', fn($q) => $q->where('active', (bool) $this->filterStatus))
+            ->when(!$this->mostrarInactivas, fn($q) => $q->where('active', true))
+            ->when($this->colFilterId !== '',        fn($q) => $q->where('id', 'like', "%{$this->colFilterId}%"))
             ->when($this->colFilterCodigo,           fn($q) => $q->where('code', 'like', "%{$this->colFilterCodigo}%"))
             ->when($this->colFilterNombre,           fn($q) => $q->where('name', 'like', "%{$this->colFilterNombre}%"))
             ->when($this->colFilterCiclo,            fn($q) => $q->whereHas('cycle', fn($sq) => $sq->where('code', 'like', "%{$this->colFilterCiclo}%")))
