@@ -223,7 +223,10 @@ class BandejaAsignacion extends Component
                 $q->whereHas('cobranzaCaso', fn($c) => $c->where('responsable_id', $this->filtroResponsable))
             )
             ->when($this->filtroDias, function ($q) use ($today) {
-                $expr = "COALESCE(DATEDIFF(NOW(), (SELECT MIN(c.fecha_vencimiento) FROM cuotas c INNER JOIN plan_pagos pp ON pp.id = c.plan_pago_id WHERE pp.pedido_id = pedidos.id AND (c.estado = 'vencido' OR (c.estado = 'pendiente' AND c.fecha_vencimiento < '$today')))), 0)";
+                $minVencSub = "(SELECT MIN(c.fecha_vencimiento) FROM cuotas c INNER JOIN plan_pagos pp ON pp.id = c.plan_pago_id WHERE pp.pedido_id = pedidos.id AND (c.estado = 'vencido' OR (c.estado = 'pendiente' AND c.fecha_vencimiento < '$today')))";
+                $expr = DB::connection()->getDriverName() === 'sqlite'
+                    ? "COALESCE(CAST(julianday('now') - julianday($minVencSub) AS INTEGER), 0)"
+                    : "COALESCE(DATEDIFF(NOW(), $minVencSub), 0)";
                 $q->where(fn($q2) =>
                     $q2->whereDoesntHave('cobranzaCaso')
                        ->orWhereHas('cobranzaCaso', fn($c) => $c->whereNotIn('estado', ['cerrado', 'cancelado']))
@@ -243,7 +246,10 @@ class BandejaAsignacion extends Component
         $today = now()->toDateString();
 
         $cicloSub = '(SELECT cc.code FROM pedido_items pi INNER JOIN lista_maestra_items lmi ON lmi.id = pi.lista_maestra_item_id INNER JOIN lista_maestra lm ON lm.id = lmi.lista_maestra_id INNER JOIN commercial_cycles cc ON cc.id = lm.cycle_id WHERE pi.pedido_id = pedidos.id LIMIT 1)';
-        $diasSub  = "COALESCE(DATEDIFF(NOW(), (SELECT MIN(c.fecha_vencimiento) FROM cuotas c INNER JOIN plan_pagos pp ON pp.id = c.plan_pago_id WHERE pp.pedido_id = pedidos.id AND (c.estado = 'vencido' OR (c.estado = 'pendiente' AND c.fecha_vencimiento < '$today')))), 0)";
+        $minVencSub = "(SELECT MIN(c.fecha_vencimiento) FROM cuotas c INNER JOIN plan_pagos pp ON pp.id = c.plan_pago_id WHERE pp.pedido_id = pedidos.id AND (c.estado = 'vencido' OR (c.estado = 'pendiente' AND c.fecha_vencimiento < '$today')))";
+        $diasSub  = DB::connection()->getDriverName() === 'sqlite'
+            ? "COALESCE(CAST(julianday('now') - julianday($minVencSub) AS INTEGER), 0)"
+            : "COALESCE(DATEDIFF(NOW(), $minVencSub), 0)";
         $cntSub   = "(SELECT COUNT(*) FROM cuotas c INNER JOIN plan_pagos pp ON pp.id = c.plan_pago_id WHERE pp.pedido_id = pedidos.id AND (c.estado = 'vencido' OR (c.estado = 'pendiente' AND c.fecha_vencimiento < '$today')))";
 
         $pedidos = Pedido::with(['cliente.usuario', 'vendedor', 'cobranzaCaso.responsable', 'cobranzaCaso.asignadoPor'])
