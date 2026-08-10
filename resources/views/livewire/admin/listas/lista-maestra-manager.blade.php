@@ -768,9 +768,9 @@
                     <td style="padding:4px 8px; font-size:12px; text-align:center; color:#6B7280;">{{ number_format($item->stock_consumido, 2) }}</td>
                     <td style="padding:4px 8px; font-size:12px; text-align:center; color:#6B7280;">{{ number_format($item->stock_actual, 2) }}</td>
                     <td style="padding:4px 6px;">
-                        <select wire:model="editItemActive" style="{{ $iE }} background:#fff; cursor:pointer;">
-                            <option value="1">Habilitado</option>
-                            <option value="0">Deshabilitado</option>
+                        <select wire:model="editItemActive" wire:key="edit-item-active-p-{{ $item->id }}" x-init="$el.value = @js($editItemActive ? '1' : '0')" style="{{ $iE }} background:#fff; cursor:pointer;">
+                            <option value="1" @selected($editItemActive)>Habilitado</option>
+                            <option value="0" @selected(!$editItemActive)>Deshabilitado</option>
                         </select>
                     </td>
                 </tr>
@@ -909,9 +909,9 @@
                     <td style="padding:4px 8px; font-size:12px; text-align:center; color:#6B7280;">{{ number_format($mi->stock_consumido, 2) }}</td>
                     <td style="padding:4px 8px; font-size:12px; text-align:center; color:#6B7280;">{{ number_format($mi->stock_actual, 2) }}</td>
                     <td style="padding:4px 6px;">
-                        <select wire:model="editItemActive" style="{{ $iE }} background:#fff; cursor:pointer;">
-                            <option value="1">Habilitado</option>
-                            <option value="0">Deshabilitado</option>
+                        <select wire:model="editItemActive" wire:key="edit-item-active-m-{{ $mi->id }}" x-init="$el.value = @js($editItemActive ? '1' : '0')" style="{{ $iE }} background:#fff; cursor:pointer;">
+                            <option value="1" @selected($editItemActive)>Habilitado</option>
+                            <option value="0" @selected(!$editItemActive)>Deshabilitado</option>
                         </select>
                     </td>
                 </tr>
@@ -1365,11 +1365,11 @@
             <div style="{{ $row }}">
                 <span style="{{ $lbl }}">Tipo Inc.</span>
                 <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
-                    <select wire:model="editItemTipoIncremento" x-on:change="tipo = $event.target.value"
+                    <select wire:model="editItemTipoIncremento" wire:key="edit-item-tipoinc-modal-{{ $editItemId }}" x-on:change="tipo = $event.target.value"
                             style="{{ $inp }} background:#fff; cursor:pointer;">
-                        <option value="">— Sin inc. —</option>
-                        <option value="porcentaje">% Porcentaje</option>
-                        <option value="monto_fijo">Bs Monto Fijo</option>
+                        <option value="" @selected(!$editItemTipoIncremento)>— Sin inc. —</option>
+                        <option value="porcentaje" @selected($editItemTipoIncremento === 'porcentaje')>% Porcentaje</option>
+                        <option value="monto_fijo" @selected($editItemTipoIncremento === 'monto_fijo')>Bs Monto Fijo</option>
                     </select>
                 </div>
             </div>
@@ -1413,10 +1413,10 @@
             <div style="display:flex; align-items:center;">
                 <span style="{{ $lbl }}">Estado</span>
                 <div style="{{ $val }} padding-top:5px; padding-bottom:5px;">
-                    <select wire:model="editItemActive"
+                    <select wire:model="editItemActive" wire:key="edit-item-active-modal-{{ $editItemId }}" x-init="$el.value = @js($editItemActive ? '1' : '0')"
                             style="{{ $inp }} background:#fff; cursor:pointer;">
-                        <option value="1">Habilitado</option>
-                        <option value="0">Deshabilitado</option>
+                        <option value="1" @selected($editItemActive)>Habilitado</option>
+                        <option value="0" @selected(!$editItemActive)>Deshabilitado</option>
                     </select>
                 </div>
             </div>
@@ -2019,10 +2019,10 @@
                     </td>
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Ciclo</div>
-                        <select wire:model="editCycleId" style="{{ $iE }} padding:0 6px;">
-                            <option value="">— Ciclo —</option>
+                        <select wire:model="editCycleId" wire:key="edit-cycle-{{ $m->id }}" style="{{ $iE }} padding:0 6px;">
+                            <option value="" @selected(!$editCycleId)>— Ciclo —</option>
                             @foreach ($cycles as $cycle)
-                                <option value="{{ $cycle->id }}">{{ $cycle->code }}</option>
+                                <option value="{{ $cycle->id }}" @selected((string) $editCycleId === (string) $cycle->id)>{{ $cycle->code }}</option>
                             @endforeach
                         </select>
                         @error('editCycleId') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
@@ -2044,18 +2044,18 @@
                     </td>
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">C. Inicial</div>
-                        <select wire:model.live="editTipoCuotaInicial" style="{{ $iE }} padding:0 6px;">
-                            <option value="ninguna">Sin cuota</option>
-                            <option value="porcentaje">%</option>
-                            <option value="monto_fijo">Bs</option>
+                        <select wire:model.live="editTipoCuotaInicial" wire:key="edit-tipocuota-{{ $m->id }}" style="{{ $iE }} padding:0 6px;">
+                            <option value="ninguna" @selected($editTipoCuotaInicial === 'ninguna')>Sin cuota</option>
+                            <option value="porcentaje" @selected($editTipoCuotaInicial === 'porcentaje')>%</option>
+                            <option value="monto_fijo" @selected($editTipoCuotaInicial === 'monto_fijo')>Bs</option>
                         </select>
                     </td>
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Incremento</div>
-                        <select wire:model.live="editTipoIncremento" style="{{ $iE }} padding:0 6px;">
-                            <option value="">Sin incr.</option>
-                            <option value="porcentaje">%</option>
-                            <option value="monto_fijo">Bs</option>
+                        <select wire:model.live="editTipoIncremento" wire:key="edit-tipoinc-{{ $m->id }}" style="{{ $iE }} padding:0 6px;">
+                            <option value="" @selected(!$editTipoIncremento)>Sin incr.</option>
+                            <option value="porcentaje" @selected($editTipoIncremento === 'porcentaje')>%</option>
+                            <option value="monto_fijo" @selected($editTipoIncremento === 'monto_fijo')>Bs</option>
                         </select>
                     </td>
                     <td style="padding:7px 10px; text-align:center;">
@@ -2065,9 +2065,9 @@
                     </td>
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Estado</div>
-                        <select wire:model="editActive" style="{{ $iE }} padding:0 6px;">
-                            <option value="1">Activa</option>
-                            <option value="0">Inactiva</option>
+                        <select wire:model="editActive" wire:key="edit-active-{{ $m->id }}" x-init="$el.value = @js($editActive ? '1' : '0')" style="{{ $iE }} padding:0 6px;">
+                            <option value="1" @selected($editActive)>Activa</option>
+                            <option value="0" @selected(!$editActive)>Inactiva</option>
                         </select>
                     </td>
                 </tr>
@@ -2193,18 +2193,18 @@
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
                 <div>
                     <label style="{{ $ml }}">Ciclo</label>
-                    <select wire:model="editCycleId" style="{{ $mi }}">
-                        <option value="">— Ciclo —</option>
+                    <select wire:model="editCycleId" wire:key="mob-edit-cycle-{{ $m->id }}" style="{{ $mi }}">
+                        <option value="" @selected(!$editCycleId)>— Ciclo —</option>
                         @foreach ($cycles as $cycle)
-                            <option value="{{ $cycle->id }}">{{ $cycle->code }}</option>
+                            <option value="{{ $cycle->id }}" @selected((string) $editCycleId === (string) $cycle->id)>{{ $cycle->code }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div>
                     <label style="{{ $ml }}">Estado</label>
-                    <select wire:model="editActive" style="{{ $mi }}">
-                        <option value="1">Activa</option>
-                        <option value="0">Inactiva</option>
+                    <select wire:model="editActive" wire:key="mob-edit-active-{{ $m->id }}" x-init="$el.value = @js($editActive ? '1' : '0')" style="{{ $mi }}">
+                        <option value="1" @selected($editActive)>Activa</option>
+                        <option value="0" @selected(!$editActive)>Inactiva</option>
                     </select>
                 </div>
                 <div>
@@ -2230,10 +2230,10 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
             <div>
                 <label style="{{ $ml }}">Tipo</label>
-                <select wire:model="editTipoIncremento" style="{{ $mi }}">
-                    <option value="">— Sin incremento —</option>
-                    <option value="porcentaje">Porcentaje %</option>
-                    <option value="monto_fijo">Monto Fijo Bs</option>
+                <select wire:model="editTipoIncremento" wire:key="mob-edit-tipoinc-{{ $m->id }}" style="{{ $mi }}">
+                    <option value="" @selected(!$editTipoIncremento)>— Sin incremento —</option>
+                    <option value="porcentaje" @selected($editTipoIncremento === 'porcentaje')>Porcentaje %</option>
+                    <option value="monto_fijo" @selected($editTipoIncremento === 'monto_fijo')>Monto Fijo Bs</option>
                 </select>
             </div>
             <div>
@@ -2253,10 +2253,10 @@
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px;">
             <div>
                 <label style="{{ $ml }}">Tipo</label>
-                <select wire:model="editTipoCuotaInicial" style="{{ $mi }}">
-                    <option value="ninguna">Sin cuota inicial</option>
-                    <option value="porcentaje">Porcentaje %</option>
-                    <option value="monto_fijo">Monto Fijo Bs</option>
+                <select wire:model="editTipoCuotaInicial" wire:key="mob-edit-tipocuota-{{ $m->id }}" style="{{ $mi }}">
+                    <option value="ninguna" @selected($editTipoCuotaInicial === 'ninguna')>Sin cuota inicial</option>
+                    <option value="porcentaje" @selected($editTipoCuotaInicial === 'porcentaje')>Porcentaje %</option>
+                    <option value="monto_fijo" @selected($editTipoCuotaInicial === 'monto_fijo')>Monto Fijo Bs</option>
                 </select>
             </div>
             @if ($editTipoCuotaInicial !== 'ninguna')
