@@ -3,17 +3,6 @@
 {{-- ══ LIST ══ --}}
 @if ($mode === 'list')
 
-{{-- Toolbar --}}
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5 mb-5">
-    <div class="relative w-full sm:flex-1" style="min-width:0; max-width:100%;">
-        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
-        </svg>
-        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar cliente o Nº pedido..."
-               style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
-    </div>
-</div>
-
 {{-- MOBILE: Cards --}}
 <div class="sm:hidden flex flex-col" style="gap:10px;">
     @forelse ($pedidos as $p)
@@ -70,45 +59,86 @@
 </div>
 
 {{-- DESKTOP: Tabla --}}
+@php
+$fI   = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:left;';
+$fW   = 'position:relative; margin-top:4px;';
+$fIc  = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
+$fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
+$thC  = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top; position:relative; overflow:hidden;';
+$sortColsR = ['Cod. Pedido'=>'numero','CI'=>'ci','Cliente'=>'cliente','Vendedor'=>'vendedor','Fecha'=>'fecha','Total Bs.'=>'total'];
+$colFiltersR = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colFilterCliente','vendedor'=>'colFilterVendedor'];
+@endphp
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">En Revisión</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidos->total() }}</span>
+        @if($selectedPedidoId)
+        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            <button wire:click="verSeleccionado" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                Revisar
+            </button>
+        </div>
+        @endif
     </div>
 
-    @php
-    $sortColsR = ['Cod. Pedido'=>'numero','CI'=>'ci','Cliente'=>'cliente','Vendedor'=>'vendedor','Fecha'=>'fecha','Total Bs.'=>'total'];
-    @endphp
     <div style="overflow:auto; flex:1;">
-    <table style="width:100%; min-width:800px; border-collapse:collapse; font-size:13px;">
+    <table style="width:100%; min-width:900px; border-collapse:collapse; font-size:13px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
-                <th style="padding:10px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Ciclo</th>
+                <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF;">
+                    #
+                    <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
+                        <input type="checkbox"
+                               :checked="$wire.selectedPedidoId !== null"
+                               :disabled="$wire.selectedPedidoId === null"
+                               @click.prevent="$wire.selectedPedidoId !== null && $wire.set('selectedPedidoId', null)"
+                               :style="$wire.selectedPedidoId !== null ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
+                    </div>
+                </th>
+
+                {{-- Ciclo (solo filtro, sin orden) --}}
+                <th style="{{ $thC }} text-align:left; min-width:110px;">
+                    Ciclo
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" style="{{ $fI }}"></div>
+                </th>
+
                 @foreach($sortColsR as $label => $key)
                 @php $isActive = $sortBy === $key; @endphp
                 <th wire:click="toggleSort('{{ $key }}')"
-                    style="padding:10px 14px; text-align:{{ $label === 'Total Bs.' ? 'right' : 'left' }}; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; cursor:pointer; user-select:none; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
-                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                    <span style="display:inline-flex; align-items:center; gap:5px;">{{ $label }}
-                        @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                        @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                        @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
-                        @endif
-                    </span>
+                    style="{{ $thC }} text-align:{{ $label === 'Total Bs.' ? 'right' : 'left' }}; cursor:pointer; min-width:130px; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="!{{ $isActive?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isActive?'true':'false' }} && ($el.style.background='')">
+                    <div style="display:flex; align-items:center; gap:4px; {{ $label === 'Total Bs.' ? 'justify-content:flex-end;' : '' }}">{{ $label }}
+                        <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isActive && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isActive && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                        </span>
+                    </div>
+                    @if(isset($colFiltersR[$key]))
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="{{ $colFiltersR[$key] }}" @click.stop type="text" style="{{ $fI }}"></div>
+                    @endif
                 </th>
                 @endforeach
-                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acción</th>
             </tr>
         </thead>
         <tbody>
             @forelse ($pedidos as $p)
+            @php $selP = $selectedPedidoId === $p->id; @endphp
             <tr wire:key="rd-{{ $p->id }}"
-                style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
-                @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $pedidos->firstItem() + $loop->index }}</td>
-                <td style="padding:10px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; font-family:monospace; white-space:nowrap; background:#F8F7FF;">{{ $p->ciclo_code ?? '—' }}</td>
+                style="border-bottom:1px solid #F3F4F6; transition:background .1s; background:{{ $selP ? '#F5F3FF' : '' }}; {{ $selP ? 'border-left:3px solid #7B6FE8;' : '' }}"
+                @mouseenter="$el.style.background='{{ $selP ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selP ? '#F5F3FF' : '' }}'">
+                <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selP ? '#F5F3FF' : '#fff' }};">
+                    <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                        <input type="checkbox"
+                               :checked="$wire.selectedPedidoId === {{ $p->id }}"
+                               @click="$wire.selectedPedidoId === {{ $p->id }} ? $wire.set('selectedPedidoId', null) : $wire.selectPedido({{ $p->id }})"
+                               style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                        <span style="font-size:13px; color:#111827;">{{ $pedidos->firstItem() + $loop->index }}</span>
+                    </div>
+                </td>
+                <td style="padding:10px 10px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; font-family:monospace; white-space:nowrap;">{{ $p->ciclo_code ?? '—' }}</td>
                 <td style="padding:10px 14px; font-family:monospace; font-size:12px; font-weight:700; color:#111827; white-space:nowrap;">{{ $p->numero }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->cliente?->ci ?: '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($p->cliente?->nombre_completo ?? '—')) }}</td>
@@ -121,21 +151,10 @@
                         <span style="color:#D1D5DB;">—</span>
                     @endif
                 </td>
-                <td style="padding:10px 14px; text-align:center;">
-                    <button wire:click="ver({{ $p->id }})"
-                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;"
-                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'"
-                            title="Revisar">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    </button>
-                </td>
             </tr>
             @empty
             <tr wire:key="rd-empty">
-                <td colspan="9" style="padding:64px 24px; text-align:center;">
+                <td colspan="8" style="padding:64px 24px; text-align:center;">
                     <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
