@@ -3,13 +3,37 @@
 namespace App\Livewire\Admin\Definiciones;
 
 use App\Models\PesoIndicador;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class PesoIndicadorManager extends Component
 {
-    public string $mode    = 'list';
     public string $sortBy  = '';
     public string $sortDir = 'asc';
+
+    public ?int $selectedPesoId = null;
+    public ?int $editingId      = null;
+    public bool $showAddForm    = false;
+
+    public string $colFilterNombre  = '';
+    public string $colFilterEstado  = '';
+    public string $colFilterVigente = '';
+
+    public string $newNombre             = '';
+    public float  $newPesoPuntualidad    = 25;
+    public float  $newPesoMora           = 25;
+    public float  $newPesoRiesgo         = 20;
+    public float  $newPesoRecuperacion   = 20;
+    public float  $newPesoReprogramacion = 10;
+    public int    $newActivo             = 1;
+
+    public string $editNombre             = '';
+    public float  $editPesoPuntualidad    = 25;
+    public float  $editPesoMora           = 25;
+    public float  $editPesoRiesgo         = 20;
+    public float  $editPesoRecuperacion   = 20;
+    public float  $editPesoReprogramacion = 10;
+    public int    $editActivo             = 1;
 
     public function toggleSort(string $col): void
     {
@@ -21,157 +45,174 @@ class PesoIndicadorManager extends Component
         }
     }
 
-    public ?int    $editId             = null;
-    public string  $nombre             = '';
-    public string  $fechaInicio        = '';
-    public string  $fechaFin           = '';
-    public float   $pesoPuntualidad    = 25;
-    public float   $pesoMora           = 25;
-    public float   $pesoRiesgo         = 20;
-    public float   $pesoRecuperacion   = 20;
-    public float   $pesoReprogramacion = 10;
-    public int     $activo             = 1;
-
-    public function create(): void
+    public function showAdd(): void
     {
-        $this->resetForm();
+        $this->resetNewForm();
         $this->resetErrorBag();
-        $this->fechaInicio = now()->toDateString();
-        $this->mode = 'form';
+        $this->showAddForm = true;
     }
 
-    public function edit(int $id): void
+    public function cancelAdd(): void
+    {
+        $this->resetNewForm();
+        $this->resetErrorBag();
+        $this->showAddForm = false;
+    }
+
+    public function selectPeso(int $id): void
+    {
+        $this->selectedPesoId = $this->selectedPesoId === $id ? null : $id;
+    }
+
+    public function startEdit(int $id): void
     {
         $p = PesoIndicador::findOrFail($id);
-        $this->resetForm();
-        $this->resetErrorBag();
-        $this->editId             = $p->id;
-        $this->nombre             = $p->nombre;
-        $this->fechaInicio        = $p->fecha_inicio->toDateString();
-        $this->fechaFin           = $p->fecha_fin?->toDateString() ?? '';
-        $this->pesoPuntualidad    = $p->peso_puntualidad;
-        $this->pesoMora           = $p->peso_mora;
-        $this->pesoRiesgo         = $p->peso_riesgo;
-        $this->pesoRecuperacion   = $p->peso_recuperacion;
-        $this->pesoReprogramacion = $p->peso_reprogramacion;
-        $this->activo             = $p->activo ? 1 : 0;
-        $this->mode = 'form';
-    }
 
-    public function save(): void
-    {
-        $this->validate([
-            'nombre'             => 'required|string|max:100',
-            'fechaInicio'        => 'required|date',
-            'fechaFin'           => 'nullable|date|after_or_equal:fechaInicio',
-            'pesoPuntualidad'    => 'required|numeric|min:0|max:100',
-            'pesoMora'           => 'required|numeric|min:0|max:100',
-            'pesoRiesgo'         => 'required|numeric|min:0|max:100',
-            'pesoRecuperacion'   => 'required|numeric|min:0|max:100',
-            'pesoReprogramacion' => 'required|numeric|min:0|max:100',
-        ]);
-
-        $total = $this->pesoPuntualidad + $this->pesoMora + $this->pesoRiesgo
-               + $this->pesoRecuperacion + $this->pesoReprogramacion;
-
-        if (round($total, 2) !== 100.0) {
-            $this->addError('pesoPuntualidad', "La suma de pesos debe ser 100%. Actualmente: {$total}%");
+        if ($p->fecha_fin !== null) {
+            session()->flash('error', 'Solo se puede editar la configuración vigente. Los registros históricos quedan bloqueados.');
             return;
         }
 
-        if ($this->editId && (int) $this->activo === 0 && PesoIndicador::vigente()?->id === $this->editId) {
-            $today = \Carbon\Carbon::today();
-            $hayOtro = PesoIndicador::where('activo', true)
-                ->where('id', '!=', $this->editId)
-                ->where('fecha_inicio', '<=', $today)
-                ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $today))
-                ->exists();
-            if (!$hayOtro) {
-                $this->addError('activo', 'No se puede inactivar: es la única configuración vigente para hoy.');
-                return;
+        $this->resetErrorBag();
+        $this->editingId              = $p->id;
+        $this->selectedPesoId         = $p->id;
+        $this->editNombre             = $p->nombre;
+        $this->editPesoPuntualidad    = $p->peso_puntualidad;
+        $this->editPesoMora           = $p->peso_mora;
+        $this->editPesoRiesgo         = $p->peso_riesgo;
+        $this->editPesoRecuperacion   = $p->peso_recuperacion;
+        $this->editPesoReprogramacion = $p->peso_reprogramacion;
+        $this->editActivo             = $p->activo ? 1 : 0;
+    }
+
+    public function cancelEdit(): void
+    {
+        $this->editingId = null;
+        $this->resetErrorBag();
+    }
+
+    public function saveNew(): void
+    {
+        $this->validate([
+            'newNombre'             => 'required|string|max:100',
+            'newPesoPuntualidad'    => 'required|numeric|min:0|max:100',
+            'newPesoMora'           => 'required|numeric|min:0|max:100',
+            'newPesoRiesgo'         => 'required|numeric|min:0|max:100',
+            'newPesoRecuperacion'   => 'required|numeric|min:0|max:100',
+            'newPesoReprogramacion' => 'required|numeric|min:0|max:100',
+        ]);
+
+        $total = $this->newPesoPuntualidad + $this->newPesoMora + $this->newPesoRiesgo
+               + $this->newPesoRecuperacion + $this->newPesoReprogramacion;
+
+        if (round($total, 2) !== 100.0) {
+            $this->addError('newPesoPuntualidad', "La suma de pesos debe ser 100%. Actualmente: {$total}%");
+            return;
+        }
+
+        DB::transaction(function () {
+            $ahora = now();
+
+            $anterior = PesoIndicador::abierta();
+            if ($anterior) {
+                $anterior->update(['fecha_fin' => $ahora->copy()->subMinute()]);
             }
-        }
 
-        $data = [
-            'nombre'              => $this->nombre,
-            'fecha_inicio'        => $this->fechaInicio,
-            'fecha_fin'           => $this->fechaFin ?: null,
-            'peso_puntualidad'    => $this->pesoPuntualidad,
-            'peso_mora'           => $this->pesoMora,
-            'peso_riesgo'         => $this->pesoRiesgo,
-            'peso_recuperacion'   => $this->pesoRecuperacion,
-            'peso_reprogramacion' => $this->pesoReprogramacion,
-            'activo'              => (bool) $this->activo,
-        ];
+            PesoIndicador::create([
+                'nombre'              => $this->newNombre,
+                'fecha_inicio'        => $ahora,
+                'fecha_fin'           => null,
+                'peso_puntualidad'    => $this->newPesoPuntualidad,
+                'peso_mora'           => $this->newPesoMora,
+                'peso_riesgo'         => $this->newPesoRiesgo,
+                'peso_recuperacion'   => $this->newPesoRecuperacion,
+                'peso_reprogramacion' => $this->newPesoReprogramacion,
+                'activo'              => (bool) $this->newActivo,
+            ]);
+        });
 
-        if ($this->editId) {
-            PesoIndicador::findOrFail($this->editId)->update($data);
-        } else {
-            PesoIndicador::create($data);
-        }
-
-        session()->flash('success', 'Configuración guardada.');
-        $this->backToList();
+        session()->flash('success', 'Configuración creada. Pasa a ser la vigente.');
+        $this->resetNewForm();
+        $this->showAddForm = false;
     }
 
-    public function toggleActivo(int $id): void
+    public function saveEdit(): void
     {
-        $p = PesoIndicador::findOrFail($id);
-
-        if ($p->activo && PesoIndicador::vigente()?->id === $id) {
-            $today = \Carbon\Carbon::today();
-            $hayOtro = PesoIndicador::where('activo', true)
-                ->where('id', '!=', $id)
-                ->where('fecha_inicio', '<=', $today)
-                ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $today))
-                ->exists();
-            if (!$hayOtro) {
-                session()->flash('error', 'No se puede inactivar: es la única configuración vigente para hoy.');
-                return;
-            }
+        $p = PesoIndicador::findOrFail($this->editingId);
+        if ($p->fecha_fin !== null) {
+            $this->editingId = null;
+            session()->flash('error', 'Este registro ya quedó histórico y no se puede editar.');
+            return;
         }
 
-        $p->update(['activo' => !$p->activo]);
+        $this->validate([
+            'editNombre'             => 'required|string|max:100',
+            'editPesoPuntualidad'    => 'required|numeric|min:0|max:100',
+            'editPesoMora'           => 'required|numeric|min:0|max:100',
+            'editPesoRiesgo'         => 'required|numeric|min:0|max:100',
+            'editPesoRecuperacion'   => 'required|numeric|min:0|max:100',
+            'editPesoReprogramacion' => 'required|numeric|min:0|max:100',
+        ]);
+
+        $total = $this->editPesoPuntualidad + $this->editPesoMora + $this->editPesoRiesgo
+               + $this->editPesoRecuperacion + $this->editPesoReprogramacion;
+
+        if (round($total, 2) !== 100.0) {
+            $this->addError('editPesoPuntualidad', "La suma de pesos debe ser 100%. Actualmente: {$total}%");
+            return;
+        }
+
+        if ((int) $this->editActivo === 0 && PesoIndicador::vigente()?->id === $this->editingId) {
+            session()->flash('error', 'No se puede inactivar: es la configuración vigente y no hay otra que la reemplace.');
+            return;
+        }
+
+        $p->update([
+            'nombre'              => $this->editNombre,
+            'peso_puntualidad'    => $this->editPesoPuntualidad,
+            'peso_mora'           => $this->editPesoMora,
+            'peso_riesgo'         => $this->editPesoRiesgo,
+            'peso_recuperacion'   => $this->editPesoRecuperacion,
+            'peso_reprogramacion' => $this->editPesoReprogramacion,
+            'activo'              => (bool) $this->editActivo,
+        ]);
+
+        session()->flash('success', 'Configuración actualizada.');
+        $this->editingId = null;
     }
 
-    public function backToList(): void
+    private function resetNewForm(): void
     {
-        $this->resetForm();
-        $this->mode = 'list';
-    }
-
-    private function resetForm(): void
-    {
-        $this->editId             = null;
-        $this->nombre             = '';
-        $this->fechaInicio        = '';
-        $this->fechaFin           = '';
-        $this->pesoPuntualidad    = 25;
-        $this->pesoMora           = 25;
-        $this->pesoRiesgo         = 20;
-        $this->pesoRecuperacion   = 20;
-        $this->pesoReprogramacion = 10;
-        $this->activo             = 1;
+        $this->newNombre             = '';
+        $this->newPesoPuntualidad    = 25;
+        $this->newPesoMora           = 25;
+        $this->newPesoRiesgo         = 20;
+        $this->newPesoRecuperacion   = 20;
+        $this->newPesoReprogramacion = 10;
+        $this->newActivo             = 1;
     }
 
     public function render()
     {
         $vigenteId = PesoIndicador::vigente()?->id;
-        $registros = PesoIndicador::orderByDesc('fecha_inicio')->get()
-            ->when($this->sortBy, fn($c) => $this->sortDir === 'asc'
-                ? $c->sortBy($this->sortBy)
-                : $c->sortByDesc($this->sortBy),
-                fn($c) => $c->sortByDesc(function ($r) use ($vigenteId) {
-                    if ($r->id === $vigenteId) return 2;
-                    if ($r->activo)            return 1;
-                    return 0;
-                })
-            )->values();
+
+        $query = PesoIndicador::query()
+            ->when($this->colFilterNombre !== '', fn($q) => $q->where('nombre', 'like', "%{$this->colFilterNombre}%"))
+            ->when($this->colFilterEstado !== '', fn($q) => $q->where('activo', $this->colFilterEstado))
+            ->when($this->colFilterVigente === '1', fn($q) => $q->where('id', $vigenteId ?? 0))
+            ->when($this->colFilterVigente === '0', fn($q) => $q->where('id', '!=', $vigenteId ?? 0));
+
+        if ($this->sortBy) {
+            $query->orderBy($this->sortBy, $this->sortDir);
+        } else {
+            $query->orderByDesc('fecha_inicio');
+        }
+
+        $registros = $query->get();
 
         return view('livewire.admin.definiciones.peso-indicador-manager', [
             'registros' => $registros,
-            'sortBy'    => $this->sortBy,
-            'sortDir'   => $this->sortDir,
+            'vigenteId' => $vigenteId,
         ]);
     }
 }

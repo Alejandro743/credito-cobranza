@@ -157,8 +157,8 @@ class CalificacionVendedor extends Component
     public function render()
     {
         $hoy    = Carbon::today();
-        $pesos  = PesoIndicador::vigente($hoy) ?? PesoIndicador::porDefecto();
-        $rangos = RangoCalificacion::vigente($hoy) ?? RangoCalificacion::porDefecto();
+        $pesos  = PesoIndicador::vigente() ?? PesoIndicador::porDefecto();
+        $rangos = RangoCalificacion::vigente() ?? RangoCalificacion::porDefecto();
 
         $todos = $this->calcularVendedores($pesos, $rangos);
 

@@ -1,300 +1,602 @@
 <div>
 
-{{-- Flash success --}}
+@php
+$iS     = 'height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;';
+$iRow   = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;';
+$lStyle = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;';
+@endphp
+
+{{-- Toast success --}}
 @if(session('success'))
-<div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,3000)"
-     style="position:fixed; bottom:20px; right:20px; z-index:50; background:#7B6FE8; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(123,111,232,.35);">
+<div wire:key="toast-success-{{ uniqid() }}" x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,3000)"
+     style="position:fixed;bottom:20px;right:20px;z-index:50;background:#7B6FE8;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:12px;box-shadow:0 4px 16px rgba(123,111,232,.35);display:flex;align-items:center;gap:8px;">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
     {{ session('success') }}
 </div>
 @endif
 
-{{-- Flash error --}}
+{{-- Toast error --}}
 @if(session('error'))
-<div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,4000)"
-     style="position:fixed; bottom:20px; right:20px; z-index:50; background:#EF4444; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(239,68,68,.35);">
+<div wire:key="toast-error-{{ uniqid() }}" x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,4000)"
+     style="position:fixed;bottom:20px;right:20px;z-index:50;background:#EF4444;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:12px;box-shadow:0 4px 16px rgba(239,68,68,.35);">
     {{ session('error') }}
 </div>
 @endif
 
-{{-- ══════════════════════════════════════════════════
-     LIST
-══════════════════════════════════════════════════ --}}
-@if($mode === 'list')
-
 {{-- Toolbar --}}
-<div style="display:flex; align-items:center; justify-content:flex-end; margin-bottom:16px;">
-    <button wire:click="create"
-            style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;"
+@if(!$showAddForm)
+<div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;justify-content:flex-start;">
+    <button wire:click="showAdd"
+            style="height:36px;padding:0 18px;background:#7B6FE8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;"
             @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         Nueva Configuración
     </button>
 </div>
+@endif
 
-{{-- Card tabla --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
+{{-- Panel Alta --}}
+@if($showAddForm)
+@php $totalNew = $newPesoPuntualidad + $newPesoMora + $newPesoRiesgo + $newPesoRecuperacion + $newPesoReprogramacion; @endphp
 
-    {{-- Barra --}}
-    <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
-        <span style="font-size:13px; font-weight:700; color:#111827;">Configuraciones de Pesos</span>
-        <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $registros->count() }}</span>
-    </div>
-
-    @if($registros->isEmpty())
-    <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">Sin configuraciones. Creá la primera.</p>
-    @else
-
-    {{-- DESKTOP --}}
-    <div class="hidden sm:block" style="overflow:auto; flex:1;">
-        <table style="width:100%; border-collapse:collapse; min-width:860px;">
-            @php
-            $sortColsP = [
-                'Nombre'         => 'nombre',
-                'Vigencia desde' => 'fecha_inicio',
-                'Vigencia hasta' => 'fecha_fin',
-                'Vigente'        => null,
-                'Punt%'          => 'peso_puntualidad',
-                'Mora%'          => 'peso_mora',
-                'Riesgo%'        => 'peso_riesgo',
-                'Recup%'         => 'peso_recuperacion',
-                'Reprog%'        => 'peso_reprogramacion',
-                'Estado'         => 'activo',
-            ];
-            @endphp
-            <thead style="position:sticky; top:0; z-index:10;">
-                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
-                    @foreach($sortColsP as $label => $key)
-                    @php $isActive = $key && $sortBy === $key; @endphp
-                    <th @if($key) wire:click="toggleSort('{{ $key }}')" @endif
-                        style="padding:10px 14px; text-align:{{ $label === 'Nombre' ? 'left' : 'center' }}; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; {{ $key ? 'cursor:pointer; user-select:none;' : '' }} {{ $isActive ? 'background:#EDE9FE;' : '' }}"
-                        @if($key) @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'" @endif>
-                        <span style="display:inline-flex; align-items:center; gap:5px;">{{ $label }}
-                            @if($key)
-                                @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                                @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                                @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
-                                @endif
-                            @endif
-                        </span>
-                    </th>
-                    @endforeach
-                    <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-            @foreach($registros as $r)
-            @php $esVigente = \App\Models\PesoIndicador::vigente()?->id === $r->id; @endphp
-            <tr wire:key="pi-{{ $r->id }}" style="border-bottom:1px solid #F3F4F6; {{ $esVigente ? 'background:#FAFAFE;' : '' }}"
-                @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background='{{ $esVigente ? '#FAFAFE' : '' }}'">
-                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $loop->iteration }}</td>
-                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($r->nombre)) }}</td>
-                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $r->fecha_inicio->format('d/m/Y') }}</td>
-                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $r->fecha_fin?->format('d/m/Y') ?? '—' }}</td>
-                <td style="padding:10px 14px; text-align:center;">
-                    @if($esVigente)
-                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; background:#EDE9FE; color:#7B6FE8;">Sí</span>
-                    @else
-                    <span style="font-size:13px; color:#111827;">—</span>
-                    @endif
-                </td>
-                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827;">{{ $r->peso_puntualidad }}%</td>
-                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827;">{{ $r->peso_mora }}%</td>
-                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827;">{{ $r->peso_riesgo }}%</td>
-                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827;">{{ $r->peso_recuperacion }}%</td>
-                <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827;">{{ $r->peso_reprogramacion }}%</td>
-                <td style="padding:10px 14px; text-align:center;">
-                    <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700;
-                                 background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
-                                 color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
-                        {{ $r->activo ? 'Activo' : 'Inactivo' }}
-                    </span>
-                </td>
-                <td style="padding:10px 14px; text-align:center;">
-                    <button wire:click="edit({{ $r->id }})" title="Editar"
-                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;"
-                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    </button>
-                </td>
-            </tr>
-            @endforeach
-            </tbody>
-        </table>
-    </div>
-
-    {{-- MOBILE --}}
-    <div class="block sm:hidden">
-        <div style="display:flex; flex-direction:column; gap:12px; padding:14px;">
-            @foreach($registros as $r)
-            @php $esVigente = \App\Models\PesoIndicador::vigente()?->id === $r->id; @endphp
-            <div wire:key="mpi-{{ $r->id }}"
-                 style="background:#fff; border-radius:14px; border:1px solid {{ $esVigente ? '#C4B5FD' : '#E5E7EB' }}; {{ $esVigente ? 'box-shadow:0 0 0 3px #EDE9FE;' : 'box-shadow:0 1px 3px rgba(0,0,0,.06);' }} overflow:hidden;">
-
-                {{-- Header --}}
-                <div style="padding:12px 14px; {{ $esVigente ? 'background:#F8F7FF; border-bottom:1px solid #EDE9FE;' : 'border-bottom:1px solid #F3F4F6;' }}">
-                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px;">
-                        <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                            <span style="font-size:12px; font-weight:700; color:#7B6FE8; text-transform:uppercase; line-height:1;">{{ mb_substr($r->nombre, 0, 1) }}</span>
-                        </div>
-                        <span style="font-size:14px; font-weight:800; color:#111827; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $r->nombre }}</span>
-                        @if($esVigente)
-                        <span style="font-size:9px; font-weight:800; padding:2px 7px; border-radius:99px; background:#7B6FE8; color:#fff; white-space:nowrap; flex-shrink:0; letter-spacing:.3px;">VIGENTE</span>
-                        @endif
-                        <span style="flex-shrink:0; padding:2px 9px; border-radius:99px; font-size:11px; font-weight:700;
-                                     background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
-                            {{ $r->activo ? 'Activo' : 'Inactivo' }}
-                        </span>
-                    </div>
-                    <span style="font-size:11px; color:#9CA3AF; display:block; padding-left:38px;">
-                        {{ $r->fecha_inicio->format('d/m/Y') }} → {{ $r->fecha_fin?->format('d/m/Y') ?? 'sin límite' }}
-                    </span>
-                </div>
-
-                {{-- Pesos --}}
-                <div style="padding:12px 14px; display:flex; flex-direction:column; gap:8px;">
-                    @foreach([
-                        ['Puntualidad',    $r->peso_puntualidad],
-                        ['Mora generada',  $r->peso_mora],
-                        ['Cuota en riesgo',$r->peso_riesgo],
-                        ['Recuperación',   $r->peso_recuperacion],
-                        ['Reprogramación', $r->peso_reprogramacion],
-                    ] as [$lbl, $val])
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <span style="font-size:12px; color:#6B7280; width:120px; flex-shrink:0;">{{ $lbl }}</span>
-                        <div style="flex:1; height:6px; background:#F3F4F6; border-radius:99px; overflow:hidden;">
-                            <div style="height:100%; width:{{ $val }}%; background:#7B6FE8; border-radius:99px;"></div>
-                        </div>
-                        <span style="font-size:13px; font-weight:800; color:#7B6FE8; width:36px; text-align:right; flex-shrink:0;">{{ $val }}%</span>
-                    </div>
-                    @endforeach
-                </div>
-
-                {{-- Acción --}}
-                <div style="padding:10px 14px; border-top:1px solid #F3F4F6;">
-                    <button wire:click="edit({{ $r->id }})"
-                            style="width:100%; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px;">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                        Editar
-                    </button>
-                </div>
-
-            </div>
-            @endforeach
-        </div>
-    </div>
-
-    @endif
-</div>
-
-{{-- ══════════════════════════════════════════════════
-     FORM
-══════════════════════════════════════════════════ --}}
-@elseif($mode === 'form')
-@php $iS = 'width:100%; height:38px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;'; @endphp
-
-{{-- Header --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #EDE9FE; box-shadow:0 2px 8px rgba(0,0,0,.06); margin-bottom:20px; overflow:hidden;">
-    <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:11px 18px; display:flex; align-items:center; gap:12px;">
-        <button wire:click="backToList"
-                style="width:34px; height:34px; border:1px solid #EDE9FE; background:#fff; color:#7B6FE8; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
-                @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#fff'">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 18l-6-6 6-6"/></svg>
+{{-- Desktop --}}
+<div class="hidden sm:block" style="background:#fff;border-radius:16px;border:1px solid #EDE9FE;box-shadow:0 2px 12px rgba(123,111,232,.12);margin-bottom:20px;overflow:hidden;">
+    <div style="background:#F8F7FF;border-bottom:1px solid #EDE9FE;padding:12px 20px;display:flex;align-items:center;justify-content:space-between;">
+        <span style="font-size:14px;font-weight:800;color:#7B6FE8;display:flex;align-items:center;gap:7px;">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="color:#7B6FE8;"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+            Nueva Configuración de Pesos
+        </span>
+        <button wire:click="cancelAdd"
+                style="width:30px;height:30px;border:1px solid #EDE9FE;background:#fff;color:#9CA3AF;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;"
+                @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
-        <div>
-            <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0;">Definiciones</p>
-            <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0;">{{ $editId ? 'Editar' : 'Nueva' }} Configuración de Pesos</p>
+    </div>
+    <div style="padding:16px 20px;display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+        <div style="min-width:200px;">
+            <label style="{{ $lStyle }}">Nombre *</label>
+            <input wire:model="newNombre" type="text" placeholder="Ej: Pesos 2026" style="width:100%;{{ $iS }}">
+            @error('newNombre') <p style="font-size:11px;color:#EF4444;margin-top:4px;">{{ $message }}</p> @enderror
         </div>
+        <div style="min-width:130px;">
+            <label style="{{ $lStyle }}">Estado</label>
+            <select wire:model="newActivo" style="width:100%;{{ $iS }} cursor:pointer;">
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
+        </div>
+        <div style="min-width:220px; padding-top:20px;">
+            <p style="font-size:11px; color:#9CA3AF; margin:0; display:flex; align-items:center; gap:5px;">
+                <svg width="12" height="12" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                Empieza a regir ahora mismo y cierra automáticamente la configuración anterior.
+            </p>
+        </div>
+    </div>
+
+    {{-- Pesos --}}
+    <div style="padding:0 20px 16px;">
+        <div style="border:1px solid #EDE9FE;border-radius:10px;padding:14px 16px;background:#FAFAFE;">
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:12px;">
+                <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Pesos de Indicadores</span>
+                <div style="flex:1; height:1px; background:#EDE9FE;"></div>
+                <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; white-space:nowrap;
+                             background:{{ round($totalNew,2) == 100 ? '#D1FAE5' : '#FEF2F2' }};
+                             color:{{ round($totalNew,2) == 100 ? '#059669' : '#EF4444' }};">
+                    Suma: {{ $totalNew }}%
+                </span>
+            </div>
+            @error('newPesoPuntualidad')<p style="font-size:11px; color:#EF4444; margin:-6px 0 10px;">{{ $message }}</p>@enderror
+            <div style="display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;">
+                @foreach([
+                    ['Puntualidad',  'newPesoPuntualidad',    25],
+                    ['Mora',         'newPesoMora',           25],
+                    ['C. Riesgo',    'newPesoRiesgo',         20],
+                    ['Recuperación', 'newPesoRecuperacion',   20],
+                    ['Reprogramac.', 'newPesoReprogramacion', 10],
+                ] as [$lbl, $model, $def])
+                <div style="min-width:120px;">
+                    <label style="{{ $lStyle }} margin-bottom:3px;">{{ $lbl }}</label>
+                    <p style="font-size:10px; color:#9CA3AF; margin:0 0 4px;">def. {{ $def }}%</p>
+                    <div style="position:relative;">
+                        <input wire:model.live="{{ $model }}" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iS }} padding-right:28px;">
+                        <span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:12px; color:#9CA3AF; font-weight:700;">%</span>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+    <div style="padding:0 20px 20px;display:flex;gap:8px;">
+        <button wire:click="saveNew" wire:loading.attr="disabled"
+                style="height:38px;padding:0 24px;background:#7B6FE8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;"
+                @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+            <span wire:loading.remove wire:target="saveNew">Guardar</span>
+            <span wire:loading wire:target="saveNew">Guardando...</span>
+        </button>
+        <button wire:click="cancelAdd"
+                style="height:38px;padding:0 18px;background:#F3F4F6;color:#6B7280;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+            Cancelar
+        </button>
     </div>
 </div>
 
-{{-- Form card --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden;">
-    <div style="padding:14px 16px; display:flex; flex-direction:column; gap:10px;">
+{{-- Móvil --}}
+<div class="sm:hidden" style="background:#FAFAFE;border-radius:14px;border:1px solid #EDE9FE;margin-bottom:16px;padding:14px 16px;box-shadow:0 1px 4px rgba(123,111,232,.1);">
+    <div style="margin-bottom:10px;">
+        <label style="{{ $lStyle }}">Nombre *</label>
+        <input wire:model="newNombre" type="text" placeholder="Ej: Pesos 2026" style="width:100%;{{ $iS }}">
+        @error('newNombre') <p style="font-size:10px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+    </div>
+    <div style="margin-bottom:10px;">
+        <label style="{{ $lStyle }}">Estado</label>
+        <select wire:model="newActivo" style="width:100%;{{ $iS }} cursor:pointer;">
+            <option value="1">Activo</option>
+            <option value="0">Inactivo</option>
+        </select>
+    </div>
+    <p style="font-size:10px; color:#9CA3AF; margin:0 0 12px; display:flex; align-items:center; gap:5px;">
+        <svg width="11" height="11" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        Empieza a regir ahora y cierra la configuración anterior automáticamente.
+    </p>
 
-        {{-- Nombre + Estado --}}
-        <div class="grid grid-cols-2 gap-3">
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Nombre *</label>
-                <input wire:model="nombre" type="text" placeholder="Ej: Pesos 2026" style="{{ $iS }}">
-                @error('nombre')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Estado</label>
-                <select wire:model.live="activo" style="{{ $iS }} cursor:pointer;">
-                    <option value="1">Activo</option>
-                    <option value="0">Inactivo</option>
-                </select>
-                @error('activo')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
-            </div>
-        </div>
-
-        {{-- Vigencia --}}
-        <div class="grid grid-cols-2 gap-3">
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Desde *</label>
-                <input wire:model.blur="fechaInicio" type="date" style="{{ $iS }}">
-                @error('fechaInicio')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
-            </div>
-            <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:5px;">Hasta <span style="font-weight:400; color:#9CA3AF; text-transform:none; font-size:10px;">(vacío=∞)</span></label>
-                <input wire:model.blur="fechaFin" type="date" style="{{ $iS }}">
-                @error('fechaFin')<p style="font-size:11px; color:#EF4444; margin-top:4px;">{{ $message }}</p>@enderror
-            </div>
-        </div>
-
-        {{-- Separador pesos --}}
-        @php $total = $pesoPuntualidad + $pesoMora + $pesoRiesgo + $pesoRecuperacion + $pesoReprogramacion; @endphp
-        <div style="display:flex; align-items:center; gap:10px;">
-            <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Pesos de Indicadores</span>
+    <div style="border:1px solid #EDE9FE;border-radius:10px;padding:12px;background:#fff;margin-bottom:12px;">
+        <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+            <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Pesos</span>
             <div style="flex:1; height:1px; background:#EDE9FE;"></div>
             <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; white-space:nowrap;
-                         background:{{ round($total,2) == 100 ? '#D1FAE5' : '#FEF2F2' }};
-                         color:{{ round($total,2) == 100 ? '#059669' : '#EF4444' }};">
-                Suma: {{ $total }}%
+                         background:{{ round($totalNew,2) == 100 ? '#D1FAE5' : '#FEF2F2' }};
+                         color:{{ round($totalNew,2) == 100 ? '#059669' : '#EF4444' }};">
+                {{ $totalNew }}%
             </span>
         </div>
-        @error('pesoPuntualidad')<p style="font-size:11px; color:#EF4444; margin-top:-8px;">{{ $message }}</p>@enderror
-
-        {{-- Grid pesos --}}
-        <div class="grid grid-cols-2 gap-3">
+        @error('newPesoPuntualidad')<p style="font-size:10px; color:#EF4444; margin:-6px 0 10px;">{{ $message }}</p>@enderror
+        <div style="display:flex;flex-direction:column;gap:10px;">
             @foreach([
-                ['Puntualidad',  'pesoPuntualidad',    25],
-                ['Mora',         'pesoMora',           25],
-                ['C. Riesgo',    'pesoRiesgo',         20],
-                ['Recuperación', 'pesoRecuperacion',   20],
-                ['Reprogramac.', 'pesoReprogramacion', 10],
+                ['Puntualidad',  'newPesoPuntualidad',    25],
+                ['Mora',         'newPesoMora',           25],
+                ['C. Riesgo',    'newPesoRiesgo',         20],
+                ['Recuperación', 'newPesoRecuperacion',   20],
+                ['Reprogramac.', 'newPesoReprogramacion', 10],
             ] as [$lbl, $model, $def])
             <div>
-                <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:3px;">{{ $lbl }}</label>
-                <p style="font-size:10px; color:#9CA3AF; margin:0 0 4px;">def. {{ $def }}%</p>
+                <label style="{{ $lStyle }} margin-bottom:3px;">{{ $lbl }} <span style="font-weight:400; color:#9CA3AF; text-transform:none;">(def. {{ $def }}%)</span></label>
                 <div style="position:relative;">
-                    <input wire:model.live="{{ $model }}" type="number" min="0" max="100" step="0.5"
-                           style="{{ $iS }} padding-right:28px;">
+                    <input wire:model.live="{{ $model }}" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iS }} padding-right:28px;">
                     <span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:12px; color:#9CA3AF; font-weight:700;">%</span>
                 </div>
             </div>
             @endforeach
         </div>
+    </div>
 
-        {{-- Botones --}}
-        <div class="grid grid-cols-2 gap-2" style="padding-top:2px; border-top:1px solid #F3F4F6;">
-            <button wire:click="save" wire:loading.attr="disabled"
-                    style="flex:1; height:42px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
-                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-                <span wire:loading.remove wire:target="save">Guardar configuración</span>
-                <span wire:loading wire:target="save">Guardando...</span>
-            </button>
-            <button wire:click="backToList"
-                    style="flex:1; height:42px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
-                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
-                Cancelar
-            </button>
-        </div>
-
+    <div style="display:flex;gap:8px;">
+        <button wire:click="saveNew" wire:loading.attr="disabled"
+                style="flex:1;height:36px;background:#7B6FE8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;">
+            <span wire:loading.remove wire:target="saveNew">Guardar</span>
+            <span wire:loading wire:target="saveNew">Guardando...</span>
+        </button>
+        <button wire:click="cancelAdd"
+                style="flex:1;height:36px;background:#F3F4F6;color:#6B7280;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;">
+            Cancelar
+        </button>
     </div>
 </div>
 @endif
+
+{{-- Tabla escritorio --}}
+@php
+$fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:left;';
+$fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; text-indent:16px; cursor:pointer;';
+$fW  = 'position:relative; margin-top:4px;' . ($editingId ? ' opacity:0.45;' : '');
+$fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
+$fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
+$thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top; position:relative; overflow:hidden;';
+@endphp
+<div class="hidden sm:block" style="background:#fff;border-radius:16px;border:1px solid #E5E7EB;box-shadow:0 1px 4px rgba(0,0,0,.06);overflow:hidden;display:flex;flex-direction:column;max-height:calc(100vh - 180px);">
+
+    <div style="padding:10px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #F3F4F6;flex-shrink:0;">
+        <span style="font-size:13px;font-weight:700;color:#111827;">Configuraciones de Pesos</span>
+        <span style="background:#EDE9FE;color:#7B6FE8;font-size:11px;font-weight:600;padding:2px 8px;border-radius:99px;">{{ $registros->count() }}</span>
+        @if($selectedPesoId)
+        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            @if($editingId === $selectedPesoId)
+                <button wire:click="saveEdit" wire:loading.attr="disabled" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    Guardar
+                </button>
+                <button wire:click="cancelEdit" style="{{ $btnH }} background:#E5E7EB; color:#374151;">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Cancelar
+                </button>
+            @else
+                <button wire:click="startEdit({{ $selectedPesoId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                    Editar
+                </button>
+            @endif
+        </div>
+        @endif
+    </div>
+
+    @if($registros->isEmpty())
+    <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">Sin configuraciones. Creá la primera.</p>
+    @else
+    <div style="overflow:auto;flex:1;">
+        <table style="width:100%;border-collapse:collapse;min-width:1200px;">
+            <thead style="position:sticky;top:0;z-index:10;">
+                <tr style="background:#F9F8FF;border-bottom:2px solid #EDE9FE;">
+                    <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF;">
+                        #
+                        <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
+                            <input type="checkbox"
+                                   :checked="$wire.selectedPesoId !== null"
+                                   :disabled="$wire.selectedPesoId === null || $wire.editingId !== null"
+                                   @click.prevent="$wire.selectedPesoId !== null && $wire.editingId === null && $wire.set('selectedPesoId', null)"
+                                   :style="($wire.selectedPesoId !== null && $wire.editingId === null) ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
+                        </div>
+                    </th>
+
+                    {{-- Nombre --}}
+                    @php $isA = $sortBy === 'nombre'; @endphp
+                    <th wire:click="toggleSort('nombre')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:170px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; gap:4px;">Nombre
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" style="{{ $fI }}"></div>
+                    </th>
+
+                    {{-- Vigencia desde --}}
+                    @php $isA = $sortBy === 'fecha_inicio'; @endphp
+                    <th wire:click="toggleSort('fecha_inicio')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Desde
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                    </th>
+
+                    {{-- Vigencia hasta --}}
+                    @php $isA = $sortBy === 'fecha_fin'; @endphp
+                    <th wire:click="toggleSort('fecha_fin')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Hasta
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                    </th>
+
+                    {{-- Vigente --}}
+                    <th style="{{ $thC }} text-align:center; min-width:100px;">
+                        Vigente
+                        <div style="{{ $fW }}" @click.stop>
+                            {!! $fSvg !!}
+                            <select wire:model.live="colFilterVigente" @click.stop style="{{ $fS }}">
+                                <option value="">Todos</option>
+                                <option value="1">Sí</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                    </th>
+
+                    {{-- Punt% --}}
+                    @php $isA = $sortBy === 'peso_puntualidad'; @endphp
+                    <th wire:click="toggleSort('peso_puntualidad')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:90px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Punt%
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                    </th>
+
+                    {{-- Mora% --}}
+                    @php $isA = $sortBy === 'peso_mora'; @endphp
+                    <th wire:click="toggleSort('peso_mora')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:90px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Mora%
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                    </th>
+
+                    {{-- Riesgo% --}}
+                    @php $isA = $sortBy === 'peso_riesgo'; @endphp
+                    <th wire:click="toggleSort('peso_riesgo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:90px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Riesgo%
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                    </th>
+
+                    {{-- Recup% --}}
+                    @php $isA = $sortBy === 'peso_recuperacion'; @endphp
+                    <th wire:click="toggleSort('peso_recuperacion')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:90px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Recup%
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                    </th>
+
+                    {{-- Reprog% --}}
+                    @php $isA = $sortBy === 'peso_reprogramacion'; @endphp
+                    <th wire:click="toggleSort('peso_reprogramacion')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:90px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Reprog%
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                    </th>
+
+                    {{-- Estado --}}
+                    @php $isA = $sortBy === 'activo'; @endphp
+                    <th wire:click="toggleSort('activo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:130px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>
+                            {!! $fSvg !!}
+                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                                <option value="">Todos</option>
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($registros as $r)
+                @if($editingId === $r->id)
+                {{-- Fila edición inline --}}
+                <tr wire:key="edit-{{ $r->id }}" style="background:#FAFAFE;border-bottom:1px solid #EDE9FE;">
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#FAFAFE;">
+                        <span style="font-size:13px; color:#111827;">{{ $loop->iteration }}</span>
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <input wire:model="editNombre" type="text" style="width:100%;{{ $iRow }}">
+                        @error('editNombre') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                    </td>
+                    <td style="padding:10px 10px;text-align:center;">
+                        <span style="font-size:12px;color:#6B7280;white-space:nowrap;">{{ $r->fecha_inicio->format('d/m/Y H:i') }}</span>
+                    </td>
+                    <td style="padding:10px 10px;text-align:center;">
+                        <span style="font-size:12px;color:#9CA3AF;">—</span>
+                    </td>
+                    <td style="padding:10px 10px;text-align:center;">
+                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;background:#EDE9FE;color:#7B6FE8;">Sí</span>
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <input wire:model="editPesoPuntualidad" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <input wire:model="editPesoMora" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <input wire:model="editPesoRiesgo" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <input wire:model="editPesoRecuperacion" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <input wire:model="editPesoReprogramacion" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <select wire:model="editActivo" style="width:100%;{{ $iRow }} cursor:pointer;">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </td>
+                </tr>
+                @error('editPesoPuntualidad')
+                <tr wire:key="edit-err-{{ $r->id }}" style="background:#FAFAFE;">
+                    <td colspan="11" style="padding:0 10px 10px; position:sticky; left:0;">
+                        <p style="font-size:11px;color:#EF4444;margin:0;">{{ $message }}</p>
+                    </td>
+                </tr>
+                @enderror
+                @else
+                {{-- Fila normal --}}
+                @php $selR = $selectedPesoId === $r->id; $esVigente = $vigenteId === $r->id; $esAbierta = $r->fecha_fin === null; @endphp
+                <tr wire:key="pi-{{ $r->id }}"
+                    style="border-bottom:1px solid #F3F4F6;transition:background .1s; background:{{ $selR ? '#F5F3FF' : '' }}; {{ $selR ? 'border-left:3px solid #7B6FE8;' : '' }} {{ !$esAbierta ? 'opacity:0.75;' : '' }}"
+                    @mouseenter="$el.style.background='{{ $selR ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selR ? '#F5F3FF' : '' }}'">
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selR ? '#F5F3FF' : '#fff' }};">
+                        <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                            @if($esAbierta)
+                            <input type="checkbox"
+                                   :checked="$wire.selectedPesoId === {{ $r->id }}"
+                                   @click="$wire.selectedPesoId === {{ $r->id }} ? $wire.set('selectedPesoId', null) : $wire.selectPeso({{ $r->id }})"
+                                   :disabled="{{ $editingId && $editingId !== $r->id ? 'true' : 'false' }}"
+                                   style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $r->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
+                            @else
+                            <span title="Histórico: no editable" style="width:13px; height:13px; display:inline-flex; align-items:center; justify-content:center;">
+                                <svg width="11" height="11" fill="none" stroke="#D1D5DB" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                            </span>
+                            @endif
+                            <span style="font-size:13px; color:#111827;">{{ $loop->iteration }}</span>
+                        </div>
+                    </td>
+                    <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ ucwords(strtolower($r->nombre)) }}</span></td>
+                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:13px;color:#111827;white-space:nowrap;">{{ $r->fecha_inicio->format('d/m/Y H:i') }}</span></td>
+                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:13px;color:#111827;white-space:nowrap;">{{ $r->fecha_fin?->format('d/m/Y H:i') ?? '—' }}</span></td>
+                    <td style="padding:10px 14px;text-align:center;">
+                        @if($esVigente)
+                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;background:#EDE9FE;color:#7B6FE8;">Sí</span>
+                        @else
+                        <span style="font-size:13px;color:#D1D5DB;">—</span>
+                        @endif
+                    </td>
+                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:13px;color:#111827;">{{ $r->peso_puntualidad }}%</span></td>
+                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:13px;color:#111827;">{{ $r->peso_mora }}%</span></td>
+                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:13px;color:#111827;">{{ $r->peso_riesgo }}%</span></td>
+                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:13px;color:#111827;">{{ $r->peso_recuperacion }}%</span></td>
+                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:13px;color:#111827;">{{ $r->peso_reprogramacion }}%</span></td>
+                    <td style="padding:10px 14px;text-align:center;">
+                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;
+                                     background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
+                            {{ $r->activo ? 'Activo' : 'Inactivo' }}
+                        </span>
+                    </td>
+                </tr>
+                @endif
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+    @endif
+</div>
+
+{{-- Tarjetas móvil --}}
+<div class="sm:hidden flex flex-col" style="gap:10px;">
+    @forelse($registros as $r)
+    @if($editingId === $r->id)
+    <div wire:key="card-edit-{{ $r->id }}"
+         style="background:#FAFAFE;border-radius:14px;border:1px solid #EDE9FE;padding:14px 16px;box-shadow:0 1px 4px rgba(123,111,232,.1);">
+        <div style="margin-bottom:10px;">
+            <label style="{{ $lStyle }}">Nombre *</label>
+            <input wire:model="editNombre" type="text" style="width:100%;{{ $iRow }}">
+            @error('editNombre') <p style="font-size:10px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+        </div>
+        <p style="font-size:10px; color:#9CA3AF; margin:0 0 10px;">Vigente desde {{ $r->fecha_inicio->format('d/m/Y H:i') }}</p>
+        <div style="margin-bottom:12px;">
+            <label style="{{ $lStyle }}">Estado</label>
+            <select wire:model="editActivo" style="width:100%;{{ $iRow }} cursor:pointer;">
+                <option value="1">Activo</option>
+                <option value="0">Inactivo</option>
+            </select>
+        </div>
+
+        <div style="border:1px solid #EDE9FE;border-radius:10px;padding:12px;background:#fff;margin-bottom:12px;">
+            @php $totalEdit = $editPesoPuntualidad + $editPesoMora + $editPesoRiesgo + $editPesoRecuperacion + $editPesoReprogramacion; @endphp
+            <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Pesos</span>
+                <div style="flex:1; height:1px; background:#EDE9FE;"></div>
+                <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; white-space:nowrap;
+                             background:{{ round($totalEdit,2) == 100 ? '#D1FAE5' : '#FEF2F2' }};
+                             color:{{ round($totalEdit,2) == 100 ? '#059669' : '#EF4444' }};">
+                    {{ $totalEdit }}%
+                </span>
+            </div>
+            @error('editPesoPuntualidad')<p style="font-size:10px; color:#EF4444; margin:-6px 0 10px;">{{ $message }}</p>@enderror
+            <div style="display:flex;flex-direction:column;gap:10px;">
+                @foreach([
+                    ['Puntualidad',  'editPesoPuntualidad',    25],
+                    ['Mora',         'editPesoMora',           25],
+                    ['C. Riesgo',    'editPesoRiesgo',         20],
+                    ['Recuperación', 'editPesoRecuperacion',   20],
+                    ['Reprogramac.', 'editPesoReprogramacion', 10],
+                ] as [$lbl, $model, $def])
+                <div>
+                    <label style="{{ $lStyle }} margin-bottom:3px;">{{ $lbl }} <span style="font-weight:400; color:#9CA3AF; text-transform:none;">(def. {{ $def }}%)</span></label>
+                    <div style="position:relative;">
+                        <input wire:model.live="{{ $model }}" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} padding-right:28px;">
+                        <span style="position:absolute; right:10px; top:50%; transform:translateY(-50%); font-size:12px; color:#9CA3AF; font-weight:700;">%</span>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+
+        <div style="display:flex;gap:8px;">
+            <button wire:click="saveEdit" wire:loading.attr="disabled"
+                    style="flex:1;height:36px;background:#7B6FE8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;">
+                <span wire:loading.remove wire:target="saveEdit">Guardar</span>
+                <span wire:loading wire:target="saveEdit">Guardando...</span>
+            </button>
+            <button wire:click="cancelEdit"
+                    style="flex:1;height:36px;background:#F3F4F6;color:#6B7280;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;">
+                Cerrar
+            </button>
+        </div>
+    </div>
+    @else
+    @php $esVigente = $vigenteId === $r->id; $esAbierta = $r->fecha_fin === null; @endphp
+    <div wire:key="card-{{ $r->id }}"
+         style="background:#fff;border-radius:14px;border:1px solid {{ $esVigente ? '#C4B5FD' : '#E5E7EB' }}; {{ $esVigente ? 'box-shadow:0 0 0 3px #EDE9FE;' : 'box-shadow:0 1px 3px rgba(0,0,0,.06);' }} overflow:hidden; {{ !$esAbierta ? 'opacity:0.8;' : '' }}">
+
+        <div style="background:#F8F7FF;padding:10px 14px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #EDE9FE;">
+            <div style="width:30px; height:30px; border-radius:8px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:12px; font-weight:700; color:#7B6FE8;">{{ mb_substr($r->nombre, 0, 1) }}</span>
+            </div>
+            <div style="flex:1;min-width:0;">
+                <span style="font-size:13px;font-weight:700;color:#111827;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ $r->nombre }}</span>
+                <span style="font-size:11px;color:#9CA3AF;">{{ $r->fecha_inicio->format('d/m/Y H:i') }} → {{ $r->fecha_fin?->format('d/m/Y H:i') ?? 'sin límite' }}</span>
+            </div>
+            @if($esVigente)
+            <span style="font-size:9px; font-weight:800; padding:2px 7px; border-radius:99px; background:#7B6FE8; color:#fff; white-space:nowrap; flex-shrink:0; letter-spacing:.3px;">VIGENTE</span>
+            @endif
+            @if($r->activo)
+            <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#D1FAE5;color:#059669;flex-shrink:0;">Activo</span>
+            @else
+            <span style="font-size:11px;font-weight:600;padding:3px 10px;border-radius:99px;background:#F3F4F6;color:#9CA3AF;flex-shrink:0;">Inactivo</span>
+            @endif
+        </div>
+
+        <div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;">
+            @foreach([
+                ['Puntualidad',    $r->peso_puntualidad],
+                ['Mora generada',  $r->peso_mora],
+                ['Cuota en riesgo',$r->peso_riesgo],
+                ['Recuperación',   $r->peso_recuperacion],
+                ['Reprogramación', $r->peso_reprogramacion],
+            ] as [$lbl, $val])
+            <div style="display:flex; align-items:center; gap:10px;">
+                <span style="font-size:12px; color:#6B7280; width:100px; flex-shrink:0;">{{ $lbl }}</span>
+                <div style="flex:1; height:6px; background:#F3F4F6; border-radius:99px; overflow:hidden;">
+                    <div style="height:100%; width:{{ $val }}%; background:#7B6FE8; border-radius:99px;"></div>
+                </div>
+                <span style="font-size:13px; font-weight:800; color:#7B6FE8; width:36px; text-align:right; flex-shrink:0;">{{ $val }}%</span>
+            </div>
+            @endforeach
+        </div>
+
+        @if($esAbierta)
+        <div style="padding:10px 14px;border-top:1px solid #F3F4F6;">
+            <button wire:click="startEdit({{ $r->id }})"
+                    style="width:100%;height:34px;background:#F8F7FF;color:#7B6FE8;border:1px solid #EDE9FE;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;"
+                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                Editar
+            </button>
+        </div>
+        @else
+        <div style="padding:8px 14px;border-top:1px solid #F3F4F6;">
+            <span style="font-size:11px;color:#9CA3AF;display:flex;align-items:center;justify-content:center;gap:5px;">
+                <svg width="11" height="11" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                Histórico
+            </span>
+        </div>
+        @endif
+    </div>
+    @endif
+    @empty
+    <p style="text-align:center;font-size:13px;color:#9CA3AF;padding:48px 0;">Sin configuraciones. Creá la primera.</p>
+    @endforelse
+</div>
 
 </div>

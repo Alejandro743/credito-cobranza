@@ -20,8 +20,8 @@ class MiCalificacion extends Component
     public function render()
     {
         $hoy    = Carbon::today();
-        $pesos  = PesoIndicador::vigente($hoy)  ?? PesoIndicador::porDefecto();
-        $rangos = RangoCalificacion::vigente($hoy) ?? RangoCalificacion::porDefecto();
+        $pesos  = PesoIndicador::vigente()  ?? PesoIndicador::porDefecto();
+        $rangos = RangoCalificacion::vigente() ?? RangoCalificacion::porDefecto();
 
         $cliente = auth()->user()->cliente;
 

@@ -3,13 +3,35 @@
 namespace App\Livewire\Admin\Definiciones;
 
 use App\Models\RangoCalificacion;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class RangoCalificacionManager extends Component
 {
-    public string $mode    = 'list';
     public string $sortBy  = '';
     public string $sortDir = 'asc';
+
+    public ?int $selectedRangoId = null;
+    public ?int $editingId       = null;
+    public bool $showAddForm     = false;
+
+    public string $colFilterNombre  = '';
+    public string $colFilterEstado  = '';
+    public string $colFilterVigente = '';
+
+    public string $newNombre = '';
+    public float  $newMinA   = 85;
+    public float  $newMinB   = 70;
+    public float  $newMinC   = 50;
+    public float  $newMinD   = 30;
+    public int    $newActivo = 1;
+
+    public string $editNombre = '';
+    public float  $editMinA   = 85;
+    public float  $editMinB   = 70;
+    public float  $editMinC   = 50;
+    public float  $editMinD   = 30;
+    public int    $editActivo = 1;
 
     public function toggleSort(string $col): void
     {
@@ -21,149 +43,162 @@ class RangoCalificacionManager extends Component
         }
     }
 
-    public ?int   $editId      = null;
-    public string $nombre      = '';
-    public string $fechaInicio = '';
-    public string $fechaFin    = '';
-    public float  $minA        = 85;
-    public float  $minB        = 70;
-    public float  $minC        = 50;
-    public float  $minD        = 30;
-    public int    $activo      = 1;
-
-    public function create(): void
+    public function showAdd(): void
     {
-        $this->resetForm();
+        $this->resetNewForm();
         $this->resetErrorBag();
-        $this->fechaInicio = now()->toDateString();
-        $this->mode = 'form';
+        $this->showAddForm = true;
     }
 
-    public function edit(int $id): void
+    public function cancelAdd(): void
+    {
+        $this->resetNewForm();
+        $this->resetErrorBag();
+        $this->showAddForm = false;
+    }
+
+    public function selectRango(int $id): void
+    {
+        $this->selectedRangoId = $this->selectedRangoId === $id ? null : $id;
+    }
+
+    public function startEdit(int $id): void
     {
         $r = RangoCalificacion::findOrFail($id);
-        $this->resetForm();
-        $this->resetErrorBag();
-        $this->editId      = $r->id;
-        $this->nombre      = $r->nombre;
-        $this->fechaInicio = $r->fecha_inicio->toDateString();
-        $this->fechaFin    = $r->fecha_fin?->toDateString() ?? '';
-        $this->minA        = $r->min_a;
-        $this->minB        = $r->min_b;
-        $this->minC        = $r->min_c;
-        $this->minD        = $r->min_d;
-        $this->activo      = $r->activo ? 1 : 0;
-        $this->mode = 'form';
-    }
 
-    public function save(): void
-    {
-        $this->validate([
-            'nombre'      => 'required|string|max:100',
-            'fechaInicio' => 'required|date',
-            'fechaFin'    => 'nullable|date|after_or_equal:fechaInicio',
-            'minA'        => 'required|numeric|min:0|max:100',
-            'minB'        => 'required|numeric|min:0|max:100',
-            'minC'        => 'required|numeric|min:0|max:100',
-            'minD'        => 'required|numeric|min:0|max:100',
-        ]);
-
-        if (!($this->minA > $this->minB && $this->minB > $this->minC && $this->minC > $this->minD && $this->minD >= 0)) {
-            $this->addError('minA', 'Los umbrales deben ser A > B > C > D ≥ 0.');
+        if ($r->fecha_fin !== null) {
+            session()->flash('error', 'Solo se puede editar la configuración vigente. Los registros históricos quedan bloqueados.');
             return;
         }
 
-        if ($this->editId && (int) $this->activo === 0 && RangoCalificacion::vigente()?->id === $this->editId) {
-            $today = \Carbon\Carbon::today();
-            $hayOtro = RangoCalificacion::where('activo', true)
-                ->where('id', '!=', $this->editId)
-                ->where('fecha_inicio', '<=', $today)
-                ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $today))
-                ->exists();
-            if (!$hayOtro) {
-                $this->addError('activo', 'No se puede inactivar: es la única configuración vigente para hoy.');
-                return;
+        $this->resetErrorBag();
+        $this->editingId        = $r->id;
+        $this->selectedRangoId  = $r->id;
+        $this->editNombre       = $r->nombre;
+        $this->editMinA         = $r->min_a;
+        $this->editMinB         = $r->min_b;
+        $this->editMinC         = $r->min_c;
+        $this->editMinD         = $r->min_d;
+        $this->editActivo       = $r->activo ? 1 : 0;
+    }
+
+    public function cancelEdit(): void
+    {
+        $this->editingId = null;
+        $this->resetErrorBag();
+    }
+
+    public function saveNew(): void
+    {
+        $this->validate([
+            'newNombre' => 'required|string|max:100',
+            'newMinA'   => 'required|numeric|min:0|max:100',
+            'newMinB'   => 'required|numeric|min:0|max:100',
+            'newMinC'   => 'required|numeric|min:0|max:100',
+            'newMinD'   => 'required|numeric|min:0|max:100',
+        ]);
+
+        if (!($this->newMinA > $this->newMinB && $this->newMinB > $this->newMinC && $this->newMinC > $this->newMinD && $this->newMinD >= 0)) {
+            $this->addError('newMinA', 'Los umbrales deben ser A > B > C > D ≥ 0.');
+            return;
+        }
+
+        DB::transaction(function () {
+            $ahora = now();
+
+            $anterior = RangoCalificacion::abierta();
+            if ($anterior) {
+                $anterior->update(['fecha_fin' => $ahora->copy()->subMinute()]);
             }
-        }
 
-        $data = [
-            'nombre'       => $this->nombre,
-            'fecha_inicio' => $this->fechaInicio,
-            'fecha_fin'    => $this->fechaFin ?: null,
-            'min_a'        => $this->minA,
-            'min_b'        => $this->minB,
-            'min_c'        => $this->minC,
-            'min_d'        => $this->minD,
-            'activo'       => (bool) $this->activo,
-        ];
+            RangoCalificacion::create([
+                'nombre'       => $this->newNombre,
+                'fecha_inicio' => $ahora,
+                'fecha_fin'    => null,
+                'min_a'        => $this->newMinA,
+                'min_b'        => $this->newMinB,
+                'min_c'        => $this->newMinC,
+                'min_d'        => $this->newMinD,
+                'activo'       => (bool) $this->newActivo,
+            ]);
+        });
 
-        if ($this->editId) {
-            RangoCalificacion::findOrFail($this->editId)->update($data);
-        } else {
-            RangoCalificacion::create($data);
-        }
-
-        session()->flash('success', 'Configuración guardada.');
-        $this->backToList();
+        session()->flash('success', 'Configuración creada. Pasa a ser la vigente.');
+        $this->resetNewForm();
+        $this->showAddForm = false;
     }
 
-    public function toggleActivo(int $id): void
+    public function saveEdit(): void
     {
-        $r = RangoCalificacion::findOrFail($id);
-
-        if ($r->activo && RangoCalificacion::vigente()?->id === $id) {
-            $today = \Carbon\Carbon::today();
-            $hayOtro = RangoCalificacion::where('activo', true)
-                ->where('id', '!=', $id)
-                ->where('fecha_inicio', '<=', $today)
-                ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $today))
-                ->exists();
-            if (!$hayOtro) {
-                session()->flash('error', 'No se puede inactivar: es la única configuración vigente para hoy.');
-                return;
-            }
+        $r = RangoCalificacion::findOrFail($this->editingId);
+        if ($r->fecha_fin !== null) {
+            $this->editingId = null;
+            session()->flash('error', 'Este registro ya quedó histórico y no se puede editar.');
+            return;
         }
 
-        $r->update(['activo' => !$r->activo]);
+        $this->validate([
+            'editNombre' => 'required|string|max:100',
+            'editMinA'   => 'required|numeric|min:0|max:100',
+            'editMinB'   => 'required|numeric|min:0|max:100',
+            'editMinC'   => 'required|numeric|min:0|max:100',
+            'editMinD'   => 'required|numeric|min:0|max:100',
+        ]);
+
+        if (!($this->editMinA > $this->editMinB && $this->editMinB > $this->editMinC && $this->editMinC > $this->editMinD && $this->editMinD >= 0)) {
+            $this->addError('editMinA', 'Los umbrales deben ser A > B > C > D ≥ 0.');
+            return;
+        }
+
+        if ((int) $this->editActivo === 0 && RangoCalificacion::vigente()?->id === $this->editingId) {
+            session()->flash('error', 'No se puede inactivar: es la configuración vigente y no hay otra que la reemplace.');
+            return;
+        }
+
+        $r->update([
+            'nombre' => $this->editNombre,
+            'min_a'  => $this->editMinA,
+            'min_b'  => $this->editMinB,
+            'min_c'  => $this->editMinC,
+            'min_d'  => $this->editMinD,
+            'activo' => (bool) $this->editActivo,
+        ]);
+
+        session()->flash('success', 'Configuración actualizada.');
+        $this->editingId = null;
     }
 
-    public function backToList(): void
+    private function resetNewForm(): void
     {
-        $this->resetForm();
-        $this->mode = 'list';
-    }
-
-    private function resetForm(): void
-    {
-        $this->editId      = null;
-        $this->nombre      = '';
-        $this->fechaInicio = '';
-        $this->fechaFin    = '';
-        $this->minA        = 85;
-        $this->minB        = 70;
-        $this->minC        = 50;
-        $this->minD        = 30;
-        $this->activo      = 1;
+        $this->newNombre = '';
+        $this->newMinA   = 85;
+        $this->newMinB   = 70;
+        $this->newMinC   = 50;
+        $this->newMinD   = 30;
+        $this->newActivo = 1;
     }
 
     public function render()
     {
         $vigenteId = RangoCalificacion::vigente()?->id;
-        $registros = RangoCalificacion::orderByDesc('fecha_inicio')->get()
-            ->when($this->sortBy, fn($c) => $this->sortDir === 'asc'
-                ? $c->sortBy($this->sortBy)
-                : $c->sortByDesc($this->sortBy),
-                fn($c) => $c->sortByDesc(function ($r) use ($vigenteId) {
-                    if ($r->id === $vigenteId) return 2;
-                    if ($r->activo)            return 1;
-                    return 0;
-                })
-            )->values();
+
+        $query = RangoCalificacion::query()
+            ->when($this->colFilterNombre !== '', fn($q) => $q->where('nombre', 'like', "%{$this->colFilterNombre}%"))
+            ->when($this->colFilterEstado !== '', fn($q) => $q->where('activo', $this->colFilterEstado))
+            ->when($this->colFilterVigente === '1', fn($q) => $q->where('id', $vigenteId ?? 0))
+            ->when($this->colFilterVigente === '0', fn($q) => $q->where('id', '!=', $vigenteId ?? 0));
+
+        if ($this->sortBy) {
+            $query->orderBy($this->sortBy, $this->sortDir);
+        } else {
+            $query->orderByDesc('fecha_inicio');
+        }
+
+        $registros = $query->get();
 
         return view('livewire.admin.definiciones.rango-calificacion-manager', [
             'registros' => $registros,
-            'sortBy'    => $this->sortBy,
-            'sortDir'   => $this->sortDir,
+            'vigenteId' => $vigenteId,
         ]);
     }
 }

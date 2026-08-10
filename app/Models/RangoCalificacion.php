@@ -14,8 +14,8 @@ class RangoCalificacion extends Model
     ];
 
     protected $casts = [
-        'fecha_inicio' => 'date',
-        'fecha_fin'    => 'date',
+        'fecha_inicio' => 'datetime',
+        'fecha_fin'    => 'datetime',
         'min_a'        => 'float',
         'min_b'        => 'float',
         'min_c'        => 'float',
@@ -34,14 +34,25 @@ class RangoCalificacion extends Model
         };
     }
 
-    public static function vigente(?Carbon $fecha = null): ?self
+    /**
+     * El vigente es siempre el último registro creado (el que aún no fue cerrado
+     * por uno posterior) y que además está activo.
+     */
+    public static function vigente(): ?self
     {
-        $fecha ??= Carbon::today();
         return static::where('activo', true)
-            ->where('fecha_inicio', '<=', $fecha)
-            ->where(fn($q) => $q->whereNull('fecha_fin')->orWhere('fecha_fin', '>=', $fecha))
+            ->whereNull('fecha_fin')
             ->orderByDesc('fecha_inicio')
             ->first();
+    }
+
+    /**
+     * El registro abierto (sin fecha_fin) independientemente de su estado activo.
+     * Es el que se cierra automáticamente cuando se crea uno nuevo.
+     */
+    public static function abierta(): ?self
+    {
+        return static::whereNull('fecha_fin')->orderByDesc('fecha_inicio')->first();
     }
 
     public static function porDefecto(): self
