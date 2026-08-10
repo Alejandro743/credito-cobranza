@@ -13,20 +13,50 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithPagination;
-use Spatie\Permission\Models\Role;
 
 class ClienteManager extends Component
 {
     use WithPagination, HasModuleColor;
 
-    // ── Filtros ───────────────────────────────────────────────────────────────
-    public string $search       = '';
-    public string $filterCiudad = '';
-    public string $filterActivo = '';
-
     // ── Ordenación ────────────────────────────────────────────────────────────
     public string $sortBy  = '';
     public string $sortDir = 'asc';
+
+    // ── Filtros por columna ──────────────────────────────────────────────────
+    public string $colFilterIdLn      = '';
+    public string $colFilterCi        = '';
+    public string $colFilterNombre    = '';
+    public string $colFilterApellido  = '';
+    public string $colFilterTelefono  = '';
+    public string $colFilterNit       = '';
+    public string $colFilterCorreo    = '';
+    public string $colFilterCiudad    = '';
+    public string $colFilterProvincia = '';
+    public string $colFilterMunicipio = '';
+    public string $colFilterDireccion = '';
+    public string $colFilterVendedor  = '';
+    public string $colFilterEstado    = '';
+
+    public function updatingColFilterIdLn():      void { $this->resetPage(); }
+    public function updatingColFilterCi():        void { $this->resetPage(); }
+    public function updatingColFilterNombre():    void { $this->resetPage(); }
+    public function updatingColFilterApellido():  void { $this->resetPage(); }
+    public function updatingColFilterTelefono():  void { $this->resetPage(); }
+    public function updatingColFilterNit():       void { $this->resetPage(); }
+    public function updatingColFilterCorreo():    void { $this->resetPage(); }
+    public function updatingColFilterCiudad():    void { $this->resetPage(); }
+    public function updatingColFilterProvincia(): void { $this->resetPage(); }
+    public function updatingColFilterMunicipio(): void { $this->resetPage(); }
+    public function updatingColFilterDireccion(): void { $this->resetPage(); }
+    public function updatingColFilterVendedor():  void { $this->resetPage(); }
+    public function updatingColFilterEstado():    void { $this->resetPage(); }
+
+    public ?int $selectedClienteId = null;
+
+    public function selectCliente(int $id): void
+    {
+        $this->selectedClienteId = $this->selectedClienteId === $id ? null : $id;
+    }
 
     public function toggleSort(string $col): void
     {
@@ -82,10 +112,6 @@ class ClienteManager extends Component
         $this->initModuleColor();
     }
 
-    public function updatingSearch(): void { $this->resetPage(); }
-    public function updatingFilterCiudad(): void { $this->resetPage(); }
-    public function updatingFilterActivo(): void { $this->resetPage(); }
-
     public function updatedNewCiudad(): void   { $this->newProvincia = ''; $this->newMunicipio = ''; }
     public function updatedNewProvincia(): void { $this->newMunicipio = ''; }
     public function updatedEditCiudad(): void   { $this->editProvincia = ''; $this->editMunicipio = ''; }
@@ -109,9 +135,14 @@ class ClienteManager extends Component
         $this->newDireccion  = '';
         $this->newVendedorId = null;
         $this->newActive     = true;
+        $this->resetValidation();
     }
 
-    public function cancelAdd(): void { $this->showAddForm = false; }
+    public function cancelAdd(): void
+    {
+        $this->showAddForm = false;
+        $this->resetValidation();
+    }
 
     public function saveNew(): void
     {
@@ -177,9 +208,14 @@ class ClienteManager extends Component
         $this->editVendedorId= $c->vendedor_id;
         $this->editActive    = $c->active;
         $this->showAddForm   = false;
+        $this->resetValidation();
     }
 
-    public function cancelEdit(): void { $this->editingId = null; }
+    public function cancelEdit(): void
+    {
+        $this->editingId = null;
+        $this->resetValidation();
+    }
 
     public function saveEdit(): void
     {
@@ -226,35 +262,30 @@ class ClienteManager extends Component
         session()->flash('success', 'Cliente actualizado.');
     }
 
-    // ── Toggle activo ─────────────────────────────────────────────────────────
-
-    public function toggleActivo(int $id): void
-    {
-        $c = Cliente::with('usuario')->findOrFail($id);
-        $nuevo = !$c->active;
-        $c->update(['active' => $nuevo]);
-        $c->usuario?->update(['active' => $nuevo]);
-    }
-
     // ── Render ────────────────────────────────────────────────────────────────
 
     public function render()
     {
         $clientes = Cliente::with(['usuario', 'vendedorUsuario'])
-            ->when($this->search, fn($q) =>
-                $q->where('ci', 'like', "%{$this->search}%")
-                  ->orWhere('id_ln', 'like', "%{$this->search}%")
-                  ->orWhere('apellido', 'like', "%{$this->search}%")
-                  ->orWhereHas('usuario', fn($u) => $u->where('name', 'like', "%{$this->search}%")))
-            ->when($this->filterCiudad, fn($q) => $q->where('ciudad', $this->filterCiudad))
-            ->when($this->filterActivo !== '', fn($q) => $q->where('active', (bool) $this->filterActivo))
+            ->when($this->colFilterIdLn,     fn($q) => $q->where('id_ln', 'like', "%{$this->colFilterIdLn}%"))
+            ->when($this->colFilterCi,       fn($q) => $q->where('ci', 'like', "%{$this->colFilterCi}%"))
+            ->when($this->colFilterNombre,   fn($q) => $q->whereHas('usuario', fn($u) => $u->where('name', 'like', "%{$this->colFilterNombre}%")))
+            ->when($this->colFilterApellido, fn($q) => $q->where('apellido', 'like', "%{$this->colFilterApellido}%"))
+            ->when($this->colFilterTelefono, fn($q) => $q->where('telefono', 'like', "%{$this->colFilterTelefono}%"))
+            ->when($this->colFilterNit,       fn($q) => $q->where('nit', 'like', "%{$this->colFilterNit}%"))
+            ->when($this->colFilterCorreo,    fn($q) => $q->where('correo', 'like', "%{$this->colFilterCorreo}%"))
+            ->when($this->colFilterCiudad,    fn($q) => $q->where('ciudad', 'like', "%{$this->colFilterCiudad}%"))
+            ->when($this->colFilterProvincia, fn($q) => $q->where('provincia', 'like', "%{$this->colFilterProvincia}%"))
+            ->when($this->colFilterMunicipio, fn($q) => $q->where('municipio', 'like', "%{$this->colFilterMunicipio}%"))
+            ->when($this->colFilterDireccion, fn($q) => $q->where('direccion', 'like', "%{$this->colFilterDireccion}%"))
+            ->when($this->colFilterVendedor,  fn($q) => $q->whereHas('vendedorUsuario', fn($u) => $u->where('name', 'like', "%{$this->colFilterVendedor}%")))
+            ->when($this->colFilterEstado !== '', fn($q) => $q->where('active', $this->colFilterEstado === '1'))
             ->when($this->sortBy === 'nombre',   fn($q) => $q->orderBy(User::select('name')->whereColumn('id', 'clientes.usuario_id'), $this->sortDir))
             ->when($this->sortBy === 'vendedor',  fn($q) => $q->orderBy(User::select('name')->whereColumn('id', 'clientes.vendedor_id'), $this->sortDir))
             ->when($this->sortBy && !in_array($this->sortBy, ['nombre','vendedor']), fn($q) => $q->orderBy($this->sortBy, $this->sortDir))
             ->when(!$this->sortBy, fn($q) => $q->orderByDesc('active')->orderBy('apellido'))
             ->paginate(20);
 
-        $ciudades  = Cliente::select('ciudad')->distinct()->orderBy('ciudad')->pluck('ciudad');
         $vendedores = User::where('tipo', 'vendedor')->orderBy('name')->get(['id','name']);
 
         $ciudadesAll    = Ciudad::orderBy('nombre')->get();
@@ -271,7 +302,7 @@ class ClienteManager extends Component
         $viewingClienteId = $this->viewingClienteId;
 
         return view('livewire.credito.cliente-manager', compact(
-            'clientes', 'ciudades', 'vendedores',
+            'clientes', 'vendedores',
             'ciudadesAll', 'newProvincias', 'newMunicipios',
             'editProvincias', 'editMunicipios',
             'viewingClienteId'
