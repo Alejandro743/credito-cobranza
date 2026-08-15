@@ -30,7 +30,7 @@ class OfertaManager extends Component
     use HasModuleColor, WithFileUploads;
 
     // ── Flujo ─────────────────────────────────────────────────────────────────
-    public string $step = 'cliente'; // cliente | oferta | resumen | entrega
+    public string $step = 'oferta'; // cliente | oferta | resumen | entrega
 
     // ── Acceso ────────────────────────────────────────────────────────────────
     public bool $sinListasActivas = false;
@@ -131,7 +131,7 @@ class OfertaManager extends Component
                 'entregaNuevoCiudad','entregaNuevaProvincia',
                 'entregaNuevoMunicipio','entregaNuevaDireccion',
             ]);
-            $this->step = 'cliente';
+            $this->step = 'oferta';
         }
 
         $q = trim($this->searchCliente);

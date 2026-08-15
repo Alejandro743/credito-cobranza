@@ -213,7 +213,7 @@
 </div>
 
 {{-- ── DOCUMENTACIÓN DEL PLAN ──────────────────────────────────────────────── --}}
-@if ($clienteId && $step === 'oferta')
+@if ($step === 'oferta')
 <div class="bg-white px-4 py-2" style="max-width:900px; margin:0 auto;"
      x-data="{
          up: { ci1:false, ci2:false, d1:false, d2:false, luz:false },
