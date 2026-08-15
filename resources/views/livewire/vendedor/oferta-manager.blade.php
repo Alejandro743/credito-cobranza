@@ -1083,7 +1083,7 @@
     overflow: hidden;
     min-height: 0;
     max-height: 88vh;
-    border-radius: 20px;
+    border-radius: 0;
     box-shadow: 0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15);
     flex: none;
     max-width: 640px;
