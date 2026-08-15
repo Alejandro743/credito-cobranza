@@ -383,15 +383,16 @@
     @if (!empty($carrito))
     <div style="display:flex; flex-direction:column; gap:8px;">
         @foreach ($carrito as $pid => $item)
-        <div style="background:#fff; border:1.5px solid #D1D5DB; border-radius:12px; padding:14px 12px; box-shadow:0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.10);" wire:key="sel-{{ $pid }}">
-            {{-- Código + descripción --}}
-            <div style="display:flex; align-items:flex-start; gap:7px; margin-bottom:8px;">
-                <div style="width:22px; height:22px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;">
+        <div style="background:#fff; border:1.5px solid #D1D5DB; border-radius:12px; padding:12px; box-shadow:0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.10);" wire:key="sel-{{ $pid }}">
+            {{-- Código — descripción en una sola línea --}}
+            <div style="display:flex; align-items:center; gap:7px; margin-bottom:8px;">
+                <div style="width:22px; height:22px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                     <span style="font-size:10px; font-weight:800; color:#fff; line-height:1;">{{ $item['cantidad'] }}</span>
                 </div>
-                <div style="flex:1; min-width:0;">
-                    <span style="font-size:16px; font-weight:800; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
-                    <span style="font-size:13px; font-weight:400; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $item['code'] ?? '' }}</span>
+                <div style="flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ $item['code'] ?? '' }} — {{ ucwords(strtolower($item['nombre'])) }}">
+                    <span style="font-size:13px; font-weight:400; color:#6B7280;">{{ $item['code'] ?? '' }}</span>
+                    <span style="font-size:13px; font-weight:400; color:#6B7280;"> — </span>
+                    <span style="font-size:16px; font-weight:800; color:#111827;">{{ ucwords(strtolower($item['nombre'])) }}</span>
                 </div>
             </div>
             {{-- Precios --}}
