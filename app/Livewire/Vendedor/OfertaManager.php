@@ -286,7 +286,7 @@ class OfertaManager extends Component
             'entregaNuevoCiudad','entregaNuevaProvincia',
             'entregaNuevoMunicipio','entregaNuevaDireccion',
         ]);
-        $this->step = 'cliente';
+        $this->step = 'oferta';
     }
 
     // ── Oferta ────────────────────────────────────────────────────────────────
@@ -342,7 +342,10 @@ class OfertaManager extends Component
             ->with(['items' => fn($q) => $q
                 ->where('active', true)
                 ->whereRaw('stock_actual - stock_comprometido > 0')
-                ->with(['product' => fn($p) => $p->where('active', true)])
+                ->with([
+                    'product' => fn($p) => $p->where('active', true),
+                    'maestroArticulo' => fn($m) => $m->where('active', true),
+                ])
             ])->get();
 
         $this->listasInfo = $listas->mapWithKeys(fn($l) => [
@@ -352,14 +355,15 @@ class OfertaManager extends Component
         $oferta = [];
         foreach ($listas as $lista) {
             foreach ($lista->items as $item) {
-                if (!$item->product) continue;
+                $articulo = $item->product ?? $item->maestroArticulo;
+                if (!$articulo) continue;
                 $key = (string)$item->id;
                 $oferta[$key] = [
                     'item_id'           => $item->id,
                     'product_id'        => $item->product_id,
-                    'code'              => $item->product->code ?? '',
-                    'nombre'            => $item->product->name,
-                    'image'             => $item->product->foto_url ?? ($item->product->image ? Storage::url($item->product->image) : null),
+                    'code'              => $articulo->code ?? $articulo->codigo ?? '',
+                    'nombre'            => $articulo->name ?? $articulo->nombre,
+                    'image'             => $articulo->foto_url ?? ($item->product && $item->product->image ? Storage::url($item->product->image) : null),
                     'precio_base'       => (float)$item->precio_base,
                     'tipo_incremento'   => $item->tipo_incremento,
                     'factor_incremento' => (float)$item->factor_incremento,

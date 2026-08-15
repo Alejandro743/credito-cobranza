@@ -75,41 +75,38 @@
                 </div>
             </div>
             @else
-            @php $csStyle = 'width:100%; padding:8px 30px 8px 10px; font-size:12px; border-radius:10px; border:1.5px solid #C4B5FD; outline:none; box-sizing:border-box; background:#F8F7FF; color:#3C3489;'; @endphp
-            <div style="display:flex; align-items:center; gap:10px;">
-                <span style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap; flex-shrink:0; display:flex; align-items:center; gap:5px;">
-                    <svg width="12" height="12" fill="none" stroke="#7B6FE8" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    Buscar Cliente:
-                </span>
-                <div style="position:relative; flex:1;">
-                    @if ($clienteId)
-                    <input type="text" readonly value="{{ $clienteCI }} — {{ $clienteNombre }}" style="{{ $csStyle }} cursor:default;">
-                    <button wire:click="cambiarCliente" type="button"
-                            style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:#9CA3AF; padding:2px; display:flex; align-items:center;">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                    @else
-                    <input id="clienteSearchInput"
-                           wire:model.live.debounce.300ms="searchCliente"
-                           type="text"
-                           placeholder="CI, nombre o apellido (mín. 2)..."
-                           @focus="showSearch = true"
-                           style="{{ $csStyle }}">
-                    @if (trim($searchCliente) !== '')
-                    <button wire:click="$set('searchCliente','')" type="button"
-                            style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:#9CA3AF; padding:2px; display:flex; align-items:center;">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                    @endif
-                    <div x-show="showSearch" x-cloak
-                         x-transition:enter="transition ease-out duration-100"
-                         x-transition:enter-start="opacity-0 -translate-y-1"
-                         x-transition:enter-end="opacity-100 translate-y-0"
-                         style="position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #E5E7EB; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,.1); z-index:60; max-height:220px; overflow-y:auto;">
-                        @include('livewire.vendedor.partials.cliente-resultados')
-                    </div>
-                    @endif
+            @php $csStyle = 'width:100%; padding:8px 32px 8px 32px; font-size:12px; border-radius:10px; border:1.5px solid #C4B5FD; outline:none; box-sizing:border-box; background:#F8F7FF; color:#3C3489;'; @endphp
+            <div style="position:relative;">
+                <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; pointer-events:none;" fill="none" stroke="#7B6FE8" stroke-width="2.3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                @if ($clienteId)
+                <input type="text" readonly value="{{ $clienteCI }} — {{ $clienteNombre }}" style="{{ $csStyle }} cursor:default;">
+                <button wire:click="cambiarCliente" type="button"
+                        style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:#9CA3AF; padding:2px; display:flex; align-items:center;">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+                @else
+                <input id="clienteSearchInput"
+                       wire:model.live.debounce.300ms="searchCliente"
+                       type="text"
+                       placeholder="Buscar Cliente (CI, Nombre o Apellido)"
+                       @focus="showSearch = true"
+                       style="{{ $csStyle }}">
+                @if (trim($searchCliente) !== '')
+                <button wire:click="$set('searchCliente','')" type="button"
+                        style="position:absolute; right:8px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:#9CA3AF; padding:2px; display:flex; align-items:center;">
+                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+                @endif
+                <div x-show="showSearch && $wire.searchCliente.length >= 2" x-cloak
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="opacity-0 -translate-y-1"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     style="position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #E5E7EB; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,.1); z-index:60; max-height:220px; overflow-y:auto;">
+                    @include('livewire.vendedor.partials.cliente-resultados')
                 </div>
+                @endif
             </div>
             @endif
         </div>
@@ -154,40 +151,37 @@
                 <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
             </div>
             @else
-            @php $csStyleM = 'width:100%; height:36px; padding:0 26px 0 10px; font-size:12.5px; border-radius:8px; border:1.5px solid #C4B5FD; background:#F8F7FF; outline:none; color:#3C3489; box-sizing:border-box;'; @endphp
-            <div style="display:flex; align-items:center; gap:8px;">
-                <span style="font-size:11px; font-weight:700; color:#3C3489; white-space:nowrap; flex-shrink:0; display:flex; align-items:center; gap:4px;">
-                    <svg width="11" height="11" fill="none" stroke="#7B6FE8" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-                    Buscar Cliente:
-                </span>
-                <div style="position:relative; flex:1;">
-                    @if ($clienteId)
-                    <input type="text" readonly value="{{ $clienteCI }} — {{ $clienteNombre }}" style="{{ $csStyleM }} cursor:default;">
-                    <button wire:click="cambiarCliente" type="button"
-                            style="position:absolute; right:7px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:#9CA3AF; padding:2px; display:flex; align-items:center;">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                    @else
-                    <input wire:model.live.debounce.300ms="searchCliente"
-                           type="text"
-                           placeholder="CI o nombre (mín. 2)..."
-                           @focus="showSearch = true"
-                           style="{{ $csStyleM }}">
-                    @if (trim($searchCliente) !== '')
-                    <button wire:click="$set('searchCliente','')" type="button"
-                            style="position:absolute; right:7px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:#9CA3AF; padding:2px; display:flex; align-items:center;">
-                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                    </button>
-                    @endif
-                    <div x-show="showSearch" x-cloak
-                         x-transition:enter="transition ease-out duration-100"
-                         x-transition:enter-start="opacity-0 -translate-y-1"
-                         x-transition:enter-end="opacity-100 translate-y-0"
-                         style="position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #E5E7EB; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,.1); z-index:60; max-height:220px; overflow-y:auto;">
-                        @include('livewire.vendedor.partials.cliente-resultados')
-                    </div>
-                    @endif
+            @php $csStyleM = 'width:100%; height:36px; padding:0 26px 0 28px; font-size:12.5px; border-radius:8px; border:1.5px solid #C4B5FD; background:#F8F7FF; outline:none; color:#3C3489; box-sizing:border-box;'; @endphp
+            <div style="position:relative;">
+                <svg style="position:absolute; left:9px; top:50%; transform:translateY(-50%); width:12px; height:12px; pointer-events:none;" fill="none" stroke="#7B6FE8" stroke-width="2.3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                @if ($clienteId)
+                <input type="text" readonly value="{{ $clienteCI }} — {{ $clienteNombre }}" style="{{ $csStyleM }} cursor:default;">
+                <button wire:click="cambiarCliente" type="button"
+                        style="position:absolute; right:7px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:#9CA3AF; padding:2px; display:flex; align-items:center;">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+                @else
+                <input wire:model.live.debounce.300ms="searchCliente"
+                       type="text"
+                       placeholder="Buscar Cliente (CI, Nombre o Apellido)"
+                       @focus="showSearch = true"
+                       style="{{ $csStyleM }}">
+                @if (trim($searchCliente) !== '')
+                <button wire:click="$set('searchCliente','')" type="button"
+                        style="position:absolute; right:7px; top:50%; transform:translateY(-50%); background:transparent; border:none; cursor:pointer; color:#9CA3AF; padding:2px; display:flex; align-items:center;">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+                @endif
+                <div x-show="showSearch && $wire.searchCliente.length >= 2" x-cloak
+                     x-transition:enter="transition ease-out duration-100"
+                     x-transition:enter-start="opacity-0 -translate-y-1"
+                     x-transition:enter-end="opacity-100 translate-y-0"
+                     style="position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #E5E7EB; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,.1); z-index:60; max-height:220px; overflow-y:auto;">
+                    @include('livewire.vendedor.partials.cliente-resultados')
                 </div>
+                @endif
             </div>
             @endif
         </div>
@@ -1078,26 +1072,22 @@
 
 {{-- ══ MODAL: BUSCAR CLIENTE ════════════════════════════════════════════════ --}}
 <style>
+.modal-productos-outer {
+    background: rgba(30,24,80,0.28) !important;
+    backdrop-filter: blur(2px);
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
 .modal-productos-panel {
     overflow: hidden;
     min-height: 0;
-}
-@media (min-width: 768px) {
-    .modal-productos-outer {
-        background: rgba(20,10,40,0.45) !important;
-        backdrop-filter: blur(2px);
-        align-items: center;
-        justify-content: center;
-        padding: 24px;
-    }
-    .modal-productos-panel {
-        max-height: 85vh;
-        border-radius: 10px;
-        box-shadow: 0 24px 60px rgba(60,52,137,0.22), 0 0 0 1px rgba(196,181,253,0.15);
-        flex: none;
-        max-width: 900px;
-        width: 100%;
-    }
+    max-height: 88vh;
+    border-radius: 20px;
+    box-shadow: 0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15);
+    flex: none;
+    max-width: 640px;
+    width: 100%;
 }
 .buscar-sheet {
     width: calc(100% - 32px);
@@ -1121,13 +1111,15 @@
 
 {{-- ═══════════════════════════ MODAL: AGREGAR PRODUCTOS ═══════════════════ --}}
 @if ($step === 'oferta' && $clienteId && !$sinListasComunes)
-<div x-show="showProductos" x-cloak
+<div x-data="{ staged: {}, stagedTotal() { return Object.values(this.staged).reduce((a,b) => a + b, 0); } }"
+     x-show="showProductos" x-cloak
      x-transition:enter="transition ease-out duration-200"
      x-transition:enter-start="opacity-0"
      x-transition:enter-end="opacity-100"
      x-transition:leave="transition ease-in duration-150"
      x-transition:leave-end="opacity-0"
-     class="fixed inset-0 md:absolute md:inset-0 flex flex-col modal-productos-outer"
+     class="fixed inset-0 flex flex-col modal-productos-outer"
+     @click.self="staged = {}; showProductos = false"
      style="z-index:400; background:#fff;">
 
     {{-- Panel centrado (desktop: dialog card; mobile: full screen) --}}
@@ -1135,14 +1127,18 @@
          style="background:#fff;">
 
         {{-- TOP BAR --}}
-        <div style="flex-shrink:0; background:#fff; border-bottom:1.5px solid #EDE9FE; padding:12px 14px 10px;">
+        <div style="flex-shrink:0; background:#fff; border-bottom:1px solid #F0EEFF; padding:16px 20px;">
         <div style="max-width:900px; margin:0 auto;">
-            <div style="position:relative; text-align:center; margin-bottom:10px;">
-                <span style="font-size:16px; font-weight:900; color:#1a1a1a; letter-spacing:0.08em; text-transform:uppercase; display:block;">Seleccionar Artículos</span>
-                <div style="height:2px; background:linear-gradient(to right,#7B6FE8,#C4B5FD); border-radius:1px; margin-top:4px;"></div>
-                <button @click="showProductos = false"
-                        style="position:absolute; top:0; right:0; width:28px; height:28px; border-radius:50%; background:#F3F4F6; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;">
-                    <svg width="14" height="14" fill="none" stroke="#6B7280" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                <div style="display:flex; align-items:center; gap:9px;">
+                    <div style="width:30px; height:30px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                    </div>
+                    <p style="font-size:17px; font-weight:700; color:#3C3489; margin:0; letter-spacing:-0.2px;">Seleccionar Artículos</p>
+                </div>
+                <button @click="showProductos = false" type="button"
+                        style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
+                    <svg width="10" height="10" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
             </div>
 
@@ -1242,9 +1238,9 @@
                         </svg>
                         <input wire:model.live.debounce.300ms="searchProducto" type="text"
                                placeholder="Buscar producto..."
-                               style="width:100%; padding:8px 10px 8px 28px; background:#F8F7FF; border:2px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"
-                               onfocus="this.style.borderColor='#7B6FE8'; this.style.background='#fff';"
-                               onblur="this.style.borderColor='#C4B5FD'; this.style.background='#F8F7FF';">
+                               style="width:100%; padding:8px 10px 8px 28px; background:#FAFAFE; border:1.5px solid #EDE9FE; border-radius:10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box; transition:border-color 0.15s, background 0.15s;"
+                               onfocus="this.style.borderColor='#C4B5FD'; this.style.background='#fff';"
+                               onblur="this.style.borderColor='#EDE9FE'; this.style.background='#FAFAFE';">
                     </div>
                 </div>
 
@@ -1262,18 +1258,17 @@
                     : collect($ofertaPorLista)->flatten(1);
                 @endphp
                 @forelse ($productosModal as $p)
-                @php $iid2=(string)$p['item_id']; $qty2=isset($carrito[$iid2])?$carrito[$iid2]['cantidad']:0; @endphp
-                <div x-data="{ n: 0, maxStock: @js((int)$p['stock']) }"
-                     x-on:carrito-vaciado.window="n = 0"
+                @php $iid2=(string)$p['item_id']; $stock2=(int)$p['stock']; @endphp
+                <div x-data="{ maxStock: @js($stock2), get qty() { return this.staged['{{ $iid2 }}'] || 0; } }"
+                     x-on:carrito-vaciado.window="delete staged['{{ $iid2 }}']"
                      wire:key="mod-{{ $iid2 }}"
-                     style="background:#fff; border:1.5px solid #D1D5DB; border-radius:12px; padding:20px 12px; box-shadow:0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.10), 0 24px 40px rgba(0,0,0,0.06);">
+                     style="background:#fff; border:1px solid #E5E7EB; border-radius:12px; padding:16px 14px; box-shadow:0 1px 2px rgba(60,52,137,0.05), 0 4px 12px rgba(60,52,137,0.06);">
 
                     {{-- Fila 1: indicador circular + código arriba, descripción abajo --}}
                     <div style="display:flex; align-items:flex-start; gap:7px; margin-bottom:7px;">
-                        <div style="width:22px; height:22px; border-radius:50%; background:{{ $qty2 > 0 ? '#f97316' : '#EDE9FE' }}; border:1.5px solid {{ $qty2 > 0 ? '#f97316' : '#D4CFF8' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;">
-                            @if ($qty2 > 0)
-                            <span style="font-size:10px; font-weight:800; color:#fff; line-height:1;">{{ $qty2 }}</span>
-                            @endif
+                        <div :style="qty > 0 ? 'background:#7B6FE8; border-color:#7B6FE8;' : 'background:#EDE9FE; border-color:#D4CFF8;'"
+                             style="width:22px; height:22px; border-radius:50%; border:1.5px solid; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;">
+                            <span x-show="qty > 0" x-text="qty" style="font-size:10px; font-weight:800; color:#fff; line-height:1;"></span>
                         </div>
                         <div style="flex:1; min-width:0;">
                             <span style="font-size:16px; font-weight:800; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ ucwords(strtolower($p['nombre'])) }}">{{ ucwords(strtolower($p['nombre'])) }}</span>
@@ -1288,25 +1283,24 @@
                             <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Puntos: <span style="color:#111827; font-size:14px; font-weight:400;">{{ $p['puntos'] }}</span></span>
                         </div>
                         <div style="display:flex; align-items:center; gap:14px;">
-                            <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Bs: <span style="color:#3C3489; font-size:14px; font-weight:400;">{{ number_format($p['precio'] * $qty2, 2) }}</span></span>
-                            <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Puntos: <span style="color:#111827; font-size:14px; font-weight:400;">+{{ $p['puntos'] * $qty2 }}</span></span>
+                            <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Bs: <span style="color:#3C3489; font-size:14px; font-weight:400;" x-text="({{ $p['precio'] }} * qty).toFixed(2)"></span></span>
+                            <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Puntos: <span style="color:#111827; font-size:14px; font-weight:400;" x-text="'+' + ({{ (int)$p['puntos'] }} * qty)"></span></span>
                         </div>
                     </div>
 
                     {{-- Pie --}}
                     <div style="display:flex; align-items:center; gap:6px;">
                         <span style="font-size:13px; font-weight:700; color:#f97316; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-left:10px; padding-right:8px;">{{ $p['lista_nombre'] }}</span>
-                        <button @click="if(n===0) n=1; $wire.agregar({{ $p['item_id'] }}, n).then(() => n=0)"
-                                style="background:#fff; color:#f97316; border:1.5px solid #f97316; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px; flex-shrink:0;">
-                            <svg style="width:14px; height:14px; flex-shrink:0;" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        <button @click="staged['{{ $iid2 }}'] = Math.min((staged['{{ $iid2 }}']||0) + 1, maxStock)"
+                                style="background:#7B6FE8; color:#fff; border:none; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px; flex-shrink:0;">
+                            <svg style="width:14px; height:14px; flex-shrink:0;" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                             Agregar
                         </button>
-                        @if ($qty2 > 0)
-                        <button wire:click="quitar({{ $p['item_id'] }})"
+                        <button x-show="qty > 0" x-cloak
+                                @click="delete staged['{{ $iid2 }}']"
                                 style="width:30px; height:30px; border-radius:50%; background:#ef4444; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none; box-shadow:0 2px 8px rgba(239,68,68,0.40);">
                             <svg style="width:13px; height:13px;" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
-                        @endif
                     </div>
                 </div>
                 @empty
@@ -1320,21 +1314,21 @@
         </div>
 
         {{-- PIE MODAL: cerrar --}}
-        <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1.5px solid #EDE9FE;">
-        <div style="max-width:900px; margin:0 auto;">
-            <button @click="showProductos = false"
-                    style="width:100%; padding:13px; background:{{ $cantidad > 0 ? '#7B6FE8' : '#6B7280' }}; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:8px;">
-                @if ($cantidad > 0)
-                    <span style="width:22px; height:22px; border-radius:50%; background:#f97316; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="12" height="12" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                    </span>
-                    <span style="text-decoration:underline; text-underline-offset:3px;">Confirmar &mdash; {{ $cantidad }} Un.</span>
-                @else
-                    <span style="width:22px; height:22px; border-radius:50%; background:#f97316; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="12" height="12" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                    </span>
-                    <span style="text-decoration:underline; text-underline-offset:3px;">Regresar</span>
-                @endif
+        <div style="flex-shrink:0; padding:14px 20px; background:#fff; border-top:1px solid #F0EEFF; display:flex; gap:8px;">
+        <div style="max-width:900px; margin:0 auto; width:100%; display:flex; gap:8px;">
+            <button @click="staged = {}; showProductos = false" type="button"
+                    style="padding:10px 16px; border:1.5px solid #E5E7EB; border-radius:10px; font-size:13px; font-weight:600; color:#6B7280; background:#fff; cursor:pointer; flex-shrink:0; -webkit-appearance:none; appearance:none;">
+                Salir
+            </button>
+            <button type="button"
+                    :disabled="stagedTotal() === 0"
+                    @click="
+                        const calls = Object.entries(staged).filter(([id, q]) => q > 0).map(([id, q]) => $wire.agregar(parseInt(id), q));
+                        Promise.all(calls).then(() => { staged = {}; showProductos = false; });
+                    "
+                    :style="stagedTotal() === 0 ? 'flex:1; padding:11px; border-radius:10px; font-size:13px; font-weight:700; color:#9CA3AF; background:#F3F4F6; border:none; cursor:not-allowed; display:flex; align-items:center; justify-content:center; gap:6px; -webkit-appearance:none; appearance:none;' : 'flex:1; padding:11px; border-radius:10px; font-size:13px; font-weight:700; color:#fff; background:#7B6FE8; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; -webkit-appearance:none; appearance:none;'">
+                <svg width="14" height="14" fill="none" :stroke="stagedTotal() === 0 ? '#9CA3AF' : '#fff'" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                <span x-text="stagedTotal() === 0 ? 'Confirmar' : 'Confirmar — ' + stagedTotal() + (stagedTotal() === 1 ? ' artículo' : ' artículos')"></span>
             </button>
         </div>
         </div>
@@ -1573,7 +1567,7 @@
                 Cancelar
             </button>
             <button wire:click="guardarNuevoCliente" wire:loading.attr="disabled"
-                    style="flex:1; padding:11px; border-radius:10px; font-size:13px; font-weight:700; color:#fff; background:#F97316; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 10px rgba(249,115,22,0.30);">
+                    style="flex:1; padding:11px; border-radius:10px; font-size:13px; font-weight:700; color:#fff; background:#7B6FE8; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; box-shadow:0 2px 10px rgba(123,111,232,0.30);">
                 <svg wire:loading.remove wire:target="guardarNuevoCliente" width="14" height="14" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/>
                 </svg>
