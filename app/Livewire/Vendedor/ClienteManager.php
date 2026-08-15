@@ -23,17 +23,27 @@ class ClienteManager extends Component
     public string $colFilterCi       = '';
     public string $colFilterNombre   = '';
     public string $colFilterApellido = '';
-    public string $colFilterTelefono = '';
-    public string $colFilterCiudad   = '';
-    public string $colFilterEstado   = '';
+    public string $colFilterTelefono  = '';
+    public string $colFilterNit       = '';
+    public string $colFilterCorreo    = '';
+    public string $colFilterCiudad    = '';
+    public string $colFilterProvincia = '';
+    public string $colFilterMunicipio = '';
+    public string $colFilterDireccion = '';
+    public string $colFilterEstado    = '';
 
-    public function updatingColFilterIdLn():     void { $this->resetPage(); }
-    public function updatingColFilterCi():       void { $this->resetPage(); }
-    public function updatingColFilterNombre():   void { $this->resetPage(); }
-    public function updatingColFilterApellido(): void { $this->resetPage(); }
-    public function updatingColFilterTelefono(): void { $this->resetPage(); }
-    public function updatingColFilterCiudad():   void { $this->resetPage(); }
-    public function updatingColFilterEstado():   void { $this->resetPage(); }
+    public function updatingColFilterIdLn():      void { $this->resetPage(); }
+    public function updatingColFilterCi():        void { $this->resetPage(); }
+    public function updatingColFilterNombre():    void { $this->resetPage(); }
+    public function updatingColFilterApellido():  void { $this->resetPage(); }
+    public function updatingColFilterTelefono():  void { $this->resetPage(); }
+    public function updatingColFilterNit():       void { $this->resetPage(); }
+    public function updatingColFilterCorreo():    void { $this->resetPage(); }
+    public function updatingColFilterCiudad():    void { $this->resetPage(); }
+    public function updatingColFilterProvincia(): void { $this->resetPage(); }
+    public function updatingColFilterMunicipio(): void { $this->resetPage(); }
+    public function updatingColFilterDireccion(): void { $this->resetPage(); }
+    public function updatingColFilterEstado():    void { $this->resetPage(); }
 
     public ?int $selectedClienteId = null;
 
@@ -273,8 +283,13 @@ class ClienteManager extends Component
             ->when($this->colFilterCi,       fn($q) => $q->where('ci', 'like', "%{$this->colFilterCi}%"))
             ->when($this->colFilterNombre,   fn($q) => $q->whereHas('usuario', fn($u) => $u->where('name', 'like', "%{$this->colFilterNombre}%")))
             ->when($this->colFilterApellido, fn($q) => $q->where('apellido', 'like', "%{$this->colFilterApellido}%"))
-            ->when($this->colFilterTelefono, fn($q) => $q->where('telefono', 'like', "%{$this->colFilterTelefono}%"))
-            ->when($this->colFilterCiudad,   fn($q) => $q->where('ciudad', 'like', "%{$this->colFilterCiudad}%"))
+            ->when($this->colFilterTelefono,  fn($q) => $q->where('telefono', 'like', "%{$this->colFilterTelefono}%"))
+            ->when($this->colFilterNit,       fn($q) => $q->where('nit', 'like', "%{$this->colFilterNit}%"))
+            ->when($this->colFilterCorreo,    fn($q) => $q->where('correo', 'like', "%{$this->colFilterCorreo}%"))
+            ->when($this->colFilterCiudad,    fn($q) => $q->where('ciudad', 'like', "%{$this->colFilterCiudad}%"))
+            ->when($this->colFilterProvincia, fn($q) => $q->where('provincia', 'like', "%{$this->colFilterProvincia}%"))
+            ->when($this->colFilterMunicipio, fn($q) => $q->where('municipio', 'like', "%{$this->colFilterMunicipio}%"))
+            ->when($this->colFilterDireccion, fn($q) => $q->where('direccion', 'like', "%{$this->colFilterDireccion}%"))
             ->when($this->colFilterEstado !== '', fn($q) => $q->where('active', $this->colFilterEstado === '1'))
             ->orderByDesc('active')
             ->orderBy('apellido')
