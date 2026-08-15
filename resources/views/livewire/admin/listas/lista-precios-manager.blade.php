@@ -695,8 +695,8 @@ $lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                     <th style="width:50px; padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; position:sticky; left:0; z-index:11; background:#F9F8FF; white-space:nowrap;">#</th>
                     <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Nombre</th>
-                    <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Ciclo</th>
                     <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</th>
+                    <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Ciclo</th>
                     <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Creada</th>
                 </tr>
             </thead>
@@ -715,13 +715,13 @@ $lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase
                         </div>
                     </td>
                     <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827;">{{ strtoupper($lista->name) }}</td>
-                    <td style="padding:10px 14px; font-family:monospace; font-size:12px; color:#6B7280;">{{ strtoupper($lista->cycle?->code ?? '—') }}</td>
                     <td style="padding:10px 14px; text-align:center;">
                         <span style="display:inline-flex; padding:2px 10px; border-radius:99px; font-size:12px; font-weight:700;
                             {{ $lista->estado === 'activa' ? 'background:#D1FAE5; color:#059669;' : 'background:#F3F4F6; color:#6B7280;' }}">
                             {{ strtoupper($lista->estado) }}
                         </span>
                     </td>
+                    <td style="padding:10px 14px; font-family:monospace; font-size:12px; color:#6B7280;">{{ strtoupper($lista->cycle?->code ?? '—') }}</td>
                     <td style="padding:10px 14px; text-align:center; font-size:12px; color:#6B7280;">{{ $lista->created_at->format('d/m/Y') }}</td>
                 </tr>
                 @empty
