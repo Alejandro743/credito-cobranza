@@ -1911,6 +1911,23 @@
                         </div>
                     </th>
 
+                    {{-- Estado --}}
+                    @php $isActive = ($sortBy??'') === 'active'; @endphp
+                    <th wire:click="toggleSort('active')" style="padding:8px 14px 6px; min-width:160px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
+                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Estado
+                            @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
+                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
+                            @endif
+                        </span>
+                        <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                            <option value="">Todos</option>
+                            <option value="1">Activa</option>
+                            <option value="0">Inactiva</option>
+                        </select></div>
+                    </th>
+
                     {{-- Ciclo --}}
                     @php $isActive = ($sortBy??'') === 'cycle_id'; @endphp
                     <th wire:click="toggleSort('cycle_id')" style="padding:8px 14px 6px; min-width:100px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
@@ -2023,22 +2040,6 @@
                         <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><input wire:model.live.debounce.300ms="colFilterDias" @click.stop type="number" min="1" style="{{ $fI }}"></div>
                     </th>
 
-                    {{-- Estado --}}
-                    @php $isActive = ($sortBy??'') === 'active'; @endphp
-                    <th wire:click="toggleSort('active')" style="padding:8px 14px 6px; min-width:160px; text-align:center; cursor:pointer; user-select:none; position:relative; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                        <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:flex; align-items:center; justify-content:center; gap:5px;">Estado
-                            @if($isActive && ($sortDir??'asc')==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                            @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                            @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
-                            @endif
-                        </span>
-                        <div style="{{ $fW }}"><svg style="{{ $fIc }}" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg><select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
-                            <option value="">Todos</option>
-                            <option value="1">Activa</option>
-                            <option value="0">Inactiva</option>
-                        </select></div>
-                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -2051,6 +2052,13 @@
                 <tr wire:key="m-edit-{{ $m->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
                     <td class="col-row-num" rowspan="2" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap; vertical-align:middle;">
                         <span style="font-size:12px; font-weight:700; color:#374151;">{{ $maestras->firstItem() + $loop->index }}</span>
+                    </td>
+                    <td style="padding:7px 10px;">
+                        <div style="{{ $lE }}">Estado</div>
+                        <select wire:model="editActive" wire:key="edit-active-{{ $m->id }}" x-init="$el.value = @js($editActive ? '1' : '0')" style="{{ $iE }} padding:0 6px;">
+                            <option value="1" @selected($editActive)>Activa</option>
+                            <option value="0" @selected(!$editActive)>Inactiva</option>
+                        </select>
                     </td>
                     <td style="padding:7px 10px;">
                         <div style="{{ $lE }}">Ciclo</div>
@@ -2102,17 +2110,10 @@
                         <input wire:model="editDiasEntreCuotas" type="number" min="1" max="365" placeholder="30"
                                style="width:60px; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
                     </td>
-                    <td style="padding:7px 10px;">
-                        <div style="{{ $lE }}">Estado</div>
-                        <select wire:model="editActive" wire:key="edit-active-{{ $m->id }}" x-init="$el.value = @js($editActive ? '1' : '0')" style="{{ $iE }} padding:0 6px;">
-                            <option value="1" @selected($editActive)>Activa</option>
-                            <option value="0" @selected(!$editActive)>Inactiva</option>
-                        </select>
-                    </td>
                 </tr>
                 {{-- Fila edición — Fila 2: valores de C. Inicial e Incremento --}}
                 <tr style="background:#F8F7FF; border-bottom:2px solid #C4B5FD;">
-                    <td colspan="5"></td>{{-- Ciclo + ID LISTA + Código + Nombre + Cuotas --}}
+                    <td colspan="6"></td>{{-- Estado + Ciclo + ID LISTA + Código + Nombre + Cuotas --}}
                     <td style="padding:0 10px 7px;">
                         @if($editTipoCuotaInicial !== 'ninguna')
                         <input wire:model="editValorCuotaInicial" type="number" step="0.01" min="0" placeholder="Valor {{ $editTipoCuotaInicial === 'porcentaje' ? '%' : 'Bs' }}"
@@ -2125,7 +2126,7 @@
                                style="{{ $iE }} text-align:center;">
                         @endif
                     </td>
-                    <td colspan="2"></td>{{-- Días + Estado --}}
+                    <td></td>{{-- Días --}}
                 </tr>
 
                 @else
@@ -2144,6 +2145,13 @@
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $m->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
                             <span style="font-size:12px; font-weight:700; color:#374151;">{{ $maestras->firstItem() + $loop->index }}</span>
                         </div>
+                    </td>
+                    <td style="padding:10px 14px; text-align:center;">
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
+                                     background:{{ $m->active ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $m->active ? '#059669' : '#9CA3AF' }};">
+                            {{ $m->active ? 'Activa' : 'Inactiva' }}
+                        </span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden;">
                         <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle?->code ?? '—' }}</span>
@@ -2180,13 +2188,6 @@
                     </td>
                     <td style="padding:10px 14px; text-align:center;">
                         <span style="font-size:13px; color:#374151;">{{ $m->dias_entre_cuotas ? $m->dias_entre_cuotas.'d' : '—' }}</span>
-                    </td>
-                    <td style="padding:10px 14px; text-align:center;">
-                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
-                                     background:{{ $m->active ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $m->active ? '#059669' : '#9CA3AF' }};">
-                            {{ $m->active ? 'Activa' : 'Inactiva' }}
-                        </span>
                     </td>
                 </tr>
                 @endif
