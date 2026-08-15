@@ -39,7 +39,7 @@
      x-transition:leave="transition ease-in duration-150"
      x-transition:leave-end="opacity-0 translate-y-4 scale-95"
      class="flex flex-row items-center gap-2"
-     style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:9999;background:linear-gradient(135deg,#10b981,#059669);border-radius:16px;padding:13px 24px;box-shadow:0 8px 32px rgba(16,185,129,0.35);font-size:15px;font-weight:700;color:#fff;pointer-events:none;white-space:nowrap;">
+     style="position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:9999;background:#10B981;border-radius:16px;padding:13px 24px;box-shadow:0 8px 32px rgba(16,185,129,0.35);font-size:15px;font-weight:700;color:#fff;pointer-events:none;white-space:nowrap;">
     <svg style="width:18px;height:18px;flex-shrink:0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
     <span x-text="appToastMsg"></span>
 </div>
@@ -48,67 +48,6 @@
 @if ($step === 'cliente' || $step === 'oferta')
 
 {{-- ── BUSCADOR DE CLIENTE ───────────────────────────────────────────────── --}}
-@if (false) {{-- compact search bar replaced by modal --}}
-<div class="bg-white px-3 pt-2.5 pb-2 border-b border-gray-100">
-    @if ($sinListasActivas)
-    <div class="flex items-center gap-2 py-1" style="color:#e24b4a;">
-        <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-        </svg>
-        <span class="text-xs font-medium">Sin listas activas asignadas</span>
-    </div>
-    @else
-    <div class="relative">
-        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-        </svg>
-        <input wire:model.live.debounce.300ms="searchCliente" type="text"
-               placeholder="Buscar por CI, nombre o apellido..."
-               class="w-full pl-9 pr-3 py-2 text-sm rounded-xl border-0 focus:outline-none"
-               style="background:#f3f4f6;">
-        {{-- Dropdown --}}
-        @if (count($resultadosCliente))
-        <div class="absolute left-0 right-0 mt-1 bg-white rounded-xl shadow-2xl border border-gray-100 overflow-hidden z-50">
-            @foreach ($resultadosCliente as $c)
-            <button wire:click="seleccionarCliente({{ $c['id'] }}, {{ $c['user_id'] }}, '{{ addslashes($c['nombre']) }}', '{{ addslashes($c['ci']) }}')"
-                    class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-gray-50 transition-colors text-left border-b border-gray-50 last:border-0">
-                <div class="w-7 h-7 rounded-full flex items-center justify-center font-bold text-xs flex-shrink-0 text-white"
-                     style="background:#7c3aed;">
-                    {{ strtoupper(substr($c['nombre'], 0, 1)) }}
-                </div>
-                <div class="min-w-0">
-                    <p class="font-semibold text-sm truncate" style="color:#3C3489;">
-                        {{ $c['ci'] }} — {{ $c['nombre'] }}
-                    </p>
-                </div>
-            </button>
-            @endforeach
-        </div>
-        @elseif (strlen(trim($searchCliente)) >= 2)
-        <div class="absolute left-0 right-0 mt-1 bg-white rounded-xl shadow-xl border border-gray-100 z-50 overflow-hidden">
-            <p class="px-4 py-2.5 text-center text-xs text-gray-400 border-b border-gray-50">
-                Sin resultados para "<strong class="text-gray-600">{{ $searchCliente }}</strong>"
-            </p>
-            <button wire:click="abrirRegistroCliente"
-                    class="w-full flex items-center gap-3 px-4 py-3 transition-colors text-left"
-                    style="background:#F8F7FF;"
-                    onmouseover="this.style.background='#EEEDFE'" onmouseout="this.style.background='#F8F7FF'">
-                <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full" style="background:#EEEDFE;">
-                    <svg width="14" height="14" fill="none" stroke="#7c3aed" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
-                    </svg>
-                </div>
-                <div class="min-w-0">
-                    <p class="font-semibold text-sm" style="color:#3C3489;">Registrar nuevo cliente</p>
-                    <p class="text-xs text-gray-400">CI: {{ $searchCliente }}</p>
-                </div>
-            </button>
-        </div>
-        @endif
-    </div>
-    @endif
-</div>
-@endif {{-- /compact search bar --}}
 
 {{-- ════════════ HEADER (stats + filtros) ════════════ --}}
 <div style="background:#fff;">
@@ -352,264 +291,10 @@
 </div>
 @endif
 
-@if (false) {{-- filtros movidos al modal showProductos --}}
-@if ($clienteId && !$sinListasComunes && $step === 'oferta')
-<div class="bg-white border-b border-gray-100 px-4 py-3">
-
-    @php
-    $cardColors = [
-        ['bg'=>'#FFF7ED','iconBg'=>'#F97316','selBorder'=>'#F97316','selCard'=>'#FFF7ED','text'=>'#C2410C','sub'=>'#FB923C'],
-        ['bg'=>'#F0EEFF','iconBg'=>'#7c3aed','selBorder'=>'#7c3aed','selCard'=>'#EDE9FE','text'=>'#5B21B6','sub'=>'#8B5CF6'],
-        ['bg'=>'#F0FDF4','iconBg'=>'#059669','selBorder'=>'#059669','selCard'=>'#DCFCE7','text'=>'#065F46','sub'=>'#10B981'],
-        ['bg'=>'#EFF6FF','iconBg'=>'#3B82F6','selBorder'=>'#3B82F6','selCard'=>'#DBEAFE','text'=>'#1D4ED8','sub'=>'#60A5FA'],
-    ];
-    $iconPaths = [
-        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>',
-        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>',
-        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 8v1m0-8c-1.11 0-2.08.402-2.599 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
-        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>',
-    ];
-    @endphp
-
-    {{-- FILA 1: Label "Promociones" + cards deslizables (SOLO DESKTOP) --}}
-    <div class="hidden md:flex items-center gap-3 mb-2" style="overflow:hidden;">
-
-        {{-- Label fijo --}}
-        <div class="flex items-center gap-1.5 flex-shrink-0">
-            <svg width="13" height="13" fill="none" stroke="#F97316" stroke-width="2" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
-            </svg>
-            <span style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Promociones</span>
-        </div>
-
-        {{-- Divisor vertical --}}
-        <div style="width:1px; height:20px; background:#EDE9FE; flex-shrink:0;"></div>
-
-        {{-- Cards deslizables --}}
-        <div style="position:relative; flex:1; min-width:0; overflow:hidden;">
-        <div class="flex items-center gap-2" style="overflow-x:auto; padding-bottom:2px; scrollbar-width:none; -ms-overflow-style:none;">
-            <style>.promo-scroll::-webkit-scrollbar{display:none;}</style>
-
-            {{-- Todos --}}
-            @php $selTodos = $filterLista === ''; @endphp
-            <button wire:click="$set('filterLista', '')"
-                    class="promo-scroll flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
-                    style="padding:6px 14px 6px 6px; border-radius:20px; border:1.5px solid {{ $selTodos ? '#F97316' : '#E5E7EB' }}; background:{{ $selTodos ? '#FFF7ED' : '#fff' }}; cursor:pointer; box-shadow:{{ $selTodos ? '0 2px 8px rgba(249,115,22,0.15)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
-                <div style="width:28px; height:28px; border-radius:10px; background:{{ $selTodos ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="13" height="13" fill="none" stroke="{{ $selTodos ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
-                    </svg>
-                </div>
-                <span style="font-size:12px; font-weight:700; color:{{ $selTodos ? '#C2410C' : '#374151' }}; white-space:nowrap;">Todos</span>
-            </button>
-
-            @foreach ($listasInfo as $lid => $info)
-            @php
-                $ci  = $loop->index % count($cardColors);
-                $col = $cardColors[$ci];
-                $sel = $filterLista === (string)$lid;
-                $ico = $iconPaths[$ci];
-            @endphp
-            <button wire:click="$set('filterLista', '{{ $lid }}')"
-                    class="flex items-center gap-2 flex-shrink-0 transition-all active:scale-95"
-                    style="padding:6px 14px 6px 6px; border-radius:20px; border:1.5px solid {{ $sel ? $col['selBorder'] : '#E5E7EB' }}; background:{{ $sel ? $col['selCard'] : '#fff' }}; cursor:pointer; box-shadow:{{ $sel ? '0 2px 8px rgba(0,0,0,0.10)' : '0 1px 3px rgba(0,0,0,0.06)' }};">
-                <div style="width:28px; height:28px; border-radius:10px; background:{{ $sel ? $col['iconBg'] : $col['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="13" height="13" fill="none" stroke="{{ $sel ? '#fff' : $col['iconBg'] }}" viewBox="0 0 24 24">{!! $ico !!}</svg>
-                </div>
-                <span style="font-size:12px; font-weight:700; color:{{ $sel ? $col['text'] : '#374151' }}; white-space:nowrap;">{{ ucwords(strtolower($info['nombre'])) }}</span>
-            </button>
-            @endforeach
-
-        </div>
-        <div style="position:absolute; right:0; top:0; bottom:0; width:48px; pointer-events:none; background:linear-gradient(to right, transparent, #fff);"></div>
-        </div>
-    </div>
-
-    {{-- FILA 2 DESKTOP: Buscador + contador --}}
-    <div class="hidden md:flex items-center gap-3">
-        <div class="relative flex-1">
-            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <input wire:model.live.debounce.300ms="searchProducto" type="text"
-                   placeholder="Buscar producto..."
-                   class="w-full pl-8 pr-3 py-2 focus:outline-none"
-                   style="background:#F8F7FF; border:2.5px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489;"
-                   onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
-                   onblur="this.style.borderColor='#C4B5FD'; this.style.background='#F8F7FF';">
-        </div>
-        @php $totalProductos = collect($ofertaPorLista)->flatten(1)->count(); @endphp
-        <span class="flex-shrink-0" style="font-size:12px; font-weight:600; color:#C4B5FD; white-space:nowrap;">{{ $totalProductos }} {{ $totalProductos === 1 ? 'producto' : 'productos' }}</span>
-    </div>
-
-    {{-- FILA MÓVIL: botón selector promo + buscador --}}
-    @php
-        $selLabel  = $filterLista === '' ? 'Todos' : ucwords(strtolower($listasInfo[(string)$filterLista]['nombre'] ?? 'Todos'));
-        $selIsAll  = $filterLista === '';
-        $selIdx    = $selIsAll ? -1 : array_search((string)$filterLista, array_keys($listasInfo));
-        $selColMob = (!$selIsAll && $selIdx !== false) ? $cardColors[$selIdx % count($cardColors)] : null;
-    @endphp
-    <div class="flex md:hidden items-center gap-2 pt-0" x-data="{ promoOpen: false }">
-
-        {{-- Botón selector --}}
-        <div style="position:relative; flex-shrink:0;">
-            <button @click="promoOpen = !promoOpen"
-                    style="display:flex; align-items:center; gap:6px; padding:8px 10px; border-radius:10px;
-                           border:1.5px solid {{ $selIsAll ? '#E5E7EB' : ($selColMob['selBorder'] ?? '#7B6FE8') }};
-                           background:{{ $selIsAll ? '#fff' : ($selColMob['selCard'] ?? '#EEEDFE') }};
-                           cursor:pointer; -webkit-appearance:none; appearance:none;">
-                <div style="width:22px; height:22px; border-radius:6px; background:{{ $selIsAll ? '#F3F4F6' : ($selColMob['iconBg'] ?? '#7B6FE8') }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    @if ($selIsAll)
-                    <svg width="11" height="11" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-                    @else
-                    <svg width="11" height="11" fill="none" stroke="#fff" viewBox="0 0 24 24">{!! $iconPaths[$selIdx % count($iconPaths)] !!}</svg>
-                    @endif
-                </div>
-                <span style="font-size:12px; font-weight:700; color:{{ $selIsAll ? '#374151' : ($selColMob['text'] ?? '#534AB7') }}; white-space:nowrap; max-width:90px; overflow:hidden; text-overflow:ellipsis;">{{ $selLabel }}</span>
-                <svg width="10" height="10" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" style="flex-shrink:0;">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
-                </svg>
-            </button>
-
-            {{-- Dropdown --}}
-            <div x-show="promoOpen" x-cloak @click.away="promoOpen = false"
-                 style="position:absolute; top:calc(100% + 4px); left:0; background:#fff;
-                        border-radius:12px; box-shadow:0 8px 24px rgba(60,52,137,0.18);
-                        border:1px solid #EDE9FE; z-index:200; min-width:210px; overflow:hidden;">
-
-                {{-- Todos --}}
-                <button wire:click="$set('filterLista', '')" @click="promoOpen = false"
-                        style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
-                               background:{{ $selIsAll ? '#FFF7ED' : '#fff' }}; border:none; cursor:pointer;
-                               border-bottom:1px solid #F3F4F6; -webkit-appearance:none; appearance:none;">
-                    <div style="width:28px; height:28px; border-radius:8px; background:{{ $selIsAll ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="13" height="13" fill="none" stroke="{{ $selIsAll ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
-                    </div>
-                    <span style="font-size:13px; font-weight:700; color:{{ $selIsAll ? '#C2410C' : '#374151' }};">Todos</span>
-                </button>
-
-                @foreach ($listasInfo as $lid => $info)
-                @php
-                    $ci3  = $loop->index % count($cardColors);
-                    $col3 = $cardColors[$ci3];
-                    $sel3 = $filterLista === (string)$lid;
-                    $ico3 = $iconPaths[$ci3];
-                @endphp
-                <button wire:click="$set('filterLista', '{{ $lid }}')" @click="promoOpen = false"
-                        style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
-                               background:{{ $sel3 ? $col3['selCard'] : '#fff' }}; border:none; cursor:pointer;
-                               {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }} -webkit-appearance:none; appearance:none;">
-                    <div style="width:28px; height:28px; border-radius:8px; background:{{ $sel3 ? $col3['iconBg'] : $col3['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="13" height="13" fill="none" stroke="{{ $sel3 ? '#fff' : $col3['iconBg'] }}" viewBox="0 0 24 24">{!! $ico3 !!}</svg>
-                    </div>
-                    <span style="font-size:13px; font-weight:700; color:{{ $sel3 ? $col3['text'] : '#374151' }}; white-space:nowrap;">{{ ucwords(strtolower($info['nombre'])) }}</span>
-                </button>
-                @endforeach
-            </div>
-        </div>
-
-        {{-- Buscador --}}
-        <div class="relative flex-1">
-            <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-            </svg>
-            <input wire:model.live.debounce.300ms="searchProducto" type="text"
-                   placeholder="Buscar producto..."
-                   class="w-full pl-8 pr-3 py-2 focus:outline-none"
-                   style="background:#F8F7FF; border:2.5px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489;"
-                   onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
-                   onblur="this.style.borderColor='#C4B5FD'; this.style.background='#F8F7FF';">
-        </div>
-    </div>
-
-</div>
-@endif
-@endif {{-- /filtros movidos --}}
 
 </div>{{-- /header --}}
 
 {{-- ── DOCUMENTACIÓN DEL PLAN (movida dentro del sticky, antes de filtros) ── --}}
-@if (false)
-<div>
-    <div class="doc-grid" style="display:grid; grid-template-columns:repeat(5,1fr); gap:6px;">
-        {{-- 1. Anverso CI --}}
-        <label style="cursor:pointer;">
-            <div style="{{ $docAnversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:70px; box-sizing:border-box;">
-                <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAnversoCi ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
-                    @if($docAnversoCi)
-                    <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                    @else
-                    <svg style="width:13px;height:13px;" fill="none" stroke="#534AB7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/></svg>
-                    @endif
-                </div>
-                <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:{{ $docAnversoCi ? '#0F6E56' : '#534AB7' }};">Anverso CI</span>
-                <span style="font-size:10px; color:{{ $docAnversoCi ? '#0F6E56' : '#AFA9EC' }};">{{ $docAnversoCi ? 'OK' : 'JPG/PDF' }}</span>
-            </div>
-            <input type="file" wire:model="docAnversoCi" accept="image/*,application/pdf" class="hidden">
-        </label>
-        {{-- 2. Reverso CI --}}
-        <label style="cursor:pointer;">
-            <div style="{{ $docReversoCi ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:70px; box-sizing:border-box;">
-                <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docReversoCi ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
-                    @if($docReversoCi)
-                    <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                    @else
-                    <svg style="width:13px;height:13px;" fill="none" stroke="#534AB7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/></svg>
-                    @endif
-                </div>
-                <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:{{ $docReversoCi ? '#0F6E56' : '#534AB7' }};">Reverso CI</span>
-                <span style="font-size:10px; color:{{ $docReversoCi ? '#0F6E56' : '#AFA9EC' }};">{{ $docReversoCi ? 'OK' : 'JPG/PDF' }}</span>
-            </div>
-            <input type="file" wire:model="docReversoCi" accept="image/*,application/pdf" class="hidden">
-        </label>
-        {{-- 3. Anverso Documento --}}
-        <label style="cursor:pointer;">
-            <div style="{{ $docAnversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:70px; box-sizing:border-box;">
-                <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAnversoDoc ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
-                    @if($docAnversoDoc)
-                    <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                    @else
-                    <svg style="width:13px;height:13px;" fill="none" stroke="#534AB7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
-                    @endif
-                </div>
-                <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:{{ $docAnversoDoc ? '#0F6E56' : '#534AB7' }};">Anverso Doc</span>
-                <span style="font-size:10px; color:{{ $docAnversoDoc ? '#0F6E56' : '#AFA9EC' }};">{{ $docAnversoDoc ? 'OK' : 'JPG/PDF' }}</span>
-            </div>
-            <input type="file" wire:model="docAnversoDoc" accept="image/*,application/pdf" class="hidden">
-        </label>
-        {{-- 4. Reverso Documento --}}
-        <label style="cursor:pointer;">
-            <div style="{{ $docReversoDoc ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:70px; box-sizing:border-box;">
-                <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docReversoDoc ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
-                    @if($docReversoDoc)
-                    <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                    @else
-                    <svg style="width:13px;height:13px;" fill="none" stroke="#534AB7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"/></svg>
-                    @endif
-                </div>
-                <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:{{ $docReversoDoc ? '#0F6E56' : '#534AB7' }};">Reverso Doc</span>
-                <span style="font-size:10px; color:{{ $docReversoDoc ? '#0F6E56' : '#AFA9EC' }};">{{ $docReversoDoc ? 'OK' : 'JPG/PDF' }}</span>
-            </div>
-            <input type="file" wire:model="docReversoDoc" accept="image/*,application/pdf" class="hidden">
-        </label>
-        {{-- 5. Aviso Luz --}}
-        <label style="cursor:pointer;">
-            <div style="{{ $docAvisoLuz ? 'border:1.5px solid #0F6E56; background:#F0FDF4;' : 'border:1.5px dashed #9CA3AF; background:#fff;' }} border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:70px; box-sizing:border-box;">
-                <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; {{ $docAvisoLuz ? 'background:#DCFCE7;' : 'background:#EEEDFE;' }}">
-                    @if($docAvisoLuz)
-                    <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
-                    @else
-                    <svg style="width:13px;height:13px;" fill="none" stroke="#534AB7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
-                    @endif
-                </div>
-                <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:{{ $docAvisoLuz ? '#0F6E56' : '#534AB7' }};">Aviso Luz</span>
-                <span style="font-size:10px; color:{{ $docAvisoLuz ? '#0F6E56' : '#AFA9EC' }};">{{ $docAvisoLuz ? 'OK' : 'JPG/PDF' }}</span>
-            </div>
-            <input type="file" wire:model="docAvisoLuz" accept="image/*,application/pdf" class="hidden">
-        </label>
-    </div>
-</div>
-@endif
 
 {{-- ── STEP OFERTA ──────────────────────────────────────────────────────── --}}
 @if ($step === 'oferta')
@@ -617,7 +302,7 @@
 @if ($sinListasComunes)
 <div class="flex flex-col items-center justify-center py-16 text-center px-4">
     <div class="w-14 h-14 rounded-full flex items-center justify-center mb-4" style="background:#EEEDFE;">
-        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#7c3aed;">
+        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#7B6FE8;">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"/>
         </svg>
     </div>
@@ -625,7 +310,7 @@
     <p class="text-gray-400 text-sm mt-1 max-w-xs">Este cliente no tiene acceso a listas compartidas contigo.</p>
     <button wire:click="cambiarCliente"
             class="mt-5 px-5 py-2 text-white text-sm font-semibold rounded-xl transition-colors"
-            style="background:#7c3aed;">
+            style="background:#7B6FE8;">
         Buscar otro cliente
     </button>
 </div>
@@ -670,7 +355,7 @@
             {{-- Precios --}}
             <div style="background:#F8F7FF; border-radius:8px; padding:8px 10px; margin-bottom:8px;">
                 <div style="display:flex; align-items:center; gap:14px; margin-bottom:4px;">
-                    <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Precio Bs Un: <span style="color:#7c3aed; font-size:14px; font-weight:400;">{{ number_format($item['precio'], 2) }}</span></span>
+                    <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Precio Bs Un: <span style="color:#7B6FE8; font-size:14px; font-weight:400;">{{ number_format($item['precio'], 2) }}</span></span>
                     <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Puntos: <span style="color:#111827; font-size:14px; font-weight:400;">{{ $item['puntos'] }}</span></span>
                 </div>
                 <div style="display:flex; align-items:center; gap:14px;">
@@ -784,7 +469,7 @@
                     <button type="button"
                             @click="ubEntModal=true; ubEntTipo='ciudad'; ubEntOpciones=@js($ciudadesAll->pluck('nombre')->toArray()); ubEntSearch=''"
                             style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevoCiudad ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:#fff; cursor:pointer; box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
-                        <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoCiudad ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoCiudad ? '#7B6FE8' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoCiudad ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevoCiudad ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoCiudad ? ucwords(strtolower($entregaNuevoCiudad)) : 'Seleccionar ciudad' }}</span>
                         <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                     </button>
@@ -795,7 +480,7 @@
                     <button type="button"
                             @if($entregaNuevoCiudad) @click="ubEntModal=true; ubEntTipo='provincia'; ubEntOpciones=@js($entregaProvincias->pluck('nombre')->toArray()); ubEntSearch=''" @endif
                             style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevaProvincia ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:{{ $entregaNuevoCiudad ? '#fff' : '#F8F7FF' }}; {{ $entregaNuevoCiudad ? 'cursor:pointer;' : 'cursor:not-allowed;' }} box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
-                        <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevaProvincia ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                        <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevaProvincia ? '#7B6FE8' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
                         <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevaProvincia ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevaProvincia ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevaProvincia ? ucwords(strtolower($entregaNuevaProvincia)) : 'Seleccionar provincia' }}</span>
                         <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                     </button>
@@ -805,7 +490,7 @@
                     <button type="button"
                             @if($entregaNuevaProvincia) @click="ubEntModal=true; ubEntTipo='municipio'; ubEntOpciones=@js($entregaMunicipios->pluck('nombre')->toArray()); ubEntSearch=''" @endif
                             style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevoMunicipio ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:{{ $entregaNuevaProvincia ? '#fff' : '#F8F7FF' }}; {{ $entregaNuevaProvincia ? 'cursor:pointer;' : 'cursor:not-allowed;' }} box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
-                        <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoMunicipio ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                        <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoMunicipio ? '#7B6FE8' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                         <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoMunicipio ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevoMunicipio ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoMunicipio ? ucwords(strtolower($entregaNuevoMunicipio)) : 'Seleccionar municipio' }}</span>
                         <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                     </button>
@@ -840,7 +525,7 @@
                 Cancelar
             </button>
             <button wire:click="confirmarPedido"
-                    style="flex:2; padding:13px 10px; background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); color:#fff; font-size:13px; font-weight:800; border-radius:16px; border:none; cursor:pointer; box-shadow:0 4px 18px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px;">
+                    style="flex:2; padding:13px 10px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:800; border-radius:16px; border:none; cursor:pointer; box-shadow:0 4px 18px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px;">
                 <svg width="14" height="14" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 Confirmar Plan
             </button>
@@ -851,132 +536,6 @@
 </div>
 
 {{-- ── (grid movido al modal showProductos) ──────────────────────────────── --}}
-@if (false)
-<div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px;">
-    <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:16px;">
-        @forelse (collect($ofertaPorLista)->flatten(1) as $p)
-        @php
-            $pid       = (string)$p['product_id'];
-            $enCarrito = isset($carrito[$pid]);
-            $qty       = $enCarrito ? $carrito[$pid]['cantidad'] : 0;
-        @endphp
-            <div class="flex flex-col w-full"
-                 x-data="{ n: 0, precio: @js((float)$p['precio']), puntos: @js((int)$p['puntos']), maxStock: @js((int)$p['stock']) }"
-                 x-on:carrito-vaciado.window="n = 0"
-                 style="background:#fff; border:1.5px solid #C4B5FD; border-radius:12px; overflow:hidden; box-shadow:2px 6px 20px rgba(0,0,0,0.22);"
-                 wire:key="prod-{{ $pid }}">
-
-                {{-- FOTO (solo escritorio) --}}
-                <div class="card-foto relative flex-shrink-0"
-                     style="width:100%; height:160px; overflow:hidden; background:#ffffff; border-bottom:0.5px solid #e5e7eb;">
-                    @if ($p['image'])
-                    <img src="{{ $p['image'] }}" alt="{{ $p['nombre'] }}"
-                         style="width:100%; height:100%; object-fit:contain; object-position:center; display:block;"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    @endif
-                    <div class="w-full h-full items-center justify-center" style="display:{{ $p['image'] ? 'none' : 'flex' }};">
-                        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color:#CECBF6;">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                        </svg>
-                    </div>
-
-                    {{-- Badge naranja top-left: cantidad en carrito --}}
-                    @if ($qty > 0)
-                    <span class="absolute flex items-center justify-center font-bold text-white leading-none"
-                          style="top:8px; left:8px; width:26px; height:26px; border-radius:50%; background:#f97316; font-size:12px;">{{ $qty }}</span>
-                    @endif
-                </div>
-
-                {{-- CUERPO MÓVIL --}}
-                <div class="card-body-mob" style="padding:10px 12px 6px; display:flex; flex-direction:column; gap:0; flex:1;">
-                    {{-- Nombre + código + Precio/Pts --}}
-                    <div style="background:transparent; border-radius:8px; padding:7px 10px; min-width:0;">
-                        {{-- Fila nombre --}}
-                        <div style="display:flex; align-items:center; gap:6px; min-width:0;">
-                            @if ($qty > 0)
-                            <span style="flex-shrink:0; width:20px; height:20px; border-radius:50%; background:#f97316; color:#fff; font-size:10px; font-weight:800; display:inline-flex; align-items:center; justify-content:center;">{{ $qty }}</span>
-                            @endif
-                            <span style="font-size:15px; font-weight:900; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-transform:uppercase; letter-spacing:0.01em; flex:1; min-width:0;">{{ $p['nombre'] }}</span>
-                        </div>
-                        {{-- Fila código + Precio/Pts a la derecha --}}
-                        <div style="display:flex; align-items:baseline; justify-content:space-between; gap:6px; margin-top:3px;">
-                            <span style="font-size:15px; font-weight:400; color:#1a1a1a; text-transform:uppercase; letter-spacing:0.06em; flex-shrink:0;">{{ $p['code'] ?? '' }}</span>
-                            <div style="display:flex; align-items:baseline; gap:8px; flex-shrink:0;">
-                                <div style="display:flex; align-items:baseline; gap:3px;">
-                                    <span style="font-size:9px; font-weight:600; color:#9B93E0;">Precio Bs</span>
-                                    <span style="font-size:13px; font-weight:400; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
-                                </div>
-                                <div style="display:flex; align-items:baseline; gap:3px;">
-                                    <span style="font-size:9px; font-weight:600; color:#9B93E0;">Puntos</span>
-                                    <span style="font-size:13px; font-weight:400; color:#0F6E56;">{{ $p['puntos'] }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- CUERPO ESCRITORIO --}}
-                <div class="card-body-desk" style="padding:10px 12px 8px; display:flex; flex-direction:column; gap:6px; flex:1;">
-                    <div style="background:#F8F7FF; border-radius:8px; padding:8px 10px; display:flex; flex-direction:column; gap:4px;">
-                        <span style="font-size:11px; font-weight:800; color:#3C3489; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;" title="{{ $p['nombre'] }}">{{ $p['nombre'] }}</span>
-                        <span style="font-size:11px; font-weight:400; color:#534AB7;">{{ $p['code'] ?? '' }}</span>
-                        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:6px;">
-                            <span style="font-size:10px; font-weight:400; color:#534AB7;">Precio Bs</span>
-                            <span style="font-size:14px; font-weight:400; color:#7c3aed;">{{ number_format($p['precio'], 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:6px;">
-                            <span style="font-size:10px; font-weight:400; color:#534AB7;">Puntos</span>
-                            <span style="font-size:11px; font-weight:400; color:#0F6E56;">{{ $p['puntos'] }}</span>
-                        </div>
-                    </div>
-                    <div style="background:#EEEDFE; border-radius:8px; padding:8px 10px; display:flex; flex-direction:column; gap:3px;">
-                        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:6px;">
-                            <span style="font-size:11px; font-weight:400; color:#534AB7;">Total Bs:</span>
-                            <span x-text="(precio * n).toFixed(2)" style="font-size:15px; font-weight:400; color:#3C3489;">{{ number_format($p['precio'] * $qty, 2) }}</span>
-                        </div>
-                        <div style="display:flex; justify-content:space-between; align-items:baseline; gap:6px;">
-                            <span style="font-size:11px; font-weight:400; color:#534AB7;">Total Puntos:</span>
-                            <span x-text="'+' + (puntos * n) + ' pts'" style="font-size:13px; font-weight:400; color:#0F6E56;">+{{ $p['puntos'] * $qty }} pts</span>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- PIE --}}
-                <div style="padding:6px 12px 10px; display:flex; align-items:center; justify-content:flex-end; gap:6px; flex-shrink:0;">
-                    {{-- Agregar --}}
-                    <button @click="if(n === 0) n = 1; $wire.agregar({{ $p['product_id'] }}, n).then(() => n = 0)"
-                            class="flex items-center justify-center gap-1 transition-all active:scale-95 flex-shrink-0"
-                            style="background:#fff; color:#7B6FE8; border:1.5px solid #7B6FE8; border-radius:10px; padding:7px 12px; font-size:12px; font-weight:700; -webkit-appearance:none; appearance:none;">
-                        <svg style="width:13px; height:13px; flex-shrink:0;" fill="none" stroke="#7B6FE8" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
-                        </svg>
-                        Agregar
-                    </button>
-                    {{-- Basurero círculo --}}
-                    @if ($qty > 0)
-                    <button wire:click="quitar({{ $p['product_id'] }})"
-                            class="flex items-center justify-center flex-shrink-0 transition-all active:scale-95"
-                            style="width:32px; height:32px; border-radius:50%; background:#FEF2F2; border:none; -webkit-appearance:none; appearance:none; clip-path:circle(16px at 16px 16px);">
-                        <svg style="width:14px; height:14px;" fill="none" stroke="#e24b4a" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                        </svg>
-                    </button>
-                    @endif
-                </div>
-
-            </div>
-        @empty
-        <div class="flex flex-col items-center justify-center py-16 text-gray-400" style="grid-column:1/-1;">
-            <svg class="w-12 h-12 mb-3 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-            </svg>
-            <p class="font-medium text-sm">No hay productos disponibles</p>
-        </div>
-        @endforelse
-    </div>
-</div>
-@endif {{-- /grid movido al modal --}}
 
 @endif {{-- sinListasComunes --}}
 @endif {{-- step oferta --}}
@@ -989,7 +548,7 @@
 <div class="mx-auto px-4 pb-10 pt-4" style="max-width:900px;">
 
     {{-- Header: VERIFICACIÓN --}}
-    <div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:14px; padding:16px 18px; margin-bottom:14px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
+    <div style="background:#7B6FE8; border-radius:14px; padding:16px 18px; margin-bottom:14px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
         <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin:0 0 2px; text-align:center;">VERIFICACIÓN</h2>
         <p style="font-size:11px; color:rgba(255,255,255,0.75); margin:0; text-align:center;">Revisá tu pedido antes de continuar</p>
     </div>
@@ -1006,7 +565,7 @@
     {{-- Cliente --}}
     <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:12px 14px; margin-bottom:14px; box-shadow:0 2px 12px rgba(123,111,232,0.12); display:flex; align-items:center; gap:12px;">
         <div style="width:40px; height:40px; border-radius:10px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <span style="font-size:17px; font-weight:800; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
+            <span style="font-size:17px; font-weight:800; color:#7B6FE8;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
         </div>
         <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;">
             @if ($clienteCI)
@@ -1054,7 +613,7 @@
                 <span style="font-size:11px; color:#9B93E0;">Bs {{ number_format($item['precio'], 2) }} c/u</span>
             </div>
             <div style="text-align:right; flex-shrink:0;">
-                <span style="font-size:15px; font-weight:400; color:#7c3aed; display:block;">Bs {{ number_format($item['precio'] * $item['cantidad'], 2) }}</span>
+                <span style="font-size:15px; font-weight:400; color:#7B6FE8; display:block;">Bs {{ number_format($item['precio'] * $item['cantidad'], 2) }}</span>
                 @if ($item['puntos'] > 0)
                 <span style="font-size:10px; font-weight:400; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:1px 7px;">+{{ $item['puntos'] * $item['cantidad'] }} pts</span>
                 @endif
@@ -1103,7 +662,7 @@
             {{-- Pie: total + puntos --}}
             <div style="display:flex; align-items:center; gap:8px; padding:8px 12px; background:#F8F7FF; border-top:1px solid #EDE9FE;">
                 <span style="font-size:11px; font-weight:600; color:#9B93E0; flex:1;">Total</span>
-                <span style="font-size:17px; font-weight:400; color:#7c3aed;">Bs {{ number_format($item['precio'] * $item['cantidad'], 2) }}</span>
+                <span style="font-size:17px; font-weight:400; color:#7B6FE8;">Bs {{ number_format($item['precio'] * $item['cantidad'], 2) }}</span>
                 @if ($item['puntos'] > 0)
                 <span style="font-size:10px; font-weight:400; background:#E1F5EE; color:#0F6E56; border-radius:99px; padding:2px 8px; white-space:nowrap;">+{{ $item['puntos'] * $item['cantidad'] }} pts</span>
                 @endif
@@ -1154,7 +713,7 @@
                 @endif
             </div>
             <span style="font-size:11px; {{ $cuota['tipo'] === 'inicial' ? 'font-weight:700; color:#0F6E56;' : 'color:#6B7280;' }}">{{ $cuota['fecha'] }}</span>
-            <span style="font-size:14px; font-weight:800; color:#7c3aed; text-align:right;">Bs {{ number_format($cuota['monto'], 2) }}</span>
+            <span style="font-size:14px; font-weight:800; color:#7B6FE8; text-align:right;">Bs {{ number_format($cuota['monto'], 2) }}</span>
         </div>
         @endforeach
     </div>
@@ -1199,7 +758,7 @@
 <div class="max-w-2xl mx-auto px-4 pt-4 pb-10">
 
     {{-- Header: COMPLEMENTO --}}
-    <div style="background:linear-gradient(135deg,#7B6FE8 0%,#5B4FD4 100%); border-radius:14px; padding:16px 18px; margin-bottom:14px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
+    <div style="background:#7B6FE8; border-radius:14px; padding:16px 18px; margin-bottom:14px; box-shadow:0 4px 18px rgba(123,111,232,0.35);">
         <h2 style="font-size:20px; font-weight:800; color:#fff; letter-spacing:-0.3px; margin:0 0 2px; text-align:center;">COMPLEMENTO</h2>
         <p style="font-size:11px; color:rgba(255,255,255,0.75); margin:0; text-align:center;">Documentación y Entrega</p>
     </div>
@@ -1216,7 +775,7 @@
     {{-- Card Cliente --}}
     <div style="background:#fff; border:1px solid #EDE9FE; border-radius:10px; padding:12px 14px; margin-bottom:14px; box-shadow:0 2px 12px rgba(123,111,232,0.12); display:flex; align-items:center; gap:12px;">
         <div style="width:40px; height:40px; border-radius:10px; background:#EEEDFE; border:1.5px solid #C4B5FD; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <span style="font-size:17px; font-weight:800; color:#7c3aed;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
+            <span style="font-size:17px; font-weight:800; color:#7B6FE8;">{{ strtoupper(substr($clienteNombre, 0, 1)) }}</span>
         </div>
         <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:4px;">
             @if ($clienteCI)
@@ -1373,7 +932,7 @@
                 <button type="button"
                         @click="ubEntModal=true; ubEntTipo='ciudad'; ubEntOpciones=@js($ciudadesAll->pluck('nombre')->toArray()); ubEntSearch=''"
                         style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevoCiudad ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:#fff; cursor:pointer; box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
-                    <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoCiudad ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                    <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoCiudad ? '#7B6FE8' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                     <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoCiudad ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevoCiudad ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoCiudad ? ucwords(strtolower($entregaNuevoCiudad)) : 'Seleccionar ciudad' }}</span>
                     <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                 </button>
@@ -1384,7 +943,7 @@
                 <button type="button"
                         @if($entregaNuevoCiudad) @click="ubEntModal=true; ubEntTipo='provincia'; ubEntOpciones=@js($entregaProvincias->pluck('nombre')->toArray()); ubEntSearch=''" @endif
                         style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevaProvincia ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:{{ $entregaNuevoCiudad ? '#fff' : '#F8F7FF' }}; {{ $entregaNuevoCiudad ? 'cursor:pointer;' : 'cursor:not-allowed;' }} box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
-                    <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevaProvincia ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
+                    <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevaProvincia ? '#7B6FE8' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/></svg>
                     <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevaProvincia ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevaProvincia ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevaProvincia ? ucwords(strtolower($entregaNuevaProvincia)) : 'Seleccionar provincia' }}</span>
                     <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                 </button>
@@ -1394,7 +953,7 @@
                 <button type="button"
                         @if($entregaNuevaProvincia) @click="ubEntModal=true; ubEntTipo='municipio'; ubEntOpciones=@js($entregaMunicipios->pluck('nombre')->toArray()); ubEntSearch=''" @endif
                         style="width:100%; padding:8px 10px; border:1.5px solid {{ $entregaNuevoMunicipio ? '#C4B5FD' : '#EDE9FE' }}; border-radius:8px; background:{{ $entregaNuevaProvincia ? '#fff' : '#F8F7FF' }}; {{ $entregaNuevaProvincia ? 'cursor:pointer;' : 'cursor:not-allowed;' }} box-sizing:border-box; display:flex; align-items:center; gap:6px; overflow:hidden; transition:all 0.15s;">
-                    <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoMunicipio ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                    <svg width="11" height="11" fill="none" stroke="{{ $entregaNuevoMunicipio ? '#7B6FE8' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                     <span style="flex:1; min-width:0; text-align:left; font-size:12px; color:{{ $entregaNuevoMunicipio ? '#3C3489' : '#4B5563' }}; font-weight:{{ $entregaNuevoMunicipio ? '500' : '500' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $entregaNuevoMunicipio ? ucwords(strtolower($entregaNuevoMunicipio)) : 'Seleccionar municipio' }}</span>
                     <svg width="8" height="8" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24" style="flex-shrink:0;"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/></svg>
                 </button>
@@ -1542,7 +1101,7 @@
             @php
             $mColors = [
                 ['bg'=>'#FFF7ED','iconBg'=>'#F97316','selBorder'=>'#F97316','selCard'=>'#FFF7ED','text'=>'#C2410C'],
-                ['bg'=>'#F0EEFF','iconBg'=>'#7c3aed','selBorder'=>'#7c3aed','selCard'=>'#EDE9FE','text'=>'#5B21B6'],
+                ['bg'=>'#F0EEFF','iconBg'=>'#7B6FE8','selBorder'=>'#7B6FE8','selCard'=>'#EDE9FE','text'=>'#3C3489'],
                 ['bg'=>'#F0FDF4','iconBg'=>'#059669','selBorder'=>'#059669','selCard'=>'#DCFCE7','text'=>'#065F46'],
                 ['bg'=>'#EFF6FF','iconBg'=>'#3B82F6','selBorder'=>'#3B82F6','selCard'=>'#DBEAFE','text'=>'#1D4ED8'],
             ];
@@ -1636,7 +1195,7 @@
                         <input wire:model.live.debounce.300ms="searchProducto" type="text"
                                placeholder="Buscar producto..."
                                style="width:100%; padding:8px 10px 8px 28px; background:#F8F7FF; border:2px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"
-                               onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
+                               onfocus="this.style.borderColor='#7B6FE8'; this.style.background='#fff';"
                                onblur="this.style.borderColor='#C4B5FD'; this.style.background='#F8F7FF';">
                     </div>
                 </div>
@@ -1677,7 +1236,7 @@
                     {{-- Fila 2: Precio Bs Un / Total Bs Total Puntos --}}
                     <div style="margin-bottom:8px; background:#F8F7FF; border-radius:8px; padding:8px 10px;">
                         <div style="display:flex; align-items:center; gap:14px; margin-bottom:4px;">
-                            <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Precio Bs Un: <span style="color:#7c3aed; font-size:14px; font-weight:400;">{{ number_format($p['precio'], 2) }}</span></span>
+                            <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Precio Bs Un: <span style="color:#7B6FE8; font-size:14px; font-weight:400;">{{ number_format($p['precio'], 2) }}</span></span>
                             <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Puntos: <span style="color:#111827; font-size:14px; font-weight:400;">{{ $p['puntos'] }}</span></span>
                         </div>
                         <div style="display:flex; align-items:center; gap:14px;">
@@ -1756,7 +1315,7 @@
                 <div style="display:flex; align-items:center; gap:8px;">
                     {{-- Ícono persona outline sutil --}}
                     <div style="width:28px; height:28px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <svg width="14" height="14" fill="none" stroke="#7c3aed" stroke-width="1.7" viewBox="0 0 24 24">
+                        <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="1.7" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                         </svg>
                     </div>
@@ -1859,7 +1418,7 @@
                         onmouseover="this.style.background='#F9FAFB'; this.style.borderColor='#D1D5DB'; this.querySelector('.nombre-text').style.color='#3C3489';"
                         onmouseout="this.style.background='#fff'; this.style.borderColor='#E5E7EB'; this.querySelector('.nombre-text').style.color='#534AB7';">
                     <div style="width:32px; height:32px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <span style="font-weight:700; font-size:13px; color:#7c3aed;">{{ strtoupper(substr($c['nombre'], 0, 1)) }}</span>
+                        <span style="font-weight:700; font-size:13px; color:#7B6FE8;">{{ strtoupper(substr($c['nombre'], 0, 1)) }}</span>
                     </div>
                     <div style="min-width:0; flex:1; text-align:left;">
                         <p class="nombre-text" style="font-weight:600; font-size:13px; color:#534AB7; margin:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; transition:color 0.12s;">{{ $c['nombre'] }}</p>
@@ -1919,7 +1478,7 @@
         <div style="padding:10px 12px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
             <input x-model="ubEntSearch" type="text" placeholder="Buscar..."
                    style="width:100%; padding:7px 10px; border:1.5px solid #EDE9FE; border-radius:8px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"
-                   onfocus="this.style.borderColor='#7c3aed'" onblur="this.style.borderColor='#EDE9FE'">
+                   onfocus="this.style.borderColor='#7B6FE8'" onblur="this.style.borderColor='#EDE9FE'">
         </div>
         <div style="overflow-y:auto; flex:1; min-height:0; padding:4px 0;">
             <template x-for="op in ubEntOpciones.filter(o => o.toLowerCase().includes(ubEntSearch.toLowerCase()))" :key="op">
@@ -2067,7 +1626,7 @@
                         <button type="button"
                                 @click="ubModal=true; ubTipo='ciudad'; ubOpciones=@js($ciudadesAll->pluck('nombre')->toArray()); ubSearch=''"
                                 style="width:100%; padding:10px 12px; border:1.5px solid {{ $regCiudad ? '#C4B5FD' : '#EDE9FE' }}; border-radius:10px; background:{{ $regCiudad ? '#EEEDFE' : '#fff' }}; cursor:pointer; box-sizing:border-box; display:flex; align-items:center; gap:8px; overflow:hidden; transition:all 0.15s;">
-                            <svg width="13" height="13" fill="none" stroke="{{ $regCiudad ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;">
+                            <svg width="13" height="13" fill="none" stroke="{{ $regCiudad ? '#7B6FE8' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                             </svg>
@@ -2083,7 +1642,7 @@
                         <button type="button"
                                 @if($regCiudad) @click="ubModal=true; ubTipo='provincia'; ubOpciones=@js($regProvincias->pluck('nombre')->toArray()); ubSearch=''" @endif
                                 style="width:100%; padding:10px 12px; border:1.5px solid {{ $regProvincia ? '#C4B5FD' : '#EDE9FE' }}; border-radius:10px; background:{{ $regProvincia ? '#EEEDFE' : ($regCiudad ? '#fff' : '#FAFAFE') }}; {{ $regCiudad ? 'cursor:pointer;' : 'cursor:not-allowed; opacity:0.5;' }} box-sizing:border-box; display:flex; align-items:center; gap:8px; overflow:hidden; transition:all 0.15s;">
-                            <svg width="13" height="13" fill="none" stroke="{{ $regProvincia ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;">
+                            <svg width="13" height="13" fill="none" stroke="{{ $regProvincia ? '#7B6FE8' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"/>
                             </svg>
                             <span style="flex:1; min-width:0; text-align:left; font-size:13px; color:{{ $regProvincia ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $regProvincia ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $regProvincia ? ucwords(strtolower($regProvincia)) : 'Seleccionar' }}</span>
@@ -2098,7 +1657,7 @@
                         <button type="button"
                                 @if($regProvincia) @click="ubModal=true; ubTipo='municipio'; ubOpciones=@js($regMunicipios->pluck('nombre')->toArray()); ubSearch=''" @endif
                                 style="width:100%; padding:10px 12px; border:1.5px solid {{ $regMunicipio ? '#C4B5FD' : '#EDE9FE' }}; border-radius:10px; background:{{ $regMunicipio ? '#EEEDFE' : ($regProvincia ? '#fff' : '#FAFAFE') }}; {{ $regProvincia ? 'cursor:pointer;' : 'cursor:not-allowed; opacity:0.5;' }} box-sizing:border-box; display:flex; align-items:center; gap:8px; overflow:hidden; transition:all 0.15s;">
-                            <svg width="13" height="13" fill="none" stroke="{{ $regMunicipio ? '#7c3aed' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;">
+                            <svg width="13" height="13" fill="none" stroke="{{ $regMunicipio ? '#7B6FE8' : '#C4B5FD' }}" viewBox="0 0 24 24" style="flex-shrink:0;">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                             </svg>
                             <span style="flex:1; min-width:0; text-align:left; font-size:13px; color:{{ $regMunicipio ? '#3C3489' : '#9CA3AF' }}; font-weight:{{ $regMunicipio ? '500' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $regMunicipio ? ucwords(strtolower($regMunicipio)) : 'Seleccionar municipio' }}</span>
@@ -2187,7 +1746,7 @@
                             "
                             x-text="op.toLowerCase().replace(/\b\w/g, l => l.toUpperCase())"
                             style="width:100%; padding:10px 16px; text-align:left; font-size:13px; color:#374151; border:none; background:transparent; cursor:pointer; display:block;"
-                            onmouseover="this.style.background='#F5F3FF'; this.style.color='#7c3aed';"
+                            onmouseover="this.style.background='#F5F3FF'; this.style.color='#7B6FE8';"
                             onmouseout="this.style.background='transparent'; this.style.color='#374151';">
                     </button>
                 </template>
