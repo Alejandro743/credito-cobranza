@@ -18,10 +18,29 @@ class ClienteManager extends Component
 {
     use WithPagination, HasModuleColor;
 
-    // ── Filtros ───────────────────────────────────────────────────────────────
-    public string $search      = '';
-    public string $filterCiudad = '';
-    public string $filterActivo = '';
+    // ── Filtros por columna ──────────────────────────────────────────────────
+    public string $colFilterIdLn     = '';
+    public string $colFilterCi       = '';
+    public string $colFilterNombre   = '';
+    public string $colFilterApellido = '';
+    public string $colFilterTelefono = '';
+    public string $colFilterCiudad   = '';
+    public string $colFilterEstado   = '';
+
+    public function updatingColFilterIdLn():     void { $this->resetPage(); }
+    public function updatingColFilterCi():       void { $this->resetPage(); }
+    public function updatingColFilterNombre():   void { $this->resetPage(); }
+    public function updatingColFilterApellido(): void { $this->resetPage(); }
+    public function updatingColFilterTelefono(): void { $this->resetPage(); }
+    public function updatingColFilterCiudad():   void { $this->resetPage(); }
+    public function updatingColFilterEstado():   void { $this->resetPage(); }
+
+    public ?int $selectedClienteId = null;
+
+    public function selectCliente(int $id): void
+    {
+        $this->selectedClienteId = $this->selectedClienteId === $id ? null : $id;
+    }
 
     // ── Inline add ────────────────────────────────────────────────────────────
     public bool   $showAddForm   = false;
@@ -43,6 +62,13 @@ class ClienteManager extends Component
     public function ver(int $id): void
     {
         $this->viewingId = $id;
+    }
+
+    public function verSeleccionado(): void
+    {
+        if ($this->selectedClienteId) {
+            $this->ver($this->selectedClienteId);
+        }
     }
 
     public function closeModal(): void
@@ -69,10 +95,6 @@ class ClienteManager extends Component
     {
         $this->initModuleColor();
     }
-
-    public function updatingSearch(): void { $this->resetPage(); }
-    public function updatingFilterCiudad(): void { $this->resetPage(); }
-    public function updatingFilterActivo(): void { $this->resetPage(); }
 
     public function updatedNewCiudad(): void   { $this->newProvincia = ''; $this->newMunicipio = ''; }
     public function updatedNewProvincia(): void { $this->newMunicipio = ''; }
@@ -247,20 +269,16 @@ class ClienteManager extends Component
     {
         $clientes = Cliente::with('usuario')
             ->where('vendedor_id', auth()->id())
-            ->when($this->search, function ($q) {
-                $s = $this->search;
-                $q->where('ci', 'like', "%{$s}%")
-                  ->orWhere('apellido', 'like', "%{$s}%")
-                  ->orWhereHas('usuario', fn($u) => $u->where('name', 'like', "%{$s}%"));
-            })
-            ->when($this->filterCiudad, fn($q) => $q->where('ciudad', $this->filterCiudad))
-            ->when($this->filterActivo !== '', fn($q) => $q->where('active', (bool) $this->filterActivo))
+            ->when($this->colFilterIdLn,     fn($q) => $q->where('id_ln', 'like', "%{$this->colFilterIdLn}%"))
+            ->when($this->colFilterCi,       fn($q) => $q->where('ci', 'like', "%{$this->colFilterCi}%"))
+            ->when($this->colFilterNombre,   fn($q) => $q->whereHas('usuario', fn($u) => $u->where('name', 'like', "%{$this->colFilterNombre}%")))
+            ->when($this->colFilterApellido, fn($q) => $q->where('apellido', 'like', "%{$this->colFilterApellido}%"))
+            ->when($this->colFilterTelefono, fn($q) => $q->where('telefono', 'like', "%{$this->colFilterTelefono}%"))
+            ->when($this->colFilterCiudad,   fn($q) => $q->where('ciudad', 'like', "%{$this->colFilterCiudad}%"))
+            ->when($this->colFilterEstado !== '', fn($q) => $q->where('active', $this->colFilterEstado === '1'))
             ->orderByDesc('active')
             ->orderBy('apellido')
             ->paginate(15);
-
-        $ciudades = Cliente::where('vendedor_id', auth()->id())
-            ->select('ciudad')->distinct()->orderBy('ciudad')->pluck('ciudad');
 
         $ciudadesAll    = Ciudad::orderBy('nombre')->get();
         $newCiudadObj   = Ciudad::where('nombre', $this->newCiudad)->first();
@@ -278,7 +296,7 @@ class ClienteManager extends Component
             : null;
 
         return view('livewire.vendedor.cliente-manager', compact(
-            'clientes', 'ciudades', 'ciudadesAll',
+            'clientes', 'ciudadesAll',
             'newProvincias', 'newMunicipios',
             'editProvincias', 'editMunicipios',
             'viewingCliente'
