@@ -361,9 +361,9 @@
 @else
 
 <style>
-.art-grid { display:grid; grid-template-columns:30px minmax(0,1fr) 64px 70px 46px 26px; align-items:center; }
+.art-grid { display:grid; grid-template-columns:40px minmax(0,1fr) 68px 88px 54px 34px; align-items:center; }
 @media (max-width:480px) {
-    .art-grid { grid-template-columns:26px minmax(0,1fr) 26px; }
+    .art-grid { grid-template-columns:36px minmax(0,1fr) 34px; }
     .art-grid .art-precio, .art-grid .art-total, .art-grid .art-pts,
     .art-grid .art-head-precio, .art-grid .art-head-total, .art-grid .art-head-pts { display:none; }
 }
@@ -399,11 +399,11 @@
     </div>
     <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:14px; overflow:hidden; box-shadow:0 2px 4px rgba(60,52,137,0.06), 0 8px 20px rgba(60,52,137,0.08);">
         <div class="art-grid">
-            <div style="padding:8px 0 8px 12px; background:#F8F7FF; border-bottom:1px solid #E7E3FA;"></div>
-            <div style="padding:8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">Producto</div>
-            <div class="art-precio" style="padding:8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Precio</div>
-            <div class="art-total" style="padding:8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Total</div>
-            <div class="art-pts" style="padding:8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Pts</div>
+            <div style="padding:8px 4px 8px 10px; background:#F8F7FF; border-bottom:1px solid #E7E3FA;"></div>
+            <div style="padding:8px 8px 8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">Producto</div>
+            <div class="art-precio" style="padding:8px 8px 8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Precio</div>
+            <div class="art-total" style="padding:8px 8px 8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Total</div>
+            <div class="art-pts" style="padding:8px 8px 8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Pts</div>
             <div style="padding:8px 10px 8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA;"></div>
 
             @foreach ($carrito as $pid => $item)
@@ -413,18 +413,18 @@
                 $rowBorder = $lastRow ? 'none' : '1px solid #E7E3FA';
             @endphp
             <div style="display:contents;" wire:key="sel-{{ $pid }}">
-                <div style="padding:10px 0 10px 12px; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; display:flex; align-items:center;">
-                    <div style="width:21px; height:21px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                        <span style="font-size:9.5px; font-weight:800; color:#fff; line-height:1;">{{ $item['cantidad'] }}</span>
+                <div style="padding:10px 4px 10px 10px; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; display:flex; align-items:center; justify-content:center;">
+                    <div style="width:20px; height:20px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <span style="font-size:9px; font-weight:800; color:#fff; line-height:1;">{{ $item['cantidad'] }}</span>
                     </div>
                 </div>
-                <div style="padding:10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; min-width:0; overflow:hidden;">
+                <div style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; min-width:0; overflow:hidden;">
                     <span style="font-size:13px; font-weight:700; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
                     <span style="font-size:10.5px; color:#9CA3AF; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">{{ $item['code'] ?? '' }} · <span style="color:#f97316; font-weight:700;">{{ $item['lista_nombre'] ?? '' }}</span></span>
                 </div>
-                <div class="art-precio" style="padding:10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:12px; color:#6B7280; font-variant-numeric:tabular-nums;">{{ number_format($item['precio'], 2) }}</div>
-                <div class="art-total" style="padding:10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:13px; font-weight:800; color:#3C3489; font-variant-numeric:tabular-nums;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</div>
-                <div class="art-pts" style="padding:10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; font-variant-numeric:tabular-nums;">+{{ $item['puntos'] * $item['cantidad'] }}</div>
+                <div class="art-precio" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:13px; font-weight:700; color:#3C3489; font-variant-numeric:tabular-nums;">{{ number_format($item['precio'], 2) }}</div>
+                <div class="art-total" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:13px; font-weight:700; color:#3C3489; font-variant-numeric:tabular-nums;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</div>
+                <div class="art-pts" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:13px; font-weight:700; color:#3C3489; font-variant-numeric:tabular-nums;">+{{ $item['puntos'] * $item['cantidad'] }}</div>
                 <div style="padding:10px 10px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; display:flex; align-items:center; justify-content:center;">
                     <button wire:click="quitar({{ $item['item_id'] }})"
                             style="width:22px; height:22px; border-radius:50%; background:transparent; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#ef4444; -webkit-appearance:none; appearance:none;">
