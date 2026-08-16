@@ -360,6 +360,15 @@
 </div>
 @else
 
+<style>
+.art-grid { display:grid; grid-template-columns:30px minmax(0,1fr) 64px 70px 46px 26px; align-items:center; }
+@media (max-width:480px) {
+    .art-grid { grid-template-columns:26px minmax(0,1fr) 26px; }
+    .art-grid .art-precio, .art-grid .art-total, .art-grid .art-pts,
+    .art-grid .art-head-precio, .art-grid .art-head-total, .art-grid .art-head-pts { display:none; }
+}
+</style>
+
 {{-- ── ARTÍCULOS SELECCIONADOS + BOTÓN CARRITO ──────────────────────────── --}}
 <div style="padding:16px 16px 24px; max-width:900px; margin:0 auto;">
 
@@ -388,27 +397,44 @@
         <span style="font-size:13.5px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Artículos Seleccionados</span>
         <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
     </div>
-    <div style="display:flex; flex-direction:column; gap:8px;">
-        @foreach ($carrito as $pid => $item)
-        <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:10px; border:1px solid #E7E3FA; background:#fff; box-shadow:0 1px 2px rgba(60,52,137,0.05), 0 2px 8px rgba(60,52,137,0.06);" wire:key="sel-{{ $pid }}">
-            <div style="width:22px; height:22px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <span style="font-size:10px; font-weight:800; color:#fff; line-height:1;">{{ $item['cantidad'] }}</span>
-            </div>
-            <div style="flex:1; min-width:0;">
-                <div style="display:flex; align-items:baseline; gap:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ $item['code'] ?? '' }} — {{ ucwords(strtolower($item['nombre'])) }}">
-                    <span style="font-size:12px; color:#6B7280; flex-shrink:0;">{{ $item['code'] ?? '' }} —</span>
-                    <span style="font-size:13.5px; font-weight:800; color:#111827; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
+    <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:14px; overflow:hidden; box-shadow:0 2px 4px rgba(60,52,137,0.06), 0 8px 20px rgba(60,52,137,0.08);">
+        <div class="art-grid">
+            <div style="padding:8px 0 8px 12px; background:#F8F7FF; border-bottom:1px solid #E7E3FA;"></div>
+            <div style="padding:8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">Producto</div>
+            <div class="art-precio" style="padding:8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Precio</div>
+            <div class="art-total" style="padding:8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Total</div>
+            <div class="art-pts" style="padding:8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Pts</div>
+            <div style="padding:8px 10px 8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA;"></div>
+
+            @foreach ($carrito as $pid => $item)
+            @php
+                $zebra = $loop->odd ? '#FBFAFF' : '#fff';
+                $lastRow = $loop->last;
+                $rowBorder = $lastRow ? 'none' : '1px solid #E7E3FA';
+            @endphp
+            <div style="display:contents;" wire:key="sel-{{ $pid }}">
+                <div style="padding:10px 0 10px 12px; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; display:flex; align-items:center;">
+                    <div style="width:21px; height:21px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <span style="font-size:9.5px; font-weight:800; color:#fff; line-height:1;">{{ $item['cantidad'] }}</span>
+                    </div>
                 </div>
-                <div style="font-size:11px; color:#9CA3AF; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-                    Bs <b style="color:#6B7280; font-weight:700;">{{ number_format($item['precio'], 2) }}</b> c/u<span style="margin:0 5px; opacity:.6;">·</span>Total Bs <b style="color:#6B7280; font-weight:700;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</b><span style="margin:0 5px; opacity:.6;">·</span>+{{ $item['puntos'] * $item['cantidad'] }} pts<span style="margin:0 5px; opacity:.6;">·</span><span style="color:#f97316; font-weight:700;">{{ $item['lista_nombre'] ?? '' }}</span>
+                <div style="padding:10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; min-width:0; overflow:hidden;">
+                    <span style="font-size:13px; font-weight:700; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
+                    <span style="font-size:10.5px; color:#9CA3AF; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">{{ $item['code'] ?? '' }} · <span style="color:#f97316; font-weight:700;">{{ $item['lista_nombre'] ?? '' }}</span></span>
+                </div>
+                <div class="art-precio" style="padding:10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:12px; color:#6B7280; font-variant-numeric:tabular-nums;">{{ number_format($item['precio'], 2) }}</div>
+                <div class="art-total" style="padding:10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:13px; font-weight:800; color:#3C3489; font-variant-numeric:tabular-nums;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</div>
+                <div class="art-pts" style="padding:10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:11px; font-weight:700; color:#7B6FE8; font-variant-numeric:tabular-nums;">+{{ $item['puntos'] * $item['cantidad'] }}</div>
+                <div style="padding:10px 10px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; display:flex; align-items:center; justify-content:center;">
+                    <button wire:click="quitar({{ $item['item_id'] }})"
+                            style="width:22px; height:22px; border-radius:50%; background:transparent; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#ef4444; -webkit-appearance:none; appearance:none;">
+                        <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                    </button>
                 </div>
             </div>
-            <button wire:click="quitar({{ $item['item_id'] }})"
-                    style="width:26px; height:26px; border-radius:50%; background:#ef4444; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none; box-shadow:0 2px 8px rgba(239,68,68,0.40);">
-                <svg style="width:11px; height:11px;" fill="none" stroke="#fff" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-            </button>
+            @endforeach
         </div>
-        @endforeach
+    </div>
 
         {{-- Separador Resumen --}}
         <div style="display:flex; align-items:center; gap:7px; margin-top:16px; margin-bottom:12px;">
