@@ -361,11 +361,11 @@
 @else
 
 <style>
-.art-grid { display:grid; grid-template-columns:40px minmax(0,1fr) 68px 88px 54px 34px; align-items:center; }
+.art-grid, .art-grid-row { display:grid; grid-template-columns:40px minmax(0,1fr) 68px 88px 54px 34px; align-items:stretch; }
 @media (max-width:480px) {
-    .art-grid { grid-template-columns:36px minmax(0,1fr) 34px; }
+    .art-grid, .art-grid-row { grid-template-columns:36px minmax(0,1fr) 34px; }
     .art-grid .art-precio, .art-grid .art-total, .art-grid .art-pts,
-    .art-grid .art-head-precio, .art-grid .art-head-total, .art-grid .art-head-pts { display:none; }
+    .art-grid-row .art-precio, .art-grid-row .art-total, .art-grid-row .art-pts { display:none; }
 }
 </style>
 
@@ -405,26 +405,27 @@
             <div class="art-total" style="padding:8px 8px 8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Total</div>
             <div class="art-pts" style="padding:8px 8px 8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Pts</div>
             <div style="padding:8px 10px 8px 0; background:#F8F7FF; border-bottom:1px solid #E7E3FA;"></div>
+        </div>
 
-            @foreach ($carrito as $pid => $item)
+        @foreach ($carrito as $pid => $item)
             @php
                 $zebra = $loop->odd ? '#FBFAFF' : '#fff';
                 $lastRow = $loop->last;
                 $rowBorder = $lastRow ? 'none' : '1px solid #E7E3FA';
             @endphp
-            <div style="display:contents;" wire:key="sel-{{ $pid }}">
+            <div class="art-grid-row" wire:key="sel-{{ $pid }}">
                 <div style="padding:10px 4px 10px 10px; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; display:flex; align-items:center; justify-content:center;">
                     <div style="width:20px; height:20px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                         <span style="font-size:9px; font-weight:800; color:#fff; line-height:1;">{{ $item['cantidad'] }}</span>
                     </div>
                 </div>
-                <div style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; min-width:0; overflow:hidden;">
+                <div style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; min-width:0; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
                     <span style="font-size:13px; font-weight:700; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
                     <span style="font-size:10.5px; color:#9CA3AF; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">{{ $item['code'] ?? '' }} · <span style="color:#f97316; font-weight:700;">{{ $item['lista_nombre'] ?? '' }}</span></span>
                 </div>
-                <div class="art-precio" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:13px; font-weight:700; color:#3C3489; font-variant-numeric:tabular-nums;">{{ number_format($item['precio'], 2) }}</div>
-                <div class="art-total" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:13px; font-weight:700; color:#3C3489; font-variant-numeric:tabular-nums;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</div>
-                <div class="art-pts" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; text-align:right; font-size:13px; font-weight:700; color:#3C3489; font-variant-numeric:tabular-nums;">+{{ $item['puntos'] * $item['cantidad'] }}</div>
+                <div class="art-precio" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:700; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item['precio'], 2) }}</div>
+                <div class="art-total" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:700; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</div>
+                <div class="art-pts" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:700; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">+{{ $item['puntos'] * $item['cantidad'] }}</div>
                 <div style="padding:10px 10px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; display:flex; align-items:center; justify-content:center;">
                     <button wire:click="quitar({{ $item['item_id'] }})"
                             style="width:22px; height:22px; border-radius:50%; background:transparent; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#ef4444; -webkit-appearance:none; appearance:none;">
@@ -433,7 +434,6 @@
                 </div>
             </div>
             @endforeach
-        </div>
     </div>
 
         {{-- Separador Resumen --}}
@@ -592,7 +592,6 @@
                 Confirmar Plan
             </button>
         </div>
-    </div>
     @endif
 
 </div>
