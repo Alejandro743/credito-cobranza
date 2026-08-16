@@ -1317,13 +1317,14 @@
                     <div style="display:flex; align-items:center; gap:6px;">
                         <span style="font-size:13px; font-weight:700; color:#f97316; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-left:10px; padding-right:8px;">{{ $p['lista_nombre'] }}</span>
                         <button @click="staged['{{ $iid2 }}'] = Math.min((staged['{{ $iid2 }}']||0) + 1, maxStock)"
+                                class="transition-all duration-150 hover:brightness-110 hover:shadow-md active:scale-90"
                                 style="background:#7B6FE8; color:#fff; border:none; border-radius:7px; padding:5px 10px; font-size:11px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:4px; flex-shrink:0;">
                             <svg style="width:11px; height:11px; flex-shrink:0;" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                             Agregar
                         </button>
                         <button x-show="qty > 0" x-cloak
                                 @click="delete staged['{{ $iid2 }}']"
-                                class="btn-circle-center"
+                                class="btn-circle-center transition-all duration-150 hover:brightness-110 active:scale-90"
                                 style="width:30px; height:30px; border-radius:50%; background:#ef4444; border:none; cursor:pointer; flex-shrink:0; -webkit-appearance:none; appearance:none; box-shadow:0 2px 8px rgba(239,68,68,0.40);">
                             <svg style="width:13px; height:13px;" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                         </button>
@@ -1343,11 +1344,13 @@
         <div style="flex-shrink:0; padding:14px 20px; background:#fff; border-top:1px solid #F0EEFF; display:flex; gap:8px;">
         <div style="max-width:900px; margin:0 auto; width:100%; display:flex; gap:8px;">
             <button @click="staged = {}; showProductos = false" type="button"
+                    class="transition-all duration-150 hover:bg-gray-50 hover:border-gray-300 active:scale-95"
                     style="padding:10px 16px; border:1.5px solid #E5E7EB; border-radius:10px; font-size:13px; font-weight:600; color:#6B7280; background:#fff; cursor:pointer; flex-shrink:0; -webkit-appearance:none; appearance:none;">
                 Salir
             </button>
             <button type="button"
                     :disabled="stagedTotal() === 0"
+                    :class="stagedTotal() === 0 ? '' : 'transition-all duration-150 hover:brightness-110 hover:shadow-lg active:scale-95'"
                     @click="
                         const calls = Object.entries(staged).filter(([id, q]) => q > 0).map(([id, q]) => $wire.agregar(parseInt(id), q));
                         Promise.all(calls).then(() => { staged = {}; showProductos = false; });
