@@ -83,7 +83,7 @@
                 @if ($clienteId)
                 <input type="text" readonly value="{{ $clienteCI }} — {{ $clienteNombre }}" style="{{ $csStyle }} cursor:default;">
                 <button wire:click="cambiarCliente" type="button"
-                        style="position:absolute; right:0; top:0; height:100%; width:34px; background:#f97316; border:none; border-radius:0 10px 10px 0; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center;">
+                        style="position:absolute; right:0; top:0; height:100%; width:34px; background:#ef4444; border:none; border-radius:0 10px 10px 0; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center;">
                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
                 @else
@@ -96,7 +96,7 @@
                        style="{{ $csStyle }}">
                 @if (trim($searchCliente) !== '')
                 <button wire:click="$set('searchCliente','')" type="button"
-                        style="position:absolute; right:0; top:0; height:100%; width:34px; background:#f97316; border:none; border-radius:0 10px 10px 0; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center;">
+                        style="position:absolute; right:0; top:0; height:100%; width:34px; background:#ef4444; border:none; border-radius:0 10px 10px 0; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center;">
                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
                 @endif
@@ -160,7 +160,7 @@
                 @if ($clienteId)
                 <input type="text" readonly value="{{ $clienteCI }} — {{ $clienteNombre }}" style="{{ $csStyleM }} cursor:default;">
                 <button wire:click="cambiarCliente" type="button"
-                        style="position:absolute; right:0; top:0; height:100%; width:30px; background:#f97316; border:none; border-radius:0 8px 8px 0; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center;">
+                        style="position:absolute; right:0; top:0; height:100%; width:30px; background:#ef4444; border:none; border-radius:0 8px 8px 0; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center;">
                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
                 @else
@@ -172,7 +172,7 @@
                        style="{{ $csStyleM }}">
                 @if (trim($searchCliente) !== '')
                 <button wire:click="$set('searchCliente','')" type="button"
-                        style="position:absolute; right:0; top:0; height:100%; width:30px; background:#f97316; border:none; border-radius:0 8px 8px 0; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center;">
+                        style="position:absolute; right:0; top:0; height:100%; width:30px; background:#ef4444; border:none; border-radius:0 8px 8px 0; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center;">
                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
                 @endif
@@ -363,61 +363,50 @@
 {{-- ── ARTÍCULOS SELECCIONADOS + BOTÓN CARRITO ──────────────────────────── --}}
 <div style="padding:16px 16px 24px; max-width:900px; margin:0 auto;">
 
-    {{-- Separador Artículos Seleccionados (siempre visible) --}}
-    <div style="display:flex; align-items:center; gap:7px; margin-top:8px; margin-bottom:16px;">
-        <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-        <span style="font-size:13.5px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Artículos Seleccionados</span>
-        <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
-    </div>
-
     {{-- Botón Seleccionar Artículos --}}
     <button @click="showProductos = true"
             type="button"
             @if(!$clienteId) disabled @endif
-            style="width:100%; padding:11px 20px; background:{{ $clienteId ? '#6B7280' : '#D1D5DB' }}; color:#fff; font-size:14px; font-weight:800; border-radius:10px; border:1.5px solid {{ $clienteId ? '#6B7280' : '#D1D5DB' }}; cursor:{{ $clienteId ? 'pointer' : 'not-allowed' }}; display:flex; align-items:center; justify-content:center; gap:8px; -webkit-appearance:none; appearance:none; margin-bottom:{{ !empty($carrito) ? '14px' : '0' }};">
+            @if($clienteId)
+            onmouseover="this.style.background='#6B7280'; this.style.borderColor='#6B7280';"
+            onmouseout="this.style.background='#9CA3AF'; this.style.borderColor='#9CA3AF';"
+            @endif
+            style="width:100%; padding:11px 20px; background:{{ $clienteId ? '#9CA3AF' : '#D1D5DB' }}; color:#fff; font-size:14px; font-weight:800; border-radius:10px; border:1.5px solid {{ $clienteId ? '#9CA3AF' : '#D1D5DB' }}; cursor:{{ $clienteId ? 'pointer' : 'not-allowed' }}; display:flex; align-items:center; justify-content:center; gap:8px; -webkit-appearance:none; appearance:none; margin-bottom:16px; transition:background 0.15s, border-color 0.15s;">
         <span style="width:26px; height:26px; border-radius:50%; background:{{ $clienteId ? '#f97316' : '#9CA3AF' }}; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">
             <svg width="14" height="14" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
             </svg>
         </span>
-        <span style="text-decoration:underline; text-underline-offset:3px;">Ir a Seleccionar Artículos</span>
+        <span style="text-decoration:underline; text-underline-offset:3px;">Agregar Productos</span>
     </button>
 
     {{-- Lista artículos seleccionados --}}
     @if (!empty($carrito))
+    {{-- Separador Artículos Seleccionados (solo si hay artículos) --}}
+    <div style="display:flex; align-items:center; gap:7px; margin-bottom:16px;">
+        <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+        <span style="font-size:13.5px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Artículos Seleccionados</span>
+        <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+    </div>
     <div style="display:flex; flex-direction:column; gap:8px;">
         @foreach ($carrito as $pid => $item)
-        <div style="background:#fff; border:1.5px solid #D1D5DB; border-radius:12px; padding:12px; box-shadow:0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.10);" wire:key="sel-{{ $pid }}">
-            {{-- Código — descripción en una sola línea --}}
-            <div style="display:flex; align-items:center; gap:7px; margin-bottom:8px;">
-                <div style="width:22px; height:22px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <span style="font-size:10px; font-weight:800; color:#fff; line-height:1;">{{ $item['cantidad'] }}</span>
+        <div style="display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:10px; border:1px solid #E7E3FA; background:#fff; box-shadow:0 1px 2px rgba(60,52,137,0.05), 0 2px 8px rgba(60,52,137,0.06);" wire:key="sel-{{ $pid }}">
+            <div style="width:22px; height:22px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <span style="font-size:10px; font-weight:800; color:#fff; line-height:1;">{{ $item['cantidad'] }}</span>
+            </div>
+            <div style="flex:1; min-width:0;">
+                <div style="display:flex; align-items:baseline; gap:5px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ $item['code'] ?? '' }} — {{ ucwords(strtolower($item['nombre'])) }}">
+                    <span style="font-size:12px; color:#6B7280; flex-shrink:0;">{{ $item['code'] ?? '' }} —</span>
+                    <span style="font-size:13.5px; font-weight:800; color:#111827; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
                 </div>
-                <div style="flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ $item['code'] ?? '' }} — {{ ucwords(strtolower($item['nombre'])) }}">
-                    <span style="font-size:13px; font-weight:400; color:#6B7280;">{{ $item['code'] ?? '' }}</span>
-                    <span style="font-size:13px; font-weight:400; color:#6B7280;"> — </span>
-                    <span style="font-size:16px; font-weight:800; color:#111827;">{{ ucwords(strtolower($item['nombre'])) }}</span>
+                <div style="font-size:11px; color:#9CA3AF; margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                    Bs <b style="color:#6B7280; font-weight:700;">{{ number_format($item['precio'], 2) }}</b> c/u<span style="margin:0 5px; opacity:.6;">·</span>Total Bs <b style="color:#6B7280; font-weight:700;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</b><span style="margin:0 5px; opacity:.6;">·</span>+{{ $item['puntos'] * $item['cantidad'] }} pts<span style="margin:0 5px; opacity:.6;">·</span><span style="color:#f97316; font-weight:700;">{{ $item['lista_nombre'] ?? '' }}</span>
                 </div>
             </div>
-            {{-- Precios --}}
-            <div style="background:#F8F7FF; border-radius:8px; padding:8px 10px; margin-bottom:8px;">
-                <div style="display:flex; align-items:center; gap:14px; margin-bottom:4px;">
-                    <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Precio Bs Un: <span style="color:#7B6FE8; font-size:14px; font-weight:400;">{{ number_format($item['precio'], 2) }}</span></span>
-                    <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Puntos: <span style="color:#111827; font-size:14px; font-weight:400;">{{ $item['puntos'] }}</span></span>
-                </div>
-                <div style="display:flex; align-items:center; gap:14px;">
-                    <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Bs: <span style="color:#3C3489; font-size:14px; font-weight:400;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</span></span>
-                    <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Puntos: <span style="color:#111827; font-size:14px; font-weight:400;">+{{ $item['puntos'] * $item['cantidad'] }}</span></span>
-                </div>
-            </div>
-            {{-- Pie: lista_nombre + trash --}}
-            <div style="display:flex; align-items:center; gap:6px;">
-                <span style="font-size:13px; font-weight:700; color:#f97316; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-left:10px;">{{ $item['lista_nombre'] ?? '' }}</span>
-                <button wire:click="quitar({{ $item['item_id'] }})"
-                        style="width:30px; height:30px; border-radius:50%; background:#ef4444; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none; box-shadow:0 2px 8px rgba(239,68,68,0.40);">
-                    <svg style="width:13px; height:13px;" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                </button>
-            </div>
+            <button wire:click="quitar({{ $item['item_id'] }})"
+                    style="width:26px; height:26px; border-radius:50%; background:#ef4444; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none; box-shadow:0 2px 8px rgba(239,68,68,0.40);">
+                <svg style="width:11px; height:11px;" fill="none" stroke="#fff" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+            </button>
         </div>
         @endforeach
 
