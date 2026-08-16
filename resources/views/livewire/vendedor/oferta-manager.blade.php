@@ -75,7 +75,7 @@
                 </div>
             </div>
             @else
-            @php $csStyle = 'width:100%; padding:8px 32px 8px 32px; font-size:12px; border-radius:10px; border:1.5px solid #C4B5FD; outline:none; box-sizing:border-box; background:#F8F7FF; color:#3C3489;'; @endphp
+            @php $csStyle = 'width:100%; padding:8px 32px 8px 32px; font-size:12px; font-weight:700; border-radius:10px; border:1.5px solid #C4B5FD; outline:none; box-sizing:border-box; background:#F8F7FF; color:#3C3489;'; @endphp
             <div style="position:relative;">
                 <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; pointer-events:none;" fill="none" stroke="#7B6FE8" stroke-width="2.3" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
@@ -152,7 +152,7 @@
                 <span style="font-size:11px; font-weight:500; color:#e24b4a;">Sin listas activas</span>
             </div>
             @else
-            @php $csStyleM = 'width:100%; height:36px; padding:0 26px 0 28px; font-size:12.5px; border-radius:8px; border:1.5px solid #C4B5FD; background:#F8F7FF; outline:none; color:#3C3489; box-sizing:border-box;'; @endphp
+            @php $csStyleM = 'width:100%; height:36px; padding:0 26px 0 28px; font-size:12.5px; font-weight:700; border-radius:8px; border:1.5px solid #C4B5FD; background:#F8F7FF; outline:none; color:#3C3489; box-sizing:border-box;'; @endphp
             <div style="position:relative;">
                 <svg style="position:absolute; left:9px; top:50%; transform:translateY(-50%); width:12px; height:12px; pointer-events:none;" fill="none" stroke="#7B6FE8" stroke-width="2.3" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
