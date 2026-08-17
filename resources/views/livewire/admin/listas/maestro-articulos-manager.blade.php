@@ -133,6 +133,26 @@
                         </div>
                     </th>
 
+                    {{-- Estado --}}
+                    @php $isA = $sortBy === 'active'; @endphp
+                    <th wire:click="toggleSort('active')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>
+                            {!! $fSvg !!}
+                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                                <option value="">Todos</option>
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                    </th>
+
                     {{-- Código --}}
                     @php $isA = $sortBy === 'codigo'; @endphp
                     <th wire:click="toggleSort('codigo')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:100px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
@@ -205,26 +225,6 @@
                         <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
                     </th>
 
-                    {{-- Estado --}}
-                    @php $isA = $sortBy === 'active'; @endphp
-                    <th wire:click="toggleSort('active')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        <div style="{{ $fW }}" @click.stop>
-                            {!! $fSvg !!}
-                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
-                                <option value="">Todos</option>
-                                <option value="1">Activo</option>
-                                <option value="0">Inactivo</option>
-                            </select>
-                        </div>
-                    </th>
-
                 </tr>
             </thead>
             <tbody>
@@ -236,6 +236,12 @@
                 <tr wire:key="edit-{{ $a->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
                     <td class="col-row-num" style="padding:6px 8px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap;">
                         <span style="font-size:12px; font-weight:700; color:#374151;">{{ $articulos->firstItem() + $loop->index }}</span>
+                    </td>
+                    <td style="padding:7px 10px;">
+                        <select wire:model="editActive" wire:key="edit-active-{{ $a->id }}" x-init="$el.value = @js($editActive ? '1' : '0')" style="{{ $eI }} padding:0 6px; cursor:pointer;">
+                            <option value="1" @selected($editActive)>Activo</option>
+                            <option value="0" @selected(!$editActive)>Inactivo</option>
+                        </select>
                     </td>
                     <td style="padding:7px 10px; min-width:110px;">
                         <input wire:model="editCodigo" type="text" maxlength="50" style="{{ $eI }} font-family:monospace; text-transform:uppercase;">
@@ -261,12 +267,6 @@
                             @endforeach
                         </select>
                     </td>
-                    <td style="padding:7px 10px;">
-                        <select wire:model="editActive" style="{{ $eI }} padding:0 6px; cursor:pointer;">
-                            <option value="1">Activo</option>
-                            <option value="0">Inactivo</option>
-                        </select>
-                    </td>
                 </tr>
 
                 {{-- Fila normal --}}
@@ -285,6 +285,14 @@
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $a->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
                             <span style="font-size:12px; font-weight:700; color:#374151;">{{ $articulos->firstItem() + $loop->index }}</span>
                         </div>
+                    </td>
+
+                    <td style="padding:10px 14px; text-align:center;">
+                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
+                                     background:{{ $a->active ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $a->active ? '#059669' : '#9CA3AF' }};">
+                            {{ $a->active ? 'Activo' : 'Inactivo' }}
+                        </span>
                     </td>
 
                     <td style="padding:10px 14px;">
@@ -312,14 +320,6 @@
                         @else
                         <span style="color:#D1D5DB; font-size:13px;">—</span>
                         @endif
-                    </td>
-
-                    <td style="padding:10px 14px; text-align:center;">
-                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
-                                     background:{{ $a->active ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $a->active ? '#059669' : '#9CA3AF' }};">
-                            {{ $a->active ? 'Activo' : 'Inactivo' }}
-                        </span>
                     </td>
 
                 </tr>
@@ -392,9 +392,9 @@
             </div>
             <div>
                 <label style="display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; margin-bottom:4px;">Estado</label>
-                <select wire:model="editActive" style="{{ $iM }} cursor:pointer; padding:0 8px;">
-                    <option value="1">Activo</option>
-                    <option value="0">Inactivo</option>
+                <select wire:model="editActive" wire:key="card-edit-active-{{ $a->id }}" x-init="$el.value = @js($editActive ? '1' : '0')" style="{{ $iM }} cursor:pointer; padding:0 8px;">
+                    <option value="1" @selected($editActive)>Activo</option>
+                    <option value="0" @selected(!$editActive)>Inactivo</option>
                 </select>
             </div>
             <div style="display:flex; gap:8px; padding-top:2px;">

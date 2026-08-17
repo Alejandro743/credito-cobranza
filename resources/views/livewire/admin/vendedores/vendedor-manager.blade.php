@@ -278,6 +278,26 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         </div>
                     </th>
 
+                    {{-- Estado --}}
+                    @php $isA = $sortBy === 'activo'; @endphp
+                    <th wire:click="toggleSort('activo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:130px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>
+                            {!! $fSvg !!}
+                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                                <option value="">Todos</option>
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                    </th>
+
                     {{-- Código Usuario --}}
                     @php $isA = $sortBy === 'codigo_usuario'; @endphp
                     <th wire:click="toggleSort('codigo_usuario')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:150px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
@@ -391,26 +411,6 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                             </select>
                         </div>
                     </th>
-
-                    {{-- Estado --}}
-                    @php $isA = $sortBy === 'activo'; @endphp
-                    <th wire:click="toggleSort('activo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:130px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        <div style="{{ $fW }}" @click.stop>
-                            {!! $fSvg !!}
-                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
-                                <option value="">Todos</option>
-                                <option value="1">Activo</option>
-                                <option value="0">Inactivo</option>
-                            </select>
-                        </div>
-                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -420,6 +420,12 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 <tr wire:key="edit-{{ $v->id }}" style="background:#FAFAFE;border-bottom:1px solid #EDE9FE;">
                     <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#FAFAFE;">
                         <span style="font-size:13px; color:#111827;">{{ $vendedores->firstItem() + $loop->index }}</span>
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <select wire:model="editActivo" style="width:100%;{{ $iRow }} cursor:pointer;">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
                     </td>
                     <td style="padding:10px 10px;">
                         <input wire:model="editCodigoUsuario" type="text" style="width:100%;{{ $iRow }} font-family:monospace;">
@@ -469,12 +475,6 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         </select>
                         @error('editUserRol') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:10px 10px;">
-                        <select wire:model="editActivo" style="width:100%;{{ $iRow }} cursor:pointer;">
-                            <option value="1">Activo</option>
-                            <option value="0">Inactivo</option>
-                        </select>
-                    </td>
                 </tr>
                 @else
                 {{-- Fila normal --}}
@@ -491,6 +491,13 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $v->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
                             <span style="font-size:13px; color:#111827;">{{ $vendedores->firstItem() + $loop->index }}</span>
                         </div>
+                    </td>
+                    <td style="padding:10px 14px;text-align:center;">
+                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;
+                                     background:{{ $v->activo ? '#D1FAE5' : '#F3F4F6' }};
+                                     color:{{ $v->activo ? '#059669' : '#9CA3AF' }};">
+                            {{ $v->activo ? 'Activo' : 'Inactivo' }}
+                        </span>
                     </td>
                     <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;font-family:monospace;">{{ $v->codigo_usuario ?? '—' }}</span></td>
                     <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;font-family:monospace;">{{ $v->ci ?? '—' }}</span></td>
@@ -513,13 +520,6 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         @else
                         <span style="font-size:13px;color:#D1D5DB;">—</span>
                         @endif
-                    </td>
-                    <td style="padding:10px 14px;text-align:center;">
-                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;
-                                     background:{{ $v->activo ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $v->activo ? '#059669' : '#9CA3AF' }};">
-                            {{ $v->activo ? 'Activo' : 'Inactivo' }}
-                        </span>
                     </td>
                 </tr>
                 @endif

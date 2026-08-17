@@ -622,6 +622,7 @@ class OfertaManager extends Component
         } catch (\Exception $e) {
             \Illuminate\Support\Facades\Log::error('confirmarPedido error: ' . $e->getMessage(), ['trace' => $e->getTraceAsString()]);
             $this->addError('pedido', $e->getMessage());
+            $this->dispatch('app-toast', type: 'error', msg: 'No se pudo guardar el plan. Intentá de nuevo.');
             return;
         }
 
