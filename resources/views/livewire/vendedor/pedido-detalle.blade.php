@@ -20,12 +20,76 @@
     <div class="pedido-body" style="padding:12px 0 16px;">
 
         {{-- ── DATO CLIENTE ── --}}
-        <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+        <div x-data="{ modalPedido: false }" style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
             <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em;">Dato Cliente</span>
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
-            <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8; white-space:nowrap;">{{ $p->numero }}</span>
-            <span style="font-size:11px; font-weight:700; color:{{ $estadoConfig['color'] }}; white-space:nowrap;">{{ $p->estado_badge['label'] }}</span>
+            <button type="button" @click="modalPedido = true"
+                    style="display:flex; align-items:center; gap:6px; background:transparent; border:none; cursor:pointer; padding:2px 4px;">
+                <span style="font-family:monospace; font-size:11px; font-weight:700; color:#7B6FE8; white-space:nowrap;">{{ $p->numero }}</span>
+                <span style="font-size:11px; font-weight:700; color:{{ $estadoConfig['color'] }}; white-space:nowrap;">{{ $p->estado_badge['label'] }}</span>
+            </button>
+
+            <template x-teleport="body">
+                <div x-show="modalPedido"
+                     x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
+                     x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0"
+                     class="fixed inset-0 flex items-center justify-center p-4"
+                     style="z-index:9999; background:rgba(0,0,0,.45);"
+                     @click.self="modalPedido = false" @keydown.escape.window="modalPedido = false">
+
+                    <div style="background:#fff; border-radius:8px; width:100%; max-width:420px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22);">
+
+                        <div style="padding:16px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:12px; flex-shrink:0;">
+                            <div style="width:36px; height:36px; border-radius:10px; background:#EEEDFE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="18" height="18" fill="none" stroke="#7B6FE8" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            </div>
+                            <div style="flex:1; min-width:0;">
+                                <p style="font-size:16px; font-weight:800; color:#111827; margin:0; font-family:monospace;">{{ $p->numero }}</p>
+                                <span style="font-size:11px; font-weight:700; color:{{ $estadoConfig['color'] }};">{{ $p->estado_badge['label'] }}</span>
+                            </div>
+                            <button @click="modalPedido = false"
+                                    style="width:32px; height:32px; background:#EDE9FE; border:none; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#7B6FE8;">
+                                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                        </div>
+
+                        <div style="overflow:auto; flex:1; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                                <div>
+                                    <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#6B7280; margin:0 0 4px 0;">Fecha Solicitud</p>
+                                    <div style="background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:9px 12px; font-size:13px; font-weight:600; color:#111827;">{{ $p->created_at->format('d/m/Y') }}</div>
+                                </div>
+                                <div>
+                                    <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#6B7280; margin:0 0 4px 0;">Fecha Contestación</p>
+                                    <div style="background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:9px 12px; font-size:13px; font-weight:600; color:#111827;">
+                                        @if (in_array($p->estado, ['aprobado','rechazado']) && $p->updated_at)
+                                            {{ $p->updated_at->format('d/m/Y') }}
+                                        @else
+                                            <span style="color:#D1D5DB;">—</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            @if ($p->notas)
+                            <div>
+                                <p style="font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:{{ $p->estado === 'rechazado' ? '#B91C1C' : '#6B7280' }}; margin:0 0 4px 0;">{{ $p->estado === 'rechazado' ? 'Motivo de Rechazo' : 'Notas' }}</p>
+                                <div style="background:{{ $p->estado === 'rechazado' ? '#FEF2F2' : '#F8F7FF' }}; border:1px solid {{ $p->estado === 'rechazado' ? '#FECACA' : '#EDE9FE' }}; border-radius:8px; padding:10px 12px; font-size:13px; font-weight:500; color:{{ $p->estado === 'rechazado' ? '#B91C1C' : '#3C3489' }};">{{ $p->notas }}</div>
+                            </div>
+                            @endif
+                        </div>
+
+                        <div style="padding:12px 20px; border-top:1px solid #F3F4F6; flex-shrink:0;">
+                            <button @click="modalPedido = false"
+                                    style="width:100%; padding:10px; background:#F9FAFB; border:1px solid #E5E7EB; border-radius:10px; font-size:13px; font-weight:700; color:#374151; cursor:pointer;"
+                                    @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
+                                Cerrar
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            </template>
         </div>
 
         @php
@@ -108,27 +172,6 @@
                 </div>
             </template>
         </div>
-
-        {{-- Motivo de rechazo / Notas --}}
-        @if ($p->notas)
-        <div style="margin-top:8px;">
-            @if ($p->estado === 'rechazado')
-            <div style="display:flex; align-items:center; gap:7px; margin-bottom:8px; margin-top:16px;">
-                <svg width="14" height="14" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                <span style="font-size:12px; font-weight:700; color:#B91C1C; letter-spacing:0.05em; white-space:nowrap;">Motivo de Rechazo</span>
-                <div style="flex:1; height:1.5px; background:#FECACA;"></div>
-            </div>
-            <div style="background:#FEF2F2; border:0.5px solid #CBCBCB; border-radius:10px; padding:10px 12px;">
-                <span style="font-size:13px; font-weight:600; color:#B91C1C; display:block;">{{ $p->notas }}</span>
-            </div>
-            @else
-            <div style="background:white; border:0.5px solid #CECBF6; border-radius:10px; padding:10px 12px; margin-top:8px;">
-                <span style="font-size:9px; font-weight:500; color:#534AB7; display:block; margin-bottom:3px; text-transform:uppercase; letter-spacing:0.04em;">Notas</span>
-                <span style="font-size:13px; font-weight:600; color:#3C3489; display:block;">{{ $p->notas }}</span>
-            </div>
-            @endif
-        </div>
-        @endif
 
         {{-- ── DOCUMENTACIÓN DEL PLAN ── --}}
         <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
