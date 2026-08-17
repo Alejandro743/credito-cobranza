@@ -436,45 +436,32 @@
             @endforeach
     </div>
 
-        {{-- Separador Resumen --}}
-        <div style="display:flex; align-items:center; gap:7px; margin-top:16px; margin-bottom:12px;">
-            <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
-            <span style="font-size:13.5px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Resumen</span>
-            <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
-        </div>
-
         {{-- Card Resumen --}}
         @php
         $listaLockedId = !empty($carrito) ? (collect($carrito)->first()['lista_id'] ?? null) : null;
         $cuotasLista   = $listaLockedId ? ($listasInfo[$listaLockedId]['cantidad_cuotas'] ?? null) : null;
         $montoCuota    = ($cuotasLista && $cuotasLista > 0) ? $total / $cuotasLista : null;
         @endphp
-        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.18), 0 1px 4px rgba(123,111,232,0.10);">
-            <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#f97316 100%);"></div>
-            <div style="padding:14px 14px;">
-                {{-- Hero: Total Pedido full width --}}
-                <div style="margin-bottom:8px; text-align:center;">
-                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Pedido Bs.</span>
-                    <span style="font-size:26px; font-weight:900; color:#3C3489; line-height:1; display:block;">{{ number_format($total, 2) }}</span>
+        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:12px; overflow:hidden; box-shadow:0 2px 10px rgba(123,111,232,0.12);">
+            <div style="height:3px; background:linear-gradient(90deg,#7B6FE8 0%,#f97316 100%);"></div>
+            <div style="display:grid; grid-template-columns:{{ $cuotasLista ? 'repeat(4,1fr)' : 'repeat(2,1fr)' }}; text-align:center; padding:10px 6px;">
+                <div style="padding:0 6px;">
+                    <span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:2px;">Puntos</span>
+                    <span style="font-size:13px; font-weight:900; color:#111827; line-height:1.1;">{{ number_format($puntos) }}</span>
                 </div>
-                {{-- Divider --}}
-                <div style="height:1px; background:#EDE9FE; margin-bottom:8px;"></div>
-                {{-- Secundarios: Puntos + Cuotas + Monto centrados --}}
-                <div style="display:grid; grid-template-columns:{{ $cuotasLista ? 'repeat(3,1fr)' : '1fr' }}; text-align:center;">
-                    <div style="padding:0 6px;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Puntos</span>
-                        <span style="font-size:14px; font-weight:900; color:#111827; line-height:1.1;">{{ number_format($puntos) }}</span>
-                    </div>
-                    @if ($cuotasLista)
-                    <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">N° Cuotas</span>
-                        <span style="font-size:14px; font-weight:900; color:#111827; line-height:1.1;">{{ $cuotasLista }}</span>
-                    </div>
-                    <div style="padding:0 6px;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Monto x Cuota</span>
-                        <span style="font-size:14px; font-weight:900; color:#111827; line-height:1.1;">{{ number_format($montoCuota, 2) }}</span>
-                    </div>
-                    @endif
+                @if ($cuotasLista)
+                <div style="padding:0 6px; border-left:1px solid #EDE9FE;">
+                    <span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:2px;">N° Cuotas</span>
+                    <span style="font-size:13px; font-weight:900; color:#111827; line-height:1.1;">{{ $cuotasLista }}</span>
+                </div>
+                <div style="padding:0 6px; border-left:1px solid #EDE9FE;">
+                    <span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:2px;">Cuota</span>
+                    <span style="font-size:13px; font-weight:900; color:#111827; line-height:1.1;">{{ number_format($montoCuota, 2) }}</span>
+                </div>
+                @endif
+                <div style="padding:0 6px; border-left:1px solid #EDE9FE;">
+                    <span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; display:block; margin-bottom:2px;">Total Bs.</span>
+                    <span style="font-size:13px; font-weight:900; color:#3C3489; line-height:1.1;">{{ number_format($total, 2) }}</span>
                 </div>
             </div>
         </div>
