@@ -1089,6 +1089,10 @@
 
 {{-- ══ MODAL: BUSCAR CLIENTE ════════════════════════════════════════════════ --}}
 <style>
+.qty-circle {
+    width: 22px; height: 22px; border-radius: 50%; border: 1.5px solid;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
 .modal-productos-outer {
     background: rgba(30,24,80,0.28) !important;
     backdrop-filter: blur(2px);
@@ -1288,8 +1292,7 @@
 
                     {{-- Fila 1: indicador circular + código — descripción en una sola línea --}}
                     <div style="display:flex; align-items:center; gap:7px; margin-bottom:7px;">
-                        <div :style="qty > 0 ? 'background:#7B6FE8; border-color:#7B6FE8;' : 'background:#EDE9FE; border-color:#D4CFF8;'"
-                             style="width:22px; height:22px; border-radius:50%; border:1.5px solid; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <div class="qty-circle" :style="qty > 0 ? 'background:#7B6FE8; border-color:#7B6FE8;' : 'background:#EDE9FE; border-color:#D4CFF8;'">
                             <span x-show="qty > 0" x-text="qty" style="font-size:10px; font-weight:800; color:#fff; line-height:1;"></span>
                         </div>
                         <div style="flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ $p['code'] ?? '' }} — {{ ucwords(strtolower($p['nombre'])) }}">
