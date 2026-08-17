@@ -183,28 +183,44 @@
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
         </div>
 
-        <div style="display:flex; flex-direction:column; gap:8px;">
+        <style>
+        .pd-art-grid, .pd-art-row { display:grid; grid-template-columns:40px minmax(0,1fr) 68px 88px 54px; align-items:stretch; }
+        @media (max-width:480px) {
+            .pd-art-grid, .pd-art-row { grid-template-columns:36px minmax(0,1fr) 34px; }
+            .pd-art-grid .pd-precio, .pd-art-grid .pd-total, .pd-art-grid .pd-pts,
+            .pd-art-row .pd-precio, .pd-art-row .pd-total, .pd-art-row .pd-pts { display:none; }
+        }
+        </style>
+        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:14px; overflow:hidden; box-shadow:0 2px 4px rgba(60,52,137,0.06), 0 8px 20px rgba(60,52,137,0.08);">
+            <div class="pd-art-grid">
+                <div style="padding:8px 4px 8px 10px; background:#F9F8FF; border-bottom:2px solid #EDE9FE;"></div>
+                <div style="padding:8px 8px 8px 0; background:#F9F8FF; border-bottom:2px solid #EDE9FE; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">Producto</div>
+                <div class="pd-precio" style="padding:8px 8px 8px 0; background:#F9F8FF; border-bottom:2px solid #EDE9FE; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Precio</div>
+                <div class="pd-total" style="padding:8px 8px 8px 0; background:#F9F8FF; border-bottom:2px solid #EDE9FE; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Total</div>
+                <div class="pd-pts" style="padding:8px 10px 8px 0; background:#F9F8FF; border-bottom:2px solid #EDE9FE; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Pts</div>
+            </div>
+
             @foreach ($p->items as $item)
-            <div style="background:#fff; border:1.5px solid #D1D5DB; border-radius:12px; padding:14px 12px; box-shadow:0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.10);">
-                {{-- Cantidad + Nombre --}}
-                <div style="display:flex; align-items:flex-start; gap:8px; margin-bottom:6px;">
-                    <div style="width:24px; height:24px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px;">
-                        <span style="font-size:11px; font-weight:800; color:#fff; line-height:1;">{{ $item->cantidad }}</span>
-                    </div>
-                    <div style="flex:1; min-width:0;">
-                        <span style="font-size:16px; font-weight:800; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.2;">{{ ucwords(strtolower($item->product?->name ?? '—')) }}</span>
-                        @if ($item->product?->code)
-                        <span style="font-size:10px; font-weight:600; color:#9CA3AF; display:block; margin-top:1px;">{{ $item->product->code }}</span>
-                        @endif
+            @php
+                $articulo = $item->product ?? $item->listaMaestraItem?->maestroArticulo;
+                $artNombre = $articulo->name ?? $articulo->nombre ?? '—';
+                $artCode   = $articulo->code ?? $articulo->codigo ?? '';
+                $zebra = '#fff';
+                $rowBorder = $loop->last ? 'none' : '1px solid #E7E3FA';
+            @endphp
+            <div class="pd-art-row" wire:key="pd-item-{{ $item->id }}">
+                <div style="padding:10px 4px 10px 10px; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; display:flex; align-items:center; justify-content:center;">
+                    <div style="width:20px; height:20px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                        <span style="font-size:9px; font-weight:800; color:#fff; line-height:1;">{{ $item->cantidad }}</span>
                     </div>
                 </div>
-                {{-- Precios --}}
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:2px 16px; padding-top:6px; border-top:1px solid #f3f4f6;">
-                    <span style="font-size:11px; color:#6B7280;">Precio Bs <strong style="color:#374151;">{{ number_format($item->precio_unitario, 2) }}</strong></span>
-                    <span style="font-size:11px; color:#6B7280;">Puntos <strong style="color:#0F6E56;">{{ $item->puntos }}</strong></span>
-                    <span style="font-size:11px; color:#6B7280;">Total Bs <strong style="color:#7c3aed;">{{ number_format($item->subtotal, 2) }}</strong></span>
-                    <span style="font-size:11px; color:#6B7280;">Total Puntos <strong style="color:#0F6E56;">+{{ $item->puntos * $item->cantidad }}</strong></span>
+                <div style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; min-width:0; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
+                    <span style="font-size:13px; font-weight:700; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($artNombre)) }}</span>
+                    <span style="font-size:10.5px; color:#9CA3AF; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">{{ $artCode }}</span>
                 </div>
+                <div class="pd-precio" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item->precio_unitario, 2) }}</div>
+                <div class="pd-total" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item->subtotal, 2) }}</div>
+                <div class="pd-pts" style="padding:10px 10px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ $item->puntos * $item->cantidad }}</div>
             </div>
             @endforeach
         </div>
@@ -215,29 +231,30 @@
             <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Resumen</span>
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
         </div>
-        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:16px; overflow:hidden; box-shadow:0 4px 20px rgba(123,111,232,0.18), 0 1px 4px rgba(123,111,232,0.10);">
-            <div style="height:4px; background:linear-gradient(90deg,#7B6FE8 0%,#f97316 100%);"></div>
-            <div style="padding:14px;">
-                <div style="margin-bottom:8px; text-align:center;">
-                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Total Pedido Bs.</span>
-                    <span style="font-size:26px; font-weight:900; color:#3C3489; line-height:1; display:block;">{{ number_format($p->total, 2) }}</span>
+        @php $pdResCols = $cuotasNum ? 'repeat(4,1fr)' : 'repeat(2,1fr)'; @endphp
+        <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:12px; overflow:hidden; box-shadow:0 2px 10px rgba(123,111,232,0.12);">
+            <div style="display:grid; grid-template-columns:{{ $pdResCols }}; text-align:center; padding:6px 6px; background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
+                <div style="padding:0 6px;"><span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">Puntos</span></div>
+                @if ($cuotasNum)
+                <div style="padding:0 6px; border-left:1px solid #E7E3FA;"><span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">N° Cuotas</span></div>
+                <div style="padding:0 6px; border-left:1px solid #E7E3FA;"><span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">Cuota</span></div>
+                @endif
+                <div style="padding:0 6px; border-left:1px solid #E7E3FA;"><span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">Total Bs.</span></div>
+            </div>
+            <div style="display:grid; grid-template-columns:{{ $pdResCols }}; text-align:center; padding:8px 6px; background:#fff;">
+                <div style="padding:0 6px;">
+                    <span style="font-size:13px; font-weight:400; color:#111827; line-height:1.1;">{{ number_format($totalPuntos) }}</span>
                 </div>
-                <div style="height:1px; background:#EDE9FE; margin-bottom:8px;"></div>
-                <div style="display:grid; grid-template-columns:{{ $cuotasNum ? 'repeat(3,1fr)' : '1fr' }}; text-align:center;">
-                    <div style="padding:0 6px;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Puntos</span>
-                        <span style="font-size:14px; font-weight:900; color:#111827; line-height:1.1;">{{ number_format($totalPuntos) }}</span>
-                    </div>
-                    @if ($cuotasNum)
-                    <div style="padding:0 6px; border-left:1px solid #EDE9FE; border-right:1px solid #EDE9FE;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">N° Cuotas</span>
-                        <span style="font-size:14px; font-weight:900; color:#111827; line-height:1.1;">{{ $cuotasNum }}</span>
-                    </div>
-                    <div style="padding:0 6px;">
-                        <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.07em; display:block; margin-bottom:2px;">Monto x Cuota</span>
-                        <span style="font-size:14px; font-weight:900; color:#111827; line-height:1.1;">{{ number_format($montoCuota, 2) }}</span>
-                    </div>
-                    @endif
+                @if ($cuotasNum)
+                <div style="padding:0 6px; border-left:1px solid #E7E3FA;">
+                    <span style="font-size:13px; font-weight:400; color:#111827; line-height:1.1;">{{ $cuotasNum }}</span>
+                </div>
+                <div style="padding:0 6px; border-left:1px solid #E7E3FA;">
+                    <span style="font-size:13px; font-weight:400; color:#111827; line-height:1.1;">{{ number_format($montoCuota, 2) }}</span>
+                </div>
+                @endif
+                <div style="padding:0 6px; border-left:1px solid #E7E3FA;">
+                    <span style="font-size:13px; font-weight:400; color:#3C3489; line-height:1.1;">{{ number_format($p->total, 2) }}</span>
                 </div>
             </div>
         </div>
