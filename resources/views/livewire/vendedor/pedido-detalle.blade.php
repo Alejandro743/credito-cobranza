@@ -17,19 +17,6 @@
 
 <div style="max-width:900px; margin:0 auto;">
 
-    {{-- Cabecera --}}
-    <div style="background:#EDE9FE; border:1px solid #C4B5FD; border-radius:14px; padding:16px 18px; margin:0 0 4px; text-align:center;">
-        <h1 style="font-size:20px; font-weight:800; color:#534AB7; letter-spacing:-0.3px; margin:0 0 14px;">
-            SOLICITUD DE CRÉDITO
-        </h1>
-        <p style="font-size:15px; font-weight:700; color:#534AB7; letter-spacing:0.02em; margin:0 0 8px;">
-            Nro. {{ $p->numero }}
-        </p>
-        <span style="font-size:14px; font-weight:800; letter-spacing:0.06em; text-transform:uppercase; color:{{ $estadoConfig['color'] }};">
-            {{ $p->estado_badge['label'] }}
-        </span>
-    </div>
-
     <div class="pedido-body" style="padding:12px 0 16px;">
 
         {{-- ── DATO CLIENTE ── --}}
@@ -37,6 +24,8 @@
             <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em;">Dato Cliente</span>
             <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+            <span style="font-family:monospace; font-size:11px; font-weight:700; color:#9CA3AF; white-space:nowrap;">{{ $p->numero }}</span>
+            <span style="font-size:11px; font-weight:700; color:{{ $estadoConfig['color'] }}; white-space:nowrap;">{{ $p->estado_badge['label'] }}</span>
         </div>
 
         @php
@@ -47,14 +36,13 @@
         @endphp
 
         <div x-data="{ modal: false }">
-            <div style="background:#fff; border:1px solid #FED7AA; border-radius:10px; padding:14px 16px; text-align:center; margin-bottom:4px; cursor:pointer; box-shadow:0 2px 8px rgba(249,115,22,0.08);"
-                 @click="modal = true">
-                <div style="display:flex; align-items:center; justify-content:center; gap:4px; margin-bottom:3px;">
-                    <svg width="11" height="11" fill="none" stroke="#EA580C" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-                    <span style="font-size:13px; font-weight:800; color:#EA580C; letter-spacing:0.05em;">Ver Cliente</span>
+            <div style="position:relative; cursor:pointer;" @click="modal = true">
+                <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; pointer-events:none;" fill="none" stroke="#7B6FE8" stroke-width="2.3" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <div style="width:100%; padding:8px 32px; font-size:12px; font-weight:700; border-radius:10px; border:1.5px solid #C4B5FD; background:#F8F7FF; color:#3C3489; box-sizing:border-box; min-height:20px; display:flex; align-items:center;">
+                    {{ $p->cliente->ci ?: '—' }} — {{ $p->cliente->nombre_completo }}
                 </div>
-                <span style="font-size:16px; font-weight:800; color:#111827; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $p->cliente->nombre_completo }}</span>
-                <span style="font-size:12px; font-weight:600; color:#6B7280; display:block;">CI: {{ $p->cliente->ci ?: '—' }}</span>
             </div>
 
             <template x-teleport="body">
@@ -152,8 +140,7 @@
             $docs = ['Anverso CI' => $p->doc_anverso_ci, 'Reverso CI' => $p->doc_reverso_ci, 'Anverso Doc.' => $p->doc_anverso_doc, 'Reverso Doc.' => $p->doc_reverso_doc, 'Aviso de Luz' => $p->doc_aviso_luz];
             $docIconos = ['Anverso CI' => 'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0', 'Reverso CI' => 'M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0', 'Anverso Doc.' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'Reverso Doc.' => 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', 'Aviso de Luz' => 'M13 10V3L4 14h7v7l9-11h-7z'];
         @endphp
-        <style>@media(min-width:400px){.doc-det-grid{grid-template-columns:repeat(5,1fr)!important;}}</style>
-        <div class="doc-det-grid" style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:6px;">
         @foreach ($docs as $label => $path)
         @if ($path)
         @php $url = \Illuminate\Support\Facades\Storage::url($path); @endphp
@@ -162,15 +149,15 @@
                 <div style="width:24px; height:24px; border-radius:6px; background:#DCFCE7; display:flex; align-items:center; justify-content:center;">
                     <svg style="width:13px;height:13px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"/></svg>
                 </div>
-                <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:#0F6E56;">{{ $label }}</span>
-                <span style="display:inline-flex; align-items:center; gap:2px; font-size:8px; color:#0F6E56;"><svg style="width:9px;height:9px;" fill="none" stroke="#0F6E56" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/></svg>Descargar</span>
+                <span style="font-size:11px; font-weight:600; line-height:1.2; color:#0F6E56;">{{ $label }}</span>
+                <span style="font-size:10px; color:#0F6E56;">OK</span>
             </div>
         </a>
         @else
         <div style="border:1.5px dashed #9CA3AF; background:#fff; border-radius:8px; padding:6px 4px; text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px; width:100%; height:68px; box-sizing:border-box;">
             <div style="width:24px; height:24px; border-radius:6px; background:#EEEDFE; display:flex; align-items:center; justify-content:center;"><svg style="width:13px;height:13px;" fill="none" stroke="#534AB7" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="{{ $docIconos[$label] ?? 'M9 12h6m-6 4h6' }}"/></svg></div>
-            <span style="font-size:9px; font-weight:600; display:block; line-height:1.2; color:#534AB7;">{{ $label }}</span>
-            <span style="font-size:8px; color:#AFA9EC;">Sin archivo</span>
+            <span style="font-size:11px; font-weight:600; line-height:1.2; color:#534AB7;">{{ $label }}</span>
+            <span style="font-size:10px; color:#AFA9EC;">Sin archivo</span>
         </div>
         @endif
         @endforeach
