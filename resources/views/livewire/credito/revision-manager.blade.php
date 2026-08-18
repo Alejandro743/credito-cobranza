@@ -1,7 +1,6 @@
 <div>
 
 {{-- ══ LIST ══ --}}
-@if ($mode === 'list')
 
 {{-- MOBILE: Cards --}}
 <div class="sm:hidden flex flex-col" style="gap:10px;">
@@ -171,77 +170,97 @@ $colFiltersR = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
     @endif
 </div>
 
-{{-- ══ DETAIL ══ --}}
-@elseif ($mode === 'detail' && $pedidoDetalle)
+{{-- ══ DETAIL MODAL ══ --}}
+@if ($mode === 'detail' && $pedidoDetalle)
 
 <style>
-.rv-act-wrap { display:flex; flex-direction:column; gap:8px; margin-top:16px; }
+.rv-act-wrap { display:flex; flex-direction:column; gap:8px; }
 @@media (min-width:640px) { .rv-act-wrap { flex-direction:row; } }
 </style>
 
-<div style="max-width:900px; margin:0 auto;">
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4"
+     style="background:rgba(20,10,40,0.4); backdrop-filter:blur(2px);">
+    <div style="background:#fff; border-radius:20px; width:100%; max-width:900px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
 
-    @include('livewire.credito.partials.pedido-detail', [
-        'p'               => $pedidoDetalle,
-        'plan'            => $pedidoDetalle->planPago,
-        'aprobado'        => false,
-        'editable'        => true,
-        'editTipoEntrega' => $editTipoEntrega,
-        'ciudadesAll'     => $ciudadesAll,
-        'editProvincias'  => $editProvincias,
-        'editMunicipios'  => $editMunicipios,
-        'articulosEdit'        => $articulosEdit,
-        'articulosAgrupados'   => $articulosAgrupados,
-        'articulosTodos'       => $articulosTodos,
-        'searchProductoEdit'   => $searchProductoEdit,
-    ])
-
-    {{-- Botones acción --}}
-    @if (!$confirmandoRechazo)
-    <div class="rv-act-wrap">
-        <button wire:click="backToList"
-                style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:14px; background:#F4F4F4; color:#6D8196; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
-            <span style="font-size:17px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span> Regresar
-        </button>
-        <button wire:click="devolverEspera" wire:confirm="¿Devolvés este pedido a En Espera?"
-                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#F0F9FF; color:#0369A1; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #7DD3FC; cursor:pointer; -webkit-appearance:none; appearance:none;">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
-            En Espera
-        </button>
-        <button wire:click="$set('confirmandoRechazo', true)"
-                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#FEF2F2; color:#B91C1C; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #FECACA; cursor:pointer; -webkit-appearance:none; appearance:none;">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-            Rechazar
-        </button>
-        <button wire:click="aprobar" wire:confirm="¿Confirmás la aprobación de este pedido?"
-                style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-            Aprobar
-        </button>
-    </div>
-    @else
-    <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:12px; padding:16px; margin-top:16px;">
-        <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
-            <svg width="14" height="14" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-            <span style="font-size:13px; font-weight:700; color:#B91C1C;">Motivo del rechazo</span>
-        </div>
-        <textarea wire:model="notaRechazo" rows="3" placeholder="Explicá el motivo del rechazo..."
-                  style="width:100%; display:block; background:#fff; border:1px solid #FECACA; border-radius:8px; padding:10px 12px; font-size:13px; color:#374151; outline:none; box-sizing:border-box; resize:vertical;"></textarea>
-        @error('notaRechazo')<p style="font-size:11px; color:#B91C1C; margin-top:4px;">{{ $message }}</p>@enderror
-        <div style="display:flex; gap:8px; margin-top:12px;">
-            <button wire:click="$set('confirmandoRechazo', false)"
-                    style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:12px; background:#F4F4F4; color:#6D8196; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
-                <span style="font-size:16px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span> Cancelar
-            </button>
-            <button wire:click="rechazar"
-                    style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; background:#B91C1C; color:#fff; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
-                <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                Confirmar Rechazo
+        {{-- Header --}}
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
+            <div style="display:flex; align-items:center; gap:9px;">
+                <div style="width:30px; height:30px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                </div>
+                <p style="font-size:17px; font-weight:700; color:#3C3489; margin:0; letter-spacing:-0.2px;">Pedido {{ $pedidoDetalle->numero }}</p>
+            </div>
+            <button type="button" wire:click="backToList"
+                    style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="10" height="10" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
-    </div>
-    @endif
 
+        {{-- Body --}}
+        <div style="overflow-y:auto; flex:1; min-height:0; padding:18px 20px;">
+
+            @include('livewire.credito.partials.pedido-detail', [
+                'p'               => $pedidoDetalle,
+                'plan'            => $pedidoDetalle->planPago,
+                'aprobado'        => false,
+                'editable'        => true,
+                'editTipoEntrega' => $editTipoEntrega,
+                'ciudadesAll'     => $ciudadesAll,
+                'editProvincias'  => $editProvincias,
+                'editMunicipios'  => $editMunicipios,
+                'articulosEdit'        => $articulosEdit,
+                'articulosAgrupados'   => $articulosAgrupados,
+                'articulosTodos'       => $articulosTodos,
+                'searchProductoEdit'   => $searchProductoEdit,
+            ])
+
+        </div>
+
+        {{-- Footer: acciones --}}
+        <div style="padding:14px 20px; border-top:1px solid #F0EEFF; flex-shrink:0;">
+        @if (!$confirmandoRechazo)
+        <div class="rv-act-wrap">
+            <button wire:click="devolverEspera" wire:confirm="¿Devolvés este pedido a En Espera?"
+                    style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#F0F9FF; color:#0369A1; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #7DD3FC; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
+                En Espera
+            </button>
+            <button wire:click="$set('confirmandoRechazo', true)"
+                    style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#FEF2F2; color:#B91C1C; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #FECACA; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                Rechazar
+            </button>
+            <button wire:click="aprobar" wire:confirm="¿Confirmás la aprobación de este pedido?"
+                    style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Aprobar
+            </button>
+        </div>
+        @else
+        <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:12px; padding:16px;">
+            <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+                <svg width="14" height="14" fill="none" stroke="#B91C1C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                <span style="font-size:13px; font-weight:700; color:#B91C1C;">Motivo del rechazo</span>
+            </div>
+            <textarea wire:model="notaRechazo" rows="3" placeholder="Explicá el motivo del rechazo..."
+                      style="width:100%; display:block; background:#fff; border:1px solid #FECACA; border-radius:8px; padding:10px 12px; font-size:13px; color:#374151; outline:none; box-sizing:border-box; resize:vertical;"></textarea>
+            @error('notaRechazo')<p style="font-size:11px; color:#B91C1C; margin-top:4px;">{{ $message }}</p>@enderror
+            <div style="display:flex; gap:8px; margin-top:12px;">
+                <button wire:click="$set('confirmandoRechazo', false)"
+                        style="flex:1; display:flex; align-items:center; justify-content:center; gap:6px; padding:12px; background:#F4F4F4; color:#6D8196; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; box-sizing:border-box; border:1.5px solid #CBCBCB; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                    <span style="font-size:16px; line-height:1; font-weight:900; letter-spacing:-2px;">«</span> Cancelar
+                </button>
+                <button wire:click="rechazar"
+                        style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:12px; background:#B91C1C; color:#fff; font-size:14px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:10px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                    <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Confirmar Rechazo
+                </button>
+            </div>
+        </div>
+        @endif
+        </div>
+
+    </div>
 </div>
 
 @endif

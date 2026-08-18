@@ -26,9 +26,25 @@ class PedidoManager extends Component
 
     public ?int $selectedPedidoId = null;
 
+    public string $mode      = 'list';
+    public ?int   $viewingId = null;
+
     public function mount(): void
     {
         $this->initModuleColor();
+    }
+
+    public function ver(int $id): void
+    {
+        $this->viewingId        = $id;
+        $this->selectedPedidoId = $id;
+        $this->mode              = 'detail';
+    }
+
+    public function backToList(): void
+    {
+        $this->viewingId = null;
+        $this->mode       = 'list';
     }
 
     public function updatingColFilterNumero(): void    { $this->resetPage(); }
@@ -83,6 +99,12 @@ class PedidoManager extends Component
             })
             ->paginate(10);
 
-        return view('livewire.vendedor.pedido-manager', compact('pedidos'));
+        $pedidoDetalle = null;
+        if ($this->mode === 'detail' && $this->viewingId) {
+            $pedidoDetalle = Pedido::with(['cliente.usuario', 'items.product', 'planPago.cuotas'])
+                ->find($this->viewingId);
+        }
+
+        return view('livewire.vendedor.pedido-manager', compact('pedidos', 'pedidoDetalle'));
     }
 }

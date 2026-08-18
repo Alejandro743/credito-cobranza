@@ -317,7 +317,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
     @php
     $fI   = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:left;';
     $fS   = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; text-indent:16px; cursor:pointer;';
-    $fW   = 'position:relative; margin-top:4px;';
+    $fW   = 'position:relative; margin-top:4px;' . ($editingId ? ' opacity:0.45; pointer-events:none;' : '');
     $fIc  = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
     $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
     $colFiltersV = ['ID_LN'=>'colFilterIdLn','CI'=>'colFilterCi','Nombre'=>'colFilterNombre','Apellido'=>'colFilterApellido','Teléfono'=>'colFilterTelefono','NIT'=>'colFilterNit','Correo'=>'colFilterCorreo','Ciudad'=>'colFilterCiudad','Provincia'=>'colFilterProvincia','Municipio'=>'colFilterMunicipio','Dirección'=>'colFilterDireccion'];
@@ -329,6 +329,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
         <table style="table-layout:fixed; width:100%; min-width:1700px; border-collapse:collapse; font-size:13px;">
             <colgroup>
                 <col style="width:50px;">   {{-- # --}}
+                <col style="width:130px;">  {{-- Estado --}}
                 <col style="width:90px;">   {{-- ID_LN --}}
                 <col style="width:110px;">  {{-- CI --}}
                 <col style="width:150px;">  {{-- Nombre --}}
@@ -340,11 +341,10 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                 <col style="width:110px;">  {{-- Provincia --}}
                 <col style="width:110px;">  {{-- Municipio --}}
                 <col style="width:180px;">  {{-- Dirección --}}
-                <col style="width:90px;">   {{-- Estado --}}
             </colgroup>
             <thead>
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                    <th style="padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; vertical-align:top; position:sticky; left:0; z-index:2; background:#F9F8FF;">
+                    <th style="padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; vertical-align:top; position:sticky; left:0; z-index:2; background:#F9F8FF; box-shadow:inset -1px 0 0 #E5E7EB;">
                         #
                         <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
                             <input type="checkbox"
@@ -354,8 +354,8 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                                    :style="($wire.selectedClienteId !== null && $wire.editingId === null) ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
                         </div>
                     </th>
-                    @foreach(['ID_LN','CI','Nombre','Apellido','Teléfono','NIT','Correo','Ciudad','Provincia','Municipio','Dirección','Estado'] as $col)
-                    <th style="padding:8px 10px 6px; text-align:left; position:relative; user-select:none; overflow:hidden; vertical-align:top;">
+                    @foreach(['Estado','ID_LN','CI','Nombre','Apellido','Teléfono','NIT','Correo','Ciudad','Provincia','Municipio','Dirección'] as $col)
+                    <th style="padding:8px 10px 6px; text-align:left; position:relative; user-select:none; overflow:hidden; vertical-align:top; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">{{ $col }}</span>
                         <div x-data="colResize()" @mousedown="start($event)"
                              style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;"
@@ -383,31 +383,37 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                 @if ($editingId === $c->id)
                 @php $iE = 'width:100%; height:32px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; color:#374151;'; @endphp
                 <tr wire:key="edit-{{ $c->id }}" style="background:#FAFAFE; border-bottom:2px solid #EDE9FE;">
-                    <td style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#FAFAFE;">
+                    <td style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#FAFAFE; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <span style="font-size:13px; color:#111827;">{{ $clientes->firstItem() + $loop->index }}</span>
                     </td>
-                    <td style="padding:10px 10px;"><span style="font-size:11px;font-family:monospace;font-weight:700;color:#7B6FE8;white-space:nowrap;">{{ $c->id_ln ?? '—' }}</span></td>
-                    <td style="padding:10px 10px;"><span style="font-size:12px;font-family:monospace;color:#374151;white-space:nowrap;">{{ $c->ci }}</span></td>
-                    <td style="padding:10px 10px;">
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <select wire:model="editActive" style="{{ $iE }} cursor:pointer;">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </td>
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;"><span style="font-size:11px;font-family:monospace;font-weight:700;color:#7B6FE8;white-space:nowrap;">{{ $c->id_ln ?? '—' }}</span></td>
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;"><span style="font-size:12px;font-family:monospace;color:#374151;white-space:nowrap;">{{ $c->ci }}</span></td>
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <input wire:model="editNombre" type="text" style="{{ $iE }}">
                         @error('editNombre') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:10px 10px;">
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <input wire:model="editApellido" type="text" style="{{ $iE }}">
                         @error('editApellido') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:10px 10px;">
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <input wire:model="editTelefono" type="text" style="{{ $iE }}">
                         @error('editTelefono') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:10px 10px;">
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <input wire:model="editNit" type="text" style="{{ $iE }}">
                     </td>
-                    <td style="padding:10px 10px;">
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <input wire:model="editCorreo" type="email" style="{{ $iE }}">
                         @error('editCorreo') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:10px 10px;">
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <select wire:model.live="editCiudad" style="{{ $iE }} cursor:pointer;">
                             <option value="">— Ciudad —</option>
                             @foreach($ciudadesAll as $ciudad)
@@ -416,7 +422,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                         </select>
                         @error('editCiudad') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:10px 10px;">
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <select wire:model.live="editProvincia" style="{{ $iE }} cursor:pointer;" @disabled(!$editCiudad)>
                             <option value="">— Provincia —</option>
                             @foreach($editProvincias as $prov)
@@ -425,7 +431,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                         </select>
                         @error('editProvincia') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:10px 10px;">
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <select wire:model.live="editMunicipio" style="{{ $iE }} cursor:pointer;" @disabled(!$editProvincia)>
                             <option value="">— Municipio —</option>
                             @foreach($editMunicipios as $mun)
@@ -438,12 +444,6 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                         <input wire:model="editDireccion" type="text" maxlength="255" style="{{ $iE }}">
                         @error('editDireccion') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
-                    <td style="padding:10px 10px;">
-                        <select wire:model="editActive" style="{{ $iE }} cursor:pointer;">
-                            <option value="1">Activo</option>
-                            <option value="0">Inactivo</option>
-                        </select>
-                    </td>
                 </tr>
 
                 {{-- Fila normal --}}
@@ -453,7 +453,7 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                     style="border-bottom:1px solid #F9FAFB; transition:background .1s; background:{{ $selC ? '#F5F3FF' : '' }}; {{ $selC ? 'border-left:3px solid #7B6FE8;' : '' }}"
                     @mouseenter="$el.style.background='{{ $selC ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selC ? '#F5F3FF' : '' }}'">
 
-                    <td style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selC ? '#F5F3FF' : '#fff' }};">
+                    <td style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selC ? '#F5F3FF' : '#fff' }}; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                             <input type="checkbox"
                                    :checked="$wire.selectedClienteId === {{ $c->id }}"
@@ -462,45 +462,43 @@ $iM = 'height:36px; border:1px solid #EDE9FE; border-radius:8px; padding:0 10px;
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $c->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
                         </div>
                     </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:11px; font-family:monospace; font-weight:700; color:#7B6FE8; white-space:nowrap;">{{ $c->id_ln ?? '—' }}</span>
-                    </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; font-family:monospace; color:#374151; white-space:nowrap;">{{ $c->ci }}</span>
-                    </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:13px; font-weight:500; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->usuario->name ?? '—' }}</span>
-                    </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->apellido ?? '—' }}</span>
-                    </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; color:#6B7280; white-space:nowrap;">{{ $c->telefono }}</span>
-                    </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; color:#6B7280; white-space:nowrap;">{{ $c->nit ?: '—' }}</span>
-                    </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->correo ?: '—' }}</span>
-                    </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; color:#6B7280; white-space:nowrap;">{{ $c->ciudad }}</span>
-                    </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; color:#6B7280; white-space:nowrap;">{{ $c->provincia ?: '—' }}</span>
-                    </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; color:#6B7280; white-space:nowrap;">{{ $c->municipio ?: '—' }}</span>
-                    </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="font-size:12px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->direccion ?: '—' }}</span>
-                    </td>
-                    <td style="padding:10px 16px; overflow:hidden;">
-                        <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; white-space:nowrap;
-                                     background:{{ $c->active ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $c->active ? '#059669' : '#9CA3AF' }};">
+                    <td style="padding:10px 16px; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:700; white-space:nowrap; color:#374151;">
                             {{ $c->active ? 'Activo' : 'Inactivo' }}
                         </span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $c->id_ln ?? '—' }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $c->ci }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->usuario->name ?? '—' }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->apellido ?? '—' }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $c->telefono }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $c->nit ?: '—' }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->correo ?: '—' }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $c->ciudad }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $c->provincia ?: '—' }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $c->municipio ?: '—' }}</span>
+                    </td>
+                    <td style="padding:10px 16px; overflow:hidden;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->direccion ?: '—' }}</span>
                     </td>
                 </tr>
                 @endif
@@ -543,50 +541,64 @@ window.colResize = function () {
 };
 </script>
 
-{{-- ══ MODAL: Ver cliente ══ --}}
+{{-- ══ MODAL: Ver cliente (mismo estándar del popup "Datos del Cliente" de Revisión del Crédito) ══ --}}
 @if ($viewingCliente)
-<div style="position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:16px; background:rgba(0,0,0,.45);"
+@php
+$vField = 'background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:9px 12px; font-size:13px; font-weight:600; color:#3C3489; min-height:38px; display:flex; align-items:center;';
+$vLabel = 'font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#6B7280; margin:0 0 4px 0;';
+$vCard  = 'border:1px solid #E5E7EB; border-radius:12px; padding:14px 16px; background:#F8F7FF;';
+$vSec   = 'display:flex; align-items:center; gap:6px; margin-bottom:12px;';
+@endphp
+<div class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(0,0,0,.45);"
      wire:click.self="closeModal">
-    <div style="background:#fff; border-radius:20px; box-shadow:0 8px 40px rgba(0,0,0,.18); width:100%; max-width:560px; display:flex; flex-direction:column; max-height:calc(100vh - 32px);">
+    <div style="background:#fff; border-radius:8px; width:100%; max-width:460px; max-height:88vh; display:flex; flex-direction:column; box-shadow:0 24px 64px rgba(0,0,0,.22);">
 
         {{-- Header --}}
-        <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:14px 20px; border-radius:20px 20px 0 0; display:flex; align-items:center; justify-content:space-between; flex-shrink:0; min-width:0;">
-            <div style="min-width:0; flex:1; padding-right:12px;">
-                <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.7px; margin:0 0 2px;">Datos del cliente</p>
-                <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $viewingCliente->usuario->name ?? '—' }} {{ $viewingCliente->apellido }}</p>
+        <div style="padding:16px 20px; border-bottom:1px solid #F3F4F6; display:flex; align-items:center; gap:12px; flex-shrink:0;">
+            <div style="width:36px; height:36px; border-radius:10px; background:#FFEDD5; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                <svg width="18" height="18" fill="none" stroke="#EA580C" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
             </div>
-            <span style="font-size:11px; font-weight:700; padding:3px 10px; border-radius:99px; flex-shrink:0; {{ $viewingCliente->active ? 'background:#D1FAE5; color:#059669;' : 'background:#F3F4F6; color:#9CA3AF;' }}">
-                {{ $viewingCliente->active ? 'Activo' : 'Inactivo' }}
-            </span>
+            <p style="font-size:16px; font-weight:800; color:#111827; margin:0; flex:1;">Datos del Cliente</p>
+            <button wire:click="closeModal"
+                    style="width:32px; height:32px; background:#EDE9FE; border:none; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#7B6FE8; transition:background .15s, color .15s;"
+                    @mouseenter="$el.style.background='#7B6FE8'; $el.style.color='#fff';"
+                    @mouseleave="$el.style.background='#EDE9FE'; $el.style.color='#7B6FE8';">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
         </div>
 
         {{-- Body --}}
-        <div style="padding:16px 20px; overflow-y:auto; display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-            @php
-                $field = fn($label, $value) => '<div style="min-width:0;"><p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 3px;">'.$label.'</p><p style="font-size:13px; color:#374151; margin:0; font-weight:500; overflow-wrap:break-word; word-break:break-word;">'.e($value ?: '—').'</p></div>';
-            @endphp
-            {!! $field('CI', $viewingCliente->ci) !!}
-            {!! $field('ID_LN', $viewingCliente->id_ln) !!}
-            {!! $field('Teléfono', $viewingCliente->telefono) !!}
-            {!! $field('NIT', $viewingCliente->nit) !!}
-            {!! $field('Correo', $viewingCliente->correo) !!}
-            {!! $field('Ciudad', $viewingCliente->ciudad) !!}
-            {!! $field('Provincia', $viewingCliente->provincia) !!}
-            {!! $field('Municipio', $viewingCliente->municipio) !!}
-            <div style="grid-column:1/-1; min-width:0;">
-                <p style="font-size:10px; font-weight:700; color:#9CA3AF; text-transform:uppercase; letter-spacing:.5px; margin:0 0 3px;">Dirección</p>
-                <p style="font-size:13px; color:#374151; margin:0; font-weight:500; overflow-wrap:break-word; word-break:break-word;">{{ $viewingCliente->direccion ?: '—' }}</p>
+        <div style="overflow:auto; flex:1; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
+            <div style="{{ $vCard }}">
+                <div style="{{ $vSec }}">
+                    <div style="width:8px; height:8px; border-radius:50%; background:#F97316; flex-shrink:0;"></div>
+                    <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.6px;">Datos Personales</span>
+                </div>
+                <div style="margin-bottom:10px;"><p style="{{ $vLabel }}">Nombre</p><div style="{{ $vField }}">{{ $viewingCliente->usuario->name ?? '—' }} {{ $viewingCliente->apellido }}</div></div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                    <div><p style="{{ $vLabel }}">ID_LN</p><div style="{{ $vField }} font-family:monospace;">{{ $viewingCliente->id_ln ?: '—' }}</div></div>
+                    <div><p style="{{ $vLabel }}">CI</p><div style="{{ $vField }} font-family:monospace;">{{ $viewingCliente->ci ?: '—' }}</div></div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px;">
+                    <div><p style="{{ $vLabel }}">Teléfono</p><div style="{{ $vField }}">{{ $viewingCliente->telefono ?: '—' }}</div></div>
+                    <div><p style="{{ $vLabel }}">NIT</p><div style="{{ $vField }}">{{ $viewingCliente->nit ?: '—' }}</div></div>
+                </div>
+                <div><p style="{{ $vLabel }}">Correo</p><div style="{{ $vField }} word-break:break-all; align-items:flex-start; padding-top:9px;">{{ $viewingCliente->correo ?: '—' }}</div></div>
+            </div>
+            <div style="{{ $vCard }}">
+                <div style="{{ $vSec }}">
+                    <div style="width:8px; height:8px; border-radius:50%; background:#F97316; flex-shrink:0;"></div>
+                    <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.6px;">Dirección</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:10px;">
+                    <div><p style="{{ $vLabel }}">Ciudad</p><div style="{{ $vField }}">{{ $viewingCliente->ciudad ?: '—' }}</div></div>
+                    <div><p style="{{ $vLabel }}">Provincia</p><div style="{{ $vField }}">{{ $viewingCliente->provincia ?: '—' }}</div></div>
+                    <div><p style="{{ $vLabel }}">Municipio</p><div style="{{ $vField }}">{{ $viewingCliente->municipio ?: '—' }}</div></div>
+                </div>
+                <div><p style="{{ $vLabel }}">Dirección</p><div style="{{ $vField }}">{{ $viewingCliente->direccion ?: '—' }}</div></div>
             </div>
         </div>
 
-        {{-- Footer --}}
-        <div style="padding:12px 20px; border-top:1px solid #F3F4F6; display:flex; justify-content:flex-end;">
-            <button wire:click="closeModal"
-                    style="height:36px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
-                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-                Cerrar
-            </button>
-        </div>
     </div>
 </div>
 @endif
