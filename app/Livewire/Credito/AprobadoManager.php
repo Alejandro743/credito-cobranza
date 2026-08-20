@@ -15,9 +15,28 @@ class AprobadoManager extends Component
     use WithPagination;
 
     public string $mode              = 'list';
-    public string $search            = '';
-    public string $filtroEstado      = '';
     public ?int   $viewingId         = null;
+
+    // ── Filtros por columna ──────────────────────────────────────────────────
+    public string $colFilterCiclo       = '';
+    public string $colFilterNumero      = '';
+    public string $colFilterCi          = '';
+    public string $colFilterCliente     = '';
+    public string $colFilterVendedor    = '';
+    public string $colFilterFechaRevision = '';
+    public string $colFilterEstado      = '';
+    public string $colFilterAsignadoPor = '';
+    public string $colFilterRevisadoPor = '';
+
+    public function updatingColFilterCiclo():          void { $this->resetPage(); }
+    public function updatingColFilterNumero():         void { $this->resetPage(); }
+    public function updatingColFilterCi():             void { $this->resetPage(); }
+    public function updatingColFilterCliente():        void { $this->resetPage(); }
+    public function updatingColFilterVendedor():       void { $this->resetPage(); }
+    public function updatingColFilterFechaRevision():  void { $this->resetPage(); }
+    public function updatingColFilterEstado():         void { $this->resetPage(); }
+    public function updatingColFilterAsignadoPor():    void { $this->resetPage(); }
+    public function updatingColFilterRevisadoPor():    void { $this->resetPage(); }
     public bool   $confirmandoRechazo = false;
     public string $notaRechazo       = '';
 
@@ -32,9 +51,6 @@ class AprobadoManager extends Component
 
     public string $sortBy  = '';
     public string $sortDir = 'asc';
-
-    public function updatingSearch(): void      { $this->resetPage(); }
-    public function updatingFiltroEstado(): void { $this->resetPage(); }
 
     public function toggleSort(string $col): void
     {
@@ -213,18 +229,23 @@ class AprobadoManager extends Component
 
     public function render()
     {
-        $pedidos = Pedido::with(['cliente.usuario', 'vendedor.user', 'cierre.motivoCierre'])
+        $pedidos = Pedido::with(['cliente.usuario', 'vendedor.user', 'cierre.motivoCierre', 'asignadoPor', 'revisadoPor'])
             ->selectRaw('`pedidos`.*, (SELECT COALESCE(SUM(`c`.`monto`), 0) FROM `cuotas` `c` INNER JOIN `plan_pagos` `pp` ON `pp`.`id` = `c`.`plan_pago_id` WHERE `pp`.`pedido_id` = `pedidos`.`id` AND `c`.`estado` = ?) AS `total_pagado`', ['pagado'])
             ->addSelect(DB::raw('(SELECT cc.code FROM pedido_items pi INNER JOIN lista_maestra_items lmi ON lmi.id = pi.lista_maestra_item_id INNER JOIN lista_maestra lm ON lm.id = lmi.lista_maestra_id INNER JOIN commercial_cycles cc ON cc.id = lm.cycle_id WHERE pi.pedido_id = pedidos.id LIMIT 1) as ciclo_code'))
             ->whereIn('pedidos.estado', ['aprobado', 'rechazado', 'cerrado'])
-            ->when($this->filtroEstado, fn($q) => $q->where('pedidos.estado', $this->filtroEstado))
-            ->when($this->search, fn($q) => $q->whereHas('cliente.usuario', fn($c) =>
-                $c->where('name', 'like', "%{$this->search}%")
-            )->orWhere('pedidos.numero', 'like', "%{$this->search}%"))
+            ->when($this->colFilterEstado,   fn($q) => $q->where('pedidos.estado', $this->colFilterEstado))
+            ->when($this->colFilterNumero,   fn($q) => $q->where('pedidos.numero', 'like', "%{$this->colFilterNumero}%"))
+            ->when($this->colFilterCi,       fn($q) => $q->whereHas('cliente', fn($c) => $c->where('ci', 'like', "%{$this->colFilterCi}%")))
+            ->when($this->colFilterCliente,  fn($q) => $q->whereHas('cliente.usuario', fn($u) => $u->where('name', 'like', "%{$this->colFilterCliente}%")))
+            ->when($this->colFilterVendedor, fn($q) => $q->whereHas('vendedor.user', fn($u) => $u->where('name', 'like', "%{$this->colFilterVendedor}%")))
+            ->when($this->colFilterCiclo,    fn($q) => $q->whereHas('items.listaMaestraItem.listaMaestra.cycle', fn($c) => $c->where('code', 'like', "%{$this->colFilterCiclo}%")))
+            ->when($this->colFilterFechaRevision, fn($q) => $q->whereDate('pedidos.revisado_en', $this->colFilterFechaRevision))
+            ->when($this->colFilterAsignadoPor, fn($q) => $q->whereHas('asignadoPor', fn($u) => $u->where('name', 'like', "%{$this->colFilterAsignadoPor}%")))
+            ->when($this->colFilterRevisadoPor, fn($q) => $q->whereHas('revisadoPor', fn($u) => $u->where('name', 'like', "%{$this->colFilterRevisadoPor}%")))
             ->when($this->sortBy === 'cliente',  fn($q) => $q->orderBy(DB::table('users')->join('clientes','clientes.usuario_id','=','users.id')->whereColumn('clientes.id','pedidos.cliente_id')->select('users.name'), $this->sortDir))
             ->when($this->sortBy === 'vendedor', fn($q) => $q->orderBy(DB::table('users')->join('vendedores','vendedores.user_id','=','users.id')->whereColumn('vendedores.id','pedidos.vendedor_id')->select('users.name'), $this->sortDir))
             ->when($this->sortBy === 'ci',       fn($q) => $q->orderBy(DB::table('clientes')->whereColumn('clientes.id','pedidos.cliente_id')->select('ci'), $this->sortDir))
-            ->when(in_array($this->sortBy, ['numero','fecha','total','estado']), fn($q) => $q->orderBy(match($this->sortBy) { 'numero'=>'pedidos.numero', 'fecha'=>'pedidos.updated_at', 'total'=>'pedidos.total_pagar', 'estado'=>'pedidos.estado' }, $this->sortDir))
+            ->when(in_array($this->sortBy, ['numero','fecha_revision','total','estado']), fn($q) => $q->orderBy(match($this->sortBy) { 'numero'=>'pedidos.numero', 'fecha_revision'=>'pedidos.revisado_en', 'total'=>'pedidos.total_pagar', 'estado'=>'pedidos.estado' }, $this->sortDir))
             ->when(!$this->sortBy, fn($q) => $q->orderByDesc('pedidos.updated_at'))
             ->paginate(15);
 

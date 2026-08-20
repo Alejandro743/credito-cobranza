@@ -22,14 +22,18 @@ class EsperaManager extends Component
     public string $colFilterCi       = '';
     public string $colFilterCliente  = '';
     public string $colFilterVendedor = '';
-    public string $colFilterFecha    = '';
+    public string $colFilterFechaPlan       = '';
+    public string $colFilterFechaAsignacion = '';
+    public string $colFilterAsignadoPor = '';
 
-    public function updatingColFilterCiclo():    void { $this->resetPage(); }
-    public function updatingColFilterNumero():   void { $this->resetPage(); }
-    public function updatingColFilterCi():       void { $this->resetPage(); }
-    public function updatingColFilterCliente():  void { $this->resetPage(); }
-    public function updatingColFilterVendedor(): void { $this->resetPage(); }
-    public function updatingColFilterFecha():    void { $this->resetPage(); }
+    public function updatingColFilterCiclo():           void { $this->resetPage(); }
+    public function updatingColFilterNumero():          void { $this->resetPage(); }
+    public function updatingColFilterCi():              void { $this->resetPage(); }
+    public function updatingColFilterCliente():         void { $this->resetPage(); }
+    public function updatingColFilterVendedor():        void { $this->resetPage(); }
+    public function updatingColFilterFechaPlan():       void { $this->resetPage(); }
+    public function updatingColFilterFechaAsignacion(): void { $this->resetPage(); }
+    public function updatingColFilterAsignadoPor():     void { $this->resetPage(); }
 
     // ── Selección múltiple ────────────────────────────────────────────────────
     public array $selectedIds = [];
@@ -83,6 +87,7 @@ class EsperaManager extends Component
         $pedido->update([
             'estado'      => 'revision',
             'revisado_por' => auth()->id(),
+            'revisado_en'  => now(),
         ]);
         $this->selectedIds = [];
         session()->flash('success', 'Pedido tomado para revisión. Ya aparece en tu bandeja.');
@@ -98,6 +103,7 @@ class EsperaManager extends Component
             ->update([
                 'estado'       => 'revision',
                 'revisado_por' => auth()->id(),
+                'revisado_en'  => now(),
             ]);
 
         $count = count($this->selectedIds);
@@ -119,16 +125,19 @@ class EsperaManager extends Component
             ->select('pedidos.*')
             ->addSelect(DB::raw($cicloSub))
             ->where('estado', 'en_espera')
+            ->whereNotNull('asignado_a_id')
             ->when($this->colFilterNumero,   fn($q) => $q->where('pedidos.numero', 'like', "%{$this->colFilterNumero}%"))
             ->when($this->colFilterCi,       fn($q) => $q->whereHas('cliente', fn($c) => $c->where('ci', 'like', "%{$this->colFilterCi}%")))
             ->when($this->colFilterCliente,  fn($q) => $q->whereHas('cliente.usuario', fn($u) => $u->where('name', 'like', "%{$this->colFilterCliente}%")))
             ->when($this->colFilterVendedor, fn($q) => $q->whereHas('vendedor.user', fn($u) => $u->where('name', 'like', "%{$this->colFilterVendedor}%")))
             ->when($this->colFilterCiclo,    fn($q) => $q->whereHas('items.listaMaestraItem.listaMaestra.cycle', fn($c) => $c->where('code', 'like', "%{$this->colFilterCiclo}%")))
-            ->when($this->colFilterFecha,    fn($q) => $q->whereDate('pedidos.created_at', $this->colFilterFecha))
+            ->when($this->colFilterFechaPlan,       fn($q) => $q->whereDate('pedidos.created_at', $this->colFilterFechaPlan))
+            ->when($this->colFilterFechaAsignacion, fn($q) => $q->whereDate('pedidos.asignado_en', $this->colFilterFechaAsignacion))
+            ->when($this->colFilterAsignadoPor, fn($q) => $q->whereHas('asignadoPor', fn($u) => $u->where('name', 'like', "%{$this->colFilterAsignadoPor}%")))
             ->when($this->sortBy === 'cliente',  fn($q) => $q->orderBy(DB::table('users')->join('clientes','clientes.usuario_id','=','users.id')->whereColumn('clientes.id','pedidos.cliente_id')->select('users.name'), $this->sortDir))
             ->when($this->sortBy === 'vendedor', fn($q) => $q->orderBy(DB::table('users')->join('vendedores','vendedores.user_id','=','users.id')->whereColumn('vendedores.id','pedidos.vendedor_id')->select('users.name'), $this->sortDir))
             ->when($this->sortBy === 'ci',       fn($q) => $q->orderBy(DB::table('clientes')->whereColumn('clientes.id','pedidos.cliente_id')->select('ci'), $this->sortDir))
-            ->when(in_array($this->sortBy, ['numero','fecha','total']), fn($q) => $q->orderBy(match($this->sortBy) { 'numero'=>'pedidos.numero', 'fecha'=>'pedidos.created_at', 'total'=>'pedidos.total_pagar' }, $this->sortDir))
+            ->when(in_array($this->sortBy, ['numero','fecha_plan','fecha_asignacion','total']), fn($q) => $q->orderBy(match($this->sortBy) { 'numero'=>'pedidos.numero', 'fecha_plan'=>'pedidos.created_at', 'fecha_asignacion'=>'pedidos.asignado_en', 'total'=>'pedidos.total_pagar' }, $this->sortDir))
             ->when(!$this->sortBy, fn($q) => $q->orderByDesc('created_at'));
     }
 

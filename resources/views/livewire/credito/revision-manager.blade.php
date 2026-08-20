@@ -64,8 +64,9 @@ $fW   = 'position:relative; margin-top:4px;';
 $fIc  = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
 $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
 $thC  = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top; position:relative; overflow:hidden;';
-$sortColsR = ['Cod. Pedido'=>'numero','CI'=>'ci','Cliente'=>'cliente','Vendedor'=>'vendedor','Fecha'=>'fecha','Total Bs.'=>'total'];
+$sortColsR = ['Cod. Pedido'=>'numero','Fecha del Plan'=>'fecha_plan','Fecha a Revisar'=>'fecha_revisar','CI'=>'ci','Cliente'=>'cliente','Vendedor'=>'vendedor','Total Bs.'=>'total'];
 $colFiltersR = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colFilterCliente','vendedor'=>'colFilterVendedor'];
+$colFiltersFechaR = ['fecha_plan'=>'colFilterFechaPlan','fecha_revisar'=>'colFilterFechaRevisar'];
 @endphp
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
@@ -84,10 +85,10 @@ $colFiltersR = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
     </div>
 
     <div style="overflow:auto; flex:1;">
-    <table style="width:100%; min-width:900px; border-collapse:collapse; font-size:13px;">
+    <table style="width:100%; min-width:1230px; border-collapse:collapse; font-size:13px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF;">
+                <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF; box-shadow:inset -1px 0 0 #E5E7EB;">
                     #
                     <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
                         <input type="checkbox"
@@ -98,8 +99,13 @@ $colFiltersR = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
                     </div>
                 </th>
 
+                {{-- Ver --}}
+                <th style="{{ $thC }} text-align:center; min-width:60px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    Ver
+                </th>
+
                 {{-- Ciclo (solo filtro, sin orden) --}}
-                <th style="{{ $thC }} text-align:left; min-width:110px;">
+                <th style="{{ $thC }} text-align:center; min-width:110px; box-shadow:inset -1px 0 0 #E5E7EB;">
                     Ciclo
                     <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" style="{{ $fI }}"></div>
                 </th>
@@ -107,19 +113,27 @@ $colFiltersR = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
                 @foreach($sortColsR as $label => $key)
                 @php $isActive = $sortBy === $key; @endphp
                 <th wire:click="toggleSort('{{ $key }}')"
-                    style="{{ $thC }} text-align:{{ $label === 'Total Bs.' ? 'right' : 'left' }}; cursor:pointer; min-width:130px; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    style="{{ $thC }} text-align:center; cursor:pointer; min-width:130px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
                     @mouseenter="!{{ $isActive?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isActive?'true':'false' }} && ($el.style.background='')">
-                    <div style="display:flex; align-items:center; gap:4px; {{ $label === 'Total Bs.' ? 'justify-content:flex-end;' : '' }}">{{ $label }}
+                    <div style="display:flex; align-items:center; justify-content:center; gap:4px;">{{ $label }}
                         <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
                             <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isActive && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
                             <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isActive && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
                         </span>
                     </div>
-                    @if(isset($colFiltersR[$key]))
+                    @if(isset($colFiltersFechaR[$key]))
+                    <div style="{{ $fW }}" @click.stop><input wire:model.live="{{ $colFiltersFechaR[$key] }}" @click.stop type="date" style="{{ $fI }} padding-left:6px;"></div>
+                    @elseif(isset($colFiltersR[$key]))
                     <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="{{ $colFiltersR[$key] }}" @click.stop type="text" style="{{ $fI }}"></div>
                     @endif
                 </th>
                 @endforeach
+
+                {{-- Asignado por --}}
+                <th style="{{ $thC }} text-align:center; min-width:150px;">
+                    Asignado por
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterAsignadoPor" @click.stop type="text" style="{{ $fI }}"></div>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -128,7 +142,7 @@ $colFiltersR = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
             <tr wire:key="rd-{{ $p->id }}"
                 style="border-bottom:1px solid #F3F4F6; transition:background .1s; background:{{ $selP ? '#F5F3FF' : '' }}; {{ $selP ? 'border-left:3px solid #7B6FE8;' : '' }}"
                 @mouseenter="$el.style.background='{{ $selP ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selP ? '#F5F3FF' : '' }}'">
-                <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selP ? '#F5F3FF' : '#fff' }};">
+                <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selP ? '#F5F3FF' : '#fff' }}; box-shadow:inset -1px 0 0 #E5E7EB;">
                     <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                         <input type="checkbox"
                                :checked="$wire.selectedPedidoId === {{ $p->id }}"
@@ -137,23 +151,34 @@ $colFiltersR = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
                         <span style="font-size:13px; color:#111827;">{{ $pedidos->firstItem() + $loop->index }}</span>
                     </div>
                 </td>
-                <td style="padding:10px 10px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; font-family:monospace; white-space:nowrap;">{{ $p->ciclo_code ?? '—' }}</td>
-                <td style="padding:10px 14px; font-family:monospace; font-size:12px; font-weight:700; color:#111827; white-space:nowrap;">{{ $p->numero }}</td>
-                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->cliente?->ci ?: '—' }}</td>
-                <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($p->cliente?->nombre_completo ?? '—')) }}</td>
-                <td style="padding:10px 14px; font-size:13px; color:#6B7280; white-space:nowrap;">{{ ucwords(strtolower($p->vendedor?->user?->name ?? '—')) }}</td>
-                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->created_at->format('d/m/Y') }}</td>
-                <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:700; color:#111827; white-space:nowrap;">
+                <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    <button type="button" wire:click="ver({{ $p->id }})"
+                            style="width:26px; height:26px; border:none; background:transparent; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; color:#7B6FE8; padding:0;">
+                        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </button>
+                </td>
+                <td style="padding:10px 10px; text-align:center; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->ciclo_code ?? '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->numero }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->created_at->format('d/m/Y') }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->revisado_en?->format('d/m/Y') ?? '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->cliente?->ci ?: '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ ucwords(strtolower($p->cliente?->nombre_completo ?? '—')) }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#6B7280; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ ucwords(strtolower($p->vendedor?->user?->name ?? '—')) }}</td>
+                <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">
                     @if ($p->total_pagar > 0)
                         {{ number_format($p->total_pagar, 2) }}
                     @else
                         <span style="color:#D1D5DB;">—</span>
                     @endif
                 </td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $p->asignadoPor->name ?? '—' }}</td>
             </tr>
             @empty
             <tr wire:key="rd-empty">
-                <td colspan="8" style="padding:64px 24px; text-align:center;">
+                <td colspan="11" style="padding:64px 24px; text-align:center;">
                     <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                     </svg>
@@ -186,13 +211,20 @@ $colFiltersR = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
         <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
             <div style="display:flex; align-items:center; gap:9px;">
                 <div style="width:30px; height:30px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                    <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                    <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="1.8" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                        <rect x="9" y="3" width="6" height="4" rx="1"/>
+                        <line x1="9" y1="12" x2="15" y2="12"/>
+                        <line x1="9" y1="16" x2="13" y2="16"/>
+                    </svg>
                 </div>
-                <p style="font-size:17px; font-weight:700; color:#3C3489; margin:0; letter-spacing:-0.2px;">Pedido {{ $pedidoDetalle->numero }}</p>
+                <p style="font-size:17px; font-weight:700; color:#6B7280; margin:0; letter-spacing:-0.2px;">{{ $pedidoDetalle->numero }} - {{ $pedidoDetalle->estado_badge['label'] }}</p>
             </div>
             <button type="button" wire:click="backToList"
-                    style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-                <svg width="10" height="10" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; color:#9CA3AF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s, color .15s;"
+                    @mouseenter="$el.style.background='#7B6FE8'; $el.style.color='#fff';"
+                    @mouseleave="$el.style.background='#F5F3FF'; $el.style.color='#9CA3AF';">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
 

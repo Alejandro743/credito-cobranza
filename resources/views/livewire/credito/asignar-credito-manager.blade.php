@@ -57,12 +57,14 @@
 {{-- DESKTOP: Tabla --}}
 @php
 $fI   = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:left;';
+$fS   = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; text-indent:16px; cursor:pointer;';
 $fW   = 'position:relative; margin-top:4px;';
 $fIc  = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
 $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
 $thC  = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top; position:relative; overflow:hidden;';
-$sortColsE = ['Cod. Pedido'=>'numero','Fecha'=>'fecha','CI'=>'ci','Cliente'=>'cliente','Vendedor'=>'vendedor','Total Bs.'=>'total'];
-$colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colFilterCliente','vendedor'=>'colFilterVendedor','fecha'=>'colFilterFecha'];
+$sortColsE = ['Cod. Pedido'=>'numero','Fecha del Plan'=>'fecha_plan','Fecha de Asignación'=>'fecha_asignacion','CI'=>'ci','Cliente'=>'cliente','Vendedor'=>'vendedor','Total Bs.'=>'total'];
+$colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colFilterCliente','vendedor'=>'colFilterVendedor'];
+$colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan','fecha_asignacion'=>'colFilterFechaAsignacion'];
 @endphp
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
@@ -88,7 +90,7 @@ $colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
     </div>
 
     <div style="overflow:auto; flex:1;">
-    <table style="width:100%; min-width:1100px; border-collapse:collapse; font-size:13px;">
+    <table style="width:100%; min-width:1550px; border-collapse:collapse; font-size:13px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                 <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF; box-shadow:inset -1px 0 0 #E5E7EB;">
@@ -104,6 +106,19 @@ $colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
                 {{-- Ver --}}
                 <th style="{{ $thC }} text-align:center; min-width:60px; box-shadow:inset -1px 0 0 #E5E7EB;">
                     Ver
+                </th>
+
+                {{-- Asignación --}}
+                <th style="{{ $thC }} text-align:center; min-width:140px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    Asignación
+                    <div style="{{ $fW }}" @click.stop>
+                        {!! $fSvg !!}
+                        <select wire:model.live="colFilterAsignacion" @click.stop style="{{ $fS }}">
+                            <option value="">Todos</option>
+                            <option value="1">Asignado</option>
+                            <option value="0">Sin Asignar</option>
+                        </select>
+                    </div>
                 </th>
 
                 {{-- Ciclo (solo filtro, sin orden) --}}
@@ -123,8 +138,8 @@ $colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
                             <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isActive && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
                         </span>
                     </div>
-                    @if($key === 'fecha')
-                    <div style="{{ $fW }}" @click.stop><input wire:model.live="colFilterFecha" @click.stop type="date" style="{{ $fI }} padding-left:6px;"></div>
+                    @if(isset($colFiltersFechaE[$key]))
+                    <div style="{{ $fW }}" @click.stop><input wire:model.live="{{ $colFiltersFechaE[$key] }}" @click.stop type="date" style="{{ $fI }} padding-left:6px;"></div>
                     @elseif(isset($colFiltersE[$key]))
                     <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="{{ $colFiltersE[$key] }}" @click.stop type="text" style="{{ $fI }}"></div>
                     @endif
@@ -132,10 +147,33 @@ $colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
                 @endforeach
 
                 {{-- Asignado por --}}
-                <th style="{{ $thC }} text-align:center; min-width:150px; box-shadow:inset -1px 0 0 #E5E7EB;">Asignado por</th>
+                <th style="{{ $thC }} text-align:center; min-width:150px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    Asignado por
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterAsignadoPor" @click.stop type="text" style="{{ $fI }}"></div>
+                </th>
 
                 {{-- Asignado a --}}
-                <th style="{{ $thC }} text-align:center; min-width:150px;">Asignado a</th>
+                <th style="{{ $thC }} text-align:center; min-width:150px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    Asignado a
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterAsignadoA" @click.stop type="text" style="{{ $fI }}"></div>
+                </th>
+
+                {{-- Estado --}}
+                <th style="{{ $thC }} text-align:center; min-width:150px;">
+                    Estado
+                    <div style="{{ $fW }}" @click.stop>
+                        {!! $fSvg !!}
+                        <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                            <option value="">Todos</option>
+                            <option value="en_espera">En Espera</option>
+                            <option value="revision">En Revisión</option>
+                            <option value="aprobado">Aprobado</option>
+                            <option value="rechazado">Rechazado</option>
+                            <option value="operativo">Operativo</option>
+                            <option value="cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -162,9 +200,13 @@ $colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
                         </svg>
                     </button>
                 </td>
+                <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    <span style="font-size:13px; font-weight:700; color:#374151; white-space:nowrap;">{{ $p->asignado_a_id ? 'Asignado' : 'Sin Asignar' }}</span>
+                </td>
                 <td style="padding:10px 10px; text-align:center; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->ciclo_code ?? '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->numero }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->created_at->format('d/m/Y') }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->asignado_en?->format('d/m/Y') ?? '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->cliente->ci ?: '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#6B7280; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ ucwords(strtolower($p->vendedor->user->name ?? '—')) }}</td>
@@ -176,11 +218,12 @@ $colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
                     @endif
                 </td>
                 <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#374151; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->asignadoPor->name ?? '—' }}</td>
-                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $p->asignadoA->name ?? '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#374151; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->asignadoA->name ?? '—' }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; font-weight:700; color:#374151; white-space:nowrap;">{{ $p->estado_badge['label'] }}</td>
             </tr>
             @empty
             <tr wire:key="ed-empty">
-                <td colspan="11" style="padding:64px 24px; text-align:center;">
+                <td colspan="14" style="padding:64px 24px; text-align:center;">
                     <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>

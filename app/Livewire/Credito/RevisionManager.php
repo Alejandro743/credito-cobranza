@@ -31,12 +31,18 @@ class RevisionManager extends Component
     public string $colFilterCi       = '';
     public string $colFilterCliente  = '';
     public string $colFilterVendedor = '';
+    public string $colFilterFechaPlan     = '';
+    public string $colFilterFechaRevisar  = '';
+    public string $colFilterAsignadoPor = '';
 
-    public function updatingColFilterCiclo():    void { $this->resetPage(); }
-    public function updatingColFilterNumero():   void { $this->resetPage(); }
-    public function updatingColFilterCi():       void { $this->resetPage(); }
-    public function updatingColFilterCliente():  void { $this->resetPage(); }
-    public function updatingColFilterVendedor(): void { $this->resetPage(); }
+    public function updatingColFilterCiclo():         void { $this->resetPage(); }
+    public function updatingColFilterNumero():        void { $this->resetPage(); }
+    public function updatingColFilterCi():            void { $this->resetPage(); }
+    public function updatingColFilterCliente():       void { $this->resetPage(); }
+    public function updatingColFilterVendedor():      void { $this->resetPage(); }
+    public function updatingColFilterFechaPlan():     void { $this->resetPage(); }
+    public function updatingColFilterFechaRevisar():  void { $this->resetPage(); }
+    public function updatingColFilterAsignadoPor(): void { $this->resetPage(); }
 
     public ?int $selectedPedidoId = null;
 
@@ -454,7 +460,7 @@ class RevisionManager extends Component
         Pedido::where('id', $this->viewingId)
             ->where('estado', 'revision')
             ->firstOrFail()
-            ->update(['estado' => 'en_espera', 'revisado_por' => null]);
+            ->update(['estado' => 'en_espera', 'revisado_por' => null, 'revisado_en' => null]);
 
         session()->flash('success', 'Pedido devuelto a En Espera.');
         $this->backToList();
@@ -477,7 +483,7 @@ class RevisionManager extends Component
                     $lmi->save();
                 }
             }
-            $pedido->update(['estado' => 'aprobado', 'notas' => null]);
+            $pedido->update(['estado' => 'aprobado', 'notas' => null, 'aprobado_por_id' => auth()->id()]);
         });
 
         session()->flash('success', 'Pedido aprobado correctamente.');
@@ -539,7 +545,7 @@ class RevisionManager extends Component
     {
         $cicloSub = '(SELECT cc.code FROM pedido_items pi INNER JOIN lista_maestra_items lmi ON lmi.id = pi.lista_maestra_item_id INNER JOIN lista_maestra lm ON lm.id = lmi.lista_maestra_id INNER JOIN commercial_cycles cc ON cc.id = lm.cycle_id WHERE pi.pedido_id = pedidos.id LIMIT 1) as ciclo_code';
 
-        $pedidos = Pedido::with(['cliente.usuario', 'vendedor.user'])
+        $pedidos = Pedido::with(['cliente.usuario', 'vendedor.user', 'asignadoPor'])
             ->select('pedidos.*')
             ->addSelect(DB::raw($cicloSub))
             ->where('estado', 'revision')
@@ -549,10 +555,13 @@ class RevisionManager extends Component
             ->when($this->colFilterCliente,  fn($q) => $q->whereHas('cliente.usuario', fn($u) => $u->where('name', 'like', "%{$this->colFilterCliente}%")))
             ->when($this->colFilterVendedor, fn($q) => $q->whereHas('vendedor.user', fn($u) => $u->where('name', 'like', "%{$this->colFilterVendedor}%")))
             ->when($this->colFilterCiclo,    fn($q) => $q->whereHas('items.listaMaestraItem.listaMaestra.cycle', fn($c) => $c->where('code', 'like', "%{$this->colFilterCiclo}%")))
+            ->when($this->colFilterFechaPlan,    fn($q) => $q->whereDate('pedidos.created_at', $this->colFilterFechaPlan))
+            ->when($this->colFilterFechaRevisar, fn($q) => $q->whereDate('pedidos.revisado_en', $this->colFilterFechaRevisar))
+            ->when($this->colFilterAsignadoPor, fn($q) => $q->whereHas('asignadoPor', fn($u) => $u->where('name', 'like', "%{$this->colFilterAsignadoPor}%")))
             ->when($this->sortBy === 'cliente',  fn($q) => $q->orderBy(DB::table('users')->join('clientes','clientes.usuario_id','=','users.id')->whereColumn('clientes.id','pedidos.cliente_id')->select('users.name'), $this->sortDir))
             ->when($this->sortBy === 'vendedor', fn($q) => $q->orderBy(DB::table('users')->join('vendedores','vendedores.user_id','=','users.id')->whereColumn('vendedores.id','pedidos.vendedor_id')->select('users.name'), $this->sortDir))
             ->when($this->sortBy === 'ci',       fn($q) => $q->orderBy(DB::table('clientes')->whereColumn('clientes.id','pedidos.cliente_id')->select('ci'), $this->sortDir))
-            ->when(in_array($this->sortBy, ['numero','fecha','total']), fn($q) => $q->orderBy(match($this->sortBy) { 'numero'=>'pedidos.numero', 'fecha'=>'pedidos.created_at', 'total'=>'pedidos.total_pagar' }, $this->sortDir))
+            ->when(in_array($this->sortBy, ['numero','fecha_plan','fecha_revisar','total']), fn($q) => $q->orderBy(match($this->sortBy) { 'numero'=>'pedidos.numero', 'fecha_plan'=>'pedidos.created_at', 'fecha_revisar'=>'pedidos.revisado_en', 'total'=>'pedidos.total_pagar' }, $this->sortDir))
             ->when(!$this->sortBy, fn($q) => $q->orderByDesc('created_at'))
             ->paginate(15);
 

@@ -11,28 +11,6 @@ $badgeEstado = [
 {{-- ══ LIST ══ --}}
 @if ($mode === 'list')
 
-{{-- Toolbar --}}
-<div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-2.5 mb-5">
-    <div class="relative w-full sm:flex-1" style="min-width:0; max-width:100%;">
-        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:14px; height:14px; color:#9CA3AF;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0"/>
-        </svg>
-        <input wire:model.live.debounce.300ms="search" type="text" placeholder="Buscar cliente o Nº pedido..."
-               style="width:100%; height:36px; padding:0 12px 0 30px; border:1px solid #E5E7EB; border-radius:9px; font-size:13px; outline:none; box-sizing:border-box; background:#fff;">
-    </div>
-    <div style="display:flex; gap:6px; flex-wrap:wrap;">
-        @foreach([''=>'Todos','aprobado'=>'Aprobados','rechazado'=>'Rechazados','cerrado'=>'Cerrados'] as $valor => $label)
-        <button wire:click="$set('filtroEstado', '{{ $valor }}')"
-                style="padding:5px 12px; font-size:11px; font-weight:600; cursor:pointer; white-space:nowrap; border-radius:7px; -webkit-appearance:none; appearance:none;
-                       border:1.5px solid {{ $filtroEstado === $valor ? '#C4B5FD' : '#E5E7EB' }};
-                       background:{{ $filtroEstado === $valor ? '#EDE9FE' : 'transparent' }};
-                       color:{{ $filtroEstado === $valor ? '#7B6FE8' : '#9CA3AF' }};">
-            {{ $label }}
-        </button>
-        @endforeach
-    </div>
-</div>
-
 {{-- MOBILE: Cards --}}
 <div class="sm:hidden flex flex-col" style="gap:10px;">
     @forelse ($pedidos as $p)
@@ -61,8 +39,8 @@ $badgeEstado = [
                 <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->vendedor->user->name ?? '—' }}</span>
             </div>
             <div style="flex:1;">
-                <span style="font-size:11px; color:#9CA3AF; display:block;">Fecha</span>
-                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->updated_at->format('d/m/Y') }}</span>
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Fecha Revisión</span>
+                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->revisado_en?->format('d/m/Y') ?? '—' }}</span>
             </div>
             <div style="text-align:right;">
                 <span style="font-size:11px; color:#9CA3AF; display:block;">Total Bs.</span>
@@ -115,31 +93,84 @@ $badgeEstado = [
 
     <div style="overflow:auto; flex:1;">
     @php
-    $sortColsA = ['Cod. Pedido'=>'numero','CI'=>'ci','Cliente'=>'cliente','Vendedor'=>'vendedor','Fecha'=>'fecha','Estado'=>'estado','Total Bs.'=>'total'];
-    $colorEstado = ['aprobado'=>'#059669','rechazado'=>'#DC2626','cerrado'=>'#6B7280'];
-    $noSortA   = ['Pagado Bs.','Saldo Bs.','Acción'];
+    $fI   = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:left;';
+    $fS   = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; text-indent:16px; cursor:pointer;';
+    $fW   = 'position:relative; margin-top:4px;';
+    $fIc  = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
+    $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
+    $thC  = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top; position:relative; overflow:hidden;';
+    $sortColsA = ['Cod. Pedido'=>'numero','Fecha Revisión'=>'fecha_revision','CI'=>'ci','Cliente'=>'cliente','Vendedor'=>'vendedor','Total Bs.'=>'total'];
+    $colFiltersA = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colFilterCliente','vendedor'=>'colFilterVendedor'];
     @endphp
-    <table style="width:100%; min-width:920px; border-collapse:collapse; font-size:13px;">
+    <table style="width:100%; min-width:1500px; border-collapse:collapse; font-size:13px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
-                <th style="padding:10px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">Ciclo</th>
+                <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF; box-shadow:inset -1px 0 0 #E5E7EB;">#</th>
+
+                {{-- Ver --}}
+                <th style="{{ $thC }} text-align:center; min-width:60px; box-shadow:inset -1px 0 0 #E5E7EB;">Ver</th>
+
+                {{-- Ciclo (solo filtro, sin orden) --}}
+                <th style="{{ $thC }} text-align:center; min-width:110px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    Ciclo
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" style="{{ $fI }}"></div>
+                </th>
+
+                {{-- Estado --}}
+                @php $isA = $sortBy === 'estado'; @endphp
+                <th wire:click="toggleSort('estado')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:140px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
+                        <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                        </span>
+                    </div>
+                    <div style="{{ $fW }}" @click.stop>
+                        {!! $fSvg !!}
+                        <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                            <option value="">Todos</option>
+                            <option value="aprobado">Aprobado</option>
+                            <option value="rechazado">Rechazado</option>
+                            <option value="cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                </th>
+
                 @foreach($sortColsA as $label => $key)
-                @php $isActive = $sortBy === $key; $rightAlign = in_array($label, ['Total Bs.']); @endphp
+                @php $isActive = $sortBy === $key; @endphp
                 <th wire:click="toggleSort('{{ $key }}')"
-                    style="padding:10px 14px; text-align:{{ $rightAlign ? 'right' : ($label==='Estado' ? 'center' : 'left') }}; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; cursor:pointer; user-select:none; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
-                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                    <span style="display:inline-flex; align-items:center; gap:5px;">{{ $label }}
-                        @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                        @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                        @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
-                        @endif
-                    </span>
+                    style="{{ $thC }} text-align:center; cursor:pointer; min-width:130px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="!{{ $isActive?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isActive?'true':'false' }} && ($el.style.background='')">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:4px;">{{ $label }}
+                        <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isActive && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isActive && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                        </span>
+                    </div>
+                    @if($key === 'fecha_revision')
+                    <div style="{{ $fW }}" @click.stop><input wire:model.live="colFilterFechaRevision" @click.stop type="date" style="{{ $fI }} padding-left:6px;"></div>
+                    @elseif(isset($colFiltersA[$key]))
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="{{ $colFiltersA[$key] }}" @click.stop type="text" style="{{ $fI }}"></div>
+                    @endif
                 </th>
                 @endforeach
-                @foreach($noSortA as $label)
-                <th style="padding:10px 14px; text-align:{{ $label==='Acción' ? 'center' : 'right' }}; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap;">{{ $label }}</th>
-                @endforeach
+
+                {{-- Pagado / Saldo (sin orden ni filtro) --}}
+                <th style="{{ $thC }} text-align:right; min-width:110px; box-shadow:inset -1px 0 0 #E5E7EB;">Pagado Bs.</th>
+                <th style="{{ $thC }} text-align:right; min-width:110px; box-shadow:inset -1px 0 0 #E5E7EB;">Saldo Bs.</th>
+
+                {{-- Asignado por --}}
+                <th style="{{ $thC }} text-align:center; min-width:150px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    Asignado por
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterAsignadoPor" @click.stop type="text" style="{{ $fI }}"></div>
+                </th>
+
+                {{-- Revisado por --}}
+                <th style="{{ $thC }} text-align:center; min-width:150px;">
+                    Revisado por
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterRevisadoPor" @click.stop type="text" style="{{ $fI }}"></div>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -149,53 +180,44 @@ $badgeEstado = [
                 $esRechazado = $p->estado === 'rechazado';
                 $pagado      = ($sinImpacto || $esRechazado) ? 0 : ($p->total_pagado ?? 0);
                 $saldo       = ($sinImpacto || $esRechazado) ? 0 : max(0, $p->total_pagar - $pagado);
-                $estiloEstado = $badgeEstado[$p->estado] ?? 'background:#F4F4F4;color:#4A4A4A;border:1px solid #CBCBCB;';
             @endphp
             <tr wire:key="ad-{{ $p->id }}"
                 style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
                 @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-                <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; white-space:nowrap;">{{ $pedidos->firstItem() + $loop->index }}</td>
-                <td style="padding:10px 10px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; font-family:monospace; white-space:nowrap; background:#F8F7FF;">{{ $p->ciclo_code ?? '—' }}</td>
-                <td style="padding:10px 14px; font-family:monospace; font-size:12px; font-weight:700; color:#111827; white-space:nowrap;">{{ $p->numero }}</td>
-                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->cliente->ci ?: '—' }}</td>
-                <td style="padding:10px 14px; font-size:13px; font-weight:500; color:#111827; white-space:nowrap;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</td>
-                <td style="padding:10px 14px; font-size:13px; color:#6B7280; white-space:nowrap;">{{ ucwords(strtolower($p->vendedor->user->name ?? '—')) }}</td>
-                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $p->updated_at->format('d/m/Y') }}</td>
-                <td style="padding:10px 14px; white-space:nowrap;">
-                    @php
-                    $badgeStyle = match($p->estado) {
-                        'aprobado'  => 'background:#D1FAE5; color:#059669;',
-                        'rechazado' => 'background:#FEE2E2; color:#DC2626;',
-                        'cerrado'   => 'background:#F3F4F6; color:#6B7280;',
-                        default     => 'background:#F3F4F6; color:#6B7280;',
-                    };
-                    @endphp
-                    <span style="display:inline-block; padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; {{ $badgeStyle }}">{{ ucfirst($p->estado) }}</span>
+                <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#fff; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    <span style="font-size:13px; color:#111827;">{{ $pedidos->firstItem() + $loop->index }}</span>
                 </td>
-                <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:700; color:#111827; white-space:nowrap;">
+                <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    <button type="button" wire:click="ver({{ $p->id }})"
+                            style="width:26px; height:26px; border:none; background:transparent; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; color:#7B6FE8; padding:0;">
+                        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                        </svg>
+                    </button>
+                </td>
+                <td style="padding:10px 10px; text-align:center; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->ciclo_code ?? '—' }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; font-weight:700; color:#374151; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ ucfirst($p->estado) }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->numero }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->revisado_en?->format('d/m/Y') ?? '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->cliente->ci ?: '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#6B7280; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ ucwords(strtolower($p->vendedor->user->name ?? '—')) }}</td>
+                <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">
                     @if ($p->total_pagar > 0)
                         {{ number_format($p->total_pagar, 2) }}
                     @else
                         <span style="color:#D1D5DB;">—</span>
                     @endif
                 </td>
-                <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:700; color:#10B981; white-space:nowrap;">{{ number_format($pagado, 2) }}</td>
-                <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:700; white-space:nowrap; color:{{ $saldo > 0 ? '#DC2626' : '#111827' }};">{{ number_format($saldo, 2) }}</td>
-                <td style="padding:10px 14px; text-align:center;">
-                    <button wire:click="ver({{ $p->id }})"
-                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F5F3FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; -webkit-appearance:none; appearance:none;"
-                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F5F3FF'"
-                            title="Ver">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                        </svg>
-                    </button>
-                </td>
+                <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:400; color:#10B981; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ number_format($pagado, 2) }}</td>
+                <td style="padding:10px 14px; text-align:right; font-size:13px; font-weight:400; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB; color:{{ $saldo > 0 ? '#DC2626' : '#111827' }};">{{ number_format($saldo, 2) }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#374151; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->asignadoPor->name ?? '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $p->revisadoPor->name ?? '—' }}</td>
             </tr>
             @empty
             <tr wire:key="ad-empty">
-                <td colspan="12" style="padding:64px 24px; text-align:center;">
+                <td colspan="13" style="padding:64px 24px; text-align:center;">
                     <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
@@ -227,7 +249,33 @@ $badgeEstado = [
 @@media (min-width:640px) { .am-act-wrap { flex-direction:row; } }
 </style>
 
-<div style="max-width:900px;margin:0 auto;">
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4"
+     style="background:rgba(20,10,40,0.4); backdrop-filter:blur(2px);">
+    <div style="background:#fff; border-radius:20px; width:100%; max-width:900px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
+
+        {{-- Header --}}
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
+            <div style="display:flex; align-items:center; gap:9px;">
+                <div style="width:30px; height:30px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="1.8" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+                        <rect x="9" y="3" width="6" height="4" rx="1"/>
+                        <line x1="9" y1="12" x2="15" y2="12"/>
+                        <line x1="9" y1="16" x2="13" y2="16"/>
+                    </svg>
+                </div>
+                <p style="font-size:17px; font-weight:700; color:#6B7280; margin:0; letter-spacing:-0.2px;">{{ $p->numero }} - {{ $p->estado_badge['label'] }}</p>
+            </div>
+            <button type="button" wire:click="backToList"
+                    style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; color:#9CA3AF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s, color .15s;"
+                    @mouseenter="$el.style.background='#7B6FE8'; $el.style.color='#fff';"
+                    @mouseleave="$el.style.background='#F5F3FF'; $el.style.color='#9CA3AF';">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        {{-- Body --}}
+        <div style="overflow-y:auto; flex:1; min-height:0; padding:18px 20px;">
 
     @include('livewire.credito.partials.pedido-detail', [
         'p'        => $p,
@@ -448,7 +496,9 @@ $badgeEstado = [
     </div>
     @endif
 
-</div>
+        </div>
 
+    </div>
+</div>
 @endif
 </div>
