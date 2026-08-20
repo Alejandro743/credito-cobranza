@@ -103,7 +103,7 @@ class ClienteManager extends Component
     public string $editMunicipio  = '';
     public string $editDireccion  = '';
     public ?int   $editVendedorId = null;
-    public bool   $editActive     = true;
+    public string $editActive     = '1';
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -206,7 +206,7 @@ class ClienteManager extends Component
         $this->editMunicipio = $c->municipio;
         $this->editDireccion = $c->direccion;
         $this->editVendedorId= $c->vendedor_id;
-        $this->editActive    = $c->active;
+        $this->editActive    = $c->active ? '1' : '0';
         $this->showAddForm   = false;
         $this->resetValidation();
     }
@@ -237,11 +237,13 @@ class ClienteManager extends Component
             'editVendedorId'=>['nullable','exists:users,id'],
         ]);
 
+        $activeBool = $this->editActive === '1';
+
         // Actualizar usuario (CI puede cambiar → actualiza email=login)
         $cliente->usuario->update([
             'name'   => $this->editNombre,
             'email'  => $this->editCi,
-            'active' => $this->editActive,
+            'active' => $activeBool,
         ]);
 
         $cliente->update([
@@ -255,7 +257,7 @@ class ClienteManager extends Component
             'municipio'   => $this->editMunicipio,
             'direccion'   => $this->editDireccion,
             'vendedor_id' => $this->editVendedorId,
-            'active'      => $this->editActive,
+            'active'      => $activeBool,
         ]);
 
         $this->editingId = null;

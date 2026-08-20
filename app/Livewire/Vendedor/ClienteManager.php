@@ -97,7 +97,7 @@ class ClienteManager extends Component
     public string $editProvincia = '';
     public string $editMunicipio = '';
     public string $editDireccion = '';
-    public bool   $editActive    = true;
+    public string $editActive    = '1';
 
     // ─────────────────────────────────────────────────────────────────────────
 
@@ -209,7 +209,7 @@ class ClienteManager extends Component
         $this->editProvincia = $c->provincia;
         $this->editMunicipio = $c->municipio;
         $this->editDireccion = $c->direccion;
-        $this->editActive    = (bool) $c->active;
+        $this->editActive    = $c->active ? '1' : '0';
         $this->showAddForm   = false;
         $this->resetValidation();
     }
@@ -244,9 +244,11 @@ class ClienteManager extends Component
             'editDireccion'=> 'dirección',
         ]);
 
+        $activeBool = $this->editActive === '1';
+
         $c->usuario->update([
             'name'   => trim($this->editNombre),
-            'active' => $this->editActive,
+            'active' => $activeBool,
         ]);
 
         $c->update([
@@ -258,7 +260,7 @@ class ClienteManager extends Component
             'provincia'   => trim($this->editProvincia),
             'municipio'   => trim($this->editMunicipio),
             'direccion'   => trim($this->editDireccion),
-            'active'      => $this->editActive,
+            'active'      => $activeBool,
         ]);
 
         $this->editingId = null;

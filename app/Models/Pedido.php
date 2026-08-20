@@ -17,7 +17,7 @@ class Pedido extends Model
     protected $table    = 'pedidos';
     protected $fillable = [
         'numero', 'cliente_id', 'vendedor_id', 'financial_matrix_id',
-        'estado', 'revisado_por', 'notas', 'total', 'total_pagar', 'cuota_inicial',
+        'estado', 'revisado_por', 'asignado_por_id', 'asignado_a_id', 'notas', 'total', 'total_pagar', 'cuota_inicial',
         'matriz_snapshot',
         'entrega_ciudad', 'entrega_provincia', 'entrega_municipio', 'entrega_direccion', 'entrega_referencia', 'tipo_entrega',
         'doc_anverso_ci', 'doc_reverso_ci', 'doc_anverso_doc', 'doc_reverso_doc', 'doc_aviso_luz',
@@ -38,6 +38,18 @@ class Pedido extends Model
     public function vendedor(): BelongsTo
     {
         return $this->belongsTo(Vendedor::class);
+    }
+
+    /** Usuario administrativo que hizo la asignación de crédito */
+    public function asignadoPor(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'asignado_por_id');
+    }
+
+    /** Usuario administrativo al que se le asignó el crédito del pedido */
+    public function asignadoA(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'asignado_a_id');
     }
 
     public function items(): HasMany

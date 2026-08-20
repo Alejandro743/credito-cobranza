@@ -3,11 +3,12 @@
 namespace App\Livewire\Credito;
 
 use App\Models\Pedido;
+use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 use Livewire\WithPagination;
 
-class EsperaManager extends Component
+class AsignarCreditoManager extends Component
 {
     use WithPagination;
 
@@ -77,32 +78,67 @@ class EsperaManager extends Component
         }
     }
 
-    public function tomarRevision(int $id): void
-    {
-        $pedido = Pedido::where('id', $id)->where('estado', 'en_espera')->firstOrFail();
-        $pedido->update([
-            'estado'      => 'revision',
-            'revisado_por' => auth()->id(),
-        ]);
-        $this->selectedIds = [];
-        session()->flash('success', 'Pedido tomado para revisión. Ya aparece en tu bandeja.');
-        $this->backToList();
-    }
+    // ── Asignar Credito (bulk) ───────────────────────────────────────────────
+    public bool   $showAsignarModal = false;
+    public string $searchAdmin      = '';
+    public ?int   $selectedAdminId  = null;
 
-    public function tomarRevisionMasivo(): void
+    public function abrirAsignar(): void
     {
         if (empty($this->selectedIds)) return;
+        $this->searchAdmin      = '';
+        $this->selectedAdminId  = null;
+        $this->showAsignarModal = true;
+    }
+
+    public function cerrarAsignar(): void
+    {
+        $this->showAsignarModal = false;
+        $this->searchAdmin      = '';
+        $this->selectedAdminId  = null;
+    }
+
+    public function seleccionarAdmin(int $id): void
+    {
+        $this->selectedAdminId = $this->selectedAdminId === $id ? null : $id;
+    }
+
+    public function administrativos()
+    {
+        $q = trim($this->searchAdmin);
+
+        return User::where('tipo', 'administrativo')
+            ->when($q !== '', fn ($w) => $w->where(function ($w2) use ($q) {
+                $w2->where('name', 'like', "%{$q}%")
+                   ->orWhere('apellido', 'like', "%{$q}%")
+                   ->orWhere('email', 'like', "%{$q}%");
+            }))
+            ->orderBy('name')
+            ->get()
+            ->map(fn ($u) => [
+                'id'     => $u->id,
+                'rol'    => ucfirst(preg_replace('/_\d+$/', '', $u->getRoleNames()->first() ?? '—')),
+                'usuario'=> $u->email,
+                'nombre' => trim($u->name.' '.($u->apellido ?? '')),
+            ]);
+    }
+
+    public function asignarCredito(): void
+    {
+        if (empty($this->selectedIds) || !$this->selectedAdminId) return;
 
         Pedido::whereIn('id', $this->selectedIds)
             ->where('estado', 'en_espera')
             ->update([
-                'estado'       => 'revision',
-                'revisado_por' => auth()->id(),
+                'asignado_por_id' => auth()->id(),
+                'asignado_a_id'   => $this->selectedAdminId,
             ]);
 
-        $count = count($this->selectedIds);
-        $this->selectedIds = [];
-        session()->flash('success', $count.' pedido'.($count === 1 ? '' : 's').' tomado'.($count === 1 ? '' : 's').' para revisión.');
+        $this->selectedIds      = [];
+        $this->showAsignarModal = false;
+        $this->searchAdmin      = '';
+        $this->selectedAdminId  = null;
+        session()->flash('success', 'Crédito asignado correctamente.');
     }
 
     public function backToList(): void
@@ -115,7 +151,7 @@ class EsperaManager extends Component
     {
         $cicloSub = '(SELECT cc.code FROM pedido_items pi INNER JOIN lista_maestra_items lmi ON lmi.id = pi.lista_maestra_item_id INNER JOIN lista_maestra lm ON lm.id = lmi.lista_maestra_id INNER JOIN commercial_cycles cc ON cc.id = lm.cycle_id WHERE pi.pedido_id = pedidos.id LIMIT 1) as ciclo_code';
 
-        return Pedido::with(['cliente.usuario', 'vendedor.user', 'asignadoPor'])
+        return Pedido::with(['cliente.usuario', 'vendedor.user', 'asignadoPor', 'asignadoA'])
             ->select('pedidos.*')
             ->addSelect(DB::raw($cicloSub))
             ->where('estado', 'en_espera')
@@ -144,6 +180,6 @@ class EsperaManager extends Component
             ])->find($this->viewingId);
         }
 
-        return view('livewire.credito.espera-manager', compact('pedidos', 'pedidoDetalle'));
+        return view('livewire.credito.asignar-credito-manager', compact('pedidos', 'pedidoDetalle'));
     }
 }

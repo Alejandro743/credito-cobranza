@@ -25,8 +25,8 @@
                 <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->vendedor->user->name ?? '—' }}</span>
             </div>
             <div style="flex:1;">
-                <span style="font-size:11px; color:#9CA3AF; display:block;">Fecha</span>
-                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->created_at->format('d/m/Y') }}</span>
+                <span style="font-size:11px; color:#9CA3AF; display:block;">Asignado a</span>
+                <span style="font-size:12px; font-weight:600; color:#374151;">{{ $p->asignadoA->name ?? '—' }}</span>
             </div>
             <div style="text-align:right;">
                 <span style="font-size:11px; color:#9CA3AF; display:block;">Total Bs.</span>
@@ -36,10 +36,8 @@
         <div style="padding:10px 14px; border-top:1px solid #F3F4F6;">
             <button wire:click="ver({{ $p->id }})"
                     style="width:100%; height:34px; border:1px solid #EDE9FE; border-radius:8px; background:#F5F3FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:5px; -webkit-appearance:none; appearance:none;">
-                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                </svg>
-                Tomar para Revisión
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                Ver
             </button>
         </div>
     </div>
@@ -69,30 +67,28 @@ $colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
-        <span style="font-size:13px; font-weight:700; color:#111827;">En Espera de Aprobación</span>
+        <span style="font-size:13px; font-weight:700; color:#111827;">Asignar Credito</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidos->total() }}</span>
         @if(count($selectedIds) > 0)
         @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
         <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
-            <span style="font-size:11px; font-weight:700; color:#7B6FE8;">{{ count($selectedIds) }} seleccionada{{ count($selectedIds) === 1 ? '' : 's' }}</span>
+            <span style="font-size:11px; font-weight:700; color:#7B6FE8;">{{ count($selectedIds) }} seleccionado{{ count($selectedIds) === 1 ? '' : 's' }}</span>
             @if(count($selectedIds) === 1)
             <button wire:click="verSeleccionado" style="{{ $btnH }} background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE;">
                 <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                 Ver
             </button>
             @endif
-            <button wire:click="tomarRevisionMasivo" wire:confirm="¿Tomar {{ count($selectedIds) }} pedido{{ count($selectedIds) === 1 ? '' : 's' }} para revisión? Quedará{{ count($selectedIds) === 1 ? '' : 'n' }} asignado{{ count($selectedIds) === 1 ? '' : 's' }} a vos." style="{{ $btnH }} background:#7B6FE8; color:#fff;">
-                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                </svg>
-                Tomar para Revisión
+            <button wire:click="abrirAsignar" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/><path stroke-linecap="round" stroke-linejoin="round" d="M20 8v6m3-3h-6"/></svg>
+                Asignar Credito
             </button>
         </div>
         @endif
     </div>
 
     <div style="overflow:auto; flex:1;">
-    <table style="width:100%; min-width:900px; border-collapse:collapse; font-size:13px;">
+    <table style="width:100%; min-width:1100px; border-collapse:collapse; font-size:13px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
                 <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF; box-shadow:inset -1px 0 0 #E5E7EB;">
@@ -136,9 +132,10 @@ $colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
                 @endforeach
 
                 {{-- Asignado por --}}
-                <th style="{{ $thC }} text-align:center; min-width:150px;">
-                    Asignado por
-                </th>
+                <th style="{{ $thC }} text-align:center; min-width:150px; box-shadow:inset -1px 0 0 #E5E7EB;">Asignado por</th>
+
+                {{-- Asignado a --}}
+                <th style="{{ $thC }} text-align:center; min-width:150px;">Asignado a</th>
             </tr>
         </thead>
         <tbody>
@@ -178,16 +175,17 @@ $colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
                         <span style="color:#D1D5DB;">—</span>
                     @endif
                 </td>
-                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $p->asignadoPor->name ?? '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#374151; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->asignadoPor->name ?? '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $p->asignadoA->name ?? '—' }}</td>
             </tr>
             @empty
             <tr wire:key="ed-empty">
-                <td colspan="10" style="padding:64px 24px; text-align:center;">
+                <td colspan="11" style="padding:64px 24px; text-align:center;">
                     <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
                     <p style="font-weight:600; color:#6B7280; font-size:13px; margin-bottom:4px;">Sin pedidos en espera</p>
-                    <p style="font-size:12px; color:#9CA3AF;">Todos los pedidos han sido tomados para revisión</p>
+                    <p style="font-size:12px; color:#9CA3AF;">No hay solicitudes pendientes de asignación</p>
                 </td>
             </tr>
             @endforelse
@@ -231,15 +229,74 @@ $colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colF
             @include('livewire.vendedor.partials.pedido-detalle-body', ['pedido' => $pedidoDetalle, 'mostrarCodEstadoInline' => false])
         </div>
 
+    </div>
+</div>
+@endif
+
+{{-- ══ MODAL: Asignar Credito ══ --}}
+@if ($showAsignarModal)
+<div class="fixed inset-0 flex items-center justify-center p-4" style="z-index:9999; background:rgba(20,10,40,0.4); backdrop-filter:blur(2px);"
+     wire:click.self="cerrarAsignar">
+    <div style="background:#fff; border-radius:20px; width:100%; max-width:480px; max-height:85vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
+
+        {{-- Header --}}
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:16px 20px; border-bottom:1px solid #F0EEFF; flex-shrink:0;">
+            <div style="display:flex; align-items:center; gap:9px;">
+                <div style="width:30px; height:30px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                    <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </div>
+                <div>
+                    <p style="font-size:17px; font-weight:700; color:#6B7280; margin:0; letter-spacing:-0.2px;">Asignar Credito</p>
+                    <p style="font-size:11px; color:#9CA3AF; margin:0;">{{ count($selectedIds) }} pedido{{ count($selectedIds) === 1 ? '' : 's' }} seleccionado{{ count($selectedIds) === 1 ? '' : 's' }}</p>
+                </div>
+            </div>
+            <button type="button" wire:click="cerrarAsignar"
+                    style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; color:#9CA3AF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s, color .15s;"
+                    @mouseenter="$el.style.background='#7B6FE8'; $el.style.color='#fff';"
+                    @mouseleave="$el.style.background='#F5F3FF'; $el.style.color='#9CA3AF';">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+        </div>
+
+        {{-- Body --}}
+        <div style="padding:16px 20px; overflow-y:auto; flex:1; min-height:0;">
+            <div style="position:relative; margin-bottom:10px;">
+                <svg style="position:absolute; left:12px; top:50%; transform:translateY(-50%); width:14px; height:14px; pointer-events:none;" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>
+                <input type="text" wire:model.live.debounce.300ms="searchAdmin" autofocus
+                       placeholder="Buscar administrativo (nombre, apellido o usuario)..."
+                       style="width:100%; height:38px; border:1px solid #DDD8FA; border-radius:9px; padding:0 12px 0 34px; font-size:13px; color:#374151; outline:none; box-sizing:border-box;">
+            </div>
+
+            @php $resultadosAdmin = $this->administrativos(); @endphp
+            @if ($resultadosAdmin->isEmpty())
+            <p style="text-align:center; padding:24px 12px; font-size:12px; color:#9CA3AF;">Sin resultados{{ $searchAdmin !== '' ? ' para "'.$searchAdmin.'"' : '' }}</p>
+            @else
+            <div style="border:1px solid #E5E7EB; border-radius:10px; overflow:hidden; max-height:280px; overflow-y:auto;">
+                <div style="display:grid; grid-template-columns:90px 1fr 1fr; background:#F9F8FF; border-bottom:2px solid #EDE9FE; padding:7px 12px; position:sticky; top:0;">
+                    <span style="font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Rol</span>
+                    <span style="font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Usuario</span>
+                    <span style="font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Nombre</span>
+                </div>
+                @foreach ($resultadosAdmin as $a)
+                @php $selA = $selectedAdminId === $a['id']; @endphp
+                <button type="button" wire:click="seleccionarAdmin({{ $a['id'] }})"
+                        style="width:100%; display:grid; grid-template-columns:90px 1fr 1fr; align-items:center; text-align:left; padding:9px 12px; border:none; {{ !$loop->last ? 'border-bottom:1px solid #F9FAFB;' : '' }} background:{{ $selA ? '#F5F3FF' : '#fff' }}; {{ $selA ? 'box-shadow:inset 3px 0 0 #7B6FE8;' : '' }} cursor:pointer;"
+                        @if(!$selA) @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background='#fff'" @endif>
+                    <span style="font-size:11px; font-weight:700; color:#7B6FE8;">{{ $a['rol'] }}</span>
+                    <span style="font-size:12px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $a['usuario'] }}</span>
+                    <span style="font-size:13px; font-weight:500; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $a['nombre'] }}</span>
+                </button>
+                @endforeach
+            </div>
+            @endif
+        </div>
+
         {{-- Footer --}}
         <div style="padding:14px 20px; border-top:1px solid #F0EEFF; flex-shrink:0;">
-            <button wire:click="tomarRevision({{ $pedidoDetalle->id }})"
-                    wire:confirm="¿Tomás este pedido para revisión? Quedará asignado a vos."
-                    style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
-                <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
-                </svg>
-                Tomar para Revisión
+            <button type="button" wire:click="asignarCredito" @if(!$selectedAdminId) disabled @endif
+                    style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:none; -webkit-appearance:none; appearance:none; {{ $selectedAdminId ? 'background:#7B6FE8; color:#fff; cursor:pointer;' : 'background:#F4F4F4; color:#C4B5FD; cursor:not-allowed;' }}">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                Asignar
             </button>
         </div>
 
