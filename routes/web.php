@@ -76,6 +76,7 @@ Route::middleware(['auth', 'submodulo.permiso'])->prefix('admin')->name('admin.'
 Route::middleware(['auth', 'submodulo.permiso'])->prefix('credito')->name('credito.')->group(function () {
     Route::get('/dashboard',     fn() => view('modules.credito.dashboard'))->name('dashboard');
     Route::get('/asignar-credito', fn() => view('modules.credito.asignar-credito'))->name('asignar-credito');
+    Route::get('/historico-credito', fn() => view('modules.credito.historico-credito'))->name('historico-credito');
     Route::get('/espera',        fn() => view('modules.credito.espera'))->name('espera');
     Route::get('/revision',      fn() => view('modules.credito.revision'))->name('revision');
     Route::get('/aprobado',      fn() => view('modules.credito.aprobado'))->name('aprobado');

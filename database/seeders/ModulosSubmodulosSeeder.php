@@ -90,11 +90,12 @@ class ModulosSubmodulosSeeder extends Seeder
                         'name' => 'Gestión de Crédito', 'slug' => 'credito-gestion',
                         'route_name' => null, 'sort_order' => 1,
                         'children' => [
-                            ['name' => 'Clientes',                'slug' => 'credito-clientes',  'route_name' => 'admin.credito.clientes', 'sort_order' => 1],
+                            ['name' => 'Datos Clientes',          'slug' => 'credito-clientes',  'route_name' => 'admin.credito.clientes', 'sort_order' => 1],
                             ['name' => 'Asignar Credito',         'slug' => 'credito-asignar',   'route_name' => 'credito.asignar-credito', 'sort_order' => 2],
-                            ['name' => 'En Espera de Aprobación', 'slug' => 'credito-espera',    'route_name' => 'credito.espera',         'sort_order' => 3],
-                            ['name' => 'En Revisión',             'slug' => 'credito-revision',  'route_name' => 'credito.revision',       'sort_order' => 4],
-                            ['name' => 'Aprobado / Rechazado / Cerrado', 'slug' => 'credito-aprobado', 'route_name' => 'credito.aprobado', 'sort_order' => 5],
+                            ['name' => 'Pendiente de Revisión',   'slug' => 'credito-espera',    'route_name' => 'credito.espera',         'sort_order' => 3],
+                            ['name' => 'En Proceso de Revisión',  'slug' => 'credito-revision',  'route_name' => 'credito.revision',       'sort_order' => 4],
+                            ['name' => 'Credito Aprobado/Rechazado/Cerrado', 'slug' => 'credito-aprobado', 'route_name' => 'credito.aprobado', 'sort_order' => 5],
+                            ['name' => 'Histórico de Créditos',   'slug' => 'credito-historico', 'route_name' => 'credito.historico-credito', 'sort_order' => 6],
                         ],
                     ],
                     [

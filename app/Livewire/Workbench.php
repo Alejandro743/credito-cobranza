@@ -45,11 +45,12 @@ class Workbench extends Component
         'ciclo-puntos'       => ['label' => 'Puntos',             'component' => 'admin.ciclo.configuracion-puntos-manager'],
 
         // ── Crédito/Cobranza / Gestión de Crédito ────────────────────────────
-        'credito-clientes' => ['label' => 'Clientes',                       'component' => 'credito.cliente-manager'],
+        'credito-clientes' => ['label' => 'Datos Clientes',                 'component' => 'credito.cliente-manager'],
         'credito-asignar'  => ['label' => 'Asignar Credito',                'component' => 'credito.asignar-credito-manager'],
-        'credito-espera'   => ['label' => 'En Espera de Aprobación',        'component' => 'credito.espera-manager'],
-        'credito-revision' => ['label' => 'En Revisión',                    'component' => 'credito.revision-manager'],
-        'credito-aprobado' => ['label' => 'Aprobado / Rechazado / Cerrado', 'component' => 'credito.aprobado-manager'],
+        'credito-historico'=> ['label' => 'Histórico de Créditos',          'component' => 'credito.historico-creditos-manager'],
+        'credito-espera'   => ['label' => 'Pendiente de Revisión',          'component' => 'credito.espera-manager'],
+        'credito-revision' => ['label' => 'En Proceso de Revisión',         'component' => 'credito.revision-manager'],
+        'credito-aprobado' => ['label' => 'Credito Aprobado/Rechazado/Cerrado', 'component' => 'credito.aprobado-manager'],
 
         // ── Crédito/Cobranza / Cobranza ──────────────────────────────────────
         'cobranza-bandeja'             => ['label' => 'Bandeja de Asignación', 'component' => 'credito.bandeja-asignacion'],

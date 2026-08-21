@@ -62,14 +62,14 @@ $fW   = 'position:relative; margin-top:4px;';
 $fIc  = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
 $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
 $thC  = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top; position:relative; overflow:hidden;';
-$sortColsE = ['Cod. Pedido'=>'numero','Fecha del Plan'=>'fecha_plan','CI'=>'ci','Cliente'=>'cliente','Vendedor'=>'vendedor','Total Bs.'=>'total'];
+$sortColsE = ['Cod. Pedido'=>'numero','Fecha del Plan'=>'fecha_plan','Fecha de Asignación'=>'fecha_asignacion','CI'=>'ci','Cliente'=>'cliente','Vendedor'=>'vendedor','Total Bs.'=>'total'];
 $colFiltersE = ['numero'=>'colFilterNumero','ci'=>'colFilterCi','cliente'=>'colFilterCliente','vendedor'=>'colFilterVendedor'];
-$colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan'];
+$colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan','fecha_asignacion'=>'colFilterFechaAsignacion'];
 @endphp
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
-        <span style="font-size:13px; font-weight:700; color:#111827;">Asignar Credito</span>
+        <span style="font-size:13px; font-weight:700; color:#111827;">Histórico de Créditos</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidos->total() }}</span>
         @if(count($selectedIds) > 0)
         @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
@@ -145,6 +145,35 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan'];
                     @endif
                 </th>
                 @endforeach
+
+                {{-- Asignado por --}}
+                <th style="{{ $thC }} text-align:center; min-width:150px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    Asignado por
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterAsignadoPor" @click.stop type="text" style="{{ $fI }}"></div>
+                </th>
+
+                {{-- Asignado a --}}
+                <th style="{{ $thC }} text-align:center; min-width:150px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    Asignado a
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterAsignadoA" @click.stop type="text" style="{{ $fI }}"></div>
+                </th>
+
+                {{-- Estado --}}
+                <th style="{{ $thC }} text-align:center; min-width:150px;">
+                    Estado
+                    <div style="{{ $fW }}" @click.stop>
+                        {!! $fSvg !!}
+                        <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                            <option value="">Todos</option>
+                            <option value="en_espera">En Espera</option>
+                            <option value="revision">En Revisión</option>
+                            <option value="aprobado">Aprobado</option>
+                            <option value="rechazado">Rechazado</option>
+                            <option value="operativo">Operativo</option>
+                            <option value="cerrado">Cerrado</option>
+                        </select>
+                    </div>
+                </th>
             </tr>
         </thead>
         <tbody>
@@ -177,6 +206,7 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan'];
                 <td style="padding:10px 10px; text-align:center; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->ciclo_code ?? '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->numero }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->created_at->format('d/m/Y') }}</td>
+                <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->asignado_en?->format('d/m/Y') ?? '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->cliente->ci ?: '—' }}</td>
                 <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ ucwords(strtolower($p->cliente->nombre_completo)) }}</td>
                 <td style="padding:10px 14px; font-size:13px; color:#6B7280; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ ucwords(strtolower($p->vendedor->user->name ?? '—')) }}</td>
@@ -187,15 +217,18 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan'];
                         <span style="color:#D1D5DB;">—</span>
                     @endif
                 </td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#374151; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->asignadoPor->name ?? '—' }}</td>
+                <td style="padding:10px 14px; font-size:13px; font-weight:400; color:#374151; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $p->asignadoA->name ?? '—' }}</td>
+                <td style="padding:10px 14px; text-align:center; font-size:13px; font-weight:700; color:#374151; white-space:nowrap;">{{ $p->estado_badge['label'] }}</td>
             </tr>
             @empty
             <tr wire:key="ed-empty">
-                <td colspan="10" style="padding:64px 24px; text-align:center;">
+                <td colspan="14" style="padding:64px 24px; text-align:center;">
                     <svg style="width:48px; height:48px; color:#E5E7EB; margin:0 auto 12px; display:block;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                     </svg>
-                    <p style="font-weight:600; color:#6B7280; font-size:13px; margin-bottom:4px;">Sin pedidos en espera</p>
-                    <p style="font-size:12px; color:#9CA3AF;">No hay solicitudes pendientes de asignación</p>
+                    <p style="font-weight:600; color:#6B7280; font-size:13px; margin-bottom:4px;">Sin créditos registrados</p>
+                    <p style="font-size:12px; color:#9CA3AF;">No hay resultados para los filtros actuales</p>
                 </td>
             </tr>
             @endforelse

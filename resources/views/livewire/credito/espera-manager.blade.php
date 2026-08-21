@@ -70,7 +70,7 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan','fecha_asignacion'=>'col
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
-        <span style="font-size:13px; font-weight:700; color:#111827;">En Espera de Aprobación</span>
+        <span style="font-size:13px; font-weight:700; color:#111827;">Pendiente de Revisión</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidos->total() }}</span>
         @if(count($selectedIds) > 0)
         @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
