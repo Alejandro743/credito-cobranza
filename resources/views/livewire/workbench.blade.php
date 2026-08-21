@@ -30,9 +30,11 @@
         @php $isActive = $activeTab === $key; @endphp
         <div wire:key="wb-tabbtn-{{ $key }}"
              data-tab-key="{{ $key }}"
-             style="flex:1; min-width:0; display:flex; align-items:center; gap:7px; padding:8px 8px 9px 12px; border-radius:9px 9px 0 0; cursor:pointer;
+             style="flex:1; min-width:0; display:flex; align-items:center; gap:7px; padding:8px 8px 9px 12px; border-radius:9px 9px 0 0; cursor:pointer; transition:background-color .15s ease;
                     background:{{ $isActive ? '#fff' : '#F0EDFC' }}; color:{{ $isActive ? '#7B6FE8' : '#6B7280' }}; font-size:12.5px; font-weight:{{ $isActive ? '700' : '600' }};
-                    border:2px solid {{ $isActive ? '#7B6FE8' : 'transparent' }}; border-bottom:none; position:relative; top:1px;">
+                    border:2px solid {{ $isActive ? '#7B6FE8' : 'transparent' }}; border-bottom:none; position:relative; top:1px;"
+             onmouseenter="if (this.style.background !== 'rgb(255, 255, 255)') this.style.background='#E5DFFB';"
+             onmouseleave="if (this.style.background !== 'rgb(255, 255, 255)') this.style.background='#F0EDFC';">
             <span style="flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $t['label'] }}</span>
             <button type="button" wire:click.stop="cerrarPestana('{{ $key }}')" title="Cerrar pestaña"
                     style="width:16px; height:16px; border-radius:5px; border:none; background:transparent; color:#9CA3AF; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
