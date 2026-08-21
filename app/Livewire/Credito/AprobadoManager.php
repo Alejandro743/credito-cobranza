@@ -7,12 +7,17 @@ use App\Models\MotivoCierre;
 use App\Models\PedidoCierre;
 use App\Models\Pedido;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class AprobadoManager extends Component
 {
     use WithPagination;
+
+    /** Otra pestaña/pantalla cambió pedidos compartidos: refrescar esta grilla. */
+    #[On('pedidos-actualizados')]
+    public function refrescarPorEvento(): void {}
 
     public string $mode              = 'list';
     public ?int   $viewingId         = null;
@@ -52,6 +57,20 @@ class AprobadoManager extends Component
     public string $sortBy  = '';
     public string $sortDir = 'asc';
 
+    public ?int $selectedPedidoId = null;
+
+    public function selectPedido(int $id): void
+    {
+        $this->selectedPedidoId = $this->selectedPedidoId === $id ? null : $id;
+    }
+
+    public function verSeleccionado(): void
+    {
+        if ($this->selectedPedidoId) {
+            $this->ver($this->selectedPedidoId);
+        }
+    }
+
     public function toggleSort(string $col): void
     {
         if ($this->sortBy === $col) {
@@ -66,6 +85,7 @@ class AprobadoManager extends Component
     public function ver(int $id): void
     {
         $this->viewingId             = $id;
+        $this->selectedPedidoId      = $id;
         $this->confirmandoRechazo    = false;
         $this->notaRechazo           = '';
         $this->confirmandoCierre     = false;
@@ -116,6 +136,7 @@ class AprobadoManager extends Component
         });
 
         session()->flash('success', 'Pedido devuelto a Revisión.');
+        $this->dispatch('pedidos-actualizados');
         $this->backToList();
     }
 
@@ -140,6 +161,7 @@ class AprobadoManager extends Component
         });
 
         session()->flash('success', 'Pedido aprobado.');
+        $this->dispatch('pedidos-actualizados');
         $this->backToList();
     }
 
@@ -169,6 +191,7 @@ class AprobadoManager extends Component
         });
 
         session()->flash('success', 'Pedido rechazado.');
+        $this->dispatch('pedidos-actualizados');
         $this->backToList();
     }
 
@@ -197,6 +220,7 @@ class AprobadoManager extends Component
         ]);
 
         session()->flash('success', 'Crédito cerrado correctamente.');
+        $this->dispatch('pedidos-actualizados');
         $this->backToList();
     }
 
@@ -224,6 +248,7 @@ class AprobadoManager extends Component
         ]);
 
         session()->flash('success', 'Cierre revertido. El pedido volvió a Aprobado.');
+        $this->dispatch('pedidos-actualizados');
         $this->backToList();
     }
 

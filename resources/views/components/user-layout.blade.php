@@ -246,18 +246,6 @@ $dashActivo = request()->routeIs('administrativo.dashboard')
         <header class="flex items-center flex-shrink-0"
                 style="background:#fff; border-bottom:1px solid #E5E7EB; min-height:56px; box-shadow:0 1px 3px rgba(0,0,0,.04); gap:0;">
 
-            {{-- Toggle sidebar --}}
-            <button @click="$dispatch('toggle-sidebar')"
-                    style="align-self:stretch; width:58px; border:none; border-radius:0; background:#7B6FE8; color:#fff; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; box-shadow:2px 0 8px rgba(123,111,232,.4); transition:box-shadow .2s, background .2s;"
-                    @mouseenter="$el.style.boxShadow='0 0 18px 4px rgba(123,111,232,.55), 2px 0 8px rgba(123,111,232,.4)'; $el.style.background='#6B5FD8'"
-                    @mouseleave="$el.style.boxShadow='2px 0 8px rgba(123,111,232,.4)'; $el.style.background='#7B6FE8'"
-                    :title="sidebarCollapsed ? 'Expandir menú' : 'Colapsar menú'">
-                <div style="width:34px; height:34px; border-radius:50%; background:rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center;">
-                    <svg x-show="!sidebarCollapsed" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 19l-7-7 7-7M18 19l-7-7 7-7"/></svg>
-                    <svg x-show="sidebarCollapsed"  width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13 5l7 7-7 7M6 5l7 7-7 7"/></svg>
-                </div>
-            </button>
-
             {{-- Ícono cuadrícula + Título --}}
             <div class="flex items-center flex-1 min-w-0" style="gap:5px; padding:0 12px; overflow:hidden;">
                 <div style="width:34px; height:34px; border-radius:9px; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">

@@ -89,6 +89,15 @@ $badgeEstado = [
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6; flex-shrink:0;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Gestión de Crédito</span>
         <span style="background:#EDE9FE; color:#7B6FE8; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $pedidos->total() }}</span>
+        @if($selectedPedidoId)
+        @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
+        <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            <button wire:click="verSeleccionado" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
+                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                Ver
+            </button>
+        </div>
+        @endif
     </div>
 
     <div style="overflow:auto; flex:1;">
@@ -105,7 +114,16 @@ $badgeEstado = [
     <table style="width:100%; min-width:1500px; border-collapse:collapse; font-size:13px;">
         <thead style="position:sticky; top:0; z-index:10;">
             <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF; box-shadow:inset -1px 0 0 #E5E7EB;">#</th>
+                <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    #
+                    <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
+                        <input type="checkbox"
+                               :checked="$wire.selectedPedidoId !== null"
+                               :disabled="$wire.selectedPedidoId === null"
+                               @click.prevent="$wire.selectedPedidoId !== null && $wire.set('selectedPedidoId', null)"
+                               :style="$wire.selectedPedidoId !== null ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
+                    </div>
+                </th>
 
                 {{-- Ver --}}
                 <th style="{{ $thC }} text-align:center; min-width:60px; box-shadow:inset -1px 0 0 #E5E7EB;">Ver</th>
@@ -181,11 +199,18 @@ $badgeEstado = [
                 $pagado      = ($sinImpacto || $esRechazado) ? 0 : ($p->total_pagado ?? 0);
                 $saldo       = ($sinImpacto || $esRechazado) ? 0 : max(0, $p->total_pagar - $pagado);
             @endphp
+            @php $selP = $selectedPedidoId === $p->id; @endphp
             <tr wire:key="ad-{{ $p->id }}"
-                style="border-bottom:1px solid #F3F4F6; transition:background .1s;"
-                @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-                <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#fff; box-shadow:inset -1px 0 0 #E5E7EB;">
-                    <span style="font-size:13px; color:#111827;">{{ $pedidos->firstItem() + $loop->index }}</span>
+                style="border-bottom:1px solid #F3F4F6; transition:background .1s; background:{{ $selP ? '#F5F3FF' : '' }}; {{ $selP ? 'border-left:3px solid #7B6FE8;' : '' }}"
+                @mouseenter="$el.style.background='{{ $selP ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selP ? '#F5F3FF' : '' }}'">
+                <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selP ? '#F5F3FF' : '#fff' }}; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                        <input type="checkbox"
+                               :checked="$wire.selectedPedidoId === {{ $p->id }}"
+                               @click="$wire.selectedPedidoId === {{ $p->id }} ? $wire.set('selectedPedidoId', null) : $wire.selectPedido({{ $p->id }})"
+                               style="accent-color:#7B6FE8; width:13px; height:13px; cursor:pointer;">
+                        <span style="font-size:13px; color:#111827;">{{ $pedidos->firstItem() + $loop->index }}</span>
+                    </div>
                 </td>
                 <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
                     <button type="button" wire:click="ver({{ $p->id }})"

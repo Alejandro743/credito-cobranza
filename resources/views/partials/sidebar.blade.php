@@ -1,3 +1,38 @@
+@php
+    $workbenchSlugs = \App\Livewire\Workbench::slugsDisponibles();
+    $tabInicial = (string) request()->query('tab', '');
+
+    $workbenchMap = [];
+    $navActiveModule = '';
+    $navActiveGroup = '';
+
+    foreach ($navModulos as $wm) {
+        foreach ($wm->submodulosVisibles as $ws) {
+            if ($ws->isGroup()) {
+                foreach ($ws->childrenVisibles as $wc) {
+                    if (in_array($wc->slug, $workbenchSlugs, true)) {
+                        $workbenchMap[$wc->slug] = ['modulo' => $wm->slug, 'grupo' => $ws->slug];
+                    }
+                    $isRouteMatch = $wc->route_name && request()->routeIs($wc->route_name);
+                    $isWbMatch = request()->routeIs('workbench') && $wc->slug === $tabInicial;
+                    if ($isRouteMatch || $isWbMatch) {
+                        $navActiveModule = $wm->slug;
+                        $navActiveGroup = $ws->slug;
+                    }
+                }
+            } else {
+                if (in_array($ws->slug, $workbenchSlugs, true)) {
+                    $workbenchMap[$ws->slug] = ['modulo' => $wm->slug, 'grupo' => ''];
+                }
+                $isRouteMatch = $ws->route_name && request()->routeIs($ws->route_name);
+                $isWbMatch = request()->routeIs('workbench') && $ws->slug === $tabInicial;
+                if ($isRouteMatch || $isWbMatch) {
+                    $navActiveModule = $wm->slug;
+                }
+            }
+        }
+    }
+@endphp
 {{-- Overlay móvil --}}
 <div x-cloak x-show="sidebarOpen"
      x-transition:enter="transition-opacity duration-200"
@@ -38,7 +73,19 @@
     {{-- ── Navegación ── --}}
     <nav class="sidebar-nav flex-1 overflow-y-auto overflow-x-hidden"
          style="padding:4px 10px 8px;"
-         x-data="{ activeModule: '{{ $activeModuloSlug }}' }">
+         x-data="{
+             activeModule: '{{ $navActiveModule }}',
+             activeGroup: '{{ $navActiveGroup }}',
+             wbActiveSlug: '{{ $tabInicial }}',
+             wbMap: {{ \Illuminate\Support\Js::from($workbenchMap) }},
+             setActiveFromSlug(slug) {
+                 this.wbActiveSlug = slug || '';
+                 const m = this.wbMap[this.wbActiveSlug];
+                 this.activeModule = m ? m.modulo : '';
+                 this.activeGroup = m ? m.grupo : '';
+             }
+         }"
+         x-on:workbench-tab-changed.window="setActiveFromSlug($event.detail.slug)">
 
         {{-- Panel Inicio — primer ítem del nav --}}
         <div style="margin-bottom:2px;">
@@ -64,24 +111,28 @@
         @php $slug = $modulo->slug; @endphp
         <div style="margin-bottom:2px;">
 
-            <button @click="sidebarCollapsed ? (sidebarCollapsed = false, sidebarWidth = 240, activeModule = '{{ $slug }}') : (activeModule = activeModule === '{{ $slug }}' ? '' : '{{ $slug }}')"
+            <button @click="sidebarCollapsed ? (sidebarCollapsed = false, sidebarWidth = 240, activeModule = '{{ $slug }}') : (activeModule = activeModule === '{{ $slug }}' ? '' : '{{ $slug }}', activeGroup = '')"
                     @mouseenter="navTipText='{{ $modulo->name }}'; navTipY=$event.currentTarget.getBoundingClientRect().top+$event.currentTarget.getBoundingClientRect().height/2; navTipVisible=true"
                     @mouseleave="navTipVisible=false"
                     class="nav-item-wrap w-full flex items-center gap-3"
-                    style="padding:9px 10px; border-radius:8px; position:relative; {{ $activeModuloSlug === $slug ? 'background:rgba(123,111,232,.15);' : '' }}">
+                    style="padding:9px 10px; border-radius:8px; position:relative; {{ $navActiveModule === $slug ? 'background:rgba(123,111,232,.15);' : '' }}"
+                    :style="{ background: activeModule === '{{ $slug }}' ? 'rgba(123,111,232,.15)' : '' }">
                 <span class="nav-tooltip">{{ $modulo->name }}</span>
-                <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $activeModuloSlug === $slug ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}">
+                <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $navActiveModule === $slug ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}"
+                     :style="{ background: activeModule === '{{ $slug }}' ? '#7B6FE8' : 'rgba(255,255,255,.14)' }">
                     <svg width="15" height="15" fill="none"
-                         stroke="{{ $activeModuloSlug === $slug ? '#fff' : 'rgba(255,255,255,.6)' }}"
+                         stroke="{{ $navActiveModule === $slug ? '#fff' : 'rgba(255,255,255,.6)' }}"
+                         :stroke="activeModule === '{{ $slug }}' ? '#fff' : 'rgba(255,255,255,.6)'"
                          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <path d="{{ $modulo->icon }}"/>
                     </svg>
                 </div>
                 <div class="nav-label flex items-center flex-1 gap-1" style="min-width:0; overflow:hidden;">
-                    <span style="flex:1; text-align:left; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:{{ $activeModuloSlug === $slug ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.60)' }};">
+                    <span style="flex:1; text-align:left; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:{{ $navActiveModule === $slug ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.60)' }};"
+                          :style="{ color: activeModule === '{{ $slug }}' ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.60)' }">
                         {{ $modulo->name }}
                     </span>
-                    <svg class="w-3 h-3 flex-shrink-0 {{ $activeModuloSlug === $slug ? 'rotate-180' : '' }}"
+                    <svg class="w-3 h-3 flex-shrink-0"
                          :class="activeModule === '{{ $slug }}' ? 'rotate-180' : ''"
                          style="transition:transform .2s; color:rgba(255,255,255,.3);"
                          fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -98,44 +149,58 @@
 
                 @if ($sub->isGroup())
                 @php
-                    $grupActivo = $sub->childrenVisibles->contains(
-                        fn($ch) => $ch->route_name && request()->routeIs($ch->route_name)
-                    );
+                    $grupActivoInicial = $navActiveGroup === $sub->slug;
                 @endphp
-                <div x-data="{ subOpen: {{ $grupActivo ? 'true' : 'false' }} }" style="margin-bottom:1px;">
-                    <button @click="subOpen = !subOpen"
+                <div style="margin-bottom:1px;">
+                    <button @click="activeGroup = activeGroup === '{{ $sub->slug }}' ? '' : '{{ $sub->slug }}'"
                             class="w-full flex items-center gap-2.5"
-                            style="padding:7px 8px; border-radius:6px; {{ $grupActivo ? 'background:rgba(123,111,232,.12);' : '' }}">
-                        <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $grupActivo ? 'background:rgba(123,111,232,.5);' : 'background:rgba(255,255,255,.12);' }}">
+                            style="padding:7px 8px; border-radius:6px; {{ $grupActivoInicial ? 'background:rgba(123,111,232,.12);' : '' }}"
+                            :style="{ background: activeGroup === '{{ $sub->slug }}' ? 'rgba(123,111,232,.12)' : '' }">
+                        <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $grupActivoInicial ? 'background:rgba(123,111,232,.5);' : 'background:rgba(255,255,255,.12);' }}"
+                             :style="{ background: activeGroup === '{{ $sub->slug }}' ? 'rgba(123,111,232,.5)' : 'rgba(255,255,255,.12)' }">
                             <svg width="12" height="12" fill="none"
-                                 stroke="{{ $grupActivo ? '#C4B5FD' : 'rgba(255,255,255,.65)' }}"
+                                 stroke="{{ $grupActivoInicial ? '#C4B5FD' : 'rgba(255,255,255,.65)' }}"
+                                 :stroke="activeGroup === '{{ $sub->slug }}' ? '#C4B5FD' : 'rgba(255,255,255,.65)'"
                                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <path d="{{ $subIconos[$sub->slug] ?? 'M4 6h16M4 12h16M4 18h16' }}"/>
                             </svg>
                         </div>
-                        <span style="flex:1; text-align:left; font-size:12px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:{{ $grupActivo ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,.65)' }};">
+                        <span style="flex:1; text-align:left; font-size:12px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:{{ $grupActivoInicial ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,.65)' }};"
+                              :style="{ color: activeGroup === '{{ $sub->slug }}' ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,.65)' }">
                             {{ $sub->name }}
                         </span>
-                        <svg class="w-3 h-3 flex-shrink-0 {{ $grupActivo ? 'rotate-180' : '' }}"
-                             :class="subOpen ? 'rotate-180' : ''"
+                        <svg class="w-3 h-3 flex-shrink-0"
+                             :class="activeGroup === '{{ $sub->slug }}' ? 'rotate-180' : ''"
                              style="transition:transform .2s; color:rgba(255,255,255,.25);"
                              fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
                         </svg>
                     </button>
-                    <div x-cloak x-show="subOpen"
+                    <div x-cloak x-show="activeGroup === '{{ $sub->slug }}'"
                          style="margin-left:12px; padding-left:10px; border-left:1px solid rgba(255,255,255,.08); margin-top:1px;">
                         @foreach ($sub->childrenVisibles as $child)
                         @php
-                            $childActivo = $child->route_name && request()->routeIs($child->route_name);
-                            $href = ($child->route_name && \Illuminate\Support\Facades\Route::has($child->route_name))
-                                ? route($child->route_name) : '#';
+                            $childActivoInicial = ($child->route_name && request()->routeIs($child->route_name))
+                                || (request()->routeIs('workbench') && $child->slug === $tabInicial);
+                            $childEsWorkbench = in_array($child->slug, $workbenchSlugs, true);
+                            $onWorkbench = $childEsWorkbench && request()->routeIs('workbench');
+                            $href = $childEsWorkbench
+                                ? route('workbench', ['tab' => $child->slug])
+                                : (($child->route_name && \Illuminate\Support\Facades\Route::has($child->route_name)) ? route($child->route_name) : '#');
                         @endphp
-                        <a href="{{ $href }}" wire:navigate
+                        <a href="{{ $href }}"
+                           @if($onWorkbench)
+                           @click.prevent="window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: '{{ $child->slug }}' } })); setActiveFromSlug('{{ $child->slug }}')"
+                           @elseif(!$childEsWorkbench)
+                           wire:navigate
+                           @endif
                            class="flex items-center gap-2"
-                           style="padding:6px 8px; border-radius:6px; margin-bottom:1px; {{ $childActivo ? 'background:#7B6FE8;' : '' }}">
-                            <span style="width:5px; height:5px; border-radius:50%; flex-shrink:0; background:{{ $childActivo ? '#fff' : 'rgba(255,255,255,.25)' }};"></span>
-                            <span style="font-size:12px; font-weight:{{ $childActivo ? '600' : '400' }}; color:{{ $childActivo ? '#fff' : 'rgba(255,255,255,.65)' }};">{{ $child->name }}</span>
+                           style="padding:6px 8px; border-radius:6px; margin-bottom:1px; {{ $childActivoInicial ? 'background:#7B6FE8;' : '' }}"
+                           :style="{ background: wbActiveSlug === '{{ $child->slug }}' ? '#7B6FE8' : '' }">
+                            <span style="width:5px; height:5px; border-radius:50%; flex-shrink:0; background:{{ $childActivoInicial ? '#fff' : 'rgba(255,255,255,.25)' }};"
+                                  :style="{ background: wbActiveSlug === '{{ $child->slug }}' ? '#fff' : 'rgba(255,255,255,.25)' }"></span>
+                            <span style="font-size:12px; font-weight:{{ $childActivoInicial ? '600' : '400' }}; color:{{ $childActivoInicial ? '#fff' : 'rgba(255,255,255,.65)' }};"
+                                  :style="{ fontWeight: wbActiveSlug === '{{ $child->slug }}' ? '600' : '400', color: wbActiveSlug === '{{ $child->slug }}' ? '#fff' : 'rgba(255,255,255,.65)' }">{{ $child->name }}</span>
                         </a>
                         @endforeach
                     </div>
@@ -143,21 +208,34 @@
 
                 @else
                 @php
-                    $subActivo = $sub->route_name && request()->routeIs($sub->route_name);
-                    $href = ($sub->route_name && \Illuminate\Support\Facades\Route::has($sub->route_name))
-                        ? route($sub->route_name) : '#';
+                    $subActivoInicial = ($sub->route_name && request()->routeIs($sub->route_name))
+                        || (request()->routeIs('workbench') && $sub->slug === $tabInicial);
+                    $subEsWorkbench = in_array($sub->slug, $workbenchSlugs, true);
+                    $subOnWorkbench = $subEsWorkbench && request()->routeIs('workbench');
+                    $href = $subEsWorkbench
+                        ? route('workbench', ['tab' => $sub->slug])
+                        : (($sub->route_name && \Illuminate\Support\Facades\Route::has($sub->route_name)) ? route($sub->route_name) : '#');
                 @endphp
-                <a href="{{ $href }}" wire:navigate
+                <a href="{{ $href }}"
+                   @if($subOnWorkbench)
+                   @click.prevent="window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: '{{ $sub->slug }}' } })); setActiveFromSlug('{{ $sub->slug }}')"
+                   @elseif(!$subEsWorkbench)
+                   wire:navigate
+                   @endif
                    class="flex items-center gap-2.5"
-                   style="padding:7px 8px; border-radius:6px; margin-bottom:1px; {{ $subActivo ? 'background:#7B6FE8;' : '' }}">
-                    <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $subActivo ? 'background:rgba(255,255,255,.2);' : 'background:rgba(255,255,255,.12);' }}">
+                   style="padding:7px 8px; border-radius:6px; margin-bottom:1px; {{ $subActivoInicial ? 'background:#7B6FE8;' : '' }}"
+                   :style="{ background: wbActiveSlug === '{{ $sub->slug }}' ? '#7B6FE8' : '' }">
+                    <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $subActivoInicial ? 'background:rgba(255,255,255,.2);' : 'background:rgba(255,255,255,.12);' }}"
+                         :style="{ background: wbActiveSlug === '{{ $sub->slug }}' ? 'rgba(255,255,255,.2)' : 'rgba(255,255,255,.12)' }">
                         <svg width="12" height="12" fill="none"
-                             stroke="{{ $subActivo ? '#fff' : 'rgba(255,255,255,.65)' }}"
+                             stroke="{{ $subActivoInicial ? '#fff' : 'rgba(255,255,255,.65)' }}"
+                             :stroke="wbActiveSlug === '{{ $sub->slug }}' ? '#fff' : 'rgba(255,255,255,.65)'"
                              stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                             <path d="{{ $subIconos[$sub->slug] ?? 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2' }}"/>
                         </svg>
                     </div>
-                    <span style="font-size:12px; font-weight:{{ $subActivo ? '600' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:{{ $subActivo ? '#fff' : 'rgba(255,255,255,.70)' }};">
+                    <span style="font-size:12px; font-weight:{{ $subActivoInicial ? '600' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:{{ $subActivoInicial ? '#fff' : 'rgba(255,255,255,.70)' }};"
+                          :style="{ fontWeight: wbActiveSlug === '{{ $sub->slug }}' ? '600' : '400', color: wbActiveSlug === '{{ $sub->slug }}' ? '#fff' : 'rgba(255,255,255,.70)' }">
                         {{ $sub->name }}
                     </span>
                 </a>

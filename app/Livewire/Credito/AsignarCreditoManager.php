@@ -5,12 +5,17 @@ namespace App\Livewire\Credito;
 use App\Models\Pedido;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class AsignarCreditoManager extends Component
 {
     use WithPagination;
+
+    /** Otra pestaña/pantalla cambió pedidos compartidos: refrescar esta grilla. */
+    #[On('pedidos-actualizados')]
+    public function refrescarPorEvento(): void {}
 
     public string $mode      = 'list';
     public ?int   $viewingId = null;
@@ -150,6 +155,7 @@ class AsignarCreditoManager extends Component
         $this->searchAdmin      = '';
         $this->selectedAdminId  = null;
         session()->flash('success', 'Crédito asignado correctamente.');
+        $this->dispatch('pedidos-actualizados');
     }
 
     public function backToList(): void

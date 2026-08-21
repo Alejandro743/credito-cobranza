@@ -2,7 +2,12 @@
 
 {{-- Toolbar --}}
 <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
-    <a href="{{ route('vendedor.oferta') }}"
+    <a href="{{ $enWorkbench ? route('workbench', ['tab' => 'vendedor-oferta']) : route('vendedor.oferta') }}"
+       @if($enWorkbench)
+       @click.prevent="window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: 'vendedor-oferta' } }))"
+       @else
+       wire:navigate
+       @endif
        style="height:36px; padding:0 18px; display:flex; align-items:center; justify-content:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; text-decoration:none; box-sizing:border-box; flex-shrink:0;">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
             <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
@@ -59,7 +64,12 @@
         </svg>
         <p style="font-weight:600; color:#6B7280; font-size:13px;">Sin pedidos todavía</p>
         <p style="font-size:12px; color:#9CA3AF; margin-top:4px;">Generá tu primer pedido desde Oferta / Carrito</p>
-        <a href="{{ route('vendedor.oferta') }}"
+        <a href="{{ $enWorkbench ? route('workbench', ['tab' => 'vendedor-oferta']) : route('vendedor.oferta') }}"
+           @if($enWorkbench)
+           @click.prevent="window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: 'vendedor-oferta' } }))"
+           @else
+           wire:navigate
+           @endif
            style="display:inline-block; margin-top:12px; padding:8px 20px; background:#EA580C; color:#fff; font-size:13px; font-weight:600; border-radius:10px; text-decoration:none;">
             Ir a Oferta / Carrito
         </a>
@@ -260,7 +270,12 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                     </svg>
                     <p style="font-weight:600; color:#6B7280; font-size:13px; margin-bottom:4px;">Sin pedidos todavía</p>
                     <p style="font-size:12px; color:#9CA3AF;">Generá tu primer pedido desde Oferta / Carrito</p>
-                    <a href="{{ route('vendedor.oferta') }}"
+                    <a href="{{ $enWorkbench ? route('workbench', ['tab' => 'vendedor-oferta']) : route('vendedor.oferta') }}"
+                       @if($enWorkbench)
+                       @click.prevent="window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: 'vendedor-oferta' } }))"
+                       @else
+                       wire:navigate
+                       @endif
                        style="display:inline-block; margin-top:12px; padding:8px 20px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:600; border-radius:10px; text-decoration:none;">
                         Ir a Oferta / Carrito
                     </a>

@@ -4,12 +4,17 @@ namespace App\Livewire\Credito;
 
 use App\Models\Pedido;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
 class EsperaManager extends Component
 {
     use WithPagination;
+
+    /** Otra pestaña/pantalla cambió pedidos compartidos: refrescar esta grilla. */
+    #[On('pedidos-actualizados')]
+    public function refrescarPorEvento(): void {}
 
     public string $mode      = 'list';
     public ?int   $viewingId = null;
@@ -91,6 +96,7 @@ class EsperaManager extends Component
         ]);
         $this->selectedIds = [];
         session()->flash('success', 'Pedido tomado para revisión. Ya aparece en tu bandeja.');
+        $this->dispatch('pedidos-actualizados');
         $this->backToList();
     }
 
@@ -109,6 +115,7 @@ class EsperaManager extends Component
         $count = count($this->selectedIds);
         $this->selectedIds = [];
         session()->flash('success', $count.' pedido'.($count === 1 ? '' : 's').' tomado'.($count === 1 ? '' : 's').' para revisión.');
+        $this->dispatch('pedidos-actualizados');
     }
 
     public function backToList(): void

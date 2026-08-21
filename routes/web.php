@@ -9,6 +9,8 @@ Route::get('/', fn() => view('welcome'));
 // ─── Redirect dinámico según permisos ─────────────────────────────────────────
 Route::middleware('auth')->get('/administrativo/dashboard', fn() => view('modules.administrativo.dashboard'))->name('administrativo.dashboard');
 
+Route::middleware('auth')->get('/workbench', fn() => view('modules.workbench'))->name('workbench');
+
 Route::get('/dashboard', function () {
     $user = auth()->user();
 

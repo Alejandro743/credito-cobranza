@@ -29,6 +29,9 @@ class PedidoManager extends Component
     public string $mode      = 'list';
     public ?int   $viewingId = null;
 
+    /** true cuando este componente se abre embebido como pestaña del workbench. */
+    public bool $enWorkbench = false;
+
     public function mount(): void
     {
         $this->initModuleColor();

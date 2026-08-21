@@ -10,6 +10,7 @@ use App\Models\Pedido;
 use App\Models\PedidoItem;
 use App\Models\Provincia;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Livewire\WithPagination;
@@ -17,6 +18,10 @@ use Livewire\WithPagination;
 class RevisionManager extends Component
 {
     use WithPagination, WithFileUploads;
+
+    /** Otra pestaña/pantalla cambió pedidos compartidos: refrescar esta grilla. */
+    #[On('pedidos-actualizados')]
+    public function refrescarPorEvento(): void {}
 
     public string $mode               = 'list';
     public ?int   $viewingId          = null;
@@ -89,6 +94,7 @@ class RevisionManager extends Component
     public function ver(int $id): void
     {
         $this->viewingId          = $id;
+        $this->selectedPedidoId   = $id;
         $this->confirmandoRechazo = false;
         $this->notaRechazo        = '';
         $this->docAnversoCi       = null;
@@ -463,6 +469,7 @@ class RevisionManager extends Component
             ->update(['estado' => 'en_espera', 'revisado_por' => null, 'revisado_en' => null]);
 
         session()->flash('success', 'Pedido devuelto a En Espera.');
+        $this->dispatch('pedidos-actualizados');
         $this->backToList();
     }
 
@@ -487,6 +494,7 @@ class RevisionManager extends Component
         });
 
         session()->flash('success', 'Pedido aprobado correctamente.');
+        $this->dispatch('pedidos-actualizados');
         $this->backToList();
     }
 
@@ -514,13 +522,13 @@ class RevisionManager extends Component
         });
 
         session()->flash('success', 'Pedido rechazado.');
+        $this->dispatch('pedidos-actualizados');
         $this->backToList();
     }
 
     public function backToList(): void
     {
         $this->viewingId          = null;
-        $this->selectedPedidoId   = null;
         $this->confirmandoRechazo = false;
         $this->notaRechazo        = '';
         $this->docAnversoCi       = null;
