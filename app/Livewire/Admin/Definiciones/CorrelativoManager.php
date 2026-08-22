@@ -32,6 +32,22 @@ class CorrelativoManager extends Component
     public string $sortBy  = 'id';
     public string $sortDir = 'asc';
 
+    // ── Selección / filtros por columna ─────────────────────────────────────────
+    public ?int $selectedCorrelativoId = null;
+
+    public string $colFilterPrefijo     = '';
+    public string $colFilterDescripcion = '';
+    public string $colFilterEstado      = '';
+
+    public function updatingColFilterPrefijo(): void     { $this->resetPage(); }
+    public function updatingColFilterDescripcion(): void { $this->resetPage(); }
+    public function updatingColFilterEstado(): void      { $this->resetPage(); }
+
+    public function selectCorrelativo(int $id): void
+    {
+        $this->selectedCorrelativoId = $id;
+    }
+
     public function toggleSort(string $col): void
     {
         if ($this->sortBy === $col) {
@@ -182,7 +198,12 @@ class CorrelativoManager extends Component
     {
         $allowed = ['prefijo', 'descripcion', 'siguiente_numero', 'longitud', 'activo'];
         $col = in_array($this->sortBy, $allowed) ? $this->sortBy : 'id';
-        $correlativos = ConfiguracionCorrelativo::orderBy($col, $this->sortDir)->paginate(20);
+        $correlativos = ConfiguracionCorrelativo::query()
+            ->when($this->colFilterPrefijo,      fn ($q) => $q->where('prefijo', 'like', '%' . $this->colFilterPrefijo . '%'))
+            ->when($this->colFilterDescripcion,  fn ($q) => $q->where('descripcion', 'like', '%' . $this->colFilterDescripcion . '%'))
+            ->when($this->colFilterEstado !== '', fn ($q) => $q->where('activo', (bool) $this->colFilterEstado))
+            ->orderBy($col, $this->sortDir)
+            ->paginate(20);
         return view('livewire.admin.definiciones.correlativo-manager', compact('correlativos'));
     }
 }

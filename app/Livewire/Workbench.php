@@ -3,12 +3,15 @@
 namespace App\Livewire;
 
 use App\Services\PermisoService;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 
 class Workbench extends Component
 {
     /** slug (submodulo) => pestaña abierta */
     public array $openTabs = [];
+
+    #[Url(as: 'tab')]
     public ?string $activeTab = null;
 
     /**
@@ -106,9 +109,10 @@ class Workbench extends Component
         $tieneAlgunAcceso = collect(array_keys(self::TABS))->contains(fn ($key) => $this->puedeAbrir($key));
         abort_unless($tieneAlgunAcceso, 403);
 
-        $inicial = (string) request()->query('tab', '');
-        if ($inicial !== '' && $this->puedeAbrir($inicial)) {
-            $this->abrirPestana($inicial);
+        if ($this->activeTab !== null && $this->puedeAbrir($this->activeTab)) {
+            $this->abrirPestana($this->activeTab);
+        } else {
+            $this->activeTab = null;
         }
     }
 

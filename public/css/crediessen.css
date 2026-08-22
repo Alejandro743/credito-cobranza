@@ -757,14 +757,6 @@ main thead .ds-sticky-col     { text-align: left !important; }
 main .ds-sticky-col > .flex   { justify-content: flex-start !important; }
 
 /* ─────────────────────────────────────────────────────────────
-   27b. USER-MANAGER — primeras 4 cols a la izquierda
-──────────────────────────────────────────────────────────────*/
-main table.um-table thead th:nth-child(-n+4),
-main table.um-table thead td:nth-child(-n+4),
-main table.um-table tbody  td:nth-child(-n+4),
-main table.um-table tbody  th:nth-child(-n+4) { text-align: left !important; }
-
-/* ─────────────────────────────────────────────────────────────
    27c. CORRELATIVO — col Prefijo a la izquierda
 ──────────────────────────────────────────────────────────────*/
 main table.corr-table thead th:nth-child(1) { text-align: left !important; }
