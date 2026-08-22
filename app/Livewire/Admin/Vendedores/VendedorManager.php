@@ -66,6 +66,8 @@ class VendedorManager extends Component
     public function updatingColFilterAcceso():        void { $this->resetPage(); }
     public function updatingColFilterRol():           void { $this->resetPage(); }
 
+    public function refrescarGrilla(): void {}
+
     // ── Panel alta ───────────────────────────────────────────────────────────
     public bool   $showAddForm      = false;
     public string $newCodigoUsuario = '';

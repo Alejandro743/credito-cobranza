@@ -34,6 +34,8 @@ class RoleManager extends Component
     public function updatingColFilterNombre(): void { $this->resetPage(); }
     public function updatingColFilterEstado(): void  { $this->resetPage(); }
 
+    public function refrescarGrilla(): void {}
+
     // Inline add
     public bool   $showAddForm  = false;
     public string $newRoleName  = '';
