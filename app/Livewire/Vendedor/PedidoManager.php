@@ -5,6 +5,7 @@ use App\Livewire\Concerns\HasModuleColor;
 use App\Models\Pedido;
 use App\Models\Vendedor;
 use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
@@ -12,6 +13,10 @@ use Livewire\WithPagination;
 class PedidoManager extends Component
 {
     use WithPagination, WithoutUrlPagination, HasModuleColor;
+
+    /** Otra pestaña/pantalla cambió pedidos compartidos: refrescar esta grilla. */
+    #[On('pedidos-actualizados')]
+    public function refrescarPorEvento(): void {}
 
     public string $colFilterNumero    = '';
     public string $colFilterCiclo     = '';

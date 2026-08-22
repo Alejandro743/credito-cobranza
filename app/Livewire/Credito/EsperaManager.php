@@ -132,7 +132,7 @@ class EsperaManager extends Component
             ->select('pedidos.*')
             ->addSelect(DB::raw($cicloSub))
             ->where('estado', 'en_espera')
-            ->whereNotNull('asignado_a_id')
+            ->where('asignado_a_id', auth()->id())
             ->when($this->colFilterNumero,   fn($q) => $q->where('pedidos.numero', 'like', "%{$this->colFilterNumero}%"))
             ->when($this->colFilterCi,       fn($q) => $q->whereHas('cliente', fn($c) => $c->where('ci', 'like', "%{$this->colFilterCi}%")))
             ->when($this->colFilterCliente,  fn($q) => $q->whereHas('cliente.usuario', fn($u) => $u->where('name', 'like', "%{$this->colFilterCliente}%")))

@@ -258,6 +258,7 @@ class AprobadoManager extends Component
             ->selectRaw('`pedidos`.*, (SELECT COALESCE(SUM(`c`.`monto`), 0) FROM `cuotas` `c` INNER JOIN `plan_pagos` `pp` ON `pp`.`id` = `c`.`plan_pago_id` WHERE `pp`.`pedido_id` = `pedidos`.`id` AND `c`.`estado` = ?) AS `total_pagado`', ['pagado'])
             ->addSelect(DB::raw('(SELECT cc.code FROM pedido_items pi INNER JOIN lista_maestra_items lmi ON lmi.id = pi.lista_maestra_item_id INNER JOIN lista_maestra lm ON lm.id = lmi.lista_maestra_id INNER JOIN commercial_cycles cc ON cc.id = lm.cycle_id WHERE pi.pedido_id = pedidos.id LIMIT 1) as ciclo_code'))
             ->whereIn('pedidos.estado', ['aprobado', 'rechazado', 'cerrado'])
+            ->where('pedidos.asignado_a_id', auth()->id())
             ->when($this->colFilterEstado,   fn($q) => $q->where('pedidos.estado', $this->colFilterEstado))
             ->when($this->colFilterNumero,   fn($q) => $q->where('pedidos.numero', 'like', "%{$this->colFilterNumero}%"))
             ->when($this->colFilterCi,       fn($q) => $q->whereHas('cliente', fn($c) => $c->where('ci', 'like', "%{$this->colFilterCi}%")))

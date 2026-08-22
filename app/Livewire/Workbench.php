@@ -83,7 +83,7 @@ class Workbench extends Component
 
         // ── Vendedor / EIE ────────────────────────────────────────────────────
         'vendedor-clientes'     => ['label' => 'Mis Clientes',         'component' => 'vendedor.cliente-manager'],
-        'vendedor-oferta'       => ['label' => 'Registrar Nuevo Plan', 'component' => 'vendedor.oferta-manager'],
+        'vendedor-oferta'       => ['label' => 'Registrar Nuevo Plan', 'component' => 'vendedor.oferta-manager', 'params' => ['enWorkbench' => true]],
         'vendedor-pedidos'      => ['label' => 'Revisión del Crédito', 'component' => 'vendedor.pedido-manager', 'params' => ['enWorkbench' => true]],
         'vendedor-pagos-saldos' => ['label' => 'Historial de Pagos',   'component' => 'vendedor.pago-historial'],
 

@@ -22,12 +22,16 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 
 class OfertaManager extends Component
 {
     use HasModuleColor, WithFileUploads;
+
+    /** true cuando este componente se abre embebido como pestaña del workbench. */
+    public bool $enWorkbench = false;
 
     // ── Flujo ─────────────────────────────────────────────────────────────────
     public string $step = 'oferta'; // cliente | oferta | resumen | entrega
@@ -95,7 +99,21 @@ class OfertaManager extends Component
     public function mount(): void
     {
         $this->initModuleColor();
+        $this->cargarDatosIniciales();
+    }
 
+    /** Vuelve a empezar el flujo desde cero (usado al entrar desde "Nueva Solicitud"). */
+    #[On('nueva-oferta')]
+    public function nuevaOferta(): void
+    {
+        $enWorkbench = $this->enWorkbench;
+        $this->reset();
+        $this->enWorkbench = $enWorkbench;
+        $this->cargarDatosIniciales();
+    }
+
+    private function cargarDatosIniciales(): void
+    {
         $this->sinListasActivas = !ListaMaestra::where('active', true)
             ->where(function ($q) {
                 $q->whereDoesntHave('accesosVendedores')
@@ -637,6 +655,7 @@ class OfertaManager extends Component
         }
 
         $this->dispatch('app-toast', type: 'success', msg: '¡ Guardado !');
+        $this->dispatch('pedidos-actualizados');
         $this->dispatch('app-redirect', url: route('vendedor.pedidos'), delay: 1800);
     }
 

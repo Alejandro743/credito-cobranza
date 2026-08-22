@@ -4,7 +4,7 @@
 <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px; flex-wrap:wrap;">
     <a href="{{ $enWorkbench ? route('workbench', ['tab' => 'vendedor-oferta']) : route('vendedor.oferta') }}"
        @if($enWorkbench)
-       @click.prevent="window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: 'vendedor-oferta' } }))"
+       @click.prevent="window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: 'vendedor-oferta' } })); window.dispatchEvent(new CustomEvent('nueva-oferta'))"
        @else
        wire:navigate
        @endif
@@ -66,7 +66,7 @@
         <p style="font-size:12px; color:#9CA3AF; margin-top:4px;">Generá tu primer pedido desde Oferta / Carrito</p>
         <a href="{{ $enWorkbench ? route('workbench', ['tab' => 'vendedor-oferta']) : route('vendedor.oferta') }}"
            @if($enWorkbench)
-           @click.prevent="window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: 'vendedor-oferta' } }))"
+           @click.prevent="window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: 'vendedor-oferta' } })); window.dispatchEvent(new CustomEvent('nueva-oferta'))"
            @else
            wire:navigate
            @endif
@@ -143,7 +143,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         {!! $fSvg !!}
                         <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
                             <option value="">Todos</option>
-                            <option value="en_espera">En Espera</option>
+                            <option value="en_espera">Pendiente de Revisión</option>
                             <option value="revision">En Revisión</option>
                             <option value="aprobado">Aprobado</option>
                             <option value="rechazado">Rechazado</option>
@@ -272,7 +272,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                     <p style="font-size:12px; color:#9CA3AF;">Generá tu primer pedido desde Oferta / Carrito</p>
                     <a href="{{ $enWorkbench ? route('workbench', ['tab' => 'vendedor-oferta']) : route('vendedor.oferta') }}"
                        @if($enWorkbench)
-                       @click.prevent="window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: 'vendedor-oferta' } }))"
+                       @click.prevent="window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: 'vendedor-oferta' } })); window.dispatchEvent(new CustomEvent('nueva-oferta'))"
                        @else
                        wire:navigate
                        @endif

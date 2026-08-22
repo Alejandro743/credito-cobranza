@@ -2,7 +2,9 @@
      x-effect="document.body.style.overflow = (showProductos || ubEntModal) ? 'hidden' : ''; if (!showSearch) $wire.set('searchCliente', '')"
      x-on:producto-agregado.window="toastMsg = $event.detail.nombre; toastShow = true; setTimeout(() => toastShow = false, 2200)"
      x-on:app-toast.window="appToastMsg=$event.detail.msg; appToastType=$event.detail.type; appToastShow=true; setTimeout(()=>appToastShow=false, 3200)"
-     x-on:app-redirect.window="setTimeout(()=>window.location=$event.detail.url, $event.detail.delay||1800)">
+     x-on:app-redirect.window="{{ $enWorkbench
+        ? "setTimeout(() => window.dispatchEvent(new CustomEvent('abrir-pestana', { detail: { key: 'vendedor-pedidos' } })), \$event.detail.delay||1800)"
+        : "setTimeout(()=>window.location=\$event.detail.url, \$event.detail.delay||1800)" }}">
 
 {{-- Toast --}}
 <div x-show="toastShow" x-cloak
