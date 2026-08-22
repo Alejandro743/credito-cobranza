@@ -377,23 +377,9 @@
                         </div>
                     </th>
 
-                    {{-- Nombre --}}
-                    @php $isA = $sortBy === 'name'; @endphp
-                    <th wire:click="toggleSort('name')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:160px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Nombre
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" style="{{ $fI }} text-align:center;"></div>
-                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-
                     {{-- Estado --}}
                     @php $isA = $sortBy === 'activo'; @endphp
-                    <th wire:click="toggleSort('activo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('activo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
@@ -411,6 +397,20 @@
                         </div>
                     </th>
 
+                    {{-- Nombre --}}
+                    @php $isA = $sortBy === 'name'; @endphp
+                    <th wire:click="toggleSort('name')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:160px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Nombre
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" style="{{ $fI }} text-align:center;"></div>
+                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+
                 </tr>
             </thead>
             <tbody>
@@ -424,15 +424,6 @@
                     </td>
                     <td style="padding:7px 10px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
                         @if ($role->name === 'admin')
-                            <span style="font-size:13px; color:#111827; text-transform:capitalize;">admin</span>
-                        @else
-                            <input wire:model="editRoleName" type="text" placeholder="Nombre del rol"
-                                   style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; text-align:center;">
-                            @error('editRoleName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
-                        @endif
-                    </td>
-                    <td style="padding:7px 10px; text-align:center;">
-                        @if ($role->name === 'admin')
                             <span style="font-size:12px; color:#7B6FE8; font-weight:500;">Siempre activo</span>
                         @else
                             <select wire:model="editActivo"
@@ -440,6 +431,15 @@
                                 <option value="1">Activo</option>
                                 <option value="0">Inactivo</option>
                             </select>
+                        @endif
+                    </td>
+                    <td style="padding:7px 10px; text-align:center;">
+                        @if ($role->name === 'admin')
+                            <span style="font-size:13px; color:#111827; text-transform:capitalize;">admin</span>
+                        @else
+                            <input wire:model="editRoleName" type="text" placeholder="Nombre del rol"
+                                   style="width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff; text-align:center;">
+                            @error('editRoleName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                         @endif
                     </td>
                 </tr>
@@ -462,12 +462,12 @@
                         </div>
                     </td>
 
-                    <td style="padding:10px 14px; overflow:hidden; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
-                        <span style="font-size:13px; font-weight:400; color:#374151; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $role->name }}</span>
+                    <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:700; color:#374151; white-space:nowrap;">{{ $role->name === 'admin' ? 'Siempre activo' : (($role->activo ?? true) ? 'Activo' : 'Inactivo') }}</span>
                     </td>
 
-                    <td style="padding:10px 14px; text-align:center;">
-                        <span style="font-size:13px; font-weight:700; color:#374151; white-space:nowrap;">{{ $role->name === 'admin' ? 'Siempre activo' : (($role->activo ?? true) ? 'Activo' : 'Inactivo') }}</span>
+                    <td style="padding:10px 14px; overflow:hidden; text-align:center;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $role->name }}</span>
                     </td>
 
                 </tr>

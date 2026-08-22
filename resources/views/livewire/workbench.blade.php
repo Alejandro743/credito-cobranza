@@ -1,6 +1,7 @@
 <div id="wb-root-{{ $this->getId() }}" style="height:100%; display:flex; flex-direction:column;"
      x-data="{
          labels: {{ \Illuminate\Support\Js::from(collect($tabsInfo)->map(fn($t) => $t['label'])->all()) }},
+         dragKey: null,
          syncTab(key) {
              const root = document.getElementById('wb-root-{{ $this->getId() }}');
              if (!root) return;
@@ -9,7 +10,7 @@
                  p.style.background = active ? '#fff' : '#F0EDFC';
                  p.style.color = active ? '#7B6FE8' : '#6B7280';
                  p.style.fontWeight = active ? '700' : '600';
-                 p.style.borderColor = active ? '#7B6FE8' : 'transparent';
+                 p.style.borderColor = active ? '#7B6FE8' : '#EDE9FE';
              });
              root.querySelectorAll('[data-pane-key]').forEach(p => {
                  p.style.display = p.dataset.paneKey === key ? '' : 'none';
@@ -31,16 +32,24 @@
         @php $isActive = $activeTab === $key; @endphp
         <div wire:key="wb-tabbtn-{{ $key }}"
              data-tab-key="{{ $key }}"
-             style="{{ $tabFlex }} min-width:0; display:flex; align-items:center; gap:7px; padding:8px 8px 9px 12px; border-radius:9px 9px 0 0; cursor:pointer; transition:background-color .15s ease;
+             data-base-bg="{{ $isActive ? '#fff' : '#F0EDFC' }}"
+             draggable="true"
+             style="{{ $tabFlex }} min-width:0; display:flex; align-items:center; gap:7px; padding:8px 8px 9px 12px; border-radius:9px 9px 0 0; cursor:grab; transition:background-color .15s ease, opacity .15s ease;
                     background:{{ $isActive ? '#fff' : '#F0EDFC' }}; color:{{ $isActive ? '#7B6FE8' : '#6B7280' }}; font-size:12.5px; font-weight:{{ $isActive ? '700' : '600' }};
-                    border:2px solid {{ $isActive ? '#7B6FE8' : 'transparent' }}; border-bottom:none; position:relative; top:1px;"
+                    border:2px solid {{ $isActive ? '#7B6FE8' : '#EDE9FE' }}; border-bottom:none; position:relative; top:1px;"
              onmouseenter="if (this.style.background !== 'rgb(255, 255, 255)') this.style.background='#E5DFFB';"
-             onmouseleave="if (this.style.background !== 'rgb(255, 255, 255)') this.style.background='#F0EDFC';">
+             onmouseleave="if (this.style.background !== 'rgb(255, 255, 255)') this.style.background='#F0EDFC';"
+             @dragstart="dragKey = '{{ $key }}'; $event.dataTransfer.effectAllowed = 'move'; $el.style.opacity = '0.35'; $el.style.cursor = 'grabbing';"
+             @dragend="dragKey = null; $el.style.opacity = '1'; $el.style.cursor = 'grab';"
+             @dragover.prevent="$event.dataTransfer.dropEffect = 'move'; if (dragKey && dragKey !== '{{ $key }}') { $el.style.background = '#DCD4FB'; $el.style.boxShadow = 'inset 0 0 0 2px #7B6FE8'; }"
+             @dragenter.prevent="if (dragKey && dragKey !== '{{ $key }}') { $el.style.background = '#DCD4FB'; $el.style.boxShadow = 'inset 0 0 0 2px #7B6FE8'; }"
+             @dragleave="if (!$el.contains($event.relatedTarget)) { $el.style.background = $el.dataset.baseBg; $el.style.boxShadow = ''; }"
+             @drop.prevent="$el.style.background = $el.dataset.baseBg; $el.style.boxShadow = ''; if (dragKey && dragKey !== '{{ $key }}') { $wire.reordenarPestana(dragKey, '{{ $key }}'); } dragKey = null;">
             <span style="flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $t['label'] }}</span>
             <button type="button" wire:click.stop="cerrarPestana('{{ $key }}')" title="Cerrar pestaña"
-                    style="width:16px; height:16px; border-radius:5px; border:none; background:transparent; color:#9CA3AF; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
-                    onmouseenter="this.style.background='#FEE2E2';this.style.color='#B91C1C';"
-                    onmouseleave="this.style.background='transparent';this.style.color='#9CA3AF';">
+                    style="width:16px; height:16px; border-radius:50%; border:1px solid #7B6FE8; background:transparent; color:#7B6FE8; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8';this.style.color='#fff';"
+                    onmouseleave="this.style.background='transparent';this.style.color='#7B6FE8';">
                 <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round"><path d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>

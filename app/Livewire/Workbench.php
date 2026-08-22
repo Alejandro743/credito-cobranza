@@ -151,6 +151,19 @@ class Workbench extends Component
         $this->dispatch('workbench-tab-changed', slug: $this->activeTab ?? '');
     }
 
+    /** Mueve $draggedKey a la posicion que ocupaba $targetKey (drag & drop de pestanas). */
+    public function reordenarPestana(string $draggedKey, string $targetKey): void
+    {
+        if ($draggedKey === $targetKey) return;
+        if (!in_array($draggedKey, $this->openTabs, true) || !in_array($targetKey, $this->openTabs, true)) return;
+
+        $sinArrastrada = array_values(array_filter($this->openTabs, fn ($k) => $k !== $draggedKey));
+        $indiceDestino = array_search($targetKey, $sinArrastrada, true);
+
+        array_splice($sinArrastrada, $indiceDestino, 0, [$draggedKey]);
+        $this->openTabs = $sinArrastrada;
+    }
+
     public function render()
     {
         return view('livewire.workbench', [
