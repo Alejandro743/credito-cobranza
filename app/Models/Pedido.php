@@ -140,7 +140,7 @@ class Pedido extends Model
     public function getEstadoBadgeAttribute(): array
     {
         return match($this->estado) {
-            'en_espera' => ['label' => 'Pendiente de Revisión', 'style' => 'background:#FEF3C7; color:#854F0B;'],
+            'en_espera' => ['label' => 'Pendiente', 'style' => 'background:#FEF3C7; color:#854F0B;'],
             'revision'  => ['label' => 'En Revisión', 'style' => 'background:#F0F9FF; color:#0369A1;'],
             'aprobado'  => ['label' => 'Aprobado',    'style' => 'background:#F0FDF4; color:#15803D;'],
             'rechazado' => ['label' => 'Rechazado',   'style' => 'background:#FEF2F2; color:#B91C1C;'],

@@ -143,7 +143,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         {!! $fSvg !!}
                         <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
                             <option value="">Todos</option>
-                            <option value="en_espera">Pendiente de Revisión</option>
+                            <option value="en_espera">Pendiente</option>
                             <option value="revision">En Revisión</option>
                             <option value="aprobado">Aprobado</option>
                             <option value="rechazado">Rechazado</option>

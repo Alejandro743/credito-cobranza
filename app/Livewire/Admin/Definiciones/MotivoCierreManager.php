@@ -14,8 +14,19 @@ class MotivoCierreManager extends Component
     public int    $afectaMora = 0;
     public int    $activo     = 1;
 
+    public ?int $selectedMotivoId = null;
+
+    public string $colFilterNombre = '';
+    public string $colFilterAfecta = '';
+    public string $colFilterEstado = '';
+
     public string $sortBy  = 'nombre';
     public string $sortDir = 'asc';
+
+    public function selectMotivo(int $id): void
+    {
+        $this->selectedMotivoId = $id;
+    }
 
     public function toggleSort(string $col): void
     {
@@ -97,8 +108,15 @@ class MotivoCierreManager extends Component
 
     public function render()
     {
+        $registros = MotivoCierre::query()
+            ->when($this->colFilterNombre !== '', fn ($q) => $q->where('nombre', 'like', '%' . $this->colFilterNombre . '%'))
+            ->when($this->colFilterAfecta !== '', fn ($q) => $q->where('afecta_mora', $this->colFilterAfecta))
+            ->when($this->colFilterEstado !== '', fn ($q) => $q->where('activo', $this->colFilterEstado))
+            ->orderBy($this->sortBy, $this->sortDir)
+            ->get();
+
         return view('livewire.admin.definiciones.motivo-cierre-manager', [
-            'registros' => MotivoCierre::orderBy($this->sortBy, $this->sortDir)->get(),
+            'registros' => $registros,
         ]);
     }
 }

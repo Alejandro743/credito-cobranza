@@ -18,6 +18,9 @@ class ClienteManager extends Component
 {
     use WithPagination, HasModuleColor;
 
+    /** Botón "Actualizar" de la barra: fuerza volver a consultar la grilla. */
+    public function refrescarGrilla(): void {}
+
     // ── Ordenación ────────────────────────────────────────────────────────────
     public string $sortBy  = '';
     public string $sortDir = 'asc';

@@ -16,7 +16,7 @@
                 <p style="font-size:12px; color:#7B6FE8; font-family:monospace; margin:2px 0 0;">{{ $p->numero }} @if($p->ciclo_code) <span style="color:#9CA3AF;">· {{ $p->ciclo_code }}</span>@endif</p>
             </div>
             <span style="padding:3px 10px; border-radius:99px; font-size:11px; font-weight:600; flex-shrink:0; background:#FEF3C7; color:#D97706;">
-                Pendiente de revisión
+                Pendiente
             </span>
         </div>
         <div style="padding:10px 14px; display:flex; align-items:center; gap:8px;">
@@ -165,7 +165,7 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan','fecha_asignacion'=>'col
                         {!! $fSvg !!}
                         <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
                             <option value="">Todos</option>
-                            <option value="en_espera">Pendiente de Revisión</option>
+                            <option value="en_espera">Pendiente</option>
                             <option value="revision">En Revisión</option>
                             <option value="aprobado">Aprobado</option>
                             <option value="rechazado">Rechazado</option>

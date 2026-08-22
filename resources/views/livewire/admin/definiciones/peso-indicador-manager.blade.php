@@ -9,7 +9,7 @@ $lStyle = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-t
 {{-- Toast success --}}
 @if(session('success'))
 <div wire:key="toast-success-{{ uniqid() }}" x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,3000)"
-     style="position:fixed;bottom:20px;right:20px;z-index:50;background:#7B6FE8;color:#fff;font-size:13px;font-weight:600;padding:10px 20px;border-radius:12px;box-shadow:0 4px 16px rgba(123,111,232,.35);display:flex;align-items:center;gap:8px;">
+     style="position:fixed;bottom:20px;right:20px;z-index:50;border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8;font-size:13px;font-weight:600;padding:10px 20px;border-radius:12px;box-shadow:0 4px 16px rgba(123,111,232,.35);display:flex;align-items:center;gap:8px;">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
     {{ session('success') }}
 </div>
@@ -27,8 +27,8 @@ $lStyle = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-t
 @if(!$showAddForm)
 <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;flex-wrap:wrap;justify-content:flex-start;">
     <button wire:click="showAdd"
-            style="height:36px;padding:0 18px;background:#7B6FE8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;"
-            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+            style="height:36px;padding:0 18px;border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap; transition:background .15s, color .15s;"
+            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         Nueva Configuración
     </button>
@@ -109,13 +109,13 @@ $lStyle = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-t
 
     <div style="padding:0 20px 20px;display:flex;gap:8px;">
         <button wire:click="saveNew" wire:loading.attr="disabled"
-                style="height:38px;padding:0 24px;background:#7B6FE8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap;"
-                @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                style="height:38px;padding:0 24px;border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap; transition:background .15s, color .15s;"
+                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
             <span wire:loading.remove wire:target="saveNew">Guardar</span>
             <span wire:loading wire:target="saveNew">Guardando...</span>
         </button>
         <button wire:click="cancelAdd"
-                style="height:38px;padding:0 18px;background:#F3F4F6;color:#6B7280;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
+                style="height:38px;padding:0 18px;border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;">
             Cancelar
         </button>
     </div>
@@ -172,12 +172,12 @@ $lStyle = 'display:block; font-size:11px; font-weight:700; color:#7B6FE8; text-t
 
     <div style="display:flex;gap:8px;">
         <button wire:click="saveNew" wire:loading.attr="disabled"
-                style="flex:1;height:36px;background:#7B6FE8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;">
+                style="flex:1;height:36px;border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;">
             <span wire:loading.remove wire:target="saveNew">Guardar</span>
             <span wire:loading wire:target="saveNew">Guardando...</span>
         </button>
         <button wire:click="cancelAdd"
-                style="flex:1;height:36px;background:#F3F4F6;color:#6B7280;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;">
+                style="flex:1;height:36px;border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;">
             Cancelar
         </button>
     </div>
@@ -202,17 +202,17 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
         @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
         <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
             @if($editingId === $selectedPesoId)
-                <button wire:click="saveEdit" wire:loading.attr="disabled" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
-                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                <button wire:click="saveEdit" wire:loading.attr="disabled" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     Guardar
                 </button>
-                <button wire:click="cancelEdit" style="{{ $btnH }} background:#E5E7EB; color:#374151;">
+                <button wire:click="cancelEdit" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                     <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     Cancelar
                 </button>
             @else
-                <button wire:click="startEdit({{ $selectedPesoId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
-                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                <button wire:click="startEdit({{ $selectedPesoId }})" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                     Editar
                 </button>
             @endif
@@ -525,12 +525,12 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
 
         <div style="display:flex;gap:8px;">
             <button wire:click="saveEdit" wire:loading.attr="disabled"
-                    style="flex:1;height:36px;background:#7B6FE8;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;">
+                    style="flex:1;height:36px;border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;">
                 <span wire:loading.remove wire:target="saveEdit">Guardar</span>
                 <span wire:loading wire:target="saveEdit">Guardando...</span>
             </button>
             <button wire:click="cancelEdit"
-                    style="flex:1;height:36px;background:#F3F4F6;color:#6B7280;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;">
+                    style="flex:1;height:36px;border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;">
                 Cerrar
             </button>
         </div>
@@ -549,7 +549,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 <span style="font-size:11px;color:#9CA3AF;">{{ $r->fecha_inicio->format('d/m/Y H:i') }} → {{ $r->fecha_fin?->format('d/m/Y H:i') ?? 'sin límite' }}</span>
             </div>
             @if($esVigente)
-            <span style="font-size:9px; font-weight:800; padding:2px 7px; border-radius:99px; background:#7B6FE8; color:#fff; white-space:nowrap; flex-shrink:0; letter-spacing:.3px;">VIGENTE</span>
+            <span style="font-size:9px; font-weight:800; padding:2px 7px; border-radius:99px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; white-space:nowrap; flex-shrink:0; letter-spacing:.3px;">VIGENTE</span>
             @endif
             @if($r->activo)
             <span style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:99px;background:#D1FAE5;color:#059669;flex-shrink:0;">Activo</span>
@@ -579,8 +579,8 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
         @if($esAbierta)
         <div style="padding:10px 14px;border-top:1px solid #F3F4F6;">
             <button wire:click="startEdit({{ $r->id }})"
-                    style="width:100%;height:34px;background:#F8F7FF;color:#7B6FE8;border:1px solid #EDE9FE;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;"
-                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                    style="width:100%;height:34px;background:#F8F7FF;color:#7B6FE8;border:1px solid #EDE9FE;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 Editar
             </button>
         </div>

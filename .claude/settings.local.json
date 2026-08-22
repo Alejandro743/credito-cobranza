@@ -62,7 +62,14 @@
       "Bash(echo \"exit:$?\")",
       "Read(//c/laragon/**)",
       "Read(//c/laragon//**)",
-      "Bash(cmd.exe /c start \"\" \"C:\\\\laragon\\\\laragon.exe\")"
+      "Bash(cmd.exe /c start \"\" \"C:\\\\laragon\\\\laragon.exe\")",
+      "Bash(sed -i \"s/#7c3aed/#7B6FE8/g\" oferta-manager.blade.php)",
+      "Bash(sed -i \"s/#5B21B6/#3C3489/g\" oferta-manager.blade.php)",
+      "Bash(sed -i \"s/linear-gradient\\(135deg,#10b981,#059669\\)/#10B981/g\" oferta-manager.blade.php)",
+      "Bash(sed -i \"s/linear-gradient\\(135deg,#7B6FE8 0%,#5B4FD4 100%\\)/#7B6FE8/g\" oferta-manager.blade.php)",
+      "Artifact",
+      "Bash(awk *)",
+      "PowerShell(try { $r = Invoke-WebRequest -Uri \"http://credito-cobranza.test\" -UseBasicParsing -TimeoutSec 10; \"Status: $\\($r.StatusCode\\)\" } catch { \"Error: $\\($_.Exception.Message\\)\" })"
     ]
   }
 }

@@ -3,7 +3,7 @@
 {{-- Flash success --}}
 @if(session('success'))
 <div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,3000)"
-     style="position:fixed; bottom:20px; right:20px; z-index:50; background:#7B6FE8; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(123,111,232,.35); display:flex; align-items:center; gap:8px;">
+     style="position:fixed; bottom:20px; right:20px; z-index:50; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(123,111,232,.35); display:flex; align-items:center; gap:8px;">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
     {{ session('success') }}
 </div>
@@ -111,14 +111,14 @@
         {{-- Botones --}}
         <div style="display:flex; gap:8px;">
             <button wire:click="save" wire:loading.attr="disabled"
-                    style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                    style="height:38px; padding:0 24px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 <span wire:loading.remove wire:target="save">Guardar</span>
                 <span wire:loading wire:target="save">Guardando...</span>
             </button>
             <button wire:click="cancelar"
-                    style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
-                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                    style="height:38px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 Cancelar
             </button>
         </div>
@@ -131,8 +131,8 @@
     <span style="font-size:12px; color:#9CA3AF; font-weight:500;">{{ $registros->count() }} matriz(ces)</span>
     @if(!$showForm && !$editId)
     <button wire:click="create"
-            style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;"
-            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+            style="height:36px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background .15s, color .15s;"
+            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         Nueva Matriz
     </button>
@@ -260,14 +260,14 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas'];
                 {{-- Botones --}}
                 <div style="display:flex; gap:6px;">
                     <button wire:click="save" wire:loading.attr="disabled"
-                            style="height:34px; padding:0 20px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                            @mouseenter="$el.style.opacity='.85'" @mouseleave="$el.style.opacity='1'">
+                            style="height:34px; padding:0 20px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s;"
+                            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                         <span wire:loading.remove wire:target="save">Guardar</span>
                         <span wire:loading wire:target="save">...</span>
                     </button>
                     <button wire:click="cancelar"
-                            style="height:34px; padding:0 16px; border-radius:7px; border:1px solid #E5E7EB; background:#F3F4F6; color:#6B7280; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
-                            @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                            style="height:34px; padding:0 16px; border-radius:7px; border:1px solid #E5E7EB; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s;"
+                            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                         Cancelar
                     </button>
                 </div>
@@ -313,8 +313,8 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas'];
             </td>
             <td style="padding:11px 14px; text-align:center;">
                 <button wire:click="edit({{ $r->id }})" title="Editar"
-                        style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto;"
-                        @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                        style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; transition:background .15s, color .15s;"
+                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 </button>
             </td>
@@ -414,12 +414,12 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas'];
 
         <div style="display:flex; gap:8px;">
             <button wire:click="save" wire:loading.attr="disabled"
-                    style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                    style="flex:1; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
                 <span wire:loading.remove wire:target="save">Guardar</span>
                 <span wire:loading wire:target="save">Guardando...</span>
             </button>
             <button wire:click="cancelar"
-                    style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                    style="flex:1; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
                 Cancelar
             </button>
         </div>
@@ -460,8 +460,8 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas'];
             </span>
             @endif
             <button wire:click="edit({{ $r->id }})"
-                    style="margin-left:auto; height:32px; padding:0 14px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;"
-                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                    style="margin-left:auto; height:32px; padding:0 14px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
             </button>

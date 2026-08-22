@@ -31,8 +31,8 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" style="padding:13px 18px;">
         <div style="display:flex; align-items:center; gap:12px; min-width:0;">
             <button wire:click="backToList"
-                    style="width:34px; height:34px; border-radius:9px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
-                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                    style="width:34px; height:34px; border-radius:9px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
             </button>
             <div style="min-width:0;">
@@ -156,13 +156,15 @@
             </div>
             <div style="display:flex; gap:8px; padding-bottom:2px;">
                 <button wire:click="saveNewItem"
-                        style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;"
-                        @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                        style="height:36px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; transition:background .15s, color .15s; display:inline-flex; align-items:center; gap:5px;"
+                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                     Guardar
                 </button>
                 <button wire:click="cancelAddItem"
-                        style="height:36px; padding:0 14px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
-                        @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                        style="height:36px; padding:0 14px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; transition:background .15s, color .15s; display:inline-flex; align-items:center; gap:5px;"
+                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                     Cancelar
                 </button>
             </div>
@@ -174,8 +176,8 @@
 {{-- Botón agregar artículo maestro --}}
 @if(!$showAddMaestroForm && !$showAddItemForm)
 <div style="display:flex; justify-content:flex-start; margin-bottom:10px;">
-    <button wire:click="showAddMaestro" style="height:32px; padding:0 14px; border:none; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; background:#7B6FE8; color:#fff;">
-        <svg width="11" height="11" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+    <button wire:click="showAddMaestro" style="height:32px; padding:0 14px; border-radius:8px; font-size:12px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         Agregar artículo
     </button>
 </div>
@@ -284,9 +286,9 @@
                         Sin resultados para "<span x-text="query" style="font-style:italic;"></span>"
                     </div>
                     <button @mousedown.prevent="$wire.openCreateMaestroModal(query); open = false"
-                            style="width:100%; text-align:left; padding:10px 12px; border:none; border-top:1px solid #F3F4F6; background:#F8F7FF; font-size:12px; font-weight:700; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; gap:6px;"
-                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                        <svg width="13" height="13" fill="none" stroke="#7B6FE8" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                            style="width:100%; text-align:left; padding:10px 12px; border:none; border-top:1px solid #F3F4F6; background:#F8F7FF; font-size:12px; font-weight:700; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background .15s, color .15s;"
+                            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                         ¿No existe? Agregarlo al Maestro
                     </button>
                 </div>
@@ -393,13 +395,13 @@
 
         <div style="padding-top:21px; display:flex; gap:8px;">
             <button wire:click="saveAddMaestro"
-                    style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                    style="height:38px; padding:0 24px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 Guardar
             </button>
             <button wire:click="cancelAddMaestro"
-                    style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
-                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                    style="height:38px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 Cancelar
             </button>
         </div>
@@ -423,35 +425,36 @@
         @if($selectedProductId && !$editItemId)
         <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
             @if($selInLista)
-                <button wire:click="startEditItem({{ $selItem->id }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
-                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                <button wire:click="startEditItem({{ $selItem->id }})" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                     Editar
                 </button>
             @else
-                <button wire:click="openAgregarModal" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
-                    <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                <button wire:click="openAgregarModal" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                     Agregar a lista
                 </button>
             @endif
         </div>
         @elseif($selectedMaestroItemId && !$editItemId)
         <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
-            <button wire:click="startEditItem({{ $selectedMaestroItemId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
-                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+            <button wire:click="startEditItem({{ $selectedMaestroItemId }})" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
                 Editar
             </button>
-            <button wire:click="askRemoveItem({{ $selectedMaestroItemId }})" style="{{ $btnH }} background:#FEE2E2; color:#DC2626; border:1px solid #FECACA;">
-                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+            <button wire:click="askRemoveItem({{ $selectedMaestroItemId }})" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                 Quitar Item del Listado
             </button>
         </div>
         @elseif($editItemId)
         <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
-            <button wire:click="saveEditItem" style="{{ $btnH }} background:#7B6FE8; color:#fff;">
-                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            <button wire:click="saveEditItem" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 Guardar
             </button>
-            <button wire:click="cancelEditItem" style="{{ $btnH }} background:#F3F4F6; color:#6B7280; border:1px solid #E5E7EB;">
+            <button wire:click="cancelEditItem" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 Cancelar
             </button>
         </div>
@@ -1016,7 +1019,7 @@
         <div style="{{ $mFoot2 }}">
             <button wire:click="$set('showImportModal', false)" style="height:36px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
             <button wire:click="importCsv" wire:loading.attr="disabled" wire:target="importCsv"
-                    style="height:36px; padding:0 18px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                    style="height:36px; padding:0 18px; border:none; border-radius:8px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
                 <span wire:loading.remove wire:target="importCsv">Procesar</span>
                 <span wire:loading wire:target="importCsv">Procesando...</span>
             </button>
@@ -1070,7 +1073,7 @@
         </div>
         <div style="{{ $mFoot2 }}">
             <button wire:click="$set('showImportResultModal', false)"
-                    style="height:36px; padding:0 20px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">Listo</button>
+                    style="height:36px; padding:0 20px; border:none; border-radius:8px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:700; cursor:pointer;">Listo</button>
         </div>
     </div>
 </div>
@@ -1135,7 +1138,7 @@
         </div>
         <div style="{{ $mFoot }}">
             <button wire:click="$set('showCreateMaestroModal', false)" style="height:36px; padding:0 14px; border:1px solid #E5E7EB; border-radius:8px; background:#fff; color:#374151; font-size:13px; font-weight:600; cursor:pointer;">Cancelar</button>
-            <button wire:click="saveCreateMaestroModal" wire:loading.attr="disabled" style="height:36px; padding:0 18px; border:none; border-radius:8px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer;">Guardar</button>
+            <button wire:click="saveCreateMaestroModal" wire:loading.attr="disabled" style="height:36px; padding:0 18px; border:none; border-radius:8px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:700; cursor:pointer;">Guardar</button>
         </div>
     </div>
 </div>
@@ -1306,7 +1309,7 @@
                 Cancelar
             </button>
             <button wire:click="saveAgregarModal"
-                    style="height:36px; padding:0 20px; border:none; border-radius:6px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:600; cursor:pointer;">
+                    style="height:36px; padding:0 20px; border:none; border-radius:6px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:600; cursor:pointer;">
                 Agregar
             </button>
         </div>
@@ -1424,11 +1427,15 @@
         {{-- Footer --}}
         <div style="padding:12px 20px; border-top:1px solid #E5E7EB; display:flex; justify-content:flex-end; gap:8px;">
             <button wire:click="cancelEditItem"
-                    style="height:36px; padding:0 16px; border:1px solid #E5E7EB; border-radius:6px; background:#fff; color:#374151; font-size:13px; cursor:pointer;">
+                    style="height:36px; padding:0 16px; border:1px solid #EDE9FE; border-radius:6px; background:#F8F7FF; color:#7B6FE8; font-size:13px; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 Cancelar
             </button>
             <button wire:click="saveEditItem"
-                    style="height:36px; padding:0 20px; border:none; border-radius:6px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:600; cursor:pointer;">
+                    style="height:36px; padding:0 20px; border:1px solid #EDE9FE; border-radius:6px; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:5px; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 Guardar
             </button>
         </div>
@@ -1471,8 +1478,8 @@
     <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" style="padding:13px 18px;">
         <div style="display:flex; align-items:center; gap:12px; min-width:0;">
             <button wire:click="backToList"
-                    style="width:34px; height:34px; border-radius:9px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
-                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                    style="width:34px; height:34px; border-radius:9px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
             </button>
             <div style="min-width:0;">
@@ -1679,7 +1686,8 @@
 <div class="flex flex-col sm:flex-row sm:flex-wrap sm:items-center gap-2 sm:gap-2.5 mb-5">
 
     <button wire:click="showAdd" class="w-full sm:w-auto"
-            style="height:36px; padding:0 18px; display:flex; align-items:center; justify-content:center; gap:6px; border:none; border-radius:9px; background:#7B6FE8; font-size:13px; font-weight:700; color:#fff; cursor:pointer; white-space:nowrap; box-sizing:border-box;">
+            style="height:36px; padding:0 18px; display:flex; align-items:center; justify-content:center; gap:6px; border:1px solid #EDE9FE; border-radius:9px; background:#F8F7FF; font-size:13px; font-weight:700; color:#7B6FE8; cursor:pointer; white-space:nowrap; box-sizing:border-box; transition:background .15s, color .15s;"
+            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
         </svg>
@@ -1833,11 +1841,13 @@
         {{-- Botones --}}
         <div style="display:flex; gap:8px; padding-top:12px; border-top:1px solid #F3F4F6; margin-top:16px;">
             <button wire:click="saveNew"
-                    style="height:36px; padding:0 20px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box;">
+                    style="height:36px; padding:0 20px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 Guardar
             </button>
             <button wire:click="cancelAdd"
-                    style="height:36px; padding:0 16px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box;">
+                    style="height:36px; padding:0 16px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 Cancelar
             </button>
         </div>
@@ -1863,23 +1873,23 @@
             @endif
             @if($editingId === $selectedMaestraId)
                 <div style="display:flex; align-items:center; gap:5px; margin-left:2px; padding-left:10px; border-left:1px solid #E5E7EB;">
-                    <button wire:click="saveEdit" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Guardar</button>
-                    <button wire:click="cancelEdit" style="{{ $btnH }} background:#E5E7EB; color:#374151;">Cancelar</button>
+                    <button wire:click="saveEdit" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>Guardar</button>
+                    <button wire:click="cancelEdit" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>Cancelar</button>
                 </div>
             @else
                 <div style="display:flex; align-items:center; gap:5px; margin-left:2px; padding-left:10px; border-left:1px solid #E5E7EB;">
-                    <button wire:click="viewItems({{ $selectedMaestraId }})" style="{{ $btnH }} background:#fff; color:#7B6FE8; box-shadow:inset 0 0 0 1px #EDE9FE;" @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">Ver artículos</button>
-                    <button wire:click="viewAcceso({{ $selectedMaestraId }})" style="{{ $btnH }} background:#fff; color:#7B6FE8; box-shadow:inset 0 0 0 1px #EDE9FE;" @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">Acceso</button>
-                    <button wire:click="openView({{ $selectedMaestraId }})" style="{{ $btnH }} background:#fff; color:#7B6FE8; box-shadow:inset 0 0 0 1px #EDE9FE;" @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">Ver detalle</button>
-                    <button wire:click="startEdit({{ $selectedMaestraId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Editar</button>
+                    <button wire:click="viewItems({{ $selectedMaestraId }})" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>Ver artículos</button>
+                    <button wire:click="viewAcceso({{ $selectedMaestraId }})" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 013 3m3 0a6 6 0 01-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1121.75 8.25z"/></svg>Acceso</button>
+                    <button wire:click="openView({{ $selectedMaestraId }})" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>Ver detalle</button>
+                    <button wire:click="startEdit({{ $selectedMaestraId }})" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"><svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>Editar</button>
                 </div>
             @endif
         </div>
         @endif
 
         <button wire:click="$toggle('mostrarInactivas')"
-                style="height:28px; padding:0 10px; border:1px solid #EDE9FE; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; background:#fff; color:#7B6FE8; margin-left:auto;"
-                @mouseenter="$el.style.background='#F8F7FF'" @mouseleave="$el.style.background='#fff'">
+                style="height:28px; padding:0 10px; border:1px solid #EDE9FE; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap; background:#F8F7FF; color:#7B6FE8; margin-left:auto; transition:background .15s, color .15s;"
+                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
             @if($mostrarInactivas)
             <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.98 8.223A10.477 10.477 0 001.934 12C3.226 16.338 7.244 19.5 12 19.5c.993 0 1.953-.138 2.863-.395M6.228 6.228A10.45 10.45 0 0112 4.5c4.756 0 8.774 3.162 10.065 7.498a10.522 10.522 0 01-4.293 5.774M6.228 6.228L3 3m3.228 3.228l3.65 3.65m7.894 7.894L21 21m-3.228-3.228l-3.65-3.65m0 0a3 3 0 10-4.243-4.243m4.242 4.242L9.88 9.88"/></svg>
             Ocultar Listas Inactivas
@@ -2314,11 +2324,13 @@
         {{-- Botones --}}
         <div style="display:flex; gap:8px; padding-top:4px; border-top:1px solid #EDE9FE;">
             <button wire:click="saveEdit"
-                    style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                    style="flex:1; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 Guardar
             </button>
             <button wire:click="cancelEdit"
-                    style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                    style="flex:1; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 Cancelar
             </button>
         </div>
@@ -2353,8 +2365,8 @@
         <div style="display:flex; align-items:center; gap:6px; border-top:1px solid #F3F4F6; padding-top:10px;">
             {{-- Editar --}}
             <button wire:click="startEdit({{ $m->id }})" title="Editar"
-                    style="flex:1; height:32px; border-radius:8px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px; font-size:11px; font-weight:600;"
-                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                    style="flex:1; height:32px; border-radius:8px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px; font-size:11px; font-weight:600; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
             </button>
@@ -2519,8 +2531,8 @@ if (!window.colResize) {
         {{-- Footer --}}
         <div style="padding:12px 20px; border-top:1px solid #F3F4F6; flex-shrink:0; display:flex; justify-content:flex-end;">
             <button wire:click="closeView"
-                    style="height:36px; padding:0 24px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;"
-                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                    style="height:36px; padding:0 24px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 Cerrar
             </button>
         </div>

@@ -3,7 +3,7 @@
 {{-- Flash success --}}
 @if (session('success'))
 <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
-     style="position:fixed; bottom:20px; right:20px; z-index:50; background:#7B6FE8; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(123,111,232,.35);">
+     style="position:fixed; bottom:20px; right:20px; z-index:50; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(123,111,232,.35);">
     {{ session('success') }}
 </div>
 @endif
@@ -20,8 +20,8 @@
 <div style="display:flex; align-items:center; justify-content:flex-end; margin-bottom:16px;">
     @if (!$showAddForm && !$editingId)
     <button wire:click="showAdd"
-            style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;"
-            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+            style="height:36px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background .15s, color .15s;"
+            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
         <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
         Nuevo Correlativo
     </button>
@@ -79,13 +79,13 @@
         </div>
         <div style="display:flex; gap:8px; padding-top:4px; border-top:1px solid #F3F4F6;">
             <button wire:click="saveNew"
-                    style="height:36px; padding:0 20px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;"
-                    @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                    style="height:36px; padding:0 20px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 Guardar
             </button>
             <button wire:click="cancelAdd"
-                    style="height:36px; padding:0 16px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;"
-                    @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                    style="height:36px; padding:0 16px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 Cancelar
             </button>
         </div>
@@ -187,13 +187,13 @@
                             </div>
                             <div style="display:flex; gap:6px;">
                                 <button wire:click="saveEdit"
-                                        style="height:30px; padding:0 14px; background:#7B6FE8; color:#fff; border:none; border-radius:7px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                                        @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                                        style="height:30px; padding:0 14px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:7px; font-size:12px; font-weight:700; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s;"
+                                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                                     Guardar
                                 </button>
                                 <button wire:click="cancelEdit"
-                                        style="height:30px; padding:0 10px; background:#F3F4F6; color:#6B7280; border:none; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer;"
-                                        @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                                        style="height:30px; padding:0 10px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:7px; font-size:12px; font-weight:600; cursor:pointer; transition:background .15s, color .15s;"
+                                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                                     Cancelar
                                 </button>
                             </div>
@@ -228,8 +228,8 @@
                     <td style="padding:10px 16px; text-align:center;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:4px;">
                             <button wire:click="startEdit({{ $c->id }})" title="Editar"
-                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                                    style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:background .15s, color .15s;"
+                                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                             </button>
                         </div>
@@ -296,11 +296,11 @@
 
                 <div class="grid grid-cols-2 gap-2" style="padding-top:4px; border-top:1px solid #EDE9FE;">
                     <button wire:click="saveEdit"
-                            style="height:38px; background:#7B6FE8; color:#fff; border:none; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
+                            style="height:38px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:13px; font-weight:700; cursor:pointer;">
                         Guardar
                     </button>
                     <button wire:click="cancelEdit"
-                            style="height:38px; background:#F3F4F6; color:#6B7280; border:none; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
+                            style="height:38px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:8px; font-size:13px; font-weight:600; cursor:pointer;">
                         Cancelar
                     </button>
                 </div>

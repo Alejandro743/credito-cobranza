@@ -443,11 +443,11 @@
                 </div>
                 <div style="display:flex; gap:8px; padding-top:2px;">
                     <button wire:click="saveEditItem"
-                            style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                            style="flex:1; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
                         Guardar
                     </button>
                     <button wire:click="cancelEditItem"
-                            style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                            style="flex:1; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
                         Cancelar
                     </button>
                 </div>
@@ -492,7 +492,7 @@
                         Agregar
                     </button>
                     <button wire:click="cancelQuickAdd"
-                            style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                            style="flex:1; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
                         Cancelar
                     </button>
                 </div>
@@ -658,11 +658,13 @@ $lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase
                 <label style="color:transparent; font-size:11px; margin-bottom:5px;">.</label>
                 <div style="display:flex; gap:8px;">
                     <button wire:click="save" type="button"
-                            style="height:38px; padding:0 18px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; border:none; border-radius:8px; cursor:pointer;">
+                            style="height:38px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:700; border-radius:8px; cursor:pointer; transition:background .15s, color .15s;"
+                            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                         Guardar
                     </button>
                     <button wire:click="cancelForm" type="button"
-                            style="height:38px; padding:0 14px; background:#F3F4F6; color:#374151; font-size:13px; font-weight:600; border:1px solid #E5E7EB; border-radius:8px; cursor:pointer;">
+                            style="height:38px; padding:0 14px; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:600; border:1px solid #EDE9FE; border-radius:8px; cursor:pointer; transition:background .15s, color .15s;"
+                            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                         Cancelar
                     </button>
                 </div>
@@ -684,7 +686,7 @@ $lbl = 'font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase
         @php $btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;'; @endphp
         <div style="display:flex; align-items:center; gap:5px; margin-left:10px; padding-left:10px; border-left:1px solid #E5E7EB;">
             <button wire:click="viewItems({{ $selectedListaId }})" style="{{ $btnH }} background:#0EA5E9; color:#fff;">Ver productos</button>
-            <button wire:click="edit({{ $selectedListaId }})" style="{{ $btnH }} background:#7B6FE8; color:#fff;">Editar</button>
+            <button wire:click="edit({{ $selectedListaId }})" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">Editar</button>
         </div>
         @endif
     </div>

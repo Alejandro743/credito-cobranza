@@ -3,7 +3,7 @@
 {{-- Flash success --}}
 @if(session('success'))
 <div x-data="{show:true}" x-show="show" x-init="setTimeout(()=>show=false,3000)"
-     style="position:fixed; bottom:20px; right:20px; z-index:50; background:#7B6FE8; color:#fff; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(123,111,232,.35); display:flex; align-items:center; gap:8px;">
+     style="position:fixed; bottom:20px; right:20px; z-index:50; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:600; padding:10px 20px; border-radius:12px; box-shadow:0 4px 16px rgba(123,111,232,.35); display:flex; align-items:center; gap:8px;">
     <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
     {{ session('success') }}
 </div>
@@ -61,14 +61,14 @@
             <label style="display:block; font-size:11px; font-weight:700; color:transparent; margin-bottom:5px;">·</label>
             <div style="display:flex; gap:8px;">
                 <button wire:click="save" wire:loading.attr="disabled"
-                        style="height:38px; padding:0 24px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                        @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
+                        style="height:38px; padding:0 24px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s;"
+                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                     <span wire:loading.remove wire:target="save">Guardar</span>
                     <span wire:loading wire:target="save">Guardando...</span>
                 </button>
                 <button wire:click="cancelar"
-                        style="height:38px; padding:0 18px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
-                        @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
+                        style="height:38px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s;"
+                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                     Cancelar
                 </button>
             </div>
@@ -77,59 +77,124 @@
 </div>
 @endif
 
-{{-- ══════ TOOLBAR ══════ --}}
-<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-    <span style="font-size:12px; color:#9CA3AF; font-weight:500;">{{ $registros->count() }} motivo(s)</span>
-    @if(!$showForm)
-    <button wire:click="create"
-            style="height:36px; padding:0 18px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px;"
-            @mouseenter="$el.style.opacity='.88'" @mouseleave="$el.style.opacity='1'">
-        <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
-        Nuevo Motivo
-    </button>
-    @endif
-</div>
-
 @php
 $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;';
+$btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;';
 @endphp
 
 {{-- ══════ TABLA ESCRITORIO ══════ --}}
+<div class="hidden sm:block">
+@if(!$showForm)
+<div style="display:flex; justify-content:flex-start; margin-bottom:8px;">
+    <button wire:click="create"
+            style="height:32px; padding:0 14px; display:inline-flex; align-items:center; gap:5px; border:1px solid #EDE9FE; border-radius:8px; background:#F8F7FF; font-size:12px; font-weight:700; color:#7B6FE8; cursor:pointer; white-space:nowrap; transition:background .15s, color .15s;"
+            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+        <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+        Nuevo Motivo
+    </button>
+</div>
+@endif
+</div>
 <div class="hidden sm:block" style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); overflow:hidden; display:flex; flex-direction:column; max-height:calc(100vh - 180px);">
 
+    {{-- Barra --}}
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Motivos de Cierre</span>
         <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $registros->count() }}</span>
+        @if($selectedMotivoId)
+        <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            @if($editId === $selectedMotivoId)
+                <button wire:click="save" wire:loading.attr="disabled"
+                        style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;"
+                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    <span wire:loading.remove wire:target="save">Guardar</span>
+                    <span wire:loading wire:target="save">...</span>
+                </button>
+                <button wire:click="cancelar"
+                        style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;"
+                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Cancelar
+                </button>
+            @else
+                <button wire:click="edit({{ $selectedMotivoId }})"
+                        style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;"
+                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                    Editar
+                </button>
+            @endif
+        </div>
+        @endif
     </div>
 
     <div style="overflow:auto; flex:1;">
-    @php $sortCols = ['Descripción'=>'nombre','Afecta indicadores'=>'afecta_mora','Estado'=>'activo']; @endphp
+    @php
+        $sortCols = ['Descripción'=>'nombre','Afecta indicadores'=>'afecta_mora','Estado'=>'activo'];
+        $fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:left;';
+        $fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; cursor:pointer;';
+        $fW  = 'position:relative; margin-top:4px;' . ($editId ? ' opacity:0.45;' : '');
+        $fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
+        $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
+        $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top; position:relative; overflow:hidden;';
+    @endphp
     <table style="table-layout:fixed; width:100%; border-collapse:collapse; min-width:480px;">
         <colgroup>
-            <col style="width:44px;">
+            <col style="width:50px;">
             <col>
             <col style="width:160px;">
-            <col style="width:110px;">
-            <col style="width:160px;">
+            <col style="width:130px;">
         </colgroup>
         <thead style="position:sticky; top:0; z-index:10;">
-            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editId ? 'pointer-events:none;' : '' }}">
+
+                {{-- # --}}
+                <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top;">
+                    #
+                    <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
+                        <input type="checkbox"
+                               :checked="$wire.selectedMotivoId !== null"
+                               :disabled="$wire.selectedMotivoId === null"
+                               @click.prevent="$wire.selectedMotivoId !== null && $wire.set('selectedMotivoId', null)"
+                               :style="$wire.selectedMotivoId !== null ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
+                    </div>
+                </th>
+
                 @foreach($sortCols as $label => $key)
                 @php $isActive = $sortBy === $key; @endphp
                 <th wire:click="toggleSort('{{ $key }}')"
-                    style="padding:10px 14px; text-align:{{ in_array($label,['Afecta indicadores','Estado']) ? 'center' : 'left' }}; position:relative; user-select:none; overflow:hidden; min-width:70px; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
-                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                    <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                    style="{{ $thC }} text-align:{{ in_array($label,['Afecta indicadores','Estado']) ? 'center' : 'left' }}; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="!{{ $isActive?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isActive?'true':'false' }} && ($el.style.background='')">
+                    <div style="display:flex; align-items:center; {{ in_array($label,['Afecta indicadores','Estado']) ? 'justify-content:center;' : '' }} gap:4px;">
                         {{ $label }}
-                        @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                        @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                        @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
-                        @endif
-                    </span>
+                        <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isActive && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isActive && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                        </span>
+                    </div>
+                    @if($key === 'nombre')
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" style="{{ $fI }}"></div>
+                    @elseif($key === 'afecta_mora')
+                    <div style="{{ $fW }}" @click.stop>
+                        <select wire:model.live="colFilterAfecta" @click.stop style="{{ $fS }}">
+                            <option value="">Todos</option>
+                            <option value="1">Sí afecta</option>
+                            <option value="0">No afecta</option>
+                        </select>
+                    </div>
+                    @else
+                    <div style="{{ $fW }}" @click.stop>
+                        <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                            <option value="">Todos</option>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                    @endif
                 </th>
                 @endforeach
-                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
+
             </tr>
         </thead>
         <tbody>
@@ -137,48 +202,49 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
 
         @if($r->id === $editId)
         {{-- ── FILA EDICIÓN INLINE ── --}}
-        <tr wire:key="mc-edit-{{ $r->id }}" style="background:#FAFAFE; border-bottom:1px solid #EDE9FE;">
-            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $loop->iteration }}</td>
-            <td style="padding:10px 14px;">
+        <tr wire:key="mc-edit-{{ $r->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
+            <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap;">
+                <span style="font-size:13px; color:#111827;">{{ $loop->iteration }}</span>
+            </td>
+            <td style="padding:7px 10px;">
                 <input wire:model="nombre" type="text"
                        style="width:100%; {{ $iRow }}">
                 @error('nombre')<p style="font-size:11px; color:#EF4444; margin-top:3px;">{{ $message }}</p>@enderror
             </td>
-            <td style="padding:10px 14px; text-align:center;">
+            <td style="padding:7px 10px; text-align:center;">
                 <select wire:model="afectaMora" style="{{ $iRow }} width:100%; cursor:pointer;">
                     <option value="0">No afecta</option>
                     <option value="1">Sí afecta</option>
                 </select>
             </td>
-            <td style="padding:10px 14px; text-align:center;">
+            <td style="padding:7px 10px; text-align:center;">
                 <select wire:model="activo" style="{{ $iRow }} width:100%; cursor:pointer;">
                     <option value="1">Activo</option>
                     <option value="0">Inactivo</option>
                 </select>
             </td>
-            <td style="padding:10px 14px;">
-                <div style="display:flex; gap:6px; justify-content:center;">
-                    <button wire:click="save" wire:loading.attr="disabled"
-                            style="height:34px; padding:0 16px; border-radius:7px; border:none; background:#7B6FE8; color:#fff; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap;"
-                            @mouseenter="$el.style.opacity='.85'" @mouseleave="$el.style.opacity='1'">
-                        <span wire:loading.remove wire:target="save">Guardar</span>
-                        <span wire:loading wire:target="save">...</span>
-                    </button>
-                    <button wire:click="cancelar"
-                            style="height:34px; padding:0 14px; border-radius:7px; border:1px solid #E5E7EB; background:#F3F4F6; color:#6B7280; font-size:13px; font-weight:600; cursor:pointer; white-space:nowrap;"
-                            @mouseenter="$el.style.background='#E5E7EB'" @mouseleave="$el.style.background='#F3F4F6'">
-                        Cerrar
-                    </button>
-                </div>
-            </td>
         </tr>
 
         @else
         {{-- ── FILA NORMAL ── --}}
-        <tr wire:key="mc-{{ $r->id }}" style="border-bottom:1px solid #F9FAFB;"
-            @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $loop->iteration }}</td>
+        @php $selM = $selectedMotivoId === $r->id; @endphp
+        <tr wire:key="mc-{{ $r->id }}"
+            style="border-bottom:1px solid #F3F4F6; transition:background .1s; background:{{ $selM ? '#F5F3FF' : '' }}; {{ $selM ? 'border-left:3px solid #7B6FE8;' : '' }}"
+            @mouseenter="$el.style.background='{{ $selM ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selM ? '#F5F3FF' : '' }}'">
+
+            <td class="col-row-num" style="padding:6px 6px; text-align:center;">
+                <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                    <input type="checkbox"
+                           :checked="$wire.selectedMotivoId === {{ $r->id }}"
+                           @click="$wire.selectedMotivoId === {{ $r->id }} ? $wire.set('selectedMotivoId', null) : $wire.selectMotivo({{ $r->id }})"
+                           :disabled="{{ $editId && $editId !== $r->id ? 'true' : 'false' }}"
+                           style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editId && $editId !== $r->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
+                    <span style="font-size:13px; color:#111827;">{{ $loop->iteration }}</span>
+                </div>
+            </td>
+
             <td style="padding:11px 14px; font-size:13px; color:#111827;">{{ ucwords(strtolower($r->nombre)) }}</td>
+
             <td style="padding:11px 14px; text-align:center;">
                 @if($r->afecta_mora)
                 <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px; background:#FEE2E2; color:#DC2626;">Sí afecta</span>
@@ -186,6 +252,7 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                 <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px; background:#F3F4F6; color:#9CA3AF;">No afecta</span>
                 @endif
             </td>
+
             <td style="padding:11px 14px; text-align:center;">
                 <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px;
                              background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
@@ -193,20 +260,11 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
                     {{ $r->activo ? 'Activo' : 'Inactivo' }}
                 </span>
             </td>
-            <td style="padding:11px 14px; text-align:center;">
-                <div style="display:flex; gap:6px; justify-content:center;">
-                    <button wire:click="edit({{ $r->id }})" title="Editar"
-                            style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center;"
-                            @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
-                        <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                    </button>
-                </div>
-            </td>
         </tr>
         @endif
 
         @empty
-        <tr><td colspan="5" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">Sin motivos configurados. Creá el primero.</td></tr>
+        <tr><td colspan="4" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">{{ $colFilterNombre || $colFilterAfecta !== '' || $colFilterEstado !== '' ? 'Sin resultados para los filtros aplicados.' : 'Sin motivos configurados. Creá el primero.' }}</td></tr>
         @endforelse
         </tbody>
     </table>
@@ -253,12 +311,12 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
 
         <div style="display:flex; gap:8px;">
             <button wire:click="save" wire:loading.attr="disabled"
-                    style="flex:1; height:36px; background:#7B6FE8; color:#fff; border:none; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
+                    style="flex:1; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer;">
                 <span wire:loading.remove wire:target="save">Guardar</span>
                 <span wire:loading wire:target="save">Guardando...</span>
             </button>
             <button wire:click="cancelar"
-                    style="flex:1; height:36px; background:#F3F4F6; color:#6B7280; border:none; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
+                    style="flex:1; height:36px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer;">
                 Cerrar
             </button>
         </div>
@@ -290,8 +348,8 @@ $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px
             <span style="font-size:11px; font-weight:600; padding:2px 10px; border-radius:99px; background:#F3F4F6; color:#9CA3AF;">No afecta</span>
             @endif
             <button wire:click="edit({{ $r->id }})"
-                    style="margin-left:auto; height:32px; padding:0 14px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px;"
-                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='#F8F7FF'">
+                    style="margin-left:auto; height:32px; padding:0 14px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; border-radius:8px; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; gap:4px; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
                 Editar
             </button>
