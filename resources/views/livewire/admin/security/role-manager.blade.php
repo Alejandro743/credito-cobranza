@@ -21,49 +21,44 @@
     ];
 @endphp
 
-{{-- Cabecera --}}
-<div style="background:#fff; border-radius:16px; border:1px solid #E5E7EB; box-shadow:0 1px 4px rgba(0,0,0,.06); margin-bottom:14px; overflow:hidden;">
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3" style="padding:13px 18px;">
-        <div style="display:flex; align-items:center; gap:12px; min-width:0;">
-            <button wire:click="backToList"
-                    style="width:34px; height:34px; border-radius:9px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s, color .15s;"
-                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
-                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/>
-                </svg>
-            </button>
-            <div style="min-width:0;">
-                <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.6px; margin:0 0 2px;">Configurando accesos</p>
-                <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $permissionsRoleName }}</p>
-            </div>
-        </div>
-        <div style="display:flex; align-items:center; gap:6px;">
-            <button wire:click="toggleTodos(true)" class="flex-1 sm:flex-none"
-                    style="height:34px; padding:0 12px; border:1px solid #EDE9FE; border-radius:7px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px; white-space:nowrap; transition:background .15s, color .15s;"
-                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
-                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                Dar todo
-            </button>
-            <button wire:click="toggleTodos(false)" class="flex-1 sm:flex-none"
-                    style="height:34px; padding:0 12px; border:1px solid #EDE9FE; border-radius:7px; background:#F8F7FF; color:#7B6FE8; font-size:12px; font-weight:600; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:4px; white-space:nowrap; transition:background .15s, color .15s;"
-                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
-                <svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                Quitar todo
-            </button>
-        </div>
-    </div>
-</div>
+<div style="position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.45);"
+     wire:click.self="backToList">
+<div style="background:#fff; border-radius:10px; box-shadow:0 8px 40px rgba(0,0,0,.18); width:100%; max-width:640px; max-height:85vh; display:flex; flex-direction:column; overflow:hidden;">
 
-{{-- Módulos --}}
-<div style="display:flex; flex-direction:column; gap:10px; margin-bottom:14px;">
+    {{-- Header --}}
+    <div style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; flex-shrink:0;">
+        <div style="min-width:0;">
+            <p style="font-size:10px; color:#9CA3AF; font-weight:600; text-transform:uppercase; letter-spacing:.7px; margin:0 0 2px;">Configurando Accesos</p>
+            <p style="font-size:16px; font-weight:800; color:#7B6FE8; margin:0; text-transform:capitalize; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $permissionsRoleName }}</p>
+        </div>
+        <button wire:click="backToList"
+                style="width:32px; height:32px; border-radius:9px; border:1px solid #EDE9FE; background:#fff; color:#9CA3AF; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0;"
+                @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#fff'">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+        </button>
+    </div>
+
+    {{-- Body --}}
+    <div style="flex:1; overflow-y:auto; padding:16px 20px;">
+
+    {{-- Módulos --}}
+    <div x-data="{ openModulo: null }" style="display:flex; flex-direction:column; gap:10px;">
     @forelse ($modulosArbol as $modulo)
     @php $cc = $accColorMap[$modulo->color] ?? $accColorMap['lavanda']; @endphp
     <div wire:key="m-{{ $modulo->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 3px rgba(0,0,0,.05); overflow:hidden;">
 
         {{-- Cabecera módulo --}}
-        <div style="padding:10px 16px; background:{{ $cc['head_bg'] }}; border-bottom:1px solid {{ $cc['head_border'] }}; display:flex; align-items:center; justify-content:space-between;">
+        <div @click="openModulo = (openModulo === {{ $modulo->id }} ? null : {{ $modulo->id }})"
+             style="padding:10px 16px; background:{{ $cc['head_bg'] }}; border-bottom:1px solid {{ $cc['head_border'] }}; display:flex; align-items:center; justify-content:space-between; cursor:pointer;">
             <div style="display:flex; align-items:center; gap:8px;">
+                <svg width="12" height="12" fill="none" stroke="{{ $cc['icon'] }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
+                     style="flex-shrink:0; transition:transform .15s ease;"
+                     :style="openModulo === {{ $modulo->id }} ? 'transform:rotate(90deg);' : 'transform:rotate(0deg);'">
+                    <path d="M9 18l6-6-6-6"/>
+                </svg>
                 <div style="width:30px; height:30px; border-radius:8px; background:{{ $cc['head_border'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                     <svg width="14" height="14" fill="none" stroke="{{ $cc['icon'] }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <path d="{{ $modulo->icon }}"/>
@@ -71,19 +66,22 @@
                 </div>
                 <span style="font-size:13px; font-weight:700; color:#111827;">{{ $modulo->name }}</span>
             </div>
-            <div style="display:flex; gap:5px;">
+            <div style="display:flex; gap:5px;" @click.stop>
                 <button wire:click="toggleModulo({{ $modulo->id }}, true)"
-                        style="height:26px; padding:0 10px; border-radius:6px; border:none; background:{{ $cc['btn_bg'] }}; color:{{ $cc['btn_color'] }}; font-size:11px; font-weight:700; cursor:pointer;">
+                        style="height:26px; padding:0 10px; border-radius:6px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:11px; font-weight:700; cursor:pointer; transition:background .15s, color .15s;"
+                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                     Todos
                 </button>
                 <button wire:click="toggleModulo({{ $modulo->id }}, false)"
-                        style="height:26px; padding:0 10px; border-radius:6px; border:1px solid #E5E7EB; background:#fff; color:#6B7280; font-size:11px; font-weight:700; cursor:pointer;">
+                        style="height:26px; padding:0 10px; border-radius:6px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; font-size:11px; font-weight:700; cursor:pointer; transition:background .15s, color .15s;"
+                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                     Ninguno
                 </button>
             </div>
         </div>
 
         {{-- Submodulos --}}
+        <div x-show="openModulo === {{ $modulo->id }}" x-cloak>
         @foreach ($modulo->submodulos as $sub)
         @if ($sub->isGroup())
         <div style="padding:5px 16px; background:#F9FAFB; border-bottom:1px solid #F3F4F6;">
@@ -139,26 +137,32 @@
         </div>
         @endif
         @endforeach
+        </div>
 
     </div>
     @empty
     <p style="text-align:center; padding:48px; color:#9CA3AF; font-size:13px;">No hay módulos en BD.</p>
     @endforelse
-</div>
+    </div>
 
-{{-- Footer --}}
-<div style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; padding:13px 18px; display:flex; align-items:center; justify-content:flex-end; gap:8px;">
-    <button wire:click="savePermissions" wire:loading.attr="disabled"
-            style="height:36px; padding:0 22px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box; transition:background .15s, color .15s;"
-            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
-        <span wire:loading.remove wire:target="savePermissions">Guardar</span>
-        <span wire:loading wire:target="savePermissions">Guardando...</span>
-    </button>
-    <button wire:click="backToList"
-            style="height:36px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box; transition:background .15s, color .15s;"
-            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
-        Cerrar
-    </button>
+    </div>
+
+    {{-- Footer --}}
+    <div style="padding:12px 20px; border-top:1px solid #F3F4F6; flex-shrink:0; display:flex; justify-content:flex-end; gap:8px;">
+        <button wire:click="savePermissions" wire:loading.attr="disabled"
+                style="height:36px; padding:0 22px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; box-sizing:border-box; display:inline-flex; align-items:center; gap:5px; transition:background .15s, color .15s;"
+                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+            <span wire:loading.remove wire:target="savePermissions">Guardar</span>
+            <span wire:loading wire:target="savePermissions">Guardando...</span>
+        </button>
+        <button wire:click="backToList"
+                style="height:36px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box; transition:background .15s, color .15s;"
+                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+            Cerrar
+        </button>
+    </div>
+</div>
 </div>
 
 @else

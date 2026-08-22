@@ -162,6 +162,9 @@ class Workbench extends Component
 
         array_splice($sinArrastrada, $indiceDestino, 0, [$draggedKey]);
         $this->openTabs = $sinArrastrada;
+
+        $this->activeTab = $draggedKey;
+        $this->dispatch('workbench-tab-changed', slug: $this->activeTab ?? '');
     }
 
     public function render()

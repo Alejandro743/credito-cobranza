@@ -7,7 +7,15 @@
     sidebarDragging: false,
     mobileTab: sessionStorage.getItem('_mTab') || 'inicio',
     navTipText: '', navTipY: 0, navTipVisible: false,
-    init() { this.$watch('mobileTab', v => sessionStorage.setItem('_mTab', v)); }
+    init() {
+        this.$watch('mobileTab', v => sessionStorage.setItem('_mTab', v));
+        const mq = window.matchMedia('(min-width: 768px)');
+        mq.addEventListener('change', e => {
+            if (!e.matches) return;
+            if (this.mobileTab === 'modulos') this.mobileTab = 'inicio';
+            this.sidebarOpen = false;
+        });
+    }
 }"
 @toggle-sidebar.window="if(sidebarCollapsed){ sidebarCollapsed = false; sidebarWidth = 240; } else { sidebarCollapsed = true; }"
 style="background:#0B1120;">
