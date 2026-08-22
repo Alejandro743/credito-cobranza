@@ -1,4 +1,14 @@
 @props(['title' => '', 'noHeader' => false, 'noPadding' => false, 'headerTitle' => '', 'bgMain' => '#F0F2F5', 'customHeaderText' => ''])
+@php
+    $wbRoutePathMap = [];
+    foreach (\App\Models\Submodulo::whereIn('slug', \App\Livewire\Workbench::slugsDisponibles())->whereNotNull('route_name')->get() as $wbSub) {
+        if (\Illuminate\Support\Facades\Route::has($wbSub->route_name)) {
+            try {
+                $wbRoutePathMap[parse_url(route($wbSub->route_name), PHP_URL_PATH)] = $wbSub->slug;
+            } catch (\Throwable $e) {}
+        }
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="es" x-data="{
     sidebarOpen: false,
@@ -7,6 +17,7 @@
     sidebarDragging: false,
     mobileTab: sessionStorage.getItem('_mTab') || 'inicio',
     navTipText: '', navTipY: 0, navTipVisible: false,
+    wbRouteMap: {{ \Illuminate\Support\Js::from($wbRoutePathMap) }},
     init() {
         this.$watch('mobileTab', v => sessionStorage.setItem('_mTab', v));
         const mq = window.matchMedia('(min-width: 768px)');
@@ -14,6 +25,10 @@
             if (!e.matches) return;
             if (this.mobileTab === 'modulos') this.mobileTab = 'inicio';
             this.sidebarOpen = false;
+            const slug = this.wbRouteMap[window.location.pathname];
+            if (slug && !window.location.pathname.startsWith('/workbench')) {
+                window.location.href = '/workbench?tab=' + encodeURIComponent(slug);
+            }
         });
     }
 }"

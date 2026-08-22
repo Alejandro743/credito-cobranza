@@ -23,8 +23,8 @@
      x-on:workbench-tab-changed.window="syncTab($event.detail.slug)"
      @click="const el = $event.target.closest('[data-tab-key]'); if (el) { syncTab(el.dataset.tabKey); window.dispatchEvent(new CustomEvent('workbench-tab-changed', { detail: { slug: el.dataset.tabKey } })); }">
 
-    {{-- Barra de pestañas --}}
-    <div style="flex:none; display:flex; align-items:stretch; background:#F9F8FF; border-bottom:1px solid #EDE9FE; padding:6px 6px 0; gap:3px;">
+    {{-- Barra de pestañas (solo escritorio: en celular se ve solo el contenido de la pestaña activa) --}}
+    <div class="hidden md:flex" style="flex:none; align-items:stretch; background:#F9F8FF; border-bottom:1px solid #EDE9FE; padding:6px 6px 0; gap:3px;">
         @php $tabFlex = count($openTabs) === 1 ? 'flex:0 0 50%; max-width:50%;' : 'flex:1;'; @endphp
         @forelse ($openTabs as $key)
         @php $t = $tabsInfo[$key] ?? null; @endphp

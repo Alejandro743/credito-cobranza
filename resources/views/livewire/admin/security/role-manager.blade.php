@@ -13,12 +13,7 @@
 @if ($mode === 'permissions')
 {{-- ── ACCESOS DEL ROL ──────────────────────────────────────────────────── --}}
 @php
-    $accColorMap = [
-        'lavanda'   => ['head_bg'=>'#F5F3FF','head_border'=>'#EDE9FE','hover'=>'#F0EEFF','icon'=>'#7B6FE8','dot'=>'#A78BFA','btn_bg'=>'#EDE9FE','btn_color'=>'#5B21B6'],
-        'mint'      => ['head_bg'=>'#F0FDF4','head_border'=>'#D1FAE5','hover'=>'#E6FCF0','icon'=>'#059669','dot'=>'#6EE7B7','btn_bg'=>'#D1FAE5','btn_color'=>'#065F46'],
-        'melocoton' => ['head_bg'=>'#FFF7ED','head_border'=>'#FED7AA','hover'=>'#FEF0D8','icon'=>'#EA580C','dot'=>'#FDBA74','btn_bg'=>'#FED7AA','btn_color'=>'#9A3412'],
-        'celeste'   => ['head_bg'=>'#EFF6FF','head_border'=>'#BFDBFE','hover'=>'#E4F0FF','icon'=>'#2563EB','dot'=>'#93C5FD','btn_bg'=>'#BFDBFE','btn_color'=>'#1E40AF'],
-    ];
+    $cc = ['head_bg'=>'#F5F3FF','head_bg_open'=>'#EDE9FE','head_border'=>'#EDE9FE','hover'=>'#F0EEFF','icon'=>'#7B6FE8','dot'=>'#A78BFA'];
 @endphp
 
 <div style="position:fixed; inset:0; z-index:60; display:flex; align-items:center; justify-content:center; padding:24px; background:rgba(0,0,0,.45);"
@@ -46,13 +41,12 @@
     {{-- Módulos --}}
     <div x-data="{ openModulo: null }" style="display:flex; flex-direction:column; gap:10px;">
     @forelse ($modulosArbol as $modulo)
-    @php $cc = $accColorMap[$modulo->color] ?? $accColorMap['lavanda']; @endphp
     <div wire:key="m-{{ $modulo->id }}"
          style="background:#fff; border-radius:14px; border:1px solid #E5E7EB; box-shadow:0 1px 3px rgba(0,0,0,.05); overflow:hidden;">
 
         {{-- Cabecera módulo --}}
         <div @click="openModulo = (openModulo === {{ $modulo->id }} ? null : {{ $modulo->id }})"
-             style="padding:10px 16px; background:{{ $cc['head_bg'] }}; border-bottom:1px solid {{ $cc['head_border'] }}; display:flex; align-items:center; justify-content:space-between; cursor:pointer;">
+             :style="'padding:10px 16px; border-bottom:1px solid {{ $cc['head_border'] }}; display:flex; align-items:center; justify-content:space-between; cursor:pointer; ' + (openModulo === {{ $modulo->id }} ? 'background:{{ $cc['head_bg_open'] }};' : 'background:{{ $cc['head_bg'] }};')">
             <div style="display:flex; align-items:center; gap:8px;">
                 <svg width="12" height="12" fill="none" stroke="{{ $cc['icon'] }}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"
                      style="flex-shrink:0; transition:transform .15s ease;"
@@ -157,8 +151,9 @@
             <span wire:loading wire:target="savePermissions">Guardando...</span>
         </button>
         <button wire:click="backToList"
-                style="height:36px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box; transition:background .15s, color .15s;"
+                style="height:36px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:600; cursor:pointer; box-sizing:border-box; display:inline-flex; align-items:center; gap:5px; transition:background .15s, color .15s;"
                 onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             Cerrar
         </button>
     </div>
