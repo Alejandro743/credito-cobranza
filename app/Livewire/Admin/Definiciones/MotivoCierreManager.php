@@ -28,6 +28,8 @@ class MotivoCierreManager extends Component
         $this->selectedMotivoId = $id;
     }
 
+    public function refrescarGrilla(): void {}
+
     public function toggleSort(string $col): void
     {
         if ($this->sortBy === $col) {

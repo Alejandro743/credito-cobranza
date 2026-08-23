@@ -64,6 +64,8 @@ class PesoIndicadorManager extends Component
         $this->selectedPesoId = $this->selectedPesoId === $id ? null : $id;
     }
 
+    public function refrescarGrilla(): void {}
+
     public function startEdit(int $id): void
     {
         $p = PesoIndicador::findOrFail($id);

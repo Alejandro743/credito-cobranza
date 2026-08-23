@@ -48,6 +48,8 @@ class CorrelativoManager extends Component
         $this->selectedCorrelativoId = $id;
     }
 
+    public function refrescarGrilla(): void {}
+
     public function toggleSort(string $col): void
     {
         if ($this->sortBy === $col) {

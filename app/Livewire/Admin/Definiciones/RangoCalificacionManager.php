@@ -62,6 +62,8 @@ class RangoCalificacionManager extends Component
         $this->selectedRangoId = $this->selectedRangoId === $id ? null : $id;
     }
 
+    public function refrescarGrilla(): void {}
+
     public function startEdit(int $id): void
     {
         $r = RangoCalificacion::findOrFail($id);

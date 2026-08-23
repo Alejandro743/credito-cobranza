@@ -204,6 +204,14 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
             @endif
         </div>
         @endif
+
+        <button type="button" wire:click="refrescarGrilla"
+                style="margin-left:auto; height:28px; padding:0 10px; border:1px solid #EDE9FE; border-radius:7px; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex-shrink:0; font-size:11px; font-weight:700; white-space:nowrap; transition:background .15s, color .15s;"
+                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"
+                onclick="const ic=this.querySelector('svg'); const deg=(parseInt(ic.dataset.deg||'0')+360); ic.dataset.deg=deg; ic.style.transition='transform .5s ease'; ic.style.transform='rotate('+deg+'deg)';">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            Actualizar
+        </button>
     </div>
 
     @if($registros->isEmpty())
@@ -213,7 +221,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
         <table style="width:100%;border-collapse:collapse;min-width:1050px;">
             <thead style="position:sticky;top:0;z-index:10;">
                 <tr style="background:#F9F8FF;border-bottom:2px solid #EDE9FE;">
-                    <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF;">
+                    <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF; box-shadow:inset -1px 0 0 #E5E7EB;">
                         #
                         <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
                             <input type="checkbox"
@@ -224,9 +232,29 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         </div>
                     </th>
 
+                    {{-- Estado --}}
+                    @php $isA = $sortBy === 'activo'; @endphp
+                    <th wire:click="toggleSort('activo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:130px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>
+                            {!! $fSvg !!}
+                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }} text-indent:0; padding-left:16px;">
+                                <option value="">Todos</option>
+                                <option value="1">Activo</option>
+                                <option value="0">Inactivo</option>
+                            </select>
+                        </div>
+                    </th>
+
                     {{-- Nombre --}}
                     @php $isA = $sortBy === 'nombre'; @endphp
-                    <th wire:click="toggleSort('nombre')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:170px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('nombre')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:170px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
                         <div style="display:flex; align-items:center; gap:4px;">Nombre
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
@@ -239,7 +267,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
 
                     {{-- Vigencia desde --}}
                     @php $isA = $sortBy === 'fecha_inicio'; @endphp
-                    <th wire:click="toggleSort('fecha_inicio')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('fecha_inicio')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Desde
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
@@ -251,7 +279,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
 
                     {{-- Vigencia hasta --}}
                     @php $isA = $sortBy === 'fecha_fin'; @endphp
-                    <th wire:click="toggleSort('fecha_fin')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('fecha_fin')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Hasta
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
@@ -262,7 +290,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                     </th>
 
                     {{-- Vigente --}}
-                    <th style="{{ $thC }} text-align:center; min-width:100px;">
+                    <th style="{{ $thC }} text-align:center; min-width:100px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         Vigente
                         <div style="{{ $fW }}" @click.stop>
                             {!! $fSvg !!}
@@ -276,7 +304,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
 
                     {{-- A --}}
                     @php $isA = $sortBy === 'min_a'; @endphp
-                    <th wire:click="toggleSort('min_a')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:90px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('min_a')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:90px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">A
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
@@ -288,7 +316,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
 
                     {{-- B --}}
                     @php $isA = $sortBy === 'min_b'; @endphp
-                    <th wire:click="toggleSort('min_b')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:90px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('min_b')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:90px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">B
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
@@ -300,7 +328,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
 
                     {{-- C --}}
                     @php $isA = $sortBy === 'min_c'; @endphp
-                    <th wire:click="toggleSort('min_c')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:90px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('min_c')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:90px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">C
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
@@ -321,26 +349,6 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                             </span>
                         </div>
                     </th>
-
-                    {{-- Estado --}}
-                    @php $isA = $sortBy === 'activo'; @endphp
-                    <th wire:click="toggleSort('activo')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:130px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        <div style="{{ $fW }}" @click.stop>
-                            {!! $fSvg !!}
-                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
-                                <option value="">Todos</option>
-                                <option value="1">Activo</option>
-                                <option value="0">Inactivo</option>
-                            </select>
-                        </div>
-                    </th>
                 </tr>
             </thead>
             <tbody>
@@ -348,39 +356,39 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 @if($editingId === $r->id)
                 {{-- Fila edición inline --}}
                 <tr wire:key="edit-{{ $r->id }}" style="background:#FAFAFE;border-bottom:1px solid #EDE9FE;">
-                    <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#FAFAFE;">
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#FAFAFE; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <span style="font-size:13px; color:#111827;">{{ $loop->iteration }}</span>
                     </td>
-                    <td style="padding:10px 10px;">
-                        <input wire:model="editNombre" type="text" style="width:100%;{{ $iRow }}">
-                        @error('editNombre') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
-                    </td>
-                    <td style="padding:10px 10px;text-align:center;">
-                        <span style="font-size:12px;color:#6B7280;white-space:nowrap;">{{ $r->fecha_inicio->format('d/m/Y H:i') }}</span>
-                    </td>
-                    <td style="padding:10px 10px;text-align:center;">
-                        <span style="font-size:12px;color:#9CA3AF;">—</span>
-                    </td>
-                    <td style="padding:10px 10px;text-align:center;">
-                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;background:#EDE9FE;color:#7B6FE8;">Sí</span>
-                    </td>
-                    <td style="padding:10px 10px;">
-                        <input wire:model="editMinA" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
-                    </td>
-                    <td style="padding:10px 10px;">
-                        <input wire:model="editMinB" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
-                    </td>
-                    <td style="padding:10px 10px;">
-                        <input wire:model="editMinC" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
-                    </td>
-                    <td style="padding:10px 10px;">
-                        <input wire:model="editMinD" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
-                    </td>
-                    <td style="padding:10px 10px;">
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <select wire:model="editActivo" style="width:100%;{{ $iRow }} cursor:pointer;">
                             <option value="1">Activo</option>
                             <option value="0">Inactivo</option>
                         </select>
+                    </td>
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <input wire:model="editNombre" type="text" style="width:100%;{{ $iRow }}">
+                        @error('editNombre') <p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p> @enderror
+                    </td>
+                    <td style="padding:10px 10px;text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:12px;color:#6B7280;white-space:nowrap;">{{ $r->fecha_inicio->format('d/m/Y H:i') }}</span>
+                    </td>
+                    <td style="padding:10px 10px;text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:12px;color:#9CA3AF;">—</span>
+                    </td>
+                    <td style="padding:10px 10px;text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;background:#EDE9FE;color:#7B6FE8;">Sí</span>
+                    </td>
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <input wire:model="editMinA" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
+                    </td>
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <input wire:model="editMinB" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
+                    </td>
+                    <td style="padding:10px 10px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <input wire:model="editMinC" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
+                    </td>
+                    <td style="padding:10px 10px;">
+                        <input wire:model="editMinD" type="number" min="0" max="100" step="0.5" style="width:100%;{{ $iRow }} text-align:center;">
                     </td>
                 </tr>
                 @error('editMinA')
@@ -396,7 +404,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 <tr wire:key="rc-{{ $r->id }}"
                     style="border-bottom:1px solid #F3F4F6;transition:background .1s; background:{{ $selR ? '#F5F3FF' : '' }}; {{ $selR ? 'border-left:3px solid #7B6FE8;' : '' }} {{ !$esAbierta ? 'opacity:0.75;' : '' }}"
                     @mouseenter="$el.style.background='{{ $selR ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selR ? '#F5F3FF' : '' }}'">
-                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selR ? '#F5F3FF' : '#fff' }};">
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selR ? '#F5F3FF' : '#fff' }}; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                             @if($esAbierta)
                             <input type="checkbox"
@@ -412,27 +420,23 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                             <span style="font-size:13px; color:#111827;">{{ $loop->iteration }}</span>
                         </div>
                     </td>
-                    <td style="padding:10px 14px;"><span style="font-size:13px;color:#111827;">{{ ucwords(strtolower($r->nombre)) }}</span></td>
-                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:13px;color:#111827;white-space:nowrap;">{{ $r->fecha_inicio->format('d/m/Y H:i') }}</span></td>
-                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:13px;color:#111827;white-space:nowrap;">{{ $r->fecha_fin?->format('d/m/Y H:i') ?? '—' }}</span></td>
-                    <td style="padding:10px 14px;text-align:center;">
+                    <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:700; color:#374151; white-space:nowrap;">{{ $r->activo ? 'Activo' : 'Inactivo' }}</span>
+                    </td>
+                    <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;"><span style="font-size:13px;font-weight:400;color:#374151;">{{ ucwords(strtolower($r->nombre)) }}</span></td>
+                    <td style="padding:10px 14px;text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;"><span style="font-size:13px;font-weight:400;color:#374151;white-space:nowrap;">{{ $r->fecha_inicio->format('d/m/Y H:i') }}</span></td>
+                    <td style="padding:10px 14px;text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;"><span style="font-size:13px;font-weight:400;color:#374151;white-space:nowrap;">{{ $r->fecha_fin?->format('d/m/Y H:i') ?? '—' }}</span></td>
+                    <td style="padding:10px 14px;text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
                         @if($esVigente)
                         <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;background:#EDE9FE;color:#7B6FE8;">Sí</span>
                         @else
                         <span style="font-size:13px;color:#D1D5DB;">—</span>
                         @endif
                     </td>
-                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px;background:#D1FAE5;color:#059669;">≥ {{ $r->min_a }}</span></td>
-                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px;background:#CFFAFE;color:#0E7490;">≥ {{ $r->min_b }}</span></td>
-                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px;background:#FEF3C7;color:#B45309;">≥ {{ $r->min_c }}</span></td>
+                    <td style="padding:10px 14px;text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;"><span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px;background:#D1FAE5;color:#059669;">≥ {{ $r->min_a }}</span></td>
+                    <td style="padding:10px 14px;text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;"><span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px;background:#CFFAFE;color:#0E7490;">≥ {{ $r->min_b }}</span></td>
+                    <td style="padding:10px 14px;text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;"><span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px;background:#FEF3C7;color:#B45309;">≥ {{ $r->min_c }}</span></td>
                     <td style="padding:10px 14px;text-align:center;"><span style="font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px;background:#FFEDD5;color:#C2410C;">≥ {{ $r->min_d }}</span></td>
-                    <td style="padding:10px 14px;text-align:center;">
-                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;
-                                     background:{{ $r->activo ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $r->activo ? '#059669' : '#9CA3AF' }};">
-                            {{ $r->activo ? 'Activo' : 'Inactivo' }}
-                        </span>
-                    </td>
                 </tr>
                 @endif
                 @endforeach

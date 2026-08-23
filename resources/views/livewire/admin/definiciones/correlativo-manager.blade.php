@@ -126,6 +126,14 @@
             @endif
         </div>
         @endif
+
+        <button type="button" wire:click="refrescarGrilla"
+                style="margin-left:auto; height:28px; padding:0 10px; border:1px solid #EDE9FE; border-radius:7px; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex-shrink:0; font-size:11px; font-weight:700; white-space:nowrap; transition:background .15s, color .15s;"
+                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"
+                onclick="const ic=this.querySelector('svg'); const deg=(parseInt(ic.dataset.deg||'0')+360); ic.dataset.deg=deg; ic.style.transition='transform .5s ease'; ic.style.transform='rotate('+deg+'deg)';">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            Actualizar
+        </button>
     </div>
 
     @if ($correlativos->isEmpty() && !$showAddForm)
@@ -137,16 +145,16 @@
     <div style="overflow:auto; flex:1;">
         @if ($correlativos->isNotEmpty())
         @php
-        $sortCols = ['Prefijo'=>'prefijo','Descripción'=>'descripcion','Sig. Número'=>'siguiente_numero','Longitud'=>'longitud','Estado'=>'activo'];
+        $sortCols = ['Estado'=>'activo','Prefijo'=>'prefijo','Descripción'=>'descripcion','Sig. Número'=>'siguiente_numero','Longitud'=>'longitud'];
         @endphp
         <table style="table-layout:fixed; width:100%; min-width:680px; border-collapse:collapse; font-size:13px;">
             <colgroup>
                 <col style="width:44px;">
+                <col style="width:110px;">
                 <col style="width:200px;">
                 <col style="width:260px;">
                 <col style="width:120px;">
                 <col style="width:100px;">
-                <col style="width:110px;">
             </colgroup>
             <thead style="position:sticky; top:0; z-index:10;">
                 @php
@@ -157,7 +165,7 @@
                     $fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
                 @endphp
                 <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editingId ? 'pointer-events:none;' : '' }}">
-                    <th style="width:44px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; vertical-align:top;">
+                    <th style="width:44px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; vertical-align:top; box-shadow:inset -1px 0 0 #E5E7EB;">
                         #
                         <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
                             <input type="checkbox"
@@ -168,9 +176,9 @@
                         </div>
                     </th>
                     @foreach($sortCols as $label => $key)
-                    @php $isActive = $sortBy === $key; @endphp
+                    @php $isActive = $sortBy === $key; $isLastCol = $loop->last; @endphp
                     <th wire:click="toggleSort('{{ $key }}')"
-                        style="padding:10px 14px 6px; text-align:{{ in_array($label,['Sig. Número','Longitud','Estado']) ? 'center' : 'left' }}; user-select:none; cursor:pointer; vertical-align:top; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                        style="padding:10px 14px 6px; text-align:center; user-select:none; cursor:pointer; vertical-align:top; {{ $isLastCol ? '' : 'box-shadow:inset -1px 0 0 #E5E7EB;' }} {{ $isActive ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
                         <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
                             {{ $label }}
@@ -180,9 +188,9 @@
                             @endif
                         </span>
                         @if($key === 'prefijo')
-                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterPrefijo" @click.stop type="text" style="{{ $fI }}"></div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterPrefijo" @click.stop type="text" style="{{ $fI }} text-align:center;"></div>
                         @elseif($key === 'descripcion')
-                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterDescripcion" @click.stop type="text" style="{{ $fI }}"></div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterDescripcion" @click.stop type="text" style="{{ $fI }} text-align:center;"></div>
                         @elseif($key === 'activo')
                         <div style="{{ $fW }}" @click.stop>
                             <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
@@ -202,7 +210,7 @@
                 @if ($editingId === $c->id)
                 @php $eS = 'height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; background:#fff; box-sizing:border-box;'; @endphp
                 <tr wire:key="edit-{{ $c->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE; border-left:3px solid #7B6FE8;">
-                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $correlativos->firstItem() + $loop->index }}</td>
+                    <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">{{ $correlativos->firstItem() + $loop->index }}</td>
                     <td colspan="5" style="padding:10px 14px;">
                         <div style="display:flex; gap:10px; align-items:flex-end; flex-wrap:wrap;">
                             <div style="width:100px;">
@@ -256,7 +264,7 @@
                 <tr wire:key="row-{{ $c->id }}"
                     style="border-bottom:1px solid #F3F4F6; transition:background .1s; background:{{ $selCo ? '#F5F3FF' : '' }}; {{ $selCo ? 'border-left:3px solid #7B6FE8;' : '' }}"
                     @mouseenter="$el.style.background='{{ $selCo ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selCo ? '#F5F3FF' : '' }}'">
-                    <td class="col-row-num" style="padding:6px 6px; text-align:center;">
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                             <input type="checkbox"
                                    :checked="$wire.selectedCorrelativoId === {{ $c->id }}"
@@ -266,26 +274,26 @@
                             <span style="font-size:13px; color:#111827;">{{ $correlativos->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
-                    <td style="padding:10px 14px; overflow:hidden;">
-                        <div style="display:flex; align-items:center; gap:8px;">
-                            <span style="font-size:13px; color:#111827; white-space:nowrap;">{{ $c->prefijo }}</span>
-                            <span style="font-size:13px; color:#111827;">→</span>
+                    <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:700; color:#374151; white-space:nowrap;">{{ $c->activo ? 'Activo' : 'Inactivo' }}</span>
+                    </td>
+                    <td style="padding:10px 14px; overflow:hidden; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <div style="display:inline-flex; align-items:center; gap:8px;">
+                            <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $c->prefijo }}</span>
+                            <span style="font-size:13px; font-weight:400; color:#374151;">→</span>
                             <span style="font-family:monospace; font-size:12px; color:#7B6FE8; font-weight:600; background:#F0EEFF; padding:2px 7px; border-radius:6px; white-space:nowrap;">
                                 {{ $c->prefijo }}{{ str_pad($c->siguiente_numero, $c->longitud, '0', STR_PAD_LEFT) }}
                             </span>
                         </div>
                     </td>
-                    <td style="padding:10px 14px; overflow:hidden;">
-                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->descripcion ? ucwords(strtolower($c->descripcion)) : '—' }}</span>
+                    <td style="padding:10px 14px; overflow:hidden; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $c->descripcion ? ucwords(strtolower($c->descripcion)) : '—' }}</span>
                     </td>
-                    <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827;">{{ $c->siguiente_numero }}</td>
-                    <td style="padding:10px 14px; text-align:center; font-size:13px; color:#111827;">{{ $c->longitud }}</td>
+                    <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:400; color:#374151;">{{ $c->siguiente_numero }}</span>
+                    </td>
                     <td style="padding:10px 14px; text-align:center;">
-                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
-                                     background:{{ $c->activo ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $c->activo ? '#059669' : '#9CA3AF' }};">
-                            {{ $c->activo ? 'Activo' : 'Inactivo' }}
-                        </span>
+                        <span style="font-size:13px; font-weight:400; color:#374151;">{{ $c->longitud }}</span>
                     </td>
                 </tr>
                 @endif
