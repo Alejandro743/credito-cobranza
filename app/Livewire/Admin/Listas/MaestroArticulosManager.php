@@ -54,6 +54,8 @@ class MaestroArticulosManager extends Component
     public function updatingColFilterUnidadId(): void     { $this->resetPage(); }
     public function updatingColFilterEstado(): void       { $this->resetPage(); }
 
+    public function refrescarGrilla(): void {}
+
     public function toggleSort(string $col): void
     {
         $this->sortBy  = $this->sortBy === $col ? $this->sortBy : $col;

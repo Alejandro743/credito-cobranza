@@ -58,6 +58,8 @@ class UnidadManager extends Component
     public function updatingColFilterAbreviatura(): void { $this->resetPage(); }
     public function updatingColFilterEstado(): void      { $this->resetPage(); }
 
+    public function refrescarGrilla(): void {}
+
     // ── Agregar ───────────────────────────────────────────────────────────────
 
     public function showAdd(): void

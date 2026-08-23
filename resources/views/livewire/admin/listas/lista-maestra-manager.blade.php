@@ -1898,18 +1898,26 @@
             Mostrar Listas Inactivas
             @endif
         </button>
+
+        <button type="button" wire:click="refrescarGrilla"
+                style="height:28px; padding:0 10px; border:1px solid #EDE9FE; border-radius:7px; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex-shrink:0; font-size:11px; font-weight:700; white-space:nowrap; transition:background .15s, color .15s;"
+                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"
+                onclick="const ic=this.querySelector('svg'); const deg=(parseInt(ic.dataset.deg||'0')+360); ic.dataset.deg=deg; ic.style.transition='transform .5s ease'; ic.style.transform='rotate('+deg+'deg)';">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            Actualizar
+        </button>
     </div>
 
     <div style="overflow:auto; flex:1;">
         @php
         $fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center;';
         $fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; text-indent:16px; cursor:pointer;';
-        $fW  = 'position:relative; margin-top:4px;';
+        $fW  = 'position:relative; margin-top:4px;' . ($editingId ? ' opacity:0.45;' : '');
         $fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
         @endphp
         <table style="width:100%; min-width:1500px; border-collapse:collapse; font-size:13px;">
             <thead style="position:sticky; top:0; z-index:10;">
-                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editingId ? 'opacity:0.45; pointer-events:none;' : '' }}">
+                <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editingId ? 'pointer-events:none;' : '' }}">
                     <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; position:sticky; left:0; z-index:11; background:#F9F8FF; white-space:nowrap; vertical-align:top;">
                         #
                         <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
@@ -2157,22 +2165,18 @@
                         </div>
                     </td>
                     <td style="padding:10px 14px; text-align:center;">
-                        <span style="padding:3px 10px; border-radius:6px; font-size:12px; font-weight:700; white-space:nowrap;
-                                     background:{{ $m->active ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $m->active ? '#059669' : '#9CA3AF' }};">
-                            {{ $m->active ? 'Activa' : 'Inactiva' }}
-                        </span>
+                        <span style="font-size:13px; font-weight:700; color:#374151; white-space:nowrap;">{{ $m->active ? 'Activa' : 'Inactiva' }}</span>
                     </td>
-                    <td style="padding:10px 14px; overflow:hidden;">
+                    <td style="padding:10px 14px; overflow:hidden; text-align:center;">
                         <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle?->code ?? '—' }}</span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden; text-align:center;">
                         <span style="font-size:12px; font-family:monospace; color:#9CA3AF;">{{ $m->id }}</span>
                     </td>
-                    <td style="padding:10px 14px; overflow:hidden;">
+                    <td style="padding:10px 14px; overflow:hidden; text-align:center;">
                         <span style="font-size:12px; font-family:monospace; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->code ?? '—' }}</span>
                     </td>
-                    <td style="padding:10px 14px; overflow:hidden;">
+                    <td style="padding:10px 14px; overflow:hidden; text-align:center;">
                         <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($m->name)) }}</span>
                     </td>
                     <td style="padding:10px 14px; text-align:center;">

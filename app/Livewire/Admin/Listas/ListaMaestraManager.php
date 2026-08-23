@@ -262,6 +262,8 @@ class ListaMaestraManager extends Component
     public function updatingSearch(): void { $this->resetPage(); }
     public function updatedMostrarInactivas(): void { $this->resetPage(); }
 
+    public function refrescarGrilla(): void {}
+
     // ── List: inline add ─────────────────────────────────────────────────────
 
     public function showAdd(): void

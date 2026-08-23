@@ -62,6 +62,8 @@ class CategoriaManager extends Component
     public function updatingColFilterDescripcion(): void { $this->resetPage(); }
     public function updatingColFilterEstado(): void      { $this->resetPage(); }
 
+    public function refrescarGrilla(): void {}
+
     // ── Agregar ───────────────────────────────────────────────────────────────
 
     public function showAdd(): void
