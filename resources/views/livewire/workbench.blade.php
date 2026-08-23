@@ -79,7 +79,7 @@
         <div wire:key="wb-pane-{{ $key }}"
              data-pane-key="{{ $key }}"
              style="position:absolute; inset:0; overflow:auto; padding:16px; {{ $activeTab === $key ? '' : 'display:none;' }}">
-            @livewire($t['component'], $t['params'] ?? [], 'wb-comp-'.$key)
+            @livewire($t['component'], $t['params'] ?? [], key('wb-comp-'.$key))
         </div>
         @empty
         <div style="height:100%; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#9CA3AF; gap:8px;">
