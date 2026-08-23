@@ -279,11 +279,11 @@
 
                 {{-- Fila normal --}}
                 @else
+                @php $sel = $selectedId === $a->id; @endphp
                 <tr wire:key="a-{{ $a->id }}"
-                    style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
-                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                    style="border-bottom:1px solid #F9FAFB; transition:background .1s; background:{{ $sel ? '#F5F3FF' : '' }}; {{ $sel ? 'border-left:3px solid #7B6FE8;' : '' }}"
+                    @mouseenter="$el.style.background='{{ $sel ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $sel ? '#F5F3FF' : '' }}'">
 
-                    @php $sel = $selectedId === $a->id; @endphp
                     <td class="col-row-num" style="padding:6px 8px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $sel ? '#F5F3FF' : '#fff' }}; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                             <input type="checkbox"

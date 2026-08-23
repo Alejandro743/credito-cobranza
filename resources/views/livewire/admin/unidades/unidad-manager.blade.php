@@ -203,11 +203,11 @@
 
                 {{-- Fila normal --}}
                 @else
+                @php $selU = $selectedUnidadId === $u->id; @endphp
                 <tr wire:key="u-{{ $u->id }}"
-                    style="border-bottom:1px solid #F9FAFB; transition:background .1s;"
-                    @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
+                    style="border-bottom:1px solid #F9FAFB; transition:background .1s; background:{{ $selU ? '#F5F3FF' : '' }}; {{ $selU ? 'border-left:3px solid #7B6FE8;' : '' }}"
+                    @mouseenter="$el.style.background='{{ $selU ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selU ? '#F5F3FF' : '' }}'">
 
-                    @php $selU = $selectedUnidadId === $u->id; @endphp
                     <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selU ? '#F5F3FF' : '#fff' }}; white-space:nowrap; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                             <input type="checkbox"
