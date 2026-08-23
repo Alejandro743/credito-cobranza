@@ -2161,47 +2161,47 @@
                                    @click="$wire.selectedMaestraId === {{ $m->id }} ? $wire.set('selectedMaestraId', null) : $wire.selectMaestra({{ $m->id }})"
                                    :disabled="{{ $editingId && $editingId !== $m->id ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $m->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
-                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $maestras->firstItem() + $loop->index }}</span>
+                            <span style="font-size:13px; color:#111827;">{{ $maestras->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
                     <td style="padding:10px 14px; text-align:center;">
                         <span style="font-size:13px; font-weight:700; color:#374151; white-space:nowrap;">{{ $m->active ? 'Activa' : 'Inactiva' }}</span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden; text-align:center;">
-                        <span style="font-size:13px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle?->code ?? '—' }}</span>
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->cycle?->code ?? '—' }}</span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden; text-align:center;">
-                        <span style="font-size:12px; font-family:monospace; color:#9CA3AF;">{{ $m->id }}</span>
+                        <span style="font-size:13px; font-weight:400; color:#374151;">{{ $m->id }}</span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden; text-align:center;">
-                        <span style="font-size:12px; font-family:monospace; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->code ?? '—' }}</span>
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $m->code ?? '—' }}</span>
                     </td>
                     <td style="padding:10px 14px; overflow:hidden; text-align:center;">
-                        <span style="font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($m->name)) }}</span>
+                        <span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ ucwords(strtolower($m->name)) }}</span>
                     </td>
                     <td style="padding:10px 14px; text-align:center;">
-                        <span style="font-size:13px; color:#6B7280;">{{ $m->cantidad_cuotas ? $m->cantidad_cuotas.'c' : '—' }}</span>
+                        <span style="font-size:13px; font-weight:400; color:#374151;">{{ $m->cantidad_cuotas ? $m->cantidad_cuotas.'c' : '—' }}</span>
                     </td>
                     <td style="padding:10px 16px; text-align:center;">
                         @if ($m->usa_cuota_inicial)
-                        <span style="font-size:13px; color:#374151;">
+                        <span style="font-size:13px; font-weight:400; color:#374151;">
                             {{ $m->tipo_cuota_inicial === 'porcentaje' ? number_format($m->valor_cuota_inicial, 0).'%' : 'Bs '.number_format($m->valor_cuota_inicial, 2) }}
                         </span>
                         @else
-                        <span style="font-size:13px; color:#9CA3AF;">—</span>
+                        <span style="font-size:13px; font-weight:400; color:#374151;">—</span>
                         @endif
                     </td>
                     <td style="padding:10px 14px; text-align:center;">
                         @if($m->tipo_incremento === 'porcentaje')
-                        <span style="font-size:13px; color:#374151;">{{ number_format($m->valor_incremento, 0) }}%</span>
+                        <span style="font-size:13px; font-weight:400; color:#374151;">{{ number_format($m->valor_incremento, 0) }}%</span>
                         @elseif($m->tipo_incremento === 'monto_fijo')
-                        <span style="font-size:13px; color:#374151;">Bs {{ number_format($m->valor_incremento, 2) }}</span>
+                        <span style="font-size:13px; font-weight:400; color:#374151;">Bs {{ number_format($m->valor_incremento, 2) }}</span>
                         @else
-                        <span style="font-size:13px; color:#9CA3AF;">—</span>
+                        <span style="font-size:13px; font-weight:400; color:#374151;">—</span>
                         @endif
                     </td>
                     <td style="padding:10px 14px; text-align:center;">
-                        <span style="font-size:13px; color:#374151;">{{ $m->dias_entre_cuotas ? $m->dias_entre_cuotas.'d' : '—' }}</span>
+                        <span style="font-size:13px; font-weight:400; color:#374151;">{{ $m->dias_entre_cuotas ? $m->dias_entre_cuotas.'d' : '—' }}</span>
                     </td>
                 </tr>
                 @endif

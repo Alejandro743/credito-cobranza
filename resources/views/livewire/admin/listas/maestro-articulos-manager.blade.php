@@ -291,7 +291,7 @@
                                    @click="$wire.selectedId === {{ $a->id }} ? $wire.set('selectedId', null) : $wire.selectArticulo({{ $a->id }})"
                                    :disabled="{{ $editingId && $editingId !== $a->id ? 'true' : 'false' }}"
                                    style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editingId && $editingId !== $a->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
-                            <span style="font-size:12px; font-weight:700; color:#374151;">{{ $articulos->firstItem() + $loop->index }}</span>
+                            <span style="font-size:13px; color:#111827;">{{ $articulos->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
 
