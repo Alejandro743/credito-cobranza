@@ -2065,21 +2065,18 @@
 
                 @if ($editingId === $m->id)
                 {{-- Fila edición — Fila 1: campos principales --}}
-                @php $lE = 'font-size:10px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.4px; margin-bottom:3px;';
-                     $iE = 'width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;'; @endphp
+                @php $iE = 'width:100%; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 8px; font-size:12px; outline:none; box-sizing:border-box; background:#fff;'; @endphp
                 <tr wire:key="m-edit-{{ $m->id }}" style="background:#F8F7FF; border-bottom:1px solid #EDE9FE;">
                     <td class="col-row-num" rowspan="2" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:#F8F7FF; white-space:nowrap; vertical-align:middle;">
                         <span style="font-size:12px; font-weight:700; color:#374151;">{{ $maestras->firstItem() + $loop->index }}</span>
                     </td>
                     <td style="padding:7px 10px;">
-                        <div style="{{ $lE }}">Estado</div>
                         <select wire:model="editActive" wire:key="edit-active-{{ $m->id }}" x-init="$el.value = @js($editActive ? '1' : '0')" style="{{ $iE }} padding:0 6px;">
                             <option value="1" @selected($editActive)>Activa</option>
                             <option value="0" @selected(!$editActive)>Inactiva</option>
                         </select>
                     </td>
                     <td style="padding:7px 10px;">
-                        <div style="{{ $lE }}">Ciclo</div>
                         <select wire:model="editCycleId" wire:key="edit-cycle-{{ $m->id }}" style="{{ $iE }} padding:0 6px;">
                             <option value="" @selected(!$editCycleId)>— Ciclo —</option>
                             @foreach ($cycles as $cycle)
@@ -2089,26 +2086,21 @@
                         @error('editCycleId') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:7px 10px;">
-                        <div style="{{ $lE }}">ID LISTA</div>
                         <div style="{{ $iE }} display:flex; align-items:center; justify-content:center; font-family:monospace; color:#9CA3AF; font-style:italic; background:#F9FAFB;">{{ $m->id }}</div>
                     </td>
                     <td style="padding:7px 10px;">
-                        <div style="{{ $lE }}">Código</div>
                         <input wire:model="editCode" type="text" style="{{ $iE }} text-transform:uppercase; font-family:monospace;">
                         @error('editCode') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:7px 10px;">
-                        <div style="{{ $lE }}">Nombre</div>
                         <input wire:model="editName" type="text" style="{{ $iE }}">
                         @error('editName') <p style="color:#EF4444; font-size:10px; margin-top:2px;">{{ $message }}</p> @enderror
                     </td>
                     <td style="padding:7px 10px; text-align:center;">
-                        <div style="{{ $lE }}">Cuotas</div>
                         <input wire:model="editCantidadCuotas" type="number" min="1" max="999" placeholder="—"
                                style="width:60px; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
                     </td>
                     <td style="padding:7px 10px;">
-                        <div style="{{ $lE }}">C. Inicial</div>
                         <select wire:model.live="editTipoCuotaInicial" wire:key="edit-tipocuota-{{ $m->id }}" style="{{ $iE }} padding:0 6px;">
                             <option value="ninguna" @selected($editTipoCuotaInicial === 'ninguna')>Sin cuota</option>
                             <option value="porcentaje" @selected($editTipoCuotaInicial === 'porcentaje')>%</option>
@@ -2116,7 +2108,6 @@
                         </select>
                     </td>
                     <td style="padding:7px 10px;">
-                        <div style="{{ $lE }}">Incremento</div>
                         <select wire:model.live="editTipoIncremento" wire:key="edit-tipoinc-{{ $m->id }}" style="{{ $iE }} padding:0 6px;">
                             <option value="" @selected(!$editTipoIncremento)>Sin incr.</option>
                             <option value="porcentaje" @selected($editTipoIncremento === 'porcentaje')>%</option>
@@ -2124,7 +2115,6 @@
                         </select>
                     </td>
                     <td style="padding:7px 10px; text-align:center;">
-                        <div style="{{ $lE }}">Días</div>
                         <input wire:model="editDiasEntreCuotas" type="number" min="1" max="365" placeholder="30"
                                style="width:60px; height:30px; border:1px solid #D8D3F8; border-radius:7px; padding:0 6px; font-size:12px; text-align:center; outline:none; background:#fff; box-sizing:border-box;">
                     </td>
