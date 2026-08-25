@@ -210,11 +210,12 @@ $colFiltersFechaR = ['fecha_plan'=>'colFilterFechaPlan','fecha_revisar'=>'colFil
 
 <style>
 .rv-act-wrap { display:flex; flex-direction:column; gap:8px; }
-@@media (min-width:640px) { .rv-act-wrap { flex-direction:row; } }
+.rv-act-row  { display:flex; flex-direction:row; gap:8px; }
+@@media (min-width:640px) { .rv-act-wrap { flex-direction:row; } .rv-act-row { display:contents; } }
 </style>
 
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4"
-     style="background:rgba(20,10,40,0.4); backdrop-filter:blur(2px);">
+<div class="fixed inset-0 flex items-center justify-center p-4"
+     style="z-index:9999; background:rgba(20,10,40,0.4); backdrop-filter:blur(2px);">
     <div style="background:#fff; border-radius:20px; width:100%; max-width:900px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
 
         {{-- Header --}}
@@ -273,6 +274,7 @@ $colFiltersFechaR = ['fecha_plan'=>'colFilterFechaPlan','fecha_revisar'=>'colFil
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
                 Pendiente de Revisión
             </button>
+            <div class="rv-act-row">
             <button wire:click="$set('confirmandoRechazo', true)"
                     style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#F8F7FF; color:#7B6FE8; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #EDE9FE; cursor:pointer; -webkit-appearance:none; appearance:none; transition:background .15s, color .15s;"
                     onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
@@ -285,6 +287,7 @@ $colFiltersFechaR = ['fecha_plan'=>'colFilterFechaPlan','fecha_revisar'=>'colFil
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 Aprobar
             </button>
+            </div>
         </div>
         @else
         <div style="background:#FEF2F2; border:1.5px solid #FECACA; border-radius:12px; padding:16px;">
