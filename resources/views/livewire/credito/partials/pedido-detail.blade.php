@@ -31,10 +31,11 @@
     ];
     $editable        = $editable        ?? false;
     $editTipoEntrega = $editTipoEntrega ?? 'domicilio';
-    $articulosEdit        = $articulosEdit        ?? [];
-    $articulosAgrupados   = $articulosAgrupados   ?? [];
-    $articulosTodos       = $articulosTodos       ?? [];
-    $searchProductoEdit   = $searchProductoEdit   ?? '';
+    $articulosEdit          = $articulosEdit          ?? [];
+    $articulosFiltradosEdit = $articulosFiltradosEdit ?? [];
+    $articulosListasInfo    = $articulosListasInfo    ?? [];
+    $filterListaEdit        = $filterListaEdit        ?? '';
+    $searchProductoEdit     = $searchProductoEdit     ?? '';
 @endphp
 
 <div style="padding:12px 0 16px;">
@@ -384,6 +385,24 @@
     </div>
 
     @if($editable)
+    @php
+    $mColorsEdit = [
+        ['bg'=>'#FFF7ED','iconBg'=>'#F97316','selBorder'=>'#F97316','selCard'=>'#FFF7ED','text'=>'#C2410C'],
+        ['bg'=>'#F0EEFF','iconBg'=>'#7B6FE8','selBorder'=>'#7B6FE8','selCard'=>'#EDE9FE','text'=>'#3C3489'],
+        ['bg'=>'#F0FDF4','iconBg'=>'#059669','selBorder'=>'#059669','selCard'=>'#DCFCE7','text'=>'#065F46'],
+        ['bg'=>'#EFF6FF','iconBg'=>'#3B82F6','selBorder'=>'#3B82F6','selCard'=>'#DBEAFE','text'=>'#1D4ED8'],
+    ];
+    $mIconsEdit = [
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/>',
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>',
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 8v1m0-8c-1.11 0-2.08.402-2.599 1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>',
+        '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>',
+    ];
+    $mSelAllEdit  = $filterListaEdit === '';
+    $mIdxEdit     = $filterListaEdit ? array_search($filterListaEdit, array_keys($articulosListasInfo)) : -1;
+    $mColEdit     = ($filterListaEdit && $mIdxEdit !== false) ? $mColorsEdit[$mIdxEdit % count($mColorsEdit)] : null;
+    $mLabelEdit   = $filterListaEdit ? ucwords(strtolower($articulosListasInfo[$filterListaEdit]['nombre'] ?? '')) : 'Todas las Listas';
+    @endphp
     <style>
     .modal-art-panel {
         overflow: hidden;
@@ -408,7 +427,7 @@
     }
     </style>
 
-    <div x-data="{ modalArt: false }"
+    <div x-data="{ modalArt: false, listaOpen: false }"
          @art-modal-open.window="modalArt = true"
          @art-modal-close.window="modalArt = false">
 
@@ -424,21 +443,96 @@
                  style="background:#fff;">
 
                 {{-- TOP BAR --}}
-                <div style="flex-shrink:0; background:#fff; border-bottom:1.5px solid #EDE9FE; padding:12px 14px 10px;">
+                <div style="flex-shrink:0; background:#fff; border-bottom:1px solid #F0EEFF; padding:16px 20px;">
                 <div style="max-width:900px; margin:0 auto;">
-                    <div style="text-align:center; margin-bottom:10px;">
-                        <span style="font-size:16px; font-weight:900; color:#1a1a1a; letter-spacing:0.08em; text-transform:uppercase; display:block;">Editar Artículos</span>
-                        <div style="height:2px; background:linear-gradient(to right,#7B6FE8,#C4B5FD); border-radius:1px; margin-top:4px;"></div>
+                    <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:12px;">
+                        <div style="display:flex; align-items:center; gap:9px;">
+                            <div style="width:30px; height:30px; border-radius:50%; background:#EDE9FE; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                <svg width="14" height="14" fill="none" stroke="#7B6FE8" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                            </div>
+                            <p style="font-size:17px; font-weight:700; color:#3C3489; margin:0; letter-spacing:-0.2px;">Editar Artículos</p>
+                        </div>
+                        <button @click="$wire.call('cerrarEditarArticulos')" type="button"
+                                style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
+                            <svg width="10" height="10" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                        </button>
                     </div>
-                    <div style="position:relative;">
-                        <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; pointer-events:none;" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                        </svg>
-                        <input wire:model.live.debounce.300ms="searchProductoEdit" type="text"
-                               placeholder="Buscar producto..."
-                               style="width:100%; padding:8px 10px 8px 28px; background:#F8F7FF; border:2px solid #C4B5FD; border-radius:10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"
-                               onfocus="this.style.borderColor='#7c3aed'; this.style.background='#fff';"
-                               onblur="this.style.borderColor='#C4B5FD'; this.style.background='#F8F7FF';">
+
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+
+                        {{-- Fila 1: Lista de Precios --}}
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span class="hidden md:block" style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Lista de Precios:</span>
+                            <div style="position:relative; flex:1;">
+                                <button @click="listaOpen = !listaOpen" type="button"
+                                        style="width:100%; display:flex; align-items:center; gap:6px; padding:8px 10px; border-radius:10px;
+                                               border:1.5px solid {{ $mSelAllEdit ? '#E5E7EB' : ($mColEdit['selBorder'] ?? '#7B6FE8') }};
+                                               background:{{ $mSelAllEdit ? '#fff' : ($mColEdit['selCard'] ?? '#EEEDFE') }};
+                                               cursor:pointer; -webkit-appearance:none; appearance:none;">
+                                    <div style="width:22px; height:22px; border-radius:6px; background:{{ $mSelAllEdit ? '#F3F4F6' : ($mColEdit['iconBg'] ?? '#7B6FE8') }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                        @if ($mSelAllEdit)
+                                        <svg width="11" height="11" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                                        @else
+                                        <svg width="11" height="11" fill="none" stroke="#fff" viewBox="0 0 24 24">{!! $mIconsEdit[$mIdxEdit % count($mIconsEdit)] !!}</svg>
+                                        @endif
+                                    </div>
+                                    <span style="font-size:12px; font-weight:700; color:{{ $mSelAllEdit ? '#9CA3AF' : ($mColEdit['text'] ?? '#534AB7') }}; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left;">{{ $mLabelEdit }}</span>
+                                    <svg width="10" height="10" fill="none" stroke="#9CA3AF" viewBox="0 0 24 24" style="flex-shrink:0;">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7"/>
+                                    </svg>
+                                </button>
+
+                                <div x-show="listaOpen" x-cloak @click.away="listaOpen = false"
+                                     style="position:absolute; top:calc(100% + 4px); left:0; right:0; background:#fff;
+                                            border-radius:12px; box-shadow:0 8px 24px rgba(60,52,137,0.18);
+                                            border:1px solid #EDE9FE; z-index:500; overflow:hidden;">
+
+                                    <button wire:click="$set('filterListaEdit', '')" @click="listaOpen = false" type="button"
+                                            style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
+                                                   background:{{ $mSelAllEdit ? '#FFF7ED' : '#fff' }}; border:none; cursor:pointer;
+                                                   border-bottom:1px solid #F3F4F6; -webkit-appearance:none; appearance:none;">
+                                        <div style="width:28px; height:28px; border-radius:8px; background:{{ $mSelAllEdit ? '#F97316' : '#F3F4F6' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                            <svg width="13" height="13" fill="none" stroke="{{ $mSelAllEdit ? '#fff' : '#9CA3AF' }}" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                                        </div>
+                                        <span style="font-size:13px; font-weight:700; color:{{ $mSelAllEdit ? '#C2410C' : '#374151' }};">Todas</span>
+                                    </button>
+
+                                    @foreach ($articulosListasInfo as $lid => $info)
+                                    @php
+                                        $mCiEdit  = $loop->index % count($mColorsEdit);
+                                        $mCEdit   = $mColorsEdit[$mCiEdit];
+                                        $mSEdit   = $filterListaEdit === (string)$lid;
+                                        $mIcoEdit = $mIconsEdit[$mCiEdit];
+                                    @endphp
+                                    <button wire:click="$set('filterListaEdit', '{{ $lid }}')" @click="listaOpen = false" type="button"
+                                            style="width:100%; display:flex; align-items:center; gap:10px; padding:10px 14px;
+                                                   background:{{ $mSEdit ? $mCEdit['selCard'] : '#fff' }}; border:none; cursor:pointer;
+                                                   {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }} -webkit-appearance:none; appearance:none;">
+                                        <div style="width:28px; height:28px; border-radius:8px; background:{{ $mSEdit ? $mCEdit['iconBg'] : $mCEdit['bg'] }}; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
+                                            <svg width="13" height="13" fill="none" stroke="{{ $mSEdit ? '#fff' : $mCEdit['iconBg'] }}" viewBox="0 0 24 24">{!! $mIcoEdit !!}</svg>
+                                        </div>
+                                        <span style="font-size:13px; font-weight:700; color:{{ $mSEdit ? $mCEdit['text'] : '#374151' }}; white-space:nowrap;">{{ ucwords(strtolower($info['nombre'])) }}</span>
+                                    </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+
+                        {{-- Fila 2: Buscar Productos --}}
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span class="hidden md:block" style="font-size:12px; font-weight:700; color:#3C3489; white-space:nowrap;">Buscar Productos:</span>
+                            <div style="position:relative; flex:1;">
+                                <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; pointer-events:none;" fill="none" stroke="#C4B5FD" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                </svg>
+                                <input wire:model.live.debounce.300ms="searchProductoEdit" type="text"
+                                       placeholder="Buscar producto..."
+                                       style="width:100%; padding:8px 10px 8px 28px; background:#FAFAFE; border:1.5px solid #EDE9FE; border-radius:10px; font-size:12px; color:#3C3489; outline:none; box-sizing:border-box;"
+                                       onfocus="this.style.borderColor='#C4B5FD'; this.style.background='#fff';"
+                                       onblur="this.style.borderColor='#EDE9FE'; this.style.background='#FAFAFE';">
+                            </div>
+                        </div>
+
                     </div>
                 </div>
                 </div>
@@ -447,8 +541,7 @@
                 <div style="flex:1; overflow-y:auto; padding:10px 12px;">
                 <div style="max-width:900px; margin:0 auto;">
                     <div style="display:flex; flex-direction:column; gap:8px;">
-                        @forelse ($articulosTodos as $grupo)
-                            @foreach ($grupo['productos'] as $prod)
+                        @forelse ($articulosFiltradosEdit as $prod)
                             @php
                                 $editEntry = null;
                                 foreach ($articulosEdit as $ea) {
@@ -456,54 +549,52 @@
                                 }
                                 $editQty = $editEntry ? (int) $editEntry['cantidad'] : 0;
                             @endphp
-                            <div x-data="{ n: {{ $editQty > 0 ? $editQty : 1 }}, maxStock: @js((int)$prod['stock']) }"
-                                 wire:key="art-rev-{{ $prod['item_id'] }}"
-                                 style="background:#fff; border:1.5px solid #D1D5DB; border-radius:12px; padding:20px 12px; box-shadow:0 2px 4px rgba(0,0,0,0.06), 0 8px 20px rgba(0,0,0,0.10), 0 24px 40px rgba(0,0,0,0.06);">
+                            <div wire:key="art-rev-{{ $prod['item_id'] }}"
+                                 style="background:#fff; border:1px solid #E5E7EB; border-radius:12px; padding:12px 14px; box-shadow:0 1px 2px rgba(60,52,137,0.05), 0 4px 12px rgba(60,52,137,0.06);">
 
-                                <div style="display:flex; align-items:flex-start; gap:7px; margin-bottom:7px;">
-                                    <div style="width:22px; height:22px; border-radius:50%; background:{{ $editQty > 0 ? '#f97316' : '#EDE9FE' }}; border:1.5px solid {{ $editQty > 0 ? '#f97316' : '#D4CFF8' }}; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:2px;">
+                                {{-- Fila 1: indicador circular + código — descripción en una sola línea --}}
+                                <div style="display:flex; align-items:center; gap:7px; margin-bottom:7px;">
+                                    <div class="qty-circle" style="{{ $editQty > 0 ? 'background:#7B6FE8; border-color:#7B6FE8;' : 'background:#EDE9FE; border-color:#D4CFF8;' }} width:22px; height:22px; border-radius:50%; border:1.5px solid; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
                                         @if ($editQty > 0)
                                         <span style="font-size:10px; font-weight:800; color:#fff; line-height:1;">{{ $editQty }}</span>
                                         @endif
                                     </div>
-                                    <div style="flex:1; min-width:0;">
-                                        <span style="font-size:16px; font-weight:800; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ ucwords(strtolower($prod['nombre'])) }}">{{ ucwords(strtolower($prod['nombre'])) }}</span>
-                                        <span style="font-size:13px; font-weight:400; color:#6B7280; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $prod['codigo'] ?? '' }}</span>
+                                    <div style="flex:1; min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="{{ $prod['codigo'] ?? '' }} — {{ ucwords(strtolower($prod['nombre'])) }}">
+                                        <span style="font-size:13px; font-weight:400; color:#6B7280;">{{ $prod['codigo'] ?? '' }}</span>
+                                        <span style="font-size:13px; font-weight:400; color:#6B7280;"> — </span>
+                                        <span style="font-size:16px; font-weight:800; color:#3C3489;">{{ ucwords(strtolower($prod['nombre'])) }}</span>
                                     </div>
                                 </div>
 
+                                {{-- Fila 2: Precio Bs Un / Total Bs Total Puntos --}}
                                 <div style="margin-bottom:8px; background:#F8F7FF; border-radius:8px; padding:8px 10px;">
                                     <div style="display:flex; align-items:center; gap:14px; margin-bottom:4px;">
-                                        <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Precio Bs Un: <span style="color:#7c3aed; font-size:14px; font-weight:400;">{{ number_format($prod['precio'], 2) }}</span></span>
+                                        <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Precio Bs Un: <span style="color:#7B6FE8; font-size:14px; font-weight:400;">{{ number_format($prod['precio'], 2) }}</span></span>
                                         <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Puntos: <span style="color:#111827; font-size:14px; font-weight:400;">{{ $prod['puntos'] }}</span></span>
                                     </div>
                                     <div style="display:flex; align-items:center; gap:14px;">
-                                        <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Bs: <span style="color:#3C3489; font-size:14px; font-weight:400;" x-text="({{ $prod['precio'] }} * n).toFixed(2)">—</span></span>
-                                        <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Pts: <span style="color:#111827; font-size:14px; font-weight:400;" x-text="'+' + ({{ $prod['puntos'] }} * n)">—</span></span>
+                                        <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Bs: <span style="color:#3C3489; font-size:14px; font-weight:400;">{{ number_format($prod['precio'] * $editQty, 2) }}</span></span>
+                                        <span style="font-size:12px; font-weight:400; color:#9CA3AF; white-space:nowrap;">Total Puntos: <span style="color:#111827; font-size:14px; font-weight:400;">{{ $prod['puntos'] * $editQty }}</span></span>
                                     </div>
                                 </div>
 
+                                {{-- Pie --}}
                                 <div style="display:flex; align-items:center; gap:6px;">
-                                    <div style="display:flex; align-items:center; gap:0; border:1.5px solid #EDE9FE; border-radius:8px; overflow:hidden; flex-shrink:0;">
-                                        <button @click="if(n>1) n--" style="width:30px; height:30px; background:#F5F3FF; border:none; cursor:pointer; font-size:16px; font-weight:700; color:#7B6FE8; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;">−</button>
-                                        <span x-text="n" style="min-width:30px; text-align:center; font-size:13px; font-weight:700; color:#111827;"></span>
-                                        <button @click="if(n < maxStock) n++" style="width:30px; height:30px; background:#F5F3FF; border:none; cursor:pointer; font-size:16px; font-weight:700; color:#7B6FE8; display:flex; align-items:center; justify-content:center; -webkit-appearance:none; appearance:none;">+</button>
-                                    </div>
-                                    <div style="flex:1;"></div>
-                                    <button @click="$wire.agregarOActualizarEdit({{ $prod['item_id'] }}, n)"
-                                            style="background:#fff; color:#f97316; border:1.5px solid #f97316; border-radius:8px; padding:7px 14px; font-size:13px; font-weight:700; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px; flex-shrink:0;">
-                                        <svg style="width:14px; height:14px; flex-shrink:0;" fill="none" stroke="#f97316" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
-                                        {{ $editQty > 0 ? 'Actualizar' : 'Agregar' }}
+                                    <span style="font-size:13px; font-weight:700; color:#f97316; flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; margin-left:10px; padding-right:8px;">{{ $prod['lista_nombre'] }}</span>
+                                    <button wire:click="agregarOActualizarEdit({{ $prod['item_id'] }}, {{ $editQty + 1 }})"
+                                            @if($editQty >= (int)$prod['stock']) disabled @endif
+                                            style="background:#fff; color:{{ $editQty >= (int)$prod['stock'] ? '#D1D5DB' : '#7B6FE8' }}; border:1.5px solid {{ $editQty >= (int)$prod['stock'] ? '#E5E7EB' : '#7B6FE8' }}; border-radius:7px; padding:5px 10px; font-size:11px; font-weight:700; cursor:{{ $editQty >= (int)$prod['stock'] ? 'not-allowed' : 'pointer' }}; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:4px; flex-shrink:0;">
+                                        <svg style="width:11px; height:11px; flex-shrink:0;" fill="none" stroke="{{ $editQty >= (int)$prod['stock'] ? '#D1D5DB' : '#7B6FE8' }}" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                                        Agregar
                                     </button>
                                     @if ($editQty > 0)
                                     <button wire:click="quitarPorProductoEdit({{ $prod['item_id'] }})"
-                                            style="width:30px; height:30px; border-radius:50%; background:#ef4444; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none; box-shadow:0 2px 8px rgba(239,68,68,0.40);">
-                                        <svg style="width:13px; height:13px;" fill="none" stroke="#fff" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                                            style="width:30px; height:30px; border-radius:50%; background:#fff; border:1.5px solid #ef4444; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; -webkit-appearance:none; appearance:none;">
+                                        <svg style="width:13px; height:13px;" fill="none" stroke="#ef4444" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
                                     </button>
                                     @endif
                                 </div>
                             </div>
-                            @endforeach
                         @empty
                         <div style="text-align:center; padding:40px 16px;">
                             <svg style="width:40px; height:40px; margin:0 auto 10px; display:block;" fill="none" stroke="#CECBF6" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -515,22 +606,17 @@
                 </div>
 
                 {{-- PIE MODAL --}}
-                <div style="flex-shrink:0; padding:10px 14px; background:#fff; border-top:1.5px solid #EDE9FE;">
-                <div style="max-width:900px; margin:0 auto;">
-                    <button wire:click="guardarArticulos" wire:loading.attr="disabled" wire:target="guardarArticulos"
-                            style="width:100%; padding:13px; background:{{ !empty($articulosEdit) ? '#7B6FE8' : '#6B7280' }}; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:8px;">
-                        @if (!empty($articulosEdit))
-                        <span style="width:22px; height:22px; border-radius:50%; background:#f97316; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">
-                            <svg width="12" height="12" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                        </span>
-                        <span wire:loading.remove wire:target="guardarArticulos" style="text-decoration:underline; text-underline-offset:3px;">Guardar &mdash; {{ count($articulosEdit) }} artículos</span>
+                <div style="flex-shrink:0; padding:14px 20px; background:#fff; border-top:1px solid #F0EEFF; display:flex; gap:8px;">
+                <div style="max-width:900px; margin:0 auto; width:100%; display:flex; gap:8px;">
+                    <button @click="$wire.call('cerrarEditarArticulos')" type="button"
+                            style="padding:10px 16px; border:1.5px solid #E5E7EB; border-radius:10px; font-size:13px; font-weight:600; color:#6B7280; background:#fff; cursor:pointer; flex-shrink:0; -webkit-appearance:none; appearance:none;">
+                        Salir
+                    </button>
+                    <button wire:click="guardarArticulos" wire:loading.attr="disabled" wire:target="guardarArticulos" type="button"
+                            style="flex:1; padding:11px; border-radius:10px; font-size:13px; font-weight:700; color:#fff; background:{{ !empty($articulosEdit) ? '#7B6FE8' : '#9CA3AF' }}; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:6px; -webkit-appearance:none; appearance:none;">
+                        <svg width="14" height="14" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        <span wire:loading.remove wire:target="guardarArticulos">{{ !empty($articulosEdit) ? 'Guardar — '.count($articulosEdit).' artículos' : 'Sin artículos' }}</span>
                         <span wire:loading wire:target="guardarArticulos">Guardando...</span>
-                        @else
-                        <span style="width:22px; height:22px; border-radius:50%; background:#f97316; display:inline-flex; align-items:center; justify-content:center; flex-shrink:0;">
-                            <svg width="12" height="12" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7"/></svg>
-                        </span>
-                        <span style="text-decoration:underline; text-underline-offset:3px;">Sin artículos</span>
-                        @endif
                     </button>
                 </div>
                 </div>

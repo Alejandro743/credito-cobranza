@@ -254,10 +254,11 @@ $colFiltersFechaR = ['fecha_plan'=>'colFilterFechaPlan','fecha_revisar'=>'colFil
                 'ciudadesAll'     => $ciudadesAll,
                 'editProvincias'  => $editProvincias,
                 'editMunicipios'  => $editMunicipios,
-                'articulosEdit'        => $articulosEdit,
-                'articulosAgrupados'   => $articulosAgrupados,
-                'articulosTodos'       => $articulosTodos,
-                'searchProductoEdit'   => $searchProductoEdit,
+                'articulosEdit'          => $articulosEdit,
+                'articulosFiltradosEdit' => $articulosFiltradosEdit,
+                'articulosListasInfo'    => $articulosListasInfo,
+                'filterListaEdit'        => $filterListaEdit,
+                'searchProductoEdit'     => $searchProductoEdit,
             ])
 
         </div>
