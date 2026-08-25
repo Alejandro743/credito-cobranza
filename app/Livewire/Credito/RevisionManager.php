@@ -211,15 +211,21 @@ class RevisionManager extends Component
 
     public function abrirEditarArticulos(): void
     {
-        $pedido = Pedido::with(['items.product', 'items.listaMaestraItem', 'vendedor.user', 'cliente.usuario'])->find($this->viewingId);
+        $pedido = Pedido::with(['items.product', 'items.listaMaestraItem.product', 'items.listaMaestraItem.maestroArticulo', 'vendedor.user', 'cliente.usuario'])->find($this->viewingId);
         if (!$pedido) return;
 
         $this->articulosEdit = $pedido->items->map(fn($item) => [
             'item_id'               => $item->id,
             'lista_maestra_item_id' => $item->lista_maestra_item_id,
             'product_id'            => $item->product_id,
-            'nombre'                => $item->product?->name ?? '—',
-            'codigo'                => $item->product?->code ?? '',
+            'nombre'                => $item->product?->name
+                ?? $item->listaMaestraItem?->product?->name
+                ?? $item->listaMaestraItem?->maestroArticulo?->nombre
+                ?? '—',
+            'codigo'                => $item->product?->code
+                ?? $item->listaMaestraItem?->product?->code
+                ?? $item->listaMaestraItem?->maestroArticulo?->codigo
+                ?? '',
             'cantidad'              => (int) $item->cantidad,
             'cantidad_original'     => (int) $item->cantidad,
             'precio_unitario'       => (float) $item->precio_unitario,
@@ -254,21 +260,26 @@ class RevisionManager extends Component
         if ($comunes->isEmpty()) return [];
 
         $listas = ListaMaestra::whereIn('id', $comunes)->where('active', true)
-            ->with(['items' => fn($q) => $q->where('active', true)->where('stock_actual', '>', 0)->with(['product' => fn($p) => $p->where('active', true)])])
+            ->with(['items' => fn($q) => $q->where('active', true)->where('stock_actual', '>', 0)->with([
+                'product' => fn($p) => $p->where('active', true),
+                'maestroArticulo',
+            ])])
             ->get();
 
         $disponibles = [];
         foreach ($listas as $lista) {
             foreach ($lista->items as $item) {
-                if (!$item->product) continue;
-                $pid = (string) $item->product_id;
+                $nombre = $item->product?->name ?? $item->maestroArticulo?->nombre;
+                if (!$nombre) continue;
+                $codigo = $item->product?->code ?? $item->maestroArticulo?->codigo ?? '';
+                $key = $item->product_id ? 'p'.$item->product_id : 'i'.$item->id;
                 $precioFinal = (float) $item->precio_final;
-                if (!isset($disponibles[$pid]) || $precioFinal < $disponibles[$pid]['precio']) {
-                    $disponibles[$pid] = [
+                if (!isset($disponibles[$key]) || $precioFinal < $disponibles[$key]['precio']) {
+                    $disponibles[$key] = [
                         'item_id'     => $item->id,
                         'product_id'  => $item->product_id,
-                        'nombre'      => $item->product->name,
-                        'codigo'      => $item->product->code ?? '',
+                        'nombre'      => $nombre,
+                        'codigo'      => $codigo,
                         'precio'      => $precioFinal,
                         'puntos'      => (int) $item->puntos,
                         'stock'       => (float) $item->stock_actual,
@@ -283,14 +294,14 @@ class RevisionManager extends Component
         return array_values($disponibles);
     }
 
-    public function agregarOActualizarEdit(int $productId, int $cantidad = 1): void
+    public function agregarOActualizarEdit(int $itemId, int $cantidad = 1): void
     {
         $cantidad = max(1, $cantidad);
-        $prod = collect($this->articulosDisponibles)->firstWhere('product_id', $productId);
+        $prod = collect($this->articulosDisponibles)->firstWhere('item_id', $itemId);
         if (!$prod) return;
 
         foreach ($this->articulosEdit as $i => $a) {
-            if ($a['product_id'] == $productId) {
+            if ($a['lista_maestra_item_id'] == $itemId) {
                 $this->articulosEdit[$i]['cantidad'] = $cantidad;
                 $this->articulosEdit[$i]['subtotal']  = round((float) $a['precio_unitario'] * $cantidad, 2);
                 return;
@@ -312,20 +323,20 @@ class RevisionManager extends Component
         ];
     }
 
-    public function quitarPorProductoEdit(int $productId): void
+    public function quitarPorProductoEdit(int $itemId): void
     {
         if (count($this->articulosEdit) <= 1) return;
         foreach ($this->articulosEdit as $i => $a) {
-            if ($a['product_id'] == $productId) {
+            if ($a['lista_maestra_item_id'] == $itemId) {
                 array_splice($this->articulosEdit, $i, 1);
                 return;
             }
         }
     }
 
-    public function agregarArticuloEdit(int $productId): void
+    public function agregarArticuloEdit(int $itemId): void
     {
-        $this->agregarOActualizarEdit($productId, 1);
+        $this->agregarOActualizarEdit($itemId, 1);
     }
 
     public function updatedArticulosEdit($value, $key): void
