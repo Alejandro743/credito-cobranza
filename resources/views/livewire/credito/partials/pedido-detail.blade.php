@@ -341,7 +341,7 @@
         @endif
     </div>
     <style>
-    .pd-art-grid, .pd-art-row { display:grid; grid-template-columns:40px minmax(0,1fr) 68px 88px 54px; align-items:stretch; }
+    .pd-art-grid, .pd-art-row { display:grid; grid-template-columns:40px minmax(0,1fr) 68px 88px 54px 34px; align-items:stretch; }
     @media (max-width:480px) {
         .pd-art-grid, .pd-art-row { grid-template-columns:36px minmax(0,1fr) 34px; }
         .pd-art-grid .pd-precio, .pd-art-grid .pd-total, .pd-art-grid .pd-pts,
@@ -355,6 +355,7 @@
             <div class="pd-precio" style="padding:8px 8px 8px 0; background:#F9F8FF; border-bottom:2px solid #EDE9FE; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Precio</div>
             <div class="pd-total" style="padding:8px 8px 8px 0; background:#F9F8FF; border-bottom:2px solid #EDE9FE; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Total</div>
             <div class="pd-pts" style="padding:8px 10px 8px 0; background:#F9F8FF; border-bottom:2px solid #EDE9FE; font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em; text-align:right;">Pts</div>
+            <div style="padding:8px 10px 8px 0; background:#F9F8FF; border-bottom:2px solid #EDE9FE;"></div>
         </div>
 
         @foreach ($p->items as $item)
@@ -380,6 +381,14 @@
             <div class="pd-precio" style="padding:10px 8px 10px 0; background:#fff; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item->precio_unitario, 2) }}</div>
             <div class="pd-total" style="padding:10px 8px 10px 0; background:#fff; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item->subtotal, 2) }}</div>
             <div class="pd-pts" style="padding:10px 10px 10px 0; background:#fff; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ $item->puntos * $item->cantidad }}</div>
+            <div style="padding:10px 10px 10px 0; background:#fff; border-bottom:{{ $rowBorder }}; display:flex; align-items:center; justify-content:center;">
+                @if($editable)
+                <button wire:click="eliminarArticuloSeleccionado({{ $item->id }})"
+                        style="width:22px; height:22px; border-radius:50%; background:transparent; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; color:#ef4444; -webkit-appearance:none; appearance:none;">
+                    <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.3" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                </button>
+                @endif
+            </div>
         </div>
         @endforeach
     </div>

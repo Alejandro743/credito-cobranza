@@ -443,36 +443,7 @@ class RevisionManager extends Component
             $nuevoTotal = round($pedido->items->sum('subtotal'), 2);
             $pedido->update(['total' => $nuevoTotal, 'total_pagar' => $nuevoTotal]);
 
-            $plan = $pedido->planPago;
-            if ($plan) {
-                $cuotaInicial  = $plan->cuotas->firstWhere('numero', 0);
-                $montoInicial  = $cuotaInicial ? (float) $cuotaInicial->monto : 0.0;
-                $saldo         = max(0, $nuevoTotal - $montoInicial);
-                $cuotasReg     = $plan->cuotas->where('numero', '>', 0)->sortBy('numero')->values();
-                $cantCuotas    = $cuotasReg->count();
-
-                if ($cantCuotas > 0) {
-                    $montoCuota  = $cantCuotas > 0 ? floor(($saldo / $cantCuotas) * 100) / 100 : 0;
-                    $redondeo    = round($saldo - ($montoCuota * $cantCuotas), 2);
-
-                    foreach ($cuotasReg as $i => $cuota) {
-                        $monto = $montoCuota + ($i === $cantCuotas - 1 ? $redondeo : 0);
-                        $cuota->update(['monto' => round($monto, 2)]);
-                    }
-
-                    $plan->update([
-                        'saldo_financiar' => $saldo,
-                        'monto_cuota'     => $montoCuota,
-                        'total_pagar'     => $nuevoTotal,
-                        'cantidad_cuotas' => $cantCuotas,
-                    ]);
-                } else {
-                    $plan->update([
-                        'saldo_financiar' => $saldo,
-                        'total_pagar'     => $nuevoTotal,
-                    ]);
-                }
-            }
+            $this->recalcularPlanPorTotal($pedido, $nuevoTotal);
         });
 
         $this->editandoArticulos    = false;
@@ -483,6 +454,75 @@ class RevisionManager extends Component
         $this->filterListaEdit      = '';
         $this->dispatch('art-modal-close');
         session()->flash('success', 'Artículos actualizados correctamente.');
+    }
+
+    private function recalcularPlanPorTotal(Pedido $pedido, float $nuevoTotal): void
+    {
+        $plan = $pedido->planPago;
+        if (!$plan) return;
+
+        $cuotaInicial  = $plan->cuotas->firstWhere('numero', 0);
+        $montoInicial  = $cuotaInicial ? (float) $cuotaInicial->monto : 0.0;
+        $saldo         = max(0, $nuevoTotal - $montoInicial);
+        $cuotasReg     = $plan->cuotas->where('numero', '>', 0)->sortBy('numero')->values();
+        $cantCuotas    = $cuotasReg->count();
+
+        if ($cantCuotas > 0) {
+            $montoCuota  = floor(($saldo / $cantCuotas) * 100) / 100;
+            $redondeo    = round($saldo - ($montoCuota * $cantCuotas), 2);
+
+            foreach ($cuotasReg as $i => $cuota) {
+                $monto = $montoCuota + ($i === $cantCuotas - 1 ? $redondeo : 0);
+                $cuota->update(['monto' => round($monto, 2)]);
+            }
+
+            $plan->update([
+                'saldo_financiar' => $saldo,
+                'monto_cuota'     => $montoCuota,
+                'total_pagar'     => $nuevoTotal,
+                'cantidad_cuotas' => $cantCuotas,
+            ]);
+        } else {
+            $plan->update([
+                'saldo_financiar' => $saldo,
+                'total_pagar'     => $nuevoTotal,
+            ]);
+        }
+    }
+
+    public function eliminarArticuloSeleccionado(int $pedidoItemId): void
+    {
+        $pedido = Pedido::with(['items.listaMaestraItem', 'planPago.cuotas'])
+            ->where('id', $this->viewingId)
+            ->where('estado', 'revision')
+            ->first();
+
+        if (!$pedido) return;
+
+        if ($pedido->items->count() <= 1) {
+            session()->flash('error', 'Debe haber al menos un artículo.');
+            return;
+        }
+
+        $item = $pedido->items->firstWhere('id', $pedidoItemId);
+        if (!$item) return;
+
+        DB::transaction(function () use ($pedido, $item) {
+            if ($item->listaMaestraItem) {
+                $lmi = $item->listaMaestraItem;
+                $lmi->stock_comprometido = max(0, (float) $lmi->stock_comprometido - $item->cantidad);
+                $lmi->save();
+            }
+            $item->delete();
+
+            $pedido->refresh();
+            $nuevoTotal = round($pedido->items->sum('subtotal'), 2);
+            $pedido->update(['total' => $nuevoTotal, 'total_pagar' => $nuevoTotal]);
+
+            $this->recalcularPlanPorTotal($pedido, $nuevoTotal);
+        });
+
+        session()->flash('success', 'Artículo eliminado correctamente.');
     }
 
     public function cerrarEditarArticulos(): void
