@@ -215,8 +215,8 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan','fecha_asignacion'=>'col
 
 {{-- ══ DETAIL MODAL (mismo estándar que Revisión del Crédito del Vendedor) ══ --}}
 @if ($mode === 'detail' && $pedidoDetalle)
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4"
-     style="background:rgba(20,10,40,0.4); backdrop-filter:blur(2px);">
+<div class="fixed inset-0 flex items-center justify-center p-4"
+     style="z-index:9999; background:rgba(20,10,40,0.4); backdrop-filter:blur(2px);">
     <div style="background:#fff; border-radius:20px; width:100%; max-width:900px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
 
         {{-- Header --}}
@@ -249,8 +249,9 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan','fecha_asignacion'=>'col
         <div style="padding:14px 20px; border-top:1px solid #F0EEFF; flex-shrink:0;">
             <button wire:click="tomarRevision({{ $pedidoDetalle->id }})"
                     wire:confirm="¿Tomás este pedido para revisión? Quedará asignado a vos."
-                    style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
-                <svg width="18" height="18" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+                    style="width:100%; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#F8F7FF; color:#7B6FE8; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1px solid #EDE9FE; cursor:pointer; -webkit-appearance:none; appearance:none; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                 </svg>
                 Tomar para Revisión

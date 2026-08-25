@@ -178,7 +178,7 @@ $vSec   = 'display:flex; align-items:center; gap:7px; margin-bottom:12px;';
 <style>
 .pd-art-grid, .pd-art-row { display:grid; grid-template-columns:40px minmax(0,1fr) 68px 88px 54px; align-items:stretch; }
 @media (max-width:480px) {
-    .pd-art-grid, .pd-art-row { grid-template-columns:36px minmax(0,1fr) 34px; }
+    .pd-art-grid, .pd-art-row { grid-template-columns:36px minmax(0,1fr); }
     .pd-art-grid .pd-precio, .pd-art-grid .pd-total, .pd-art-grid .pd-pts,
     .pd-art-row .pd-precio, .pd-art-row .pd-total, .pd-art-row .pd-pts { display:none; }
 }
