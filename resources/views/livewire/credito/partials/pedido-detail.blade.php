@@ -49,7 +49,6 @@
     @php
     $vField = 'background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:9px 12px; font-size:13px; font-weight:600; color:#111827; min-height:38px; display:flex; align-items:center;';
     $vLabel = 'font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.06em; color:#6B7280; margin:0 0 4px 0;';
-    $vCard  = 'border:1px solid #E5E7EB; border-radius:12px; padding:14px 16px; background:#F8F7FF;';
     $vSec   = 'display:flex; align-items:center; gap:7px; margin-bottom:12px;';
 
     $calColors = [
@@ -103,7 +102,7 @@
 
                     <div style="overflow:auto; flex:1; padding:16px 20px; display:flex; flex-direction:column; gap:12px;">
 
-                        <div style="{{ $vCard }}">
+                        <div>
                             <div style="{{ $vSec }}">
                                 <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
                                 <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Datos Personales</span>
@@ -123,7 +122,7 @@
                             </div>
                         </div>
 
-                        <div style="{{ $vCard }}">
+                        <div>
                             <div style="{{ $vSec }}">
                                 <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                                 <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Dirección</span>
@@ -138,7 +137,7 @@
                         </div>
 
                         @if ($showHistorial)
-                        <div style="{{ $vCard }}">
+                        <div>
                             <div style="{{ $vSec }}">
                                 <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                                 <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Historial Crediticio</span>
