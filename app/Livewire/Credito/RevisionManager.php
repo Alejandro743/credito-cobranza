@@ -12,6 +12,7 @@ use App\Models\PesoIndicador;
 use App\Models\Provincia;
 use App\Models\RangoCalificacion;
 use App\Services\ClienteCalificacionService;
+use App\Services\VendedorCalificacionService;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -579,6 +580,8 @@ class RevisionManager extends Component
         $pedidoDetalle      = null;
         $clienteCalificacion = null;
         $clienteHistorial    = collect();
+        $vendedorCalificacion = null;
+        $vendedorHistorial    = collect();
         if ($this->mode === 'detail' && $this->viewingId) {
             $pedidoDetalle = Pedido::with([
                 'cliente.usuario', 'vendedor.user',
@@ -586,12 +589,18 @@ class RevisionManager extends Component
             ])->find($this->viewingId);
 
             if ($pedidoDetalle) {
-                $calService = new ClienteCalificacionService();
-                $pesos      = PesoIndicador::vigente() ?? PesoIndicador::porDefecto();
-                $rangos     = RangoCalificacion::vigente() ?? RangoCalificacion::porDefecto();
+                $pesos  = PesoIndicador::vigente() ?? PesoIndicador::porDefecto();
+                $rangos = RangoCalificacion::vigente() ?? RangoCalificacion::porDefecto();
 
+                $calService = new ClienteCalificacionService();
                 $clienteCalificacion = $calService->calcularParaCliente($pedidoDetalle->cliente, $pesos, $rangos);
                 $clienteHistorial    = $calService->calcularDetallePedidos($pedidoDetalle->cliente_id);
+
+                if ($pedidoDetalle->vendedor) {
+                    $vendService = new VendedorCalificacionService();
+                    $vendedorCalificacion = $vendService->calcularParaVendedor($pedidoDetalle->vendedor, $pesos, $rangos);
+                    $vendedorHistorial    = $vendService->calcularDetallePedidos($pedidoDetalle->vendedor_id);
+                }
             }
         }
 
@@ -632,6 +641,6 @@ class RevisionManager extends Component
             ->values()
             ->toArray();
 
-        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'clienteCalificacion', 'clienteHistorial', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit', 'articulosAgrupados', 'articulosTodos', 'searchProductoEdit'));
+        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'clienteCalificacion', 'clienteHistorial', 'vendedorCalificacion', 'vendedorHistorial', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit', 'articulosAgrupados', 'articulosTodos', 'searchProductoEdit'));
     }
 }

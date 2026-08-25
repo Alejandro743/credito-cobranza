@@ -39,13 +39,6 @@
 
 <div style="padding:12px 0 16px;">
 
-    {{-- Dato Cliente --}}
-    <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
-        <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-        <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em;">Dato Cliente</span>
-        <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
-    </div>
-
     @php
     $vField = 'background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:9px 12px; font-size:13px; font-weight:600; color:#111827; min-height:38px; display:flex; align-items:center;';
     $vLabel = 'font-size:10px; font-weight:700; letter-spacing:0.06em; color:#7B6FE8; margin:0 0 4px 0;';
@@ -58,13 +51,28 @@
         'D'         => ['bg' => '#FFF7ED', 'cl' => '#C2410C'],
         'BLOQUEADO' => ['bg' => '#FEF2F2', 'cl' => '#B91C1C'],
     ];
-    $showHistorial = isset($clienteCalificacion) || isset($clienteHistorial);
+    $showClienteHistorial = isset($clienteCalificacion) || isset($clienteHistorial);
     $clienteCalificacion ??= null;
     $clienteHistorial    ??= collect();
     $calBadge = $clienteCalificacion ? ($calColors[$clienteCalificacion['calificacion']] ?? ['bg' => '#F3F4F6', 'cl' => '#6B7280']) : null;
+
+    $showVendedorHistorial = isset($vendedorCalificacion) || isset($vendedorHistorial);
+    $vendedorCalificacion ??= null;
+    $vendedorHistorial    ??= collect();
+    $vendBadge = $vendedorCalificacion ? ($calColors[$vendedorCalificacion['calificacion']] ?? ['bg' => '#F3F4F6', 'cl' => '#6B7280']) : null;
     @endphp
 
-    <div x-data="{ modal: false }">
+    {{-- Historial Crediticio Cliente --}}
+    <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
+        <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+        <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Historial Crediticio Cliente</span>
+        <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+        @if ($calBadge)
+        <span style="font-size:11px; font-weight:800; padding:2px 10px; border-radius:99px; background:{{ $calBadge['bg'] }}; color:{{ $calBadge['cl'] }}; flex-shrink:0;">{{ $clienteCalificacion['calificacion'] }} · {{ number_format($clienteCalificacion['puntaje'], 1) }} pts</span>
+        @endif
+    </div>
+
+    <div x-data="{ modal: false }" style="margin-bottom:12px;">
         {{-- Trigger --}}
         <div style="position:relative; cursor:pointer;" @click="modal = true">
             <svg style="position:absolute; left:10px; top:50%; transform:translateY(-50%); width:13px; height:13px; pointer-events:none;" fill="none" stroke="#7B6FE8" stroke-width="2.3" viewBox="0 0 24 24">
@@ -72,9 +80,6 @@
             </svg>
             <div style="width:100%; padding:8px 32px; font-size:12px; font-weight:700; border-radius:10px; border:1px solid #E5E7EB; background:#F9F8FF; color:#3C3489; box-sizing:border-box; min-height:20px; display:flex; align-items:center; gap:8px;">
                 <span style="flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">{{ $p->cliente->ci ?: '—' }} — {{ $p->cliente->nombre_completo }}</span>
-                @if ($calBadge)
-                <span style="flex-shrink:0; font-size:10px; font-weight:800; padding:2px 9px; border-radius:99px; background:{{ $calBadge['bg'] }}; color:{{ $calBadge['cl'] }};">{{ $clienteCalificacion['calificacion'] }}</span>
-                @endif
             </div>
         </div>
 
@@ -151,19 +156,9 @@
         </template>
     </div>
 
-    {{-- Historial Crediticio --}}
-    @if ($showHistorial)
-    <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
-        <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-        <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Historial Crediticio</span>
-        <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
-        @if ($calBadge)
-        <span style="font-size:11px; font-weight:800; padding:2px 10px; border-radius:99px; background:{{ $calBadge['bg'] }}; color:{{ $calBadge['cl'] }}; flex-shrink:0;">{{ $clienteCalificacion['calificacion'] }} · {{ number_format($clienteCalificacion['puntaje'], 1) }} pts</span>
-        @endif
-    </div>
-
+    @if ($showClienteHistorial)
     @if (!$clienteCalificacion)
-    <p style="font-size:12px; color:#9CA3AF; margin:0;">Sin pedidos previos con plan de pago para calificar.</p>
+    <p style="font-size:12px; color:#9CA3AF; margin:0 0 12px;">Sin pedidos previos con plan de pago para calificar.</p>
     @else
     <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px;">
         <div style="background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:7px 9px;">
@@ -189,6 +184,67 @@
             <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; text-align:right;">Monto Bs.</span>
         </div>
         @foreach ($clienteHistorial as $h)
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; align-items:center; padding:7px 10px; {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }}">
+            <span style="font-size:11px; font-weight:600; color:#374151;">{{ $h['numero'] }}</span>
+            <span style="font-size:11px; color:#374151; text-align:center;">{{ number_format($h['puntualidad'], 0) }}%</span>
+            <span style="text-align:center;">
+                @if ($h['en_mora'])
+                <span style="font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:99px; background:#FEF2F2; color:#B91C1C;">Sí</span>
+                @else
+                <span style="font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:99px; background:#F3F4F6; color:#9CA3AF;">No</span>
+                @endif
+            </span>
+            <span style="font-size:11px; font-weight:600; color:#3C3489; text-align:right;">{{ number_format($h['monto'], 2) }}</span>
+        </div>
+        @endforeach
+    </div>
+    @endif
+    @endif
+
+    {{-- Historial de Crédito EIE --}}
+    @if ($showVendedorHistorial)
+    <div style="display:flex; align-items:center; gap:7px; margin-top:20px; margin-bottom:12px;">
+        <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-1.13a4 4 0 100-8 4 4 0 000 8zm6 3a4 4 0 00-3-3.87M9 12a4 4 0 100-8 4 4 0 000 8z"/></svg>
+        <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Historial de Crédito EIE</span>
+        <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
+        @if ($vendBadge)
+        <span style="font-size:11px; font-weight:800; padding:2px 10px; border-radius:99px; background:{{ $vendBadge['bg'] }}; color:{{ $vendBadge['cl'] }}; flex-shrink:0;">{{ $vendedorCalificacion['calificacion'] }} · {{ number_format($vendedorCalificacion['puntaje'], 1) }} pts</span>
+        @endif
+    </div>
+
+    <div style="margin-bottom:12px;">
+        <div style="width:100%; padding:8px 12px; font-size:12px; font-weight:700; border-radius:10px; border:1px solid #E5E7EB; background:#F9F8FF; color:#3C3489; box-sizing:border-box; min-height:20px; display:flex; align-items:center;">
+            {{ $p->vendedor->nombre_completo ?? '—' }}
+        </div>
+    </div>
+
+    @if (!$vendedorCalificacion)
+    <p style="font-size:12px; color:#9CA3AF; margin:0;">Sin pedidos previos con plan de pago para calificar.</p>
+    @else
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px;">
+        <div style="background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:7px 9px;">
+            <p style="{{ $vLabel }} margin-bottom:2px;">Puntualidad</p>
+            <p style="font-size:14px; font-weight:800; color:#3C3489; margin:0;">{{ number_format($vendedorCalificacion['puntualidad'], 0) }}%</p>
+        </div>
+        <div style="background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:7px 9px;">
+            <p style="{{ $vLabel }} margin-bottom:2px;">Mora</p>
+            <p style="font-size:14px; font-weight:800; color:{{ $vendedorCalificacion['mora'] > 0 ? '#DC2626' : '#3C3489' }}; margin:0;">{{ number_format($vendedorCalificacion['mora'], 0) }}%</p>
+        </div>
+        <div style="background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:7px 9px;">
+            <p style="{{ $vLabel }} margin-bottom:2px;">En riesgo</p>
+            <p style="font-size:14px; font-weight:800; color:{{ $vendedorCalificacion['riesgo'] > 0 ? '#DC2626' : '#3C3489' }}; margin:0;">{{ number_format($vendedorCalificacion['riesgo'], 0) }}%</p>
+        </div>
+    </div>
+
+    <p style="{{ $vLabel }} margin-bottom:6px;">Pedidos anteriores ({{ $vendedorCalificacion['total_pedidos'] }})</p>
+    <div style="border:1px solid #E5E7EB; border-radius:8px; overflow:hidden; background:#fff;">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; padding:6px 10px; background:#F9F8FF; border-bottom:1px solid #E5E7EB;">
+            <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase;">Pedido</span>
+            <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; text-align:center;">Puntual.</span>
+            <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; text-align:center;">Mora</span>
+            <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; text-align:right;">Monto Bs.</span>
+        </div>
+        @foreach ($vendedorHistorial as $h)
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; align-items:center; padding:7px 10px; {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }}">
             <span style="font-size:11px; font-weight:600; color:#374151;">{{ $h['numero'] }}</span>
             <span style="font-size:11px; color:#374151; text-align:center;">{{ number_format($h['puntualidad'], 0) }}%</span>
