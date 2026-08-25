@@ -8,7 +8,10 @@ use App\Models\ListaMaestra;
 use App\Models\Municipio;
 use App\Models\Pedido;
 use App\Models\PedidoItem;
+use App\Models\PesoIndicador;
 use App\Models\Provincia;
+use App\Models\RangoCalificacion;
+use App\Services\ClienteCalificacionService;
 use Illuminate\Support\Facades\DB;
 use Livewire\Attributes\On;
 use Livewire\Component;
@@ -573,12 +576,23 @@ class RevisionManager extends Component
             ->when(!$this->sortBy, fn($q) => $q->orderByDesc('created_at'))
             ->paginate(15);
 
-        $pedidoDetalle = null;
+        $pedidoDetalle      = null;
+        $clienteCalificacion = null;
+        $clienteHistorial    = collect();
         if ($this->mode === 'detail' && $this->viewingId) {
             $pedidoDetalle = Pedido::with([
                 'cliente.usuario', 'vendedor.user',
                 'items.product', 'planPago.cuotas',
             ])->find($this->viewingId);
+
+            if ($pedidoDetalle) {
+                $calService = new ClienteCalificacionService();
+                $pesos      = PesoIndicador::vigente() ?? PesoIndicador::porDefecto();
+                $rangos     = RangoCalificacion::vigente() ?? RangoCalificacion::porDefecto();
+
+                $clienteCalificacion = $calService->calcularParaCliente($pedidoDetalle->cliente, $pesos, $rangos);
+                $clienteHistorial    = $calService->calcularDetallePedidos($pedidoDetalle->cliente_id);
+            }
         }
 
         $ciudadesAll     = Ciudad::orderBy('nombre')->get();
@@ -618,6 +632,6 @@ class RevisionManager extends Component
             ->values()
             ->toArray();
 
-        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit', 'articulosAgrupados', 'articulosTodos', 'searchProductoEdit'));
+        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'clienteCalificacion', 'clienteHistorial', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit', 'articulosAgrupados', 'articulosTodos', 'searchProductoEdit'));
     }
 }
