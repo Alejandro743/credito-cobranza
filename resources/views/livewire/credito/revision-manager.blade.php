@@ -268,17 +268,20 @@ $colFiltersFechaR = ['fecha_plan'=>'colFilterFechaPlan','fecha_revisar'=>'colFil
         @if (!$confirmandoRechazo)
         <div class="rv-act-wrap">
             <button wire:click="devolverEspera" wire:confirm="¿Devolvés este pedido a Pendiente de Revisión?"
-                    style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#F0F9FF; color:#0369A1; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #7DD3FC; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                    style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#F8F7FF; color:#7B6FE8; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #EDE9FE; cursor:pointer; -webkit-appearance:none; appearance:none; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 10h10a8 8 0 018 8v2M3 10l6 6m-6-6l6-6"/></svg>
                 Pendiente de Revisión
             </button>
             <button wire:click="$set('confirmandoRechazo', true)"
-                    style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#FEF2F2; color:#B91C1C; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #FECACA; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                    style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#F8F7FF; color:#7B6FE8; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #EDE9FE; cursor:pointer; -webkit-appearance:none; appearance:none; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 Rechazar
             </button>
             <button wire:click="aprobar" wire:confirm="¿Confirmás la aprobación de este pedido?"
-                    style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#7B6FE8; color:#fff; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;">
+                    style="flex:1; display:flex; align-items:center; justify-content:center; gap:8px; padding:14px; background:#F8F7FF; color:#7B6FE8; font-size:15px; font-weight:900; letter-spacing:0.08em; text-transform:uppercase; border-radius:12px; box-sizing:border-box; border:1.5px solid #EDE9FE; cursor:pointer; -webkit-appearance:none; appearance:none; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 Aprobar
             </button>
