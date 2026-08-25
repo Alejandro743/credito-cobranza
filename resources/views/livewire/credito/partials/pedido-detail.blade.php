@@ -6,7 +6,8 @@
 @php
     $totalPuntos = $p->items->sum(fn($i) => $i->puntos * $i->cantidad);
     $cuotasNum   = $plan?->cantidad_cuotas ?? null;
-    $montoCuota  = ($cuotasNum && $cuotasNum > 0) ? $p->total / $cuotasNum : null;
+    $montoCuota  = $plan?->monto_cuota;
+    $cuotaInicial = ($plan && $plan->cuota_inicial > 0) ? $plan->cuota_inicial : null;
     $docs = [
         'Anverso CI'   => $p->doc_anverso_ci,
         'Reverso CI'   => $p->doc_reverso_ci,
@@ -228,7 +229,15 @@
         </div>
 
         @foreach ($p->items as $item)
-        @php $rowBorder = $loop->last ? 'none' : '1px solid #E7E3FA'; @endphp
+        @php
+            $rowBorder = $loop->last ? 'none' : '1px solid #E7E3FA';
+            $itemNombre = $item->product?->name
+                ?? $item->listaMaestraItem?->product?->name
+                ?? $item->listaMaestraItem?->maestroArticulo?->nombre;
+            $itemCodigo = $item->product?->code
+                ?? $item->listaMaestraItem?->product?->code
+                ?? $item->listaMaestraItem?->maestroArticulo?->codigo;
+        @endphp
         <div class="pd-art-row" wire:key="pd-item-{{ $item->id }}">
             <div style="padding:10px 4px 10px 10px; background:#fff; border-bottom:{{ $rowBorder }}; display:flex; align-items:center; justify-content:center;">
                 <div style="width:20px; height:20px; border-radius:50%; background:#f97316; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
@@ -236,8 +245,8 @@
                 </div>
             </div>
             <div style="padding:10px 8px 10px 0; background:#fff; border-bottom:{{ $rowBorder }}; min-width:0; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
-                <span style="font-size:13px; font-weight:700; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item->product?->name ?? '—')) }}</span>
-                <span style="font-size:10.5px; color:#9CA3AF; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">{{ $item->product?->code }}</span>
+                <span style="font-size:13px; font-weight:700; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($itemNombre ?? '—')) }}</span>
+                <span style="font-size:10.5px; color:#9CA3AF; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">{{ $itemCodigo }}</span>
             </div>
             <div class="pd-precio" style="padding:10px 8px 10px 0; background:#fff; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item->precio_unitario, 2) }}</div>
             <div class="pd-total" style="padding:10px 8px 10px 0; background:#fff; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item->subtotal, 2) }}</div>
@@ -408,10 +417,16 @@
         <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Resumen</span>
         <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
     </div>
-    @php $pdResCols = $cuotasNum ? 'repeat(4,1fr)' : 'repeat(2,1fr)'; @endphp
+    @php
+        $pdResColCount = 1 + ($cuotaInicial ? 1 : 0) + ($cuotasNum ? 2 : 0) + 1;
+        $pdResCols = 'repeat(' . $pdResColCount . ',1fr)';
+    @endphp
     <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:12px; overflow:hidden; box-shadow:0 2px 10px rgba(123,111,232,0.12);">
         <div style="display:grid; grid-template-columns:{{ $pdResCols }}; text-align:center; padding:6px 6px; background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
             <div style="padding:0 6px;"><span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">Puntos</span></div>
+            @if ($cuotaInicial)
+            <div style="padding:0 6px; border-left:1px solid #E7E3FA;"><span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">Cuota Inicial</span></div>
+            @endif
             @if ($cuotasNum)
             <div style="padding:0 6px; border-left:1px solid #E7E3FA;"><span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">N° Cuotas</span></div>
             <div style="padding:0 6px; border-left:1px solid #E7E3FA;"><span style="font-size:8.5px; font-weight:800; color:#9CA3AF; text-transform:uppercase; letter-spacing:0.06em;">Cuota</span></div>
@@ -422,6 +437,11 @@
             <div style="padding:0 6px;">
                 <span style="font-size:13px; font-weight:400; color:#111827; line-height:1.1;">{{ number_format($totalPuntos) }}</span>
             </div>
+            @if ($cuotaInicial)
+            <div style="padding:0 6px; border-left:1px solid #E7E3FA;">
+                <span style="font-size:13px; font-weight:400; color:#111827; line-height:1.1;">{{ number_format($cuotaInicial, 2) }}</span>
+            </div>
+            @endif
             @if ($cuotasNum)
             <div style="padding:0 6px; border-left:1px solid #E7E3FA;">
                 <span style="font-size:13px; font-weight:400; color:#111827; line-height:1.1;">{{ $cuotasNum }}</span>
