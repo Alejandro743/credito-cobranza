@@ -899,8 +899,12 @@
 
                 {{-- Footer --}}
                 <div style="padding:12px 18px 16px; border-top:1px solid #F0EEFF; display:flex; gap:8px; flex-shrink:0;">
-                    <button type="button" @click="modalDir = false" style="flex:1; padding:11px; background:#F4F4F4; color:#6D8196; font-size:13px; font-weight:700; border-radius:10px; border:1.5px solid #E5E7EB; cursor:pointer; -webkit-appearance:none; appearance:none;">Cancelar</button>
-                    <button type="button" @click="$wire.call('guardarDireccion', tipo)" wire:loading.attr="disabled" wire:target="guardarDireccion" style="flex:2; padding:11px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:800; border-radius:10px; border:none; cursor:pointer; -webkit-appearance:none; appearance:none;"><span wire:loading.remove wire:target="guardarDireccion">Guardar</span><span wire:loading wire:target="guardarDireccion">Guardando...</span></button>
+                    <button type="button" @click="modalDir = false"
+                            style="flex:1; padding:11px; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:700; border-radius:10px; border:1.5px solid #EDE9FE; cursor:pointer; -webkit-appearance:none; appearance:none; transition:background .15s, color .15s;"
+                            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">Cancelar</button>
+                    <button type="button" @click="$wire.call('guardarDireccion', tipo)" wire:loading.attr="disabled" wire:target="guardarDireccion"
+                            style="flex:2; padding:11px; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:800; border-radius:10px; border:1.5px solid #EDE9FE; cursor:pointer; -webkit-appearance:none; appearance:none; transition:background .15s, color .15s;"
+                            onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"><span wire:loading.remove wire:target="guardarDireccion">Guardar</span><span wire:loading wire:target="guardarDireccion">Guardando...</span></button>
                 </div>
             </div>
         </div>
