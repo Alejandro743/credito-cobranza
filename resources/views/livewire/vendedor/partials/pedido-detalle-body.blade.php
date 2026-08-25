@@ -181,6 +181,7 @@ $vSec   = 'display:flex; align-items:center; gap:7px; margin-bottom:12px;';
     .pd-art-grid, .pd-art-row { grid-template-columns:36px minmax(0,1fr); }
     .pd-art-grid .pd-precio, .pd-art-grid .pd-total, .pd-art-grid .pd-pts,
     .pd-art-row .pd-precio, .pd-art-row .pd-total, .pd-art-row .pd-pts { display:none !important; }
+    .pd-art-mobile-stats { display:flex !important; }
 }
 </style>
 <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:14px; overflow:hidden; box-shadow:0 2px 4px rgba(60,52,137,0.06), 0 8px 20px rgba(60,52,137,0.08);">
@@ -209,6 +210,11 @@ $vSec   = 'display:flex; align-items:center; gap:7px; margin-bottom:12px;';
         <div style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; min-width:0; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
             <span style="font-size:13px; font-weight:700; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($artNombre)) }}</span>
             <span style="font-size:10.5px; color:#9CA3AF; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">{{ $artCode }}</span>
+            <div class="pd-art-mobile-stats" style="display:none; gap:10px; margin-top:3px; flex-wrap:wrap;">
+                <span style="font-size:10.5px; color:#6B7280;">Precio: <b style="color:#3C3489;">{{ number_format($item->precio_unitario, 2) }}</b></span>
+                <span style="font-size:10.5px; color:#6B7280;">Total: <b style="color:#3C3489;">{{ number_format($item->subtotal, 2) }}</b></span>
+                <span style="font-size:10.5px; color:#6B7280;">Pts: <b style="color:#3C3489;">{{ $item->puntos * $item->cantidad }}</b></span>
+            </div>
         </div>
         <div class="pd-precio" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item->precio_unitario, 2) }}</div>
         <div class="pd-total" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item->subtotal, 2) }}</div>
