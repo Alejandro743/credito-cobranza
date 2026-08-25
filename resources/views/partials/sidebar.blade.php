@@ -115,11 +115,10 @@
                     @mouseenter="navTipText='{{ $modulo->name }}'; navTipY=$event.currentTarget.getBoundingClientRect().top+$event.currentTarget.getBoundingClientRect().height/2; navTipVisible=true"
                     @mouseleave="navTipVisible=false"
                     class="nav-item-wrap w-full flex items-center gap-3"
-                    style="padding:9px 10px; border-radius:8px; position:relative; {{ $navActiveModule === $slug ? 'background:rgba(123,111,232,.15);' : '' }}"
-                    :style="{ background: activeModule === '{{ $slug }}' ? 'rgba(123,111,232,.15)' : '' }">
+                    style="padding:9px 10px; border-radius:8px; position:relative;">
                 <span class="nav-tooltip">{{ $modulo->name }}</span>
-                <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $navActiveModule === $slug ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}"
-                     :style="{ background: activeModule === '{{ $slug }}' ? '#7B6FE8' : 'rgba(255,255,255,.14)' }">
+                <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $navActiveModule === $slug ? 'background:rgba(255,255,255,.2);' : 'background:rgba(255,255,255,.14);' }}"
+                     :style="{ background: activeModule === '{{ $slug }}' ? 'rgba(255,255,255,.2)' : 'rgba(255,255,255,.14)' }">
                     <svg width="15" height="15" fill="none"
                          stroke="{{ $navActiveModule === $slug ? '#fff' : 'rgba(255,255,255,.6)' }}"
                          :stroke="activeModule === '{{ $slug }}' ? '#fff' : 'rgba(255,255,255,.6)'"
@@ -128,8 +127,8 @@
                     </svg>
                 </div>
                 <div class="nav-label flex items-center flex-1 gap-1" style="min-width:0; overflow:hidden;">
-                    <span style="flex:1; text-align:left; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:{{ $navActiveModule === $slug ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.60)' }};"
-                          :style="{ color: activeModule === '{{ $slug }}' ? 'rgba(255,255,255,.9)' : 'rgba(255,255,255,.60)' }">
+                    <span style="flex:1; text-align:left; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:.6px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:{{ $navActiveModule === $slug ? '#fff' : 'rgba(255,255,255,.60)' }}; text-decoration:{{ $navActiveModule === $slug ? 'underline' : 'none' }}; text-underline-offset:3px;"
+                          :style="{ color: activeModule === '{{ $slug }}' ? '#fff' : 'rgba(255,255,255,.60)', textDecoration: activeModule === '{{ $slug }}' ? 'underline' : 'none' }">
                         {{ $modulo->name }}
                     </span>
                     <svg class="w-3 h-3 flex-shrink-0"
@@ -154,19 +153,18 @@
                 <div style="margin-bottom:1px;">
                     <button @click="activeGroup = activeGroup === '{{ $sub->slug }}' ? '' : '{{ $sub->slug }}'"
                             class="w-full flex items-center gap-2.5"
-                            style="padding:7px 8px; border-radius:6px; {{ $grupActivoInicial ? 'background:rgba(123,111,232,.12);' : '' }}"
-                            :style="{ background: activeGroup === '{{ $sub->slug }}' ? 'rgba(123,111,232,.12)' : '' }">
-                        <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $grupActivoInicial ? 'background:rgba(123,111,232,.5);' : 'background:rgba(255,255,255,.12);' }}"
-                             :style="{ background: activeGroup === '{{ $sub->slug }}' ? 'rgba(123,111,232,.5)' : 'rgba(255,255,255,.12)' }">
+                            style="padding:7px 8px; border-radius:6px;">
+                        <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $grupActivoInicial ? 'background:rgba(255,255,255,.2);' : 'background:rgba(255,255,255,.12);' }}"
+                             :style="{ background: activeGroup === '{{ $sub->slug }}' ? 'rgba(255,255,255,.2)' : 'rgba(255,255,255,.12)' }">
                             <svg width="12" height="12" fill="none"
-                                 stroke="{{ $grupActivoInicial ? '#C4B5FD' : 'rgba(255,255,255,.65)' }}"
-                                 :stroke="activeGroup === '{{ $sub->slug }}' ? '#C4B5FD' : 'rgba(255,255,255,.65)'"
+                                 stroke="{{ $grupActivoInicial ? '#fff' : 'rgba(255,255,255,.65)' }}"
+                                 :stroke="activeGroup === '{{ $sub->slug }}' ? '#fff' : 'rgba(255,255,255,.65)'"
                                  stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                                 <path d="{{ $subIconos[$sub->slug] ?? 'M4 6h16M4 12h16M4 18h16' }}"/>
                             </svg>
                         </div>
-                        <span style="flex:1; text-align:left; font-size:12px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:{{ $grupActivoInicial ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,.65)' }};"
-                              :style="{ color: activeGroup === '{{ $sub->slug }}' ? 'rgba(255,255,255,.85)' : 'rgba(255,255,255,.65)' }">
+                        <span style="flex:1; text-align:left; font-size:12px; font-weight:500; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:{{ $grupActivoInicial ? '#fff' : 'rgba(255,255,255,.65)' }}; text-decoration:{{ $grupActivoInicial ? 'underline' : 'none' }}; text-underline-offset:3px;"
+                              :style="{ color: activeGroup === '{{ $sub->slug }}' ? '#fff' : 'rgba(255,255,255,.65)', textDecoration: activeGroup === '{{ $sub->slug }}' ? 'underline' : 'none' }">
                             {{ $sub->name }}
                         </span>
                         <svg class="w-3 h-3 flex-shrink-0"
