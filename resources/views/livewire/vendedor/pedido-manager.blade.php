@@ -131,7 +131,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
 
                 {{-- Estado --}}
                 @php $isA = $sortBy === 'estado'; @endphp
-                <th wire:click="toggleSort('estado')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:140px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                <th wire:click="toggleSort('estado')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:170px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                     @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
                     <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
                         <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
