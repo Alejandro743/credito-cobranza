@@ -64,6 +64,8 @@ class CycleManager extends Component
         $this->selectedCycleId = $this->selectedCycleId === $id ? null : $id;
     }
 
+    public function refrescarGrilla(): void {}
+
     public function mount(): void
     {
         $this->initModuleColor();

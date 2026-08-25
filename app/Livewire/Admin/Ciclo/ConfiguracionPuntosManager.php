@@ -28,6 +28,8 @@ class ConfiguracionPuntosManager extends Component
         $this->selectedPuntoId = $this->selectedPuntoId === $id ? null : $id;
     }
 
+    public function refrescarGrilla(): void {}
+
     public function toggleSort(string $col): void
     {
         if ($this->sortBy === $col) {

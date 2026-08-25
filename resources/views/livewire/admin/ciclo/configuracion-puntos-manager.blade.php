@@ -193,13 +193,21 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
             @endif
         </div>
         @endif
+
+        <button type="button" wire:click="refrescarGrilla"
+                style="margin-left:auto; height:28px; padding:0 10px; border:1px solid #EDE9FE; border-radius:7px; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex-shrink:0; font-size:11px; font-weight:700; white-space:nowrap; transition:background .15s, color .15s;"
+                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"
+                onclick="const ic=this.querySelector('svg'); const deg=(parseInt(ic.dataset.deg||'0')+360); ic.dataset.deg=deg; ic.style.transition='transform .5s ease'; ic.style.transform='rotate('+deg+'deg)';">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            Actualizar
+        </button>
     </div>
 
     <div style="overflow:auto;flex:1;">
         <table style="width:100%;border-collapse:collapse;min-width:640px;">
             <thead style="position:sticky;top:0;z-index:10;">
-                <tr style="background:#F9F8FF;border-bottom:2px solid #EDE9FE;">
-                    <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF;">
+                <tr style="background:#F9F8FF;border-bottom:2px solid #EDE9FE; {{ $editingId ? 'pointer-events:none;' : '' }}">
+                    <th style="width:50px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; vertical-align:top; position:sticky; left:0; z-index:11; background:#F9F8FF; box-shadow:inset -1px 0 0 #E5E7EB;">
                         #
                         <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
                             <input type="checkbox"
@@ -210,43 +218,9 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         </div>
                     </th>
 
-                    {{-- Ciclo --}}
-                    @php $isA = $sortBy === 'code'; @endphp
-                    <th wire:click="toggleSort('code')" style="{{ $thC }} text-align:left; cursor:pointer; min-width:150px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; gap:4px;">Ciclo
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" style="{{ $fI }}"></div>
-                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-
-                    {{-- Valor / Pto --}}
-                    @php $isA = $sortBy === 'valor_punto'; @endphp
-                    <th wire:click="toggleSort('valor_punto')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
-                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
-                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Valor / Pto
-                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
-                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
-                            </span>
-                        </div>
-                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterValor" @click.stop type="text" style="{{ $fI }}"></div>
-                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
-                    </th>
-
-                    {{-- Descripción --}}
-                    <th style="{{ $thC }} text-align:left; min-width:160px;">
-                        Descripción
-                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterDescripcion" @click.stop type="text" style="{{ $fI }}"></div>
-                    </th>
-
                     {{-- Estado --}}
                     @php $isA = $sortBy === 'active'; @endphp
-                    <th wire:click="toggleSort('active')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                    <th wire:click="toggleSort('active')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
                         @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
                         <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Estado
                             <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
@@ -256,12 +230,46 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         </div>
                         <div style="{{ $fW }}" @click.stop>
                             {!! $fSvg !!}
-                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }}">
+                            <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }} text-indent:0; padding-left:16px;">
                                 <option value="">Todos</option>
                                 <option value="1">Activo</option>
                                 <option value="0">Inactivo</option>
                             </select>
                         </div>
+                    </th>
+
+                    {{-- Ciclo --}}
+                    @php $isA = $sortBy === 'code'; @endphp
+                    <th wire:click="toggleSort('code')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:150px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Ciclo
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterCiclo" @click.stop type="text" style="{{ $fI }} text-align:center;"></div>
+                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+
+                    {{-- Valor / Pto --}}
+                    @php $isA = $sortBy === 'valor_punto'; @endphp
+                    <th wire:click="toggleSort('valor_punto')" style="{{ $thC }} text-align:center; cursor:pointer; min-width:110px; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isA ? 'background:#EDE9FE;' : '' }}"
+                        @mouseenter="!{{ $isA?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isA?'true':'false' }} && ($el.style.background='')">
+                        <div style="display:flex; align-items:center; justify-content:center; gap:4px;">Valor / Pto
+                            <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                                <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isA && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                            </span>
+                        </div>
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterValor" @click.stop type="text" style="{{ $fI }} text-align:center;"></div>
+                        <div x-data="colResize()" @mousedown="start($event)" style="position:absolute; right:0; top:0; bottom:0; width:4px; cursor:col-resize;" @mouseenter="$el.style.background='rgba(123,111,232,.3)'" @mouseleave="$el.style.background='transparent'"></div>
+                    </th>
+
+                    {{-- Descripción --}}
+                    <th style="{{ $thC }} text-align:center; min-width:160px;">
+                        Descripción
+                        <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterDescripcion" @click.stop type="text" style="{{ $fI }} text-align:center;"></div>
                     </th>
                 </tr>
             </thead>
@@ -270,10 +278,16 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 @if($editingId === $punto->id)
                 {{-- Fila edición inline --}}
                 <tr wire:key="edit-{{ $punto->id }}" style="background:#FAFAFE;border-bottom:1px solid #EDE9FE;">
-                    <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#FAFAFE;">
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; white-space:nowrap; position:sticky; left:0; z-index:2; background:#FAFAFE; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <span style="font-size:13px; color:#111827;">{{ $puntos->firstItem() + $loop->index }}</span>
                     </td>
-                    <td style="padding:10px 16px;">
+                    <td style="padding:10px 16px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <select wire:model="editActive" style="width:100%;{{ $iRow }} cursor:pointer;">
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </td>
+                    <td style="padding:10px 16px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <select wire:model="editCycleId" style="width:100%;{{ $iRow }} cursor:pointer;">
                             <option value="{{ $punto->cycle->id }}">{{ $punto->cycle->code }}</option>
                             @foreach($ciclosDisponibles as $ciclo)
@@ -282,7 +296,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         </select>
                         @error('editCycleId')<p style="font-size:11px;color:#EF4444;margin-top:3px;">{{ $message }}</p>@enderror
                     </td>
-                    <td style="padding:10px 16px;">
+                    <td style="padding:10px 16px; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <div style="position:relative;">
                             <span style="position:absolute;left:8px;top:50%;transform:translateY(-50%);font-size:12px;color:#9CA3AF;font-weight:500;">Bs</span>
                             <input wire:model="editValorPunto" type="number" step="0.01" min="0.01"
@@ -294,12 +308,6 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                         <input wire:model="editDescription" type="text" placeholder="Descripción"
                                style="width:100%;{{ $iRow }}">
                     </td>
-                    <td style="padding:10px 16px;">
-                        <select wire:model="editActive" style="width:100%;{{ $iRow }} cursor:pointer;">
-                            <option value="1">Activo</option>
-                            <option value="0">Inactivo</option>
-                        </select>
-                    </td>
                 </tr>
                 @else
                 {{-- Fila normal --}}
@@ -307,7 +315,7 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 <tr wire:key="p-{{ $punto->id }}"
                     style="border-bottom:1px solid #F3F4F6;transition:background .1s; background:{{ $selPu ? '#F5F3FF' : '' }}; {{ $selPu ? 'border-left:3px solid #7B6FE8;' : '' }}"
                     @mouseenter="$el.style.background='{{ $selPu ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selPu ? '#F5F3FF' : '' }}'">
-                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selPu ? '#F5F3FF' : '#fff' }};">
+                    <td class="col-row-num" style="padding:6px 6px; text-align:center; position:sticky; left:0; z-index:2; background:{{ $selPu ? '#F5F3FF' : '#fff' }}; box-shadow:inset -1px 0 0 #E5E7EB;">
                         <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
                             <input type="checkbox"
                                    :checked="$wire.selectedPuntoId === {{ $punto->id }}"
@@ -317,21 +325,16 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                             <span style="font-size:13px; color:#111827;">{{ $puntos->firstItem() + $loop->index }}</span>
                         </div>
                     </td>
-                    <td style="padding:10px 14px;">
-                        <span style="font-size:13px;color:#111827;">{{ $punto->cycle->code }}</span>
+                    <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px; font-weight:700; color:#374151; white-space:nowrap;">{{ $punto->active ? 'Activo' : 'Inactivo' }}</span>
                     </td>
-                    <td style="padding:10px 14px;text-align:center;">
-                        <span style="font-size:13px;color:#111827;">Bs {{ number_format((float)$punto->valor_punto, 2) }}</span>
-                        <span style="font-size:13px;color:#111827;"> / pto</span>
+                    <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px;font-weight:400;color:#374151;">{{ $punto->cycle->code }}</span>
                     </td>
-                    <td style="padding:10px 14px;font-size:13px;color:#111827;">{{ $punto->description ?? '—' }}</td>
-                    <td style="padding:10px 14px;text-align:center;">
-                        <span style="padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;
-                                     background:{{ $punto->active ? '#D1FAE5' : '#F3F4F6' }};
-                                     color:{{ $punto->active ? '#059669' : '#9CA3AF' }};">
-                            {{ $punto->active ? 'Activo' : 'Inactivo' }}
-                        </span>
+                    <td style="padding:10px 14px;text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                        <span style="font-size:13px;font-weight:400;color:#374151;">Bs {{ number_format((float)$punto->valor_punto, 2) }} / pto</span>
                     </td>
+                    <td style="padding:10px 14px;text-align:center;"><span style="font-size:13px;font-weight:400;color:#374151;">{{ $punto->description ?? '—' }}</span></td>
                 </tr>
                 @endif
                 @empty
