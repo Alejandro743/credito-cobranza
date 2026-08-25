@@ -40,13 +40,13 @@
              data-tab-key="{{ $key }}"
              data-base-bg="{{ $isActive ? '#F97316' : '#F0EDFC' }}"
              draggable="true"
-             style="{{ $tabFlex }} min-width:0; display:flex; align-items:center; gap:7px; padding:8px 8px 9px 12px; border-radius:9px 9px 0 0; cursor:grab; transition:background-color .15s ease, opacity .15s ease;
+             style="{{ $tabFlex }} min-width:0; display:flex; align-items:center; gap:7px; padding:8px 8px 9px 12px; border-radius:9px 9px 0 0; cursor:pointer; transition:background-color .15s ease, opacity .15s ease;
                     background:{{ $isActive ? '#F97316' : '#F0EDFC' }}; color:{{ $isActive ? '#fff' : '#6B7280' }}; font-size:12.5px; font-weight:{{ $isActive ? '700' : '600' }};
                     border:2px solid {{ $isActive ? '#F97316' : '#EDE9FE' }}; border-bottom:none; position:relative; top:1px;"
              onmouseenter="if (this.style.background !== 'rgb(249, 115, 22)') this.style.background='#E5DFFB';"
              onmouseleave="if (this.style.background !== 'rgb(249, 115, 22)') this.style.background='#F0EDFC';"
              @dragstart="dragKey = '{{ $key }}'; $event.dataTransfer.effectAllowed = 'move'; $el.style.opacity = '0.35'; $el.style.cursor = 'grabbing';"
-             @dragend="dragKey = null; $el.style.opacity = '1'; $el.style.cursor = 'grab';"
+             @dragend="dragKey = null; $el.style.opacity = '1'; $el.style.cursor = 'pointer';"
              @dragover.prevent="$event.dataTransfer.dropEffect = 'move'; if (dragKey && dragKey !== '{{ $key }}') { $el.style.background = '#DCD4FB'; $el.style.boxShadow = 'inset 0 0 0 2px #7B6FE8'; }"
              @dragenter.prevent="if (dragKey && dragKey !== '{{ $key }}') { $el.style.background = '#DCD4FB'; $el.style.boxShadow = 'inset 0 0 0 2px #7B6FE8'; }"
              @dragleave="if (!$el.contains($event.relatedTarget)) { $el.style.background = $el.dataset.baseBg; $el.style.boxShadow = ''; }"
