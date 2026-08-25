@@ -48,7 +48,7 @@
 
     @php
     $vField = 'background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:9px 12px; font-size:13px; font-weight:600; color:#111827; min-height:38px; display:flex; align-items:center;';
-    $vLabel = 'font-size:10px; font-weight:700; letter-spacing:0.06em; color:#6B7280; margin:0 0 4px 0;';
+    $vLabel = 'font-size:10px; font-weight:700; letter-spacing:0.06em; color:#7B6FE8; margin:0 0 4px 0;';
     $vSec   = 'display:flex; align-items:center; gap:7px; margin-bottom:12px;';
 
     $calColors = [
