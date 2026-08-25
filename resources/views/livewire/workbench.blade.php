@@ -8,9 +8,9 @@
              root.querySelectorAll('[data-tab-key]').forEach(p => {
                  const active = p.dataset.tabKey === key;
                  p.style.background = active ? '#fff' : '#F0EDFC';
-                 p.style.color = active ? '#7B6FE8' : '#6B7280';
+                 p.style.color = active ? '#F97316' : '#6B7280';
                  p.style.fontWeight = active ? '700' : '600';
-                 p.style.borderColor = active ? '#7B6FE8' : '#EDE9FE';
+                 p.style.borderColor = active ? '#F97316' : '#EDE9FE';
              });
              root.querySelectorAll('[data-pane-key]').forEach(p => {
                  p.style.display = p.dataset.paneKey === key ? '' : 'none';
@@ -35,8 +35,8 @@
              data-base-bg="{{ $isActive ? '#fff' : '#F0EDFC' }}"
              draggable="true"
              style="{{ $tabFlex }} min-width:0; display:flex; align-items:center; gap:7px; padding:8px 8px 9px 12px; border-radius:9px 9px 0 0; cursor:grab; transition:background-color .15s ease, opacity .15s ease;
-                    background:{{ $isActive ? '#fff' : '#F0EDFC' }}; color:{{ $isActive ? '#7B6FE8' : '#6B7280' }}; font-size:12.5px; font-weight:{{ $isActive ? '700' : '600' }};
-                    border:2px solid {{ $isActive ? '#7B6FE8' : '#EDE9FE' }}; border-bottom:none; position:relative; top:1px;"
+                    background:{{ $isActive ? '#fff' : '#F0EDFC' }}; color:{{ $isActive ? '#F97316' : '#6B7280' }}; font-size:12.5px; font-weight:{{ $isActive ? '700' : '600' }};
+                    border:2px solid {{ $isActive ? '#F97316' : '#EDE9FE' }}; border-bottom:none; position:relative; top:1px;"
              onmouseenter="if (this.style.background !== 'rgb(255, 255, 255)') this.style.background='#E5DFFB';"
              onmouseleave="if (this.style.background !== 'rgb(255, 255, 255)') this.style.background='#F0EDFC';"
              @dragstart="dragKey = '{{ $key }}'; $event.dataTransfer.effectAllowed = 'move'; $el.style.opacity = '0.35'; $el.style.cursor = 'grabbing';"
