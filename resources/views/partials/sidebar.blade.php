@@ -198,7 +198,7 @@
                            style="padding:6px 8px; border-radius:6px; margin-bottom:1px;">
                             <span style="width:5px; height:5px; border-radius:50%; flex-shrink:0; background:{{ $childActivoInicial ? '#fff' : 'rgba(255,255,255,.25)' }};"
                                   :style="{ background: wbActiveSlug === '{{ $child->slug }}' ? '#fff' : 'rgba(255,255,255,.25)' }"></span>
-                            <span style="font-size:12px; font-weight:{{ $childActivoInicial ? '600' : '400' }}; color:{{ $childActivoInicial ? '#fff' : 'rgba(255,255,255,.65)' }}; text-decoration:{{ $childActivoInicial ? 'underline' : 'none' }}; text-underline-offset:3px;"
+                            <span style="font-size:12px; font-weight:{{ $childActivoInicial ? '600' : '400' }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; color:{{ $childActivoInicial ? '#fff' : 'rgba(255,255,255,.65)' }}; text-decoration:{{ $childActivoInicial ? 'underline' : 'none' }}; text-underline-offset:3px;"
                                   :style="{ fontWeight: wbActiveSlug === '{{ $child->slug }}' ? '600' : '400', color: wbActiveSlug === '{{ $child->slug }}' ? '#fff' : 'rgba(255,255,255,.65)', textDecoration: wbActiveSlug === '{{ $child->slug }}' ? 'underline' : 'none' }">{{ $child->name }}</span>
                         </a>
                         @endforeach
