@@ -247,6 +247,7 @@ $colFiltersFechaR = ['fecha_plan'=>'colFilterFechaPlan','fecha_revisar'=>'colFil
                 'aprobado'        => false,
                 'editable'        => true,
                 'clienteCalificacion' => $clienteCalificacion,
+                'clienteHistorial'    => $clienteHistorial,
                 'editTipoEntrega' => $editTipoEntrega,
                 'ciudadesAll'     => $ciudadesAll,
                 'editProvincias'  => $editProvincias,
