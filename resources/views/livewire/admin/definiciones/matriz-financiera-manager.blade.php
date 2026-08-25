@@ -127,8 +127,7 @@
 @endif
 
 {{-- ══════ TOOLBAR ══════ --}}
-<div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:16px;">
-    <span style="font-size:12px; color:#9CA3AF; font-weight:500;">{{ $registros->count() }} matriz(ces)</span>
+<div style="display:flex; align-items:center; justify-content:flex-start; margin-bottom:16px;">
     @if(!$showForm && !$editId)
     <button wire:click="create"
             style="height:36px; padding:0 18px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; border-radius:9px; font-size:13px; font-weight:700; cursor:pointer; display:flex; align-items:center; gap:6px; transition:background .15s, color .15s;"
@@ -141,7 +140,14 @@
 
 @php
 $iRow = 'height:34px; border:1px solid #EDE9FE; border-radius:7px; padding:0 8px; font-size:13px; color:#374151; background:#fff; outline:none; box-sizing:border-box;';
+$fI  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 6px 0 22px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:left;';
+$fS  = 'height:28px; font-size:11px; border:1px solid #DDD8FA; border-radius:5px; padding:0 4px; width:100%; outline:none; box-sizing:border-box; background:#fff; color:#9CA3AF; font-weight:700; text-align:center; cursor:pointer;';
+$fW  = 'position:relative; margin-top:4px;' . ($editId ? ' opacity:0.45;' : '');
+$fIc = 'position:absolute; left:6px; top:50%; transform:translateY(-50%); width:11px; height:11px; pointer-events:none;';
+$fSvg = '<svg style="'.$fIc.'" fill="none" stroke="#9CA3AF" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35" stroke-linecap="round"/></svg>';
+$thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; user-select:none; vertical-align:top; position:relative; overflow:hidden;';
 $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas'];
+$btnH = 'height:28px; padding:0 10px; border:none; border-radius:7px; font-size:11px; font-weight:700; cursor:pointer; display:inline-flex; align-items:center; gap:5px; white-space:nowrap;';
 @endphp
 
 {{-- ══════ TABLA ESCRITORIO ══════ --}}
@@ -150,41 +156,94 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas'];
     <div style="padding:10px 18px; display:flex; align-items:center; gap:8px; border-bottom:1px solid #F3F4F6;">
         <span style="font-size:13px; font-weight:700; color:#111827;">Matrices Financieras</span>
         <span style="background:#F3F4F6; color:#6B7280; font-size:11px; font-weight:600; padding:2px 8px; border-radius:99px;">{{ $registros->count() }}</span>
+        @if($selectedMatrizId)
+        <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
+            @if($editId === $selectedMatrizId)
+                <button wire:click="save" wire:loading.attr="disabled" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    Guardar
+                </button>
+                <button wire:click="cancelar" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    Cancelar
+                </button>
+            @else
+                <button wire:click="edit({{ $selectedMatrizId }})" style="{{ $btnH }} border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; transition:background .15s, color .15s;" onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>
+                    Editar
+                </button>
+            @endif
+        </div>
+        @endif
+
+        <button type="button" wire:click="refrescarGrilla"
+                style="margin-left:auto; height:28px; padding:0 10px; border:1px solid #EDE9FE; border-radius:7px; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex-shrink:0; font-size:11px; font-weight:700; white-space:nowrap; transition:background .15s, color .15s;"
+                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"
+                onclick="const ic=this.querySelector('svg'); const deg=(parseInt(ic.dataset.deg||'0')+360); ic.dataset.deg=deg; ic.style.transition='transform .5s ease'; ic.style.transform='rotate('+deg+'deg)';">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            Actualizar
+        </button>
     </div>
 
     <div style="overflow:auto; flex:1;">
-    <table style="table-layout:fixed; width:100%; border-collapse:collapse; min-width:600px;">
+    <table style="table-layout:fixed; width:100%; border-collapse:collapse; min-width:680px;">
         <colgroup>
             <col style="width:44px;">
+            <col style="width:110px;">
             <col style="width:110px;">
             <col>
             <col style="width:70px;">
             <col style="width:160px;">
             <col style="width:160px;">
-            <col style="width:90px;">
-            <col style="width:80px;">
         </colgroup>
         <thead style="position:sticky; top:0; z-index:10;">
-            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE;">
-                <th style="padding:10px 8px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px;">#</th>
+            <tr style="background:#F9F8FF; border-bottom:2px solid #EDE9FE; {{ $editId ? 'pointer-events:none;' : '' }}">
+                <th style="width:44px; padding:8px 8px 6px; text-align:center; font-size:11px; font-weight:700; color:#C4B5FD; text-transform:uppercase; letter-spacing:.5px; vertical-align:top; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    #
+                    <div style="margin-top:4px; height:28px; display:flex; align-items:center; justify-content:center;">
+                        <input type="checkbox"
+                               :checked="$wire.selectedMatrizId !== null"
+                               :disabled="$wire.selectedMatrizId === null"
+                               @click.prevent="$wire.selectedMatrizId !== null && $wire.set('selectedMatrizId', null)"
+                               :style="$wire.selectedMatrizId !== null ? 'accent-color:#7B6FE8; width:15px; height:15px; cursor:pointer;' : 'accent-color:#7B6FE8; width:15px; height:15px; cursor:default; opacity:0.35;'">
+                    </div>
+                </th>
+
+                {{-- Estado --}}
+                <th style="{{ $thC }} text-align:center; min-width:110px; box-shadow:inset -1px 0 0 #E5E7EB;">
+                    Estado
+                    <div style="{{ $fW }}" @click.stop>
+                        {!! $fSvg !!}
+                        <select wire:model.live="colFilterEstado" @click.stop style="{{ $fS }} text-indent:0; padding-left:16px;">
+                            <option value="">Todos</option>
+                            <option value="1">Activo</option>
+                            <option value="0">Inactivo</option>
+                        </select>
+                    </div>
+                </th>
+
                 @foreach($sortCols as $label => $key)
                 @php $isActive = $sortBy === $key; @endphp
                 <th wire:click="toggleSort('{{ $key }}')"
-                    style="padding:10px 14px; text-align:{{ in_array($label,['Cuotas','Estado']) ? 'center' : 'left' }}; user-select:none; cursor:pointer; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
-                    @mouseenter="$el.style.background='#EDE9FE'" @mouseleave="$el.style.background='{{ $isActive ? '#EDE9FE' : '' }}'">
-                    <span style="font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px; display:inline-flex; align-items:center; gap:5px;">
+                    style="{{ $thC }} text-align:center; cursor:pointer; box-shadow:inset -1px 0 0 #E5E7EB; {{ $isActive ? 'background:#EDE9FE;' : '' }}"
+                    @mouseenter="!{{ $isActive?'true':'false' }} && ($el.style.background='#F5F3FF')" @mouseleave="!{{ $isActive?'true':'false' }} && ($el.style.background='')">
+                    <div style="display:flex; align-items:center; justify-content:center; gap:4px;">
                         {{ $label }}
-                        @if($isActive && $sortDir==='asc') <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
-                        @elseif($isActive) <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#7B6FE8" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>
-                        @else <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 9l4-4 4 4M16 15l-4 4-4-4"/></svg>
-                        @endif
-                    </span>
+                        <span style="display:inline-flex; flex-direction:column; gap:1px; line-height:1;">
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isActive && $sortDir==='asc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 0l5 6H0z"/></svg>
+                            <svg width="7" height="7" viewBox="0 0 10 6" fill="{{ $isActive && $sortDir==='desc' ? '#7B6FE8':'#C4B5FD' }}"><path d="M5 6l5-6H0z"/></svg>
+                        </span>
+                    </div>
+                    @if($key === 'code')
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterCodigo" @click.stop type="text" style="{{ $fI }} text-align:center;"></div>
+                    @elseif($key === 'name')
+                    <div style="{{ $fW }}" @click.stop>{!! $fSvg !!}<input wire:model.live.debounce.300ms="colFilterNombre" @click.stop type="text" style="{{ $fI }} text-align:center;"></div>
+                    @endif
                 </th>
                 @endforeach
-                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Cuota Inicial</th>
-                <th style="padding:10px 14px; text-align:left; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Incremento</th>
-                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Estado</th>
-                <th style="padding:10px 14px; text-align:center; font-size:11px; font-weight:700; color:#7B6FE8; text-transform:uppercase; letter-spacing:.5px;">Acciones</th>
+
+                <th style="{{ $thC }} text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">Cuota Inicial</th>
+                <th style="{{ $thC }} text-align:center;">Incremento</th>
             </tr>
         </thead>
         <tbody>
@@ -193,7 +252,7 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas'];
         @if($r->id === $editId)
         {{-- ── FILA EDICIÓN INLINE ── --}}
         <tr wire:key="mf-edit-{{ $r->id }}" style="background:#FAFAFE; border-bottom:1px solid #EDE9FE;">
-            <td colspan="8" style="padding:14px 18px;">
+            <td colspan="7" style="padding:14px 18px;">
 
                 {{-- Fila superior: Código + Nombre + Cuotas + Estado + Descripción --}}
                 <div style="display:flex; align-items:flex-start; gap:10px; flex-wrap:wrap; margin-bottom:10px;">
@@ -276,53 +335,53 @@ $sortCols = ['Código'=>'code','Nombre'=>'name','Cuotas'=>'cantidad_cuotas'];
 
         @else
         {{-- ── FILA NORMAL ── --}}
-        <tr wire:key="mf-{{ $r->id }}" style="border-bottom:1px solid #F9FAFB;"
-            @mouseenter="$el.style.background='#FAFAFE'" @mouseleave="$el.style.background=''">
-            <td class="col-row-num" style="padding:10px 8px; text-align:center; font-size:13px; color:#111827; white-space:nowrap;">{{ $loop->iteration }}</td>
-            <td style="padding:11px 14px; font-size:13px; color:#111827; white-space:nowrap;">{{ $r->code }}</td>
-            <td style="padding:11px 14px; font-size:13px; color:#111827; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ $r->name }}</td>
-            <td style="padding:11px 14px; text-align:center; font-size:13px; color:#111827;">
-                {{ $r->cantidad_cuotas === 1 ? 'Contado' : $r->cantidad_cuotas }}
+        @php $selM = $selectedMatrizId === $r->id; @endphp
+        <tr wire:key="mf-{{ $r->id }}"
+            style="border-bottom:1px solid #F9FAFB; transition:background .1s; background:{{ $selM ? '#F5F3FF' : '' }}; {{ $selM ? 'border-left:3px solid #7B6FE8;' : '' }}"
+            @mouseenter="$el.style.background='{{ $selM ? '#F5F3FF' : '#FAFAFE' }}'" @mouseleave="$el.style.background='{{ $selM ? '#F5F3FF' : '' }}'">
+            <td class="col-row-num" style="padding:6px 6px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                <div style="display:inline-flex; align-items:center; justify-content:center; gap:6px;">
+                    <input type="checkbox"
+                           :checked="$wire.selectedMatrizId === {{ $r->id }}"
+                           @click="$wire.selectedMatrizId === {{ $r->id }} ? $wire.set('selectedMatrizId', null) : $wire.selectMatriz({{ $r->id }})"
+                           :disabled="{{ $editId && $editId !== $r->id ? 'true' : 'false' }}"
+                           style="accent-color:#7B6FE8; width:13px; height:13px; {{ $editId && $editId !== $r->id ? 'cursor:not-allowed; opacity:0.35;' : 'cursor:pointer;' }}">
+                    <span style="font-size:13px; color:#111827;">{{ $loop->iteration }}</span>
+                </div>
             </td>
-            <td style="padding:11px 14px; font-size:13px; color:#111827;">
+            <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                <span style="font-size:13px; font-weight:700; color:#374151; white-space:nowrap;">{{ $r->active ? 'Activo' : 'Inactivo' }}</span>
+            </td>
+            <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;"><span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap;">{{ $r->code }}</span></td>
+            <td style="padding:10px 14px; text-align:center; overflow:hidden; box-shadow:inset -1px 0 0 #E5E7EB;"><span style="font-size:13px; font-weight:400; color:#374151; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; display:block;">{{ $r->name }}</span></td>
+            <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
+                <span style="font-size:13px; font-weight:400; color:#374151;">{{ $r->cantidad_cuotas === 1 ? 'Contado' : $r->cantidad_cuotas }}</span>
+            </td>
+            <td style="padding:10px 14px; text-align:center; box-shadow:inset -1px 0 0 #E5E7EB;">
                 @if($r->usa_cuota_inicial)
-                <span style="display:inline-flex; align-items:center; gap:5px;">
+                <span style="display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:400; color:#374151;">
                     <span style="width:6px; height:6px; border-radius:50%; background:#f97316; flex-shrink:0;"></span>
                     {{ $r->tipo_cuota_inicial === 'porcentaje' ? number_format($r->valor_cuota_inicial, 2).'%' : 'Bs. '.number_format($r->valor_cuota_inicial, 2) }}
                 </span>
                 @else
-                <span style="color:#111827; font-size:13px;">—</span>
+                <span style="color:#374151; font-size:13px; font-weight:400;">—</span>
                 @endif
             </td>
-            <td style="padding:11px 14px; font-size:13px; color:#111827;">
+            <td style="padding:10px 14px; text-align:center;">
                 @if($r->usa_incremento)
-                <span style="display:inline-flex; align-items:center; gap:5px;">
+                <span style="display:inline-flex; align-items:center; gap:5px; font-size:13px; font-weight:400; color:#374151;">
                     <span style="width:6px; height:6px; border-radius:50%; background:#7B6FE8; flex-shrink:0;"></span>
                     {{ $r->tipo_incremento === 'porcentaje' ? number_format($r->valor_incremento, 2).'%' : 'Bs. '.number_format($r->valor_incremento, 2) }}
                 </span>
                 @else
-                <span style="color:#111827; font-size:13px;">—</span>
+                <span style="color:#374151; font-size:13px; font-weight:400;">—</span>
                 @endif
-            </td>
-            <td style="padding:11px 14px; text-align:center;">
-                <span style="font-size:12px; font-weight:700; padding:3px 10px; border-radius:6px;
-                             background:{{ $r->active ? '#D1FAE5' : '#F3F4F6' }};
-                             color:{{ $r->active ? '#059669' : '#9CA3AF' }};">
-                    {{ $r->active ? 'Activo' : 'Inactivo' }}
-                </span>
-            </td>
-            <td style="padding:11px 14px; text-align:center;">
-                <button wire:click="edit({{ $r->id }})" title="Editar"
-                        style="width:28px; height:28px; border-radius:7px; border:1px solid #EDE9FE; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:flex; align-items:center; justify-content:center; margin:0 auto; transition:background .15s, color .15s;"
-                        onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
-                    <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
-                </button>
             </td>
         </tr>
         @endif
 
         @empty
-        <tr><td colspan="8" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">Sin matrices configuradas. Creá la primera.</td></tr>
+        <tr><td colspan="7" style="padding:48px; text-align:center; color:#9CA3AF; font-size:13px;">Sin matrices configuradas. Creá la primera.</td></tr>
         @endforelse
         </tbody>
     </table>

@@ -25,6 +25,23 @@ class MatrizFinancieraManager extends Component
     public string $sortBy  = 'code';
     public string $sortDir = 'asc';
 
+    public ?int $selectedMatrizId = null;
+
+    public string $colFilterCodigo = '';
+    public string $colFilterNombre = '';
+    public string $colFilterEstado = '';
+
+    public function updatingColFilterCodigo(): void { }
+    public function updatingColFilterNombre(): void { }
+    public function updatingColFilterEstado(): void { }
+
+    public function selectMatriz(int $id): void
+    {
+        $this->selectedMatrizId = $this->selectedMatrizId === $id ? null : $id;
+    }
+
+    public function refrescarGrilla(): void {}
+
     public function toggleSort(string $col): void
     {
         if ($this->sortBy === $col) {
@@ -39,6 +56,7 @@ class MatrizFinancieraManager extends Component
     {
         $this->resetForm();
         $this->resetErrorBag();
+        $this->selectedMatrizId = null;
         $this->showForm = true;
     }
 
@@ -128,8 +146,15 @@ class MatrizFinancieraManager extends Component
 
     public function render()
     {
+        $registros = FinancialMatrix::query()
+            ->when($this->colFilterCodigo, fn ($q) => $q->where('code', 'like', "%{$this->colFilterCodigo}%"))
+            ->when($this->colFilterNombre, fn ($q) => $q->where('name', 'like', "%{$this->colFilterNombre}%"))
+            ->when($this->colFilterEstado !== '', fn ($q) => $q->where('active', (bool) $this->colFilterEstado))
+            ->orderBy($this->sortBy, $this->sortDir)
+            ->get();
+
         return view('livewire.admin.definiciones.matriz-financiera-manager', [
-            'registros' => FinancialMatrix::orderBy($this->sortBy, $this->sortDir)->get(),
+            'registros' => $registros,
         ]);
     }
 }
