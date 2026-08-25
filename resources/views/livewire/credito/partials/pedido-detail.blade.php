@@ -62,10 +62,10 @@
     $vendBadge = $vendedorCalificacion ? ($calColors[$vendedorCalificacion['calificacion']] ?? ['bg' => '#F3F4F6', 'cl' => '#6B7280']) : null;
     @endphp
 
-    {{-- Historial Crediticio Cliente --}}
+    {{-- Historial de Crédito del Cliente --}}
     <div style="display:flex; align-items:center; gap:7px; margin-bottom:12px;">
         <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
-        <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Historial Crediticio Cliente</span>
+        <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Historial de Crédito del Cliente</span>
         <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
         @if ($calBadge)
         <span style="font-size:11px; font-weight:800; padding:2px 10px; border-radius:99px; background:{{ $calBadge['bg'] }}; color:{{ $calBadge['cl'] }}; flex-shrink:0;">{{ $clienteCalificacion['calificacion'] }} · {{ number_format($clienteCalificacion['puntaje'], 1) }} pts</span>
