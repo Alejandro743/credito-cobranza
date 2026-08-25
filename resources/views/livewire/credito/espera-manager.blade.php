@@ -77,7 +77,8 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan','fecha_asignacion'=>'col
         <div style="display:flex; align-items:center; gap:5px; margin-left:4px; padding-left:10px; border-left:1px solid #E5E7EB;">
             <span style="font-size:11px; font-weight:700; color:#7B6FE8;">{{ count($selectedIds) }} seleccionada{{ count($selectedIds) === 1 ? '' : 's' }}</span>
             @if(count($selectedIds) === 1)
-            <button wire:click="verSeleccionado" style="{{ $btnH }} background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE;">
+            <button wire:click="verSeleccionado" style="{{ $btnH }} background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                 <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
                 Ver
             </button>
@@ -90,6 +91,14 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan','fecha_asignacion'=>'col
             </button>
         </div>
         @endif
+
+        <button type="button" wire:click="refrescarPorEvento"
+                style="margin-left:auto; height:28px; padding:0 10px; border:1px solid #EDE9FE; border-radius:7px; background:#F8F7FF; color:#7B6FE8; cursor:pointer; display:inline-flex; align-items:center; gap:5px; flex-shrink:0; font-size:11px; font-weight:700; white-space:nowrap; transition:background .15s, color .15s;"
+                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';"
+                onclick="const ic=this.querySelector('svg'); const deg=(parseInt(ic.dataset.deg||'0')+360); ic.dataset.deg=deg; ic.style.transition='transform .5s ease'; ic.style.transform='rotate('+deg+'deg)';">
+            <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+            Actualizar
+        </button>
     </div>
 
     <div style="overflow:auto; flex:1;">
@@ -222,9 +231,9 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan','fecha_asignacion'=>'col
                 <p style="font-size:17px; font-weight:700; color:#6B7280; margin:0; letter-spacing:-0.2px;">{{ $pedidoDetalle->numero }} - {{ $pedidoDetalle->estado_badge['label'] }}</p>
             </div>
             <button type="button" wire:click="backToList"
-                    style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; color:#9CA3AF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s, color .15s;"
+                    style="width:28px; height:28px; border-radius:8px; background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s, color .15s;"
                     @mouseenter="$el.style.background='#7B6FE8'; $el.style.color='#fff';"
-                    @mouseleave="$el.style.background='#F5F3FF'; $el.style.color='#9CA3AF';">
+                    @mouseleave="$el.style.background='#F8F7FF'; $el.style.color='#7B6FE8';">
                 <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
             </button>
         </div>
