@@ -180,7 +180,7 @@ $vSec   = 'display:flex; align-items:center; gap:7px; margin-bottom:12px;';
 @media (max-width:480px) {
     .pd-art-grid, .pd-art-row { grid-template-columns:36px minmax(0,1fr); }
     .pd-art-grid .pd-precio, .pd-art-grid .pd-total, .pd-art-grid .pd-pts,
-    .pd-art-row .pd-precio, .pd-art-row .pd-total, .pd-art-row .pd-pts { display:none; }
+    .pd-art-row .pd-precio, .pd-art-row .pd-total, .pd-art-row .pd-pts { display:none !important; }
 }
 </style>
 <div style="background:#fff; border:1.5px solid #C4B5FD; border-radius:14px; overflow:hidden; box-shadow:0 2px 4px rgba(60,52,137,0.06), 0 8px 20px rgba(60,52,137,0.08);">
