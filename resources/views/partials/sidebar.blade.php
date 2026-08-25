@@ -93,9 +93,9 @@
                class="nav-item-wrap flex items-center gap-3"
                @mouseenter="navTipText='Panel Inicio'; navTipY=$event.currentTarget.getBoundingClientRect().top+$event.currentTarget.getBoundingClientRect().height/2; navTipVisible=true"
                @mouseleave="navTipVisible=false"
-               style="padding:9px 10px; border-radius:8px; position:relative; {{ $dashActivo ? 'background:rgba(123,111,232,.25);' : '' }}">
+               style="padding:9px 10px 7px; border-radius:8px; position:relative; border-bottom:2px solid {{ $dashActivo ? '#fff' : 'transparent' }};">
                 <span class="nav-tooltip">Panel Inicio</span>
-                <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $dashActivo ? 'background:#7B6FE8;' : 'background:rgba(255,255,255,.14);' }}">
+                <div style="width:32px; height:32px; border-radius:8px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $dashActivo ? 'background:rgba(255,255,255,.2);' : 'background:rgba(255,255,255,.14);' }}">
                     <svg width="15" height="15" fill="none" stroke="{{ $dashActivo ? '#fff' : 'rgba(255,255,255,.6)' }}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
                         <path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
                     </svg>
@@ -195,8 +195,8 @@
                            wire:navigate
                            @endif
                            class="flex items-center gap-2"
-                           style="padding:6px 8px; border-radius:6px; margin-bottom:1px; {{ $childActivoInicial ? 'background:#7B6FE8;' : '' }}"
-                           :style="{ background: wbActiveSlug === '{{ $child->slug }}' ? '#7B6FE8' : '' }">
+                           style="padding:6px 8px 5px; border-radius:6px; margin-bottom:1px; border-bottom:2px solid {{ $childActivoInicial ? '#fff' : 'transparent' }};"
+                           :style="{ borderBottomColor: wbActiveSlug === '{{ $child->slug }}' ? '#fff' : 'transparent' }">
                             <span style="width:5px; height:5px; border-radius:50%; flex-shrink:0; background:{{ $childActivoInicial ? '#fff' : 'rgba(255,255,255,.25)' }};"
                                   :style="{ background: wbActiveSlug === '{{ $child->slug }}' ? '#fff' : 'rgba(255,255,255,.25)' }"></span>
                             <span style="font-size:12px; font-weight:{{ $childActivoInicial ? '600' : '400' }}; color:{{ $childActivoInicial ? '#fff' : 'rgba(255,255,255,.65)' }};"
@@ -223,8 +223,8 @@
                    wire:navigate
                    @endif
                    class="flex items-center gap-2.5"
-                   style="padding:7px 8px; border-radius:6px; margin-bottom:1px; {{ $subActivoInicial ? 'background:#7B6FE8;' : '' }}"
-                   :style="{ background: wbActiveSlug === '{{ $sub->slug }}' ? '#7B6FE8' : '' }">
+                   style="padding:7px 8px 6px; border-radius:6px; margin-bottom:1px; border-bottom:2px solid {{ $subActivoInicial ? '#fff' : 'transparent' }};"
+                   :style="{ borderBottomColor: wbActiveSlug === '{{ $sub->slug }}' ? '#fff' : 'transparent' }">
                     <div style="width:24px; height:24px; border-radius:6px; display:flex; align-items:center; justify-content:center; flex-shrink:0; {{ $subActivoInicial ? 'background:rgba(255,255,255,.2);' : 'background:rgba(255,255,255,.12);' }}"
                          :style="{ background: wbActiveSlug === '{{ $sub->slug }}' ? 'rgba(255,255,255,.2)' : 'rgba(255,255,255,.12)' }">
                         <svg width="12" height="12" fill="none"
