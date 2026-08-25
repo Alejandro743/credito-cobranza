@@ -83,8 +83,10 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan','fecha_asignacion'=>'col
                 Ver
             </button>
             @endif
-            <button wire:click="tomarRevisionMasivo" wire:confirm="¿Tomar {{ count($selectedIds) }} pedido{{ count($selectedIds) === 1 ? '' : 's' }} para revisión? Quedará{{ count($selectedIds) === 1 ? '' : 'n' }} asignado{{ count($selectedIds) === 1 ? '' : 's' }} a vos." style="{{ $btnH }} background:#7B6FE8; color:#fff;">
-                <svg width="10" height="10" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24">
+            <button wire:click="tomarRevisionMasivo" wire:confirm="¿Tomar {{ count($selectedIds) }} pedido{{ count($selectedIds) === 1 ? '' : 's' }} para revisión? Quedará{{ count($selectedIds) === 1 ? '' : 'n' }} asignado{{ count($selectedIds) === 1 ? '' : 's' }} a vos."
+                    style="{{ $btnH }} background:#F8F7FF; color:#7B6FE8; border:1px solid #EDE9FE; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
                 </svg>
                 Tomar para Revisión
