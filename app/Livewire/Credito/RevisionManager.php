@@ -578,7 +578,6 @@ class RevisionManager extends Component
 
         $pedidoDetalle      = null;
         $clienteCalificacion = null;
-        $clienteHistorial    = collect();
         if ($this->mode === 'detail' && $this->viewingId) {
             $pedidoDetalle = Pedido::with([
                 'cliente.usuario', 'vendedor.user',
@@ -591,7 +590,6 @@ class RevisionManager extends Component
                 $rangos     = RangoCalificacion::vigente() ?? RangoCalificacion::porDefecto();
 
                 $clienteCalificacion = $calService->calcularParaCliente($pedidoDetalle->cliente, $pesos, $rangos);
-                $clienteHistorial    = $calService->calcularDetallePedidos($pedidoDetalle->cliente_id);
             }
         }
 
@@ -632,6 +630,6 @@ class RevisionManager extends Component
             ->values()
             ->toArray();
 
-        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'clienteCalificacion', 'clienteHistorial', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit', 'articulosAgrupados', 'articulosTodos', 'searchProductoEdit'));
+        return view('livewire.credito.revision-manager', compact('pedidos', 'pedidoDetalle', 'clienteCalificacion', 'ciudadesAll', 'editProvincias', 'editMunicipios', 'editTipoEntrega', 'articulosEdit', 'articulosAgrupados', 'articulosTodos', 'searchProductoEdit'));
     }
 }

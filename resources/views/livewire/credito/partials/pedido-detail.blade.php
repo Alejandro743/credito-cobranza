@@ -58,9 +58,7 @@
         'D'         => ['bg' => '#FFF7ED', 'cl' => '#C2410C'],
         'BLOQUEADO' => ['bg' => '#FEF2F2', 'cl' => '#B91C1C'],
     ];
-    $showHistorial = isset($clienteCalificacion) || isset($clienteHistorial);
     $clienteCalificacion ??= null;
-    $clienteHistorial    ??= collect();
     $calBadge = $clienteCalificacion ? ($calColors[$clienteCalificacion['calificacion']] ?? ['bg' => '#F3F4F6', 'cl' => '#6B7280']) : null;
     @endphp
 
@@ -135,62 +133,6 @@
                             </div>
                             <div><p style="{{ $vLabel }}">Dirección</p><div style="{{ $vField }}">{{ $p->cliente->direccion ?: '—' }}</div></div>
                         </div>
-
-                        @if ($showHistorial)
-                        <div>
-                            <div style="{{ $vSec }}">
-                                <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-                                <span style="font-size:12px; font-weight:700; color:#6B7280; letter-spacing:0.05em; white-space:nowrap;">Historial Crediticio</span>
-                                <div style="flex:1; height:1.5px; background:#D1D5DB;"></div>
-                                @if ($calBadge)
-                                <span style="font-size:11px; font-weight:800; padding:2px 10px; border-radius:99px; background:{{ $calBadge['bg'] }}; color:{{ $calBadge['cl'] }}; flex-shrink:0;">{{ $clienteCalificacion['calificacion'] }} · {{ number_format($clienteCalificacion['puntaje'], 1) }} pts</span>
-                                @endif
-                            </div>
-
-                            @if (!$clienteCalificacion)
-                            <p style="font-size:12px; color:#9CA3AF; margin:0;">Sin pedidos previos con plan de pago para calificar.</p>
-                            @else
-                            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px;">
-                                <div style="background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:7px 9px;">
-                                    <p style="{{ $vLabel }} margin-bottom:2px;">Puntualidad</p>
-                                    <p style="font-size:14px; font-weight:800; color:#3C3489; margin:0;">{{ number_format($clienteCalificacion['puntualidad'], 0) }}%</p>
-                                </div>
-                                <div style="background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:7px 9px;">
-                                    <p style="{{ $vLabel }} margin-bottom:2px;">Mora</p>
-                                    <p style="font-size:14px; font-weight:800; color:{{ $clienteCalificacion['mora'] > 0 ? '#DC2626' : '#3C3489' }}; margin:0;">{{ number_format($clienteCalificacion['mora'], 0) }}%</p>
-                                </div>
-                                <div style="background:#fff; border:1px solid #E5E7EB; border-radius:8px; padding:7px 9px;">
-                                    <p style="{{ $vLabel }} margin-bottom:2px;">En riesgo</p>
-                                    <p style="font-size:14px; font-weight:800; color:{{ $clienteCalificacion['riesgo'] > 0 ? '#DC2626' : '#3C3489' }}; margin:0;">{{ number_format($clienteCalificacion['riesgo'], 0) }}%</p>
-                                </div>
-                            </div>
-
-                            <p style="{{ $vLabel }} margin-bottom:6px;">Pedidos anteriores ({{ $clienteCalificacion['total_pedidos'] }})</p>
-                            <div style="border:1px solid #E5E7EB; border-radius:8px; overflow:hidden; background:#fff;">
-                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; padding:6px 10px; background:#F9F8FF; border-bottom:1px solid #E5E7EB;">
-                                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase;">Pedido</span>
-                                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; text-align:center;">Puntual.</span>
-                                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; text-align:center;">Mora</span>
-                                    <span style="font-size:9px; font-weight:800; color:#9CA3AF; text-transform:uppercase; text-align:right;">Monto Bs.</span>
-                                </div>
-                                @foreach ($clienteHistorial as $h)
-                                <div style="display:grid; grid-template-columns:1fr 1fr 1fr 1fr; align-items:center; padding:7px 10px; {{ !$loop->last ? 'border-bottom:1px solid #F3F4F6;' : '' }}">
-                                    <span style="font-size:11px; font-weight:600; color:#374151;">{{ $h['numero'] }}</span>
-                                    <span style="font-size:11px; color:#374151; text-align:center;">{{ number_format($h['puntualidad'], 0) }}%</span>
-                                    <span style="text-align:center;">
-                                        @if ($h['en_mora'])
-                                        <span style="font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:99px; background:#FEF2F2; color:#B91C1C;">Sí</span>
-                                        @else
-                                        <span style="font-size:9.5px; font-weight:700; padding:1px 7px; border-radius:99px; background:#F3F4F6; color:#9CA3AF;">No</span>
-                                        @endif
-                                    </span>
-                                    <span style="font-size:11px; font-weight:600; color:#3C3489; text-align:right;">{{ number_format($h['monto'], 2) }}</span>
-                                </div>
-                                @endforeach
-                            </div>
-                            @endif
-                        </div>
-                        @endif
 
                     </div>
 
