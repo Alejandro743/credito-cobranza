@@ -95,7 +95,8 @@
                         </div>
                         <p style="font-size:16px; font-weight:800; color:#111827; margin:0; flex:1;">Datos del Cliente</p>
                         <button @click="modal = false"
-                                style="width:32px; height:32px; background:#EDE9FE; border:none; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#7B6FE8;">
+                                style="width:32px; height:32px; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:8px; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; color:#7B6FE8; transition:background .15s, color .15s;"
+                                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                             <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                         </button>
                     </div>
@@ -195,8 +196,8 @@
 
                     <div style="padding:12px 20px; border-top:1px solid #F3F4F6; flex-shrink:0;">
                         <button @click="modal = false"
-                                style="width:100%; padding:10px; background:#F9FAFB; border:1px solid #E5E7EB; border-radius:10px; font-size:13px; font-weight:700; color:#374151; cursor:pointer;"
-                                @mouseenter="$el.style.background='#F3F4F6'" @mouseleave="$el.style.background='#F9FAFB'">
+                                style="width:100%; padding:10px; background:#F8F7FF; border:1px solid #EDE9FE; border-radius:10px; font-size:13px; font-weight:700; color:#7B6FE8; cursor:pointer; transition:background .15s, color .15s;"
+                                onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
                             Cerrar
                         </button>
                     </div>
