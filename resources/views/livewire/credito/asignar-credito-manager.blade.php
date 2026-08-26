@@ -220,8 +220,8 @@ $colFiltersFechaE = ['fecha_plan'=>'colFilterFechaPlan'];
 
 {{-- ══ DETAIL MODAL (mismo estándar que Revisión del Crédito del Vendedor) ══ --}}
 @if ($mode === 'detail' && $pedidoDetalle)
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4"
-     style="background:rgba(20,10,40,0.4); backdrop-filter:blur(2px);">
+<div class="fixed inset-0 flex items-center justify-center p-4"
+     style="z-index:9999; background:rgba(20,10,40,0.4); backdrop-filter:blur(2px);">
     <div style="background:#fff; border-radius:20px; width:100%; max-width:900px; max-height:92vh; display:flex; flex-direction:column; box-shadow:0 24px 60px rgba(60,52,137,0.18), 0 0 0 1px rgba(196,181,253,0.15); overflow:hidden;">
 
         {{-- Header --}}
