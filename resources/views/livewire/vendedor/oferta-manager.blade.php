@@ -432,12 +432,13 @@
                 </div>
                 <div style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; min-width:0; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
                     <span style="font-size:13px; font-weight:400; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
-                    <span style="font-size:10.5px; color:#9CA3AF; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">{{ $item['code'] ?? '' }} · <span style="color:#f97316; font-weight:400;">{{ $item['lista_nombre'] ?? '' }}</span></span>
+                    <span style="font-size:10.5px; color:#9CA3AF; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">{{ $item['code'] ?? '' }}</span>
                     <div class="art-mobile-stats" style="display:none; gap:10px; margin-top:3px; flex-wrap:wrap;">
                         <span style="font-size:10.5px; color:#6B7280;">Precio: <b style="color:#3C3489;">{{ number_format($item['precio'], 2) }}</b></span>
                         <span style="font-size:10.5px; color:#6B7280;">Total: <b style="color:#3C3489;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</b></span>
                         <span style="font-size:10.5px; color:#6B7280;">Pts: <b style="color:#3C3489;">{{ $item['puntos'] * $item['cantidad'] }}</b></span>
                     </div>
+                    <span style="font-size:10.5px; color:#f97316; font-weight:400; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3; margin-top:2px;">{{ $item['lista_nombre'] ?? '' }}</span>
                 </div>
                 <div class="art-precio" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item['precio'], 2) }}</div>
                 <div class="art-total" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</div>
