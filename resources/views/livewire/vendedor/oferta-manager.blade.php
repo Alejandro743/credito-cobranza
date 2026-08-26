@@ -1,5 +1,5 @@
 <div x-data="{ toastShow: false, toastMsg: '', showSearch: false, showProductos: false, ubEntModal: false, ubEntTipo: '', ubEntOpciones: [], ubEntSearch: '', appToastShow: false, appToastMsg: '', appToastType: 'success' }"
-     x-effect="document.body.style.overflow = (showProductos || ubEntModal) ? 'hidden' : ''; if (!showSearch) $wire.set('searchCliente', '')"
+     x-effect="document.body.style.overflow = (showProductos || ubEntModal) ? 'hidden' : ''; if (!showSearch && !$wire.clienteId) $wire.set('searchCliente', '')"
      x-on:producto-agregado.window="toastMsg = $event.detail.nombre; toastShow = true; setTimeout(() => toastShow = false, 2200)"
      x-on:app-toast.window="appToastMsg=$event.detail.msg; appToastType=$event.detail.type; appToastShow=true; setTimeout(()=>appToastShow=false, 3200)"
      x-on:app-redirect.window="{{ $enWorkbench
@@ -83,12 +83,15 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
                 @if ($clienteId)
+                <div wire:key="cliente-sel-desktop-{{ $clienteId }}">
                 <input type="text" readonly value="{{ $clienteCI }} — {{ $clienteNombre }}" style="{{ $csStyle }} cursor:default;">
                 <button wire:click="cambiarCliente" type="button"
                         style="position:absolute; right:0; top:0; height:100%; width:34px; background:#ef4444; border:none; border-radius:0 10px 10px 0; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center;">
                     <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
+                </div>
                 @else
+                <div wire:key="cliente-search-desktop">
                 <input id="clienteSearchInput"
                        wire:model.live.debounce.300ms="searchCliente"
                        type="text"
@@ -108,6 +111,7 @@
                      x-transition:enter-end="opacity-100 translate-y-0"
                      style="position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #E5E7EB; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,.1); z-index:60; max-height:220px; overflow-y:auto;">
                     @include('livewire.vendedor.partials.cliente-resultados')
+                </div>
                 </div>
                 @endif
             </div>
@@ -160,12 +164,15 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
                 @if ($clienteId)
+                <div wire:key="cliente-sel-mobile-{{ $clienteId }}">
                 <input type="text" readonly value="{{ $clienteCI }} — {{ $clienteNombre }}" style="{{ $csStyleM }} cursor:default;">
                 <button wire:click="cambiarCliente" type="button"
                         style="position:absolute; right:0; top:0; height:100%; width:30px; background:#ef4444; border:none; border-radius:0 8px 8px 0; cursor:pointer; color:#fff; display:flex; align-items:center; justify-content:center;">
                     <svg width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
+                </div>
                 @else
+                <div wire:key="cliente-search-mobile">
                 <input wire:model.live.debounce.300ms="searchCliente"
                        type="text"
                        autocomplete="off"
@@ -184,6 +191,7 @@
                      x-transition:enter-end="opacity-100 translate-y-0"
                      style="position:absolute; left:0; right:0; top:calc(100% + 4px); background:#fff; border:1px solid #E5E7EB; border-radius:10px; box-shadow:0 4px 16px rgba(0,0,0,.1); z-index:60; max-height:220px; overflow-y:auto;">
                     @include('livewire.vendedor.partials.cliente-resultados')
+                </div>
                 </div>
                 @endif
             </div>
@@ -367,7 +375,8 @@
 @media (max-width:480px) {
     .art-grid, .art-grid-row { grid-template-columns:36px minmax(0,1fr) 34px; }
     .art-grid .art-precio, .art-grid .art-total, .art-grid .art-pts,
-    .art-grid-row .art-precio, .art-grid-row .art-total, .art-grid-row .art-pts { display:none; }
+    .art-grid-row .art-precio, .art-grid-row .art-total, .art-grid-row .art-pts { display:none !important; }
+    .art-mobile-stats { display:flex !important; }
 }
 </style>
 
@@ -424,6 +433,11 @@
                 <div style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; min-width:0; overflow:hidden; display:flex; flex-direction:column; justify-content:center;">
                     <span style="font-size:13px; font-weight:400; color:#3C3489; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ ucwords(strtolower($item['nombre'])) }}</span>
                     <span style="font-size:10.5px; color:#9CA3AF; display:block; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; line-height:1.3;">{{ $item['code'] ?? '' }} · <span style="color:#f97316; font-weight:400;">{{ $item['lista_nombre'] ?? '' }}</span></span>
+                    <div class="art-mobile-stats" style="display:none; gap:10px; margin-top:3px; flex-wrap:wrap;">
+                        <span style="font-size:10.5px; color:#6B7280;">Precio: <b style="color:#3C3489;">{{ number_format($item['precio'], 2) }}</b></span>
+                        <span style="font-size:10.5px; color:#6B7280;">Total: <b style="color:#3C3489;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</b></span>
+                        <span style="font-size:10.5px; color:#6B7280;">Pts: <b style="color:#3C3489;">{{ $item['puntos'] * $item['cantidad'] }}</b></span>
+                    </div>
                 </div>
                 <div class="art-precio" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item['precio'], 2) }}</div>
                 <div class="art-total" style="padding:10px 8px 10px 0; background:{{ $zebra }}; border-bottom:{{ $rowBorder }}; font-size:13px; font-weight:400; color:#3C3489; font-variant-numeric:tabular-nums; display:flex; align-items:center; justify-content:flex-end;">{{ number_format($item['precio'] * $item['cantidad'], 2) }}</div>
@@ -580,17 +594,22 @@
             <svg style="width:16px;height:16px;flex-shrink:0;" fill="none" stroke="#EF4444" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3m0 3h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
             <span style="font-size:13px;font-weight:700;color:#EF4444;white-space:nowrap;" x-text="appToastMsg"></span>
         </div>
-        <div style="display:flex; gap:10px;">
+        <div style="height:64px;"></div>
+        <div style="position:fixed; left:0; right:0; bottom:0; z-index:400; background:#fff; border-top:1px solid #F0EEFF; padding:10px 16px; box-shadow:0 -4px 16px rgba(60,52,137,0.08);">
+        <div style="display:flex; gap:10px; max-width:900px; margin:0 auto;">
             <button wire:click="cambiarCliente"
-                    style="flex:1; padding:13px 10px; background:#fff; color:#9CA3AF; font-size:13px; font-weight:700; border-radius:16px; border:1.5px solid #E5E7EB; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px;">
-                <svg width="14" height="14" fill="none" stroke="#9CA3AF" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    style="flex:1; padding:13px 10px; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:700; border-radius:16px; border:1.5px solid #EDE9FE; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
                 Cancelar
             </button>
             <button wire:click="confirmarPedido"
-                    style="flex:2; padding:13px 10px; background:#7B6FE8; color:#fff; font-size:13px; font-weight:800; border-radius:16px; border:none; cursor:pointer; box-shadow:0 4px 18px rgba(123,111,232,0.35); -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px;">
-                <svg width="14" height="14" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                    style="flex:2; padding:13px 10px; background:#F8F7FF; color:#7B6FE8; font-size:13px; font-weight:800; border-radius:16px; border:1.5px solid #EDE9FE; cursor:pointer; -webkit-appearance:none; appearance:none; display:flex; align-items:center; justify-content:center; gap:6px; transition:background .15s, color .15s;"
+                    onmouseenter="this.style.background='#7B6FE8'; this.style.color='#fff';" onmouseleave="this.style.background='#F8F7FF'; this.style.color='#7B6FE8';">
+                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
                 Confirmar Plan
             </button>
+        </div>
         </div>
     @endif
 
