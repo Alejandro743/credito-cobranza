@@ -310,10 +310,8 @@ $thC = 'font-size:11px; font-weight:700; color:#7B6FE8; padding:8px 10px 6px; te
                 <p style="font-size:17px; font-weight:700; color:#6B7280; margin:0; letter-spacing:-0.2px;">{{ $pedidoDetalle->numero }} - {{ $pedidoDetalle->estado_badge['label'] }}</p>
             </div>
             <button type="button" wire:click="backToList"
-                    style="width:28px; height:28px; border-radius:8px; background:#F5F3FF; color:#9CA3AF; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; transition:background .15s, color .15s;"
-                    @mouseenter="$el.style.background='#7B6FE8'; $el.style.color='#fff';"
-                    @mouseleave="$el.style.background='#F5F3FF'; $el.style.color='#9CA3AF';">
-                <svg width="10" height="10" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                    style="padding:0 14px; height:28px; border-radius:8px; background:#7B6FE8; color:#fff; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-size:12px; font-weight:700;">
+                Cerrar
             </button>
         </div>
 
